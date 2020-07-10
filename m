@@ -2,123 +2,108 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8565BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA29C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DFB2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594379274;
-	bh=ZupbQMi/trtErw5kflVvFFpVwndB+ssCP+SNaqCL4rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KuZmxfyQkgnP0KOfYEW/pu1R+H5PetFRZtTmo2BQWnXjl5oLAiDw+rBvk1UJZyfNH
-	 sNlUvbqHMlPhmtcTMzkYHMGJimCPzz2paoR1Vu109eCebaSxz7F8nWSxZrtQGgaiVG
-	 3yqK2NGbuzPnLbcD7bgES2kSyeSHxb2i1X6eynUA=
+	by mail.kernel.org (Postfix) with ESMTP id DF38B2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWqB2c/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGJLHx (ORCPT
+        id S1727952AbgGJLH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbgGJLHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:07:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8C52076A;
-        Fri, 10 Jul 2020 11:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594379266;
-        bh=ZupbQMi/trtErw5kflVvFFpVwndB+ssCP+SNaqCL4rc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F9Un2HgrXYZEZVwYS3UFCu2ZkTlAib8sNzP2Pxn77/F28frjlzbmLYs7/dTfwIr/v
-         cfH+b0ibGDtF1payrlIqOtEumturq22IAWlJOuZzsfL9myoOnDXVIAJaf4zywO0qLW
-         CiK3RWcBIAEOMZu0+m34Mi3k0+TRfqHSyilli+Jg=
-Date:   Fri, 10 Jul 2020 12:07:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v6 2/4] driver core: add deferring probe reason to
- devices_deferred property
-Message-ID: <20200710110740.GB5653@sirena.org.uk>
-References: <CGME20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e@eucas1p2.samsung.com>
- <20200626100103.18879-3-a.hajda@samsung.com>
- <5f159e00-44fd-515b-dd8c-4db9845dc9e6@ti.com>
- <7e3c924b-c025-a829-6868-78e2935c70eb@samsung.com>
- <66faa188-5ef6-d449-07fe-28c8be5e559c@ti.com>
- <21f5ec9c-2d1d-5f28-5aeb-ac0db144a55e@samsung.com>
- <CAKdAkRRLBLCLGH2qhEjaVnt8wNjoyGAfQimNWHZUvzx2m6Mwng@mail.gmail.com>
- <e6057292-39de-831c-0b8d-b3f0b66937dc@samsung.com>
- <20200707041442.GE3273837@dtor-ws>
- <8b228571-d124-e5e2-2f53-57ea4b46b904@samsung.com>
+        Fri, 10 Jul 2020 07:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgGJLHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:07:55 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595EBC08C5DC;
+        Fri, 10 Jul 2020 04:07:55 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 1so2392694pfn.9;
+        Fri, 10 Jul 2020 04:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ti/RasPzpDQfCkU80y2QxpiPoAPRKGJkYJCcdL+0vLs=;
+        b=VWqB2c/2mD7N1CybHi64Z60T58eMyCTiWHXE8zz0z9JBKZDY5XwX1tpqaq+i9EYfCP
+         1EpnQonma3W/bIwCu1unJEghezBdiUwX3/2UkMfe/++zgyFLq64DKoevEDW6xhqe08D9
+         tcvj6bMqcHaAY9M8Vo1q6tSAW9b+xt5y662KQkj8qIWYgtFcuUv5DCtBrkuv4lFJx34r
+         nWTiIlsvWNuNJPWhmtZUJy5c1QdPhhtN9vXq1WV9TOwCxUfMAIC6a5EaXjskUUN4XHBL
+         71lA/nmBaZKU2VykKgTwOEfifooqU5xxcIKq7YETToMwaYvXiyYpYtmRxq47gEtkV8m0
+         kMuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ti/RasPzpDQfCkU80y2QxpiPoAPRKGJkYJCcdL+0vLs=;
+        b=UOBFXekIGJTQJRhthTJwJJYM3/fEyM29zGtPuaQ+Qyoy+6iF+eWNwcpVpZt8zp+nUU
+         e60cluVw3qD/AGqaJWwBZwefYasHxQ0enwQTE/iW+ynZRdhFxutQaYiuO/WnudKP9sNs
+         hTLzXYQKSGYyyT5QyXxJOCKAJsd/158NAdN/ssjpZ/k3XY9F0lb/O9YQeL94hEDm2WIv
+         jXsAYzhUl7WYZSfJlAJTnO2tq3SsqjtPBdFQHnXr23ygSwLzUpDH1GzDrnQe2P197BAj
+         iqQrCegwjZaZzwMSxcXr6cN4BcWQOmG6VBfvS48Ph8ZTatVbYTqy0u3F3zVsiaKhPaEm
+         99/g==
+X-Gm-Message-State: AOAM531ehw4PQqJvFNTVvfaR6x6S5WiS9hy4QJxm4C9ZiI/nBfW5a9+j
+        eLjlrJtpUxD62lM9bfAvzsI=
+X-Google-Smtp-Source: ABdhPJyTIgSD1QxyuKdo/hOw3kz38HcVnjtV13TNHThPCBsGsx7wn4iheuKlWK8i42JthGjl+OLDNA==
+X-Received: by 2002:a63:5fcc:: with SMTP id t195mr48796424pgb.56.1594379274962;
+        Fri, 10 Jul 2020 04:07:54 -0700 (PDT)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id g3sm5581621pfq.19.2020.07.10.04.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 04:07:54 -0700 (PDT)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.chuang@genesyslogic.com.tw, takahiro.akashi@linaro.org,
+        greg.tu@genesyslogic.com.tw, Ben Chuang <benchuanggli@gmail.com>
+Subject: [RFC PATCH V3 03/21] mmc: core: UHS-II support, skip set_chip_select()
+Date:   Fri, 10 Jul 2020 19:08:38 +0800
+Message-Id: <20200710110838.29018-1-benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
-Content-Disposition: inline
-In-Reply-To: <8b228571-d124-e5e2-2f53-57ea4b46b904@samsung.com>
-X-Cookie: Use only in a well-ventilated area.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+mmc_set_chip_select() should be called only in UHS-I mode,
+and not for UHS-II mode.
 
-On Fri, Jul 10, 2020 at 09:42:49AM +0200, Andrzej Hajda wrote:
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+---
+ drivers/mmc/core/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> But the provider does not know if *get is called in probe context or=20
-> not, so it is not able to differentiate it.
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 85c83c82ad0c..c6540d56646b 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -898,8 +898,10 @@ static inline void mmc_set_ios(struct mmc_host *host)
+  */
+ void mmc_set_chip_select(struct mmc_host *host, int mode)
+ {
+-	host->ios.chip_select = mode;
+-	mmc_set_ios(host);
++	if (!(host->flags & MMC_UHS2_INITIALIZED)) {
++		host->ios.chip_select = mode;
++		mmc_set_ios(host);
++	}
+ }
+ 
+ /*
+-- 
+2.27.0
 
-> So the whole idea is for me suspicious/wrong. Kind of proof:
-
-> 1. If you insist that provider's EPROBE_ERROR must be always propagated=
-=20
-> to driver core then.
-
-> 2. You must enforce that resources can be gathered only from probe.
-
-> 3. But this is against current practice, even if majority of drivers=20
-> does it from probe, there are many which doesn't.
-
-Those drivers are probably buggy anyway at this point given probe
-deferral.
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8IS/sACgkQJNaLcl1U
-h9CDlgf/czDS3TuzSg439iB93bfCxxvcHFqdaQ01xmcPSXS88+JplUZh9Mg0FzK0
-5xFnzBmfpIUWbn9/4zRjimnp5qSwljIPBZvIJErny55gneAsZE2e3L78FBMTqz6a
-s/l3e09KTuGG1tBfczy/03t6wxe+ks9t95cm6xJpj5qShpq26bVG3rNKB+/vd5us
-+xYIqPuomBa8Q9zY8WDQ83p1d5T6x+RH03/fafT82DMwE2pLXz7DT8yWEUpUD7kg
-iZA4zesvOMvSrDlTPVbMZjUu/BBlxpNBWpet41UW0dlklaUZCzmuegxOeFE86Zz5
-D7yzP9yl92PPggknrdY7qZGrsTKtTg==
-=B8/S
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
