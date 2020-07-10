@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6F8C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D548C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71B820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2033120767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGJXIn (ORCPT
+        id S1727879AbgGJXIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:08:43 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37389 "EHLO
+        Fri, 10 Jul 2020 19:08:49 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:46915 "EHLO
         relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgGJXIZ (ORCPT
+        with ESMTP id S1726803AbgGJXIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:08:25 -0400
+        Fri, 10 Jul 2020 19:08:23 -0400
 X-Originating-IP: 90.65.108.121
 Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 164D41BF205;
-        Fri, 10 Jul 2020 23:08:24 +0000 (UTC)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 662451BF207;
+        Fri, 10 Jul 2020 23:08:20 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -34,9 +34,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v6 9/9] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-Date:   Sat, 11 Jul 2020 01:08:13 +0200
-Message-Id: <20200710230813.1005150-10-alexandre.belloni@bootlin.com>
+Subject: [PATCH v6 5/9] clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+Date:   Sat, 11 Jul 2020 01:08:09 +0200
+Message-Id: <20200710230813.1005150-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200710230813.1005150-1-alexandre.belloni@bootlin.com>
 References: <20200710230813.1005150-1-alexandre.belloni@bootlin.com>
@@ -47,46 +47,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first divisor for the sama5d2 is actually the gclk selector. Because
-the currently remaining divisors are fitting the use case, currently ensure
-it is skipped.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 7fea134650fc..787dbebbb432 100644
+index 7427b07495a8..b255a4a1a36b 100644
 --- a/drivers/clocksource/timer-atmel-tcb.c
 +++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
- 	.counter_width = 32,
- };
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
  
-+static struct atmel_tcb_config tcb_sama5d2_config = {
-+	.counter_width = 32,
-+	.has_gclk = 1,
-+};
-+
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
  static const struct of_device_id atmel_tcb_of_match[] = {
- 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
- 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
-+	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
- 	{ /* sentinel */ }
- };
- 
-@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 
- 	/* How fast will we be counting?  Pick something over 5 MHz.  */
- 	rate = (u32) clk_get_rate(t0_clk);
--	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
-+	i = 0;
-+	if (tc.tcb_config->has_gclk)
-+		i = 1;
-+	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
  		unsigned divisor = atmel_tcb_divisors[i];
  		unsigned tmp;
+ 
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
+ 		tmp = rate / divisor;
+ 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
  
 -- 
 2.26.2
