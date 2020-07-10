@@ -2,179 +2,155 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB25C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41323C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 984512072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0FD20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="BbmOQTRp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiLdpIIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgGJDRU (ORCPT
+        id S1727116AbgGJDR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
+        Thu, 9 Jul 2020 23:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgGJDRT (ORCPT
+        with ESMTP id S1726560AbgGJDR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:17:19 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C9EC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:17:17 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id h13so3240831otr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:17:17 -0700 (PDT)
+        Thu, 9 Jul 2020 23:17:59 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D6FC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:17:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r19so4734786ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=j0wwhr1/T/vy9n1+otmduXmzQCUiGkNtjh79hw1bxv4=;
-        b=BbmOQTRp6gYkwQqXj3JMZ3m0Tqr0EIu9qZrevvaVT+MMCS/1fSHpqZLGJfeAU8puZy
-         9RcjYup96/Cv7z5UP21se4Jg17+/9cQF39itTwIYmb3+k5ojm4IHmdtmCnd0FYxwv7o/
-         4F0LZ2pAtf9q8WpVEUg5A+svER1CDsSU08jrknSpL7/Z5xPz/URGGp2MaIoeBGzQphIS
-         5zdxdg44kQyrTEyNsxhy6Mo7Ig36nIcNVAgQSS5YehxC4DjMzkC40goTy4lsxyL1bBSO
-         IqgFmV3UgI1u/2nCvd0NRCxtnvYzJZFyyVPaj01JfrUQX6ctJFyhIOpP/MKL6WANMXOQ
-         YQTA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TLUcgfD3vzj9e3+8HCJonIEbZ+/i+9gPCbAcc/AaAoA=;
+        b=OiLdpIICkkdCExTqxehNMdW0XGdYvLF283Yg/MiIIyL6LH6V/AF3qDNbEGFpM4BgEL
+         THMtJENwHsN5Xkl3lVtkh+XrShOrvqGvhLo1/CIGqWi9Im8FPgaYdrw1+uap0axzIbWb
+         t5kjTyXP9yOdStfM+G0kzZpBOzXx4S0YG/bYM/VooVLvLLl1UJmw1FwlDv9sN+xz/v+3
+         g17yc9mJURCJ7zpvsU+LBr/ku0k6gk11bR0x8iVYQTwhsJjsImi8M1WqhxFI1RXpes3r
+         zsklDNjVE+8dfs9DymIY5ddzL337f2pFAqgszwLG7STArcA1wH6LZzpJ+D/NR8L2QevP
+         ZGnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=j0wwhr1/T/vy9n1+otmduXmzQCUiGkNtjh79hw1bxv4=;
-        b=JpoeMpdoRZ/wnnpy8uiYuAqiSvyLGYI4WTbDbKdiG2cmgKO0IGHmnSmsbmTFPNk0zT
-         gY8342fGYgFEK1OQ6xxvQ4QPe8mdLMZYUY8a6kDH1ZWQWrmtPIfD1HOd9iQIl7ZD7Djr
-         9uZXAS4IOjInnxemGgfRl9vWJcAnIWJuVB9A3UL/bcUjvOamgTJeYNsaXidGU0rN8Zdi
-         orFYKpJfD4Yo4B6RTbuoCWVspib0uCNe/1xRxVXR4N7SmAOHUTRFC/UkluOLUkwoYO5/
-         Cj1gH5IQlP3WJIVCDka7Y62+TKaxQ2RxnpCgGnZFXOl5ZKQt2ta1tF9Eoe5qu897Xnix
-         ZxFw==
-X-Gm-Message-State: AOAM531pzlnVxe3KCkHgKoBkbllUC2xWlNk2U78XeWf/qpGpbR6Cmenc
-        uwy2tPItOxBwhHooSeEEU2O7Qg==
-X-Google-Smtp-Source: ABdhPJwpau8NTYn5wFg7gaMaXNs5CJF3bRoXICXIT+qLYysVXc/ruiVyQgs+tjrcp0KQC8fmsrEGCw==
-X-Received: by 2002:a05:6830:1e03:: with SMTP id s3mr29365301otr.306.1594351036655;
-        Thu, 09 Jul 2020 20:17:16 -0700 (PDT)
-Received: from [192.168.11.9] (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
-        by smtp.gmail.com with ESMTPSA id f26sm942554oop.46.2020.07.09.20.17.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 20:17:15 -0700 (PDT)
-Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
-From:   Steev Klimaszewski <steev@kali.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Steev Klimaszewski <steev@gentoo.org>
-References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
- <20200710011935.GA7056@gentoo.org>
- <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
- <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
- <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
-Message-ID: <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
-Date:   Thu, 9 Jul 2020 22:17:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TLUcgfD3vzj9e3+8HCJonIEbZ+/i+9gPCbAcc/AaAoA=;
+        b=D84GwlhB8nj39sf++SyIO7T6jNLMUjby3AkjOnEhGBuFm8ucmkXS8FDNCzZXI7Lv1i
+         m1JKJ7mvz1nCJsRm2aNsqWmfpk+d4WTPSdDLf269B7L29gJLOXI5pMWPLmzn3mT2Aoy2
+         mc7W0rvzjzIyoJvVNe7CIrJxt0chguRTuXnelxgWBxK2p0LJEIN4sf0NGKnwvpFx39Fw
+         vZu9mlc4GY08BFuv3XlqnyTYvM1GVkjPw0sVLEOzZ3FXZNAqnvl6mjUA++bqWvdW7sMR
+         pUfU+BRHf2Wh/2hIH1ze3KLfpEqnciLAzJAgYN4J80JvZlZh7e9SJOCytdeCbY/j/yYL
+         6efw==
+X-Gm-Message-State: AOAM531ldeZfgH58kFpf99RK98WqVktSz+hzs/dQ2mX0jmfr8/U/1cii
+        EYCFHn+YrOe8xEmztNjRe/HF9ro3deO21pPvK2VoYkffmpPmDg==
+X-Google-Smtp-Source: ABdhPJy2fEwacppAg+xY6cPAq454tX4tcJA5yUCm12WfM5rTh2UOBmq08fJgr37rqprJPJfZ6ePDPuOVwEh5bkGqF34=
+X-Received: by 2002:a2e:7c07:: with SMTP id x7mr28142677ljc.166.1594351077346;
+ Thu, 09 Jul 2020 20:17:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200710021505.2405872-1-daeho43@gmail.com> <20200710030246.GA545837@google.com>
+In-Reply-To: <20200710030246.GA545837@google.com>
+From:   Daeho Jeong <daeho43@gmail.com>
+Date:   Fri, 10 Jul 2020 12:17:46 +0900
+Message-ID: <CACOAw_yJvQgDsLRd0-iJqXN06wDXmC3_OqKgKey7p=WeqxzMFA@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in F2FS_IOC_SEC_TRIM_FILE
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+1. The valid data will be within i_size.
+2. All the trim operations will be done in a unit of block, even if
+i_size is not aligned with BLKSIZE like the below.
 
-On 7/9/20 10:12 PM, Steev Klimaszewski wrote:
+        index =3D F2FS_BYTES_TO_BLK(range.start);
+        pg_end =3D DIV_ROUND_UP(end_addr, F2FS_BLKSIZE);     <=3D BLKSIZE a=
+ligned
+
+Are you worried about the case that sudden power-off occurs while a
+file is being truncated?
+ex) 1GB file is being truncated to 4KB -> sudden power-off ->
+i_size(4KB), i_blocks(maybe somewhere between 4KB and 1GB)
+
+2020=EB=85=84 7=EC=9B=94 10=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 12:02, =
+Jaegeuk Kim <jaegeuk@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On 7/9/20 9:14 PM, Doug Anderson wrote:
->> Hi,
->>
->> On Thu, Jul 9, 2020 at 6:38 PM Doug Anderson <dianders@chromium.org> 
->> wrote:
->>> Hi,
->>>
->>> On Thu, Jul 9, 2020 at 6:19 PM Steev Klimaszewski <steev@gentoo.org> 
->>> wrote:
->>>> Hi Doug,
->>>>
->>>> I've been testing 5.8 and linux-next on the Lenovo Yoga C630, and 
->>>> with this patch applied, there is really bad banding on the display.
->>>>
->>>> I'm really bad at explaining it, but you can see the differences in 
->>>> the following:
->>>>
->>>> 24bit (pre-5.8) - https://dev.gentoo.org/~steev/files/image0.jpg
->>>>
->>>> 18bit (5.8/linux-next) - 
->>>> https://dev.gentoo.org/~steev/files/image1.jpg
->>> Presumably this means that your panel is defined improperly? If the
->>> panel reports that it's a 6 bits per pixel panel but it's actually an
->>> 8 bits per pixel panel then you'll run into this problem.
->>>
->>> I would have to assume you have a bunch of out of tree patches to
->>> support your hardware since I don't see any device trees in linuxnext
->>> (other than cheza) that use this bridge chip.  Otherwise I could try
->>> to check and confirm that was the problem.
->> Ah, interesting.  Maybe you have the panel:
->>
->> boe,nv133fhm-n61
->>
->> As far as I can tell from the datasheet (I have the similar
->> boe,nv133fhm-n62) this is a 6bpp panel.  ...but if you feed it 8bpp
->> the banding goes away!  Maybe the panel itself knows how to dither???
->> ...or maybe the datasheet / edid are wrong and this is actually an
->> 8bpp panel.  Seems unlikely...
->>
->> In any case, one fix is to pick
->> <https://lore.kernel.org/dri-devel/1593087419-903-1-git-send-email-kalyan_t@codeaurora.org/>, 
->>
->> though right now that patch is only enabled for sc7180.  Maybe you
->> could figure out how to apply it to your hardware?
->>
->> ...another fix would be to pretend that your panel is 8bpp even though
->> it's actually 6bpp.  Ironically if anyone ever tried to configure BPP
->> from the EDID they'd go back to 6bpp.  You can read the EDID of your
->> panel with this:
->>
->> bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
->> i2cdump ${bus} 0x50 i
->>
->> When I do that and then decode it on the "boe,nv133fhm-n62" panel, I 
->> find:
->>
->> 6 bits per primary color channel
->>
->> -Doug
+> On 07/10, Daeho Jeong wrote:
+> > From: Daeho Jeong <daehojeong@google.com>
+> >
+> > Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
+> >  1. Added -1 value support for range.len to signify the end of file.
+> >  2. If the end of the range passes over the end of file, it means until
+> >     the end of file.
+> >  3. ignored the case of that range.len is zero to prevent the function
+> >     from making end_addr zero and triggering different behaviour of
+> >     the function.
+> >
+> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> > ---
+> >  fs/f2fs/file.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 368c80f8e2a1..1c4601f99326 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp=
+, unsigned long arg)
+> >       file_start_write(filp);
+> >       inode_lock(inode);
+> >
+> > -     if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
+> > +     if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
+> > +                     range.start >=3D inode->i_size) {
+> >               ret =3D -EINVAL;
+> >               goto err;
+> >       }
+> >
+> > -     if (range.start >=3D inode->i_size) {
+> > -             ret =3D -EINVAL;
+> > +     if (range.len =3D=3D 0)
+> >               goto err;
+> > -     }
+> >
+> > -     if (inode->i_size - range.start < range.len) {
+> > -             ret =3D -E2BIG;
+> > -             goto err;
+> > -     }
+> > -     end_addr =3D range.start + range.len;
+> > +     if (range.len =3D=3D (u64)-1 || inode->i_size - range.start < ran=
+ge.len)
+> > +             end_addr =3D inode->i_size;
 >
+> Hmm, what if there are blocks beyond i_size? Do we need to check i_blocks=
+ for
+> ending criteria?
 >
-> Hi Doug,
->
-> Decoding it does show be to boe,nv133fhm-n61 - and yeah it does say 
-> it's 6-bit according to panelook's specs for it.
->
->
-> I'll take a look at the patch and see what I can come up with... at 
-> the moment, I'm forcing it to be 8bit and that does "work fine" but 
-> I'd like it to be fixed properly instead of my hack.
->
-> Thanks for your time and work!
->
-> -- Steev
->
-For what it's worth - the 5.8 that I'm testing is at 
-https://github.com/steev/linux/commits/c630-5.8-rc4-inline-encryption
+> > +     else
+> > +             end_addr =3D range.start + range.len;
+> >
+> >       to_end =3D (end_addr =3D=3D inode->i_size);
+> >       if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
+> > --
+> > 2.27.0.383.g050319c2ae-goog
+> >
+> >
+> >
+> > _______________________________________________
+> > Linux-f2fs-devel mailing list
+> > Linux-f2fs-devel@lists.sourceforge.net
+> > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
