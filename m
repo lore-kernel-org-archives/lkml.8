@@ -2,92 +2,101 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919B72078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728762078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FO54VgP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgGJQAw (ORCPT
+        id S1728089AbgGJQBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:00:52 -0400
-Received: from smtprelay0092.hostedemail.com ([216.40.44.92]:35094 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726925AbgGJQAv (ORCPT
+        Fri, 10 Jul 2020 12:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgGJQBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:00:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 79AB018224D66;
-        Fri, 10 Jul 2020 16:00:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: swim81_190e06826ecf
-X-Filterd-Recvd-Size: 2357
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 10 Jul 2020 16:00:48 +0000 (UTC)
-Message-ID: <a2f48c734bdc6b865a41ad684e921ac04b221821.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
-From:   Joe Perches <joe@perches.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
-        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Date:   Fri, 10 Jul 2020 09:00:46 -0700
-In-Reply-To: <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net>
-References: <20200709194257.26904-1-grandmaster@al2klimov.de>
-         <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
-         <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de>
-         <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Fri, 10 Jul 2020 12:01:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD43C08C5CE;
+        Fri, 10 Jul 2020 09:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=sRWyr6JRHvOQ9KVgvohiV8oPDS3eCjS2RJi+7dgDmCw=; b=FO54VgP8V48D2nAylnRW29xZ5z
+        IBjgWi9n1EMwL32Lpj1iBr9VRfrEvLoxJSQzHzfkDn11Aw6ML+hsF8Z9K6P4PkAdnh5t0s7+yI/eW
+        Ut3kToS5064jDoJ3J5EFBSNb2u76tSSE+LIy+McLpjz2+LdseDQYE4r3O0Eu1GvzYY2QZuZNHO+ZJ
+        AhwNz4q/dh7v8/ABOA3/eNpEPR2bxMA9fKRp2NFZ5JleTTEX6cOT/qWTIe0UsGYhzQzhBcMoghv5Y
+        ZpL34lYVrTzF42gr5F4AqSkKJRNyCt/HyB53FdP8y7OjAmXYOmXVjT8mooeNGitYlp4kxKkOGRBGn
+        vIVeS98w==;
+Received: from [2001:4bb8:188:5f50:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtvSN-0002da-H3; Fri, 10 Jul 2020 16:01:00 +0000
+Date:   Fri, 10 Jul 2020 18:00:58 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [GIT PULL] clean up kernel read/write helpers
+Message-ID: <20200710160058.GA540798@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-10 at 17:14 +0200, Daniel Borkmann wrote:
-> On 7/10/20 8:17 AM, Alexander A. Klimov wrote:
-> > Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
-> > > On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
-> > > > Rationale:
-> > > > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
-> > > > which has nothing to do with XDP.
-[]
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> > > > @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
-> > > >   F:    kernel/bpf/cpumap.c
-> > > >   F:    kernel/bpf/devmap.c
-> > > >   F:    net/core/xdp.c
-> > > > -N:    xdp
-> > > > -K:    xdp
-> > > > +N:    (?:\b|_)xdp(?:\b|_)
-> > > > +K:    (?:\b|_)xdp(?:\b|_)
-> > > 
-> > > Please also include \W to generally match on non-alphanumeric char given you
-> > > explicitly want to avoid [a-z0-9] around the term xdp.
-> > Aren't \W, ^ and $ already covered by \b?
-> 
-> Ah, true; it says '\b really means (?:(?<=\w)(?!\w)|(?<!\w)(?=\w))', so all good.
-> In case this goes via net or net-next tree:
+(note that the new WARN_ONs in combination with syzcaller already found a
+missing input validation in 9p.  The fix should be on your way through
+the maintainer ASAP)
 
-This N: pattern does not match files like:
+The following changes since commit dcde237b9b0eb1d19306e6f48c0a4e058907619f:
 
-	samples/bpf/xdp1_kern.c
+  Merge tag 'perf-tools-fixes-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux (2020-07-07 15:38:53 -0700)
 
-and does match files like:
+are available in the Git repository at:
 
-	drivers/net/ethernet/broadcom/bnxt/bnxt_xdp.c
+  git://git.infradead.org/users/hch/misc.git tags/cleanup-kernel_read_write
 
-Should it?
+for you to fetch changes up to 775802c0571fb438cd4f6548a323f9e4cb89f5aa:
 
+  fs: remove __vfs_read (2020-07-08 08:27:57 +0200)
+
+----------------------------------------------------------------
+cleanup in-kernel read and write operations
+
+Reshuffle the (__)kernel_read and (__)kernel_write helpers, and ensure
+all users of in-kernel file I/O use them if they don't use iov_iter
+based methods already.
+
+----------------------------------------------------------------
+Christoph Hellwig (11):
+      cachefiles: switch to kernel_write
+      autofs: switch to kernel_write
+      bpfilter: switch to kernel_write
+      fs: unexport __kernel_write
+      fs: check FMODE_WRITE in __kernel_write
+      fs: implement kernel_write using __kernel_write
+      fs: remove __vfs_write
+      fs: add a __kernel_read helper
+      integrity/ima: switch to using __kernel_read
+      fs: implement kernel_read using __kernel_read
+      fs: remove __vfs_read
+
+ fs/autofs/waitq.c            |   2 +-
+ fs/cachefiles/rdwr.c         |   2 +-
+ fs/read_write.c              | 131 +++++++++++++++++++++++++------------------
+ include/linux/fs.h           |   2 +-
+ net/bpfilter/bpfilter_kern.c |   2 +-
+ security/integrity/iint.c    |  14 +----
+ 6 files changed, 80 insertions(+), 73 deletions(-)
 
