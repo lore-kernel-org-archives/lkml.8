@@ -2,168 +2,150 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6553C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0022C2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 923EE2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MYNbUmQA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BFP8tF2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGJAo0 (ORCPT
+        id S1726757AbgGJAwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
+        Thu, 9 Jul 2020 20:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgGJAo0 (ORCPT
+        with ESMTP id S1726495AbgGJAwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:44:26 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FFBDC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:44:26 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id i203so5036573yba.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:44:26 -0700 (PDT)
+        Thu, 9 Jul 2020 20:52:36 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A5AC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:52:36 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so1729587pgg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=t9i52B1pRW7NNwQem2xtfhHz6MEicsdkhoSgH5EUEqk=;
-        b=MYNbUmQAXNqG4ukLS28pTAIVaO2vxHhB9bnpmh9rZrc1N5YX4Lq8dRgGFCrN0ufd09
-         piKx95RRMn2xddJjPUsGj/I0esIuVF3VWtnunx3aA5YXBqnS+Ej33vL4rHnkGvk0sAfD
-         eaxSIw341JGOx/0diPeyckGAJx2E8P7oqQN58n0pDeuTml8MspBhdSwJQBmh37Dx1sG0
-         5UZqPA0csot1jpFpBFolSNsocwlfqHi3aSEppDR6iTFctqW3Nb/BwqlUqVpq1BeSugtI
-         bgihtvM852llZCE4toFDe5mFwXN6IGJVtVhlvoazPMtXQrgQwdSrbAz3GFVLrnPPlXV/
-         J1kA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8yPHrCXyBLOpR6zGRIWiDtKHwiJWpvvhg1ayG2n9fc8=;
+        b=BFP8tF2HhYiKA/qyJjHegpvIsVSUuEje6azN5GY0R3L8WUoBLc3wHtzR+46I4fEuPk
+         XfiUAO8rReB0liW6wBmI3p2UY8xt/niNaytXTXJB+c3gWeaM5uKjATHL5zaongbYrilm
+         Ztasc8EgPA+Q1kqS5vkNpKLsqai7o8NQCrLkI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=t9i52B1pRW7NNwQem2xtfhHz6MEicsdkhoSgH5EUEqk=;
-        b=Rz2hycl0rvuxZnBY+EbNb6wJDX66XZQRcv+qcYPIiR6+baItblhkpg2lEMWL0myj/B
-         +G1X3X/lOEIiyWnL6hI3mZnHgUA3Qs7DhJK0zB99FGYa8dUlJuzg6y7t9PA1wUz4PPWM
-         dHSYJ3y6HxPoI7yBMBbC6TbUuxgFOwm+1iv/Fse20ugk0bOet0qER03ucy5e/0FUiO4l
-         O7+QSXa8EjmSoLwzeQ3qtli13wU/FSUVkK3gVpK01RG1kdWf57XKcVm8URkQ2es+rYad
-         CbARbp3hUT2Y0P0pOUUHrjHfZfLZLoi46OqizTBQdUUH6oDHfToURS4bVquUum/KStMQ
-         bQPw==
-X-Gm-Message-State: AOAM531tSJ1dlGpb0K8LAIXP9axBJPQd65cezuPpj8EGl9+nkZvn3xiy
-        Z+4jVMB6ttIv+md1HtLrCOf8qzR9Q5f+59OB
-X-Google-Smtp-Source: ABdhPJx3cXh4hzy135F82CgEDevTpjt3qDsmiQcYtuxGbFeAaepZZSPY/LdQE0FqgKXxYz3NZikYmocTfGCRD8Lh
-X-Received: by 2002:a25:b28d:: with SMTP id k13mr18719127ybj.162.1594341865353;
- Thu, 09 Jul 2020 17:44:25 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 00:44:22 +0000
-Message-Id: <20200710004422.298090-1-linchuyuan@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH] hwmon: adm1272: Enable temperature sampling for adm1272 adm1278
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net
-Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
-        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8yPHrCXyBLOpR6zGRIWiDtKHwiJWpvvhg1ayG2n9fc8=;
+        b=I7YSpZmdmr2USD04dv6QweHNL6CXAmoYFfxnJqXKyTrQKXPEJRqs8oucrwn1SsOaEL
+         s9QfOagrTi+QTbetEQniniO1VFqTyuTXakBhKRJ/GSQhyPHi5BY3C2eSVIyVvKhyB2T/
+         A2QF6G8IOL5eJelXR5T1hkpb8v4XliGV1ouIqfQ1jIgq+2SU6+pRlGfPZGXSFGF4JAkE
+         nO3p410BPfgp7SEWkx9PUjXpyxyfK5wvLv+hkWVgKAcQfxVl7RoFH10gy1W9ogBoee1T
+         QvD2Vm3kIU5gWRnkiID+DT57LTZDaOipOPpQxYDaRIRAnKrhogLEPximGVDwEO8Avem5
+         XD7g==
+X-Gm-Message-State: AOAM533GCMnGG4PumHGo0lqttRtP+i0fGQ0yY16JpETXjh1g0jhev9B9
+        STsS9O/nHPMYb8t+FVny8PT0NQ==
+X-Google-Smtp-Source: ABdhPJwcYWeG5bs4YVaoD0/XoNI2VB/2PQjL7qAGKEGMFaiXaUld/StQmsEVPMcCxV9DXDcYFi7yBw==
+X-Received: by 2002:a62:1716:: with SMTP id 22mr56845258pfx.99.1594342355674;
+        Thu, 09 Jul 2020 17:52:35 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id v28sm3992962pgn.81.2020.07.09.17.52.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 17:52:34 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 17:52:33 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Set IO pins in low power state during
+ suspend
+Message-ID: <20200710005233.GN3191083@google.com>
+References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
+ <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Problem:
-	adm1272 and adm1278 supports temperature sampling. The
-current way of enabling it requires the user manually unbind the device
-from the driver, flip the temperature sampling control bit and then bind
-the device back to the driver. It would be nice if we can control this in a
-better way by reading the dt.
+Hi,
 
-Solution:
-	Introducing device tree binding adm1272-adm1278-temp1-en. If the
-flag is set, flip the temp1_en control bit on probing.
+On Wed, Jul 08, 2020 at 06:41:20PM +0530, Veerabhadrarao Badiganti wrote:
+> Configure SDHC IO pins with low power configuration when the driver
+> is in suspend state.
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 392d41d57a6e..efd2bae1430c 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/interconnect.h>
+> +#include <linux/pinctrl/consumer.h>
+>  
+>  #include "sdhci-pltfm.h"
+>  #include "cqhci.h"
+> @@ -1352,6 +1353,19 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>  		sdhci_msm_hs400(host, &mmc->ios);
+>  }
+>  
+> +static int sdhci_msm_set_pincfg(struct sdhci_msm_host *msm_host, bool level)
+> +{
+> +	struct platform_device *pdev = msm_host->pdev;
+> +	int ret;
+> +
+> +	if (level)
+> +		ret = pinctrl_pm_select_default_state(&pdev->dev);
+> +	else
+> +		ret = pinctrl_pm_select_sleep_state(&pdev->dev);
+> +
+> +	return ret;
+> +}
+> +
+>  static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
+>  {
+>  	if (IS_ERR(mmc->supply.vmmc))
+> @@ -1596,6 +1610,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>  			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
+>  					pwr_state & REQ_BUS_ON);
+>  		if (!ret)
+> +			ret = sdhci_msm_set_pincfg(msm_host,
+> +					pwr_state & REQ_BUS_ON);
+> +		if (!ret)
+>  			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+>  		else
+>  			irq_ack |= CORE_PWRCTL_BUS_FAIL;
 
-Testing:
-1). iotools smbus_write16 35 0x10 0xd4 0x0037 // disable the temp1_en
-2). recompile the dt to have  adm1272-adm1278-temp1-en set
-3). Probe the driver and make sure tempX shows up in hwmon
+I happened to have a debug patch in my tree which logs when regulators
+are enabled/disabled, with this patch I see the SD card regulator
+toggling constantly after returning from the first system suspend.
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/pmbus/adm1275.c | 36 +++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+I added more logs:
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 19317575d1c6..293308875162 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -475,6 +475,7 @@ static int adm1275_probe(struct i2c_client *client,
- 	const struct coefficients *coefficients;
- 	int vindex = -1, voindex = -1, cindex = -1, pindex = -1;
- 	int tindex = -1;
-+	bool temp1_en;
- 	u32 shunt;
- 
- 	if (!i2c_check_functionality(client->adapter,
-@@ -536,6 +537,9 @@ static int adm1275_probe(struct i2c_client *client,
- 	if (shunt == 0)
- 		return -EINVAL;
- 
-+	temp1_en = of_property_read_bool(client->dev.of_node, "adm1272-adm1278-temp1-en") &&
-+		(mid->driver_data == adm1272 || mid->driver_data == adm1278);
-+
- 	data->id = mid->driver_data;
- 
- 	info = &data->info;
-@@ -614,16 +618,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
-@@ -685,16 +691,18 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
- 			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+		ret = config;
-+		/* Enable temp if it is instructed by dt (it is disabled by default) */
-+		if (temp1_en && !(config & ADM1278_TEMP1_EN))
-+			config |= ADM1278_TEMP1_EN;
- 		/* Enable VOUT if not enabled (it is disabled by default) */
--		if (!(config & ADM1278_VOUT_EN)) {
-+		if (!(config & ADM1278_VOUT_EN))
- 			config |= ADM1278_VOUT_EN;
--			ret = i2c_smbus_write_byte_data(client,
--							ADM1275_PMON_CONFIG,
--							config);
-+		if (ret != config) {
-+			ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, config);
- 			if (ret < 0) {
--				dev_err(&client->dev,
--					"Failed to enable VOUT monitoring\n");
--				return -ENODEV;
-+				dev_err(&client->dev, "Failed to enable config control bits");
-+				return ret;
- 			}
- 		}
- 
--- 
-2.27.0.383.g050319c2ae-goog
+[ 1156.085819] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+[ 1156.248936] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+[ 1156.301989] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+[ 1156.462383] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+[ 1156.525988] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+[ 1156.670372] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+[ 1156.717935] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+[ 1156.878122] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+[ 1156.928134] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
 
+This is on an SC7180 platform. It doesn't run an upstream kernel though,
+but v5.4 with plenty of upstream patches.
