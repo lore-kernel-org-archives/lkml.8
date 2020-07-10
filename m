@@ -2,118 +2,158 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F89C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A74720720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AC720720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGJQOS (ORCPT
+        id S1726872AbgGJQOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:14:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:37724 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgGJQOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:14:17 -0400
-Received: by mail-il1-f199.google.com with SMTP id x23so4011350ilk.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:14:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=F8ETx0vaYCpDAVW+B9gsHZoXMwniNFuDf+Ol2MGgQZY=;
-        b=Hqcowh4NRCE4VmKDxcNrUcmMT5ap7TLFHrxC13AtROnhHnScf6r3z91xZK54MJCAZ0
-         k8K8IdkShCTTrGtFYjw1jYyajAFHJTpHZdNFxvDaoYyB/IfBobTVBZ7sXkt+LhJ3qf5K
-         NmQJDgE+RhziIYnhA3qNPb+vRCiqasS/l4ln1IWGPMIoHKUG9Q1RCMcKK0TUYMfW50mj
-         1emOY5E+hQ8PoodYnxZcIv8mV4wg3Af2jH2G0bEmEmcAh/pVo4u8b2XYCNkCAVm0njn9
-         5v92dM09tLvYpcmOCLOwS9gwIBQ6xMW/4nblQkYYmhekSJ/Hw3NxhXvFmlTYuAdcEviP
-         tMQQ==
-X-Gm-Message-State: AOAM532jl4UPUYTTdbF3tE8K9MhVfIj/32FgVmAEy9wh9YuFjKiVrWAW
-        ROCzdTVib0DTx1at9UaLH5d5cs8vvKwmpb3X9LAJmQyOKxNh
-X-Google-Smtp-Source: ABdhPJzXe2nBUANY/8YxQUPL62yrEEnagss/tumVtukRFaZx/1qIToxaU9/S5KeN14ViRe2kpFlkFfFsvzC/b9c85rTf7unAc3lF
+        Fri, 10 Jul 2020 12:14:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:54820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727826AbgGJQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:14:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E06931B;
+        Fri, 10 Jul 2020 09:14:27 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C05113F8F8;
+        Fri, 10 Jul 2020 09:14:25 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 17:14:20 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+Message-ID: <20200710161420.GA9019@e121166-lin.cambridge.arm.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+ <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+ <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+ <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:10c1:: with SMTP id 184mr76573612jay.135.1594397656071;
- Fri, 10 Jul 2020 09:14:16 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 09:14:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ebc53005aa18a1a5@google.com>
-Subject: WARNING in fat12_ent_blocknr
-From:   syzbot <syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com>
-To:     hirofumi@mail.parknet.co.jp, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jul 01, 2020 at 11:18:29AM +0900, Kunihiko Hayashi wrote:
 
-syzbot found the following crash on:
+[...]
 
-HEAD commit:    9e50b94b Add linux-next specific files for 20200703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1566637b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
-dashboard link: https://syzkaller.appspot.com/bug?extid=756199124937b31a9b7e
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > > >   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> > > > > +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+> > > > >   {
+> > > > > -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> > > > >       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > >       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> > > > > -    struct irq_chip *chip = irq_desc_get_chip(desc);
+> > > > > -    unsigned long reg;
+> > > > > -    u32 val, bit, virq;
+> > > > > +    u32 val, virq;
+> > > > >   -    /* INT for debug */
+> > > > >       val = readl(priv->base + PCL_RCV_INT);
+> > > > >         if (val & PCL_CFG_BW_MGT_STATUS)
+> > > > >           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+> > > > > +
+> > > > >       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+> > > > >           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> > > > > -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> > > > > -        dev_dbg(pci->dev, "Root Error\n");
+> > > > > -    if (val & PCL_CFG_PME_MSI_STATUS)
+> > > > > -        dev_dbg(pci->dev, "PME Interrupt\n");
+> > > > > +
+> > > > > +    if (is_msi) {
+> > > > > +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> > > > > +            dev_dbg(pci->dev, "Root Error Status\n");
+> > > > > +
+> > > > > +        if (val & PCL_CFG_PME_MSI_STATUS)
+> > > > > +            dev_dbg(pci->dev, "PME Interrupt\n");
+> > > > > +
+> > > > > +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+> > > > > +               PCL_CFG_PME_MSI_STATUS)) {
+> > > > > +            virq = irq_linear_revmap(pp->irq_domain, 0);
+> > > > > +            generic_handle_irq(virq);
+> > > > > +        }
+> > > > > +    }
+> > > > 
+> > > > Please have two handlers: one for interrupts that are from the RC,
+> > > > another for interrupts coming from the endpoints.
+> > > I assume that this handler treats interrupts from the RC only and
+> > > this is set on the member ".msi_host_isr" added in the patch 1/6.
+> > > I think that the handler for interrupts coming from endpoints should be
+> > > treated as a normal case (after calling .msi_host_isr in
+> > > dw_handle_msi_irq()).
+> > 
+> > It looks pretty odd that you end-up dealing with both from the
+> > same "parent" interrupt. I guess this is in keeping with the
+> > rest of the DW PCIe hacks... :-/
+> 
+> It might be odd, however, in case of UniPhier SoC,
+> both MSI interrupts from endpoints and PME/AER interrupts from RC are
+> asserted by same "parent" interrupt. In other words, PME/AER interrupts
+> are notified using the parent interrupt for MSI.
+> 
+> MSI interrupts are treated as child interrupts with reference to
+> the status register in DW core. This is handled in a for-loop in
+> dw_handle_msi_irq().
+> 
+> PME/AER interrupts are treated with reference to the status register
+> in UniPhier glue layer, however, this couldn't be handled in the same way
+> directly.
+> 
+> So I'm trying to add .msi_host_isr function to handle this
+> with reference to the SoC-specific registers.
+> 
+> This exported function asserts MSI-0 as a shared child interrupt.
+> As a result, PME/AER are registered like the followings in dmesg:
+> 
+>    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
+>    pcieport 0000:00:00.0: AER: enabled with IRQ 25
+> 
+> And these interrupts are shared as MSI-0:
+> 
+>    # cat /proc/interrupts | grep 25:
+>     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
+> 
+> This might be a special case, though, I think that this is needed to handle
+> interrupts from RC sharing MSI parent.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Can you please send me (with this series *applied* of course and if
+possible with an endpoint MSI/MSI-X capable enabled):
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com
+- full dmesg log
+- lspci -vv output
+- cat /proc/interrupts
 
-WARNING: CPU: 0 PID: 9933 at fs/fat/fatent.c:27 fat12_ent_blocknr+0x198/0x1f0 fs/fat/fatent.c:27
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9933 Comm: syz-executor.4 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
-RIP: 0010:fat12_ent_blocknr+0x198/0x1f0 fs/fat/fatent.c:27
-Code: ff df 48 c1 ea 03 d3 fb 01 eb 80 3c 02 00 48 63 db 75 4d 49 89 1e 48 83 c4 08 5b 5d 41 5c 41 5d 41 5e 41 5f c3 e8 58 87 58 ff <0f> 0b e9 0a ff ff ff e8 3c 25 98 ff eb b7 e8 45 25 98 ff eb 83 4c
-RSP: 0018:ffffc90007ef7a30 EFLAGS: 00010216
-RAX: 00000000000005b2 RBX: 0000000000000003 RCX: ffffc900116c9000
-RDX: 0000000000040000 RSI: ffffffff821b7fa8 RDI: 0000000000000006
-RBP: 0000000000000002 R08: 0000000000000000 R09: ffff88804d53804f
-R10: 0000000000000002 R11: 0000000000000000 R12: ffff88804a232000
-R13: ffffc90007ef7ab8 R14: ffffc90007ef7ac8 R15: ffff88804d538000
- fat_ra_init.constprop.0.isra.0+0x1d3/0x3f0 fs/fat/fatent.c:665
- fat_count_free_clusters+0x230/0x950 fs/fat/fatent.c:726
- fat_statfs+0x3ac/0x4c0 fs/fat/inode.c:829
- statfs_by_dentry+0x133/0x210 fs/statfs.c:64
- vfs_statfs fs/statfs.c:88 [inline]
- user_statfs+0xa9/0x160 fs/statfs.c:103
- __do_sys_statfs+0x7a/0xf0 fs/statfs.c:193
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:367
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f648bab7c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000089
-RAX: ffffffffffffffda RBX: 00000000005092e0 RCX: 000000000045cb29
-RDX: 0000000000000000 RSI: 0000000020000340 RDI: 0000000020000240
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000bf1 R14: 00000000004c3aaf R15: 00007f648bab86d4
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+I need to understand how this system HW works before commenting any
+further.
 
+> > It is for Lorenzo to make up his mind about this anyway.
+> 
+> I'd like to Lorenzo's opinion, too.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I am trying to understand how the HW is wired up (and that's what Marc
+asked as well) so first things first, please send the logs.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Lorenzo
