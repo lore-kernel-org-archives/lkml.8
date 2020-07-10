@@ -2,133 +2,116 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C543CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6227C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BF52065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:09:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l+YJYSNH"
+	by mail.kernel.org (Postfix) with ESMTP id AEE012065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594340054;
+	bh=1Q5ejM91y+rZdlPiC9UJgo7wuGqE1YmvLc2GRbXroko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wZ2hFbqErN1FqxnXYXmQNOynEAzpqyZNqeBW/EQWvE6TTu5AtCEU+ybpDInyPjxyt
+	 c3CFlouG4DWdo1mEGSgNt6JdbkLssHpOp2BNvLSSEb2UmOxZzRHAj3M3JnB7Hzd+up
+	 Zo2k3FsZoZ8qJrofpxOtPPxsLwhLjDYsqLVGLyA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGJAJb (ORCPT
+        id S1726725AbgGJAOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgGJAJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:09:31 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD49C08C5CE;
-        Thu,  9 Jul 2020 17:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=CQnfePGDywr5hyWJkQsut1Wvk/z9Wg9+7a713iD9BgE=; b=l+YJYSNHugjbpplxyxFeWA2iUD
-        XUKWJ+m8QrHfLTDeV56w4h9PyrSkQGVXKZDvnbLqyFkbV14lcbxtpbnQyOiW9yxib4Oi+Hgiq2fH9
-        WkD2LW/G0oTs3b53CPzK7vSQBYIxfbAMybx/aaqiYYX+32El1B/IXjnfzpbGSide+XRDK56CFbK1t
-        Z5Qnl/2frA+8cWLb9kNEEw4VrHj/lXVFyFBOF6JdoLN9ZMJI/1YMmWkq9BYxhCf69hbn6atGzumEw
-        L2y4F/BMuEU+5h2z74/P3HB2TJ7GMussuBKTGL/zJrDeSQvLIKk7e4I0AW4y6TrQH7BGBwnKVz0I6
-        8MR5YLjg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtgbV-0002ig-Mw; Fri, 10 Jul 2020 00:09:26 +0000
-Subject: Re: [RFC v2 1/4] futex2: Add new futex interface
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org
-Cc:     krisman@collabora.com, kernel@collabora.com, dvhart@infradead.org,
-        mingo@redhat.com, pgriffais@valvesoftware.com, fweimer@redhat.com,
-        libc-alpha@sourceware.org, malteskarupke@web.de,
-        linux-api@vger.kernel.org, arnd@arndb.de
-References: <20200709175921.211387-1-andrealmeid@collabora.com>
- <20200709175921.211387-2-andrealmeid@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b505827d-252f-4325-db8e-047b8eb9c5fb@infradead.org>
-Date:   Thu, 9 Jul 2020 17:09:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 20:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgGJAOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 20:14:08 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2EE52065F;
+        Fri, 10 Jul 2020 00:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594340048;
+        bh=1Q5ejM91y+rZdlPiC9UJgo7wuGqE1YmvLc2GRbXroko=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=2a1Son6W+Y/jnNfWf/6l+CVIii/kSqwRfl7ye9cOmeJxHyIkrxFAKYiE+Kbt3PD6d
+         E+d1KyZ02ruY1rVQjHcKdPW8+RrhIKlIUcKaH85ObpDYyAI+tK7DIf9zThvjJM8pPn
+         X9oQEEgT+CVubZkBJGaw6L7zIIzaVuByKHmwCqbM=
+Date:   Thu, 9 Jul 2020 19:14:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/11 RFC] PCI: pciehp: Make "Power On" the default
+Message-ID: <20200710001406.GA30420@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200709175921.211387-2-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706093121.9731-6-refactormyself@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 7/9/20 10:59 AM, André Almeida wrote:
+On Mon, Jul 06, 2020 at 11:31:15AM +0200, Saheed Olayemi Bolarinwa wrote:
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 > 
+> The default case of the switch statement is redundant since 
+> PCI_EXP_SLTCTL_PCC is only a single bit. pcie_capability_read_word()
+> currently causes "On" value to be set if it fails. Patch 11/11
+> changes the behaviour of pcie_capability_read_word() so on falure the
+> "Off" value will be set.
+
+s/falure/failure/
+
+Split this into two patches.  The removal of the default case should
+be in its own patch to make it trivial to review.
+
+> Make the function set status to "Power On" by default and only set to
+> Set "Power Off" only if pcie_capability_read_word() is successful and
+> (slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
 > 
-> diff --git a/kernel/futex2.c b/kernel/futex2.c
-> new file mode 100644
-> index 000000000000..b87a10ba7c01
-> --- /dev/null
-> +++ b/kernel/futex2.c
-> @@ -0,0 +1,73 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * futex2 system call interface by André Almeida <andrealmeid@collabora.com>
-> + *
-> + * Copyright 2020 Collabora Ltd.
-> + */
-> +
-> +#include <linux/syscalls.h>
-> +
-> +#include <asm/futex.h>
-> +
-> +/*
-> + * Set of flags that futex2 operates. If we got something that is not in this
-> + * set, it can be a unsupported futex1 operation like BITSET or PI, so we
-> + * refuse to accept
-> + */
-> +#define FUTEX2_MASK (FUTEX_SIZE_MASK | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
-> +
-> +/**
-> + * sys_futex_wait: Wait on a futex address if (*uaddr) == val
-
-Function name line should use - as separator, not :, so
- * sys_futex_wait - Wait on a futex address if (*uaddr) == val
-
-> + * @uaddr: User address of futex
-> + * @val:   Expected value of futex
-> + * @flags: Checks if futex is private, the size of futex and the clockid
-> + * @timo:  Optional absolute timeout. Supports only 64bit time.
-> + */
-> +SYSCALL_DEFINE4(futex_wait, void __user *, uaddr, unsigned long, val,
-> +		unsigned long, flags, struct __kernel_timespec __user *, timo)
-> +{
-  ...
-> +}
-> +
-> +/**
-> + * sys_futex_wake: Wake a number of futexes waiting in an address
-
-Same here:
- * sys_futex_wake - Wake a number of futexes waiting in an address
-
-or could it be "on an address":
- * sys_futex_wake - Wake a number of futexes waiting on an address
-
-> + * @uaddr:   Address of futex to be woken up
-> + * @nr_wake: Number of futexes to be woken up
-> + * @flags:   Checks if futex is private and the size of futex
-> + */
-> +SYSCALL_DEFINE3(futex_wake, void __user *, uaddr, unsigned int, nr_wake,
-> +		unsigned long, flags)
-> +{
-
-
-thanks.
--- 
-~Randy
-
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> ---
+>  drivers/pci/hotplug/pciehp_hpc.c | 16 +++++-----------
+>  1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 0b691e37fd04..78f806a9c6f1 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -399,22 +399,16 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
+>  {
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	u16 slot_ctrl;
+> +	int ret;
+>  
+> -	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+> +	*status = 1;	/* On */
+> +	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+>  	ctrl_dbg(ctrl, "%s: SLOTCTRL %x value read %x\n", __func__,
+>  		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
+>  
+> -	switch (slot_ctrl & PCI_EXP_SLTCTL_PCC) {
+> -	case PCI_EXP_SLTCTL_PWR_ON:
+> -		*status = 1;	/* On */
+> -		break;
+> -	case PCI_EXP_SLTCTL_PWR_OFF:
+> +	if (!ret &&
+> +	    ((slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF))
+>  		*status = 0;	/* Off */
+> -		break;
+> -	default:
+> -		*status = 0xFF;
+> -		break;
+> -	}
+>  }
+>  
+>  void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
+> -- 
+> 2.18.2
+> 
