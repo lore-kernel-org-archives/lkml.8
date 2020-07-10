@@ -2,125 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B746C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A04207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fuJTfU5f"
+	by mail.kernel.org (Postfix) with ESMTP id BF158207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgGJOJk (ORCPT
+        id S1728116AbgGJOKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgGJOJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:09:36 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FD3C08E806
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:09:36 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d18so6174773ion.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GkJUhDwEWg19k+flxmmMGIck6ztbcEd5EG3ERyiHHYM=;
-        b=fuJTfU5frNftoB2nOBvhj+jH0w0v7UZBt3PnRDu7UtC8P7Sjj1DqVomTFixtOge9ng
-         pEAvE7Ed2zvkR8YDMoTElqae1xCMERl72kzobWs8n3Q08z3K1TqZfDI/df8oUG5w6ou1
-         FvwJ4Qt9KvhC8Suq6E9kP7Ffdr64WsPcUDDBnUVRgvxBs6HYsmpINdpOA652MjrafdJ0
-         //BgRQgnQ6kcjVnz5c0X2FZYU01+No7t4lPdlw6X5GFu5PHuecm10X3Xi7IjZlie1f8L
-         hYUamcPROy8+F7Grc28Rq5/qJsOhRSzAmkvgu9beFuD+suZDnIDHiuSXBFu0Dj78eLeo
-         t+WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GkJUhDwEWg19k+flxmmMGIck6ztbcEd5EG3ERyiHHYM=;
-        b=Ee9fJ4/uQVD+Ea8ivhVr1JgRks8BCbO0WnFuAzhB7GDFWl4lFie3R0s1SdjRcrwySC
-         8JIwytwy2mpt7w3MPDjpsQz2KLdGgFIOU9Ee9JTSTWeYMKWwKHE2NWPBFCCF4twdN9O+
-         GRz1r1Csna34ZHJUpjuOPoC7W4ZsWABzpXzCg5hNyojkgj9FkTlQRdEn0ChD9kRsEHmX
-         xtfuBF0n8a//1IrvLHXmJN9dTK2ZgDPpiV5a4+SC9JiCGUTU0PYQ/kIj1n5qFwRQnO2B
-         YdAz3k7oBYAM2pT8ujGWxRJXn2Tp32gqioNK+yHM8n/Ga9x5e2OyEAs5VnXRWQVbI9RE
-         eJ+w==
-X-Gm-Message-State: AOAM533h3fFtccLAHEdrUzImJztH6o8PQFePNLNcbnlmCGztraMYhzIk
-        9Sv5aQnuUlxiX4jc1Aeh9IJMvw==
-X-Google-Smtp-Source: ABdhPJzaZyEeMrMWgbopFxfHGDE7K7HRqxBSjebhSFB7gm/+G+oST+FYJgvn85vQMrSkFWFE9eWgyA==
-X-Received: by 2002:a02:70d4:: with SMTP id f203mr80267571jac.74.1594390175673;
-        Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z9sm3564606ilz.45.2020.07.10.07.09.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Christoph Hellwig <hch@infradead.org>,
-        Kanchan Joshi <joshiiitr@gmail.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, Matias Bj??rling <mb@lightnvm.io>,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200709085501.GA64935@infradead.org>
- <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
- <20200709140053.GA7528@infradead.org>
- <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
- <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
- <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk>
- <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
- <20200710131054.GB7491@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9e870249-01db-c68d-ea65-28edc3c1f071@kernel.dk>
-Date:   Fri, 10 Jul 2020 08:09:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 10:10:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48432 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgGJOK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:10:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BBBD9AD6A;
+        Fri, 10 Jul 2020 14:10:27 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     hch@lst.de, Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dma-pool: Only allocate from CMA when in same memory zone
+Date:   Fri, 10 Jul 2020 16:10:15 +0200
+Message-Id: <20200710141016.15495-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200710131054.GB7491@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/20 7:10 AM, Christoph Hellwig wrote:
-> On Fri, Jul 10, 2020 at 12:35:43AM +0530, Kanchan Joshi wrote:
->> Append required special treatment (conversion for sector to bytes) for io_uring.
->> And we were planning a user-space wrapper to abstract that.
->>
->> But good part (as it seems now) was: append result went along with cflags at
->> virtually no additional cost. And uring code changes became super clean/minimal
->> with further revisions.
->> While indirect-offset requires doing allocation/mgmt in application,
->> io-uring submission
->> and in completion path (which seems trickier), and those CQE flags
->> still get written
->> user-space and serve no purpose for append-write.
-> 
-> I have to say that storing the results in the CQE generally make
-> so much more sense.  I wonder if we need a per-fd "large CGE" flag
-> that adds two extra u64s to the CQE, and some ops just require this
-> version.
+There is no guarantee to CMA's placement, so allocating a zone specific
+atomic pool from CMA might return memory from a completely different
+memory zone. To get around this double check CMA's placement before
+allocating from it.
 
-I have been pondering the same thing, we could make certain ops consume
-two CQEs if it makes sense. It's a bit ugly on the app side with two
-different CQEs for a request, though. We can't just treat it as a large
-CQE, as they might not be sequential if we happen to wrap. But maybe
-it's not too bad.
+Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to gfp mask")
+Reported-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
+This is a code intensive alternative to "dma-pool: Do not allocate pool
+memory from CMA"[1].
+
+[1] https://lkml.org/lkml/2020/7/8/1108
+
+ kernel/dma/pool.c | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 8cfa01243ed2..ccf3eeb77e00 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2012 ARM Ltd.
+  * Copyright (C) 2020 Google LLC
+  */
++#include <linux/cma.h>
+ #include <linux/debugfs.h>
+ #include <linux/dma-direct.h>
+ #include <linux/dma-noncoherent.h>
+@@ -56,6 +57,39 @@ static void dma_atomic_pool_size_add(gfp_t gfp, size_t size)
+ 		pool_size_kernel += size;
+ }
+ 
++static bool cma_in_zone(gfp_t gfp)
++{
++	u64 zone_dma_end, zone_dma32_end;
++	phys_addr_t base, end;
++	unsigned long size;
++	struct cma *cma;
++
++	cma = dev_get_cma_area(NULL);
++	if (!cma)
++		return false;
++
++	size = cma_get_size(cma);
++	if (!size)
++		return false;
++	base = cma_get_base(cma) - memblock_start_of_DRAM();
++	end = base + size - 1;
++
++	zone_dma_end = IS_ENABLED(CONFIG_ZONE_DMA) ? DMA_BIT_MASK(zone_dma_bits) : 0;
++	zone_dma32_end = IS_ENABLED(CONFIG_ZONE_DMA32) ? DMA_BIT_MASK(32) : 0;
++
++	/* CMA can't cross zone boundaries, see cma_activate_area() */
++	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp & GFP_DMA &&
++	   end <= zone_dma_end)
++		return true;
++	else if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp & GFP_DMA32 &&
++		base > zone_dma_end && end <= zone_dma32_end)
++		return true;
++	else if (base > zone_dma32_end)
++		return true;
++
++	return false;
++}
++
+ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 			      gfp_t gfp)
+ {
+@@ -70,7 +104,7 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 	do {
+ 		pool_size = 1 << (PAGE_SHIFT + order);
+ 
+-		if (dev_get_cma_area(NULL))
++		if (cma_in_zone(gfp))
+ 			page = dma_alloc_from_contiguous(NULL, 1 << order,
+ 							 order, false);
+ 		else
 -- 
-Jens Axboe
+2.27.0
 
