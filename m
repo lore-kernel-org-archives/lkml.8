@@ -2,86 +2,122 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7850C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A064620767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594377804;
-	bh=EW9MXB8Q/dnRDJNPSoM2A4yEsAsEcseFCmlJ8Ror7LM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZGbzxq+4KCbMHrrbdPaC6zzGn83J7Ju8BDBqRZo/sNi+0HWaSh+1EqxON+5Fs2gnA
-	 BxGEKSWyPpEvLYxYCm0MN0H8op557rqn1pmM917ZWCHlvEJYpibuWZyfas4Mr0Ftxr
-	 9jJzDIbfg6GAISBTve3fqJYM6MBiQaJDXFsfpIkE=
+	by mail.kernel.org (Postfix) with ESMTP id 0FF2B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QaJTAe8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGJKnU (ORCPT
+        id S1726950AbgGJKrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgGJKnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:43:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A442920767;
-        Fri, 10 Jul 2020 10:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594377781;
-        bh=EW9MXB8Q/dnRDJNPSoM2A4yEsAsEcseFCmlJ8Ror7LM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tgf16EmbXRYSEQZYn/cD34QnoXjzA8+ynp8kG9ZTETZVgYmoZQ9HvJcHNXOiKeHSn
-         ehE3cqhz2C4YyZLSq60EHVpE21xVtudo/UnjDSVTbJXS6+ZLI1L1JyynmCLNZ/0g6z
-         AvmxePRff76ZbZNo72ZomEjDcZUd8MKCvgjWHDRI=
-Date:   Fri, 10 Jul 2020 12:43:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] net/bluetooth: Fix
- slab-out-of-bounds read in hci_extended_inquiry_result_evt()
-Message-ID: <20200710104306.GA1229536@kroah.com>
-References: <20200709051802.185168-1-yepeilin.cs@gmail.com>
- <20200709130224.214204-1-yepeilin.cs@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709130224.214204-1-yepeilin.cs@gmail.com>
+        Fri, 10 Jul 2020 06:47:01 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:35668 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgGJKrA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 06:47:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594378018;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=8yDCJPRfC5QGc4OjtInZIlLfs+9XcDvdAp6wM41o+PI=;
+        b=QaJTAe8YgXn1Z5cx2tDh7xZazYdPQK8YYnU733q1tAfZupCLYINUINXznr9lRgRkUu
+        YORz9dkh7eOHIuc1ICHIarcP4+m0p6VIRWpg+PYoVcJ0pojV4i/nyqjN1Hqul7aygFPe
+        oVlUcjJm//qU5/23l4xB7bGcZQ8+udYRYnvTWcHdk5u+nIgUmqxLSpwYQlNjwpMzrTBw
+        csecee0W0v/hLtKB+SYiyvkY1yRC+9Ol13vJjM+DjscY6rLotyZLxf1WK0U1qCDHwmPN
+        MFx30AFj4mFPllqVoZ+RhvYu3wjDy3BJST/Tc/hi9xMj47dUv+D9kGfh+yq2Efxo2e/Z
+        S+qA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAvw4TuZw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w6AAkm7qi
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 10 Jul 2020 12:46:48 +0200 (CEST)
+Subject: Re: [PATCH] Revert "pwm: jz4740: Enhance precision in calculation of duty cycle"
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200710101827.rkaxju7msco4mez7@pengutronix.de>
+Date:   Fri, 10 Jul 2020 12:46:47 +0200
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        tsbogend@alpha.franken.de, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3FFAD80E-02F0-4522-9EB5-C201A36CADC8@goldelico.com>
+References: <9335b924318fb36a882d5b46e8e9f2a10bb24daa.1594365885.git.hns@goldelico.com> <20200710101827.rkaxju7msco4mez7@pengutronix.de>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 09:02:24AM -0400, Peilin Ye wrote:
-> Check upon `num_rsp` is insufficient. A malformed event packet with a
-> large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
-> of bounds. Fix it.
-> 
-> This patch fixes the following syzbot bug:
-> 
->     https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
-> 
-> Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Am 10.07.2020 um 12:18 schrieb Uwe Kleine-K=F6nig =
+<u.kleine-koenig@pengutronix.de>:
+>=20
+> On Fri, Jul 10, 2020 at 09:24:45AM +0200, H. Nikolaus Schaller wrote:
+>> This reverts commit a6030d71e62d3e0e270bf3b7fb48d32a636732db.
+>>=20
+>> which was applied to v5.4.49. This ends in a compile issue:
+>>=20
+>>  CC      drivers/pwm/pwm-jz4740.o - due to target missing
+>> drivers/pwm/pwm-jz4740.c: In function 'jz4740_pwm_apply':
+>> drivers/pwm/pwm-jz4740.c:111:28: error: 'rate' undeclared (first use =
+in this function)
+>>  tmp =3D (unsigned long long)rate * state->duty_cycle;
+>>                            ^
+>> drivers/pwm/pwm-jz4740.c:111:28: note: each undeclared identifier is =
+reported only once for each function it appears in
+>> make[4]: *** [drivers/pwm/pwm-jz4740.o] Error 1
+>>=20
+>> v5.5 and later include the required additional patches to define
+>> the rate variable.
+>=20
+> So 9017dc4fbd59 ("pwm: jz4740: Enhance precision in calculation of =
+duty
+> cycle") which is in v5.8-rc1 was backported to stable:
+>=20
+> 	v5.4.49 (as commit a6030d71e62d3e0e270bf3b7fb48d32a636732db)
+> 	v5.7.5 (as commit e0e71bb7852142a18fb829da419013bb6da9ed3f)
+>=20
+> However 9017dc4fbd59 depends on
+>=20
+> 	ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
+>=20
+> (which in mainline comes before 9017dc4fbd59 as it's included in
+> v5.7-rc1).
+>=20
+> As ce1f9cece057 was not backported to v5.4.x, this must either be =
+done, or
+> we need to patch that. Will reply with a suggested change.
 
-Bluetooth maintainers, can you also add a cc: stable on this so it gets
-picked up properly there?
+That is what I did suspect that some other patch this one depends on
+was not backported.
 
-thanks,
+What the better strategy (backport missing parts or revert) depends
+on how easy it is to backport to v5.4.y.
 
-greg k-h
+I am happy with either solution. It is just simpler for me to post
+my workaround for the compile issue.
+
+>=20
+> In v5.7.x there is no problem.
+
+In v5.5 and v5.6 there is also no problem. Just v5.4 starting with =
+v5.4.49.
+
+BR and thanks,
+Nikolaus
+
