@@ -2,80 +2,87 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F47C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CE920720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E08E20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGJPIc (ORCPT
+        id S1727906AbgGJPMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:08:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55695 "EHLO mga18.intel.com"
+        Fri, 10 Jul 2020 11:12:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38264 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGJPIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:08:31 -0400
-IronPort-SDR: ksmHbg8/zo1NVsusScuhPmNzpPnTNLgfLqHyHyuykhQ7UDZBExU3oO39skk+R2Gp99ssDlP5EZ
- H0LVO3AU0DsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="135681424"
+        id S1726925AbgGJPLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:11:53 -0400
+IronPort-SDR: MVSYzkQxJyFU5XKt0utPPNnuPPOf1yzZqZKEJAG03G94X3bV6RBgzwLDdXrVdzFtceQ9KVW7er
+ QRa/S27qrS7A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686169"
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="135681424"
+   d="scan'208";a="149686169"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:08:30 -0700
-IronPort-SDR: xkMc2PrqbaCHlbLNF6MsrwSJ4wwVWBDytoob7EgX7TXV+TedX7dsq5a4HkWDLYmDR+m8zyj+DG
- lh9MO8d05ALQ==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:11:47 -0700
+IronPort-SDR: /b5b1ZrAefTgCsqe60Bv8qcmJOgeeVbWFa5Ol+QKMA9sFlgaoRwH6AjfmIIktpqQmfUZmYbXei
+ QCDwEtkgRLAg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="458308290"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:08:27 -0700
-Date:   Fri, 10 Jul 2020 16:08:19 +0100
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+   d="scan'208";a="484675443"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:11:46 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200710150819.GA410874@silpixa00400314>
-References: <20200701110302.75199-4-giovanni.cabiddu@intel.com>
- <20200701212812.GA3661715@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701212812.GA3661715@bjorn-Precision-5520>
+Subject: [PATCH V2 00/12] perf intel-pt: Add support for decoding FUP/TIP only
+Date:   Fri, 10 Jul 2020 18:10:52 +0300
+Message-Id: <20200710151104.15137-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
-> > The current generation of Intel® QuickAssist Technology devices
-> > are not designed to run in an untrusted environment because of the
-> > following issues reported in the release notes in
-> > https://01.org/intel-quickassist-technology:
-> 
-> It would be nice if this link were directly clickable, e.g., if there
-> were no trailing ":" or something.
-> 
-> And it would be even better if it went to a specific doc that
-> described these issues.  I assume these are errata, and it's not easy
-> to figure out which doc mentions them.
-Sure. I will fix the commit message in the next revision and point to the
-actual document:
-https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf
+Hi
 
-Regards,
+Here are some fixes and small improvements for Intel PT.
 
--- 
-Giovanni
+Changes in V2:
+	For d/e flags, use +/- alphabetic options instead of numbers
+	Update help text
+	Improve documentation
+
+
+Adrian Hunter (12):
+      perf intel-pt: Fix FUP packet state
+      perf intel-pt: Fix duplicate branch after CBR
+      perf tools: Improve aux_output not supported error
+      perf auxtrace: Add missing itrace options to help text
+      perf auxtrace: Add optional error flags to the itrace 'e' option
+      perf intel-pt: Use itrace error flags to suppress some errors
+      perf auxtrace: Add optional log flags to the itrace 'd' option
+      perf intel-pt: Use itrace debug log flags to suppress some messages
+      perf intel-pt: Time filter logged perf events
+      perf auxtrace: Add itrace 'q' option for quicker, less detailed decoding
+      perf intel-pt: Add support for decoding FUP/TIP only
+      perf intel-pt: Add support for decoding PSB+ only
+
+ tools/perf/Documentation/itrace.txt                |  14 ++
+ tools/perf/Documentation/perf-intel-pt.txt         |  63 +++++-
+ tools/perf/util/auxtrace.c                         |  50 +++++
+ tools/perf/util/auxtrace.h                         |  31 ++-
+ tools/perf/util/evsel.c                            |   4 +
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.c  | 214 +++++++++++++++++++--
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |   1 +
+ tools/perf/util/intel-pt.c                         |  45 ++++-
+ 8 files changed, 389 insertions(+), 33 deletions(-)
+
+
+Regards
+Adrian
