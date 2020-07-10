@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4653C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C0D2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951E42078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgGJGU3 (ORCPT
+        id S1727909AbgGJGWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:20:29 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:41122 "EHLO smtp.al2klimov.de"
+        Fri, 10 Jul 2020 02:22:08 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:41650 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgGJGU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:20:29 -0400
+        id S1727818AbgGJGV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:21:59 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 78888BC0D1;
-        Fri, 10 Jul 2020 06:20:25 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 8E527BC0D1;
+        Fri, 10 Jul 2020 06:21:57 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-        shorne@gmail.com, corbet@lwn.net, openrisc@lists.librecores.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     m@bues.ch, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
-Date:   Fri, 10 Jul 2020 08:20:19 +0200
-Message-Id: <20200710062019.28755-1-grandmaster@al2klimov.de>
+Subject: [PATCH] ssb: Replace HTTP links with HTTPS ones
+Date:   Fri, 10 Jul 2020 08:21:51 +0200
+Message-Id: <20200710062151.28871-1-grandmaster@al2klimov.de>
+In-Reply-To: <CACna6ryNBH7ZSie985YV9zXaEa_XmTXX2S2XH5LC8WfMZNFuAg@mail.gmail.com>
+References: <CACna6ryNBH7ZSie985YV9zXaEa_XmTXX2S2XH5LC8WfMZNFuAg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -57,36 +58,61 @@ For each file:
 
 Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ Better?
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+ drivers/ssb/driver_chipcommon.c     | 4 ++--
+ drivers/ssb/driver_chipcommon_pmu.c | 2 +-
+ drivers/ssb/sprom.c                 | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- Documentation/openrisc/openrisc_port.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/openrisc/openrisc_port.rst b/Documentation/openrisc/openrisc_port.rst
-index 4b2c437942a0..657ac4af7be6 100644
---- a/Documentation/openrisc/openrisc_port.rst
-+++ b/Documentation/openrisc/openrisc_port.rst
-@@ -8,7 +8,7 @@ target architecture, specifically, is the 32-bit OpenRISC 1000 family (or1k).
- For information about OpenRISC processors and ongoing development:
+diff --git a/drivers/ssb/driver_chipcommon.c b/drivers/ssb/driver_chipcommon.c
+index 3861cb659cb9..85542bfd7715 100644
+--- a/drivers/ssb/driver_chipcommon.c
++++ b/drivers/ssb/driver_chipcommon.c
+@@ -238,7 +238,7 @@ static void chipco_powercontrol_init(struct ssb_chipcommon *cc)
+ 	}
+ }
  
- 	=======		=============================
--	website		http://openrisc.io
-+	website		https://openrisc.io
- 	email		openrisc@lists.librecores.org
- 	=======		=============================
+-/* http://bcm-v4.sipsolutions.net/802.11/PmuFastPwrupDelay */
++/* https://bcm-v4.sipsolutions.net/802.11/PmuFastPwrupDelay */
+ static u16 pmu_fast_powerup_delay(struct ssb_chipcommon *cc)
+ {
+ 	struct ssb_bus *bus = cc->dev->bus;
+@@ -255,7 +255,7 @@ static u16 pmu_fast_powerup_delay(struct ssb_chipcommon *cc)
+ 	}
+ }
  
+-/* http://bcm-v4.sipsolutions.net/802.11/ClkctlFastPwrupDelay */
++/* https://bcm-v4.sipsolutions.net/802.11/ClkctlFastPwrupDelay */
+ static void calc_fast_powerup_delay(struct ssb_chipcommon *cc)
+ {
+ 	struct ssb_bus *bus = cc->dev->bus;
+diff --git a/drivers/ssb/driver_chipcommon_pmu.c b/drivers/ssb/driver_chipcommon_pmu.c
+index 0f60e90ded26..888069e10659 100644
+--- a/drivers/ssb/driver_chipcommon_pmu.c
++++ b/drivers/ssb/driver_chipcommon_pmu.c
+@@ -513,7 +513,7 @@ static void ssb_pmu_resources_init(struct ssb_chipcommon *cc)
+ 		chipco_write32(cc, SSB_CHIPCO_PMU_MAXRES_MSK, max_msk);
+ }
+ 
+-/* http://bcm-v4.sipsolutions.net/802.11/SSB/PmuInit */
++/* https://bcm-v4.sipsolutions.net/802.11/SSB/PmuInit */
+ void ssb_pmu_init(struct ssb_chipcommon *cc)
+ {
+ 	u32 pmucap;
+diff --git a/drivers/ssb/sprom.c b/drivers/ssb/sprom.c
+index 42d620cee8a9..7cd553127861 100644
+--- a/drivers/ssb/sprom.c
++++ b/drivers/ssb/sprom.c
+@@ -186,7 +186,7 @@ int ssb_fill_sprom_with_fallback(struct ssb_bus *bus, struct ssb_sprom *out)
+ 	return get_fallback_sprom(bus, out);
+ }
+ 
+-/* http://bcm-v4.sipsolutions.net/802.11/IsSpromAvailable */
++/* https://bcm-v4.sipsolutions.net/802.11/IsSpromAvailable */
+ bool ssb_is_sprom_available(struct ssb_bus *bus)
+ {
+ 	/* status register only exists on chipcomon rev >= 11 and we need check
 -- 
 2.27.0
 
