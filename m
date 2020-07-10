@@ -2,173 +2,213 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF6EC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEF3207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF04F20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDeXOIXu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nFI0k5r4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGJNtp (ORCPT
+        id S1727865AbgGJNti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgGJNtm (ORCPT
+        Fri, 10 Jul 2020 09:49:38 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53784 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgGJNti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:49:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1972DC08C5DC;
-        Fri, 10 Jul 2020 06:49:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so5993531wml.3;
-        Fri, 10 Jul 2020 06:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iNGUlusb6XGPbY/iiSrmci3WQY8ih0duTRRM8I2QK9k=;
-        b=DDeXOIXu2BiCS9fxE/OsSzLix5ZdnrJD7euJ0K+UCFRooM4QhYEWIwlloYFXznyBZm
-         bKbGh0uDE6bIJv30lRIEsnj74X57uq3TJMpGjfCn3vhTWD9aEUHTzLDKAqOgcspa30h5
-         +CnLyEPQQKos8wPL2CSrAb76Q/pAUFcDrPd+fMBR3yqYPMU5VYP810xOhmmOTpiT4SnC
-         YEWmNQnU7GCRAbl4U1BAgGTE4WJbWn/3RMzFI8hOazRhh6VbdhqocEXc05m8/GyughE1
-         Q3aASZzlCujpYuV35daJXyN8nOclhExxN91OKM4x9Yiui+i9MqkW7TXPmo+pzisQmUzN
-         V7jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iNGUlusb6XGPbY/iiSrmci3WQY8ih0duTRRM8I2QK9k=;
-        b=OAqRhMOU4noy3u39oTi+qV12NuTeLmeQoe4/zwcHzzHtcZeracydIvClVZWoFzuyKr
-         AX2jnK7SEPzrmupefXa0kUv+9Dm69Q8v0j+FDAkVbhQ8RFAIk+l0ywBX+iEpjjRZ9eUQ
-         oiHkfPsovFiD19UHKTxHFaxC5+rGgzRvRNbX2pqRGNznxrPksvQxg8jUVu1IJPYlB+lq
-         7tanwptHQE1ZZTuQmKLlTvGuGmWXipM2aY9ZHYADIMRdkGXL3/2bqg7PpeX7S/Lk4Cwn
-         MvYiBlvKQw0LeCqp2UMK+BB47jy3Hl7SvgXGGdYVkEyVNZjRP5Sl1c+HKGC9ZbJ7wGpF
-         yjOg==
-X-Gm-Message-State: AOAM533+EQqMKV02lVp6t/AqrMKDpEY+rXFsItexVyNkwQQUQxMRKnQc
-        yuhiFpI1XUWK3EUXfQCbt/0=
-X-Google-Smtp-Source: ABdhPJwHTlESN9DoaaDMAtI7D4n+BAt5h4FXs+RBDE5A/6CTsyJydS9yE1+a9c/jDu4TOKk7lQ8lNw==
-X-Received: by 2002:a1c:9d07:: with SMTP id g7mr5264267wme.160.1594388980849;
-        Fri, 10 Jul 2020 06:49:40 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id l14sm10626393wrn.18.2020.07.10.06.49.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 06:49:40 -0700 (PDT)
-Subject: Re: [PATCH v6 07/10] iommu/mediatek: Add REG_MMU_WR_LEN_CTRL register
- definition
-To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        FY Yang <fy.yang@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
-        TH Yang <th.yang@mediatek.com>
-References: <20200703044127.27438-1-chao.hao@mediatek.com>
- <20200703044127.27438-8-chao.hao@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2500e311-983a-2d79-cd31-a9ff948b2883@gmail.com>
-Date:   Fri, 10 Jul 2020 15:49:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 09:49:38 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710134936euoutp022418ee7d042210d68a124c35add3d996~gaFOGeEkI1839918399euoutp02I
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:49:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710134936euoutp022418ee7d042210d68a124c35add3d996~gaFOGeEkI1839918399euoutp02I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594388976;
+        bh=7/l5EuCBz+J5pR0/SYvXxWUmYxH8RHGJGKjz4yVojoU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nFI0k5r41Fw9g1cfqzSmdpYA8MaODe1a/+at2ymVhyu4suZZYFWBmADCQrBuAu3n5
+         PTPeUKq2s1cKBDKMNkcZ4We3E/I4e3lBNleTpjeKwOvMki2upvqmZRBBqbQefYkVQF
+         QrGspWjD9puPlhhKRnrPg8LjkWdeMPOr+eZ+phdc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200710134935eucas1p28dbfd62d73ad4a82d33e12618ac8f3bf~gaFN1sWFY3053330533eucas1p28;
+        Fri, 10 Jul 2020 13:49:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4B.A1.05997.FE1780F5; Fri, 10
+        Jul 2020 14:49:35 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200710134935eucas1p1ccd2cbcae4729edf7e16f185148362c9~gaFNbQFtj2710327103eucas1p14;
+        Fri, 10 Jul 2020 13:49:35 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200710134935eusmtrp1494e2f5a852197c5173fe7798eab11c8~gaFNZmvTG2132721327eusmtrp1B;
+        Fri, 10 Jul 2020 13:49:35 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-05-5f0871ef1859
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E2.5D.06314.FE1780F5; Fri, 10
+        Jul 2020 14:49:35 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200710134934eusmtip12bec0400d3aa4a3a8cd7fe85ec8a75a1~gaFMvm3kg1055310553eusmtip1y;
+        Fri, 10 Jul 2020 13:49:34 +0000 (GMT)
+Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <ef88644a-a75d-82c0-8b60-eb2810c68f58@samsung.com>
+Date:   Fri, 10 Jul 2020 15:49:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200703044127.27438-8-chao.hao@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3f3YnTq5Ts2XWQoDkww1y+CSYRZD9iepfoWRNudNLTdt8yMr
+        Sl2paX41IltlmjHNNNfyYwoJTslCdMrKxNIircw5JWeipta2q+S/85znnPd5zsNLIDwTxieS
+        ZGm0XCZOFuBOaOvr5YHAuQtE7J7Gst1U+cg7lPqw8AOjquYrMKp0woxQRqOWTfXnzrAp3cQw
+        Rpk6HuCUtbgHUBXGThZVnXudTX3MqcOp7pl8jFp88xVEuIoaKhuAqF09xhbp6m/iopdProlK
+        muuByKrzOYZHOx2Mp5OTMmh5cPgZp8Su4Rw0dRxerDSVIdmgxaMQcAhIhkLTzHdWIXAieGQd
+        gO1r64ApFgB8tt6MMYUVwIfqzzYZ4bBYew4xfK2Nb+tCmcICoHV8ELe/607GQY1ZxbJjD9IP
+        Dg+OOUQIqURgvm4Vszdw8gAsz68Hdswlw+H07BBqx6jNYNGPO8ye5Ek4/6UbYzRu8O29SYeG
+        Q4bB6qYihwYhveDo5KMN7AuVLfcR+zBIWtjQqK9BmKRCqGq4s4Hd4XRvM5vB22Gf6hbKGJ4D
+        uFYwteFuA7BWtY4zqjD4aWAFtx8AIXfBpo5ghj4Mi1dK2cxdXOGIxY1ZwhXebr2LMDQXFuTx
+        GPVOqNVo8c2xhe1PkTIgUG+Jpt4SR70ljvr/3CqA1gMvOl0hTaAVe2V0ZpBCLFWkyxKCJClS
+        HbB9tb713gU96FiNMwCSAAIXbpWYiOVh4gxFltQAIIEIPLhH+vtieNx4cdYlWp4SK09PphUG
+        4E2gAi/uvsc/T/PIBHEafZ6mU2n5ZpdFcPjZwFMIOOYXmUf5iIs2NIr4UxSo8jzVsU0YOiWN
+        8O8citFI4gMjQuYmzh3Pq27BfhcodYv+V0ti1DusV8KXVD5C75xuSdpf/dyQc6Nb75hwv0zL
+        D7/869uJ0pH3ZueGV/zIZWWogU496yeZLTdqlow1AVFeN3z946InR6PHIsP6BagiURwSgMgV
+        4n+4hVx/ZgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsVy+t/xu7rvCzniDQ5e5rSYeOMKi8X1L89Z
+        LRZ8msFq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i9uNK9gs
+        Dr9pZ7X4duIRowOfx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp83iQXwBalZ1OUX1qSqpCR
+        X1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3HwWiNLwT2JinmXJzA3
+        MG4V6WLk4JAQMJH4fMS+i5GLQ0hgKaPE6ovHWSHiMhLH15d1MXICmcISf651sUHUvGaUWLqw
+        kQ0kISyQJLHs9WQmEFtEQFXi2oW7LCBFzALNzBLLd11ihuh4zyRxdu0+sA42ASuJie2rGEFs
+        XgE7iVfvLrKA2CxA3W933AObJCoQIXF4xyyoGkGJkzOfgNVwClhLLFzfDVbDLKAu8WceyAIQ
+        W1zi1pP5UHF5ieats5knMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1yal66X
+        nJ+7iREYw9uO/dy8g/HSxuBDjAIcjEo8vAsSOeKFWBPLiitzDzFKcDArifA6nT0dJ8SbklhZ
+        lVqUH19UmpNafIjRFOi5icxSosn5wPSSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7
+        NbUgtQimj4mDU6qB0ZxFpm5qh4PP/CppD8sTJr9Y/11MORDJs3az68XLfUtXcnswtjpkSjyP
+        4xNldRUL6HavnZHyYIUP47WY9wuuvDhc7mvTz1wn/MnKPdT98M//UcEaPZ47lW2YBCJ7omzm
+        PXzzaKdmkmI5M1NUq7L5PqUvPqZpV5YvrLmm23ohmWOFQcz/ty+UWIozEg21mIuKEwH7XguV
+        9wIAAA==
+X-CMS-MailID: 20200710134935eucas1p1ccd2cbcae4729edf7e16f185148362c9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+        <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
+        <20200708153420.29484-2-lukasz.luba@arm.com>
+        <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
+        <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com> <20200710124503.GB22897@pi3>
+        <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 03/07/2020 06:41, Chao Hao wrote:
-> Some platforms(ex: mt6779) need to improve performance by setting
-> REG_MMU_WR_LEN_CTRL register. And we can use WR_THROT_EN macro to control
-> whether we need to set the register. If the register uses default value,
-> iommu will send command to EMI without restriction, when the number of
-> commands become more and more, it will drop the EMI performance. So when
-> more than ten_commands(default value) don't be handled for EMI, iommu will
-> stop send command to EMI for keeping EMI's performace by enabling write
-> throttling mechanism(bit[5][21]=0) in MMU_WR_LEN_CTRL register.
+On 7/10/20 2:56 PM, Lukasz Luba wrote:
 > 
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->   drivers/iommu/mtk_iommu.c | 11 +++++++++++
->   drivers/iommu/mtk_iommu.h |  1 +
->   2 files changed, 12 insertions(+)
 > 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 0d96dcd8612b..5c8e141668fc 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -46,6 +46,8 @@
->   #define F_MMU_STANDARD_AXI_MODE_MASK		(BIT(3) | BIT(19))
->   
->   #define REG_MMU_DCM_DIS				0x050
-> +#define REG_MMU_WR_LEN_CTRL			0x054
-> +#define F_MMU_WR_THROT_DIS_MASK			(BIT(5) | BIT(21))
->   
->   #define REG_MMU_CTRL_REG			0x110
->   #define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
-> @@ -112,6 +114,7 @@
->   #define RESET_AXI			BIT(3)
->   #define OUT_ORDER_WR_EN			BIT(4)
->   #define HAS_SUB_COMM			BIT(5)
-> +#define WR_THROT_EN			BIT(6)
->   
->   #define MTK_IOMMU_HAS_FLAG(pdata, _x) \
->   		((((pdata)->flags) & (_x)) == (_x))
-> @@ -593,6 +596,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->   		writel_relaxed(regval, data->base + REG_MMU_VLD_PA_RNG);
->   	}
->   	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
-> +	if (MTK_IOMMU_HAS_FLAG(data->plat_data, WR_THROT_EN)) {
-> +		/* write command throttling mode */
-> +		regval = readl_relaxed(data->base + REG_MMU_WR_LEN_CTRL);
-> +		regval &= ~F_MMU_WR_THROT_DIS_MASK;
-> +		writel_relaxed(regval, data->base + REG_MMU_WR_LEN_CTRL);
-> +	}
->   
->   	if (MTK_IOMMU_HAS_FLAG(data->plat_data, RESET_AXI)) {
->   		/* The register is called STANDARD_AXI_MODE in this case */
-> @@ -747,6 +756,7 @@ static int __maybe_unused mtk_iommu_suspend(struct device *dev)
->   	struct mtk_iommu_suspend_reg *reg = &data->reg;
->   	void __iomem *base = data->base;
->   
-> +	reg->wr_len_ctrl = readl_relaxed(base + REG_MMU_WR_LEN_CTRL);
->   	reg->misc_ctrl = readl_relaxed(base + REG_MMU_MISC_CTRL);
->   	reg->dcm_dis = readl_relaxed(base + REG_MMU_DCM_DIS);
->   	reg->ctrl_reg = readl_relaxed(base + REG_MMU_CTRL_REG);
-> @@ -771,6 +781,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->   		dev_err(data->dev, "Failed to enable clk(%d) in resume\n", ret);
->   		return ret;
->   	}
-> +	writel_relaxed(reg->wr_len_ctrl, base + REG_MMU_WR_LEN_CTRL);
->   	writel_relaxed(reg->misc_ctrl, base + REG_MMU_MISC_CTRL);
->   	writel_relaxed(reg->dcm_dis, base + REG_MMU_DCM_DIS);
->   	writel_relaxed(reg->ctrl_reg, base + REG_MMU_CTRL_REG);
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index 46d0d47b22e1..31edd05e2eb1 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -31,6 +31,7 @@ struct mtk_iommu_suspend_reg {
->   	u32				int_main_control;
->   	u32				ivrp_paddr;
->   	u32				vld_pa_rng;
-> +	u32				wr_len_ctrl;
->   };
->   
->   enum mtk_iommu_plat {
+> On 7/10/20 1:45 PM, Krzysztof Kozlowski wrote:
+>> On Fri, Jul 10, 2020 at 09:34:45AM +0100, Lukasz Luba wrote:
+>>> Hi Chanwoo,
+>>>
+>>> On 7/9/20 5:08 AM, Chanwoo Choi wrote:
+>>>> Hi Lukasz,
+>>>>
+>>>> On 7/9/20 12:34 AM, Lukasz Luba wrote:
+>>>>> In order to react faster and make better decisions under some workloads,
+>>>>> benchmarking the memory subsystem behavior, adjust the polling interval
+>>>>> and upthreshold value used by the simple_ondemand governor.
+>>>>>
+>>>>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+>>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>>> ---
+>>>>>    drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+>>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+>>>>> index 93e9c2429c0d..e03ee35f0ab5 100644
+>>>>> --- a/drivers/memory/samsung/exynos5422-dmc.c
+>>>>> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+>>>>> @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
+>>>>>             * Setup default thresholds for the devfreq governor.
+>>>>>             * The values are chosen based on experiments.
+>>>>>             */
+>>>>> -        dmc->gov_data.upthreshold = 30;
+>>>>> +        dmc->gov_data.upthreshold = 10;
+>>>>>            dmc->gov_data.downdifferential = 5;
+>>>>> -        exynos5_dmc_df_profile.polling_ms = 500;
+>>>>> +        exynos5_dmc_df_profile.polling_ms = 100;
+>>>>>        }
+>>>>>
+>>>>
+>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>
+>>>
+>>> Thank you for the review. Do you think this patch could go through
+>>> your tree together with your patches?
+>>>
+>>> I don't know Krzysztof's opinion about the patch 2/2, but
+>>> I would expect, assuming the patch itself is correct, he would
+>>> like to take it into his next/dt branch.
+>>
+>> In the cover letter you mentioned that this is a follow up for the
+>> Chanwoo's patchset. But are these patches really depending on it? Can
+>> they be picked up independently?
 > 
+> 
+> They are not heavily dependent on Chanwoo's patches.
+> Yes, they can be picked up independently.
+
+Hmmm, are you sure?
+
+Sure, they will apply fine but without Chanwoo's patches won't they
+cause the dmc driver to use using polling mode with deferred timer
+(unintended/bad behavior) instead of IRQs (current behavior) or
+polling mode with delayed timer (future behavior)?
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> I just wanted to mention that the patch 1/2 was produced on the
+> code base which had already applied Chanwoo's patch for DMC.
+> If you like to take both 1/2 and 2/2 into your tree, it's good.
+> 
+> Thank you for having a look on this.
+> 
+> Regards,
+> Lukasz
+> 
+> 
+>>
+>> The DTS patch must go through arm soc, so I will take it. If it really
+>> depends on driver changes, then it has to wait for next release.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+
