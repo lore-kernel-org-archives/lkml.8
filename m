@@ -2,217 +2,106 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D702CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D54C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40332078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7158D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSTars05"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGBtdSgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGJSef (ORCPT
+        id S1728129AbgGJSdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:34:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39364 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727085AbgGJSee (ORCPT
+        Fri, 10 Jul 2020 14:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgGJSdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:34:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594406073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wl87mSyeBQAKYVwqwLq6rWbUN6A0MbLQVY0wQln3Kk8=;
-        b=DSTars05h6R/OgQR8SgcqWip4wA6FJaP/ynztWOUjPoZ3DAVIwIe01a5DLyBQSN/Hyo7Ra
-        rNZ//4K2X1/fZAcVenFzYT+UEJ8hDGCZuX3GPBXayjd5hx4ZCIitel4L6RUc140Lj8uiJ+
-        AXKQf/lGn3FctKSTE86dFpq26cS64pI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-QHkuZU1eOpyJCN5wFmhNfA-1; Fri, 10 Jul 2020 14:34:23 -0400
-X-MC-Unique: QHkuZU1eOpyJCN5wFmhNfA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C51E1902EA1;
-        Fri, 10 Jul 2020 18:34:22 +0000 (UTC)
-Received: from localhost (ovpn-116-13.gru2.redhat.com [10.97.116.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE8A1724A0;
-        Fri, 10 Jul 2020 18:34:21 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 15:34:20 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-integrity@vger.kernel.org, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, stable@vger.kernel.org
-Subject: Re: [PATCH v5] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-Message-ID: <20200710183420.GB10547@glitch>
-References: <20200709164647.45153-1-bmeneg@redhat.com>
- <1594401804.14405.8.camel@linux.ibm.com>
- <20200710180338.GA10547@glitch>
+        Fri, 10 Jul 2020 14:33:14 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE5FC08C5DC;
+        Fri, 10 Jul 2020 11:33:14 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id k18so5184793qtm.10;
+        Fri, 10 Jul 2020 11:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TK+rDfPiXDQ6Wu0ZZ4teUJXL+8D2schXrnWNQq/FvPI=;
+        b=hGBtdSgNTkNUEE7x3DH3AHt0Qa/l2KdiClP88SJGpoDyI/aeCg/X2CWVGTebhWfTm7
+         P4+1ZHGPKnxWDAswdTk6DLMza/UTmbHCD4xOBpOpw9C+7lzpehbnv3Y6hZwafLxXwl7z
+         aEHmsiHH0cL0GZwzZD3enn/Ds7OdN+HlguPhIvpHQ1qPQ2kcs+E2wCOWE7n4pumRL0gJ
+         oA/fDcPTyAeQZH4/J84K7W/VQf7VaYzyWY/IAzlejHCgm6CnslA34rw9zrXApn07dNSe
+         DhJuM+oBc3bB7s+X22Y+B56L4MgMKThGBAyS8eoo+7jvWLkKkrR/DK/a5ZejUmXnV/Rg
+         y1/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TK+rDfPiXDQ6Wu0ZZ4teUJXL+8D2schXrnWNQq/FvPI=;
+        b=pqZ/a5+VXKsPZhvaev0diN8LH8N1BIaBgZDbdRmfYwFwRnYbhRt9mhqqBGMAJuJmNf
+         s3LpmhXBYpuoLum3XqTVwYiqFtiU0n7NPEaFp6AVyEmL9UIYRQVaPcFjZYCPdug6rwNK
+         u47Ju5fzC4z3YDGOj2CLaUnKTUsFHdsz5F+CRFnOjBhAOl2J549xb7VT5uAaU1jmzdnJ
+         657MuxOZ9eJbyRSs1EtGedxQBNIhs8V+jhrwsMw/cf63AGKvSeL4Mc1CW6kf3u1BGgzW
+         4UR/KQWr0f7vuJjt+1py3kDPm1AW1t8vCHo7zLWnEDdW2GuZGgINSitB1LMXiysNXT+G
+         9uHQ==
+X-Gm-Message-State: AOAM533/AxcT6ovPTWJO7BMiV54bbmQJskXmICHC2tnNOkY95VKMYCvx
+        y88/UXc3fphpoevQkyb9IfTyFshMrbY=
+X-Google-Smtp-Source: ABdhPJx86wfeZryei9Se+7s7/y7sXiGegaCswPNlv78kzGV7L3SRbYE0nhSOc+Bm+d+yx9QN3006Hg==
+X-Received: by 2002:aed:21e1:: with SMTP id m30mr44596251qtc.367.1594405993859;
+        Fri, 10 Jul 2020 11:33:13 -0700 (PDT)
+Received: from [192.168.1.110] ([99.85.27.166])
+        by smtp.gmail.com with ESMTPSA id k14sm9234818qtb.38.2020.07.10.11.33.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 11:33:13 -0700 (PDT)
+Subject: Re: [ANNOUNCE] Git v2.28.0-rc0
+To:     Junio C Hamano <gitster@pobox.com>
+Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+References: <xmqqh7ugwen6.fsf@gitster.c.googlers.com>
+ <01e87be3-3911-afc1-e738-69446275c8c0@gmail.com>
+ <xmqqa707uzf6.fsf@gitster.c.googlers.com>
+From:   Derrick Stolee <stolee@gmail.com>
+Message-ID: <6989c299-0431-d751-33e4-a94bd78dcafc@gmail.com>
+Date:   Fri, 10 Jul 2020 14:33:13 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-In-Reply-To: <20200710180338.GA10547@glitch>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
-Content-Disposition: inline
+In-Reply-To: <xmqqa707uzf6.fsf@gitster.c.googlers.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/10/2020 12:07 PM, Junio C Hamano wrote:
+> Derrick Stolee <stolee@gmail.com> writes:
+> 
+>> On 7/9/2020 5:40 PM, Junio C Hamano wrote:
+>>> An early preview release Git v2.28.0-rc0 is now available for
+>>> testing at the usual places.  
+>>
+>> This might be part of your new process, or it might be an
+>> oversight. It seems that GIT-VERSION-GEN did not update with
+>> this RC, so the built version will still have a 2.27 start [1].
+>>
+>> This differs from previous rc's [2].
+> 
+> Sorry, I screwed up.  Thanks for a set of sharp eyes.
 
-On Fri, Jul 10, 2020 at 03:03:38PM -0300, Bruno Meneguele wrote:
-> On Fri, Jul 10, 2020 at 01:23:24PM -0400, Mimi Zohar wrote:
-> > On Thu, 2020-07-09 at 13:46 -0300, Bruno Meneguele wrote:
-> > > APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY in co=
-mpile
-> > > time, enforcing the appraisal whenever the kernel had the arch policy=
- option
-> > > enabled.
-> >=20
-> > > However it breaks systems where the option is set but the system didn=
-'t
-> > > boot in a "secure boot" platform. In this scenario, anytime an apprai=
-sal
-> > > policy (i.e. ima_policy=3Dappraisal_tcb) is used it will be forced, w=
-ithout
-> > > giving the user the opportunity to label the filesystem, before enfor=
-cing
-> > > integrity.
-> > >=20
-> > > Considering the ARCH_POLICY is only effective when secure boot is act=
-ually
-> > > enabled this patch remove the compile time dependency and move it to =
-a
-> > > runtime decision, based on the secure boot state of that platform.
-> >=20
-> > Perhaps we could simplify this patch description a bit?
-> >=20
-> > The IMA_APPRAISE_BOOTPARAM config allows enabling different
-> > "ima_appraise=3D" modes - log, fix, enforce - at run time, but not when
-> > IMA architecture specific policies are enabled. =A0This prevents
-> > properly labeling the filesystem on systems where secure boot is
-> > supported, but not enabled on the platform. =A0Only when secure boot is
-> > enabled, should these IMA appraise modes be disabled.
-> >=20
-> > This patch removes the compile time dependency and makes it a runtime
-> > decision, based on the secure boot state of that platform.
-> >=20
->=20
-> Sounds good to me.
->=20
-> > <snip>
-> >=20
-> > > diff --git a/security/integrity/ima/ima_appraise.c b/security/integri=
-ty/ima/ima_appraise.c
-> > > index a9649b04b9f1..884de471b38a 100644
-> > > --- a/security/integrity/ima/ima_appraise.c
-> > > +++ b/security/integrity/ima/ima_appraise.c
-> > > @@ -19,6 +19,11 @@
-> > >  static int __init default_appraise_setup(c
-> >=20
-> > > har *str)
-> > >  {
-> > >  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-> > > +=09if (arch_ima_get_secureboot()) {
-> > > +=09=09pr_info("appraise boot param ignored: secure boot enabled");
-> >=20
-> > Instead of a generic statement, is it possible to include the actual
-> > option being denied? =A0Perhaps something like: "Secure boot enabled,
-> > ignoring %s boot command line option"
-> >=20
-> > Mimi
-> >=20
->=20
-> Yes, sure.
->=20
+No worries. The only reason I was confused was because I
+always hit a conflict on GIT-VERSION-GEN when rebasing
+microsoft/git onto a git-for-windows/git version (so we
+can add the ".vfs." into the version string). I had no
+idea if this would cause anyone trouble.
 
-Btw, would it make sense to first make sure we have a valid "str"
-option and not something random to print?
-=20
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima=
-/ima_appraise.c
-index a9649b04b9f1..1f1175531d3e 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -25,6 +25,16 @@ static int __init default_appraise_setup(char *str)
-                ima_appraise =3D IMA_APPRAISE_LOG;
-        else if (strncmp(str, "fix", 3) =3D=3D 0)
-                ima_appraise =3D IMA_APPRAISE_FIX;
-+       else
-+               pr_info("invalid \"%s\" appraise option");
-+
-+       if (arch_ima_get_secureboot()) {
-+               if (!is_ima_appraise_enabled()) {
-+                       pr_info("Secure boot enabled: ignoring ima_appraise=
-=3D%s boot parameter option",
-+                               str);
-+                       ima_appraise =3D IMA_APPRAISE_ENFORCE;
-+               }
-+       }
- #endif
-        return 1;
- }
-
-
-The "else" there I think would make sense as well, at least to give the
-user some feedback about a possible mispelling of him (as a separate
-patch).
-
-And "if(!is_ima_appraise_enabled())" would avoid to print anything about
-"ignoring the option" to the user in case he explicitly set "enforce",
-which we know there isn't any real effect but is allowed and shown in
-kernel-parameters.txt.
-
-> Thanks!
->=20
-> > > +=09=09return 1;
-> > > +=09}
-> > > +
-> > >  =09if (strncmp(str, "off", 3) =3D=3D 0)
-> > >  =09=09ima_appraise =3D 0;
-> > >  =09else if (strncmp(str, "log", 3) =3D=3D 0)
-> >=20
->=20
-> --=20
-> bmeneg=20
-> PGP Key: http://bmeneg.com/pubkey.txt
-
-
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8ItKwACgkQYdRkFR+R
-okN6GAgAn8hp8spQ9CD62XqNiFqZlX9aYTyBwMwNwU1YsD5D4KGFaBEqkQb39CvQ
-9aZMXN3TegwWbfC3yB28dczdWnJqpPwjICUMODQ+qlVKBZIExGEqWwLLmXQs3HNp
-DaHPEmZLB5COMygTJKRO/EdfWp3oORR4yKABM/fT0coKE/uqdGBNkDBQBbBbsprS
-z4JjcOkpZhGjBpGLM9gYHZz4fOctzVBK0ewGLLxgcY7lpTrlFjgRbDJCuJ+/FmEo
-NpT+Nxrs3uo3dlsm3crv2t1o75ELNZQv6bD1qvS4FurrliNiOxFvGL7NEPbXgHIf
-OYA8itesTKD5TXA6fNRIKgAHQZC6Ig==
-=bOdW
------END PGP SIGNATURE-----
-
---dTy3Mrz/UPE2dbVg--
-
+Thanks,
+-Stolee
