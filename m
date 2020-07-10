@@ -2,292 +2,217 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C254C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D702CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08DC62078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40332078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSTars05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgGJScG (ORCPT
+        id S1727901AbgGJSef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGJScG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:32:06 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 10 Jul 2020 14:34:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39364 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727085AbgGJSee (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:34:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594406073;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wl87mSyeBQAKYVwqwLq6rWbUN6A0MbLQVY0wQln3Kk8=;
+        b=DSTars05h6R/OgQR8SgcqWip4wA6FJaP/ynztWOUjPoZ3DAVIwIe01a5DLyBQSN/Hyo7Ra
+        rNZ//4K2X1/fZAcVenFzYT+UEJ8hDGCZuX3GPBXayjd5hx4ZCIitel4L6RUc140Lj8uiJ+
+        AXKQf/lGn3FctKSTE86dFpq26cS64pI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-QHkuZU1eOpyJCN5wFmhNfA-1; Fri, 10 Jul 2020 14:34:23 -0400
+X-MC-Unique: QHkuZU1eOpyJCN5wFmhNfA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 233202075D;
-        Fri, 10 Jul 2020 18:32:01 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 19:31:59 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     will@kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
-        steven.price@arm.com, guohanjun@huawei.com, olof@lixom.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
-Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-Message-ID: <20200710183158.GE11839@gaia>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <20200710094420.517-3-yezhenyu2@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C51E1902EA1;
+        Fri, 10 Jul 2020 18:34:22 +0000 (UTC)
+Received: from localhost (ovpn-116-13.gru2.redhat.com [10.97.116.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE8A1724A0;
+        Fri, 10 Jul 2020 18:34:21 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 15:34:20 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-integrity@vger.kernel.org, erichte@linux.ibm.com,
+        nayna@linux.ibm.com, stable@vger.kernel.org
+Subject: Re: [PATCH v5] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200710183420.GB10547@glitch>
+References: <20200709164647.45153-1-bmeneg@redhat.com>
+ <1594401804.14405.8.camel@linux.ibm.com>
+ <20200710180338.GA10547@glitch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200710180338.GA10547@glitch>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
 Content-Disposition: inline
-In-Reply-To: <20200710094420.517-3-yezhenyu2@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 05:44:20PM +0800, Zhenyu Ye wrote:
-> Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
-> 
-> When cpu supports TLBI feature, the minimum range granularity is
-> decided by 'scale', so we can not flush all pages by one instruction
-> in some cases.
-> 
-> For example, when the pages = 0xe81a, let's start 'scale' from
-> maximum, and find right 'num' for each 'scale':
-> 
-> 1. scale = 3, we can flush no pages because the minimum range is
->    2^(5*3 + 1) = 0x10000.
-> 2. scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
->    flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
->    Remaining pages is 0x1a;
-> 3. scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
->    can be flushed.
-> 4. scale = 0, we flush the remaining 0x1a pages, the num =
->    0x1a/0x2 - 1 = 0xd.
-> 
-> However, in most scenarios, the pages = 1 when flush_tlb_range() is
-> called. Start from scale = 3 or other proper value (such as scale =
-> ilog2(pages)), will incur extra overhead.
-> So increase 'scale' from 0 to maximum, the flush order is exactly
-> opposite to the example.
-> 
-> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
-> ---
->  arch/arm64/include/asm/tlbflush.h | 138 +++++++++++++++++++++++-------
->  1 file changed, 109 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index 39aed2efd21b..edfec8139ef8 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -60,6 +60,31 @@
->  		__ta;						\
->  	})
->  
-> +/*
-> + * Get translation granule of the system, which is decided by
-> + * PAGE_SIZE.  Used by TTL.
-> + *  - 4KB	: 1
-> + *  - 16KB	: 2
-> + *  - 64KB	: 3
-> + */
-> +#define TLBI_TTL_TG_4K		1
-> +#define TLBI_TTL_TG_16K		2
-> +#define TLBI_TTL_TG_64K		3
-> +
-> +static inline unsigned long get_trans_granule(void)
-> +{
-> +	switch (PAGE_SIZE) {
-> +	case SZ_4K:
-> +		return TLBI_TTL_TG_4K;
-> +	case SZ_16K:
-> +		return TLBI_TTL_TG_16K;
-> +	case SZ_64K:
-> +		return TLBI_TTL_TG_64K;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
->  /*
->   * Level-based TLBI operations.
->   *
-> @@ -73,9 +98,6 @@
->   * in asm/stage2_pgtable.h.
->   */
->  #define TLBI_TTL_MASK		GENMASK_ULL(47, 44)
-> -#define TLBI_TTL_TG_4K		1
-> -#define TLBI_TTL_TG_16K		2
-> -#define TLBI_TTL_TG_64K		3
->  
->  #define __tlbi_level(op, addr, level) do {				\
->  	u64 arg = addr;							\
-> @@ -83,19 +105,7 @@
->  	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&		\
->  	    level) {							\
->  		u64 ttl = level & 3;					\
-> -									\
-> -		switch (PAGE_SIZE) {					\
-> -		case SZ_4K:						\
-> -			ttl |= TLBI_TTL_TG_4K << 2;			\
-> -			break;						\
-> -		case SZ_16K:						\
-> -			ttl |= TLBI_TTL_TG_16K << 2;			\
-> -			break;						\
-> -		case SZ_64K:						\
-> -			ttl |= TLBI_TTL_TG_64K << 2;			\
-> -			break;						\
-> -		}							\
-> -									\
-> +		ttl |= get_trans_granule() << 2;			\
->  		arg &= ~TLBI_TTL_MASK;					\
->  		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
->  	}								\
-> @@ -108,6 +118,39 @@
->  		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
->  } while (0)
->  
-> +/*
-> + * This macro creates a properly formatted VA operand for the TLBI RANGE.
-> + * The value bit assignments are:
-> + *
-> + * +----------+------+-------+-------+-------+----------------------+
-> + * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
-> + * +-----------------+-------+-------+-------+----------------------+
-> + * |63      48|47  46|45   44|43   39|38   37|36                   0|
-> + *
-> + * The address range is determined by below formula:
-> + * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
-> + *
-> + */
-> +#define __TLBI_VADDR_RANGE(addr, asid, scale, num, ttl)		\
-> +	({							\
-> +		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
-> +		__ta &= GENMASK_ULL(36, 0);			\
-> +		__ta |= (unsigned long)(ttl & 3) << 37;		\
-> +		__ta |= (unsigned long)(num & 31) << 39;	\
-> +		__ta |= (unsigned long)(scale & 3) << 44;	\
-> +		__ta |= (get_trans_granule() & 3) << 46;	\
-> +		__ta |= (unsigned long)(asid) << 48;		\
-> +		__ta;						\
-> +	})
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Nitpick: we don't need the additional masking here (e.g. ttl & 3) since
-the values are capped anyway.
+On Fri, Jul 10, 2020 at 03:03:38PM -0300, Bruno Meneguele wrote:
+> On Fri, Jul 10, 2020 at 01:23:24PM -0400, Mimi Zohar wrote:
+> > On Thu, 2020-07-09 at 13:46 -0300, Bruno Meneguele wrote:
+> > > APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY in co=
+mpile
+> > > time, enforcing the appraisal whenever the kernel had the arch policy=
+ option
+> > > enabled.
+> >=20
+> > > However it breaks systems where the option is set but the system didn=
+'t
+> > > boot in a "secure boot" platform. In this scenario, anytime an apprai=
+sal
+> > > policy (i.e. ima_policy=3Dappraisal_tcb) is used it will be forced, w=
+ithout
+> > > giving the user the opportunity to label the filesystem, before enfor=
+cing
+> > > integrity.
+> > >=20
+> > > Considering the ARCH_POLICY is only effective when secure boot is act=
+ually
+> > > enabled this patch remove the compile time dependency and move it to =
+a
+> > > runtime decision, based on the secure boot state of that platform.
+> >=20
+> > Perhaps we could simplify this patch description a bit?
+> >=20
+> > The IMA_APPRAISE_BOOTPARAM config allows enabling different
+> > "ima_appraise=3D" modes - log, fix, enforce - at run time, but not when
+> > IMA architecture specific policies are enabled. =A0This prevents
+> > properly labeling the filesystem on systems where secure boot is
+> > supported, but not enabled on the platform. =A0Only when secure boot is
+> > enabled, should these IMA appraise modes be disabled.
+> >=20
+> > This patch removes the compile time dependency and makes it a runtime
+> > decision, based on the secure boot state of that platform.
+> >=20
+>=20
+> Sounds good to me.
+>=20
+> > <snip>
+> >=20
+> > > diff --git a/security/integrity/ima/ima_appraise.c b/security/integri=
+ty/ima/ima_appraise.c
+> > > index a9649b04b9f1..884de471b38a 100644
+> > > --- a/security/integrity/ima/ima_appraise.c
+> > > +++ b/security/integrity/ima/ima_appraise.c
+> > > @@ -19,6 +19,11 @@
+> > >  static int __init default_appraise_setup(c
+> >=20
+> > > har *str)
+> > >  {
+> > >  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
+> > > +=09if (arch_ima_get_secureboot()) {
+> > > +=09=09pr_info("appraise boot param ignored: secure boot enabled");
+> >=20
+> > Instead of a generic statement, is it possible to include the actual
+> > option being denied? =A0Perhaps something like: "Secure boot enabled,
+> > ignoring %s boot command line option"
+> >=20
+> > Mimi
+> >=20
+>=20
+> Yes, sure.
+>=20
 
-> +
-> +/* These macros are used by the TLBI RANGE feature. */
-> +#define __TLBI_RANGE_PAGES(num, scale)	(((num) + 1) << (5 * (scale) + 1))
-> +#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
-> +
-> +#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
-> +#define __TLBI_RANGE_NUM(range, scale)	\
-> +	(((range) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK)
-> +
->  /*
->   *	TLB Invalidation
->   *	================
-> @@ -232,32 +275,69 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
->  				     unsigned long stride, bool last_level,
->  				     int tlb_level)
->  {
-> +	int num = 0;
-> +	int scale = 0;
->  	unsigned long asid = ASID(vma->vm_mm);
->  	unsigned long addr;
-> +	unsigned long pages;
->  
->  	start = round_down(start, stride);
->  	end = round_up(end, stride);
-> +	pages = (end - start) >> PAGE_SHIFT;
->  
-> -	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
-> +	if ((!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
-> +	    (end - start) >= (MAX_TLBI_OPS * stride)) ||
-> +	    pages >= MAX_TLBI_RANGE_PAGES) {
->  		flush_tlb_mm(vma->vm_mm);
->  		return;
->  	}
+Btw, would it make sense to first make sure we have a valid "str"
+option and not something random to print?
+=20
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima=
+/ima_appraise.c
+index a9649b04b9f1..1f1175531d3e 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -25,6 +25,16 @@ static int __init default_appraise_setup(char *str)
+                ima_appraise =3D IMA_APPRAISE_LOG;
+        else if (strncmp(str, "fix", 3) =3D=3D 0)
+                ima_appraise =3D IMA_APPRAISE_FIX;
++       else
++               pr_info("invalid \"%s\" appraise option");
++
++       if (arch_ima_get_secureboot()) {
++               if (!is_ima_appraise_enabled()) {
++                       pr_info("Secure boot enabled: ignoring ima_appraise=
+=3D%s boot parameter option",
++                               str);
++                       ima_appraise =3D IMA_APPRAISE_ENFORCE;
++               }
++       }
+ #endif
+        return 1;
+ }
 
-I think we can use strictly greater here rather than greater or equal.
-MAX_TLBI_RANGE_PAGES can be encoded as num 31, scale 3.
 
->  
-> -	/* Convert the stride into units of 4k */
-> -	stride >>= 12;
-> +	dsb(ishst);
->  
-> -	start = __TLBI_VADDR(start, asid);
-> -	end = __TLBI_VADDR(end, asid);
-> +	/*
-> +	 * When cpu does not support TLBI RANGE feature, we flush the tlb
-> +	 * entries one by one at the granularity of 'stride'.
-> +	 * When cpu supports the TLBI RANGE feature, then:
-> +	 * 1. If pages is odd, flush the first page through non-RANGE
-> +	 *    instruction;
-> +	 * 2. For remaining pages: The minimum range granularity is decided
-> +	 *    by 'scale', so we can not flush all pages by one instruction
-> +	 *    in some cases.
-> +	 *    Here, we start from scale = 0, flush corresponding pages
-> +	 *    (from 2^(5*scale + 1) to 2^(5*(scale + 1) + 1)), and increase
-> +	 *    it until no pages left.
-> +	 */
-> +	while (pages > 0) {
+The "else" there I think would make sense as well, at least to give the
+user some feedback about a possible mispelling of him (as a separate
+patch).
 
-I did some simple checks on ((end - start) % stride) and never
-triggered. I had a slight worry that pages could become negative (and
-we'd loop forever since it's unsigned long) for some mismatched stride
-and flush size. It doesn't seem like.
+And "if(!is_ima_appraise_enabled())" would avoid to print anything about
+"ignoring the option" to the user in case he explicitly set "enforce",
+which we know there isn't any real effect but is allowed and shown in
+kernel-parameters.txt.
 
-> +		if (!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) ||
-> +		    pages % 2 == 1) {
-> +			addr = __TLBI_VADDR(start, asid);
-> +			if (last_level) {
-> +				__tlbi_level(vale1is, addr, tlb_level);
-> +				__tlbi_user_level(vale1is, addr, tlb_level);
-> +			} else {
-> +				__tlbi_level(vae1is, addr, tlb_level);
-> +				__tlbi_user_level(vae1is, addr, tlb_level);
-> +			}
-> +			start += stride;
-> +			pages -= stride >> PAGE_SHIFT;
-> +			continue;
-> +		}
->  
-> -	dsb(ishst);
-> -	for (addr = start; addr < end; addr += stride) {
-> -		if (last_level) {
-> -			__tlbi_level(vale1is, addr, tlb_level);
-> -			__tlbi_user_level(vale1is, addr, tlb_level);
-> -		} else {
-> -			__tlbi_level(vae1is, addr, tlb_level);
-> -			__tlbi_user_level(vae1is, addr, tlb_level);
-> +		num = __TLBI_RANGE_NUM(pages, scale) - 1;
-> +		if (num >= 0) {
-> +			addr = __TLBI_VADDR_RANGE(start, asid, scale,
-> +						  num, tlb_level);
-> +			if (last_level) {
-> +				__tlbi(rvale1is, addr);
-> +				__tlbi_user(rvale1is, addr);
-> +			} else {
-> +				__tlbi(rvae1is, addr);
-> +				__tlbi_user(rvae1is, addr);
-> +			}
-> +			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
-> +			pages -= __TLBI_RANGE_PAGES(num, scale);
->  		}
-> +		scale++;
->  	}
->  	dsb(ish);
+> Thanks!
+>=20
+> > > +=09=09return 1;
+> > > +=09}
+> > > +
+> > >  =09if (strncmp(str, "off", 3) =3D=3D 0)
+> > >  =09=09ima_appraise =3D 0;
+> > >  =09else if (strncmp(str, "log", 3) =3D=3D 0)
+> >=20
+>=20
+> --=20
+> bmeneg=20
+> PGP Key: http://bmeneg.com/pubkey.txt
 
-The logic looks fine to me now. I can fix the above nitpicks myself and
-maybe adjust the comment a bit. I plan to push them into next to see if
-anything explodes.
 
-Thanks.
 
--- 
-Catalin
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8ItKwACgkQYdRkFR+R
+okN6GAgAn8hp8spQ9CD62XqNiFqZlX9aYTyBwMwNwU1YsD5D4KGFaBEqkQb39CvQ
+9aZMXN3TegwWbfC3yB28dczdWnJqpPwjICUMODQ+qlVKBZIExGEqWwLLmXQs3HNp
+DaHPEmZLB5COMygTJKRO/EdfWp3oORR4yKABM/fT0coKE/uqdGBNkDBQBbBbsprS
+z4JjcOkpZhGjBpGLM9gYHZz4fOctzVBK0ewGLLxgcY7lpTrlFjgRbDJCuJ+/FmEo
+NpT+Nxrs3uo3dlsm3crv2t1o75ELNZQv6bD1qvS4FurrliNiOxFvGL7NEPbXgHIf
+OYA8itesTKD5TXA6fNRIKgAHQZC6Ig==
+=bOdW
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
+
