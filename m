@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04EBC433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7CCC433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C05FF206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A5E206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594420495;
-	bh=jLgIlw0XpAVuOCkBCu96F/m3f+tfTNFZAXAR4R0KYhQ=;
+	s=default; t=1594420491;
+	bh=cbWejgBryP3wyPjTJqgvL1vW18Wt3qtjvaAEe9kL0pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUEnpb07We7p0/8U+IYL+Hv7NnMf///w0guk4Ixk8Sok3JWvi08UqPrq8nje7tDFf
-	 88qEQpfBvaL1yu1ZnLD5B0FKMQ2O/paxY/1LKTbz28XKp1mUgoc2xXqAXxSbaY+ODk
-	 N9ZznLJ+LT847CBbe4EaZ1Z+me/K1bXRnZbukBRU=
+	b=V9ltl9GjPN7E8tKL9j7BeCzDxYIx2LMm1d3xifzgrlARISm6+jN9G7wWrqcLSMiuw
+	 Hwe6D0kMHl8G0sOKF1d8f36UG7MGli9lgOYodYWRLRyrii/6oToCUSraInCRxYqMgY
+	 JYEFJJZwmRrfWc0dvbTeotD0Ak6k8fEQ4rKp27ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgGJWey (ORCPT
+        id S1726927AbgGJWer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46026 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 18:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgGJWed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:34:33 -0400
+        id S1726801AbgGJWee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:34:34 -0400
 Received: from sstabellini-ThinkPad-T480s.hsd1.ca.comcast.net (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6EE2084C;
-        Fri, 10 Jul 2020 22:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1306420842;
+        Fri, 10 Jul 2020 22:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594420473;
-        bh=jLgIlw0XpAVuOCkBCu96F/m3f+tfTNFZAXAR4R0KYhQ=;
+        s=default; t=1594420474;
+        bh=cbWejgBryP3wyPjTJqgvL1vW18Wt3qtjvaAEe9kL0pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vsgLFsqHx83ZxrVE357/rAy2BkLYAlHXH3STs/PYChzyTa06t95Oll0lDdW/RvhzA
-         3w15KyVrAiCPA2w60Luc8SqDOVyQyqkDSy2CJJiPwbNNxRy1ZFtBmpSrg/JPH5N0pg
-         53S4KsSkr+3N1JIHxPP80eE+akQ+CPF2WRZY7gSM=
+        b=FMZ1pvxBAj/UqOMhOUE4LnQZIiFubMpVx7zHItoWPFKhBrWbTBYPVAdTBFCy2+0G1
+         9WCbwxcHHxgEqTzBBWG2k82KXIWM2L+Q1svJMEePdQc1BWjdG3rg+K0IjMVi9IuZ5m
+         Fahls4gJEmbcd12Pe6pig9hLI9mD2vlA5ttxzRQQ=
 From:   Stefano Stabellini <sstabellini@kernel.org>
 To:     jgross@suse.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
 Cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
         linux-kernel@vger.kernel.org, hch@infradead.org,
         Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: [PATCH v3 08/11] swiotlb-xen: remove XEN_PFN_PHYS
-Date:   Fri, 10 Jul 2020 15:34:24 -0700
-Message-Id: <20200710223427.6897-8-sstabellini@kernel.org>
+Subject: [PATCH v3 11/11] xen/arm: call dma_to_phys on the dma_addr_t parameter of dma_cache_maint
+Date:   Fri, 10 Jul 2020 15:34:27 -0700
+Message-Id: <20200710223427.6897-11-sstabellini@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
 References: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
@@ -57,55 +57,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 
-XEN_PFN_PHYS is only used in one place in swiotlb-xen making things more
-complex than need to be.
+dma_cache_maint is getting called passing a dma address which could be
+different from a physical address.
 
-Remove the definition of XEN_PFN_PHYS and open code the cast in the one
-place where it is needed.
+Add a struct device* parameter to dma_cache_maint.
+
+Translate the dma_addr_t parameter of dma_cache_maint by calling
+dma_to_phys. Do it for the first page and all the following pages, in
+case of multipage handling.
 
 Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
 ---
- drivers/xen/swiotlb-xen.c | 7 +------
- include/xen/page.h        | 1 -
- 2 files changed, 1 insertion(+), 7 deletions(-)
+Changes in v2:
+- improve commit message
+---
+ arch/arm/xen/mm.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index e2c35f45f91e..03d118b6c141 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -52,11 +52,6 @@ static unsigned long xen_io_tlb_nslabs;
-  * Quick lookup value of the bus address of the IOTLB.
-  */
+diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
+index a8251a70f442..396797ffe2b1 100644
+--- a/arch/arm/xen/mm.c
++++ b/arch/arm/xen/mm.c
+@@ -43,15 +43,18 @@ unsigned long xen_get_swiotlb_free_pages(unsigned int order)
+ static bool hypercall_cflush = false;
  
--/*
-- * Both of these functions should avoid XEN_PFN_PHYS because phys_addr_t
-- * can be 32bit when dma_addr_t is 64bit leading to a loss in
-- * information if the shift is done before casting to 64bit.
-- */
- static inline dma_addr_t xen_phys_to_bus(struct device *dev, phys_addr_t paddr)
+ /* buffers in highmem or foreign pages cannot cross page boundaries */
+-static void dma_cache_maint(dma_addr_t handle, size_t size, u32 op)
++static void dma_cache_maint(struct device *dev, dma_addr_t handle,
++			    size_t size, u32 op)
  {
- 	unsigned long bfn = pfn_to_bfn(XEN_PFN_DOWN(paddr));
-@@ -101,7 +96,7 @@ static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+ 	struct gnttab_cache_flush cflush;
+ 
+-	cflush.a.dev_bus_addr = handle & XEN_PAGE_MASK;
+ 	cflush.offset = xen_offset_in_page(handle);
+ 	cflush.op = op;
++	handle &= XEN_PAGE_MASK;
+ 
+ 	do {
++		cflush.a.dev_bus_addr = dma_to_phys(dev, handle);
++
+ 		if (size + cflush.offset > XEN_PAGE_SIZE)
+ 			cflush.length = XEN_PAGE_SIZE - cflush.offset;
+ 		else
+@@ -60,7 +63,7 @@ static void dma_cache_maint(dma_addr_t handle, size_t size, u32 op)
+ 		HYPERVISOR_grant_table_op(GNTTABOP_cache_flush, &cflush, 1);
+ 
+ 		cflush.offset = 0;
+-		cflush.a.dev_bus_addr += cflush.length;
++		handle += cflush.length;
+ 		size -= cflush.length;
+ 	} while (size);
+ }
+@@ -76,16 +79,16 @@ void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
+ 			  size_t size, enum dma_data_direction dir)
  {
- 	unsigned long bfn = XEN_PFN_DOWN(dma_addr);
- 	unsigned long xen_pfn = bfn_to_local_pfn(bfn);
--	phys_addr_t paddr = XEN_PFN_PHYS(xen_pfn);
-+	phys_addr_t paddr = (phys_addr_t)xen_pfn << XEN_PAGE_SHIFT;
+ 	if (dir != DMA_TO_DEVICE)
+-		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
++		dma_cache_maint(dev, handle, size, GNTTAB_CACHE_INVAL);
+ }
  
- 	/* If the address is outside our domain, it CAN
- 	 * have the same virtual address as another address
-diff --git a/include/xen/page.h b/include/xen/page.h
-index df6d6b6ec66e..285677b42943 100644
---- a/include/xen/page.h
-+++ b/include/xen/page.h
-@@ -24,7 +24,6 @@
+ void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
+ 			     size_t size, enum dma_data_direction dir)
+ {
+ 	if (dir == DMA_FROM_DEVICE)
+-		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
++		dma_cache_maint(dev, handle, size, GNTTAB_CACHE_INVAL);
+ 	else
+-		dma_cache_maint(handle, size, GNTTAB_CACHE_CLEAN);
++		dma_cache_maint(dev, handle, size, GNTTAB_CACHE_CLEAN);
+ }
  
- #define XEN_PFN_DOWN(x)	((x) >> XEN_PAGE_SHIFT)
- #define XEN_PFN_UP(x)	(((x) + XEN_PAGE_SIZE-1) >> XEN_PAGE_SHIFT)
--#define XEN_PFN_PHYS(x)	((phys_addr_t)(x) << XEN_PAGE_SHIFT)
- 
- #include <asm/xen/page.h>
- 
+ bool xen_arch_need_swiotlb(struct device *dev,
 -- 
 2.17.1
 
