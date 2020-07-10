@@ -2,86 +2,151 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C9C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACCE206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lLxKHjlV"
+	by mail.kernel.org (Postfix) with ESMTP id 44EF920657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594398424;
+	bh=G62e77LR67dR+lm/TnNE6A3hF198oh9rXctGlor0fAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rcSPDRjWBOLkUWQhKKFvvedi6UQsar/Ut5ma7yO6VktfHDIWDuPFhMScEGmV2iaB1
+	 i4w67KQUICOQ8L6OiPiKYSZu/2lS09irJKU5z0Vzw6lA2R29WUkieRPJu73G8NJVr7
+	 gjnYLFliqRDfjr1QOKLCLFDVQE8ZYTH0UeiP5ql8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGJQZO (ORCPT
+        id S1728069AbgGJQ1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:25:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgGJQZN (ORCPT
+        Fri, 10 Jul 2020 12:27:03 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39303 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQ1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:25:13 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FB2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:25:13 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id k6so5563761ili.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IcDMEhTSKKMXTowJquzFDFHW0B9rJZphvCEGihxlBug=;
-        b=lLxKHjlVieE8CR/C5FWlzc7Uis/0nuwWMvc4hUOICx3oO4m/PttpooF9Mfku50uTuz
-         pbnZevuDsAvUwVhSH2i1Nd6lpOBQzVB6TDXzhXu8318gMbmyO/OjdyNHdHnbz5kvy/J+
-         3FS0W7SMo3hcsVmFYEmHhG+8eUXCsBoAm3xnKtZw9P1CTJEQqC0YKOviRG6ubCfAaxaf
-         RO6zqusol8TO1/uZctwduaG05iNaFYJVhnwMn/wBO4+QJdzfFFkSWfHUK87pb8boRXkH
-         nP760DKxd+QNElhvMSp65xXZazGWiaN06ArD8BtuDLN0k2OEsNupQGnE1O05yXSKjYEx
-         ob4w==
+        Fri, 10 Jul 2020 12:27:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id f23so6644748iof.6;
+        Fri, 10 Jul 2020 09:27:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IcDMEhTSKKMXTowJquzFDFHW0B9rJZphvCEGihxlBug=;
-        b=XduAYK851qMTSsWdQpwPlLeusCBw0kM7K5l9Yjw03zA0XcFvdA0hH03GdFpw+tJXUB
-         A2EOjY625fHTw4R9oXFZV/jHlodlvq5+7GaroqAnzmB8uED9x67pHX4sbKudgBAH0EmK
-         JPCqt9EVSjr/LwGJDBTEYmOipzVw6brN8+3aKAgETEhIEhnuk5MhiP3Q8zfBxAGZAWw/
-         ybrLsKM/sEmZGOc+v1P64gVJQAlHiawEgmQVvpwQPZPHPG7cnKp800glC/ksACAzlqD+
-         dOsdVoCtnhXRc2zHZD7pkLD0NK9kfTiEc1o3T5uPyo5BuagR2bRFbxCVsuCk7bIwV4s+
-         5jIQ==
-X-Gm-Message-State: AOAM530B3LRoS8+0LGzxe2f3piD/lFzQYkIfCqHfNkjCCCPkciXxAJH/
-        B+h/W0Em71OgxsPt9uWWs3GkcESF2rcr/bf5X5fq2g==
-X-Google-Smtp-Source: ABdhPJx9kxVePErlat1+e+tKLypo+bvNuYSB4wDq+i1m1pqY+SMTsBHy1h3u6qRFuDiZ87hhCu416AWVwxklMXbnREo=
-X-Received: by 2002:a92:aac8:: with SMTP id p69mr54333019ill.26.1594398312271;
- Fri, 10 Jul 2020 09:25:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i9iYWjE4vBb1BFZdyqk4e90udcdzqPWgpMUqV/BqKm0=;
+        b=PaQsDr2zitTWZVsEl53VuqN4WUK/l3uTsqKHOm4LQ3QtXNnDdWvShDYu2przpkxBl+
+         01YS1Ovf0N3tI1QK877u/oPNdAgp44/8FTN8ckfERMZIRuI1RfgLLiRrv7UHV95oG9XK
+         r1TP2csgaTXOiRf0vb3dDa1pqPHDmWOXnWE1H/AVNS8oZjPjikFzA69SG5QBGC1UDTjE
+         m9pel7fovqBrflZdN0OGefQHyroZcrDrhgP2eG1b5RRMXBXtpZfiZu4yKiH8VchgP6mm
+         5OHXGDiIPWaie0lBORK7R2+ZfGvqbumoq9Ael8wT2gnRWYf+WAwIyUc9UrjnyRRKem5t
+         C4kg==
+X-Gm-Message-State: AOAM530vMXMOUMVqVVgvTjkk5O/DaQphE27HcWCLG7AQKT2Cs51yzkDe
+        NSxSHmrpnI728KtXLTjmy1qghW81ZQHx
+X-Google-Smtp-Source: ABdhPJzjBcfMgGclNycTfkDjb4tT2Ho3eooPCrDhSSTj1zZ0i+J6mqv3fllk1gsBGADFLtAPqsbb6g==
+X-Received: by 2002:a02:cd28:: with SMTP id h8mr65748586jaq.40.1594398421046;
+        Fri, 10 Jul 2020 09:27:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id k3sm3873588iot.42.2020.07.10.09.26.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:27:00 -0700 (PDT)
+Received: (nullmailer pid 2750605 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:26:57 -0000
+Date:   Fri, 10 Jul 2020 10:26:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] dt-bindings: thermal: tsens: document ipq8064
+ bindings
+Message-ID: <20200710162657.GB2743639@bogus>
+References: <20200709215136.28044-1-ansuelsmth@gmail.com>
+ <20200709215136.28044-4-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-References: <20200710154811.418214-1-mgamal@redhat.com> <20200710154811.418214-6-mgamal@redhat.com>
-In-Reply-To: <20200710154811.418214-6-mgamal@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 10 Jul 2020 09:25:01 -0700
-Message-ID: <CALMp9eRXZmtZ5zZ91q3Q0i7Yg5XUNAyLxWaX91okZ_ogNikKqQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] KVM: x86: update exception bitmap on CPUID changes
-To:     Mohammed Gamal <mgamal@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709215136.28044-4-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 8:48 AM Mohammed Gamal <mgamal@redhat.com> wrote:
->
-> From: Paolo Bonzini <pbonzini@redhat.com>
->
-> Allow vendor code to observe changes to MAXPHYADDR and start/stop
-> intercepting page faults.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+On Thu, Jul 09, 2020 at 11:51:33PM +0200, Ansuel Smith wrote:
+> Document the use of regmap phandle for ipq8064 SoCs
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/thermal/qcom-tsens.yaml          | 51 ++++++++++++++++---
+>  1 file changed, 44 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index d7be931b42d2..5ceb5d720e16 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -24,6 +24,7 @@ properties:
+>            - enum:
+>                - qcom,msm8916-tsens
+>                - qcom,msm8974-tsens
+> +              - qcom,ipq8064-tsens
+>            - const: qcom,tsens-v0_1
+>  
+>        - description: v1 of TSENS
+> @@ -47,6 +48,11 @@ properties:
+>        - description: TM registers
+>        - description: SROT registers
+>  
+> +  regmap:
+> +    description:
+> +      Phandle to the gcc. On ipq8064 SoCs gcc and tsense share the same regs.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Can't you make this a child of the gcc and drop this property?
+
+> +
+>    interrupts:
+>      minItems: 1
+>      items:
+> @@ -111,17 +117,48 @@ allOf:
+>          interrupt-names:
+>            minItems: 2
+>  
+> -required:
+> -  - compatible
+> -  - reg
+> -  - "#qcom,sensors"
+> -  - interrupts
+> -  - interrupt-names
+> -  - "#thermal-sensor-cells"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,ipq8064-tsens
+> +    then:
+> +      required:
+> +        - compatible
+> +        - regmap
+> +        - "#qcom,sensors"
+> +        - interrupts
+> +        - interrupt-names
+> +        - "#thermal-sensor-cells"
+> +
+> +    else:
+> +      required:
+> +        - compatible
+> +        - reg
+> +        - "#qcom,sensors"
+> +        - interrupts
+> +        - interrupt-names
+> +        - "#thermal-sensor-cells"
+
+Keep all the common required properties and just put reg/regmap in the 
+if/then if this ends up staying.
+
+Rob
