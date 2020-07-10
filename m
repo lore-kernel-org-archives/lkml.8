@@ -2,154 +2,88 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76652C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 642FD206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="E9qYFGE0"
+	by mail.kernel.org (Postfix) with ESMTP id 4A63C206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGJW7K (ORCPT
+        id S1726785AbgGJW7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgGJW7J (ORCPT
+        Fri, 10 Jul 2020 18:59:44 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:31475 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgGJW7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:59:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35967C08E6DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:59:09 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so2839436plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zaGr1Nu6GQQp1jxSDJ4yzfhjg6UJvh2w5gtwh4d61xs=;
-        b=E9qYFGE0+l0YCV9UzR+G2McYBQmSQeFznqZAlltk8CGMkkJZfD2cqjwZprvjTv0RQj
-         I4DWrNInpJ8TPQIe7Lu+ifSs3wKZd/lr+U50wrtRKZ7u36Knv6AfL+1+S3qzkkCXXL0Z
-         at6s+kS03qv/c4IAS0rytCM6vNJLQUWIP6MNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zaGr1Nu6GQQp1jxSDJ4yzfhjg6UJvh2w5gtwh4d61xs=;
-        b=DSp5I4N+HhmRTXZEnNElqN+msI/FjuczOVm+zCmuTqKyRQfuMuJZNe0dzCKgBoYpwA
-         LE++KWbP96CpJJ1nNqr1rqY5Jtn/a1G4SjNxkfoswp3inCXULl/U+9dNFtNd0/cUD3hN
-         oHiEPNL6aA3mjW1FoNGNGxJc/oNmQjAoSn+jpyxvj3+X0u05b6hyc/rF2qfjQkKnom/K
-         CC675yF+i/0yryXbCvfKmO6ohojlypOND2YX4JgR8HBhZRk3CF5m6Xw/FR6SMuV7KPW8
-         OtsWs2Mv4SpJjACtV0OVQZjbIqcpZScIbNpC/zgAGAescBSMtAia7ZLeMGv6RNlMc/qo
-         Gk1g==
-X-Gm-Message-State: AOAM532SfJoBHChw9Ew6z7VP3kTkGEh3y/+HjXUoqFDn0+oCSwTamkmN
-        0pNmxp/Mh6HzxMQ3z3iUnxXs9w==
-X-Google-Smtp-Source: ABdhPJxVXjjKeIdD8z8whwzZhkDi/N2YGshqCq7LJeYrNXGgmvDQGyRf1YocX3/vACrswhoSIMiJpA==
-X-Received: by 2002:a17:90a:3aaa:: with SMTP id b39mr3160671pjc.73.1594421948367;
-        Fri, 10 Jul 2020 15:59:08 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b14sm6861545pfb.186.2020.07.10.15.58.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 15:59:07 -0700 (PDT)
-Subject: Re: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from
- kernel_read_file() enums
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <20200707081926.3688096-3-keescook@chromium.org>
- <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
- <20200710220411.GR12769@casper.infradead.org>
- <128120ca-7465-e041-7481-4c5d53f639dd@broadcom.com>
- <202007101543.912633AA73@keescook>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <989a7560-29bb-a5ea-a03e-e2018c983829@broadcom.com>
-Date:   Fri, 10 Jul 2020 15:58:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 18:59:43 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 5ED8E240002;
+        Fri, 10 Jul 2020 22:59:35 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 15:59:34 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>, geofft@ldpreload.com,
+        jbaublitz@redhat.com, Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        keescook@chromium.org
+Subject: Re: Linux kernel in-tree Rust support
+Message-ID: <20200710225934.GA16881@localhost>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200710062803.GA1071395@kroah.com>
+ <20200710125022.alry7wkymalmv3ge@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <202007101543.912633AA73@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710125022.alry7wkymalmv3ge@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+On Fri, Jul 10, 2020 at 02:50:22PM +0200, Christian Brauner wrote:
+> On Fri, Jul 10, 2020 at 08:28:03AM +0200, Greg KH wrote:
+> > On Thu, Jul 09, 2020 at 11:41:47AM -0700, Nick Desaulniers wrote:
+> > > Hello folks,
+> > > I'm working on putting together an LLVM "Micro Conference" for the
+> > > upcoming Linux Plumbers Conf
+> > > (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
+> > > solidified yet, but I would really like to run a session on support
+> > > for Rust "in tree."  I suspect we could cover technical aspects of
+> > > what that might look like (I have a prototype of that, was trivial to
+> > > wire up KBuild support), but also a larger question of "should we do
+> > > this?" or "how might we place limits on where this can be used?"
+> > > 
+> > > Question to folks explicitly in To:, are you planning on attending plumbers?
+> > > 
+> > > If so, would this be an interesting topic that you'd participate in?
+> > 
+> > Yes, I'll be there.
+> 
+> We actually had this dicussion a while back and there were some more
+> people interested in this. I'd be interested to attend this and I've
+> spoken with Kees and a few others about this topic at last Plumbers (I
+> think Greg might have been around for this informal discussion as well.
+> But I might be imagining things.).
 
-On 2020-07-10 3:44 p.m., Kees Cook wrote:
-> On Fri, Jul 10, 2020 at 03:10:25PM -0700, Scott Branden wrote:
->>
->> On 2020-07-10 3:04 p.m., Matthew Wilcox wrote:
->>> On Fri, Jul 10, 2020 at 02:00:32PM -0700, Scott Branden wrote:
->>>>> @@ -950,8 +951,8 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
->>>>>     		goto out;
->>>>>     	}
->>>>> -	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
->>>>> -		*buf = vmalloc(i_size);
->>>>> +	if (!*buf)
->>>> The assumption that *buf is always NULL when id !=
->>>> READING_FIRMWARE_PREALLOC_BUFFER doesn't appear to be correct.
->>>> I get unhandled page faults due to this change on boot.
->>> Did it give you a stack backtrace?
->> Yes, but there's no requirement that *buf need to be NULL when calling this
->> function.
->> To fix my particular crash I added the following locally:
->>
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -3989,7 +3989,7 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char
->> __user *, uargs, int, flags)
->>   {
->>       struct load_info info = { };
->>       loff_t size;
->> -    void *hdr;
->> +    void *hdr = NULL;
->>       int err;
->>
->>       err = may_init_module();
-> Thanks for the diagnosis and fix! I haven't had time to cycle back
-> around to this series yet. Hopefully soon. :)
-I don't consider this a complete fix as there may be other callers which 
-do not initialize
-the *buf param to NULL before calling kernel_read_file.
+I was around for one of the informal conversations with Greg and Kees
+and others.
 
-But, it does boot my system.  Also, I was able to make modifications for my
-pread changes that pass (and the IMA works with IMA patch in my series 
-is dropped completely with your changes in place).
+As I recall, Greg's biggest condition for initial introduction of this
+was to do the same kind of "turn this Kconfig option on and turn an
+option under it off" trick that LTO uses, so that neither "make
+allnoconfig" nor "make allyesconfig" would require Rust until we've had
+plenty of time to experiment with it. And that seems entirely
+reasonable to me too.
 
-So your changes work for me other than the hack needed above.
->
-
+- Josh
