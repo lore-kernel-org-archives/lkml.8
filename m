@@ -2,194 +2,107 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD5DC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072A1207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7477020767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pPiM8bMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGJNrt (ORCPT
+        id S1728003AbgGJNse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:47:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18276 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbgGJNrs (ORCPT
+        Fri, 10 Jul 2020 09:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgGJNsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:47:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ADW2SU122001;
-        Fri, 10 Jul 2020 09:47:47 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpkmua6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 09:47:47 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ADZRr4022647;
-        Fri, 10 Jul 2020 13:47:45 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 326bch8nb9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 13:47:45 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ADlgcP65732700
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 13:47:42 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82015AE04D;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B2B6AE056;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
-Received: from osiris (unknown [9.171.65.223])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
-Date:   Fri, 10 Jul 2020 15:47:40 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] more s390 updates for 5.8-rc5
-Message-ID: <20200710134740.GA14845@osiris>
+        Fri, 10 Jul 2020 09:48:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B281C08C5CE;
+        Fri, 10 Jul 2020 06:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3sEWKCgSSIJlrf5jylxGAqRUeqaTvOph1wbVl9BPw2U=; b=pPiM8bMasRSGqygx9oUy8tC8Xm
+        Li5gj0nNDz6jJRK0BaXcFZHy75weUBw1+Ahkd4xRXqnqt0JTU1LOENkF34flVjVBrrpffQAF9A3V/
+        8Z92+xOx9CQW4XI47QxeCT3HI4Maa9xtfSuGl9gLyqSMm8mDkyS/IZJ8eZ940C/OvAwkk+85X10OT
+        H5/RwtnNGC5E6AjtyATcbpvbe4Jj0Iiv2bDDh8W678THbJELC6cHqsILZ45eWwlHQRyQcxo4ldroY
+        adRZX9LVQR98oIQ3LC8/6TJ6fIuSfk+uMONEpV0jWrweSZH/e74OzdGH85K1ADlQnvrHN3CQlteac
+        EJlYC0Ng==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jttO4-0004DD-TF; Fri, 10 Jul 2020 13:48:24 +0000
+Date:   Fri, 10 Jul 2020 14:48:24 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, Matias Bj??rling <mb@lightnvm.io>,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200710134824.GK12769@casper.infradead.org>
+References: <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200709085501.GA64935@infradead.org>
+ <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
+ <20200709140053.GA7528@infradead.org>
+ <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
+ <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
+ <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk>
+ <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
+ <20200710131054.GB7491@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_06:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- suspectscore=7 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100093
+In-Reply-To: <20200710131054.GB7491@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 10, 2020 at 02:10:54PM +0100, Christoph Hellwig wrote:
+> On Fri, Jul 10, 2020 at 12:35:43AM +0530, Kanchan Joshi wrote:
+> > Append required special treatment (conversion for sector to bytes) for io_uring.
+> > And we were planning a user-space wrapper to abstract that.
+> > 
+> > But good part (as it seems now) was: append result went along with cflags at
+> > virtually no additional cost. And uring code changes became super clean/minimal
+> > with further revisions.
+> > While indirect-offset requires doing allocation/mgmt in application,
+> > io-uring submission
+> > and in completion path (which seems trickier), and those CQE flags
+> > still get written
+> > user-space and serve no purpose for append-write.
+> 
+> I have to say that storing the results in the CQE generally make
+> so much more sense.  I wonder if we need a per-fd "large CGE" flag
+> that adds two extra u64s to the CQE, and some ops just require this
+> version.
 
-please pull more small s390 updates for 5.8-rc5.
+If we're going to go the route of changing the CQE, how about:
 
-This request is mainly due to the fact that Gerald Schaefer's and also
-my old email addresses currently do not work any longer. Therefore we
-decided to switch to new email addresses and reflect that in the
-MAINTAINERS file.
+ struct io_uring_cqe {
+         __u64   user_data;      /* sqe->data submission passed back */
+-        __s32   res;            /* result code for this event */
+-        __u32   flags;
++	union {
++		struct {
++		        __s32   res;            /* result code for this event */
++		        __u32   flags;
++		};
++		__s64	res64;
++	};
+ };
 
-Thanks,
-Heiko
-
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
-
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
-
-for you to fetch changes up to dd9ce2d6eeaebbdd342cbe095b7a195d569f18d3:
-
-  MAINTAINERS: update email address for Gerald Schaefer (2020-07-10 15:06:49 +0200)
-
-----------------------------------------------------------------
-- Update email addresses in MAINTAINERS file and add .mailmap entries
-  for Gerald Schaefer and Heiko Carstens.
-
-- Fix huge pte soft dirty copying.
-
-----------------------------------------------------------------
-Gerald Schaefer (1):
-      MAINTAINERS: update email address for Gerald Schaefer
-
-Heiko Carstens (1):
-      MAINTAINERS: update email address for Heiko Carstens
-
-Janosch Frank (1):
-      s390/mm: fix huge pte soft dirty copying
-
- .mailmap                   | 5 +++++
- MAINTAINERS                | 8 ++++----
- arch/s390/mm/hugetlbpage.c | 2 +-
- 3 files changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/.mailmap b/.mailmap
-index c69d9c734fb5..6da12dfd10dc 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -90,11 +90,16 @@ Frank Rowand <frowand.list@gmail.com> <frank.rowand@sonymobile.com>
- Frank Zago <fzago@systemfabricworks.com>
- Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@linux.vnet.ibm.com>
- Greg Kroah-Hartman <greg@echidna.(none)>
- Greg Kroah-Hartman <gregkh@suse.de>
- Greg Kroah-Hartman <greg@kroah.com>
- Gregory CLEMENT <gregory.clement@bootlin.com> <gregory.clement@free-electrons.com>
- Hanjun Guo <guohanjun@huawei.com> <hanjun.guo@linaro.org>
-+Heiko Carstens <hca@linux.ibm.com> <h.carstens@de.ibm.com>
-+Heiko Carstens <hca@linux.ibm.com> <heiko.carstens@de.ibm.com>
- Henk Vergonet <Henk.Vergonet@gmail.com>
- Henrik Kretzschmar <henne@nachtwindheim.de>
- Henrik Rydberg <rydberg@bitmath.org>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..06f61751353c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3306,7 +3306,7 @@ X:	arch/riscv/net/bpf_jit_comp32.c
- 
- BPF JIT for S390
- M:	Ilya Leoshkevich <iii@linux.ibm.com>
--M:	Heiko Carstens <heiko.carstens@de.ibm.com>
-+M:	Heiko Carstens <hca@linux.ibm.com>
- M:	Vasily Gorbik <gor@linux.ibm.com>
- L:	netdev@vger.kernel.org
- L:	bpf@vger.kernel.org
-@@ -14831,7 +14831,7 @@ S:	Maintained
- F:	drivers/video/fbdev/savage/
- 
- S390
--M:	Heiko Carstens <heiko.carstens@de.ibm.com>
-+M:	Heiko Carstens <hca@linux.ibm.com>
- M:	Vasily Gorbik <gor@linux.ibm.com>
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- L:	linux-s390@vger.kernel.org
-@@ -14862,7 +14862,7 @@ F:	drivers/s390/block/dasd*
- F:	include/linux/dasd_mod.h
- 
- S390 IOMMU (PCI)
--M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-@@ -14890,7 +14890,7 @@ F:	drivers/s390/net/
- 
- S390 PCI SUBSYSTEM
- M:	Niklas Schnelle <schnelle@linux.ibm.com>
--M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index 82df06d720e8..3b5a4d25ca9b 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
- 					     _PAGE_YOUNG);
- #ifdef CONFIG_MEM_SOFT_DIRTY
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
--					     _PAGE_DIRTY);
-+					     _PAGE_SOFT_DIRTY);
- #endif
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
- 					     _PAGE_NOEXEC);
+then we don't need to change the CQE size and it just depends on the SQE
+whether the CQE for it uses res+flags or res64.
