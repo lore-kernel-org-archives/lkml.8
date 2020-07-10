@@ -2,123 +2,381 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52218C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A898AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E912075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHER2mq0"
+	by mail.kernel.org (Postfix) with ESMTP id 7EBDE207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594413553;
+	bh=CnULaI9ELEBbbUKasyXBx7S1yYTMAfrX6S5PK1vzqPc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fgaw5tHzpi7+rroGHw3U84B1jMRwHTSIiMlalnL0/XtmsFaVXv6q7nuT6piz1fzCT
+	 amsi4KTL8hDR22Iu0vOqxbL3cmmesHJzUilOr3CRBZsFRPg8v4JsINd1SAprERjZs0
+	 DPAFsvBPmI5dqCmzgVkVhV1QW4QatIi9hGjRkGv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGJUjH (ORCPT
+        id S1728262AbgGJUjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgGJUjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:39:06 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF52CC08C5DC;
-        Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q17so2712090pls.9;
-        Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a4hcFrNamD57M+KydyUHhxTo+wBFWfBERoQNWvfd5dk=;
-        b=jHER2mq0RW3s7oUnT62BSuh+nJT18yv5xeSFCAZ4dvrFqjGih1qqq2+n6YtUUe23nR
-         YOrlHesVve4UrjUZDGiIBmNqU/ygISCLFjzBRDAKKXlggFcsbhYTQ+XXuG4LvFydmEWY
-         HMyZgo0pCyU4vQhaV7ViY9P1m7mYNsmRymR6qpqYv+CsVzvp1oXyiqZf0QpAhQ3QILg8
-         Wun7fEGyWU9C8/EktMlJoKD2f1ygXF6HHeXXZ1LLgFO7U7qHCfEbD3vePscDM6+6U/M6
-         S8gH/WE4B39qyZztKeZiGhskG+ApKI/alZBPyyPX3tA3x64BQU6/hy5j7tIISL9cJFgp
-         ucrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a4hcFrNamD57M+KydyUHhxTo+wBFWfBERoQNWvfd5dk=;
-        b=aMYSynsyvQzv1v0wCDlw6VCLaFRW2mLZrf18J3XyH5A63ML1BXmmpy9UJYGec9WJzb
-         4mXSAMD+5cYD44ZkRp8NIRcpSkDAbmjZGlt6gIkpzDbVfQX3OxHHtnLTCMNuH5nZrLRB
-         EY0Rv6eD2lpgD1MKDsYiUjZTaLv+htSKVNERQCExtHnQug6vNq/nhkb4dOLxVd3Ch79h
-         ZDmrpe9ZDtnqJm6qOtY2iF63798ezteqciVtPeLfLSBe5pp1+7pZcMU5fDuZ9q5eHMiq
-         Xvqm43cKBy3DewpJttZ0rX6GFYnfrKUWgOv+VW3z8jirNrj7YReDo9/HHeoNg1L/mxgh
-         fU3w==
-X-Gm-Message-State: AOAM532yVWPHl0aY4WmUPJDt1+2aZd5psC9ZModR8edw+pp7hgXoQTWm
-        eqi0h/mXPa1RtyjS/ZhQ1XjLYJ1F+qIvseKj5QQ=
-X-Google-Smtp-Source: ABdhPJzik9IFjwpeSv1uyJTptrG9UO41kEEFUEDwuT9LSNlLnN6ThhdXipjvF8Ao9eTJHu6BHX4tnEYSQkgxeOEIGP4=
-X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr7858831pjb.129.1594413546467;
- Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
+        Fri, 10 Jul 2020 16:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbgGJUjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:39:10 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F3322078B;
+        Fri, 10 Jul 2020 20:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594413549;
+        bh=CnULaI9ELEBbbUKasyXBx7S1yYTMAfrX6S5PK1vzqPc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gXwmLksh2phrQuh3r16fXH2dSS+qJLkUVFIFOQ7fs+LmrslitdklFssUpLoYz9I8Y
+         lUrIIXu5nceiiz6Ng+acnL1PBISNLpHxHzziPuyEXZFF+3BmBvoleu9x8bQfWWOOKM
+         aXWIxklG362XQ5JOsbI4ldpWDFcyAHfMCNnrf6sI=
+Date:   Fri, 10 Jul 2020 15:39:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 1/4] PCI: Move pci_enable_acs() and its dependencies
+ up in pci.c
+Message-ID: <20200710203908.GA78277@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200702085520.16901-1-aaron.ma@canonical.com> <20200710015614.3854-1-aaron.ma@canonical.com>
-In-Reply-To: <20200710015614.3854-1-aaron.ma@canonical.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 10 Jul 2020 23:38:50 +0300
-Message-ID: <CAHp75Ve9KGS+3PWCt20=vshfsw5EEjw42FjDAnKE8gwLVpRB6Q@mail.gmail.com>
-Subject: Re: [v3][PATCH] platform/x86: thinkpad_acpi: not loading
- brightness_init when _BCL invalid
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     mapengyu@gmail.com,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707224604.3737893-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 4:56 AM Aaron Ma <aaron.ma@canonical.com> wrote:
->
-> When _BCL invalid, disable thinkpad_acpi backlight brightness control.
->
-> brightness_enable is already checked at the beginning.
-> Most new thinkpads are using GPU driver to control brightness now,
-> print notice when enabled brightness control even when brightness_enable = 1.
->
+On Tue, Jul 07, 2020 at 03:46:01PM -0700, Rajat Jain wrote:
+> Move pci_enable_acs() and the functions it depends on, further up in the
+> source code to avoid having to forward declare it when we make it static
+> in near future (next patch).
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-Pushed to my review and testing queue, thanks!
+Applied patches 1-3 to pci/enumeration for v5.9, thanks!
 
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+I held off on patch 4 (enabling PCI_ACS_TB) until we have a little
+more conversation on the impact of it.
+
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index ff7f0a4f2475..2b36d5416a3b 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6955,10 +6955,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
->                         pr_warn("Cannot enable backlight brightness support, ACPI is already handling it.  Refer to the acpi_backlight kernel parameter.\n");
->                         return 1;
->                 }
-> -       } else if (tp_features.bright_acpimode && brightness_enable > 1) {
-> -               pr_notice("Standard ACPI backlight interface not available, thinkpad_acpi native brightness control enabled\n");
-> +       } else if (!tp_features.bright_acpimode) {
-> +               pr_notice("ACPI backlight interface not available\n");
-> +               return 1;
->         }
->
-> +       pr_notice("ACPI native brightness control enabled\n");
+> v4: Same as v3
+> v3: Initial version of the patch, created per Bjorn's suggestion
+> 
+>  drivers/pci/pci.c | 254 +++++++++++++++++++++++-----------------------
+>  1 file changed, 127 insertions(+), 127 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce096272f52b1..eec625f0e594e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -777,6 +777,133 @@ int pci_wait_for_pending(struct pci_dev *dev, int pos, u16 mask)
+>  	return 0;
+>  }
+>  
+> +static int pci_acs_enable;
 > +
->         /*
->          * Check for module parameter bogosity, note that we
->          * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
-> --
-> 2.26.2
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +/**
+> + * pci_request_acs - ask for ACS to be enabled if supported
+> + */
+> +void pci_request_acs(void)
+> +{
+> +	pci_acs_enable = 1;
+> +}
+> +
+> +static const char *disable_acs_redir_param;
+> +
+> +/**
+> + * pci_disable_acs_redir - disable ACS redirect capabilities
+> + * @dev: the PCI device
+> + *
+> + * For only devices specified in the disable_acs_redir parameter.
+> + */
+> +static void pci_disable_acs_redir(struct pci_dev *dev)
+> +{
+> +	int ret = 0;
+> +	const char *p;
+> +	int pos;
+> +	u16 ctrl;
+> +
+> +	if (!disable_acs_redir_param)
+> +		return;
+> +
+> +	p = disable_acs_redir_param;
+> +	while (*p) {
+> +		ret = pci_dev_str_match(dev, p, &p);
+> +		if (ret < 0) {
+> +			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
+> +				     disable_acs_redir_param);
+> +
+> +			break;
+> +		} else if (ret == 1) {
+> +			/* Found a match */
+> +			break;
+> +		}
+> +
+> +		if (*p != ';' && *p != ',') {
+> +			/* End of param or invalid format */
+> +			break;
+> +		}
+> +		p++;
+> +	}
+> +
+> +	if (ret != 1)
+> +		return;
+> +
+> +	if (!pci_dev_specific_disable_acs_redir(dev))
+> +		return;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+> +	if (!pos) {
+> +		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
+> +		return;
+> +	}
+> +
+> +	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+> +
+> +	/* P2P Request & Completion Redirect */
+> +	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
+> +
+> +	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> +
+> +	pci_info(dev, "disabled ACS redirect\n");
+> +}
+> +
+> +/**
+> + * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+> + * @dev: the PCI device
+> + */
+> +static void pci_std_enable_acs(struct pci_dev *dev)
+> +{
+> +	int pos;
+> +	u16 cap;
+> +	u16 ctrl;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+> +	if (!pos)
+> +		return;
+> +
+> +	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+> +	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+> +
+> +	/* Source Validation */
+> +	ctrl |= (cap & PCI_ACS_SV);
+> +
+> +	/* P2P Request Redirect */
+> +	ctrl |= (cap & PCI_ACS_RR);
+> +
+> +	/* P2P Completion Redirect */
+> +	ctrl |= (cap & PCI_ACS_CR);
+> +
+> +	/* Upstream Forwarding */
+> +	ctrl |= (cap & PCI_ACS_UF);
+> +
+> +	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> +}
+> +
+> +/**
+> + * pci_enable_acs - enable ACS if hardware support it
+> + * @dev: the PCI device
+> + */
+> +void pci_enable_acs(struct pci_dev *dev)
+> +{
+> +	if (!pci_acs_enable)
+> +		goto disable_acs_redir;
+> +
+> +	if (!pci_dev_specific_enable_acs(dev))
+> +		goto disable_acs_redir;
+> +
+> +	pci_std_enable_acs(dev);
+> +
+> +disable_acs_redir:
+> +	/*
+> +	 * Note: pci_disable_acs_redir() must be called even if ACS was not
+> +	 * enabled by the kernel because it may have been enabled by
+> +	 * platform firmware.  So if we are told to disable it, we should
+> +	 * always disable it after setting the kernel's default
+> +	 * preferences.
+> +	 */
+> +	pci_disable_acs_redir(dev);
+> +}
+> +
+>  /**
+>   * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
+>   * @dev: PCI device to have its BARs restored
+> @@ -3230,133 +3357,6 @@ void pci_configure_ari(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> -static int pci_acs_enable;
+> -
+> -/**
+> - * pci_request_acs - ask for ACS to be enabled if supported
+> - */
+> -void pci_request_acs(void)
+> -{
+> -	pci_acs_enable = 1;
+> -}
+> -
+> -static const char *disable_acs_redir_param;
+> -
+> -/**
+> - * pci_disable_acs_redir - disable ACS redirect capabilities
+> - * @dev: the PCI device
+> - *
+> - * For only devices specified in the disable_acs_redir parameter.
+> - */
+> -static void pci_disable_acs_redir(struct pci_dev *dev)
+> -{
+> -	int ret = 0;
+> -	const char *p;
+> -	int pos;
+> -	u16 ctrl;
+> -
+> -	if (!disable_acs_redir_param)
+> -		return;
+> -
+> -	p = disable_acs_redir_param;
+> -	while (*p) {
+> -		ret = pci_dev_str_match(dev, p, &p);
+> -		if (ret < 0) {
+> -			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
+> -				     disable_acs_redir_param);
+> -
+> -			break;
+> -		} else if (ret == 1) {
+> -			/* Found a match */
+> -			break;
+> -		}
+> -
+> -		if (*p != ';' && *p != ',') {
+> -			/* End of param or invalid format */
+> -			break;
+> -		}
+> -		p++;
+> -	}
+> -
+> -	if (ret != 1)
+> -		return;
+> -
+> -	if (!pci_dev_specific_disable_acs_redir(dev))
+> -		return;
+> -
+> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+> -	if (!pos) {
+> -		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
+> -		return;
+> -	}
+> -
+> -	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+> -
+> -	/* P2P Request & Completion Redirect */
+> -	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
+> -
+> -	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> -
+> -	pci_info(dev, "disabled ACS redirect\n");
+> -}
+> -
+> -/**
+> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+> - * @dev: the PCI device
+> - */
+> -static void pci_std_enable_acs(struct pci_dev *dev)
+> -{
+> -	int pos;
+> -	u16 cap;
+> -	u16 ctrl;
+> -
+> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+> -	if (!pos)
+> -		return;
+> -
+> -	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+> -	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+> -
+> -	/* Source Validation */
+> -	ctrl |= (cap & PCI_ACS_SV);
+> -
+> -	/* P2P Request Redirect */
+> -	ctrl |= (cap & PCI_ACS_RR);
+> -
+> -	/* P2P Completion Redirect */
+> -	ctrl |= (cap & PCI_ACS_CR);
+> -
+> -	/* Upstream Forwarding */
+> -	ctrl |= (cap & PCI_ACS_UF);
+> -
+> -	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> -}
+> -
+> -/**
+> - * pci_enable_acs - enable ACS if hardware support it
+> - * @dev: the PCI device
+> - */
+> -void pci_enable_acs(struct pci_dev *dev)
+> -{
+> -	if (!pci_acs_enable)
+> -		goto disable_acs_redir;
+> -
+> -	if (!pci_dev_specific_enable_acs(dev))
+> -		goto disable_acs_redir;
+> -
+> -	pci_std_enable_acs(dev);
+> -
+> -disable_acs_redir:
+> -	/*
+> -	 * Note: pci_disable_acs_redir() must be called even if ACS was not
+> -	 * enabled by the kernel because it may have been enabled by
+> -	 * platform firmware.  So if we are told to disable it, we should
+> -	 * always disable it after setting the kernel's default
+> -	 * preferences.
+> -	 */
+> -	pci_disable_acs_redir(dev);
+> -}
+> -
+>  static bool pci_acs_flags_enabled(struct pci_dev *pdev, u16 acs_flags)
+>  {
+>  	int pos;
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
