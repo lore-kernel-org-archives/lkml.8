@@ -2,121 +2,131 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD14FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A28C12078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:51:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594396260;
-	bh=Yx9JX9RFWYc1ihGffCUzZCZOndU+VTdYgQo0UHVe01g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eV7nzPoZ5r88X3UpgL8ajWR1iVkKuJjmnXmncsjn2HzpzSxHDTXBcDSx0w0bpRyTl
-	 kadEEoZxGXPXBDSeY8nxyn2bIo/dC60hmp41XQNE7xazLRsNmNyVvxM71WFrpBjDDj
-	 fu9U64YD97Vxs5nhVEwF+t52tFOG1lGqH1zPFI4Y=
+	by mail.kernel.org (Postfix) with ESMTP id C7A8C20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oUV4qdW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGJPu7 (ORCPT
+        id S1728196AbgGJPv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgGJPu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:50:59 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7EAF20720;
-        Fri, 10 Jul 2020 15:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594396258;
-        bh=Yx9JX9RFWYc1ihGffCUzZCZOndU+VTdYgQo0UHVe01g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z+X3vaxA8J8ZmLiS4Y7CP4mKS2S2CxhxEvqsFrks0DJdjLxr8D+6bpCPC3wkL6Xo7
-         whowKugX9FZEwuY/cEQ946S7xfYRx2IpZGRTMM5eobaDPrA6983yxuDdBhWsLSclHL
-         skxffECdWcWTYF+/zd7QClgOyAzq+jMImsW+kTjQ=
-Date:   Fri, 10 Jul 2020 08:50:56 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Zhi Li <lizhi01@loongson.cn>
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lixuefeng@loongson.cn,
-        chenhc@lemote.com, jiaxun.yang@flygoat.com, yangtiezhu@loongson.cn,
-        Hongbin Li <lihongbin@loongson.cn>
-Subject: Re: [PATCH] stmmac: pci: Add support for LS7A bridge chip
-Message-ID: <20200710085056.6deb411a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <1594371110-7580-1-git-send-email-lizhi01@loongson.cn>
-References: <1594371110-7580-1-git-send-email-lizhi01@loongson.cn>
+        Fri, 10 Jul 2020 11:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgGJPv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:51:59 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6667C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:51:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k4so2404573pld.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DQese5NC62g6R1leDp/qCM4i5r8CiSVoueHjPxDj68o=;
+        b=oUV4qdW6mPV9TACal8VDQwPXp4TfiKZooo6GketEaLJGMrLHYVY3V9ARqO6vVO5YpV
+         Qxh7B5tKgZDkBBQ2tKs6I+p2JwDy5eTqh660pHJNkoJngvOK+NJQUr1HlUg+yX/2EiRx
+         h2JmBIyslnxwJ/i802vUWOdAgTbhVmWPqwZU4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DQese5NC62g6R1leDp/qCM4i5r8CiSVoueHjPxDj68o=;
+        b=CXvP4Bj5AlOzFkM6ic9T+32qvVPJoiSVKrzsUrrB8c6YAG9Em014EZ3L5VdJbrVmWi
+         5OB8/FrVZvYv4SEmdC+dN0ViC3O2Rdh3ZmaavXEZan67NEf29EhLkZMs5jJZJ6XCNSh3
+         kyrf9Xsop8uEhVYWB6moLKWTdFIYZgW67ZdSxEhNdoXf7lkXUrqIVFFak+EjjIYYqoZp
+         9ihcAFOGYToYAPXeW9ViOuFMz/mm/cOSqH5N8EFfFHM/amwXz3yR+HZ1m9XGO4yVuRhO
+         3O3l16MnBMu7zxnqcPcgrtwU9y2bRgmD1rduU/ifDPHfa73PRAa3TCa8gUNuQVkCmbQY
+         duqw==
+X-Gm-Message-State: AOAM533jj5w51FOeAXByPc1PwhyGexN12dgSuL//MTLHsrftGP51CMpg
+        7Vq3/AH2IW3Va1J4oujeK4XG4Q==
+X-Google-Smtp-Source: ABdhPJxdBmulO3UZ7ab+Reja0ySreW+1xomJB1W1FlNI+5HWxnZ5HGistj70iTcj9697BSVCBEi/7g==
+X-Received: by 2002:a17:90b:94f:: with SMTP id dw15mr6530095pjb.199.1594396318409;
+        Fri, 10 Jul 2020 08:51:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c71sm6755425pje.32.2020.07.10.08.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 08:51:57 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 08:51:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
+Message-ID: <202007100849.9FA1E414A@keescook>
+References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
+ <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 16:51:50 +0800 Zhi Li wrote:
-> Add gmac platform data to support LS7A bridge chip.
->=20
-> Co-developed-by: Hongbin Li <lihongbin@loongson.cn>
-> Signed-off-by: Hongbin Li <lihongbin@loongson.cn>
-> Signed-off-by: Zhi Li <lizhi01@loongson.cn>
+On Fri, Jul 10, 2020 at 07:32:57PM +0900, Masami Hiramatsu wrote:
+> On Fri, 10 Jul 2020 02:45:19 +0300
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > +#ifdef CONFIG_MODULES
+> >  	/* Lock modules while optimizing kprobes */
+> >  	mutex_lock(&module_mutex);
+> > +#endif
+> 
+> Hmm, can you reduce these "#ifdef CONFIG_MODULE"s ?
+> 
+> e.g. 
+> 
+> #ifdef CONFIG_MODULES
+> static void lock_modules(void)
+> {
+> 	mutex_lock(&module_mutex);
+> }
+> ...
+> #else
+> #define lock_modules() do { } while (0)
+> ...
+> #endif
 
-This appears to not build with allmodconfig:
+I prefer using "static inline" for no-op functions just because they
+will maintain argument type validation by the compiler regardless of the
+CONFIG state (though it doesn't really matter here since it's void).
 
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:22:62: note: expected =
-=E2=80=98struct plat_stmmacenet_data *=E2=80=99 but argument is of type =E2=
-=80=98struct plat_stmmacenent_data *=E2=80=99
-   22 | static void common_default_data(struct plat_stmmacenet_data *plat)
-      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:145:6: error: invalid u=
-se of undefined type =E2=80=98struct plat_stmmacenent_data=E2=80=99
-  145 |  plat->bus_id =3D pci_dev_id(pdev);
-      |      ^~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:146:6: error: invalid u=
-se of undefined type =E2=80=98struct plat_stmmacenent_data=E2=80=99
-  146 |  plat->phy_addr =3D 0;
-      |      ^~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:147:6: error: invalid u=
-se of undefined type =E2=80=98struct plat_stmmacenent_data=E2=80=99
-  147 |  plat->interface =3D PHY_INTERFACE_MODE_GMII;
-      |      ^~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:149:6: error: invalid u=
-se of undefined type =E2=80=98struct plat_stmmacenent_data=E2=80=99
-  149 |  plat->dma_cfg->pbl =3D 32;
-      |      ^~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:150:6: error: invalid u=
-se of undefined type =E2=80=98struct plat_stmmacenent_data=E2=80=99
-  150 |  plat->dma_cfg->pblx8 =3D true;
-      |      ^~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c: At top level:
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:156:11: error: initiali=
-zation of =E2=80=98int (*)(struct pci_dev *, struct plat_stmmacenet_data *)=
-=E2=80=99 from incompatible pointer type =E2=80=98int (*)(struct pci_dev *,=
- struct plat_stmmacenent_data *)=E2=80=99 [-Werror=3Dincompatible-pointer-t=
-ypes]
-  156 |  .setup =3D loongson_default_data;
-      |           ^~~~~~~~~~~~~~~~~~~~~
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:156:11: note: (near ini=
-tialization for =E2=80=98loongson_pci_info.setup=E2=80=99)
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:156:32: error: expected=
- =E2=80=98}=E2=80=99 before =E2=80=98;=E2=80=99 token
-  156 |  .setup =3D loongson_default_data;
-      |                                ^
-../drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:155:51: note: to match =
-this =E2=80=98{=E2=80=99
-  155 | static struct stmmac_pci_info loongson_pci_info =3D {
-      |                                                   ^
-cc1: some warnings being treated as errors
-make[6]: *** [drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o] Error 1
-make[5]: *** [drivers/net/ethernet/stmicro/stmmac] Error 2
-make[4]: *** [drivers/net/ethernet/stmicro] Error 2
-make[3]: *** [drivers/net/ethernet] Error 2
-make[2]: *** [drivers/net] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [drivers] Error 2
-make: *** [__sub-make] Error 2
+#else
+static inline lock_modules(void) { }
+#endif
+
+-- 
+Kees Cook
