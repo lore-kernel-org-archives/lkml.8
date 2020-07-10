@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D253C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF609C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4898320874
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CF6206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594420481;
-	bh=sMYkMYitD6sPj0ukCknVdpCgnLmfr5vqpCBV7xeRxnc=;
+	s=default; t=1594420482;
+	bh=ucoDUHYkjSRPOm2qbV+240NTBrykvQHA5UqCzIUfAYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+sfZIkeGsy8IbIAJa44jGy82yAM0iLKlZ8gw/ksgEwE/YdoBSdDQk3NF9PT3xMs2
-	 UxZ+HwuRRLBrx6/vRJKIB1HCfpMSs58zJf0+qiLJdIny3NQCbZSphzrQe7FOCjwCY5
-	 wtwLcu/zoiodZODi2dxfY9/FltVMw4toAG3qDghU=
+	b=J/VqdYIzwV/yxMAwXKmJ3KpaY35YXyZnsSIBPQm/nxkzImOzjHF03IREUjSD+fyaj
+	 ciWYIxJcoQLRkEN3jDGy8mcK30EHVhyTj2I38wwbBH3opfGfVue9lKwv+HQYOyZV6i
+	 KsmsnUQM/VTt+BOygDbpZ2qfeMAE5AS1kAEOYmNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGJWej (ORCPT
+        id S1726893AbgGJWel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:34:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 18:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgGJWec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:34:32 -0400
+        id S1726794AbgGJWee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:34:34 -0400
 Received: from sstabellini-ThinkPad-T480s.hsd1.ca.comcast.net (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8DA7207FC;
-        Fri, 10 Jul 2020 22:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2675920720;
+        Fri, 10 Jul 2020 22:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594420472;
-        bh=sMYkMYitD6sPj0ukCknVdpCgnLmfr5vqpCBV7xeRxnc=;
+        s=default; t=1594420473;
+        bh=ucoDUHYkjSRPOm2qbV+240NTBrykvQHA5UqCzIUfAYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkosITiJ48CQikhlYJWkeZGIhGG+eMgl8OaoZ/kNTsCH+/33DkflrU7cSBOMfzdUq
-         bPWXlCXKKhcKjExNrnFg2SReGONdaI3jhfncDja5w3vlNRiOu2aF0upucK00xtmOYQ
-         ITCaHzvbzVF33GKpwDOLggZY96Jh0H46k5ZQLxfY=
+        b=WejIoLlLic1B7Dmj085WZh457ou/ls3auQwQETNjRv3STFqcYkb+c5Eos22MCsgQy
+         j5Km6FnmA73P5v2e7pm1hFt3dq0NkCt5v3auBQMG9F3ycKHomSh8rx7b+F+jgUHNXX
+         lEF1m7TGustCcFirrHcsPh7b/hHQkhV31TFi0JfY=
 From:   Stefano Stabellini <sstabellini@kernel.org>
 To:     jgross@suse.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
 Cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
         linux-kernel@vger.kernel.org, hch@infradead.org,
         Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: [PATCH v3 06/11] swiotlb-xen: add struct device * parameter to xen_dma_sync_for_device
-Date:   Fri, 10 Jul 2020 15:34:22 -0700
-Message-Id: <20200710223427.6897-6-sstabellini@kernel.org>
+Subject: [PATCH v3 09/11] swiotlb-xen: introduce phys_to_dma/dma_to_phys translations
+Date:   Fri, 10 Jul 2020 15:34:25 -0700
+Message-Id: <20200710223427.6897-9-sstabellini@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
 References: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
@@ -57,77 +57,190 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 
-No functional changes. The parameter is unused in this patch but will be
-used by next patches.
+With some devices physical addresses are different than dma addresses.
+To be able to deal with these cases, we need to call phys_to_dma on
+physical addresses (including machine addresses in Xen terminology)
+before returning them from xen_swiotlb_alloc_coherent and
+xen_swiotlb_map_page.
+
+We also need to convert dma addresses back to physical addresses using
+dma_to_phys in xen_swiotlb_free_coherent and xen_swiotlb_unmap_page if
+we want to do any operations on them.
+
+Call dma_to_phys in is_xen_swiotlb_buffer.
+Introduce xen_phys_to_dma and call phys_to_dma in its implementation.
+Introduce xen_dma_to_phys and call dma_to_phys in its implementation.
+Call xen_phys_to_dma/xen_dma_to_phys instead of
+xen_phys_to_bus/xen_bus_to_phys through swiotlb-xen.c.
+
+Everything is taken care of by these changes except for
+xen_swiotlb_alloc_coherent and xen_swiotlb_free_coherent, which need a
+few explicit phys_to_dma/dma_to_phys calls.
 
 Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Tested-by: Corey Minyard <cminyard@mvista.com>
 Tested-by: Roman Shaposhnik <roman@zededa.com>
 ---
-Changes in v3:
-- add whitespace in title
+Changes in v2:
 - improve commit message
----
- arch/arm/xen/mm.c         | 5 +++--
- drivers/xen/swiotlb-xen.c | 4 ++--
- include/xen/swiotlb-xen.h | 5 +++--
- 3 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index 1a00e8003c64..f2414ea40a79 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -81,8 +81,9 @@ void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
- }
- 
--void xen_dma_sync_for_device(dma_addr_t handle, phys_addr_t paddr, size_t size,
--		enum dma_data_direction dir)
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+			     phys_addr_t paddr, size_t size,
-+			     enum dma_data_direction dir)
- {
- 	if (pfn_valid(PFN_DOWN(handle)))
- 		arch_sync_dma_for_device(paddr, size, dir);
+Changes in v3:
+- add xen_phys_to_dma and xen_dma_to_phys in this patch
+---
+ drivers/xen/swiotlb-xen.c | 53 +++++++++++++++++++++++----------------
+ 1 file changed, 32 insertions(+), 21 deletions(-)
+
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index d04b7a15124f..8a3a7bcc5ec0 100644
+index 03d118b6c141..a6a95358a8cb 100644
 --- a/drivers/xen/swiotlb-xen.c
 +++ b/drivers/xen/swiotlb-xen.c
-@@ -408,7 +408,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+@@ -52,30 +52,39 @@ static unsigned long xen_io_tlb_nslabs;
+  * Quick lookup value of the bus address of the IOTLB.
+  */
  
- done:
- 	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
--		xen_dma_sync_for_device(dev_addr, phys, size, dir);
-+		xen_dma_sync_for_device(dev, dev_addr, phys, size, dir);
- 	return dev_addr;
+-static inline dma_addr_t xen_phys_to_bus(struct device *dev, phys_addr_t paddr)
++static inline phys_addr_t xen_phys_to_bus(struct device *dev, phys_addr_t paddr)
+ {
+ 	unsigned long bfn = pfn_to_bfn(XEN_PFN_DOWN(paddr));
+-	dma_addr_t dma = (dma_addr_t)bfn << XEN_PAGE_SHIFT;
++	phys_addr_t baddr = (phys_addr_t)bfn << XEN_PAGE_SHIFT;
+ 
+-	dma |= paddr & ~XEN_PAGE_MASK;
++	baddr |= paddr & ~XEN_PAGE_MASK;
++	return baddr;
++}
+ 
+-	return dma;
++static inline dma_addr_t xen_phys_to_dma(struct device *dev, phys_addr_t paddr)
++{
++	return phys_to_dma(dev, xen_phys_to_bus(dev, paddr));
  }
  
-@@ -458,7 +458,7 @@ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
- 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
+-static inline phys_addr_t xen_bus_to_phys(struct device *dev, dma_addr_t baddr)
++static inline phys_addr_t xen_bus_to_phys(struct device *dev,
++					  phys_addr_t baddr)
+ {
+ 	unsigned long xen_pfn = bfn_to_pfn(XEN_PFN_DOWN(baddr));
+-	dma_addr_t dma = (dma_addr_t)xen_pfn << XEN_PAGE_SHIFT;
+-	phys_addr_t paddr = dma;
+-
+-	paddr |= baddr & ~XEN_PAGE_MASK;
++	phys_addr_t paddr = (xen_pfn << XEN_PAGE_SHIFT) |
++			    (baddr & ~XEN_PAGE_MASK);
  
- 	if (!dev_is_dma_coherent(dev))
--		xen_dma_sync_for_device(dma_addr, paddr, size, dir);
-+		xen_dma_sync_for_device(dev, dma_addr, paddr, size, dir);
+ 	return paddr;
+ }
+ 
++static inline phys_addr_t xen_dma_to_phys(struct device *dev,
++					  dma_addr_t dma_addr)
++{
++	return xen_bus_to_phys(dev, dma_to_phys(dev, dma_addr));
++}
++
+ static inline dma_addr_t xen_virt_to_bus(struct device *dev, void *address)
+ {
+-	return xen_phys_to_bus(dev, virt_to_phys(address));
++	return xen_phys_to_dma(dev, virt_to_phys(address));
+ }
+ 
+ static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+@@ -94,7 +103,7 @@ static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+ 
+ static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+ {
+-	unsigned long bfn = XEN_PFN_DOWN(dma_addr);
++	unsigned long bfn = XEN_PFN_DOWN(dma_to_phys(dev, dma_addr));
+ 	unsigned long xen_pfn = bfn_to_local_pfn(bfn);
+ 	phys_addr_t paddr = (phys_addr_t)xen_pfn << XEN_PAGE_SHIFT;
+ 
+@@ -299,12 +308,12 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
+ 	if (hwdev && hwdev->coherent_dma_mask)
+ 		dma_mask = hwdev->coherent_dma_mask;
+ 
+-	/* At this point dma_handle is the physical address, next we are
++	/* At this point dma_handle is the dma address, next we are
+ 	 * going to set it to the machine address.
+ 	 * Do not use virt_to_phys(ret) because on ARM it doesn't correspond
+ 	 * to *dma_handle. */
+-	phys = *dma_handle;
+-	dev_addr = xen_phys_to_bus(hwdev, phys);
++	phys = dma_to_phys(hwdev, *dma_handle);
++	dev_addr = xen_phys_to_dma(hwdev, phys);
+ 	if (((dev_addr + size - 1 <= dma_mask)) &&
+ 	    !range_straddles_page_boundary(phys, size))
+ 		*dma_handle = dev_addr;
+@@ -314,6 +323,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
+ 			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
+ 			return NULL;
+ 		}
++		*dma_handle = phys_to_dma(hwdev, *dma_handle);
+ 		SetPageXenRemapped(virt_to_page(ret));
+ 	}
+ 	memset(ret, 0, size);
+@@ -334,7 +344,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 
+ 	/* do not use virt_to_phys because on ARM it doesn't return you the
+ 	 * physical address */
+-	phys = xen_bus_to_phys(hwdev, dev_addr);
++	phys = xen_dma_to_phys(hwdev, dev_addr);
+ 
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
+@@ -349,7 +359,8 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	    TestClearPageXenRemapped(page))
+ 		xen_destroy_contiguous_region(phys, order);
+ 
+-	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
++	xen_free_coherent_pages(hwdev, size, vaddr, phys_to_dma(hwdev, phys),
++				attrs);
  }
  
  /*
-diff --git a/include/xen/swiotlb-xen.h b/include/xen/swiotlb-xen.h
-index f62d1854780b..6d235fe2b92d 100644
---- a/include/xen/swiotlb-xen.h
-+++ b/include/xen/swiotlb-xen.h
-@@ -7,8 +7,9 @@
- void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
- 			  phys_addr_t paddr, size_t size,
- 			  enum dma_data_direction dir);
--void xen_dma_sync_for_device(dma_addr_t handle, phys_addr_t paddr, size_t size,
--		enum dma_data_direction dir);
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+			     phys_addr_t paddr, size_t size,
-+			     enum dma_data_direction dir);
+@@ -365,7 +376,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ 				unsigned long attrs)
+ {
+ 	phys_addr_t map, phys = page_to_phys(page) + offset;
+-	dma_addr_t dev_addr = xen_phys_to_bus(dev, phys);
++	dma_addr_t dev_addr = xen_phys_to_dma(dev, phys);
  
- extern int xen_swiotlb_init(int verbose, bool early);
- extern const struct dma_map_ops xen_swiotlb_dma_ops;
+ 	BUG_ON(dir == DMA_NONE);
+ 	/*
+@@ -390,7 +401,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ 		return DMA_MAPPING_ERROR;
+ 
+ 	phys = map;
+-	dev_addr = xen_phys_to_bus(dev, map);
++	dev_addr = xen_phys_to_dma(dev, map);
+ 
+ 	/*
+ 	 * Ensure that the address returned is DMA'ble
+@@ -418,7 +429,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	phys_addr_t paddr = xen_bus_to_phys(hwdev, dev_addr);
++	phys_addr_t paddr = xen_dma_to_phys(hwdev, dev_addr);
+ 
+ 	BUG_ON(dir == DMA_NONE);
+ 
+@@ -434,7 +445,7 @@ static void
+ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+ 		size_t size, enum dma_data_direction dir)
+ {
+-	phys_addr_t paddr = xen_bus_to_phys(dev, dma_addr);
++	phys_addr_t paddr = xen_dma_to_phys(dev, dma_addr);
+ 
+ 	if (!dev_is_dma_coherent(dev))
+ 		xen_dma_sync_for_cpu(dev, dma_addr, paddr, size, dir);
+@@ -447,7 +458,7 @@ static void
+ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
+ 		size_t size, enum dma_data_direction dir)
+ {
+-	phys_addr_t paddr = xen_bus_to_phys(dev, dma_addr);
++	phys_addr_t paddr = xen_dma_to_phys(dev, dma_addr);
+ 
+ 	if (is_xen_swiotlb_buffer(dev, dma_addr))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
 -- 
 2.17.1
 
