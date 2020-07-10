@@ -2,48 +2,49 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85095C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C119207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E1020836
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+rSYatf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WbYN6EnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgGJOMJ (ORCPT
+        id S1728196AbgGJOMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:12:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53423 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726977AbgGJOMI (ORCPT
+        Fri, 10 Jul 2020 10:12:22 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58336 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728054AbgGJOMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:12:08 -0400
+        Fri, 10 Jul 2020 10:12:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594390327;
+        s=mimecast20190719; t=1594390332;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tC/RDuBXGV/0eBPfyMsRxhpj4+FXW/fTZ0b83kArGak=;
-        b=i+rSYatf8DuJcr6S6MR9boPxcOpW8fI4vMGGLt6kCpibNhGHiQddatCesT6IbXb9Ifa6OU
-        qJTWnJfTQqFtsPHCTQ0YMyuRZiQFDmthojnlnwRRHf4PFof6bAMMmmtcIM3BxU12k9kJmC
-        S1dlwtPfYggU6N6QPD7pVKFIQOEubnc=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vHoUdqcWmCYR4qi3PrugHYTP3M3+EpRb12azAQ/0uIU=;
+        b=WbYN6EnBlT4Vs9Wdyp6BYhHHA1v2GU1VbQkLRck4jw58tjyu41qkVlTxG7vsNdNHthnAZE
+        0HBoWvWQWVPup+7pJ2kbl7FZ2ZNKPWYqjaPFrSx3CEiCiWw3gMntY1QmETjzMlyHyWR3dC
+        EwPNFhMi0YMrtonhP/10z+DrYdFwZv4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-8WEcPZc2OI29-Fy4J8_xCg-1; Fri, 10 Jul 2020 10:12:03 -0400
-X-MC-Unique: 8WEcPZc2OI29-Fy4J8_xCg-1
+ us-mta-36-D9o55wPwNruu77r6tc_XZA-1; Fri, 10 Jul 2020 10:12:07 -0400
+X-MC-Unique: D9o55wPwNruu77r6tc_XZA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B2B8186A8E3;
-        Fri, 10 Jul 2020 14:12:01 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 928F5100CCC2;
+        Fri, 10 Jul 2020 14:12:06 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF53774F5E;
-        Fri, 10 Jul 2020 14:11:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 642C774F52;
+        Fri, 10 Jul 2020 14:12:04 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -51,9 +52,11 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Junaid Shahid <junaids@google.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/9] KVM: nSVM: fixes for CR3/MMU switch upon nested guest entry/exit
-Date:   Fri, 10 Jul 2020 16:11:48 +0200
-Message-Id: <20200710141157.1640173-1-vkuznets@redhat.com>
+Subject: [PATCH v4 2/9] KVM: MMU: stop dereferencing vcpu->arch.mmu to get the context for MMU init
+Date:   Fri, 10 Jul 2020 16:11:50 +0200
+Message-Id: <20200710141157.1640173-3-vkuznets@redhat.com>
+In-Reply-To: <20200710141157.1640173-1-vkuznets@redhat.com>
+References: <20200710141157.1640173-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
@@ -62,54 +65,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v3:
-- Swapped my "KVM: nSVM: stop dereferencing vcpu->arch.mmu to get the
- context in kvm_init_shadow{,_npt}_mmu()" with Paolo's "KVM: MMU: stop
- dereferencing vcpu->arch.mmu to get the context for MMU init".
-- keeping nested_svm_init_mmu_context() in nested_prepare_vmcb_control()
- as this is also used from svm_set_nested_state() [Paolo],
- nested_svm_load_cr3() becomes a separate step in enter_svm_guest_mode().
-- nested_prepare_vmcb_save() remains 'void' [Paolo]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Original description:
+kvm_init_shadow_mmu() was actually the only function that could be called
+with different vcpu->arch.mmu values.  Now that kvm_init_shadow_npt_mmu()
+is separated from kvm_init_shadow_mmu(), we always know the MMU context
+we need to use and there is no need to dereference vcpu->arch.mmu pointer.
 
-This is a successor of "[PATCH v2 0/3] KVM: nSVM: fix #TF from CR3 switch
-when entering guest" and "[PATCH] KVM: x86: drop erroneous mmu_check_root()
-from fast_pgd_switch()".
+Based on a patch by Vitaly Kuznetsov <vkuznets@redhat.com>.
 
-The snowball is growing fast! It all started with an intention to fix
-the particular 'tripple fault' issue (now fixed by PATCH7) but now we
-also get rid of unconditional kvm_mmu_reset_context() upon nested guest
-entry/exit and make the code resemble nVMX. There is still a huge room
-for further improvement (proper error propagation, removing unconditional
-MMU sync/TLB flush,...) but at least we're making some progress.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Tested with kvm selftests/kvm-unit-tests and by running nested Hyper-V
-on KVM. The series doesn't seem to introduce any new issues.
-
-Paolo Bonzini (1):
-  KVM: MMU: stop dereferencing vcpu->arch.mmu to get the context for MMU
-    init
-
-Vitaly Kuznetsov (8):
-  KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
-  KVM: nSVM: reset nested_run_pending upon nested_svm_vmrun_msrpm()
-    failure
-  KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
-  KVM: nSVM: introduce nested_svm_load_cr3()/nested_npt_enabled()
-  KVM: nSVM: move kvm_set_cr3() after nested_svm_uninit_mmu_context()
-  KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest
-    switch
-  KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
-  KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
-
- arch/x86/kvm/mmu.h        |  3 +-
- arch/x86/kvm/mmu/mmu.c    | 45 ++++++++++++------
- arch/x86/kvm/svm/nested.c | 97 ++++++++++++++++++++++++++++-----------
- arch/x86/kvm/svm/svm.c    |  6 ++-
- arch/x86/kvm/svm/svm.h    |  4 +-
- 5 files changed, 110 insertions(+), 45 deletions(-)
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 93f18e5fa8b5..3a306ab1a9c9 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4884,7 +4884,7 @@ kvm_calc_tdp_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
+ 
+ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
++	struct kvm_mmu *context = &vcpu->arch.root_mmu;
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_tdp_mmu_root_page_role(vcpu, false);
+ 
+@@ -4952,11 +4952,10 @@ kvm_calc_shadow_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
+ 	return role;
+ }
+ 
+-static void shadow_mmu_init_context(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4,
+-				    u32 efer, union kvm_mmu_role new_role)
++static void shadow_mmu_init_context(struct kvm_vcpu *vcpu, struct kvm_mmu *context,
++				    u32 cr0, u32 cr4, u32 efer,
++				    union kvm_mmu_role new_role)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
+-
+ 	if (!(cr0 & X86_CR0_PG))
+ 		nonpaging_init_context(vcpu, context);
+ 	else if (efer & EFER_LMA)
+@@ -4972,23 +4971,23 @@ static void shadow_mmu_init_context(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4,
+ 
+ static void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
++	struct kvm_mmu *context = &vcpu->arch.root_mmu;
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+ 
+ 	if (new_role.as_u64 != context->mmu_role.as_u64)
+-		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
++		shadow_mmu_init_context(vcpu, context, cr0, cr4, efer, new_role);
+ }
+ 
+ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
+ 			     gpa_t nested_cr3)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
++	struct kvm_mmu *context = &vcpu->arch.guest_mmu;
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+ 
+ 	if (new_role.as_u64 != context->mmu_role.as_u64)
+-		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
++		shadow_mmu_init_context(vcpu, context, cr0, cr4, efer, new_role);
+ }
+ EXPORT_SYMBOL_GPL(kvm_init_shadow_npt_mmu);
+ 
+@@ -5024,7 +5023,7 @@ kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
+ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+ 			     bool accessed_dirty, gpa_t new_eptp)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
++	struct kvm_mmu *context = &vcpu->arch.guest_mmu;
+ 	u8 level = vmx_eptp_page_walk_level(new_eptp);
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_ept_root_page_role(vcpu, accessed_dirty,
+@@ -5058,7 +5057,7 @@ EXPORT_SYMBOL_GPL(kvm_init_shadow_ept_mmu);
+ 
+ static void init_kvm_softmmu(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_mmu *context = vcpu->arch.mmu;
++	struct kvm_mmu *context = &vcpu->arch.root_mmu;
+ 
+ 	kvm_init_shadow_mmu(vcpu,
+ 			    kvm_read_cr0_bits(vcpu, X86_CR0_PG),
 -- 
 2.25.4
 
