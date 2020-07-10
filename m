@@ -2,185 +2,109 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082CAC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA692077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="siq3ZbTA"
+	by mail.kernel.org (Postfix) with ESMTP id A43242065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgGJXSl (ORCPT
+        id S1726796AbgGJXZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgGJXSj (ORCPT
+        Fri, 10 Jul 2020 19:25:21 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45877 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgGJXZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:18:39 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A9FC08E6DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:18:39 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ls15so3240953pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qMRZ0NHrlcURRoHaqKwJd/gScGKjURbuurmLT4oMPDs=;
-        b=siq3ZbTA8BVqEbOmQpqqMzjRPpTkpPlIz/ks6NqaULMEejA4YkYv/HOK6AB6c+Ru+p
-         ckwa3ejAbmLnY6HDT2jT1n3vgy5z0SZ5gwYKdDBCDLbwXFqjP8vpJUm6QCqnF0ADlMxO
-         GGp2Ei5aYGCGgTYSI3DhWhxfJjbcxSCrq0KA11CGIHICNMJVAiJWmBzlP1w8NjNZTQan
-         tB0EzrdMVX7bbGxfULnfdLFA2ZeO6gq5lb7AVAuGBMpXVG8DefbouKG/WLX1Pq6VDCTc
-         yr7XR4303DU9x7jRegGN4vnjs5SN6h2yHTK7gcCMKMWE1D+G7o/sYapLeCwE4Noj7ZsW
-         KH3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qMRZ0NHrlcURRoHaqKwJd/gScGKjURbuurmLT4oMPDs=;
-        b=FrIwXPpAEyLpESX1O587GcChXLK4bAmr/xAIi1KwxZMcJwwW+7GIdA1wOI3Ev6L4FG
-         vcsPNuqfniSC0EXSe+CGMT9cUv1NP7usmP5ptJGK+HbLFZlrhpBjBAJ+M0p8bMGQyWdp
-         84T8UXnvmF8P/ZhZp7QBq6ywl6kDBiICvX8UxGrS8IgSs0IjP1sY/ygJhvU1h6r3rGLn
-         PkxGBt4h/nuKGYHe2pr/VZAOTi9fxp11918LMuy0+z3LWjxu6zJyzh9TcFpZ2G9OCadX
-         iEsjgxF98nHS9P+9AG5eRV/FiNRyQGucIipqUqDKVl2TV0FOnpfondjWypJm6y6fw0jm
-         tfrA==
-X-Gm-Message-State: AOAM531VaNlPMcndaJFuhv/lnOpFTaJSDHrW04qosfUpBc+mOWTWjLzJ
-        44/iPz/l9ieeAVK6VpxocBeRbh5RN48=
-X-Google-Smtp-Source: ABdhPJwSbb79kmY7DkCicu1bibjmRmwkDhPsaYe4S7la9jpHz+4d4wDYfZdkm3pwOOLNjGKLc5IpCQ==
-X-Received: by 2002:a17:90a:b00e:: with SMTP id x14mr8327273pjq.57.1594423118394;
-        Fri, 10 Jul 2020 16:18:38 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id c14sm7296382pfj.82.2020.07.10.16.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 16:18:37 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v3 3/3] irqchip: Allow QCOM_PDC to be loadable as a permanent module
-Date:   Fri, 10 Jul 2020 23:18:24 +0000
-Message-Id: <20200710231824.60699-4-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200710231824.60699-1-john.stultz@linaro.org>
-References: <20200710231824.60699-1-john.stultz@linaro.org>
+        Fri, 10 Jul 2020 19:25:21 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A241060002;
+        Fri, 10 Jul 2020 23:25:16 +0000 (UTC)
+Date:   Sat, 11 Jul 2020 01:25:16 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Message-ID: <20200710232516.GE3759@piout.net>
+References: <20200422072137.8517-1-o.rempel@pengutronix.de>
+ <20200710223610.GC3759@piout.net>
+ <20200710225453.GK1014141@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710225453.GK1014141@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allows qcom-pdc driver to be loaded as a permanent module
+On 11/07/2020 00:54:53+0200, Andrew Lunn wrote:
+> On Sat, Jul 11, 2020 at 12:36:10AM +0200, Alexandre Belloni wrote:
+> > Hi Oleksij,
+> > 
+> > This patch breaks Ethernet on the sama5d3 Xplained and I have not been
+> > able to unbreak it.
+> 
+> Hi Alexandre
+> 
+>                         macb0: ethernet@f0028000 {
+>                                 phy-mode = "rgmii";
+>                                 #address-cells = <1>;
+>                                 #size-cells = <0>;
+>                                 status = "okay";
+> 
+>                                 ethernet-phy@7 {
+>                                         reg = <0x7>;
+>                                 };
+>                         };
+> 
+> So DT says it wants rgmii. How are the delays being added? Could the
+> bootloader be configuring the PHY into rgmii-id mode, which is now
+> getting cleared? Or by strapping of pins on the PHY?
+> 
+> Also, looking at macb_main.c is seen:
+> 
+>        if (!(bp->caps & MACB_CAPS_USRIO_DISABLED)) {
+>                 val = 0;
+>                 if (bp->phy_interface == PHY_INTERFACE_MODE_RGMII)
+>                         val = GEM_BIT(RGMII);
+>                 else if (bp->phy_interface == PHY_INTERFACE_MODE_RMII &&
+>                          (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII))
+>                         val = MACB_BIT(RMII);
+>                 else if (!(bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII))
+>                         val = MACB_BIT(MII);
+> 
+>                 if (bp->caps & MACB_CAPS_USRIO_HAS_CLKEN)
+>                         val |= MACB_BIT(CLKEN);
+> 
+>                 macb_or_gem_writel(bp, USRIO, val);
+>         }
+> 
+> I don't know if this applies for your hardware, but if you tried
+> fixing the PHY by setting phy-mode to "rgmii-id", it could be macb
+> then did not set GEM_BIT(RGMII) and so broken even more?
+> 
 
-Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
-building as a module, we have to replace it with platform driver
-hooks explicitly.
+This is exactly what happens. I'll send patches. Thanks Andrew!
 
-Thanks to Saravana for his help on pointing out the
-IRQCHIP_DECLARE issue and guidance on a solution.
+> Rather than bp->phy_interface == PHY_INTERFACE_MODE_RGMII,
+> phy_interface_mode_is_rgmii() might work better.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2: Fix spelling, include order and set suppress_bind_attrs
-    suggested by Maulik Shah
 
-v3: Drop conditional usage of IRQCHIP_DECLARE as suggested
-    by Stephen Boyd and Marc Zyngier
----
- drivers/irqchip/Kconfig    |  2 +-
- drivers/irqchip/qcom-pdc.c | 28 +++++++++++++++++++++++++++-
- 2 files changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 216b3b8392b5..cc285c1a54c1 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -425,7 +425,7 @@ config GOLDFISH_PIC
-          for Goldfish based virtual platforms.
- 
- config QCOM_PDC
--	bool "QCOM PDC"
-+	tristate "QCOM PDC"
- 	depends on ARCH_QCOM
- 	select IRQ_DOMAIN_HIERARCHY
- 	help
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f0819d..5b624e3295e4 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -11,9 +11,11 @@
- #include <linux/irqdomain.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
- #include <linux/soc/qcom/irq.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-@@ -430,4 +432,28 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 	return ret;
- }
- 
--IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
-+static int qcom_pdc_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *parent = of_irq_find_parent(np);
-+
-+	return qcom_pdc_init(np, parent);
-+}
-+
-+static const struct of_device_id qcom_pdc_match_table[] = {
-+	{ .compatible = "qcom,pdc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
-+
-+static struct platform_driver qcom_pdc_driver = {
-+	.probe = qcom_pdc_probe,
-+	.driver = {
-+		.name = "qcom-pdc",
-+		.of_match_table = qcom_pdc_match_table,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+module_platform_driver(qcom_pdc_driver);
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
