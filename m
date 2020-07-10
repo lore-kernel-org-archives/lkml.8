@@ -2,101 +2,97 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E32C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7067BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FF12073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A599206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGJAyP (ORCPT
+        id S1726560AbgGJA7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:54:15 -0400
-Received: from mx.socionext.com ([202.248.49.38]:39525 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgGJAyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:54:14 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 10 Jul 2020 09:54:13 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4A74D180C09;
-        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 10 Jul 2020 09:54:13 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2EDCD1A0507;
-        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
-Received: from [10.213.31.123] (unknown [10.213.31.123])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 847BE12012F;
-        Fri, 10 Jul 2020 09:54:12 +0900 (JST)
-Subject: Re: [PATCH v5 6/6] PCI: uniphier: Use
- devm_platform_ioremap_resource_byname()
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
-Date:   Fri, 10 Jul 2020 09:54:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 20:59:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60508 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726265AbgGJA7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 20:59:30 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3B2835AE0537B2A909B2;
+        Fri, 10 Jul 2020 08:59:28 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.201.26) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 10 Jul 2020 08:59:21 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: [PATCH v4] mm/hugetlb: avoid hardcoding while checking if cma is enabled
+Date:   Fri, 10 Jul 2020 12:57:26 +1200
+Message-ID: <20200710005726.36068-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.201.26]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+hugetlb_cma[0] can be NULL due to various reasons, for example, node0 has
+no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
+enabled. gigantic pages might have been reserved on other nodes.
+This patch fixes possible double reservation and CMA leak.
 
-This 6/6 patch has just been covered with the following patch:
-https://patchwork.ozlabs.org/project/linux-pci/patch/20200708164013.5076-1-zhengdejin5@gmail.com/
-
-As a result, my other patches conflict with this patch.
-I'd like your comments in the patch 2/6, though,
-should I rebase to pci/dwc and resend this series without 6/6?
-
-Thank you,
-
-On 2020/06/18 17:38, Kunihiko Hayashi wrote:
-> Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>f
-> ---
->   drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 8356dd3..233d624 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -456,8 +456,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->   	if (IS_ERR(priv->pci.atu_base))
->   		priv->pci.atu_base = NULL;
->   
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
-> -	priv->base = devm_ioremap_resource(dev, res);
-> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
->   	if (IS_ERR(priv->base))
->   		return PTR_ERR(priv->base);
->   
-> 
-
+Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 ---
-Best Regards
-Kunihiko Hayashi
+ v4: address linux-next issue;
+     use hugetlb_cma_size to check if cma is enabled
+
+ mm/hugetlb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 57ece74e3aae..bc3304af40d0 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -46,6 +46,7 @@ unsigned int default_hstate_idx;
+ struct hstate hstates[HUGE_MAX_HSTATE];
+ 
+ static struct cma *hugetlb_cma[MAX_NUMNODES];
++static unsigned long hugetlb_cma_size __initdata;
+ 
+ /*
+  * Minimum page order among possible hugepage sizes, set to a proper value
+@@ -2571,7 +2572,7 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ 
+ 	for (i = 0; i < h->max_huge_pages; ++i) {
+ 		if (hstate_is_gigantic(h)) {
+-			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
++			if (hugetlb_cma_size) {
+ 				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
+ 				break;
+ 			}
+@@ -5654,7 +5655,6 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason)
+ }
+ 
+ #ifdef CONFIG_CMA
+-static unsigned long hugetlb_cma_size __initdata;
+ static bool cma_reserve_called __initdata;
+ 
+ static int __init cmdline_parse_hugetlb_cma(char *p)
+-- 
+2.27.0
+
+
