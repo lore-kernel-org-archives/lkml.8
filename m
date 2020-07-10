@@ -2,167 +2,223 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313C6C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70593C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0491C20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456362076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YKZiudmm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="apfnI4dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGJTaS (ORCPT
+        id S1728303AbgGJTcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:30:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:59976 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGJTaQ (ORCPT
+        Fri, 10 Jul 2020 15:32:06 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51780 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgGJTcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:30:16 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5D7BA20B4908;
-        Fri, 10 Jul 2020 12:30:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5D7BA20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594409415;
-        bh=M5dLai7mNPTd3Wnd//DTj/dm1yHRr0oCnAgp9ujOkD8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YKZiudmmJuux776Gb7yQajdAQBsRCOW9jSfLOtuGDBimDfr16dcP7wKxKlh1pfVnR
-         zXv6BvtTcdmAc1TLEdlP+BdqQ5ysWYwSkUPZhK24zsl3qp9zpBY6rPQwCPxoX8FEUo
-         RAbZXYzjfCVhZzojdfIul0DSPnRoxpBlGHcIOBTU=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
-Subject: [PATCH v2] tpm: Require that all digests are present in TCG_PCR_EVENT2 structures
-Date:   Fri, 10 Jul 2020 14:29:55 -0500
-Message-Id: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 10 Jul 2020 15:32:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594409523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QaE/bgVY27cEeWKGYQCTywLFI4G1w38fi5rvZfEqvys=;
+        b=apfnI4dmCVJIs9/LsK7is/MXrJfd6y8hNtiKVeXJ+qU+ul5jGRB9HyDH/4awwAxlny1uWu
+        BqpTdnAFnZa63LUpai/HoDHNCWwIokBe0DVvdvLpRML6TWgzWkVjHb6uT5a9cHLA7Z20fZ
+        tZDZimY+9w+hN3DMKuDxXOIMY1C5SnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-g5xA3eeyPG-fRK4HF6MUTg-1; Fri, 10 Jul 2020 15:32:01 -0400
+X-MC-Unique: g5xA3eeyPG-fRK4HF6MUTg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E228015F7;
+        Fri, 10 Jul 2020 19:31:58 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-112-154.rdu2.redhat.com [10.10.112.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB3810016E8;
+        Fri, 10 Jul 2020 19:31:56 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Lee Shawn C <shawn.c.lee@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Cooper Chiou <cooper.chiou@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 2/2] drm/i915/mst: filter out the display mode exceed sink's capability
+Date:   Fri, 10 Jul 2020 15:31:44 -0400
+Message-Id: <20200710193144.94751-3-lyude@redhat.com>
+In-Reply-To: <20200710193144.94751-1-lyude@redhat.com>
+References: <20200710193144.94751-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-TCG_PCClientPCREvent event log header. Also require that
-TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+From: Lee Shawn C <shawn.c.lee@intel.com>
 
-The TCG PC Client Platform Firmware Profile Specification section 9.1
-(Family "2.0", Level 00 Revision 1.04) states:
+So far, max dot clock rate for MST mode rely on physcial
+bandwidth limitation. It would caused compatibility issue
+if source display resolution exceed MST hub output ability.
 
- For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
- there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
- Note: This includes EV_NO_ACTION events which do not extend the PCR.
+For example, source DUT had DP 1.2 output capability.
+And MST docking just support HDMI 1.4 spec. When a HDMI 2.0
+monitor connected. Source would retrieve EDID from external
+and get max resolution 4k@60fps. DP 1.2 can support 4K@60fps
+because it did not surpass DP physical bandwidth limitation.
+Do modeset to 4k@60fps, source output display data but MST
+docking can't output HDMI properly due to this resolution
+already over HDMI 1.4 spec.
 
-Section 9.4.5.1 provides this description of
-TCG_EfiSpecIdEvent.numberOfAlgorithms:
+Refer to commit <fcf463807596> ("drm/dp_mst: Use full_pbn
+instead of available_pbn for bandwidth checks").
+Source driver should refer to full_pbn to evaluate sink
+output capability. And filter out the resolution surpass
+sink output limitation.
 
- The number of Hash algorithms in the digestSizes field. This field MUST
- be set to a value of 0x01 or greater.
+Changes since v1:
+* Using mgr->base.lock to protect full_pbn.
+Changes since v2:
+* Add ctx lock.
+Changes since v3:
+* s/intel_dp_mst_mode_clock_exceed_pbn_bandwidth/
+  intel_dp_mst_mode_clock_exceeds_pbn_bw/
+* Use the new drm_connector_helper_funcs.mode_valid_ctx to properly pipe
+  down the drm_modeset_acquire_ctx that the probe helpers are using, so
+  we can safely grab &mgr->base.lock without deadlocking
+Changes since v4:
+* Move drm_dp_calc_pbn_mode(mode->clock, bpp, false) > port->full_pbn
+  check
+* Fix the bpp we use in drm_dp_calc_pbn_mode()
+* Drop leftover (!mgr) check
+* Don't check for if full_pbn is unset. To be clear - it _can_ be unset,
+  but if it is then it's certainly a bug in DRM or a non-compliant sink
+  as full_pbn should always be populated by the time we call
+  ->mode_valid_ctx.
+  We should workaround non-compliant sinks with full_pbn=0, but that
+  should happen in the DP MST helpers so we can estimate the full_pbn
+  value as best we can.
 
-Enforce these restrictions, as required by the above specification, in
-order to better identify and ignore invalid sequences of bytes at the
-end of an otherwise valid TPM2 event log. Firmware doesn't always have
-the means necessary to inform the kernel of the actual event log size so
-the kernel's event log parsing code should be stringent when parsing the
-event log for resiliency against firmware bugs. This is true, for
-example, when firmware passes the event log to the kernel via a reserved
-memory region described in device tree.
-
-POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
-device tree properties to describe the memory region used to pass the
-event log from firmware to the kernel. Unfortunately, the
-"linux,sml-size" property describes the size of the entire reserved
-memory region rather than the size of the event long within the memory
-region and the event log format does not include information describing
-the size of the event log.
-
-tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
-"linux,sml-size" property is used. At the end of that function,
-log->bios_event_log_end is pointing at the end of the reserved memory
-region. That's typically 0x10000 bytes offset from "linux,sml-base",
-depending on what's defined in the device tree source.
-
-The firmware event log only fills a portion of those 0x10000 bytes and
-the rest of the memory region should be zeroed out by firmware. Even in
-the case of a properly zeroed bytes in the remainder of the memory
-region, the only thing allowing the kernel's event log parser to detect
-the end of the event log is the following conditional in
-__calc_tpm2_event_size():
-
-        if (event_type == 0 && event_field->event_size == 0)
-                size = 0;
-
-If that wasn't there, __calc_tpm2_event_size() would think that a 16
-byte sequence of zeroes, following an otherwise valid event log, was
-a valid event.
-
-However, problems can occur if a single bit is set in the offset
-corresponding to either the TCG_PCR_EVENT2.eventType or
-TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
-This could confuse the parser into thinking that an additional entry is
-present in the event log and exposing this invalid entry to userspace in
-the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
-problems have been seen if firmware does not fully zero the memory
-region upon a warm reboot.
-
-This patch significantly raises the bar on how difficult it is for
-stale/invalid memory to confuse the kernel's event log parser but
-there's still, ultimately, a reliance on firmware to properly initialize
-the remainder of the memory region reserved for the event log as the
-parser cannot be expected to detect a stale but otherwise properly
-formatted firmware event log entry.
-
-Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc: Manasi Navare <manasi.d.navare@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: Cooper Chiou <cooper.chiou@intel.com>
+Co-developed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Lee Shawn C <shawn.c.lee@intel.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
+ drivers/gpu/drm/i915/display/intel_dp_mst.c | 55 ++++++++++++++-------
+ 1 file changed, 38 insertions(+), 17 deletions(-)
 
-* v2
-  - Rebase the patch on top of the TPM next branch, commit 786a2aa281f4
-    ("Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")")
-  - Expand on the technical reasoning for needing strict event
-    validation in the commit message
-  - Improve the inline comment explaining the need for detecting
-    malformed events
-
- include/linux/tpm_eventlog.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 64356b199e94..739ba9a03ec1 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+index bdc19b04b2c10..a2d91a4997001 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -639,39 +639,60 @@ static int intel_dp_mst_get_modes(struct drm_connector *connector)
+ 	return intel_dp_mst_get_ddc_modes(connector);
+ }
  
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+-static enum drm_mode_status
+-intel_dp_mst_mode_valid(struct drm_connector *connector,
+-			struct drm_display_mode *mode)
++static int
++intel_dp_mst_mode_valid_ctx(struct drm_connector *connector,
++			    struct drm_display_mode *mode,
++			    struct drm_modeset_acquire_ctx *ctx,
++			    enum drm_mode_status *status)
+ {
+ 	struct drm_i915_private *dev_priv = to_i915(connector->dev);
+ 	struct intel_connector *intel_connector = to_intel_connector(connector);
+ 	struct intel_dp *intel_dp = intel_connector->mst_port;
++	struct drm_dp_mst_topology_mgr *mgr = &intel_dp->mst_mgr;
++	struct drm_dp_mst_port *port = intel_connector->port;
++	const int min_bpp = 18;
+ 	int max_dotclk = to_i915(connector->dev)->max_dotclk_freq;
+ 	int max_rate, mode_rate, max_lanes, max_link_clock;
++	int ret;
  
--	/* Check if event is malformed. */
-+	/*
-+	 * Perform validation of the event in order to identify malformed
-+	 * events. This function may be asked to parse arbitrary byte sequences
-+	 * immediately following a valid event log. The caller expects this
-+	 * function to recognize that the byte sequence is not a valid event
-+	 * and to return an event size of 0.
-+	 */
- 	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
--		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
-+		   sizeof(TCG_SPECID_SIG)) ||
-+	    !efispecid->num_algs || count != efispecid->num_algs) {
- 		size = 0;
- 		goto out;
- 	}
+-	if (drm_connector_is_unregistered(connector))
+-		return MODE_ERROR;
++	if (drm_connector_is_unregistered(connector)) {
++		*status = MODE_ERROR;
++		return 0;
++	}
+ 
+-	if (mode->flags & DRM_MODE_FLAG_DBLSCAN)
+-		return MODE_NO_DBLESCAN;
++	if (mode->flags & DRM_MODE_FLAG_DBLSCAN) {
++		*status = MODE_NO_DBLESCAN;
++		return 0;
++	}
+ 
+ 	max_link_clock = intel_dp_max_link_rate(intel_dp);
+ 	max_lanes = intel_dp_max_lane_count(intel_dp);
+ 
+ 	max_rate = intel_dp_max_data_rate(max_link_clock, max_lanes);
+-	mode_rate = intel_dp_link_required(mode->clock, 18);
++	mode_rate = intel_dp_link_required(mode->clock, min_bpp);
+ 
+-	/* TODO - validate mode against available PBN for link */
+-	if (mode->clock < 10000)
+-		return MODE_CLOCK_LOW;
++	ret = drm_modeset_lock(&mgr->base.lock, ctx);
++	if (ret)
++		return ret;
+ 
+-	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
+-		return MODE_H_ILLEGAL;
++	if (mode_rate > max_rate || mode->clock > max_dotclk ||
++	    drm_dp_calc_pbn_mode(mode->clock, min_bpp, false) > port->full_pbn) {
++		*status = MODE_CLOCK_HIGH;
++		return 0;
++	}
++
++	if (mode->clock < 10000) {
++		*status = MODE_CLOCK_LOW;
++		return 0;
++	}
+ 
+-	if (mode_rate > max_rate || mode->clock > max_dotclk)
+-		return MODE_CLOCK_HIGH;
++	if (mode->flags & DRM_MODE_FLAG_DBLCLK) {
++		*status = MODE_H_ILLEGAL;
++		return 0;
++	}
+ 
+-	return intel_mode_valid_max_plane_size(dev_priv, mode);
++	*status = intel_mode_valid_max_plane_size(dev_priv, mode);
++	return 0;
+ }
+ 
+ static struct drm_encoder *intel_mst_atomic_best_encoder(struct drm_connector *connector,
+@@ -700,7 +721,7 @@ intel_dp_mst_detect(struct drm_connector *connector,
+ 
+ static const struct drm_connector_helper_funcs intel_dp_mst_connector_helper_funcs = {
+ 	.get_modes = intel_dp_mst_get_modes,
+-	.mode_valid = intel_dp_mst_mode_valid,
++	.mode_valid_ctx = intel_dp_mst_mode_valid_ctx,
+ 	.atomic_best_encoder = intel_mst_atomic_best_encoder,
+ 	.atomic_check = intel_dp_mst_atomic_check,
+ 	.detect_ctx = intel_dp_mst_detect,
 -- 
-2.25.1
+2.26.2
 
