@@ -2,139 +2,103 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A258C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C8EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85D0C2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B5020725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594401936;
+	bh=mYF3i+Aso6vKO6oMEhaGo5MTSDPuOCcJZr8/ZrUf5aQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NuaPNILQTW/2ndE/WaQdjxIPLfT2CgkCM4NiZMdm2nTGjka0uA/Qvo4hfxJ1xfJ/t
+	 URK0u9NA7AyfI0vHWTkPlwNJ4ENA/TbtX390dH/PpT5rcGscBq+P1n3dQbCsibnts6
+	 i7BK+R0425XHbmuRNz6FyhWTXwKu6RpImAEPpSbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgGJRXn (ORCPT
+        id S1727932AbgGJRZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:23:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726950AbgGJRXm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:23:42 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06AGXXIK035408;
-        Fri, 10 Jul 2020 13:23:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326j83u61m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 13:23:31 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06AGsp6t109873;
-        Fri, 10 Jul 2020 13:23:31 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326j83u60m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 13:23:31 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06AHGIBY017599;
-        Fri, 10 Jul 2020 17:23:29 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 326bc30t54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 17:23:28 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06AHNQ2461735024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 17:23:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15FA44C046;
-        Fri, 10 Jul 2020 17:23:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DD254C044;
-        Fri, 10 Jul 2020 17:23:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.206.93])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Jul 2020 17:23:24 +0000 (GMT)
-Message-ID: <1594401804.14405.8.camel@linux.ibm.com>
-Subject: Re: [PATCH v5] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
-Date:   Fri, 10 Jul 2020 13:23:24 -0400
-In-Reply-To: <20200709164647.45153-1-bmeneg@redhat.com>
-References: <20200709164647.45153-1-bmeneg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_10:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 malwarescore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100111
+        Fri, 10 Jul 2020 13:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbgGJRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:25:33 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9318020720;
+        Fri, 10 Jul 2020 17:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594401933;
+        bh=mYF3i+Aso6vKO6oMEhaGo5MTSDPuOCcJZr8/ZrUf5aQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xIK2kRfA/hQZEQbB52IvWCiiEF4uMgIqnPsW9BpXzRe8IB8+JQ5F6CbH38wNSLKl6
+         9sN3ks+YuhSoWx1ygRdZ/BdDfUI2QbVcSD+GMvKIdYOZiuPA0JLHAQE9hqozfQgnBG
+         Vv0iWgjdmCL7EtIu3MMtIHyK39ozpAoH32ZLLi8o=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 01445405FF; Fri, 10 Jul 2020 14:25:29 -0300 (-03)
+Date:   Fri, 10 Jul 2020 14:25:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        Andi Kleen <andi@firstfloor.org>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v2 4/4] perf-probe: Warn if the target function is GNU
+ Indirect function
+Message-ID: <20200710172529.GE7487@kernel.org>
+References: <159438665389.62703.13848613271334658629.stgit@devnote2>
+ <159438669349.62703.5978345670436126948.stgit@devnote2>
+ <20200710135712.GO874@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710135712.GO874@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-09 at 13:46 -0300, Bruno Meneguele wrote:
-> APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY in compile
-> time, enforcing the appraisal whenever the kernel had the arch policy option
-> enabled.
-
-> However it breaks systems where the option is set but the system didn't
-> boot in a "secure boot" platform. In this scenario, anytime an appraisal
-> policy (i.e. ima_policy=appraisal_tcb) is used it will be forced, without
-> giving the user the opportunity to label the filesystem, before enforcing
-> integrity.
+Em Fri, Jul 10, 2020 at 07:27:12PM +0530, Srikar Dronamraju escreveu:
+> * Masami Hiramatsu <mhiramat@kernel.org> [2020-07-10 22:11:33]:
 > 
-> Considering the ARCH_POLICY is only effective when secure boot is actually
-> enabled this patch remove the compile time dependency and move it to a
-> runtime decision, based on the secure boot state of that platform.
+> > Warn if the probe target function is GNU indirect function (GNU_IFUNC)
+> > because it may not what the user want to probe.
+> > 
+> > The GNU indirect function ( https://sourceware.org/glibc/wiki/GNU_IFUNC )
+> > is the dynamic solved symbol at runtime. IFUNC function is a selector
+> > which is invoked from the elf loader, but the symbol address of the
+> > function which will be modified by the IFUNC is same as the IFUNC in
+> > the symbol table. This can confuse users who is trying to probe on
+> > such functions.
+> > 
+> > For example, the memcpy is one of IFUNC.
+> > 
+> > # perf probe -x /lib64/libc-2.30.so -a memcpy
+> > # perf probe -l
+> >   probe_libc:memcpy    (on __new_memcpy_ifunc@x86_64/multiarch/memcpy.c in /usr/lib64/libc-2.30.so)
+> > 
+> > the probe is put on a IFUNC.
+> > 
+> > # perf record -e probe_libc:memcpy --call-graph dwarf -aR ./perf
+> > 
+> > Thus, I decided to warn user when the perf probe detects the probe point
+> > is on the GNU IFUNC symbol. Someone who wants to probe an IFUNC symbol to
+> > debug the IFUNC function, they can ignore this warning.
+> > 
+> > Reported-by: Andi Kleen <andi@firstfloor.org>
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-Perhaps we could simplify this patch description a bit?
+Thanks, applied.
 
-The IMA_APPRAISE_BOOTPARAM config allows enabling different
-"ima_appraise=" modes - log, fix, enforce - at run time, but not when
-IMA architecture specific policies are enabled.  This prevents
-properly labeling the filesystem on systems where secure boot is
-supported, but not enabled on the platform.  Only when secure boot is
-enabled, should these IMA appraise modes be disabled.
-
-This patch removes the compile time dependency and makes it a runtime
-decision, based on the secure boot state of that platform.
-
-<snip>
-
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index a9649b04b9f1..884de471b38a 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -19,6 +19,11 @@
->  static int __init default_appraise_setup(c
-
-> har *str)
->  {
->  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-> +	if (arch_ima_get_secureboot()) {
-> +		pr_info("appraise boot param ignored: secure boot enabled");
-
-Instead of a generic statement, is it possible to include the actual
-option being denied?  Perhaps something like: "Secure boot enabled,
-ignoring %s boot command line option"
-
-Mimi
-
-> +		return 1;
-> +	}
-> +
->  	if (strncmp(str, "off", 3) == 0)
->  		ima_appraise = 0;
->  	else if (strncmp(str, "log", 3) == 0)
-
+- Arnaldo
