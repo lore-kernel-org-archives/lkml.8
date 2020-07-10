@@ -2,200 +2,123 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D7C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52218C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97EB62078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E912075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FxikLX5X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHER2mq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgGJUiO (ORCPT
+        id S1728056AbgGJUjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:38:14 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40346 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbgGJUiM (ORCPT
+        Fri, 10 Jul 2020 16:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbgGJUjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:38:12 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B75D220B4908;
-        Fri, 10 Jul 2020 13:38:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B75D220B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594413491;
-        bh=0SK4PPdilwulgPG7L8UmTifG2QAI5iiarEIkym++hEQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FxikLX5X3jSA30gaiOMVOjwn5KRKnXFPTs4kGypha6jg3m66WH93C/Ka2g76Hif9j
-         dnQHkSn+WMIvw4/oigLTtTJTMeNI2aTGPo0cZLWR4XFQv2iUFKg214vyEkkn/Xvbd4
-         YfILkumt3t/QZGhmX0dIqDASIRsqOuAAMh1ByEgA=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH v2] ima: Rename internal audit rule functions
-Date:   Fri, 10 Jul 2020 15:37:50 -0500
-Message-Id: <20200710203750.89323-1-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 10 Jul 2020 16:39:06 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF52CC08C5DC;
+        Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q17so2712090pls.9;
+        Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a4hcFrNamD57M+KydyUHhxTo+wBFWfBERoQNWvfd5dk=;
+        b=jHER2mq0RW3s7oUnT62BSuh+nJT18yv5xeSFCAZ4dvrFqjGih1qqq2+n6YtUUe23nR
+         YOrlHesVve4UrjUZDGiIBmNqU/ygISCLFjzBRDAKKXlggFcsbhYTQ+XXuG4LvFydmEWY
+         HMyZgo0pCyU4vQhaV7ViY9P1m7mYNsmRymR6qpqYv+CsVzvp1oXyiqZf0QpAhQ3QILg8
+         Wun7fEGyWU9C8/EktMlJoKD2f1ygXF6HHeXXZ1LLgFO7U7qHCfEbD3vePscDM6+6U/M6
+         S8gH/WE4B39qyZztKeZiGhskG+ApKI/alZBPyyPX3tA3x64BQU6/hy5j7tIISL9cJFgp
+         ucrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a4hcFrNamD57M+KydyUHhxTo+wBFWfBERoQNWvfd5dk=;
+        b=aMYSynsyvQzv1v0wCDlw6VCLaFRW2mLZrf18J3XyH5A63ML1BXmmpy9UJYGec9WJzb
+         4mXSAMD+5cYD44ZkRp8NIRcpSkDAbmjZGlt6gIkpzDbVfQX3OxHHtnLTCMNuH5nZrLRB
+         EY0Rv6eD2lpgD1MKDsYiUjZTaLv+htSKVNERQCExtHnQug6vNq/nhkb4dOLxVd3Ch79h
+         ZDmrpe9ZDtnqJm6qOtY2iF63798ezteqciVtPeLfLSBe5pp1+7pZcMU5fDuZ9q5eHMiq
+         Xvqm43cKBy3DewpJttZ0rX6GFYnfrKUWgOv+VW3z8jirNrj7YReDo9/HHeoNg1L/mxgh
+         fU3w==
+X-Gm-Message-State: AOAM532yVWPHl0aY4WmUPJDt1+2aZd5psC9ZModR8edw+pp7hgXoQTWm
+        eqi0h/mXPa1RtyjS/ZhQ1XjLYJ1F+qIvseKj5QQ=
+X-Google-Smtp-Source: ABdhPJzik9IFjwpeSv1uyJTptrG9UO41kEEFUEDwuT9LSNlLnN6ThhdXipjvF8Ao9eTJHu6BHX4tnEYSQkgxeOEIGP4=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr7858831pjb.129.1594413546467;
+ Fri, 10 Jul 2020 13:39:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200702085520.16901-1-aaron.ma@canonical.com> <20200710015614.3854-1-aaron.ma@canonical.com>
+In-Reply-To: <20200710015614.3854-1-aaron.ma@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 Jul 2020 23:38:50 +0300
+Message-ID: <CAHp75Ve9KGS+3PWCt20=vshfsw5EEjw42FjDAnKE8gwLVpRB6Q@mail.gmail.com>
+Subject: Re: [v3][PATCH] platform/x86: thinkpad_acpi: not loading
+ brightness_init when _BCL invalid
+To:     Aaron Ma <aaron.ma@canonical.com>
+Cc:     mapengyu@gmail.com,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename IMA's internal audit rule functions from security_filter_rule_*()
-to ima_filter_rule_*(). This avoids polluting the security_* namespace,
-which is typically reserved for general security subsystem
-infrastructure.
+On Fri, Jul 10, 2020 at 4:56 AM Aaron Ma <aaron.ma@canonical.com> wrote:
+>
+> When _BCL invalid, disable thinkpad_acpi backlight brightness control.
+>
+> brightness_enable is already checked at the beginning.
+> Most new thinkpads are using GPU driver to control brightness now,
+> print notice when enabled brightness control even when brightness_enable = 1.
+>
 
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Suggested-by: Casey Schaufler <casey@schaufler-ca.com>
----
+Pushed to my review and testing queue, thanks!
 
-* v2
-  - Rebased onto v3 of prereq series
-  - Renamed the functions to ima_filter_rule_*(), instead of
-    ima_audit_rule_*(), at Mimi's request
-  - Didn't pick up Casey's Reviewed-by on v1 since nearly every line of
-    the patch changed. Although, I suspect he'll be equally as happy with
-    the new names in v2.
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index ff7f0a4f2475..2b36d5416a3b 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6955,10 +6955,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+>                         pr_warn("Cannot enable backlight brightness support, ACPI is already handling it.  Refer to the acpi_backlight kernel parameter.\n");
+>                         return 1;
+>                 }
+> -       } else if (tp_features.bright_acpimode && brightness_enable > 1) {
+> -               pr_notice("Standard ACPI backlight interface not available, thinkpad_acpi native brightness control enabled\n");
+> +       } else if (!tp_features.bright_acpimode) {
+> +               pr_notice("ACPI backlight interface not available\n");
+> +               return 1;
+>         }
+>
+> +       pr_notice("ACPI native brightness control enabled\n");
+> +
+>         /*
+>          * Check for module parameter bogosity, note that we
+>          * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
+> --
+> 2.26.2
+>
 
-Developed on top of next-integrity-testing, commit cd1d8603df60 ("IMA:
-Add audit log for failure conditions"), plus this patch series:
 
- [PATCH v3 00/12] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE rule support
- https://lore.kernel.org/linux-integrity/20200709061911.954326-1-tyhicks@linux.microsoft.com/T/#t
-
-This patch has dependencies on the above patch series.
-
-Tested with and without CONFIG_IMA_LSM_RULES enabled by attempting to
-load IMA policy with rules containing the subj_role=foo conditional.
-Build logs are clean in both configurations. The IMA policy was first
-loaded without and then with a valid AppArmor profile named "foo". The
-behavior is the same before and after this patch is applied:
-
-                  | CONFIG_IMA_LSM_RULES=n   | CONFIG_IMA_LSM_RULES=y
------------------------------------------------------------------------
- Without Profile  |  IMA policy load fails   | IMA policy load fails
- With Profile     |  IMA policy load fails   | IMA policy load succeeds
-
- security/integrity/ima/ima.h        | 16 +++++++--------
- security/integrity/ima/ima_policy.c | 30 +++++++++++++----------------
- 2 files changed, 21 insertions(+), 25 deletions(-)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 576ae2c6d418..38043074ce5e 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -413,24 +413,24 @@ static inline void ima_free_modsig(struct modsig *modsig)
- /* LSM based policy rules require audit */
- #ifdef CONFIG_IMA_LSM_RULES
- 
--#define security_filter_rule_init security_audit_rule_init
--#define security_filter_rule_free security_audit_rule_free
--#define security_filter_rule_match security_audit_rule_match
-+#define ima_filter_rule_init security_audit_rule_init
-+#define ima_filter_rule_free security_audit_rule_free
-+#define ima_filter_rule_match security_audit_rule_match
- 
- #else
- 
--static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
--					    void **lsmrule)
-+static inline int ima_filter_rule_init(u32 field, u32 op, char *rulestr,
-+				       void **lsmrule)
- {
- 	return -EINVAL;
- }
- 
--static inline void security_filter_rule_free(void *lsmrule)
-+static inline void ima_filter_rule_free(void *lsmrule)
- {
- }
- 
--static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
--					     void *lsmrule)
-+static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op,
-+					void *lsmrule)
- {
- 	return -EINVAL;
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 2e87154c9296..c5eda02e5f51 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
- 	int i;
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--		security_filter_rule_free(entry->lsm[i].rule);
-+		ima_filter_rule_free(entry->lsm[i].rule);
- 		kfree(entry->lsm[i].args_p);
- 	}
- }
-@@ -308,10 +308,9 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 		 */
- 		entry->lsm[i].args_p = NULL;
- 
--		security_filter_rule_init(nentry->lsm[i].type,
--					  Audit_equal,
--					  nentry->lsm[i].args_p,
--					  &nentry->lsm[i].rule);
-+		ima_filter_rule_init(nentry->lsm[i].type, Audit_equal,
-+				     nentry->lsm[i].args_p,
-+				     &nentry->lsm[i].rule);
- 		if (!nentry->lsm[i].rule)
- 			pr_warn("rule for LSM \'%s\' is undefined\n",
- 				entry->lsm[i].args_p);
-@@ -495,18 +494,16 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- 		case LSM_OBJ_ROLE:
- 		case LSM_OBJ_TYPE:
- 			security_inode_getsecid(inode, &osid);
--			rc = security_filter_rule_match(osid,
--							rule->lsm[i].type,
--							Audit_equal,
--							rule->lsm[i].rule);
-+			rc = ima_filter_rule_match(osid, rule->lsm[i].type,
-+						   Audit_equal,
-+						   rule->lsm[i].rule);
- 			break;
- 		case LSM_SUBJ_USER:
- 		case LSM_SUBJ_ROLE:
- 		case LSM_SUBJ_TYPE:
--			rc = security_filter_rule_match(secid,
--							rule->lsm[i].type,
--							Audit_equal,
--							rule->lsm[i].rule);
-+			rc = ima_filter_rule_match(secid, rule->lsm[i].type,
-+						   Audit_equal,
-+						   rule->lsm[i].rule);
- 		default:
- 			break;
- 		}
-@@ -901,10 +898,9 @@ static int ima_lsm_rule_init(struct ima_rule_entry *entry,
- 		return -ENOMEM;
- 
- 	entry->lsm[lsm_rule].type = audit_type;
--	result = security_filter_rule_init(entry->lsm[lsm_rule].type,
--					   Audit_equal,
--					   entry->lsm[lsm_rule].args_p,
--					   &entry->lsm[lsm_rule].rule);
-+	result = ima_filter_rule_init(entry->lsm[lsm_rule].type, Audit_equal,
-+				      entry->lsm[lsm_rule].args_p,
-+				      &entry->lsm[lsm_rule].rule);
- 	if (!entry->lsm[lsm_rule].rule) {
- 		pr_warn("rule for LSM \'%s\' is undefined\n",
- 			entry->lsm[lsm_rule].args_p);
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
