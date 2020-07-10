@@ -2,186 +2,200 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0391C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92D8B2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD92E2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7xXCS1n"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OG0eqMHX";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="eNndz+s2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGJTlB (ORCPT
+        id S1728413AbgGJTmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgGJTlB (ORCPT
+        Fri, 10 Jul 2020 15:42:06 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:18212 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726908AbgGJTmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:41:01 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34A8C08C5DC;
-        Fri, 10 Jul 2020 12:41:00 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so7304203ejc.3;
-        Fri, 10 Jul 2020 12:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Mfk46Wt0EkqUcbzqXWWdXTqCsqh4r5j+eF9fbxeot0=;
-        b=Y7xXCS1nOyST5iaTPkncvqxbKVgFj+Nfn88bRSj5S4OQHG4kl1muiQw/AvZYLNudnY
-         9mPoOtL6Pt896dSy83Z2dzSkM7nl4FiBi/v8tuWypIw2LqrCLpodTF9fmoLXMu+Ej30S
-         k2DwUlGDQfXjBxJL+d+Lgumj2g42UGKwXpN8Knytkji13XJi+RusTz1bmPzggaxcbAiT
-         1dZLUkbOKTp1siTDY+nEzLfpzQWWkVJKY9wNRhV5+9AKOciOZjEA8hxs2RJ0Ai4bvFLf
-         q9+wsgdRL0qTHOnRDRpPH0qiHuUR/P7l9kgLy9FTHiAG9994JxxqpCBS7khSp1dMSBS+
-         vvlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Mfk46Wt0EkqUcbzqXWWdXTqCsqh4r5j+eF9fbxeot0=;
-        b=omAt/QaVFwhWcO6CWJG7FL025mthqIwByW+ZJYSxg0kl9p7edFEzyd0EsO9tZncfS5
-         8/ssDFZa7ei7eClnoO4YFQ5n+eLCaQfLofM4Burn0SUpbnM7RCqHaVRmwNs3vxM2dIck
-         3egNuajw8edwQo7KYEhjA3On22fvnm2063T+In1+YMQCfcqMox5xkyamKHqymThVoTdJ
-         iTuSC5SMlFHKhyUbQEu5fFY1yX1OgkfwukZCzck68bbEJDzeX922eQ1DSoW4LIbZFhFs
-         zrv5KEvsutVQqxO6odc7ICXmuNNUgRrrV0iTXZVqASKQRXBPHa1pv4y6jLxvXPuVbmvQ
-         4iWw==
-X-Gm-Message-State: AOAM531FLnbqmVFq6mUUovNgLnbbYVxYzoAdcgJrdNtdp1DhUu/hU39w
-        6/pfZViFtPtXOrABXnQSVp8Vx0SEBh1Ham3lq9k=
-X-Google-Smtp-Source: ABdhPJwwtakCaQKxyz/Xgq/TraHmqTx5+wz3uRxu6aBHqI7ZcwPjE6kUBX1Sx322eMeOiNMBX1MH0LMW8jw21ilN+fs=
-X-Received: by 2002:a17:906:328d:: with SMTP id 13mr63567977ejw.71.1594410059289;
- Fri, 10 Jul 2020 12:40:59 -0700 (PDT)
+        Fri, 10 Jul 2020 15:42:04 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06AJdQLm024957;
+        Fri, 10 Jul 2020 12:41:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=8CGWzK0PHZ9+96l8iseDnSJ0gOsW4hYEbCPZpOcsY7M=;
+ b=OG0eqMHX06TyPGSCkiLvVVGQS+LdV70/StD2MzTdUc3srLt+5zSkz/qFdcgxWTJTmG1C
+ +7d3Ldj79IiYVoywqBe5KfmAc558J4J5DsTTtDqpAugCOeOGJ9pzknfVyofqdlBMpRam
+ QNFiig1DOpeTWdrhU33wX28zDkgsP4wR9V0= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0089730.ppops.net with ESMTP id 325k2um09d-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 10 Jul 2020 12:41:54 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 10 Jul 2020 12:41:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F6GW2Vx12taPbF692QtAmfGReYL/fFYifgYpZx5kIXMwXkiyqGye3pPOEBR5PTxTIK9KXEOrhZ2fNSgJ+5X3oDgYnhJ7roTB4CJVe7btFhl5QUGLGskIoiYjPVH32yIO/oVYkfmvgemyJYAx5jUlSqQFQxxS2XMVxmMcYEFIgHoojoqS+auPyjXpvLrK8icVSgwlA/Q0y2grdWeAz9iXyNKxVqcYJ5Hgem1wY5IGaXBn0GAyL2Ml3mnQaDsiebvKy+2AjyXpd2b5z32hJQ1oWZkdTfLpGjQ+IO5iY5sJTzKUAx73tW//GAFMnuKOTSeL4+Ok2lm1G1NjPu/zp5ADJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8CGWzK0PHZ9+96l8iseDnSJ0gOsW4hYEbCPZpOcsY7M=;
+ b=RhPBtfoZvhwsFys4MaBPQ4XUizc31r5fYD5IxaVpIelPv1MXqgvN+gknOM5LwMWWziWgWGYuwhXzpvMPEXnAYr241OOM1pghuRJv63+rEn2xQRi34rqrX3bR+t2qlzm6hoQiRLGOdr/ZdZQcghBBQRljeIcv7/r/tEF88LVSDEVmi5AuM4BR3Q55CyMbIujMPVpDpqBFR1QKD3YFXWWRp2DkeUE3UfdKgiDnqbRG74yZ83CKvfGRYq6KkbjOB3yTAHu2Jk8lUCLFOJKYZNwabFHGV2MeYZnfdgr76ASqTvLpKWzWsJ7oro9QgF/gWXkMq2rjDjHXLDOJHgZCIHhBcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8CGWzK0PHZ9+96l8iseDnSJ0gOsW4hYEbCPZpOcsY7M=;
+ b=eNndz+s2jy1/bneOGc6HMzscExvcs4BmNOw3aY/wDhmKZdhxl5X5CjYCMad+X6sMsRlIJt/xAMq4CmZOahrTrJwFr2iE7TBwOrTMPkG6aFsXew/7erVK6UDuiuuDGJnhJ9hUxtbI557HVYhZopoXBMHPKdbgy+v1X8fNcvY9JOA=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3445.namprd15.prod.outlook.com (2603:10b6:a03:110::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 10 Jul
+ 2020 19:41:46 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3174.021; Fri, 10 Jul 2020
+ 19:41:46 +0000
+Date:   Fri, 10 Jul 2020 12:41:43 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Domas Mituzas <domas@fb.com>, Tejun Heo <tj@kernel.org>,
+        Chris Down <chris@chrisdown.name>
+Subject: Re: [PATCH] mm: memcontrol: avoid workload stalls when lowering
+ memory.high
+Message-ID: <20200710194143.GC350256@carbon.dhcp.thefacebook.com>
+References: <20200709194718.189231-1-guro@fb.com>
+ <20200710122917.GB3022@dhcp22.suse.cz>
+ <CALvZod6Yk8QoZjbNkGE8-qeOD187Nu-+VwasoROGZs_UsMgbEQ@mail.gmail.com>
+ <20200710184205.GB350256@carbon.dhcp.thefacebook.com>
+ <CALvZod45_zVaFhvw-wc9b6-Fth=fZo5Fo6xCwRVkrWC6ZprYyw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod45_zVaFhvw-wc9b6-Fth=fZo5Fo6xCwRVkrWC6ZprYyw@mail.gmail.com>
+X-ClientProxiedBy: BY3PR05CA0015.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::20) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org> <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
-In-Reply-To: <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 10 Jul 2020 12:41:31 -0700
-Message-ID: <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v4 4/7] drm: msm: a6xx: use dev_pm_opp_set_bw
- to scale DDR
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        saravanak@google.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        dri-devel@freedesktop.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:bfc1) by BY3PR05CA0015.namprd05.prod.outlook.com (2603:10b6:a03:254::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend Transport; Fri, 10 Jul 2020 19:41:45 +0000
+X-Originating-IP: [2620:10d:c090:400::5:bfc1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8efa0c51-32f6-435f-b93d-08d8250947d0
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3445:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3445E8845F3846EC4DA13274BE650@BYAPR15MB3445.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +MI06lfDmqI3xOGU0hhRDFtAVC/3RCkF5TSjss2JJweWqKj+FBQM0QKzlui4lZC8AJzX2c9Fz4DQXBcNGuEa7ypxm/czHsPGmjn4mAWwBhuYNFdm+HcYFDwr4c83GCVvCJQ8biQmBITZEoKJfJlk8DRQJm/+d0TiCnKoVzi4y98Gi/w+x5qxCI3OvTQN19QhLTp4hh/9IuQJdEbtckwBib+p+0YpkAlrreuS13E6BM4gMEw4PLhaO6MA/DsiTPZ3NYVGImPP7xJB/bIQRnT7dupZQhzGX6LwJv4ZE8nBKnV+qNxAVum3ySyPT16brYqo8NLuvK4WT651zd188gKnCg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(346002)(39860400002)(366004)(376002)(4326008)(478600001)(55016002)(186003)(9686003)(5660300002)(8936002)(1076003)(8676002)(54906003)(52116002)(53546011)(7696005)(316002)(6506007)(2906002)(86362001)(83380400001)(6916009)(33656002)(66556008)(66946007)(66476007)(16526019);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: GqfvVqP7dvHum4XVvL9XfYEtXjl45CEwODZ7qDJ9ZAk7p+E6Jl8e2Eh20ktg9MNVAcOjYePR39kASNIA4V3JMJMi50udRS971dt+nvvKdAgtbjiMcRm2MhO57xXiXtA+biwZgzMnC1BwRNo4jbfIKY190yMa2zTH2LOShuERqWdbLNilVU3LqEOrKWc5SmAwqFdWxKmtEZRhC5arGkDQrYZxF0RqUhZKZV6r4fmytjpHTX7KX89fRBgrID18VaFUwlphAOSVHtm56+iNie76s67jemqlNKqahy0pwn1A/WcWSsMoR7Kndi9opEP1aKo023Use9xSDXaQ1ZcdtRrexjSBxYh1vgfsdsER3wiYEjwd/dqcihdvaermeR6A3PSrQ1DDq3O8DYLgDGtpAuVWIbgMr3BVQeERLpa591/PBKIkxSvhxYkE2UQKBIIh7YuFHvOFs1vaQG8c15qMJyG/Jux3A6Uj0wC/wFOap4lxzDOBakM1Qbr9WgdhSBJ61/WPjlPBbtOl7RpFpygw0OVMwg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8efa0c51-32f6-435f-b93d-08d8250947d0
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 19:41:46.4248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CN/8vkRCg3POL/H27sNkcksPYoC9ViwWlHHS+3Ut3I8HfTGj/m38YtA5561tnWOl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3445
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_14:2020-07-10,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ adultscore=0 mlxscore=0 suspectscore=1 priorityscore=1501 clxscore=1015
+ bulkscore=0 phishscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007100131
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 1:01 PM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
->
-> From: Sharat Masetty <smasetty@codeaurora.org>
->
-> This patches replaces the previously used static DDR vote and uses
-> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> GPU frequency. Also since the icc path voting is handled completely
-> in the opp driver, remove the icc_path handle and its usage in the
-> drm driver.
->
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index b547339..6fbfd7d 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -123,7 +123,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->
->         if (!gmu->legacy) {
->                 a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
-> -               icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +               dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+On Fri, Jul 10, 2020 at 12:19:37PM -0700, Shakeel Butt wrote:
+> On Fri, Jul 10, 2020 at 11:42 AM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > On Fri, Jul 10, 2020 at 07:12:22AM -0700, Shakeel Butt wrote:
+> > > On Fri, Jul 10, 2020 at 5:29 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Thu 09-07-20 12:47:18, Roman Gushchin wrote:
+> > > > > Memory.high limit is implemented in a way such that the kernel
+> > > > > penalizes all threads which are allocating a memory over the limit.
+> > > > > Forcing all threads into the synchronous reclaim and adding some
+> > > > > artificial delays allows to slow down the memory consumption and
+> > > > > potentially give some time for userspace oom handlers/resource control
+> > > > > agents to react.
+> > > > >
+> > > > > It works nicely if the memory usage is hitting the limit from below,
+> > > > > however it works sub-optimal if a user adjusts memory.high to a value
+> > > > > way below the current memory usage. It basically forces all workload
+> > > > > threads (doing any memory allocations) into the synchronous reclaim
+> > > > > and sleep. This makes the workload completely unresponsive for
+> > > > > a long period of time and can also lead to a system-wide contention on
+> > > > > lru locks. It can happen even if the workload is not actually tight on
+> > > > > memory and has, for example, a ton of cold pagecache.
+> > > > >
+> > > > > In the current implementation writing to memory.high causes an atomic
+> > > > > update of page counter's high value followed by an attempt to reclaim
+> > > > > enough memory to fit into the new limit. To fix the problem described
+> > > > > above, all we need is to change the order of execution: try to push
+> > > > > the memory usage under the limit first, and only then set the new
+> > > > > high limit.
+> > > >
+> > > > Shakeel would this help with your pro-active reclaim usecase? It would
+> > > > require to reset the high limit right after the reclaim returns which is
+> > > > quite ugly but it would at least not require a completely new interface.
+> > > > You would simply do
+> > > >         high = current - to_reclaim
+> > > >         echo $high > memory.high
+> > > >         echo infinity > memory.high # To prevent direct reclaim
+> > > >                                     # allocation stalls
+> > > >
+> > >
+> > > This will reduce the chance of stalls but the interface is still
+> > > non-delegatable i.e. applications can not change their own memory.high
+> > > for the use-cases like application controlled proactive reclaim and
+> > > uswapd.
+> >
+> > Can you, please, elaborate a bit more on this? I didn't understand
+> > why.
+> >
+> 
+> Sure. Do we want memory.high a CFTYPE_NS_DELEGATABLE type file? I
+> don't think so otherwise any job on a system can change their
+> memory.high and can adversely impact the isolation and memory
+> scheduling of the system.
+> 
+> Next we have to agree that there are valid use-cases to allow
+> applications to reclaim from their cgroups and I think uswapd and
+> proactive reclaim are valid use-cases. Let's suppose memory.high is
+> the only way to trigger reclaim but the application can not write to
+> their top level memory.high, so, it has to create a dummy cgroup of
+> which it has write access to memory.high and has to move itself to
+> that dummy cgroup to use memory.high to trigger reclaim for
+> uswapd/proactive-reclaim.
 
-What is the status of the patch to add dev_pm_opp_set_bw()?  If it is
-ready to go, and I get an ack-by from the OPP maintainer, I suppose I
-could merge it via drm/msm.
+Got it, good point. I tend to agree that memory.high is not enough.
+I'll think a little bit more about how the new interface should look like.
 
-Otherwise should we consider pulling in a private copy of it into
-drm/msm (and then drop it to use the helper in, hopefully, the next
-cycle)?
-
-I'm pulling the patches preceding this one into msm-next-staging to do
-some testing.  And the dt patches following this one would normally
-get merged via Bjorn.  At the moment, I'm not sure what to do with
-this one.
-
-BR,
--R
-
->                 return;
->         }
->
-> @@ -149,11 +149,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->         if (ret)
->                 dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
->
-> -       /*
-> -        * Eventually we will want to scale the path vote with the frequency but
-> -        * for now leave it at max so that the performance is nominal.
-> -        */
-> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +       dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
->  }
->
->  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> @@ -840,6 +836,19 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
->         dev_pm_opp_put(gpu_opp);
->  }
->
-> +static void a6xx_gmu_set_initial_bw(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
-> +{
-> +       struct dev_pm_opp *gpu_opp;
-> +       unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
-> +
-> +       gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
-> +       if (IS_ERR_OR_NULL(gpu_opp))
-> +               return;
-> +
-> +       dev_pm_opp_set_bw(&gpu->pdev->dev, gpu_opp);
-> +       dev_pm_opp_put(gpu_opp);
-> +}
-> +
->  int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->  {
->         struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-> @@ -864,7 +873,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->         }
->
->         /* Set the bus quota to a reasonable value for boot */
-> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
-> +       a6xx_gmu_set_initial_bw(gpu, gmu);
->
->         /* Enable the GMU interrupt */
->         gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
-> @@ -1040,7 +1049,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->                 a6xx_gmu_shutdown(gmu);
->
->         /* Remove the bus vote */
-> -       icc_set_bw(gpu->icc_path, 0, 0);
-> +       dev_pm_opp_set_bw(&gpu->pdev->dev, NULL);
->
->         /*
->          * Make sure the GX domain is off before turning off the GMU (CX)
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+Thank you!
