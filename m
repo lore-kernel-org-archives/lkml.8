@@ -2,158 +2,93 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D852C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D75002065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594394401;
-	bh=vby8T28Zhsl7qDBYQZOZlfnWOqlS6FqV3/U4aqAHwfk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FjfYBvVvspuc9yhrIXE7mPXxqSZafmDHp5E6FT4YygLHhmawgHDY9FBavTV++Z4/4
-	 X6Okzo+P13Zpgx949gpQxSiL5q2UziZ1mbioDtUO0ejQ/dqU/DTTaRCy7SqkqFmGgx
-	 8nejPykoO0YRrNQoAsRFHkHVt6ya6sh8+KDlIfZY=
+	by mail.kernel.org (Postfix) with ESMTP id 07ADF2065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGJPUA (ORCPT
+        id S1728087AbgGJPT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728042AbgGJPRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:17:33 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050F22065D;
-        Fri, 10 Jul 2020 15:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594394230;
-        bh=vby8T28Zhsl7qDBYQZOZlfnWOqlS6FqV3/U4aqAHwfk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=G8UF7jm/7Yy6MTG60kiv3FaSOhzrW9E2hKByIHWg7PY+naOKMMkKyxvJQCQG3zSpU
-         EHLfsan0j8gi6a/j50zOrREv9c/aE102NUgnvEesyBJCtOxv0nbJ0ZmRNmtre87x/t
-         UyfmFZN3VaMLqX8vmFOjTOnjq425a3F6cVMn+8jE=
-Received: by mail-ot1-f54.google.com with SMTP id 95so4424605otw.10;
-        Fri, 10 Jul 2020 08:17:09 -0700 (PDT)
-X-Gm-Message-State: AOAM532tnJuqNeRhCHFPqEOVKXbeTAa9OQ5vgqiQuOUS/MB4ZuIGRHQq
-        70sge2WZLo09IoNF6R9P9FMM37c++J4hiD/Uvg==
-X-Google-Smtp-Source: ABdhPJxZk1EF5sd2MNgTb5L8u1KvVR6QeY8YIQeDuM4HdEwDtdmx29dRwXbBaEwnBV7tWkgFm1gHZDWiIFzbsBYuOoY=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59467283ots.192.1594394229410;
- Fri, 10 Jul 2020 08:17:09 -0700 (PDT)
+        Fri, 10 Jul 2020 11:19:57 -0400
+Received: from www62.your-server.de ([213.133.104.62]:51252 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728022AbgGJPOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:14:41 -0400
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jtujO-0007hb-D9; Fri, 10 Jul 2020 17:14:30 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jtujO-0004pb-2z; Fri, 10 Jul 2020 17:14:30 +0200
+Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+References: <20200709194257.26904-1-grandmaster@al2klimov.de>
+ <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
+ <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net>
+Date:   Fri, 10 Jul 2020 17:14:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com> <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-In-Reply-To: <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 10 Jul 2020 09:16:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25869/Fri Jul 10 16:01:45 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
-<bharat.kumar.gogada@xilinx.com> wrote:
->
-> - Add support for Versal CPM as Root Port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific interrupt line.
->
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  drivers/pci/controller/Kconfig           |   8 +
->  drivers/pci/controller/Makefile          |   1 +
->  drivers/pci/controller/pcie-xilinx-cpm.c | 617 +++++++++++++++++++++++++++++++
->  3 files changed, 626 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+On 7/10/20 8:17 AM, Alexander A. Klimov wrote:
+> Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
+>> On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
+>>> Rationale:
+>>> Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
+>>> which has nothing to do with XDP.
+>>>
+>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>>> ---
+>>>   See also: https://lore.kernel.org/lkml/20200709132607.7fb42415@carbon/
+>>>
+>>>   MAINTAINERS | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 1d4aa7f942de..2bb7feb838af 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
+>>>   F:    kernel/bpf/cpumap.c
+>>>   F:    kernel/bpf/devmap.c
+>>>   F:    net/core/xdp.c
+>>> -N:    xdp
+>>> -K:    xdp
+>>> +N:    (?:\b|_)xdp(?:\b|_)
+>>> +K:    (?:\b|_)xdp(?:\b|_)
+>>
+>> Please also include \W to generally match on non-alphanumeric char given you
+>> explicitly want to avoid [a-z0-9] around the term xdp.
+> Aren't \W, ^ and $ already covered by \b?
 
-[...]
+Ah, true; it says '\b really means (?:(?<=\w)(?!\w)|(?<!\w)(?=\w))', so all good.
+In case this goes via net or net-next tree:
 
-> +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-> +{
-> +       struct xilinx_cpm_pcie_port *port;
-> +       struct device *dev = &pdev->dev;
-> +       struct pci_host_bridge *bridge;
-> +       struct resource *bus_range;
-> +       int err;
-> +
-> +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-> +       if (!bridge)
-> +               return -ENODEV;
-> +
-> +       port = pci_host_bridge_priv(bridge);
-> +
-> +       port->dev = dev;
-> +
-> +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> +                                             &bridge->dma_ranges, &bus_range);
-> +       if (err) {
-> +               dev_err(dev, "Getting bridge resources failed\n");
-> +               return err;
-> +       }
-> +
-> +       err = xilinx_cpm_pcie_init_irq_domain(port);
-> +       if (err)
-> +               return err;
-> +
-> +       err = xilinx_cpm_pcie_parse_dt(port, bus_range);
-> +       if (err) {
-> +               dev_err(dev, "Parsing DT failed\n");
-> +               goto err_parse_dt;
-> +       }
-> +
-> +       xilinx_cpm_pcie_init_port(port);
-> +
-> +       err = xilinx_cpm_setup_irq(port);
-> +       if (err) {
-> +               dev_err(dev, "Failed to set up interrupts\n");
-> +               goto err_setup_irq;
-> +       }
-
-All the h/w init here can be moved to an .init() function in ecam ops
-and then use pci_host_common_probe. Given this is v9, that can be a
-follow-up I guess.
-
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> +       bridge->dev.parent = dev;
-> +       bridge->sysdata = port->cfg;
-> +       bridge->busnr = port->cfg->busr.start;
-> +       bridge->ops = &pci_generic_ecam_ops.pci_ops;
-> +       bridge->map_irq = of_irq_parse_and_map_pci;
-> +       bridge->swizzle_irq = pci_common_swizzle;
-> +
-> +       err = pci_host_probe(bridge);
-> +       if (err < 0)
-> +               goto err_host_bridge;
-> +
-> +       return 0;
-> +
-> +err_host_bridge:
-> +       xilinx_cpm_free_interrupts(port);
-> +err_setup_irq:
-> +       pci_ecam_free(port->cfg);
-> +err_parse_dt:
-> +       xilinx_cpm_free_irq_domains(port);
-> +       return err;
-> +}
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
