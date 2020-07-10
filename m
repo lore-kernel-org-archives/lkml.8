@@ -2,36 +2,36 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91618C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10585C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C2E2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB15A20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgGJMJL (ORCPT
+        id S1728047AbgGJMJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        Fri, 10 Jul 2020 08:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgGJMJG (ORCPT
+        with ESMTP id S1726942AbgGJMJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:09:06 -0400
+        Fri, 10 Jul 2020 08:09:05 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAD3C08E6DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:09:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E197DC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:09:04 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jtrpu-00080c-8F; Fri, 10 Jul 2020 14:09:02 +0200
+        id 1jtrpu-00080d-8F; Fri, 10 Jul 2020 14:09:02 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jtrpq-0007Yx-O8; Fri, 10 Jul 2020 14:08:58 +0200
+        id 1jtrpq-0007Z7-P4; Fri, 10 Jul 2020 14:08:58 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH net-next v1 3/5] net: phy: micrel: ksz886x add MDI-X support
-Date:   Fri, 10 Jul 2020 14:08:49 +0200
-Message-Id: <20200710120851.28984-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 4/5] net: phy: micrel: ksz8081 add MDI-X support
+Date:   Fri, 10 Jul 2020 14:08:50 +0200
+Message-Id: <20200710120851.28984-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200710120851.28984-1-o.rempel@pengutronix.de>
 References: <20200710120851.28984-1-o.rempel@pengutronix.de>
@@ -61,61 +61,46 @@ Add support for MDI-X status and configuration
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/phy/micrel.c | 101 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+ drivers/net/phy/micrel.c | 89 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
 diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 12106fbea565..ec409b2cb984 100644
+index ec409b2cb984..221ba661645f 100644
 --- a/drivers/net/phy/micrel.c
 +++ b/drivers/net/phy/micrel.c
-@@ -28,6 +28,19 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
+@@ -64,11 +64,17 @@
  
-+/* Device specific MII_BMCR (Reg 0) bits */
-+/* 1 = HP Auto MDI/MDI-X mode, 0 = Microchip Auto MDI/MDI-X mode */
-+#define KSZ886X_BMCR_HP_MDIX			BIT(5)
-+/* 1 = Force MDI (transmit on RXP/RXM pins), 0 = Normal operation
-+ * (transmit on TXP/TXM pins)
-+ */
-+#define KSZ886X_BMCR_FORCE_MDI			BIT(4)
-+/* 1 = Disable auto MDI-X */
-+#define KSZ886X_BMCR_DISABLE_AUTO_MDIX		BIT(3)
-+#define KSZ886X_BMCR_DISABLE_FAR_END_FAULT	BIT(2)
-+#define KSZ886X_BMCR_DISABLE_TRANSMIT		BIT(1)
-+#define KSZ886X_BMCR_DISABLE_LED		BIT(0)
-+
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
- #define KSZPHY_OMSO_FACTORY_TEST		BIT(15)
-@@ -58,6 +71,7 @@
+ /* PHY Control 1 */
+ #define MII_KSZPHY_CTRL_1			0x1e
++#define KSZ8081_CTRL1_MDIX_STAT			BIT(4)
+ 
+ /* PHY Control 2 / PHY Control (if no PHY Control 1) */
+ #define MII_KSZPHY_CTRL_2			0x1f
+ #define MII_KSZPHY_CTRL				MII_KSZPHY_CTRL_2
  /* bitmap of PHY register to set interrupt mode */
++#define KSZ8081_CTRL2_HP_MDIX			BIT(15)
++#define KSZ8081_CTRL2_MDI_MDI_X_SELECT		BIT(14)
++#define KSZ8081_CTRL2_DISABLE_AUTO_MDIX		BIT(13)
++#define KSZ8081_CTRL2_FORCE_LINK		BIT(11)
++#define KSZ8081_CTRL2_POWER_SAVING		BIT(10)
  #define KSZPHY_CTRL_INT_ACTIVE_HIGH		BIT(9)
  #define KSZPHY_RMII_REF_CLK_SEL			BIT(7)
-+#define KSZ886X_CTRL_MDIX_STAT			BIT(4)
- 
- /* Write/read to/from extended registers */
- #define MII_KSZPHY_EXTREG                       0x0b
-@@ -1010,6 +1024,91 @@ static int ksz8873mll_config_aneg(struct phy_device *phydev)
- 	return 0;
+ #define KSZ886X_CTRL_MDIX_STAT			BIT(4)
+@@ -398,6 +404,87 @@ static int ksz8081_config_init(struct phy_device *phydev)
+ 	return kszphy_config_init(phydev);
  }
  
-+static int ksz886x_config_mdix(struct phy_device *phydev, u8 ctrl)
++static int ksz8081_config_mdix(struct phy_device *phydev, u8 ctrl)
 +{
 +	u16 val;
 +
 +	switch (ctrl) {
 +	case ETH_TP_MDI:
-+		val = KSZ886X_BMCR_DISABLE_AUTO_MDIX;
++		val = KSZ8081_CTRL2_DISABLE_AUTO_MDIX;
 +		break;
 +	case ETH_TP_MDI_X:
-+		/* Note: The naming of the bit KSZ886X_BMCR_FORCE_MDI is bit
-+		 * counter intuitive, the "-X" in "1 = Force MDI" in the data
-+		 * sheet seems to be missing:
-+		 * 1 = Force MDI (sic!) (transmit on RX+/RX- pins)
-+		 * 0 = Normal operation (transmit on TX+/TX- pins)
-+		 */
-+		val = KSZ886X_BMCR_DISABLE_AUTO_MDIX | KSZ886X_BMCR_FORCE_MDI;
++		val = KSZ8081_CTRL2_DISABLE_AUTO_MDIX |
++			KSZ8081_CTRL2_MDI_MDI_X_SELECT;
 +		break;
 +	case ETH_TP_MDI_AUTO:
 +		val = 0;
@@ -124,13 +109,14 @@ index 12106fbea565..ec409b2cb984 100644
 +		return 0;
 +	}
 +
-+	return phy_modify(phydev, MII_BMCR,
-+			  KSZ886X_BMCR_HP_MDIX | KSZ886X_BMCR_FORCE_MDI |
-+			  KSZ886X_BMCR_DISABLE_AUTO_MDIX,
-+			  KSZ886X_BMCR_HP_MDIX | val);
++	return phy_modify(phydev, MII_KSZPHY_CTRL_2,
++			  KSZ8081_CTRL2_HP_MDIX |
++			  KSZ8081_CTRL2_MDI_MDI_X_SELECT |
++			  KSZ8081_CTRL2_DISABLE_AUTO_MDIX,
++			  KSZ8081_CTRL2_HP_MDIX | val);
 +}
 +
-+static int ksz886x_config_aneg(struct phy_device *phydev)
++static int ksz8081_config_aneg(struct phy_device *phydev)
 +{
 +	int ret;
 +
@@ -142,19 +128,19 @@ index 12106fbea565..ec409b2cb984 100644
 +	 * switching from autoneg off to on. So, take MDI-X configuration under
 +	 * own control and set it after autoneg configuration was done.
 +	 */
-+	return ksz886x_config_mdix(phydev, phydev->mdix_ctrl);
++	return ksz8081_config_mdix(phydev, phydev->mdix_ctrl);
 +}
 +
-+static int ksz886x_mdix_update(struct phy_device *phydev)
++static int ksz8081_mdix_update(struct phy_device *phydev)
 +{
 +	int ret;
 +
-+	ret = phy_read(phydev, MII_BMCR);
++	ret = phy_read(phydev, MII_KSZPHY_CTRL_2);
 +	if (ret < 0)
 +		return ret;
 +
-+	if (ret & KSZ886X_BMCR_DISABLE_AUTO_MDIX) {
-+		if (ret & KSZ886X_BMCR_FORCE_MDI)
++	if (ret & KSZ8081_CTRL2_DISABLE_AUTO_MDIX) {
++		if (ret & KSZ8081_CTRL2_MDI_MDI_X_SELECT)
 +			phydev->mdix_ctrl = ETH_TP_MDI_X;
 +		else
 +			phydev->mdix_ctrl = ETH_TP_MDI;
@@ -162,11 +148,11 @@ index 12106fbea565..ec409b2cb984 100644
 +		phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
 +	}
 +
-+	ret = phy_read(phydev, MII_KSZPHY_CTRL);
++	ret = phy_read(phydev, MII_KSZPHY_CTRL_1);
 +	if (ret < 0)
 +		return ret;
 +
-+	if (ret & KSZ886X_CTRL_MDIX_STAT)
++	if (ret & KSZ8081_CTRL1_MDIX_STAT)
 +		phydev->mdix = ETH_TP_MDI;
 +	else
 +		phydev->mdix = ETH_TP_MDI_X;
@@ -174,29 +160,29 @@ index 12106fbea565..ec409b2cb984 100644
 +	return 0;
 +}
 +
-+static int ksz886x_read_status(struct phy_device *phydev)
++static int ksz8081_read_status(struct phy_device *phydev)
 +{
 +	int ret;
 +
-+	ret = ksz886x_mdix_update(phydev);
++	ret = ksz8081_mdix_update(phydev);
 +	if (ret < 0)
 +		return ret;
 +
 +	return genphy_read_status(phydev);
 +}
 +
- static int ksz886x_resume(struct phy_device *phydev)
+ static int ksz8061_config_init(struct phy_device *phydev)
  {
  	int ret;
-@@ -1366,6 +1465,8 @@ static struct phy_driver ksphy_driver[] = {
- 	.name		= "Micrel KSZ886X Switch",
- 	/* PHY_BASIC_FEATURES */
- 	.config_init	= kszphy_config_init,
-+	.config_aneg	= ksz886x_config_aneg,
-+	.read_status	= ksz886x_read_status,
- 	.suspend	= genphy_suspend,
- 	.resume		= ksz886x_resume,
- }, {
+@@ -1381,6 +1468,8 @@ static struct phy_driver ksphy_driver[] = {
+ 	.driver_data	= &ksz8081_type,
+ 	.probe		= kszphy_probe,
+ 	.config_init	= ksz8081_config_init,
++	.config_aneg	= ksz8081_config_aneg,
++	.read_status	= ksz8081_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
+ 	.get_sset_count = kszphy_get_sset_count,
 -- 
 2.27.0
 
