@@ -2,117 +2,191 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847A3C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084E4C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8B320657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4727206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bKZKGxxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGJQWz (ORCPT
+        id S1728200AbgGJQYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:22:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45306 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgGJQWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:22:55 -0400
-IronPort-SDR: 630kz3R7Mdu711O0mZEXxHcdkOg95KiLNB/2EBCD2fNCNE4zcHJWVYKm8SzZKqNNtjbsO6ZlV8
- mJq7eGSfuMxg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149713789"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="149713789"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 09:22:54 -0700
-IronPort-SDR: Itm8YZK2yEyphbxvHGwAapnbac7UFxrcKPcFy1HhAKV8QpYyd06n/caWRVn4ZG/I2DgJyUBizZ
- Hy5YSxFuvCvA==
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="458327266"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 09:22:51 -0700
-Date:   Fri, 10 Jul 2020 17:22:44 +0100
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200710162244.GA411420@silpixa00400314>
-References: <20200710153742.GA61966@bjorn-Precision-5520>
- <20200710154433.GA62583@bjorn-Precision-5520>
- <20200710101034.5a8c1be5@x1.home>
+        Fri, 10 Jul 2020 12:24:14 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:4267 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727078AbgGJQYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:24:13 -0400
+X-UUID: a9537f6736c443e38ae549aef5a5598b-20200711
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=lz5bM/DGUrKvyb0iA7Fk88tu9GouKoqnG5Xv/sMmmGU=;
+        b=bKZKGxxTHuZ5Itt2f5K3eMHGM6WkSR5pf47Npq84cHCE7R5wHLEae9iVB85T8DfEuSMbqOoKoHqg+HkkIlU3EE3LcXoHiTZpkQ2IBeOLw+hk7H5P1oFMqq/3ER6BKVMcXbQB/My2yVHG8sxeVenXO+BK+9Iz4js+t5EyLFq28II=;
+X-UUID: a9537f6736c443e38ae549aef5a5598b-20200711
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 605348079; Sat, 11 Jul 2020 00:24:04 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 11 Jul 2020 00:24:02 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 11 Jul 2020 00:24:03 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH v8 1/4] rcu: kasan: record and print call_rcu() call stack
+Date:   Sat, 11 Jul 2020 00:24:01 +0800
+Message-ID: <20200710162401.23816-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710101034.5a8c1be5@x1.home>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6E9BA3A2DA6E0C0B9514B97C67FF9D9D1AA47C1C91B5E3D4CA23464A593A44492000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:10:34AM -0600, Alex Williamson wrote:
-> On Fri, 10 Jul 2020 10:44:33 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Fri, Jul 10, 2020 at 10:37:45AM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote:  
-> > > > On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:  
-> > > > > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:  
-> > > > > > The current generation of Intel® QuickAssist Technology devices
-> > > > > > are not designed to run in an untrusted environment because of the
-> > > > > > following issues reported in the release notes in
-> > > > > > https://01.org/intel-quickassist-technology:  
-> > > > > 
-> > > > > It would be nice if this link were directly clickable, e.g., if there
-> > > > > were no trailing ":" or something.
-> > > > > 
-> > > > > And it would be even better if it went to a specific doc that
-> > > > > described these issues.  I assume these are errata, and it's not easy
-> > > > > to figure out which doc mentions them.  
-> > > > Sure. I will fix the commit message in the next revision and point to the
-> > > > actual document:
-> > > > https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf  
-> > > 
-> > > Since URLs tend to go stale, please also include the Intel document
-> > > number and title.  
-> > 
-> > Oh, and is "01.org" really the right place for that?  It looks like an
-> > Intel document, so I'd expect it to be somewhere on intel.com.
-> > 
-> > I'm still a little confused.  That doc seems to be about *software*
-> > and Linux software in particular.  But when you said these "devices
-> > are not designed to run in an untrusted environment", I thought you
-> > meant there was some *hardware* design issue that caused a problem.
-Yes, the problem is in hardware.
+VGhpcyBmZWF0dXJlIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3Rh
+Y2tzIGFuZA0KcHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiBy
+ZXBvcnQuDQoNCldoZW4gY2FsbF9yY3UoKSBpcyBjYWxsZWQsIHdlIHN0b3JlIHRoZSBjYWxsX3Jj
+dSgpIGNhbGwgc3RhY2sgaW50bw0Kc2x1YiBhbGxvYyBtZXRhLWRhdGEsIHNvIHRoYXQgdGhlIEtB
+U0FOIHJlcG9ydCBjYW4gcHJpbnQgcmN1IHN0YWNrLg0KDQpbMV1odHRwczovL2J1Z3ppbGxhLmtl
+cm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KWzJdaHR0cHM6Ly9ncm91cHMuZ29vZ2xl
+LmNvbS9mb3J1bS8jIXNlYXJjaGluL2thc2FuLWRldi9iZXR0ZXIkMjBzdGFjayQyMHRyYWNlcyQy
+MGZvciQyMHJjdSU3Q3NvcnQ6ZGF0ZS9rYXNhbi1kZXYvS1FzalRfODhoREUvN3JOVVpwclJCZ0FK
+DQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4N
+ClN1Z2dlc3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQWNrZWQt
+Ynk6IFBhdWwgRS4gTWNLZW5uZXkgPHBhdWxtY2tAa2VybmVsLm9yZz4NClJldmlld2VkLWFuZC10
+ZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NClJldmlld2VkLWJ5
+OiBBbmRyZXkgS29ub3ZhbG92IDxhbmRyZXlrbnZsQGdvb2dsZS5jb20+DQpDYzogQW5kcmV5IFJ5
+YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBBbGV4YW5kZXIgUG90YXBlbmtv
+IDxnbGlkZXJAZ29vZ2xlLmNvbT4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5k
+YXRpb24ub3JnPg0KQ2M6IEpvc2ggVHJpcGxldHQgPGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4NCkNj
+OiBNYXRoaWV1IERlc25veWVycyA8bWF0aGlldS5kZXNub3llcnNAZWZmaWNpb3MuY29tPg0KQ2M6
+IExhaSBKaWFuZ3NoYW4gPGppYW5nc2hhbmxhaUBnbWFpbC5jb20+DQpDYzogSm9lbCBGZXJuYW5k
+ZXMgPGpvZWxAam9lbGZlcm5hbmRlcy5vcmc+DQotLS0NCg0KQ2hhbmdlcyBzaW5jZSB2NzoNCi0g
+Zml4IHRoaXMgY29tbWl0IGRlcGVuZGVuY2UgaW4gdGhlIHNlcmllcw0KDQpDaGFuZ2VzIHNpbmNl
+IHY2Og0KLSBmaXggdHlwbw0KDQotLS0NCiBpbmNsdWRlL2xpbnV4L2thc2FuLmggfCAgMiArKw0K
+IGtlcm5lbC9yY3UvdHJlZS5jICAgICB8ICAyICsrDQogbW0va2FzYW4vY29tbW9uLmMgICAgIHwg
+IDQgKystLQ0KIG1tL2thc2FuL2dlbmVyaWMuYyAgICB8IDIxICsrKysrKysrKysrKysrKysrKysr
+Kw0KIG1tL2thc2FuL2thc2FuLmggICAgICB8ICA5ICsrKysrKysrKw0KIG1tL2thc2FuL3JlcG9y
+dC5jICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCiA2IGZpbGVzIGNoYW5n
+ZWQsIDU5IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9pbmNs
+dWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCmluZGV4IDMxMzE0Y2E3
+YzYzNS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9rYXNhbi5oDQor
+KysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCkBAIC0xNzQsMTEgKzE3NCwxMyBAQCBzdGF0aWMg
+aW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9zaXplKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNo
+ZSkgeyByZXR1cm4gMDsgfQ0KIA0KIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5rKHN0cnVjdCBrbWVt
+X2NhY2hlICpjYWNoZSk7DQogdm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihzdHJ1Y3Qga21lbV9j
+YWNoZSAqY2FjaGUpOw0KK3ZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2b2lkICpwdHIpOw0K
+IA0KICNlbHNlIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQogc3RhdGljIGlubGluZSB2
+b2lkIGthc2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpIHt9DQogc3Rh
+dGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpj
+YWNoZSkge30NCitzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2b2lk
+ICpwdHIpIHt9DQogDQogI2VuZGlmIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQpkaWZm
+IC0tZ2l0IGEva2VybmVsL3JjdS90cmVlLmMgYi9rZXJuZWwvcmN1L3RyZWUuYw0KaW5kZXggMDY1
+NDhlMmViYjcyLi4zNmE0ZmY3ZjMyMGIgMTAwNjQ0DQotLS0gYS9rZXJuZWwvcmN1L3RyZWUuYw0K
+KysrIGIva2VybmVsL3JjdS90cmVlLmMNCkBAIC01Nyw2ICs1Nyw3IEBADQogI2luY2x1ZGUgPGxp
+bnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvaXNvbGF0aW9uLmg+DQogI2luY2x1
+ZGUgPGxpbnV4L3NjaGVkL2Nsb2NrLmg+DQorI2luY2x1ZGUgPGxpbnV4L2thc2FuLmg+DQogI2lu
+Y2x1ZGUgIi4uL3RpbWUvdGljay1pbnRlcm5hbC5oIg0KIA0KICNpbmNsdWRlICJ0cmVlLmgiDQpA
+QCAtMjY2OCw2ICsyNjY5LDcgQEAgX19jYWxsX3JjdShzdHJ1Y3QgcmN1X2hlYWQgKmhlYWQsIHJj
+dV9jYWxsYmFja190IGZ1bmMpDQogCWhlYWQtPmZ1bmMgPSBmdW5jOw0KIAloZWFkLT5uZXh0ID0g
+TlVMTDsNCiAJbG9jYWxfaXJxX3NhdmUoZmxhZ3MpOw0KKwlrYXNhbl9yZWNvcmRfYXV4X3N0YWNr
+KGhlYWQpOw0KIAlyZHAgPSB0aGlzX2NwdV9wdHIoJnJjdV9kYXRhKTsNCiANCiAJLyogQWRkIHRo
+ZSBjYWxsYmFjayB0byBvdXIgbGlzdC4gKi8NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24u
+YyBiL21tL2thc2FuL2NvbW1vbi5jDQppbmRleCAyOTA2MzU4ZTQyZjAuLjhiYzYxODI4OWJiMSAx
+MDA2NDQNCi0tLSBhL21tL2thc2FuL2NvbW1vbi5jDQorKysgYi9tbS9rYXNhbi9jb21tb24uYw0K
+QEAgLTQxLDcgKzQxLDcgQEANCiAjaW5jbHVkZSAia2FzYW4uaCINCiAjaW5jbHVkZSAiLi4vc2xh
+Yi5oIg0KIA0KLXN0YXRpYyBpbmxpbmUgZGVwb3Rfc3RhY2tfaGFuZGxlX3Qgc2F2ZV9zdGFjayhn
+ZnBfdCBmbGFncykNCitkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90
+IGZsYWdzKQ0KIHsNCiAJdW5zaWduZWQgbG9uZyBlbnRyaWVzW0tBU0FOX1NUQUNLX0RFUFRIXTsN
+CiAJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQpAQCAtNTQsNyArNTQsNyBAQCBzdGF0aWMgaW5s
+aW5lIGRlcG90X3N0YWNrX2hhbmRsZV90IHNhdmVfc3RhY2soZ2ZwX3QgZmxhZ3MpDQogc3RhdGlj
+IGlubGluZSB2b2lkIHNldF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBm
+bGFncykNCiB7DQogCXRyYWNrLT5waWQgPSBjdXJyZW50LT5waWQ7DQotCXRyYWNrLT5zdGFjayA9
+IHNhdmVfc3RhY2soZmxhZ3MpOw0KKwl0cmFjay0+c3RhY2sgPSBrYXNhbl9zYXZlX3N0YWNrKGZs
+YWdzKTsNCiB9DQogDQogdm9pZCBrYXNhbl9lbmFibGVfY3VycmVudCh2b2lkKQ0KZGlmZiAtLWdp
+dCBhL21tL2thc2FuL2dlbmVyaWMuYyBiL21tL2thc2FuL2dlbmVyaWMuYw0KaW5kZXggNTZmZjg4
+ODVmZTJlLi44YWNmNDg4ODJiYTIgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9nZW5lcmljLmMNCisr
+KyBiL21tL2thc2FuL2dlbmVyaWMuYw0KQEAgLTMyNSwzICszMjUsMjQgQEAgREVGSU5FX0FTQU5f
+U0VUX1NIQURPVyhmMik7DQogREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmMyk7DQogREVGSU5FX0FT
+QU5fU0VUX1NIQURPVyhmNSk7DQogREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmOCk7DQorDQordm9p
+ZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKmFkZHIpDQorew0KKwlzdHJ1Y3QgcGFnZSAq
+cGFnZSA9IGthc2FuX2FkZHJfdG9fcGFnZShhZGRyKTsNCisJc3RydWN0IGttZW1fY2FjaGUgKmNh
+Y2hlOw0KKwlzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSAqYWxsb2NfaW5mbzsNCisJdm9pZCAqb2Jq
+ZWN0Ow0KKw0KKwlpZiAoIShwYWdlICYmIFBhZ2VTbGFiKHBhZ2UpKSkNCisJCXJldHVybjsNCisN
+CisJY2FjaGUgPSBwYWdlLT5zbGFiX2NhY2hlOw0KKwlvYmplY3QgPSBuZWFyZXN0X29iaihjYWNo
+ZSwgcGFnZSwgYWRkcik7DQorCWFsbG9jX2luZm8gPSBnZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2Jq
+ZWN0KTsNCisNCisJLyoNCisJICogcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwg
+c3RhY2tzLg0KKwkgKi8NCisJYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdID0gYWxsb2NfaW5mby0+
+YXV4X3N0YWNrWzBdOw0KKwlhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0
+YWNrKEdGUF9OT1dBSVQpOw0KK30NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0v
+a2FzYW4va2FzYW4uaA0KaW5kZXggZThmMzcxOTlkODg1Li5iMWE4OGM3NTQxNmEgMTAwNjQ0DQot
+LS0gYS9tbS9rYXNhbi9rYXNhbi5oDQorKysgYi9tbS9rYXNhbi9rYXNhbi5oDQpAQCAtMTA0LDYg
+KzEwNCwxMyBAQCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KIA0KIHN0cnVjdCBrYXNhbl9hbGxvY19t
+ZXRhIHsNCiAJc3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3RyYWNrOw0KKyNpZmRlZiBDT05GSUdf
+S0FTQU5fR0VORVJJQw0KKwkvKg0KKwkgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgaXMgc3RvcmVk
+IGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEuDQorCSAqIFRoZSBmcmVlIHN0YWNrIGlzIHN0
+b3JlZCBpbnRvIHN0cnVjdCBrYXNhbl9mcmVlX21ldGEuDQorCSAqLw0KKwlkZXBvdF9zdGFja19o
+YW5kbGVfdCBhdXhfc3RhY2tbMl07DQorI2VuZGlmDQogCXN0cnVjdCBrYXNhbl90cmFjayBmcmVl
+X3RyYWNrW0tBU0FOX05SX0ZSRUVfU1RBQ0tTXTsNCiAjaWZkZWYgQ09ORklHX0tBU0FOX1NXX1RB
+R1NfSURFTlRJRlkNCiAJdTggZnJlZV9wb2ludGVyX3RhZ1tLQVNBTl9OUl9GUkVFX1NUQUNLU107
+DQpAQCAtMTU5LDYgKzE2Niw4IEBAIHZvaWQga2FzYW5fcmVwb3J0X2ludmFsaWRfZnJlZSh2b2lk
+ICpvYmplY3QsIHVuc2lnbmVkIGxvbmcgaXApOw0KIA0KIHN0cnVjdCBwYWdlICprYXNhbl9hZGRy
+X3RvX3BhZ2UoY29uc3Qgdm9pZCAqYWRkcik7DQogDQorZGVwb3Rfc3RhY2tfaGFuZGxlX3Qga2Fz
+YW5fc2F2ZV9zdGFjayhnZnBfdCBmbGFncyk7DQorDQogI2lmIGRlZmluZWQoQ09ORklHX0tBU0FO
+X0dFTkVSSUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NMQUIpIHx8IGRlZmluZWQoQ09ORklH
+X1NMVUIpKQ0KIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0IGthc2FuX2ZyZWVfbWV0YSAqaW5m
+bywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9yZXBv
+cnQuYyBiL21tL2thc2FuL3JlcG9ydC5jDQppbmRleCA4MGYyM2M5ZGE2YjAuLjI0MjFhNGJkOTIy
+NyAxMDA2NDQNCi0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQorKysgYi9tbS9rYXNhbi9yZXBvcnQu
+Yw0KQEAgLTEwNSwxNSArMTA1LDIwIEBAIHN0YXRpYyB2b2lkIGVuZF9yZXBvcnQodW5zaWduZWQg
+bG9uZyAqZmxhZ3MpDQogCWthc2FuX2VuYWJsZV9jdXJyZW50KCk7DQogfQ0KIA0KK3N0YXRpYyB2
+b2lkIHByaW50X3N0YWNrKGRlcG90X3N0YWNrX2hhbmRsZV90IHN0YWNrKQ0KK3sNCisJdW5zaWdu
+ZWQgbG9uZyAqZW50cmllczsNCisJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQorDQorCW5yX2Vu
+dHJpZXMgPSBzdGFja19kZXBvdF9mZXRjaChzdGFjaywgJmVudHJpZXMpOw0KKwlzdGFja190cmFj
+ZV9wcmludChlbnRyaWVzLCBucl9lbnRyaWVzLCAwKTsNCit9DQorDQogc3RhdGljIHZvaWQgcHJp
+bnRfdHJhY2soc3RydWN0IGthc2FuX3RyYWNrICp0cmFjaywgY29uc3QgY2hhciAqcHJlZml4KQ0K
+IHsNCiAJcHJfZXJyKCIlcyBieSB0YXNrICV1OlxuIiwgcHJlZml4LCB0cmFjay0+cGlkKTsNCiAJ
+aWYgKHRyYWNrLT5zdGFjaykgew0KLQkJdW5zaWduZWQgbG9uZyAqZW50cmllczsNCi0JCXVuc2ln
+bmVkIGludCBucl9lbnRyaWVzOw0KLQ0KLQkJbnJfZW50cmllcyA9IHN0YWNrX2RlcG90X2ZldGNo
+KHRyYWNrLT5zdGFjaywgJmVudHJpZXMpOw0KLQkJc3RhY2tfdHJhY2VfcHJpbnQoZW50cmllcywg
+bnJfZW50cmllcywgMCk7DQorCQlwcmludF9zdGFjayh0cmFjay0+c3RhY2spOw0KIAl9IGVsc2Ug
+ew0KIAkJcHJfZXJyKCIoc3RhY2sgaXMgbm90IGF2YWlsYWJsZSlcbiIpOw0KIAl9DQpAQCAtMTky
+LDYgKzE5NywxOSBAQCBzdGF0aWMgdm9pZCBkZXNjcmliZV9vYmplY3Qoc3RydWN0IGttZW1fY2Fj
+aGUgKmNhY2hlLCB2b2lkICpvYmplY3QsDQogCQlmcmVlX3RyYWNrID0ga2FzYW5fZ2V0X2ZyZWVf
+dHJhY2soY2FjaGUsIG9iamVjdCwgdGFnKTsNCiAJCXByaW50X3RyYWNrKGZyZWVfdHJhY2ssICJG
+cmVlZCIpOw0KIAkJcHJfZXJyKCJcbiIpOw0KKw0KKyNpZmRlZiBDT05GSUdfS0FTQU5fR0VORVJJ
+Qw0KKwkJaWYgKGFsbG9jX2luZm8tPmF1eF9zdGFja1swXSkgew0KKwkJCXByX2VycigiTGFzdCBj
+YWxsX3JjdSgpOlxuIik7DQorCQkJcHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzBd
+KTsNCisJCQlwcl9lcnIoIlxuIik7DQorCQl9DQorCQlpZiAoYWxsb2NfaW5mby0+YXV4X3N0YWNr
+WzFdKSB7DQorCQkJcHJfZXJyKCJTZWNvbmQgdG8gbGFzdCBjYWxsX3JjdSgpOlxuIik7DQorCQkJ
+cHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdKTsNCisJCQlwcl9lcnIoIlxuIik7
+DQorCQl9DQorI2VuZGlmDQogCX0NCiANCiAJZGVzY3JpYmVfb2JqZWN0X2FkZHIoY2FjaGUsIG9i
+amVjdCwgYWRkcik7DQotLSANCjIuMTguMA0K
 
-> There seems to be a fair bit of hardware errata in the doc too, see:
-> 
-> 3.1.2 QATE-7495 - GEN - An incorrectly formatted request to Intel® QAT can
-> hang the entire Intel® QAT Endpoint
-> 
-> 3.1.9 QATE-39220 - GEN - QAT API submissions with bad addresses that
-> trigger DMA to invalid or unmapped addresses can cause a platform
-> hang
-> 
-> 3.1.17 QATE-52389 - SR-IOV -Huge pages may not be compatible with QAT
-> VF usage
-> 
-> 3.1.19 QATE-60953 - GEN – Intel® QAT API submissions with bad addresses
-> that trigger DMA to invalid or unmapped addresses can impact QAT
-> service availability
-Correct, that document contains errata for both the QAT HW and the
-current software.
-
-Regards,
-
--- 
-Giovanni
