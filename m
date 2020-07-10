@@ -2,109 +2,104 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A61C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79131C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE45B2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548782078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C016bLjS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBl7FU/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgGJQCl (ORCPT
+        id S1727989AbgGJQDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58378 "EHLO
+        Fri, 10 Jul 2020 12:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJQCl (ORCPT
+        with ESMTP id S1727074AbgGJQDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:02:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FA8C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:02:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id j11so7044805ljo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:02:40 -0700 (PDT)
+        Fri, 10 Jul 2020 12:03:22 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A2AC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:03:22 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q15so6696951wmj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:03:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dP/Cwrj374IdB7UlLTFuDEBsi+Cb3XJB3iKosVI1sUk=;
-        b=C016bLjS1iSmlTj0cYHyYgpPqWoY/JAMQZDnD7WVqXT+pAak4ctDI2JY5PrUCGEqjQ
-         kK1fGu7t89n/K2qg2s0gtOMBRkEH4Gux1s7dsDRhKk8lkH3i0vAs+rdiFO6xBSDOqp72
-         MiuNlhIBNiLc6XYJgQY1TRcEIm6QIoZsFQtuImstn9NX9d/xjTVXRbm5A+W66VrnUjNA
-         oTskdRfKYWp5HN6JqO0FzrYzjTURpSMwqj4S2IntcSUJ8C+j2dRGORfVgAod0hF5t8oY
-         U5JvZb1Zx66ljOmk9sECCvq3zuZ+EyViOSvG1wYgBRDMgwDb888R3tqYosDQzX4f3vAk
-         D3Bw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=HU7/byzDdGrFRngwJ2Ihe/2za95z2ZBIDy+mwg/mTHc=;
+        b=MBl7FU/yIvBaWy3Kyuc5jYhBPOiReIKPfgPlLvR22C7n7X3DdznB9cjx/N2tusWiTx
+         ediyqviCImtW/WnIxtKTDGcj1XtOcoIL3ALjFXoMeqgjfDFPTIkXOXr934Au7jXhrB1J
+         swtgAkV/JMlNQG4xrMEKuCpfH1zpJa2bECdWq/ChqdGJ5O6mrgS8LLpmtHJIY8yjnOL3
+         H8nEesxLsnSFscOl3I0A/D0WQRPny1dCB9oHXH11hmFfOG4tfjOLpFKaO/7ccswEhKQs
+         uwHeE2kcw3xLOFIy1ttEVf56XhirUAddlN68BYFFrzIw97QeC1vQveR6wb25QwXldz+o
+         wTyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dP/Cwrj374IdB7UlLTFuDEBsi+Cb3XJB3iKosVI1sUk=;
-        b=qGVKJPqO9d9P7qN0B0VGwhFOuDiwDS+5VZ0a5Ehika5E9uZ1QBszpsqySIkY0PqHUh
-         lGQAmaZSeQJ5FTEn+2oPTqC49HCmKNkTDpbrSG2VZjUbHnoyjEk0BZAbH+xTYers7O9L
-         KpX5SYmpW3BdA6Hx+Yz/WTBSBoNRYO+swUEw5Qn4DiOe1x8wn3538kkoPsVVvsHYtsDP
-         UK22mc+PE/Vuwo4LV3G6Hdj/g1yQIxRTNuWwaENEJYzStlxsGUKngJBq+LqhLbiVY2xX
-         Cv/giS3rTmLKSukX0YWFoJgQvhzBTAneWmkhFpsszA7msK3vCjB3jrjBl+nwLnYiFwLF
-         7dMw==
-X-Gm-Message-State: AOAM532+jFDLLkPKJ/v/e927yNxjesTNgE00yRaJtH7VpZC5npArFK28
-        12mhiuqDVVSqeP5FYNIH20FrXmEImjbuF/qQE64o1A==
-X-Google-Smtp-Source: ABdhPJxrjkl/SqLB51dbIteb5teAD4c/1Mys6FI12CCbyigPoK1IQmofSn+hyrV2N/0Fs+ibrYIikoRo5cMZoGwR1cY=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr26850311ljg.100.1594396959423;
- Fri, 10 Jul 2020 09:02:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=HU7/byzDdGrFRngwJ2Ihe/2za95z2ZBIDy+mwg/mTHc=;
+        b=eMM9wMWpJiQl1TWRVTr9XQHqHYW5g/t+Cykcov2jo6hsQ9EzRA8UEzv67D6dj7E9Z1
+         EnpMDME2/89U0zNXxAr7YqUj8VfLW+pz8La6UpXiJn94MQBoXO4wRlu+0m7s8vCdrEpx
+         l4W41e71q1H0JOxWmoVHW1y9rqqsF+RsIos/N+snRMKXz9nN5BpCq7nMZZ1lApcRK0A/
+         aC7ZVYyRPWVc6XhyxYwTiO6smah/c0kQJOYLVpQPVWJWxpuYlzJ5QZCMWW2iTNT4wqsc
+         isiNwbpE+EWO4v7ykYiTQCg9cXekjNC/i0mbJFzOFniR4BnUsvGYIPl3lkYiVmSzyud/
+         Ghcg==
+X-Gm-Message-State: AOAM532IKJ+IquhOXmJsogmyN7xKkFovfDgPY94ELDyrEbweNvZDIEMM
+        LBmHqSBW//N1P2WsxtfQixL0ab5X+30=
+X-Google-Smtp-Source: ABdhPJxtPtkfAREBaV21XQmaaF9G3mrjKWq0G48lEic7OZzNUaGGwPPqOJe741XamARcYyemgYeykA==
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr5741624wmd.86.1594396999997;
+        Fri, 10 Jul 2020 09:03:19 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id t4sm10529773wmf.4.2020.07.10.09.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:03:19 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 13:03:13 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com, twoerner@gmail.com
+Subject: [PATCH] drm/vkms: change the max cursor width/height
+Message-ID: <20200710160313.xjoz6ereyma5vkc3@smtp.gmail.com>
 MIME-Version: 1.0
-References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Jul 2020 18:02:28 +0200
-Message-ID: <CACRpkdax9wSFtYxyCu18bWwc5T1GqNx7EDVA6JN+Qu42hOCh_A@mail.gmail.com>
-Subject: Re: [PATCH v2] CodingStyle: Inclusive Terminology
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.clm>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 9:40 AM Dan Williams <dan.j.williams@intel.com> wrote:
+This change expands the coverage for the IGT kms_cursor_crc test, where
+the size varies between 64 and 512 for a square cursor. With this, in
+addition to the cursor 64x64, this patch enables the test of cursors with
+sizes: 128x128, 256x256, and 512x512.
 
-> Linux maintains a coding-style and its own idiomatic set of terminology.
-> Update the style guidelines to recommend replacements for the terms
-> master/slave and blacklist/whitelist.
->
-> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Dave Airlie <airlied@redhat.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Acked-by: SeongJae Park <sjpark@amazon.de>
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> Signed-off-by: Chris Mason <clm@fb.clm>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+---
+ drivers/gpu/drm/vkms/vkms_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index 1e8b2169d834..57a8a397d5e8 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -133,6 +133,8 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
+ 	dev->mode_config.min_height = YRES_MIN;
+ 	dev->mode_config.max_width = XRES_MAX;
+ 	dev->mode_config.max_height = YRES_MAX;
++	dev->mode_config.cursor_width = 512;
++	dev->mode_config.cursor_height = 512;
+ 	dev->mode_config.preferred_depth = 24;
+ 	dev->mode_config.helper_private = &vkms_mode_config_helpers;
+ 
+-- 
+2.27.0
 
-An interesting piece on the topic is Douglas R. Hofstadter's
-satirical "A Person paper On Purity in Language" from 1985,
-which is funny, witty, Jonathan Swift-like and at one point
-convinced me on the importance of proper language in
-my professional work.
-http://www.cs.virginia.edu/~evans/cs655/readings/purity.html
-
-Thanks,
-Linus Walleij
