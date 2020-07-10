@@ -2,242 +2,257 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C72C4345C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0399C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C122082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847F4207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0IwyDq6L"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FWkXxVAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgGJOYJ (ORCPT
+        id S1728555AbgGJOYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:24:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36058 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbgGJOYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 10:24:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AEMsi5074625;
-        Fri, 10 Jul 2020 14:23:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=OJFXzvcgwrzEo+6n/2ZFQwVro6K6Chge5DvTyl+0AGI=;
- b=0IwyDq6Lz1xeigcMMq53xyo7YRwwAx3TylOq15cnZ+Q39mxNSVyIIRjPe451eMue5XFK
- PBCzF2E9LpLJTETgONCYrHSoXNnTZwpUrUORqOkOnkQ83qxG4+zys/DZXULgdmKlax9s
- TpWwPt1q8RHikrVEJSxrZPv+8AwdbMi1Ws/lvccgAT8bFs31310RXp3qkW282EHtMWJ0
- RCnyi27D5zTrlDHnRDk2jPBW4zeazUbpGJHuJnt1px9taR4++Yy2/IfHy9OM2eILUIeY
- VFU6CfnTBy2LzSj5ABQJrN8Tcknyol3ikvBGG/Csf2azB7dBaAK+B/wdnr/+ZeqHhm99 /A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 325y0aqr7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 14:23:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AENMOu122524;
-        Fri, 10 Jul 2020 14:23:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 325k3jy9qa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 14:23:23 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06AENKGi024199;
-        Fri, 10 Jul 2020 14:23:20 GMT
-Received: from localhost.uk.oracle.com (/10.175.190.31)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jul 2020 07:23:20 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
-        daniel@iogearbox.net, andriin@fb.com
-Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 bpf-next 1/2] bpf: use dedicated bpf_trace_printk event instead of trace_printk()
-Date:   Fri, 10 Jul 2020 15:22:32 +0100
-Message-Id: <1594390953-31757-2-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com>
-References: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100101
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36964 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbgGJOX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:23:57 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142355euoutp0292dd4d6e3855b7f24bf7eb688a4662ef~gajLq6R6C0760207602euoutp02H
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:23:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710142355euoutp0292dd4d6e3855b7f24bf7eb688a4662ef~gajLq6R6C0760207602euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594391035;
+        bh=k6kKp5Q44utOhq6BdHSSWTCNyx+Oy/mLFO4L6jIZR4E=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=FWkXxVAEaWyVMmJKgl2ZFI0GwpDBIxzQ+pkEMw7kHlvtTVrTgdfDw25YyoKQSzDol
+         IjabuHTphc4EiyVu4lnfSe3t5Q1vD47IBeS6RuMMsnPYUrS/bN9yI3IsQf48HzqzWs
+         17MQwkRRnYPlrN1ZWMfArXDaQVm89d3HDrY7Fnng=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200710142354eucas1p2d950849266e3b1f7ac3b551c09a2e080~gajLIul0n0954709547eucas1p2C;
+        Fri, 10 Jul 2020 14:23:54 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0B.DE.06318.AF9780F5; Fri, 10
+        Jul 2020 15:23:54 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710142354eucas1p2b4509184e94ba8c55ae66f9c5ba1f380~gajK0iyi80953909539eucas1p2C;
+        Fri, 10 Jul 2020 14:23:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200710142354eusmtrp2490b1926c917b6fc0a43c700af7399be~gajKztZRi1267512675eusmtrp20;
+        Fri, 10 Jul 2020 14:23:54 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-3f-5f0879fac43b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 85.71.06017.9F9780F5; Fri, 10
+        Jul 2020 15:23:53 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200710142353eusmtip1e6c80cfac1c21c3ab467fab46d269dda~gajJ_ecqM0341503415eusmtip1Q;
+        Fri, 10 Jul 2020 14:23:53 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] omapfb: fix multiple reference count leaks due to
+ pm_runtime_get_sync
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, wu000273@umn.edu,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <474b3931-4638-0eab-de96-2038a8e3ac7d@samsung.com>
+Date:   Fri, 10 Jul 2020 16:23:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200614030528.128064-1-pakki001@umn.edu>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTmt3t3791odp3ZThYVk6KCtLLoUiEW/nGh6IEFvcxmXh/kpuz6
+        yCDyhcV6akaklpaaz5xMSZ2hZdlMcYaZpVYK2UNrbaYSWq66u0X+953vO9/vfOfwozDlqNSL
+        itLFcXqdJlpNyPF7T6asq6eTqJA19sz5jL09k2Sa3jSRTFmbE2d6Ju0Ek1ZoJJi+lEYJ03az
+        k2TaLjqkzHNzHsHkFl3CmcKSKcTUmK5ijDG/n2AutKYQzOvJj3jAXDb9sU3KFt4fkbBfrVaS
+        bb5RSbKD5ywSduzLMMledtgI1vKqTsK+uJVKsuOmxbvlB+VbwrjoqARO7+t/VB6Za0iXxprV
+        J7LP5xLJ6MUiA6IooNfD44xAA5JTSroUQZ/9ATIg2Z9iAsFEyz5RGEfwsNzmEgRDs6mdFIUS
+        BA0XLYRY2BAY6mpxoYugN0HmmXKXw4M+DF0d2S5+Hu0NRWm/XBijBzDIrg0RYihof8iocBdo
+        nF4GxpkBiYA96f3wbeiRVMAK2h2eXh92WWX0Rqjs6sLEZ1TQP5wvEfESqLPlYUIeoK9TUFQx
+        QYipA+HtaD8mYg8YtdSSIl4EvxoEs2CoQjBz9tNfdx2CkivOv+7N8No6TQhJMXolGM2+Ir0V
+        njtsuHhHN3hlcxdDuEHWvWuYSCvgbIZS7F4O1XeqiX9jDQ1l2GWkzpm1Ws6sdXJmrZPzf24B
+        wsuRiovntREc76fjEn14jZaP10X4HIvRmtCfH9jhtEzWo6afoS2IppB6jqJAQ4UopZoEPknb
+        goDC1PMU2zo7jigVYZqkk5w+JkQfH83xLWghhatVCr/bI8FKOkITxx3nuFhO/0+VUDKvZNSZ
+        td0Rt+2o910+4F19ZV5j8dDOqh2B67zHvs+NPXTsw8y5cN/0AxUn9N1ahSyxW3fKHr5rsDh0
+        pFtpXNq7Vxp+eiz5Qfl4ryk42OOMKnW98coKYskP4577W04Ffa5IcnNGTzpLVd2OOVxN6vvh
+        nqx6z/OtxsFnLwMWmJ1BzY82gFWN85GataswPa/5DaNILp19AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xu7o/KzniDR69tLF4f2oiu8W+u/vY
+        LVae+MdiceXrezaL5sXr2SxuNu5msjgx7yy7xYm+D6wWl3fNYbOYvaSfxWLx8p+MFps3TWW2
+        WD//FptF79FGNos7X5+zOPB7tBx5y+qxeM9LJo93586xe+yfu4bd4373cSaPj2+esHtM+PCW
+        zeP4je1MHlcXNrF7fN4kF8AVpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqk
+        b2eTkpqTWZZapG+XoJcxu6uFtWCXUsWUntlsDYxXZboYOTkkBEwk9m86xd7FyMUhJLCUUWLv
+        299ADgdQQkbi+PoyiBphiT/Xutggal4zSny8sp8ZJMEmYCUxsX0VI4gtLBAjcf70FBYQW0RA
+        WWJJ838WkAZmgbvMEic//WKE6O5ilPh0YCEjyAZeATuJttWCIA0sAqoS6//eZgKxRQUiJA7v
+        mAU2lFdAUOLkzCdgQzkFzCXWnD8PtphZQF3iz7xLULa4xK0n85kgbHmJ7W/nME9gFJqFpH0W
+        kpZZSFpmIWlZwMiyilEktbQ4Nz232EivODG3uDQvXS85P3cTIzDutx37uWUHY9e74EOMAhyM
+        Sjy8CxI54oVYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnA
+        lJRXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoEx+NyHP3yaElnb
+        1vSaRFT0z/mvU7TL5cP0pxt75/h0XOjeZ9XPb7vj1/4jKzJ5Lfekfj2/qi+WbzKvhYT5xExD
+        AeVFEzXSHXc8WBTkFfP1s3NfSUwjt4r2t2gFhiZzA5YVlx7MCFi8LjfujOXd9yzMwYc7YzJ/
+        c8rPYtK43h/UeSOGM2fJZVElluKMREMt5qLiRACdXOynEQMAAA==
+X-CMS-MailID: 20200710142354eucas1p2b4509184e94ba8c55ae66f9c5ba1f380
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200614030543eucas1p11e05674cb3b4f801baaf012f44bbf1ba
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200614030543eucas1p11e05674cb3b4f801baaf012f44bbf1ba
+References: <CGME20200614030543eucas1p11e05674cb3b4f801baaf012f44bbf1ba@eucas1p1.samsung.com>
+        <20200614030528.128064-1-pakki001@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bpf helper bpf_trace_printk() uses trace_printk() under the hood.
-This leads to an alarming warning message originating from trace
-buffer allocation which occurs the first time a program using
-bpf_trace_printk() is loaded.
 
-We can instead create a trace event for bpf_trace_printk() and enable
-it in-kernel when/if we encounter a program using the
-bpf_trace_printk() helper.  With this approach, trace_printk()
-is not used directly and no warning message appears.
+On 6/14/20 5:05 AM, Aditya Pakki wrote:
+> On calling pm_runtime_get_sync() the reference count of the device
+> is incremented. In case of failure, decrement the
+> reference count before returning the error.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-This work was started by Steven (see Link) and finished by Alan; added
-Steven's Signed-off-by with his permission.
+Applied to drm-misc-next tree, thanks.
 
-Link: https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- kernel/trace/Makefile    |  2 ++
- kernel/trace/bpf_trace.c | 41 ++++++++++++++++++++++++++++++++++++-----
- kernel/trace/bpf_trace.h | 34 ++++++++++++++++++++++++++++++++++
- 3 files changed, 72 insertions(+), 5 deletions(-)
- create mode 100644 kernel/trace/bpf_trace.h
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 6575bb0..aeba5ee 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -31,6 +31,8 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
- GCOV_PROFILE := y
- endif
- 
-+CFLAGS_bpf_trace.o := -I$(src)
-+
- CFLAGS_trace_benchmark.o := -I$(src)
- CFLAGS_trace_events_filter.o := -I$(src)
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 1d874d8..1414bf5 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -11,6 +11,7 @@
- #include <linux/uaccess.h>
- #include <linux/ctype.h>
- #include <linux/kprobes.h>
-+#include <linux/spinlock.h>
- #include <linux/syscalls.h>
- #include <linux/error-injection.h>
- 
-@@ -19,6 +20,9 @@
- #include "trace_probe.h"
- #include "trace.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "bpf_trace.h"
-+
- #define bpf_event_rcu_dereference(p)					\
- 	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
- 
-@@ -374,6 +378,29 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
- 	}
- }
- 
-+static DEFINE_RAW_SPINLOCK(trace_printk_lock);
-+
-+#define BPF_TRACE_PRINTK_SIZE   1024
-+
-+
-+static inline __printf(1, 0) int bpf_do_trace_printk(const char *fmt, ...)
-+{
-+	static char buf[BPF_TRACE_PRINTK_SIZE];
-+	unsigned long flags;
-+	va_list ap;
-+	int ret;
-+
-+	raw_spin_lock_irqsave(&trace_printk_lock, flags);
-+	va_start(ap, fmt);
-+	ret = vsnprintf(buf, BPF_TRACE_PRINTK_SIZE, fmt, ap);
-+	va_end(ap);
-+	if (ret >= 0)
-+		trace_bpf_trace_printk(buf);
-+	raw_spin_unlock_irqrestore(&trace_printk_lock, flags);
-+
-+	return ret;
-+}
-+
- /*
-  * Only limited trace_printk() conversion specifiers allowed:
-  * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pB %pks %pus %s
-@@ -483,8 +510,7 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
-  */
- #define __BPF_TP_EMIT()	__BPF_ARG3_TP()
- #define __BPF_TP(...)							\
--	__trace_printk(0 /* Fake ip */,					\
--		       fmt, ##__VA_ARGS__)
-+	bpf_do_trace_printk(fmt, ##__VA_ARGS__)
- 
- #define __BPF_ARG1_TP(...)						\
- 	((mod[0] == 2 || (mod[0] == 1 && __BITS_PER_LONG == 64))	\
-@@ -521,10 +547,15 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
- const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
- {
- 	/*
--	 * this program might be calling bpf_trace_printk,
--	 * so allocate per-cpu printk buffers
-+	 * This program might be calling bpf_trace_printk,
-+	 * so enable the associated bpf_trace/bpf_trace_printk event.
-+	 * Repeat this each time as it is possible a user has
-+	 * disabled bpf_trace_printk events.  By loading a program
-+	 * calling bpf_trace_printk() however the user has expressed
-+	 * the intent to see such events.
- 	 */
--	trace_printk_init_buffers();
-+	if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
-+		pr_warn_ratelimited("could not enable bpf_trace_printk events");
- 
- 	return &bpf_trace_printk_proto;
- }
-diff --git a/kernel/trace/bpf_trace.h b/kernel/trace/bpf_trace.h
-new file mode 100644
-index 0000000..9acbc11
---- /dev/null
-+++ b/kernel/trace/bpf_trace.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM bpf_trace
-+
-+#if !defined(_TRACE_BPF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+
-+#define _TRACE_BPF_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(bpf_trace_printk,
-+
-+	TP_PROTO(const char *bpf_string),
-+
-+	TP_ARGS(bpf_string),
-+
-+	TP_STRUCT__entry(
-+		__string(bpf_string, bpf_string)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(bpf_string, bpf_string);
-+	),
-+
-+	TP_printk("%s", __get_str(bpf_string))
-+);
-+
-+#endif /* _TRACE_BPF_TRACE_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE bpf_trace
-+
-+#include <trace/define_trace.h>
--- 
-1.8.3.1
-
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
+>  drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
+>  drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
+>  drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
+>  drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
+>  6 files changed, 26 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> index 4a16798b2ecd..e2b572761bf6 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> @@ -520,8 +520,11 @@ int dispc_runtime_get(void)
+>  	DSSDBG("dispc_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&dispc.pdev->dev);
+> -	WARN_ON(r < 0);
+> -	return r < 0 ? r : 0;
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&dispc.pdev->dev);
+> +		return r;
+> +	}
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(dispc_runtime_get);
+>  
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> index d620376216e1..6f9c25fec994 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> @@ -1137,8 +1137,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
+>  	DSSDBG("dsi_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&dsi->pdev->dev);
+> -	WARN_ON(r < 0);
+> -	return r < 0 ? r : 0;
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&dsi->pdev->dev);
+> +		return r;
+> +	}
+> +	return 0;
+>  }
+>  
+>  static void dsi_runtime_put(struct platform_device *dsidev)
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> index 7252d22dd117..3586579c838f 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> @@ -768,8 +768,11 @@ int dss_runtime_get(void)
+>  	DSSDBG("dss_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&dss.pdev->dev);
+> -	WARN_ON(r < 0);
+> -	return r < 0 ? r : 0;
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&dss.pdev->dev);
+> +		return r;
+> +	}
+> +	return 0;
+>  }
+>  
+>  void dss_runtime_put(void)
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> index 7060ae56c062..4804aab34298 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+> @@ -39,9 +39,10 @@ static int hdmi_runtime_get(void)
+>  	DSSDBG("hdmi_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+> -	WARN_ON(r < 0);
+> -	if (r < 0)
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&hdmi.pdev->dev);
+>  		return r;
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+> index ac49531e4732..a06b6f1355bd 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+> @@ -43,9 +43,10 @@ static int hdmi_runtime_get(void)
+>  	DSSDBG("hdmi_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+> -	WARN_ON(r < 0);
+> -	if (r < 0)
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&hdmi.pdev->dev);
+>  		return r;
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> index d5404d56c922..0b0ad20afd63 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+> @@ -348,8 +348,11 @@ static int venc_runtime_get(void)
+>  	DSSDBG("venc_runtime_get\n");
+>  
+>  	r = pm_runtime_get_sync(&venc.pdev->dev);
+> -	WARN_ON(r < 0);
+> -	return r < 0 ? r : 0;
+> +	if (WARN_ON(r < 0)) {
+> +		pm_runtime_put_sync(&venc.pdev->dev);
+> +		return r;
+> +	}
+> +	return 0;
+>  }
+>  
+>  static void venc_runtime_put(void)
+> 
