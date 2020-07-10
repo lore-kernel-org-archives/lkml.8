@@ -2,120 +2,176 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F348C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78BFF20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594350169;
-	bh=kAsBqQZRZQ5C/sbtKjmCiPtuu3wHYS/cK2L+QzdWOnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1E66vqO0ObF9W9TTY5C/WJO1/1S1LhSYeJziO6kZB8vwgPA512iWu6cBtMeWG9+b4
-	 l91KIOKLfdJULwIcxtZtk6ff74q+HVEEhd2o/mO6pkTyLMyvfXgF1R0H+1/LAt8Fqb
-	 lxtzEWqV3/rryHOL7La9lc5v4j5zGTZjervM5Erk=
+	by mail.kernel.org (Postfix) with ESMTP id C937620720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="OXG6ZPCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgGJDCs (ORCPT
+        id S1727028AbgGJDDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgGJDCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:02:47 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295B82073A;
-        Fri, 10 Jul 2020 03:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594350167;
-        bh=kAsBqQZRZQ5C/sbtKjmCiPtuu3wHYS/cK2L+QzdWOnc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tqHGwKlTh3pB/U89lbrCjuUTdiwUZEC2BCFgH+77JglaOhDpyn9Q8CuHHd8esUQEm
-         ubL9ago1UFinysqXO7P8lb65P0L5AgHWks6mT7aNQ5MKO3FwNJYLot71b9/i2GwuPo
-         FqTJYk/VtPS+E0m9qU/WNpqoI/rn+hin3jwpm3Qc=
-Date:   Thu, 9 Jul 2020 20:02:46 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daeho Jeong <daeho43@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in
- F2FS_IOC_SEC_TRIM_FILE
-Message-ID: <20200710030246.GA545837@google.com>
-References: <20200710021505.2405872-1-daeho43@gmail.com>
+        Thu, 9 Jul 2020 23:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgGJDDW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:03:22 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C12C08C5CE;
+        Thu,  9 Jul 2020 20:03:21 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id rk21so4434560ejb.2;
+        Thu, 09 Jul 2020 20:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6KRtR9SdpYUMidTMu6Xmuj8Q02i63whibThkqFtREHc=;
+        b=OXG6ZPCAxCCAFxKGeTL6Oy1pdHDCjLE7HmgixA5c+sRgOyvyagscU036gw792Jyvro
+         3ApdT4aFjcKGMIsGHK9bR2eNPTljVrUkQMhnn2ty4A2hcBYb5GlR7nQdsVN71AcTsm84
+         dz/ySub8Vy57uB369VOkcXgz9JwwkjVndGkx8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6KRtR9SdpYUMidTMu6Xmuj8Q02i63whibThkqFtREHc=;
+        b=lmJRZCnh6/1OXEBhTSrFIy7+SO56pn1QTzFpgtoxkACDvcm2oCftER1giJxAHxnO7l
+         1JNUfVTwM6qYyYO9JYixptWpnsrAsXemJ0KRDLLDfsin917GSS5igmjQWDNeW3YyTyiw
+         ONVQb4Qs9rqwZ2SjAIBq3esKvHozR9zZJWEhJHPp4OJOo7ofBV3/mG/S41roQX3rAEV3
+         hUin9dl/N/FNmA2Ygm3lll8RFW/rwie6SK0whACnEZyzaj0I6zxcLBNm2opHlgt1ghLk
+         Q0RTOOkDRFVIBSeEndbXxE5HnezwaqzgKdtvgo7kF9qP4GV2s0kL2sKg0mkjxykML0Wx
+         wO8A==
+X-Gm-Message-State: AOAM530NLhn9x6aljevtYq2AhpPJ8XwtQBWRvyb70apZVSnt3MKPtMXa
+        iKLPeqVzV3PVnHPNiRBSbjEdztpBkVzHRx5VQwk=
+X-Google-Smtp-Source: ABdhPJybxKH1f3z78Ubuw7bl1ZVf6foagkpmQuQSht982jLtNvxBTTVwTwgziMcBKS0m9Ulr5MgSCknrai84CeLlCCk=
+X-Received: by 2002:a17:906:841:: with SMTP id f1mr25340332ejd.229.1594350200465;
+ Thu, 09 Jul 2020 20:03:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710021505.2405872-1-daeho43@gmail.com>
+References: <20200709195706.12741-1-eajames@linux.ibm.com> <20200709195706.12741-2-eajames@linux.ibm.com>
+In-Reply-To: <20200709195706.12741-2-eajames@linux.ibm.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 10 Jul 2020 03:03:08 +0000
+Message-ID: <CACPK8Xd1RMXooVR99xZLxWdgb+Suw8KZrSX6nN1Ua0eUM=mH3w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] clk: AST2600: Add mux for EMMC clock
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-clk@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-mmc@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
->  1. Added -1 value support for range.len to signify the end of file.
->  2. If the end of the range passes over the end of file, it means until
->     the end of file.
->  3. ignored the case of that range.len is zero to prevent the function
->     from making end_addr zero and triggering different behaviour of
->     the function.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+On Thu, 9 Jul 2020 at 19:57, Eddie James <eajames@linux.ibm.com> wrote:
+>
+> The EMMC clock can be derived from either the HPLL or the MPLL. Register
+> a clock mux so that the rate is calculated correctly based upon the
+> parent.
+>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+Acked-by: Joel Stanley <joel@jms.id.au>
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+
+Stephen, I think this should go to stable too.
+
+Cheers,
+
+Joel
+
 > ---
->  fs/f2fs/file.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 368c80f8e2a1..1c4601f99326 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->  	file_start_write(filp);
->  	inode_lock(inode);
->  
-> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
-> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
-> +			range.start >= inode->i_size) {
->  		ret = -EINVAL;
->  		goto err;
->  	}
->  
-> -	if (range.start >= inode->i_size) {
-> -		ret = -EINVAL;
-> +	if (range.len == 0)
->  		goto err;
-> -	}
->  
-> -	if (inode->i_size - range.start < range.len) {
-> -		ret = -E2BIG;
-> -		goto err;
-> -	}
-> -	end_addr = range.start + range.len;
-> +	if (range.len == (u64)-1 || inode->i_size - range.start < range.len)
-> +		end_addr = inode->i_size;
-
-Hmm, what if there are blocks beyond i_size? Do we need to check i_blocks for
-ending criteria?
-
-> +	else
-> +		end_addr = range.start + range.len;
->  
->  	to_end = (end_addr == inode->i_size);
->  	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
-> -- 
-> 2.27.0.383.g050319c2ae-goog
-> 
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>  drivers/clk/clk-ast2600.c | 49 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 41 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+> index 99afc949925f..177368cac6dd 100644
+> --- a/drivers/clk/clk-ast2600.c
+> +++ b/drivers/clk/clk-ast2600.c
+> @@ -131,6 +131,18 @@ static const struct clk_div_table ast2600_eclk_div_table[] = {
+>         { 0 }
+>  };
+>
+> +static const struct clk_div_table ast2600_emmc_extclk_div_table[] = {
+> +       { 0x0, 2 },
+> +       { 0x1, 4 },
+> +       { 0x2, 6 },
+> +       { 0x3, 8 },
+> +       { 0x4, 10 },
+> +       { 0x5, 12 },
+> +       { 0x6, 14 },
+> +       { 0x7, 16 },
+> +       { 0 }
+> +};
+> +
+>  static const struct clk_div_table ast2600_mac_div_table[] = {
+>         { 0x0, 4 },
+>         { 0x1, 4 },
+> @@ -390,6 +402,11 @@ static struct clk_hw *aspeed_g6_clk_hw_register_gate(struct device *dev,
+>         return hw;
+>  }
+>
+> +static const char *const emmc_extclk_parent_names[] = {
+> +       "emmc_extclk_hpll_in",
+> +       "mpll",
+> +};
+> +
+>  static const char * const vclk_parent_names[] = {
+>         "dpll",
+>         "d1pll",
+> @@ -459,16 +476,32 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+>                 return PTR_ERR(hw);
+>         aspeed_g6_clk_data->hws[ASPEED_CLK_UARTX] = hw;
+>
+> -       /* EMMC ext clock divider */
+> -       hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "hpll", 0,
+> -                       scu_g6_base + ASPEED_G6_CLK_SELECTION1, 15, 0,
+> -                       &aspeed_g6_clk_lock);
+> +       /* EMMC ext clock */
+> +       hw = clk_hw_register_fixed_factor(dev, "emmc_extclk_hpll_in", "hpll",
+> +                                         0, 1, 2);
+>         if (IS_ERR(hw))
+>                 return PTR_ERR(hw);
+> -       hw = clk_hw_register_divider_table(dev, "emmc_extclk", "emmc_extclk_gate", 0,
+> -                       scu_g6_base + ASPEED_G6_CLK_SELECTION1, 12, 3, 0,
+> -                       ast2600_div_table,
+> -                       &aspeed_g6_clk_lock);
+> +
+> +       hw = clk_hw_register_mux(dev, "emmc_extclk_mux",
+> +                                emmc_extclk_parent_names,
+> +                                ARRAY_SIZE(emmc_extclk_parent_names), 0,
+> +                                scu_g6_base + ASPEED_G6_CLK_SELECTION1, 11, 1,
+> +                                0, &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +
+> +       hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "emmc_extclk_mux",
+> +                                 0, scu_g6_base + ASPEED_G6_CLK_SELECTION1,
+> +                                 15, 0, &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +
+> +       hw = clk_hw_register_divider_table(dev, "emmc_extclk",
+> +                                          "emmc_extclk_gate", 0,
+> +                                          scu_g6_base +
+> +                                               ASPEED_G6_CLK_SELECTION1, 12,
+> +                                          3, 0, ast2600_emmc_extclk_div_table,
+> +                                          &aspeed_g6_clk_lock);
+>         if (IS_ERR(hw))
+>                 return PTR_ERR(hw);
+>         aspeed_g6_clk_data->hws[ASPEED_CLK_EMMC] = hw;
+> --
+> 2.24.0
+>
