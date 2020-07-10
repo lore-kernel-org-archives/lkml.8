@@ -2,204 +2,162 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB283C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAE22076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2061207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:57:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXwkuipp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGJS4R (ORCPT
+        id S1728245AbgGJS53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:56:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726872AbgGJS4Q (ORCPT
+        Fri, 10 Jul 2020 14:57:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46592 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726872AbgGJS52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:56:16 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06AIY8de004832;
-        Fri, 10 Jul 2020 14:56:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 326j81bkjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 14:56:09 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06AIpWFb056849;
-        Fri, 10 Jul 2020 14:56:09 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 326j81bkhu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 14:56:09 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06AIZHcE031343;
-        Fri, 10 Jul 2020 18:56:07 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 326bcf0vu8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 18:56:07 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06AIrRae459318
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 18:53:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F64442045;
-        Fri, 10 Jul 2020 18:54:49 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0DB442042;
-        Fri, 10 Jul 2020 18:54:48 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.206.93])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Jul 2020 18:54:48 +0000 (GMT)
-Message-ID: <1594407288.14405.36.camel@linux.ibm.com>
-Subject: Re: [PATCH v5] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-integrity@vger.kernel.org, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, stable@vger.kernel.org
-Date:   Fri, 10 Jul 2020 14:54:48 -0400
-In-Reply-To: <20200710183420.GB10547@glitch>
-References: <20200709164647.45153-1-bmeneg@redhat.com>
-         <1594401804.14405.8.camel@linux.ibm.com> <20200710180338.GA10547@glitch>
-         <20200710183420.GB10547@glitch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_14:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
- malwarescore=0 mlxscore=0 spamscore=0 phishscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007100121
+        Fri, 10 Jul 2020 14:57:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594407447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g3vr4p3HOtOZH3FqPih/GiIpdmOKnnPMCPNV6jgpCAc=;
+        b=iXwkuippkShqaB3qGR83m1zOiJGwrUNv8E3/VrrioEGK7B/WXw3U5GPLc7fiE89WLcSNZ2
+        Q1RfzBSt61Afs+jc3vbhyAB/rDR6LGnY4GFAsqmqVQKZV3bv6Emk1Kf9zFtoosz0HCKrMC
+        +YcvqpoqPElQaQgDaAI8+F9ozCJJV88=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-I-m6CWLHNZKm9-SDKbQUPQ-1; Fri, 10 Jul 2020 14:57:25 -0400
+X-MC-Unique: I-m6CWLHNZKm9-SDKbQUPQ-1
+Received: by mail-pj1-f71.google.com with SMTP id bf1so4582210pjb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 11:57:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=g3vr4p3HOtOZH3FqPih/GiIpdmOKnnPMCPNV6jgpCAc=;
+        b=p1KlPi7QO6uX2zVAdomJzucWPqLMN30g9wbL5IQkv0Gzys1VBrT7niyP5aNbgln2Y8
+         UXBZafLEWWnOLYXEkwE603mE/t++FQX5beUwr+li3XWAh93Da5nUX9UDVTolkBmTH7sk
+         +LZdC3WWi94GQG5FHzUoDqw8WdUxO4IkbJCn6d+xGpfziGD0idZO5GAQegxs55qEyD0L
+         o8XX1C7+634lj4+i7Ya/W/9x2rhV5Eu/zogEvdXrml7SEGgbBjA+/p+EypsEMcjSfO4S
+         3CM4MCyTcmu8VAcbi4aXJ49NineIcQFuMMW8ZJwii/vAurmcqthA2GoecHGUjYfV3W4l
+         9yOQ==
+X-Gm-Message-State: AOAM532bBhbUeajB0z9rmLtee8zYjJ/h4LvgFPcugJK0VcDGM4Z2kKqd
+        Z/xhcRudAZwAOGAJMFBxcWknMgkGQWKWsvvAQTj0PYFBZoSOOqafMwtwTGYD4svNyQpvYQqY1Dy
+        3sGHrhG3n3sal5BfexUefX/rt
+X-Received: by 2002:a17:902:9f96:: with SMTP id g22mr15845522plq.306.1594407444710;
+        Fri, 10 Jul 2020 11:57:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/tVx6cQ9PiRSX4L09kZ6HuM+5mJq1HjYk1MsqxC65kL5z0rrT8cvGQ00NqVS3PFpZ66gdNg==
+X-Received: by 2002:a17:902:9f96:: with SMTP id g22mr15845508plq.306.1594407444386;
+        Fri, 10 Jul 2020 11:57:24 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id y7sm6084764pgk.93.2020.07.10.11.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 11:57:23 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id BA49D1808CD; Fri, 10 Jul 2020 20:57:17 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Joe Perches <joe@perches.com>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Daniel Borkmann <daniel@iogearbox.net>, ast@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
+In-Reply-To: <a91354960fc97437bd872fa22a2ce1c60bda3e25.camel@perches.com>
+References: <20200709194257.26904-1-grandmaster@al2klimov.de> <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net> <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de> <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net> <a2f48c734bdc6b865a41ad684e921ac04b221821.camel@perches.com> <875zavjqnj.fsf@toke.dk> <458f6e74-b547-299a-4255-4c1e20cdba1b@al2klimov.de> <a91354960fc97437bd872fa22a2ce1c60bda3e25.camel@perches.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 10 Jul 2020 20:57:17 +0200
+Message-ID: <87tuyfi4fm.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-10 at 15:34 -0300, Bruno Meneguele wrote:
-> On Fri, Jul 10, 2020 at 03:03:38PM -0300, Bruno Meneguele wrote:
-> > On Fri, Jul 10, 2020 at 01:23:24PM -0400, Mimi Zohar wrote:
-> > > On Thu, 2020-07-09 at 13:46 -0300, Bruno Meneguele wrote:
-> > > > APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY in compile
-> > > > time, enforcing the appraisal whenever the kernel had the arch policy option
-> > > > enabled.
-> > > 
-> > > > However it breaks systems where the option is set but the system didn't
-> > > > boot in a "secure boot" platform. In this scenario, anytime an appraisal
-> > > > policy (i.e. ima_policy=appraisal_tcb) is used it will be forced, without
-> > > > giving the user the opportunity to label the filesystem, before enforcing
-> > > > integrity.
-> > > > 
-> > > > Considering the ARCH_POLICY is only effective when secure boot is actually
-> > > > enabled this patch remove the compile time dependency and move it to a
-> > > > runtime decision, based on the secure boot state of that platform.
-> > > 
-> > > Perhaps we could simplify this patch description a bit?
-> > > 
-> > > The IMA_APPRAISE_BOOTPARAM config allows enabling different
-> > > "ima_appraise=" modes - log, fix, enforce - at run time, but not when
-> > > IMA architecture specific policies are enabled.  This prevents
-> > > properly labeling the filesystem on systems where secure boot is
-> > > supported, but not enabled on the platform.  Only when secure boot is
-> > > enabled, should these IMA appraise modes be disabled.
-> > > 
-> > > This patch removes the compile time dependency and makes it a runtime
-> > > decision, based on the secure boot state of that platform.
-> > > 
-> > 
-> > Sounds good to me.
-> > 
-> > > <snip>
-> > > 
-> > > > diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> > > > index a9649b04b9f1..884de471b38a 100644
-> > > > --- a/security/integrity/ima/ima_appraise.c
-> > > > +++ b/security/integrity/ima/ima_appraise.c
-> > > > @@ -19,6 +19,11 @@
-> > > >  static int __init default_appraise_setup(c
-> > > 
-> > > > har *str)
-> > > >  {
-> > > >  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-> > > > +	if (arch_ima_get_secureboot()) {
-> > > > +		pr_info("appraise boot param ignored: secure boot enabled");
-> > > 
-> > > Instead of a generic statement, is it possible to include the actual
-> > > option being denied?  Perhaps something like: "Secure boot enabled,
-> > > ignoring %s boot command line option"
-> > > 
-> > > Mimi
-> > > 
-> > 
-> > Yes, sure.
-> > 
-> 
-> Btw, would it make sense to first make sure we have a valid "str"
-> option and not something random to print?
->  
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index a9649b04b9f1..1f1175531d3e 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -25,6 +25,16 @@ static int __init default_appraise_setup(char *str)
->                 ima_appraise = IMA_APPRAISE_LOG;
->         else if (strncmp(str, "fix", 3) == 0)
->                 ima_appraise = IMA_APPRAISE_FIX;
-> +       else
-> +               pr_info("invalid \"%s\" appraise option");
-> +
-> +       if (arch_ima_get_secureboot()) {
-> +               if (!is_ima_appraise_enabled()) {
-> +                       pr_info("Secure boot enabled: ignoring ima_appraise=%s boot parameter option",
-> +                               str);
-> +                       ima_appraise = IMA_APPRAISE_ENFORCE;
-> +               }
-> +       }
+Joe Perches <joe@perches.com> writes:
 
-Providing feedback is probably a good idea.  However, the
-"arch_ima_get_secureboot" test can't come after setting
-"ima_appraise."
+> On Fri, 2020-07-10 at 20:18 +0200, Alexander A. Klimov wrote:
+>>=20
+>> Am 10.07.20 um 18:12 schrieb Toke H=C3=B8iland-J=C3=B8rgensen:
+>> > Joe Perches <joe@perches.com> writes:
+>> >=20
+>> > > On Fri, 2020-07-10 at 17:14 +0200, Daniel Borkmann wrote:
+>> > > > On 7/10/20 8:17 AM, Alexander A. Klimov wrote:
+>> > > > > Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
+>> > > > > > On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
+>> > > > > > > Rationale:
+>> > > > > > > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp=
+465"
+>> > > > > > > which has nothing to do with XDP.
+>> > > []
+>> > > > > > > diff --git a/MAINTAINERS b/MAINTAINERS
+>> > > []
+>> > > > > > > @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
+>> > > > > > >    F:    kernel/bpf/cpumap.c
+>> > > > > > >    F:    kernel/bpf/devmap.c
+>> > > > > > >    F:    net/core/xdp.c
+>> > > > > > > -N:    xdp
+>> > > > > > > -K:    xdp
+>> > > > > > > +N:    (?:\b|_)xdp(?:\b|_)
+>> > > > > > > +K:    (?:\b|_)xdp(?:\b|_)
+>> > > > > >=20
+>> > > > > > Please also include \W to generally match on non-alphanumeric =
+char given you
+>> > > > > > explicitly want to avoid [a-z0-9] around the term xdp.
+>> > > > > Aren't \W, ^ and $ already covered by \b?
+>> > > >=20
+>> > > > Ah, true; it says '\b really means (?:(?<=3D\w)(?!\w)|(?<!\w)(?=3D=
+\w))', so all good.
+>> > > > In case this goes via net or net-next tree:
+>> > >=20
+>> > > This N: pattern does not match files like:
+>> > >=20
+>> > > 	samples/bpf/xdp1_kern.c
+>> > >=20
+>> > > and does match files like:
+>> > >=20
+>> > > 	drivers/net/ethernet/broadcom/bnxt/bnxt_xdp.c
+>> > >=20
+>> > > Should it?
+>> >=20
+>> > I think the idea is that it should match both?
+>> In *your* opinion: Which of these shall it (not) match?
+>
+> Dunno, but it doesn't match these files.
+> The first 5 are good, the rest probably should.
 
-Mimi
+Yup, I agree, all but the first 5 should be matched...
 
->  #endif
->         return 1;
->  }
-> 
-> 
-> The "else" there I think would make sense as well, at least to give the
-> user some feedback about a possible mispelling of him (as a separate
-> patch).
-> 
-> And "if(!is_ima_appraise_enabled())" would avoid to print anything about
-> "ignoring the option" to the user in case he explicitly set "enforce",
-> which we know there isn't any real effect but is allowed and shown in
-> kernel-parameters.txt.
-> 
-> > Thanks!
-> > 
-> > > > +		return 1;
-> > > > +	}
-> > > > +
-> > > >  	if (strncmp(str, "off", 3) == 0)
-> > > >  		ima_appraise = 0;
-> > > >  	else if (strncmp(str, "log", 3) == 0)
-> > > 
-> > 
-> > -- 
-> > bmeneg 
-> > PGP Key: http://bmeneg.com/pubkey.txt
-> 
-> 
-> 
+-Toke
+
+> $ git ls-files | grep xdp | grep -v -P '(?:\b|_)xdp(?:\b|_)'
+> Documentation/hwmon/xdpe12284.rst
+> arch/arm/mach-ixp4xx/ixdp425-pci.c
+> arch/arm/mach-ixp4xx/ixdp425-setup.c
+> arch/arm/mach-ixp4xx/ixdpg425-pci.c
+> drivers/hwmon/pmbus/xdpe12284.c
+> samples/bpf/xdp1_kern.c
+> samples/bpf/xdp1_user.c
+> samples/bpf/xdp2_kern.c
+> samples/bpf/xdp2skb_meta.sh
+> samples/bpf/xdp2skb_meta_kern.c
+> samples/bpf/xdpsock.h
+> samples/bpf/xdpsock_kern.c
+> samples/bpf/xdpsock_user.c
+> tools/testing/selftests/bpf/progs/xdping_kern.c
+> tools/testing/selftests/bpf/test_xdping.sh
+> tools/testing/selftests/bpf/xdping.c
+> tools/testing/selftests/bpf/xdping.h
 
