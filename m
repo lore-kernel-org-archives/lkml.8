@@ -2,76 +2,219 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C51C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802A6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401B420657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E53206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594398600;
+	bh=q0yxkqPHIM1TwXDC5jIPZtPqmDMrfw+O3OukvvwRv1I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PTGWKHVWlIRJ2xvI0LpSpBktHbanQBSLOSvQY062VY4ObJyf4BYo9l97pmWxBzeOp
+	 7Q1hqeNllxGKvbzdLkFBDhvH/ykf/b73per4bzBXiDPvT5ftYdUJp5Mu0o4bh5CZr9
+	 4wfiEt1sHC/Hfi+Xik5EeUO2YwMmi0zc4jMule9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgGJQ2Z (ORCPT
+        id S1728112AbgGJQ37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:28:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25693 "EHLO mga14.intel.com"
+        Fri, 10 Jul 2020 12:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgGJQ2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:28:25 -0400
-IronPort-SDR: AcpXix8XKZrbNzJLzrbc4ApEhVWof5VEpqwRK0eg7spL4FbVr+VKgkCFlWmijCKjb4JvTHPXWV
- mEwIMW5c4HOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="147341884"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="147341884"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 09:28:22 -0700
-IronPort-SDR: jNSta/rj/b6HojzQ2Vt4c9e27f53Vtt08K6Z/1hxpWryNwBeZMALkBgyV6R3IhR+Gp3br40JJ2
- u+y/rOen/2sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="428610403"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jul 2020 09:28:20 -0700
-Date:   Fri, 10 Jul 2020 09:28:19 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xu, Like" <like.xu@intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v12 07/11] KVM: vmx/pmu: Unmask LBR fields in the
- MSR_IA32_DEBUGCTLMSR emualtion
-Message-ID: <20200710162819.GF1749@linux.intel.com>
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
- <20200613080958.132489-8-like.xu@linux.intel.com>
- <654d931c-a724-ed69-6501-52ce195a6f44@intel.com>
- <ea424570-c93f-2624-3e85-d7255b609da4@intel.com>
- <20200707202155.GL20096@linux.intel.com>
- <a162343f-74be-c72e-ff65-323c1415c1e3@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a162343f-74be-c72e-ff65-323c1415c1e3@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1727771AbgGJQ36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:29:58 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C2A20657;
+        Fri, 10 Jul 2020 16:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594398597;
+        bh=q0yxkqPHIM1TwXDC5jIPZtPqmDMrfw+O3OukvvwRv1I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D5/wRzppwjD6vaSdfn0jyLEgZfujHQYHXtVcM/HEP/UO1H4Iuom2ExmTFGaYj0e0r
+         Ckbh12jD34eOVeo7Xx7hWD7fy+H5rHjTwJAFlHnPxYnK24x0OpOJFc/DPq+txFys/o
+         1pNjC/XdHnvJdTIvujntztJJkg/vHqLoXdcCsTbM=
+Received: from host109-149-250-171.range109-149.btcentralplus.com ([109.149.250.171] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jtvuO-00Ajkq-0c; Fri, 10 Jul 2020 17:29:56 +0100
+Date:   Fri, 10 Jul 2020 17:29:49 +0100
+Message-ID: <87tuyfxria.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Subject: Re: [RFC PATCH] irqchip/gic: Implement irq_chip->irq_retrigger()
+In-Reply-To: <20200710145642.28978-1-valentin.schneider@arm.com>
+References: <20200710145642.28978-1-valentin.schneider@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 109.149.250.171
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, Lorenzo.Pieralisi@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:06:57PM +0800, Xu, Like wrote:
-> Hi Sean,
+On Fri, 10 Jul 2020 15:56:42 +0100,
+Valentin Schneider <valentin.schneider@arm.com> wrote:
 > 
-> First of all, are you going to queue the LBR patch series in your tree
-> considering the host perf patches have already queued in Peter's tree ?
+> While digging around IRQCHIP_EOI_IF_HANDLED and irq/resend.c, it has come
+> to my attention that the IRQ resend situation seems a bit precarious for
+> the GIC(s). Below is a (somewhat structured) dump of my notes/thoughts
+> about that.
+> 
+> IRQCHIP_EOI_IF_HANDLED
+> ======================
+> 
+> If the irqchip doesn't have this flag set, we may issue an irq_eoi()
+> despite not having handled the IRQ in the following cases:
+> 
+> o !irq_may_run()
+>   - IRQ may be in progress (handle_irq_event() ongoing)
+>   - IRQ is an armed wakeup source (also sets it pending)
+> 
+> o !action or IRQ disabled; in this case it is set as pending.
+> 
+> irq_resend()
+> ============
+> 
+> For the above cases where the IRQ is marked as pending, it means that when
+> we'll go through check_irq_resend() (e.g. when we re-enable the IRQ) we
+> will end up in resend_irqs() which goes through the flow handler again, IOW
+> will issue *another* EOI on the same IRQ.
+> 
+> Now, this is all done via a tasklet, so AFAICT cannot happen in irq
+> context (as defined by in_interrupt() - it can happen at the tail of
+> handling an IRQ if it wasn't nesting).
+> 
+> GIC woes
+> ========
+> 
+> The TL;DR for IRQ handling on the GIC is that we have 3 steps:
+> o Acknowledgement (Ack)
+> o priority drop (PD)
+> o deactivation (D)
+> 
+> The GIC also has an "eoimode" knob that says whether PD and D are split, IOW:
+> o eoimode=0: irq_eoi() does PD + D
+> o eoimode=1: irq_eoi() does D
+> 
+> Regardless of the mode, it is paramount that any PD is
+> o issued on the same CPU that Ack'd the IRQ
+> o issued in reverse order of the Acks
+> 
+> IHI0069D, 4.1.1 Physical CPU interface, Priority drop
+> """
+> A priority drop must be performed by the same PE that activated the
+> interrupt.
+> 
+> [...]
+> 
+> For each CPU interface, the GIC architecture requires the order of the
+> valid writes to ICC_EOIR0_EL1 and ICC_EOIR1_EL1 to be the exact reverse of
+> the order of the reads from ICC_IAR0_EL1 and ICC_IAR1_EL1
+> """
+> 
+> IHI0069D, 8.2.9 ICC_EOIR0_EL1, Interrupt Controller End Of Interrupt Register 0
+> """
+> A write to this register must correspond to the most recent valid read by
+> this PE from an Interrupt Acknowledge Register, and must correspond to the
+> INTID that was read from ICC_IAR0_EL1, otherwise the system behavior is
+> UNPREDICTABLE.
+> """
+> 
+> For eoimode=1, the PD is hidden from genirq and is contained within the GIC
+> driver. This means that issuing another irq_eoi() will only be re-issuing a
+> D, which I think the GIC can live with (even if issued from a different CPU).
+> 
+> For eoimode=0, it is more troubling, as we break the aforementioned
+> restrictions. That said, IIUC this cannot cause e.g. a bogus running
+> priority reduction due to the tasklet context mentioned above (running
+> priority ought to be idle priority).
+> 
+> Linux hosts will almost always use eoimode=1, so that leaves us with
+> guests running with eoimode=0, and I don't know how common it is (if at all
+> possible) for those to use pm / wakeup IRQs. I suppose that is a reason
+> why this hasn't cropped up before, that or I miserably misunderstood the
+> whole thing.
+> 
+> In any case, the virtual interface follows the same restrictions wrt
+> PD ordering:
+> 
+> IHI0069D 8.3.7 ICV_EOIR0_EL1, Interrupt Controller Virtual End Of Interrupt Register 0
+> """
+> A write to this register must correspond to the most recent valid read by
+> this vPE from a Virtual Interrupt Acknowledge Register, and must correspond
+> to the INTID that was read from ICV_IAR0_EL1, otherwise the system behavior
+> is UNPREDICTABLE.
+> """
+> 
+> Change
+> ======
+> 
+> One way to ensure we only get one PD per interrupt activation and maintain
+> the expected ordering is to add the IRQCHIP_EOI_IF_HANDLED flag to all
+> irq-gic chips, but that only really works for eoimode=1; for eoimode=0 that
+> would mean leaving the flow handler without having issued a PD at all.
+> 
+> At the same time, this whole IRQS_PENDING & resend thing feels like
+> something we can handle in hardware: we can leverage
+> irq_chip.irq_retrigger() and use this to mark the interrupt as pending in
+> the GIC itself, in which case we *don't* want to have
+> IRQCHIP_EOI_IF_HANDLED (as the retrigger will lead to another ack+eoi
+> pair).
+> 
+> Implement irq_chip.irq_retrigger() for both GICs.
 
-No, I'll let Paolo take 'em directly, I'm nowhere near knowledgeable enough
-with respect to the PMU to feel comfortable taking them.
+Although I am very grateful for the whole documentation, I'd rather
+have a slightly more condensed changelog that documents the
+implementation of the retrigger callback! ;-)
+
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
+>  drivers/irqchip/irq-gic.c    | 6 ++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index cc46bc2d634b..c025e8b51464 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1207,6 +1207,11 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+>  #define gic_smp_init()		do { } while(0)
+>  #endif
+>  
+> +static int gic_retrigger(struct irq_data *data)
+> +{
+> +	return gic_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING, true);
+
+If I'm not mistaken, check_irq_resend() requires a non-zero return
+value if the retrigger has succeeded. So something like
+
+      return !gic_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING, true);
+
+would be more appropriate.
+
+Otherwise, looks good.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
