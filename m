@@ -3,309 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7664C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD1F20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5808520663
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="dmPwwi/8"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VJffGKFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGJCmi (ORCPT
+        id S1726948AbgGJCn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 22:42:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:16845 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgGJCmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 22:42:37 -0400
-IronPort-SDR: 45hDr1jr7peh/rIEkOqRethGQknvy/5jZGGgbvx5PXhGAXmJtBAvvyN6CQ0/0krQCBoNGcBUwq
- Q2VxrvNjc8VA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149611896"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="149611896"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 19:42:36 -0700
-IronPort-SDR: PZrqN4El/DtGqdKhDlP27CSgZSYbT5CDaj8wY59kZ2eZelphZU3PNxJ6+nK32aykaUpE8vtAo6
- azaOqF7SDOfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="323410594"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2020 19:42:35 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 19:42:35 -0700
-Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 9 Jul 2020 19:42:35 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 9 Jul 2020 19:42:35 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 19:42:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZDWeJy5NgiKflkciJ1ImC++xzKMj0WC1UgjeVR1ZDMJnOe6oxrVDGursTyfqBvkiGTqZ8WIikIVGtLhRbAuLf/XXXqUYCWMx1jwRVNan+7VIK+D7JJXZcmpA15qw7CvIPzcrGDCqcUdgVG0itXVGH0y0hcNowUvkjQmP3yMWdH+hN2q4vxI7Hj1cD62TX6FEOb2MGFOKL1RCL1EKNf2udcpbPkSIA7NYFsD19/fAjBfiqejAxZzmLrJfanzQvJ5Ts9/VS9TnPla7iGMYOPFHRVs9OdN7Kg8VnQJg5RB0U+JU/WgDOHjVVJzg3HuMz1JCYQpmFWjqxoOYEtLYRBSg1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nik6OlexRhqTj09ALTCecKHegT48NWZiiyyT0s8Iu8w=;
- b=jfQFUl8bIzKlGmvku22/xBERlWg9Q5vVyATnGFuKd3ZyU6tn7iYlglL6I3fmpp16AyzSkE67bwd430gNon5rYRkkSOx8RnwgIVWft0AyupvVAlrDBvNRXU/R4t8Y339FMaWo5RjpNTEbOu9WrSiLPev3DkKA7qjQM5f+nGybhpxMRacz8p+U18ZiGHDKPt+EjVMCG6aGTlVbT3zr3EPSyxFRqTkFCPd9qa+nyaCayhybBqKCQu06UwFW2g/A9kYHzFL9ukWg3aIfzLnt3Nq52pRXuKOrFZqD5S3yXhpZ/P5i2g2YvnwvSIOs4JM6RMfh8gn+4SRNjzTpKDZqEc3aqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nik6OlexRhqTj09ALTCecKHegT48NWZiiyyT0s8Iu8w=;
- b=dmPwwi/8cCX72W4Zs1Q4qzOkZw/dNez0L16m4E7QoKtmV8KsCh355P0V9YCUaIO6eFe1DwEQPD1Kb3Obs9JFKVRtN8O+h7USeS/EsFqcCB+gV2Tbme6vXblLi+olFHpQ8pJB57xlEB4lYcg/+ZpA8jUAQ2FCOGDOKGagHUQG7Uo=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR11MB1391.namprd11.prod.outlook.com (2603:10b6:300:23::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
- 2020 02:42:30 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3174.022; Fri, 10 Jul 2020
- 02:42:30 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 4/4] iommu/vt-d: Add page response ops support
-Thread-Topic: [PATCH v3 4/4] iommu/vt-d: Add page response ops support
-Thread-Index: AQHWVcAM+avb7Y6qlkuRLGDQ/735sakAFvrQ
-Date:   Fri, 10 Jul 2020 02:42:30 +0000
-Message-ID: <MWHPR11MB164546581C5F6B6B77AE28C88C650@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <20200709070537.18473-1-baolu.lu@linux.intel.com>
- <20200709070537.18473-5-baolu.lu@linux.intel.com>
-In-Reply-To: <20200709070537.18473-5-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e7e353a-ae40-4fca-3a62-08d8247ae461
-x-ms-traffictypediagnostic: MWHPR11MB1391:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB139156299B0F6ED0FDDE41928C650@MWHPR11MB1391.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u2E4mTW+CN+dPnuR0SV8p0fX4n+uODB1AT4EilunmM2Go/RcR9/6OXVBM5Zkb4bkpstl1xr4l7YhHrVZZcH9UIq1JxbA/o0HwtWbVXccYqUAEc1Uul8oRRFLEqw+BIPCQltewGq8Eg9tEUY1PQ2m9SwaDqxGGd6+scH05KdXZ46cU5h45H3e6Cd83hMYG5xsOLbSL9t4h1bLO2vP4v5sTn/cZwdTzkgyDRiaDzAZ6fb4BKbmOBOJ8ytOBsXSaypF5pYM54Y8mhz81TxZajbvR7k80h3pszjmeH/tfyhSikBVL/0pdAzcMMbIwVLylsi+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(396003)(366004)(376002)(54906003)(55016002)(186003)(66446008)(9686003)(83380400001)(71200400001)(26005)(66556008)(8936002)(64756008)(66476007)(33656002)(2906002)(8676002)(4326008)(86362001)(7696005)(316002)(110136005)(52536014)(478600001)(76116006)(66946007)(5660300002)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: jgZIWCU0KLNSnSA7cYBUbTGgI1eLCcwFJjrVIKWBZH1UjsqRKCAcFbWdus/sJZqd332nmBJYIJFwG0hdCNd3C3ouL4g8qIdhlREEhGxaBwaA9S7poxvV9woxuc4QQf/NdX8/E+qOmXPAg4xgzo9rzNvItl7ssqQ3Kd4kcDw2pV0FNIDJ7W09AApt2jHF72hrAAJBzpuZyB2Iax2aVsxlQJ+OCjPtMju+v/3R97iBahHDqFPT7prlsOPmQOD4LNg1L9F6tmUjH2YzTu09hiYefBrrXQhb362qzDn/FFN0LekYX9a0fWmftR1AGqnO7ukz3KF5xVhDcIOzcx+Xq8Rtqm3N9maaQiLQgab34xw69gyTO2j6PWBpR6/GfSdj1xCXxcZ9g4XfIkG3vX//U5TZKWhqaVlE+2Qs6SQAjeSo4tH458Wy724F/86D8GtAK6WyNjpXZ4Bax7iMxbTbL8SqyV5sV5q8GUuFc1zlpqC+In1FRGKYQE1JtBroTpWoxpdK
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 22:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgGJCnz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 22:43:55 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259CDC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 19:43:55 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id c25so3168150otf.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 19:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2dy4AVqCcP7kztGsFeA5Fvb3GAiUWtChvdkBa1QUZbw=;
+        b=VJffGKFCkiCfIhl//sN2TFR4d7nLOgxwKcao79heBIkTO6Ld6tufLnLyu/FoWWwYLP
+         IARF1L4e2re0mmDqsUzYo9R0GgCiNjOBnSeVCkjQgOdxfxpmxt5pg7Oi9bos4oxMR3wi
+         6xACx79JJkTqymJCNptZEVkRnBt7sRsUrErdSkBE2DLAv/rRMuJlZWWp+iF1aO3gC751
+         99d6CjUBXeORsfUbyEbLYv7/Biw7XQYW5iPEFpAckftmv48DZlzbp7GtVjdP6W07PbFY
+         mmOtmGIQgAiv6mxic1OoV1ezpp4EkpaKQeOGbfnSA9nUiOg2yHJXyEkp796PqHCKvIsV
+         fpsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2dy4AVqCcP7kztGsFeA5Fvb3GAiUWtChvdkBa1QUZbw=;
+        b=GTAHipO5Frtb4Op/sddqJmB6SIdYmwqHyxUdZ5TWV9kyBBoB17Fcs7d4EV3dp//lli
+         J1b187yFZf8o5opnXno6ydMt3WyMjRI7y3k9OB1BOsSLsTNvnGl0yVgi83uZydPndxcc
+         f+zPlbGnHLSJCup8Yah6wQ3373gtjdMInwK/O/hEhI9h21yGSlH2gQhJlDn8I8TGaSKh
+         rqXzuA1veY8rFLqdn1LBRWJQro6DzppxSfmqXAIVoK/ZLPDGNrsc1btG5KhFPgLsqK8B
+         UF4drfCNYQmP02ju54SoGhCQQKxfxI1/bUYQbyJlONmNz8eSVgjtfU5vd6s4sQBZZHbS
+         2gRg==
+X-Gm-Message-State: AOAM531H52HMke4MsNZ+u/dxcUyfgaDxi0uPoTd+TnvNnGoDbCBNKily
+        NLKioJPNTKMGR5/MLJwv9Rfb9haUaUk0qr5LjV7EKw==
+X-Google-Smtp-Source: ABdhPJwZaTrq+TyA81izHDBuSWWhfbuw/hLqSKJNZWb3zwst8fKOn5vdHPuCZ1CGPPBJ+gbL7BlSNgImIn+EmGN7oZU=
+X-Received: by 2002:a9d:222:: with SMTP id 31mr34143429otb.127.1594349034129;
+ Thu, 09 Jul 2020 19:43:54 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7e353a-ae40-4fca-3a62-08d8247ae461
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 02:42:30.6453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EI38hnIf1WuKuf1MQWF0oCrmMGkiPtkdlEju89xyK0tp4W1BR+gy+/2oMed0FuAlfmdpeeDCWzRSByXnVW05sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1391
-X-OriginatorOrg: intel.com
+References: <7faa60aa4a606b5c5c1ae374d82a7eee6c764b38.1592292685.git.zong.li@sifive.com>
+ <mhng-d4637494-2072-41f6-9a8a-1b222d89d6c4@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-d4637494-2072-41f6-9a8a-1b222d89d6c4@palmerdabbelt-glaptop1>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Fri, 10 Jul 2020 10:43:42 +0800
+Message-ID: <CANXhq0rOMFgr4j-oG_6G12XP2dKqWcXOKaCwOpg+FM7E+Qxx+A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: Support CONFIG_STRICT_DEVMEM
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Thursday, July 9, 2020 3:06 PM
->=20
-> After page requests are handled, software must respond to the device
-> which raised the page request with the result. This is done through
-> the iommu ops.page_response if the request was reported to outside of
-> vendor iommu driver through iommu_report_device_fault(). This adds the
-> VT-d implementation of page_response ops.
->=20
-> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel/iommu.c |   1 +
->  drivers/iommu/intel/svm.c   | 100
-> ++++++++++++++++++++++++++++++++++++
->  include/linux/intel-iommu.h |   3 ++
->  3 files changed, 104 insertions(+)
->=20
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 4a6b6960fc32..98390a6d8113 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -6057,6 +6057,7 @@ const struct iommu_ops intel_iommu_ops =3D {
->  	.sva_bind		=3D intel_svm_bind,
->  	.sva_unbind		=3D intel_svm_unbind,
->  	.sva_get_pasid		=3D intel_svm_get_pasid,
-> +	.page_response		=3D intel_svm_page_response,
->  #endif
->  };
->=20
-> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-> index d24e71bac8db..839d2af377b6 100644
-> --- a/drivers/iommu/intel/svm.c
-> +++ b/drivers/iommu/intel/svm.c
-> @@ -1082,3 +1082,103 @@ int intel_svm_get_pasid(struct iommu_sva *sva)
->=20
->  	return pasid;
->  }
-> +
-> +int intel_svm_page_response(struct device *dev,
-> +			    struct iommu_fault_event *evt,
-> +			    struct iommu_page_response *msg)
-> +{
-> +	struct iommu_fault_page_request *prm;
-> +	struct intel_svm_dev *sdev =3D NULL;
-> +	struct intel_svm *svm =3D NULL;
-> +	struct intel_iommu *iommu;
-> +	bool private_present;
-> +	bool pasid_present;
-> +	bool last_page;
-> +	u8 bus, devfn;
-> +	int ret =3D 0;
-> +	u16 sid;
-> +
-> +	if (!dev || !dev_is_pci(dev))
-> +		return -ENODEV;
-> +
-> +	iommu =3D device_to_iommu(dev, &bus, &devfn);
-> +	if (!iommu)
-> +		return -ENODEV;
-> +
-> +	if (!msg || !evt)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&pasid_mutex);
-> +
-> +	prm =3D &evt->fault.prm;
-> +	sid =3D PCI_DEVID(bus, devfn);
-> +	pasid_present =3D prm->flags &
-> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
-> +	private_present =3D prm->flags &
-> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
-> +	last_page =3D prm->flags &
-> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
-> +
-> +	if (pasid_present) {
-> +		if (prm->pasid =3D=3D 0 || prm->pasid >=3D PASID_MAX) {
-> +			ret =3D -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		ret =3D pasid_to_svm_sdev(dev, prm->pasid, &svm, &sdev);
-> +		if (ret || !sdev) {
-> +			ret =3D -ENODEV;
-> +			goto out;
-> +		}
-> +
-> +		/*
-> +		 * For responses from userspace, need to make sure that the
-> +		 * pasid has been bound to its mm.
-> +		*/
-> +		if (svm->flags & SVM_FLAG_GUEST_MODE) {
-> +			struct mm_struct *mm;
-> +
-> +			mm =3D get_task_mm(current);
-> +			if (!mm) {
-> +				ret =3D -EINVAL;
-> +				goto out;
-> +			}
-> +
-> +			if (mm !=3D svm->mm) {
-> +				ret =3D -ENODEV;
-> +				mmput(mm);
-> +				goto out;
-> +			}
-> +
-> +			mmput(mm);
-> +		}
-> +	} else {
-> +		pr_err_ratelimited("Invalid page response: no pasid\n");
-> +		ret =3D -EINVAL;
-> +		goto out;
+On Fri, Jul 10, 2020 at 4:08 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Tue, 16 Jun 2020 00:45:47 PDT (-0700), zong.li@sifive.com wrote:
+> > Implement the 'devmem_is_allowed()' interface for RISC-V, like some of
+> > other architectures have done. It will be called from range_is_allowed()
+> > when userpsace attempts to access /dev/mem.
+>
+> In fact, it's exactly the same (down to a few words of the comment) to the
+> others that I checked.  I'm going to put a generic version in lib/ instead,
+> I've sent out the patches.
+>
 
-check pasid=3D0 first, then no need to indent so many lines above.=20
+OK, no problem, thanks for improving it.
 
-> +	}
-> +
-> +	/*
-> +	 * Per VT-d spec. v3.0 ch7.7, system software must respond
-> +	 * with page group response if private data is present (PDP)
-> +	 * or last page in group (LPIG) bit is set. This is an
-> +	 * additional VT-d requirement beyond PCI ATS spec.
-> +	 */
-
-What is the behavior if system software doesn't follow the requirement?
-en... maybe the question is really about whether the information in prm
-comes from userspace or from internally-recorded info in iommu core.
-The former cannot be trusted. The latter one is OK.
-
-Thanks
-Kevin
-
-> +	if (last_page || private_present) {
-> +		struct qi_desc desc;
-> +
-> +		desc.qw0 =3D QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid)
-> |
-> +				QI_PGRP_PASID_P(pasid_present) |
-> +				QI_PGRP_PDP(private_present) |
-> +				QI_PGRP_RESP_CODE(msg->code) |
-> +				QI_PGRP_RESP_TYPE;
-> +		desc.qw1 =3D QI_PGRP_IDX(prm->grpid) |
-> QI_PGRP_LPIG(last_page);
-> +		desc.qw2 =3D 0;
-> +		desc.qw3 =3D 0;
-> +		if (private_present)
-> +			memcpy(&desc.qw2, prm->private_data,
-> +			       sizeof(prm->private_data));
-> +
-> +		qi_submit_sync(iommu, &desc, 1, 0);
-> +	}
-> +out:
-> +	mutex_unlock(&pasid_mutex);
-> +	return ret;
-> +}
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index fc2cfc3db6e1..bf6009a344f5 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -741,6 +741,9 @@ struct iommu_sva *intel_svm_bind(struct device
-> *dev, struct mm_struct *mm,
->  				 void *drvdata);
->  void intel_svm_unbind(struct iommu_sva *handle);
->  int intel_svm_get_pasid(struct iommu_sva *handle);
-> +int intel_svm_page_response(struct device *dev, struct iommu_fault_event
-> *evt,
-> +			    struct iommu_page_response *msg);
-> +
->  struct svm_dev_ops;
->=20
->  struct intel_svm_dev {
-> --
-> 2.17.1
-
+> > Access to exclusive IOMEM and kernel RAM is denied unless
+> > CONFIG_STRICT_DEVMEM is set to 'n'.
+> >
+> > Test it by devmem, the result as follows:
+> >
+> >  - CONFIG_STRICT_DEVMEM=y
+> >       $ devmem 0x10010000
+> >       0x00000000
+> >       $ devmem 0x80200000
+> >       0x0000106F
+> >
+> >  - CONFIG_STRICT_DEVMEM is not set
+> >       $ devmem 0x10010000
+> >       devmem: mmap: Operation not permitted
+> >       $ devmem 0x80200000
+> >       devmem: mmap: Operation not permitted
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > ---
+> >  arch/riscv/Kconfig          |  1 +
+> >  arch/riscv/include/asm/io.h |  2 ++
+> >  arch/riscv/mm/init.c        | 19 +++++++++++++++++++
+> >  3 files changed, 22 insertions(+)
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 128192e14ff2..ffd7841ede4c 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -16,6 +16,7 @@ config RISCV
+> >       select ARCH_HAS_BINFMT_FLAT
+> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
+> >       select ARCH_HAS_DEBUG_WX
+> > +     select ARCH_HAS_DEVMEM_IS_ALLOWED
+> >       select ARCH_HAS_GCOV_PROFILE_ALL
+> >       select ARCH_HAS_GIGANTIC_PAGE
+> >       select ARCH_HAS_MMIOWB
+> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+> > index 3835c3295dc5..04ac65ab93ce 100644
+> > --- a/arch/riscv/include/asm/io.h
+> > +++ b/arch/riscv/include/asm/io.h
+> > @@ -147,4 +147,6 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io_paw())
+> >
+> >  #include <asm-generic/io.h>
+> >
+> > +extern int devmem_is_allowed(unsigned long pfn);
+> > +
+> >  #endif /* _ASM_RISCV_IO_H */
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index bbe816e03b2f..5e7e61519acc 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -517,6 +517,25 @@ void mark_rodata_ro(void)
+> >  }
+> >  #endif
+> >
+> > +#ifdef CONFIG_STRICT_DEVMEM
+> > +#include <linux/ioport.h>
+> > +/*
+> > + * devmem_is_allowed() checks to see if /dev/mem access to a certain address
+> > + * is valid. The argument is a physical page number.
+> > + *
+> > + * Disallow access to system RAM as well as device-exclusive MMIO regions.
+> > + * This effectively disable read()/write() on /dev/mem.
+> > + */
+> > +int devmem_is_allowed(unsigned long pfn)
+> > +{
+> > +     if (iomem_is_exclusive(pfn << PAGE_SHIFT))
+> > +             return 0;
+> > +     if (!page_is_ram(pfn))
+> > +             return 1;
+> > +     return 0;
+> > +}
+> > +#endif
+> > +
+> >  void __init resource_init(void)
+> >  {
+> >       struct memblock_region *region;
