@@ -2,120 +2,111 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE960C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B812820786
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dK8wh55N"
+	by mail.kernel.org (Postfix) with ESMTP id 3120A206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594420283;
+	bh=jTbrwYoQXDKW6S7IjpSy2ub0G1Xen5M64E1Hbw9nZYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JVsvqgxIWeUugvmEnIm4AKwX+b6IJer0CLYBrMkRj3XJvfG1Y4tiMBosXYUzfFQtZ
+	 N3xrJjyaxTVtUwY1XjnMpYVCYf7hbej7+rP2R8vKuVjYqdsnSfK/VNWKO79vL0sCCx
+	 n86e+Q6rMPWC26vN8aURUEA34W6TyTw3MEeAQtZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgGJW2s (ORCPT
+        id S1726533AbgGJWbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33238 "EHLO
+        Fri, 10 Jul 2020 18:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgGJW2s (ORCPT
+        with ESMTP id S1726465AbgGJWbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:28:48 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DB0C08C5DC;
-        Fri, 10 Jul 2020 15:28:47 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id e13so6857190qkg.5;
-        Fri, 10 Jul 2020 15:28:47 -0700 (PDT)
+        Fri, 10 Jul 2020 18:31:21 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA75C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:31:20 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q7so8166516ljm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:31:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=hGdaV05cW1X2mW2tyPPyA3RWwI45rAOdC5AEhMWDL+0=;
-        b=dK8wh55N/arHF4X9cyBJBSJEpWOwUgHYEp537cSPuXw7xMH10nbUKJwWHTU4mXWeNj
-         LXcedL/En6IC7jGYOzyhTURMVwsCG7LJgv+HTvfcaIswm2ykMZ5NTCPSuUrTkQsSmuIB
-         zz+3tiaTuUFHyqnOTnm5uTeN3pItldBLbfA7/3P/q71J1QlX7HTw/QGscTwrxtn41bhx
-         sgCSR1TLrE3nujo+5cnXlZqHYQ4STJIQ7VBKgfNCDNThBAta4rtQziSemof7RuSNp8jV
-         zR4VBmy9oKivr0U+YMuzHulUDvPWj6PtYLdtIUHZHZHRSf7EsvI13SaRsO2shvbj3Jo6
-         X0oQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ylUmvhX6MYRi6Lzt+ERLlRxoNBMnVFwPcX/4GYDixbQ=;
+        b=GvrgqBQCzjZRZpf67abT/azNraXd5m9yHs1v9YY510nj6VdmvQ6bEoqFO10xIEJrIJ
+         s4R7WuDXxz8KqMEuj8MXp6JM7lTl6jqKDAmrldf8ePfuByTl2VIr6/+2qFVPjRvDVVve
+         5VeNJxys7d0oXdVIdpat+a87h7fKeAVaJQi9k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=hGdaV05cW1X2mW2tyPPyA3RWwI45rAOdC5AEhMWDL+0=;
-        b=d0ESSjxImWgUehUypBYZn5cYMJsBi5eceenHGwwO1FXRenXwvuLYFAFURBkyfDY4FM
-         J38AMVm5xV+wohXXhSXg+WuuPWH/mFsRZJP/koQgokOtbNAQlvWIzBt/m8qA6pTE+0jM
-         5BFVYar8jODstQiCo6Vv+1DRAZ4zJaQfdXJcWzf9qekIXWSg+OIGuAmMCCcrnCwhFPb9
-         F6IJHFpvCDa0tRbQEBe0UjHFpvsAaLhdxrBVDJxKSqIAfmqIRWakVthwYcKwpiMv42VP
-         bGImkMYS8C4MWmYeVsehKaIsmKm96DO063ewap0gi2pDApS4x3T6fYHyEWHxk5nXtaiV
-         bh0w==
-X-Gm-Message-State: AOAM532Y/nzDnWemhx17o3UDqwIxFsAue2dZIHwFNsg5ikrDtBAxqxTG
-        anlNvKrX53xANiF7RwXYc7s=
-X-Google-Smtp-Source: ABdhPJwdu1SIKLVvbHtld+Ucsaaz2lElaRXlVdfJf2agzmRcwLwpkdTu2mPjerh45JypR/nVCWF+JQ==
-X-Received: by 2002:a37:bd06:: with SMTP id n6mr51067617qkf.344.1594420127058;
-        Fri, 10 Jul 2020 15:28:47 -0700 (PDT)
-Received: from DESKTOPJC0RTV5 ([155.33.134.7])
-        by smtp.gmail.com with ESMTPSA id g30sm10211088qte.72.2020.07.10.15.28.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Jul 2020 15:28:46 -0700 (PDT)
-From:   <charley.ashbringer@gmail.com>
-To:     "'Matthew Wilcox'" <willy@infradead.org>,
-        "'Randy Dunlap'" <rdunlap@infradead.org>
-Cc:     <keescook@chromium.org>, <mcgrof@kernel.org>, <yzaikin@google.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-References: <1594351343-11811-1-git-send-email-charley.ashbringer@gmail.com> <b50e8198-ca2e-eb44-ed71-e4ca27f48232@infradead.org> <20200710112803.GI12769@casper.infradead.org>
-In-Reply-To: <20200710112803.GI12769@casper.infradead.org>
-Subject: RE: [PATCH] sysctl: add bound to panic_timeout to prevent overflow
-Date:   Fri, 10 Jul 2020 18:28:45 -0400
-Message-ID: <0d4601d65709$7a0e2d80$6e2a8880$@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ylUmvhX6MYRi6Lzt+ERLlRxoNBMnVFwPcX/4GYDixbQ=;
+        b=jDHTXABuG12wbTiDJe8syn1tn8io4agVp/yfGfxLPpkf+BbTH0BfVWE0f43TUs89q+
+         zFrufjxHp2FqUbm1rUb+sMEGArwGe9OsaC2TjQCHL49/SO82YADI20V8JzBYlX3lucIB
+         vjkJ9maTRE9jQrgagz3iXLy5Y3Tqe59bo0S9X/QeL9yeWJIAxt0G67eSvbAL+G+qa9NE
+         4yh7WkPB70Lj0/41WUMshvtn9Daq7/EHqqa0R7BX0uZsnkBYw/JWFKX8y8XxwbsQXkPr
+         83GwzJV5h97cD4TxPK4he/qbzm9/Bp+/zcSUbM4/ToX5mPWF4yALiGNjkzMKxC6rMcvp
+         hMLg==
+X-Gm-Message-State: AOAM530g5sQZiF5Z9HKe8jw6mRe8yYd5PEzXCJTCpQ6KFyE1Opory1go
+        +2o/b1guyRE1kb7aER58jef4+CJyc18=
+X-Google-Smtp-Source: ABdhPJzPOUX/Hf+GaDyqoMGDe8Dx3jtkJVBhkgVO5fwwEESoBfy3QBY+BG33z7t76021epO5bHl3tQ==
+X-Received: by 2002:a05:651c:512:: with SMTP id o18mr44423049ljp.226.1594420278475;
+        Fri, 10 Jul 2020 15:31:18 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id k6sm2630562lfm.89.2020.07.10.15.31.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 15:31:17 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 9so8105336ljv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:31:17 -0700 (PDT)
+X-Received: by 2002:a05:651c:1b6:: with SMTP id c22mr36364030ljn.421.1594420276931;
+ Fri, 10 Jul 2020 15:31:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQK1RVaBa+61frbXsEt9vwPiryoHtwJJAUXHAnUGYEenHZUHwA==
+References: <20200709221102.323356-1-cesarb@cesarb.eti.br> <CAHk-=wjUEmO4GiC9mCyzZ8_WS=ZWgfg6CnpxPSLq=uoF1F3Xyw@mail.gmail.com>
+ <CAKwvOdnbtbetfN5zF51QOXVhrutE8ak4uPe82iY6g9f6gwk=Vg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnbtbetfN5zF51QOXVhrutE8ak4uPe82iY6g9f6gwk=Vg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 10 Jul 2020 15:31:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whaqVGHSGstM4yHnJ+WkoHDBKWxMuZvgOYoxe9sYBOjEw@mail.gmail.com>
+Message-ID: <CAHk-=whaqVGHSGstM4yHnJ+WkoHDBKWxMuZvgOYoxe9sYBOjEw@mail.gmail.com>
+Subject: Re: [PATCH] Restore gcc check in mips asm/unroll.h
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Cesar Eduardo Barros <cesarb@cesarb.eti.br>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Jul 09, 2020 at 08:31:39PM -0700, Randy Dunlap wrote:
-> > > +/* this is needed for setting boundery for panic_timeout to prevent
-> > > +it from overflow*/
-> >
-> >                                  boundary (or max value)
-overflow */
-> >
-> > > +static int panic_time_max = INT_MAX / 1000;
-> 
-> Or just simplify the comment.
-> 
-> /* Prevent overflow in panic() */
-> 
-> Or perhaps better, fix panic() to not overflow.
-> 
-> -		for (i = 0; i < panic_timeout * 1000; i += PANIC_TIMER_STEP)
-{
-> +		for (i = 0; i / 1000 < panic_timeout; i += PANIC_TIMER_STEP)
-{
-> 
-> you probably also want to change i to be a long long or the loop may never
-> terminate.
+On Fri, Jul 10, 2020 at 11:43 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> What I'd really like to see as a policy in the kernel going forward in
+> that ANY new commit that adds some hack or workaround for a specific
+> compiler version add a comment about which toolchain version was
+> problematic, that way when we drop support for that version years
+> later, we can drop whatever hacks and technical debt we've accumulated
+> to support that older version.
 
-Thanks for the feedback, I too agree this should be better than 
-modifying the sysctl, considering how localized and neat this
-change is. It's also more readable. Setting a bound in sysctl.c
-which is dependent on the constant value in panic.c is not a very
-good idea.
+The problem is that at the time we find and fix things, it's often
+_very_ unclear which compiler versions are affected.
 
-I agree changing i from long to long long is necessary. 
+We also have the situation that a lot of distro compilers aren't
+necessarily completely "clean" versions, particularly for the
+"enterprise" ones that get stuck on some old version and then fix up
+their breakage by backporting fixes.
 
-I'll submit a v2 patch enforcing this shortly.
+When it's some particular version of a compiler that supports a
+particular feature, that tends to be much more straightforward. But
+we've had bugs where it was very unclear when exactly the bug was
+fixed (fi it was fixed at all by the time we do the workaround).
 
-Cheers,
-Changming
-
+              Linus
