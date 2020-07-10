@@ -2,113 +2,138 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA445C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A200C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35BF20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D7F20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iY4geAz9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FrtYecrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgGJPXn (ORCPT
+        id S1728042AbgGJPYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:23:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45226 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727098AbgGJPXh (ORCPT
+        Fri, 10 Jul 2020 11:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgGJPYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:23:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594394616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9XYubToR8gPoZKz3xGIe2POziR6ztexd5h4TTQatCvU=;
-        b=iY4geAz91oK9zFnvVqaj5KuWSt9HgeHH4m1q6MGtZZk962dc3FTCkLT1etAzphsKygngr3
-        pcNPljI+kPslT60pXv3ujvFu0u1TePIZciDWXpf0K8WaQzDvJ7EIEtvYAQv9yiYNNRQpNI
-        pERhWsLBrdXZFihTWtXCt9p6yMdiz4E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-7OaH5TUHNFiPDTpOCZ2kMA-1; Fri, 10 Jul 2020 11:23:34 -0400
-X-MC-Unique: 7OaH5TUHNFiPDTpOCZ2kMA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE051106B243;
-        Fri, 10 Jul 2020 15:23:32 +0000 (UTC)
-Received: from max.home.com (unknown [10.40.192.179])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 300715C1BD;
-        Fri, 10 Jul 2020 15:23:26 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Jens Axboe <axboe@kernel.dk>, cluster-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [GIT PULL] Fix gfs2 readahead deadlocks
-Date:   Fri, 10 Jul 2020 17:23:24 +0200
-Message-Id: <20200710152324.1690683-1-agruenba@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Fri, 10 Jul 2020 11:24:33 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E20CC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:24:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so6305100wmf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ssK+8iLM11qslosSf1j2G0wYl7L4CVX8Ifo/vpqTDIQ=;
+        b=FrtYecrJ5Ux8Bb2xvNXWLMKdeSCTBFcqZ62IVxO3EETjjgKNau0aI78KHeFHXroO8g
+         tDa9gmjvjjYHtht++RtdJuo5FfhTK8eqA++q3zeIPPXHOK/qZ2pfo88L7+oT6suKjxLs
+         PBFah0+fIX9gNI28ehCXzMgLzcD+OvmjDMFsSwDGyXDkkiQRyOMcrOwf7WjWQoaEM5HT
+         9AGAjfURfd6aw6W0KDxnaiX0JkmgX6zUiz0JTV+vV9ik2DuBDnNkhoEfLEyYZkPb0cND
+         mhE5HAb1UFnn8EheHec94E4X6qSfMtGdR6mnNw1DintDuCPBgbUWYFsU1MFcecdp37UV
+         AsxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ssK+8iLM11qslosSf1j2G0wYl7L4CVX8Ifo/vpqTDIQ=;
+        b=nxjKLLFjUbOQfwVXmKZJpUEK29ERXik3hMHf4X4qyom0B7chXcfxN18pk/MVjQnPx2
+         17RFT0c5jRk1jIdQoYGVg3hNXM48reT6fhRlauwJd4QkJfETkncfRplkPYMmYdDu+dIs
+         CYNvO5kekHIBYiVpAitgU6rRuaEnoyovgQ8HdqAMB4GyhQOUPtvF4QB3oD1SHOfN8Obh
+         4/5+X+Xc+CH6frNh5j3bwYVkVrVkbRjmZNXLBqiuUlTwZ7qUUhTfCPwIx15V2xWVJ+Qg
+         R+uBBMZlLnJ7F3XtS0j8LUEWW8P0vxCDIAeKK5pF0y76CoCL0Fq5oBScG2N+/DUQZ/Hv
+         Hjxg==
+X-Gm-Message-State: AOAM531V2YrAhSf1M4P512GNOIiBp3yb2xPD8RaL7tnm7EnsgXZpFVbK
+        +mFP12CmNRGR93xG+jLIV2KqeqBOA2Q=
+X-Google-Smtp-Source: ABdhPJy1IkcK+d02lK9Yiiu/N3xEyya1puU9CiIr/AfoqwCcNGhXhnOadBrXZoTy4jkFPzYaFEl5Sg==
+X-Received: by 2002:a1c:4d05:: with SMTP id o5mr5605806wmh.130.1594394671937;
+        Fri, 10 Jul 2020 08:24:31 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:3448:acab:4d05:2aee])
+        by smtp.gmail.com with ESMTPSA id m10sm10673506wru.4.2020.07.10.08.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 08:24:30 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     valentin.schneider@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v3] sched/fair: handle case of task_h_load() returning 0
+Date:   Fri, 10 Jul 2020 17:24:26 +0200
+Message-Id: <20200710152426.16981-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
 
-could you please pull the following two commits to fix the gfs2
-deadlocks resulting from the conversion to ->readahead in commit
-d4388340ae0b ("fs: convert mpage_readpages to mpage_readahead")?
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
 
-The first commit adds a new IOCB_NOIO flag to generic_file_read_iter.
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
 
-In the previous version [1] which you've acked [2] and Matthew Willcox
-has reviewed [3], ->readpage could still be called even when IOCB_NOIO
-was set, so I've added an additional check above that call and I've
-dropped the ack and reviewed-by tags.  In addition, bit 8 is now left
-unused for the new IOCB_WAITQ flag in the block tree per Jens Axboe's
-request.
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+---
 
-[1] https://lore.kernel.org/linux-fsdevel/CAHc6FU6LmR7m_8UHmB_77jUpYNo-kgCZ-1YTLqya-PPqvvBy7Q@mail.gmail.com/
-[2] https://lore.kernel.org/linux-fsdevel/CAHk-=whBk-jYM6_HBXbu6+gs7Gtw3hWg4iSLncQ0QTwShm6Jaw@mail.gmail.com/
-[3] https://lore.kernel.org/linux-fsdevel/20200703114108.GE25523@casper.infradead.org/
+Changes v3:
+- Fix warning about cast reported by lkp@intel.com>
 
-Thanks a lot,
-Andreas
+ kernel/sched/fair.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
-
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.8-rc4.fixes
-
-for you to fetch changes up to 20f829999c38b18e3d17f9e40dea3a28f721fac4:
-
-  gfs2: Rework read and page fault locking (2020-07-07 23:40:12 +0200)
-
-----------------------------------------------------------------
-Fix gfs2 readahead deadlocks
-
-----------------------------------------------------------------
-Andreas Gruenbacher (2):
-      fs: Add IOCB_NOIO flag for generic_file_read_iter
-      gfs2: Rework read and page fault locking
-
- fs/gfs2/aops.c     | 45 +--------------------------------------------
- fs/gfs2/file.c     | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- include/linux/fs.h |  1 +
- mm/filemap.c       | 23 +++++++++++++++++++++--
- 4 files changed, 73 insertions(+), 48 deletions(-)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b9b9f19e80c1..71a372e3707a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4049,7 +4049,11 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ 		return;
+ 	}
+ 
+-	rq->misfit_task_load = task_h_load(p);
++	/*
++	 * Make sure that misfit_task_load will not be null even if
++	 * task_h_load() returns 0.
++	 */
++	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+ }
+ 
+ #else /* CONFIG_SMP */
+@@ -7648,7 +7652,14 @@ static int detach_tasks(struct lb_env *env)
+ 
+ 		switch (env->migration_type) {
+ 		case migrate_load:
+-			load = task_h_load(p);
++			/*
++			 * Depending of the number of CPUs and tasks and the
++			 * cgroup hierarchy, task_h_load() can return a null
++			 * value. Make sure that env->imbalance decreases
++			 * otherwise detach_tasks() will stop only after
++			 * detaching up to loop_max tasks.
++			 */
++			load = max_t(unsigned long, task_h_load(p), 1);
+ 
+ 			if (sched_feat(LB_MIN) &&
+ 			    load < 16 && !env->sd->nr_balance_failed)
+-- 
+2.17.1
 
