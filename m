@@ -2,131 +2,157 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7E4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE94C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68452075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:08:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="pYbj89lR";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="pYbj89lR"
+	by mail.kernel.org (Postfix) with ESMTP id 43EB92075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGJTIz (ORCPT
+        id S1727990AbgGJTJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:08:55 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:35760 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726725AbgGJTIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:08:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 685778EE2AF;
-        Fri, 10 Jul 2020 12:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1594408115;
-        bh=TmrAzcBWb/MPHV7bm20MUfqaU7DTBEJLK9IEn4cwOI8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pYbj89lReMEsopaaRladOY/GMH9VrPwVwE8f3Whq/eWLjAEB/WP+HWEm/p+91iY60
-         0HD4PvlkLB9PP+EC7wfHRpSMdj/BKbcDt933WM4M8gb392vm4YYPcRcYJh/Ptj9l2s
-         ZKc072+6TkJY7RCiNmCfr/2NmQNdk4oKFohT62NM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FSydHnbl8cqn; Fri, 10 Jul 2020 12:08:35 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id CA52E8EE112;
-        Fri, 10 Jul 2020 12:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1594408115;
-        bh=TmrAzcBWb/MPHV7bm20MUfqaU7DTBEJLK9IEn4cwOI8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pYbj89lReMEsopaaRladOY/GMH9VrPwVwE8f3Whq/eWLjAEB/WP+HWEm/p+91iY60
-         0HD4PvlkLB9PP+EC7wfHRpSMdj/BKbcDt933WM4M8gb392vm4YYPcRcYJh/Ptj9l2s
-         ZKc072+6TkJY7RCiNmCfr/2NmQNdk4oKFohT62NM=
-Message-ID: <1594408113.4494.16.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: avoid accessing cleared ops during shutdown
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrey Pronin <apronin@chromium.org>, peterhuewe@gmx.de,
-        jarkko.sakkinen@linux.intel.com
-Cc:     jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, groeck@chromium.org
-Date:   Fri, 10 Jul 2020 12:08:33 -0700
-In-Reply-To: <20200710002209.6757-1-apronin@chromium.org>
-References: <20200710002209.6757-1-apronin@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 10 Jul 2020 15:09:33 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:57874 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgGJTJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 15:09:32 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2BE6DBC06E;
+        Fri, 10 Jul 2020 19:09:25 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        alexandre.belloni@bootlin.com, grandmaster@al2klimov.de,
+        clabbe@baylibre.com, arnd@arndb.de, yuehaibing@huawei.com,
+        yanaijie@huawei.com, baijiaju1990@gmail.com,
+        chunfeng.yun@mediatek.com, swboyd@chromium.org,
+        christophe.jaillet@wanadoo.fr, jaswinder.singh@linaro.org,
+        linux-geode@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: gadget: Replace HTTP links with HTTPS ones
+Date:   Fri, 10 Jul 2020 21:09:19 +0200
+Message-Id: <20200710190919.31464-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200710065939.GA1153760@kroah.com>
+References: <20200710065939.GA1153760@kroah.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-09 at 17:22 -0700, Andrey Pronin wrote:
-> This patch prevents NULL dereferencing when using chip->ops while
-> sending TPM2_Shutdown command if both tpm_class_shutdown handler and
-> tpm_del_char_device are called during system shutdown.
-> 
-> Both these handlers set chip->ops to NULL but don't check if it's
-> already NULL when they are called before using it.
-> 
-> This issue was revealed in Chrome OS after a recent set of changes
-> to the unregister order for spi controllers, such as:
->   b4c6230bb0ba spi: Fix controller unregister order
->   f40913d2dca1 spi: pxa2xx: Fix controller unregister order
-> and similar for other controllers.
-> 
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> ---
->  drivers/char/tpm/tpm-chip.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-
-> chip.c
-> index 8c77e88012e9..a410ca40a3c5 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -296,7 +296,7 @@ static int tpm_class_shutdown(struct device *dev)
->  	struct tpm_chip *chip = container_of(dev, struct tpm_chip,
-> dev);
->  
->  	down_write(&chip->ops_sem);
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +	if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
->  		if (!tpm_chip_start(chip)) {
->  			tpm2_shutdown(chip, TPM2_SU_CLEAR);
->  			tpm_chip_stop(chip);
-> @@ -479,7 +479,7 @@ static void tpm_del_char_device(struct tpm_chip
-> *chip)
->  
->  	/* Make the driver uncallable. */
->  	down_write(&chip->ops_sem);
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +	if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
->  		if (!tpm_chip_start(chip)) {
->  			tpm2_shutdown(chip, TPM2_SU_CLEAR);
->  			tpm_chip_stop(chip);
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I really don't think this is the right fix.  The problem is that these
-two functions are trying to open code tpm_try_get_ops/tpm_put_ops (only
-really for the tpm2 shutdown) because they want to NULL out the ops
-before final mutex unlock.  The problem with the current open coding is
-it doesn't shut down the clock if required (not really a problem for
-shutdown, but might cause issues for simple rmmod).  I think this is
-because no-one noticed the open coding when get/put was updated.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-This code should all be abstracted into a single function and shared
-with tpm_try_get_ops/tpm_put_ops so we can't have this happen in
-future.  Possibly there should be a chip shutdown function which is
-only active for TPM2 which does the correct try_get/shutdown/put
-operation and then a separate simple get mutex, null ops, put mutex one
-that's guaranteed to be called last.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Sorry, my mistake.
+ Now better?
 
-James
+ drivers/usb/gadget/udc/amd5536udc.h     | 2 +-
+ drivers/usb/gadget/udc/amd5536udc_pci.c | 2 +-
+ drivers/usb/gadget/udc/gr_udc.c         | 2 +-
+ drivers/usb/gadget/udc/gr_udc.h         | 2 +-
+ drivers/usb/gadget/udc/max3420_udc.c    | 2 +-
+ drivers/usb/gadget/udc/snps_udc_core.c  | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/usb/gadget/udc/amd5536udc.h b/drivers/usb/gadget/udc/amd5536udc.h
+index 0262383f8c79..3296f3fcee48 100644
+--- a/drivers/usb/gadget/udc/amd5536udc.h
++++ b/drivers/usb/gadget/udc/amd5536udc.h
+@@ -2,7 +2,7 @@
+ /*
+  * amd5536.h -- header for AMD 5536 UDC high/full speed USB device controller
+  *
+- * Copyright (C) 2007 AMD (http://www.amd.com)
++ * Copyright (C) 2007 AMD (https://www.amd.com)
+  * Author: Thomas Dahlmann
+  */
+ 
+diff --git a/drivers/usb/gadget/udc/amd5536udc_pci.c b/drivers/usb/gadget/udc/amd5536udc_pci.c
+index 80685e4306f3..a98b54b30882 100644
+--- a/drivers/usb/gadget/udc/amd5536udc_pci.c
++++ b/drivers/usb/gadget/udc/amd5536udc_pci.c
+@@ -2,7 +2,7 @@
+ /*
+  * amd5536udc_pci.c -- AMD 5536 UDC high/full speed USB device controller
+  *
+- * Copyright (C) 2005-2007 AMD (http://www.amd.com)
++ * Copyright (C) 2005-2007 AMD (https://www.amd.com)
+  * Author: Thomas Dahlmann
+  */
+ 
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 7164ad9800f1..8fe0b65772b9 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -8,7 +8,7 @@
+  * GRLIB VHDL IP core library.
+  *
+  * Full documentation of the GRUSBDC core can be found here:
+- * http://www.gaisler.com/products/grlib/grip.pdf
++ * https://www.gaisler.com/products/grlib/grip.pdf
+  *
+  * Contributors:
+  * - Andreas Larsson <andreas@gaisler.com>
+diff --git a/drivers/usb/gadget/udc/gr_udc.h b/drivers/usb/gadget/udc/gr_udc.h
+index 417ad2aa2cc7..ac5b3f65adb5 100644
+--- a/drivers/usb/gadget/udc/gr_udc.h
++++ b/drivers/usb/gadget/udc/gr_udc.h
+@@ -8,7 +8,7 @@
+  * GRLIB VHDL IP core library.
+  *
+  * Full documentation of the GRUSBDC core can be found here:
+- * http://www.gaisler.com/products/grlib/grip.pdf
++ * https://www.gaisler.com/products/grlib/grip.pdf
+  *
+  * Contributors:
+  * - Andreas Larsson <andreas@gaisler.com>
+diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/udc/max3420_udc.c
+index 23f33946d80c..ea8cf9341dd5 100644
+--- a/drivers/usb/gadget/udc/max3420_udc.c
++++ b/drivers/usb/gadget/udc/max3420_udc.c
+@@ -7,7 +7,7 @@
+  *
+  * Based on:
+  *	o MAX3420E datasheet
+- *		http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
++ *		https://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
+  *	o MAX342{0,1}E Programming Guides
+  *		https://pdfserv.maximintegrated.com/en/an/AN3598.pdf
+  *		https://pdfserv.maximintegrated.com/en/an/AN3785.pdf
+diff --git a/drivers/usb/gadget/udc/snps_udc_core.c b/drivers/usb/gadget/udc/snps_udc_core.c
+index 3fcded31405a..1102077facdc 100644
+--- a/drivers/usb/gadget/udc/snps_udc_core.c
++++ b/drivers/usb/gadget/udc/snps_udc_core.c
+@@ -2,7 +2,7 @@
+ /*
+  * amd5536.c -- AMD 5536 UDC high/full speed USB device controller
+  *
+- * Copyright (C) 2005-2007 AMD (http://www.amd.com)
++ * Copyright (C) 2005-2007 AMD (https://www.amd.com)
+  * Author: Thomas Dahlmann
+  */
+ 
+-- 
+2.27.0
 
