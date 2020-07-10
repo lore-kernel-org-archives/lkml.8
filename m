@@ -2,117 +2,82 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4653C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA77CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951E42078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7212920787
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594362481;
+	bh=H0eG/s1lyQ6sGKykTdhmRGHO9rgBoUeZDW5jJ3sAsmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gLsM+WqCwsIfpwHgBg75GWVFevTe4OvTFFHy4um2jpSIgMXuagfszlpytAAy7gRHl
+	 ZO5KtSGrx9eHlE6cydCQ5jNCQlSZAALbLaeo4RnvMWWDGHyELDY3P77YXWZpvAivYh
+	 nl/IPAeb5ZjIdqpwVGnjbdmsy/v79Hfk8zq9Zmmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgGJGWI (ORCPT
+        id S1726908AbgGJG2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:22:08 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:41650 "EHLO smtp.al2klimov.de"
+        Fri, 10 Jul 2020 02:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbgGJGV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:21:59 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 8E527BC0D1;
-        Fri, 10 Jul 2020 06:21:57 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     m@bues.ch, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] ssb: Replace HTTP links with HTTPS ones
-Date:   Fri, 10 Jul 2020 08:21:51 +0200
-Message-Id: <20200710062151.28871-1-grandmaster@al2klimov.de>
-In-Reply-To: <CACna6ryNBH7ZSie985YV9zXaEa_XmTXX2S2XH5LC8WfMZNFuAg@mail.gmail.com>
-References: <CACna6ryNBH7ZSie985YV9zXaEa_XmTXX2S2XH5LC8WfMZNFuAg@mail.gmail.com>
+        id S1725851AbgGJG17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:27:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA672072E;
+        Fri, 10 Jul 2020 06:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594362478;
+        bh=H0eG/s1lyQ6sGKykTdhmRGHO9rgBoUeZDW5jJ3sAsmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=txiTPIjP7EudtwFFn2YASO02jf6cgq/0rtL5MoTYHZAIdyuF4w0LA9lL93NoFVq9Z
+         LZGcvlkTF3hScD2f6C2C5Wea2oJGht379bfES+OFi4ulUp5FNwovbNxDFVnkPqwjH4
+         hBnrMQ+ZJy7bLi8Q3iET28YzUrjvicIXswH/LVe4=
+Date:   Fri, 10 Jul 2020 08:28:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: Linux kernel in-tree Rust support
+Message-ID: <20200710062803.GA1071395@kroah.com>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Thu, Jul 09, 2020 at 11:41:47AM -0700, Nick Desaulniers wrote:
+> Hello folks,
+> I'm working on putting together an LLVM "Micro Conference" for the
+> upcoming Linux Plumbers Conf
+> (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
+> solidified yet, but I would really like to run a session on support
+> for Rust "in tree."  I suspect we could cover technical aspects of
+> what that might look like (I have a prototype of that, was trivial to
+> wire up KBuild support), but also a larger question of "should we do
+> this?" or "how might we place limits on where this can be used?"
+> 
+> Question to folks explicitly in To:, are you planning on attending plumbers?
+> 
+> If so, would this be an interesting topic that you'd participate in?
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Yes, I'll be there.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Better?
+thanks,
 
- drivers/ssb/driver_chipcommon.c     | 4 ++--
- drivers/ssb/driver_chipcommon_pmu.c | 2 +-
- drivers/ssb/sprom.c                 | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/ssb/driver_chipcommon.c b/drivers/ssb/driver_chipcommon.c
-index 3861cb659cb9..85542bfd7715 100644
---- a/drivers/ssb/driver_chipcommon.c
-+++ b/drivers/ssb/driver_chipcommon.c
-@@ -238,7 +238,7 @@ static void chipco_powercontrol_init(struct ssb_chipcommon *cc)
- 	}
- }
- 
--/* http://bcm-v4.sipsolutions.net/802.11/PmuFastPwrupDelay */
-+/* https://bcm-v4.sipsolutions.net/802.11/PmuFastPwrupDelay */
- static u16 pmu_fast_powerup_delay(struct ssb_chipcommon *cc)
- {
- 	struct ssb_bus *bus = cc->dev->bus;
-@@ -255,7 +255,7 @@ static u16 pmu_fast_powerup_delay(struct ssb_chipcommon *cc)
- 	}
- }
- 
--/* http://bcm-v4.sipsolutions.net/802.11/ClkctlFastPwrupDelay */
-+/* https://bcm-v4.sipsolutions.net/802.11/ClkctlFastPwrupDelay */
- static void calc_fast_powerup_delay(struct ssb_chipcommon *cc)
- {
- 	struct ssb_bus *bus = cc->dev->bus;
-diff --git a/drivers/ssb/driver_chipcommon_pmu.c b/drivers/ssb/driver_chipcommon_pmu.c
-index 0f60e90ded26..888069e10659 100644
---- a/drivers/ssb/driver_chipcommon_pmu.c
-+++ b/drivers/ssb/driver_chipcommon_pmu.c
-@@ -513,7 +513,7 @@ static void ssb_pmu_resources_init(struct ssb_chipcommon *cc)
- 		chipco_write32(cc, SSB_CHIPCO_PMU_MAXRES_MSK, max_msk);
- }
- 
--/* http://bcm-v4.sipsolutions.net/802.11/SSB/PmuInit */
-+/* https://bcm-v4.sipsolutions.net/802.11/SSB/PmuInit */
- void ssb_pmu_init(struct ssb_chipcommon *cc)
- {
- 	u32 pmucap;
-diff --git a/drivers/ssb/sprom.c b/drivers/ssb/sprom.c
-index 42d620cee8a9..7cd553127861 100644
---- a/drivers/ssb/sprom.c
-+++ b/drivers/ssb/sprom.c
-@@ -186,7 +186,7 @@ int ssb_fill_sprom_with_fallback(struct ssb_bus *bus, struct ssb_sprom *out)
- 	return get_fallback_sprom(bus, out);
- }
- 
--/* http://bcm-v4.sipsolutions.net/802.11/IsSpromAvailable */
-+/* https://bcm-v4.sipsolutions.net/802.11/IsSpromAvailable */
- bool ssb_is_sprom_available(struct ssb_bus *bus)
- {
- 	/* status register only exists on chipcomon rev >= 11 and we need check
--- 
-2.27.0
-
+greg k-h
