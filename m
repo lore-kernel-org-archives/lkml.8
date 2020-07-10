@@ -2,185 +2,176 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A534C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970BCC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4068F207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lfh1np1N"
+	by mail.kernel.org (Postfix) with ESMTP id 7280720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594387298;
+	bh=CwV4U8T+RZdhRTtJRV4/TteblebcduQ8ooDhayYjuck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ho9nA+PFo+ezszPtCujoeP9+1fFgE9mmU4gOGp3iLXf8rn7hugrz27K0Mzoop2Ane
+	 8ADg+mTgMR+R9WuOv9f5rkd5GVUSAfMCDrd+czbazT+esuIBiLYfOy2aGF1Py4H1ip
+	 YUtN0KnOEIYhvbo/S2QUhmfFI6Dn/qMasSKEWcLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgGJNVc (ORCPT
+        id S1727827AbgGJNVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgGJNVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:21:32 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC74C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:21:31 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id z63so5115651qkb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jgg9a+wNuaByaM8m8spDFI4u6Tz5SQd7zmlaEogWrcg=;
-        b=lfh1np1Npp8Y0McpJPnqEC+BEN77yS7UxExMxSPgmDPP2HzUkdcuyLklR44E7rFUOg
-         bvRPbmQrccwm5XJumpZID2QOARfZ/Q8sP6Bmb522REXT78YQMOLrmhm20iwgzjowvWvK
-         naN7WxYOhFE21tiP4pd1WNHxKEOUGFbUh3T/A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jgg9a+wNuaByaM8m8spDFI4u6Tz5SQd7zmlaEogWrcg=;
-        b=i0USSDaFlVLFAuhKUDS7XbLWkZAMzx1fH8xa/2cNLGc0QTY1u8x/BSObXXRPGRUv1P
-         8PhUuZjgzHUa4DNcNKph6ThodJHkv1c38GGIzq/KFyEALvn0oKrJ1r0o6eaAHSdxf2uZ
-         gFrOQOiev+Aw1unzDjA3ZNcQX7qewp8McuP9xB1BYMgxCXVVIc7FoSzl3Y5CpVNowQ4x
-         jgF1Ned7NiQqV9q3RACrBt6FebNdYF50fBGrzBYPGY20i7LLvMfW6NwBUPZ9XOpbcnps
-         Xc/nIM1ol7ZpsblDpJBw8W3iPBOPuwW7wMfUvqPkH3Llb7UsTxi+R3xUX20BKS4oQIjS
-         KkFg==
-X-Gm-Message-State: AOAM533C84hJcDmNDkfEbIoaaPRNpYt9O32a6ntNAh5GeZ1lkYSurR+j
-        zgu1h2FG85MshHgpw+XQZt33wg==
-X-Google-Smtp-Source: ABdhPJxNJJu55GMBgAvbl3+Af/VrLkatLoTC23priaMD3kvVC7Ux31GUQkx4NT1wmD+XFZ4UuWXbNQ==
-X-Received: by 2002:ae9:f444:: with SMTP id z4mr67887427qkl.80.1594387290664;
-        Fri, 10 Jul 2020 06:21:30 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id b186sm7532732qkd.28.2020.07.10.06.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:21:30 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 09:21:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineethrp@gmail.com,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [RFC PATCH 14/16] irq: Add support for core-wide protection of
- IRQ and softirq
-Message-ID: <20200710132129.GA303583@google.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <c783b3890b6df669a72c7c4a3012950d009b8034.1593530334.git.vpillai@digitalocean.com>
- <ed837e01-043b-e19b-293c-30d44df6f3a8@linux.intel.com>
+        Fri, 10 Jul 2020 09:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbgGJNVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:21:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DBC20748;
+        Fri, 10 Jul 2020 13:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594387293;
+        bh=CwV4U8T+RZdhRTtJRV4/TteblebcduQ8ooDhayYjuck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GBhk2ouz7JehdrM+jTN/hOjnS5EGUeUvdRQo0Fq603rT5ayDGt2v3YgbbEeMyi8Lb
+         ItGlP+fzXBFYKgfYeQ/bOJhSdaZ6daM139/GhYzlPu6cV1ZUagv+LYCJruy6XU8UI0
+         Hrt8Zi3r9ijiGbe5/V5KGCxyZdGc6WDlA0tgc5BU=
+Date:   Fri, 10 Jul 2020 15:21:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
+ deferred probe
+Message-ID: <20200710132138.GA1866890@kroah.com>
+References: <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com>
+ <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
+ <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
+ <CAJZ5v0ju58LxvRckv2T=H0D=aDooGUoGfqFze5zWQ1ARAAJcag@mail.gmail.com>
+ <CAGETcx8KknvzZxfW4o=siswB__c9yeh=1wOVyvtM2112WEBizQ@mail.gmail.com>
+ <CAMuHMdXbzXnWQSaQ44p-cL9TA=ng20UB=vjscRDjpf7N=S4fjg@mail.gmail.com>
+ <CAJZ5v0joi2YDgAPrPhT8SMXTu-Va7s9DXVs7YDYf87JY_ntONQ@mail.gmail.com>
+ <20200630153850.GE1785141@kroah.com>
+ <CAJZ5v0jQYK8LHaaJ4-GeJpzGdGY2Csmp_jmHfgc7BOaXyfsZCg@mail.gmail.com>
+ <CAGETcx9xCvjZiht4Z_pnFVdaYp9vLPybwZTKNZ9wHGRRCi6VuA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed837e01-043b-e19b-293c-30d44df6f3a8@linux.intel.com>
+In-Reply-To: <CAGETcx9xCvjZiht4Z_pnFVdaYp9vLPybwZTKNZ9wHGRRCi6VuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 08:19:24PM +0800, Li, Aubrey wrote:
-> Hi Joel/Vineeth,
+On Tue, Jun 30, 2020 at 10:11:01AM -0700, Saravana Kannan wrote:
+> On Tue, Jun 30, 2020 at 9:11 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Jun 30, 2020 at 5:39 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Jun 30, 2020 at 03:50:58PM +0200, Rafael J. Wysocki wrote:
+> > > > On Fri, Jun 26, 2020 at 10:53 PM Geert Uytterhoeven
+> > > > <geert@linux-m68k.org> wrote:
+> > > > >
+> > > > > Hi Saravana,
+> > > > >
+> > > > > On Fri, Jun 26, 2020 at 10:34 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > On Fri, Jun 26, 2020 at 4:27 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > > On Thu, Jun 25, 2020 at 7:52 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > > > On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > > > > Note that deferred probing gets in the way here and so the problem is
+> > > > > > > > > related to it.
+> > > > > > > >
+> > > > > > > > I mean, we officially support deferred probing. Shouldn't we fix it so
+> > > > > > > > that it doesn't break suspend/resume?
+> > > > > > >
+> > > > > > > Yes, we should fix deferred probing.
+> > > > >
+> > > > > Please take into account that breakage is an actual regression.
+> > > > >
+> > > > > > > > Also, it's pretty easy to have
+> > > > > > > > cases where one module probes multiple device instances and loading it
+> > > > > > > > in one order would break dpm_list order for one device and loading it
+> > > > > > > > in another order would break it for another device. And there would be
+> > > > > > > > no "proper" order to load modules (because module order != device
+> > > > > > > > order).
+> > > > > > >
+> > > > > > > I'm not saying that the current code is perfect.  I'm saying that the
+> > > > > > > fix as proposed adds too much cost for everybody who may not care IMO.
+> > > > > >
+> > > > > > Ok, how about I don't do this reordering until we see the first
+> > > > > > deferred probe request? Will that work for you? In that case, systems
+> > > > > > with no deferred probing will not incur any reordering cost. Or if
+> > > > > > reordering starts only towards the end, all the previous probes won't
+> > > > > > incur reordering cost.
+> > > > >
+> > > > > That first deferred probe request is more or less as of the first probe,
+> > > > > since commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing when
+> > > > > adding all top level devices"), at least on DT systems.
+> > > >
+> > > > The deferred probe reordering of devices to the end of dpm_list
+> > > > started in 2012, so it is nothing new, and it demonstrably works for
+> > > > devices where the dependencies are known to the driver core.
 > 
-> On 2020/7/1 5:32, Vineeth Remanan Pillai wrote:
-> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > 
-> > With current core scheduling patchset, non-threaded IRQ and softirq
-> > victims can leak data from its hyperthread to a sibling hyperthread
-> > running an attacker.
-> > 
-> > For MDS, it is possible for the IRQ and softirq handlers to leak data to
-> > either host or guest attackers. For L1TF, it is possible to leak to
-> > guest attackers. There is no possible mitigation involving flushing of
-> > buffers to avoid this since the execution of attacker and victims happen
-> > concurrently on 2 or more HTs.
-> > 
-> > The solution in this patch is to monitor the outer-most core-wide
-> > irq_enter() and irq_exit() executed by any sibling. In between these
-> > two, we mark the core to be in a special core-wide IRQ state.
-> > 
-> > In the IRQ entry, if we detect that the sibling is running untrusted
-> > code, we send a reschedule IPI so that the sibling transitions through
-> > the sibling's irq_exit() to do any waiting there, till the IRQ being
-> > protected finishes.
-> > 
-> > We also monitor the per-CPU outer-most irq_exit(). If during the per-cpu
-> > outer-most irq_exit(), the core is still in the special core-wide IRQ
-> > state, we perform a busy-wait till the core exits this state. This
-> > combination of per-cpu and core-wide IRQ states helps to handle any
-> > combination of irq_entry()s and irq_exit()s happening on all of the
-> > siblings of the core in any order.
-> > 
-> > Lastly, we also check in the schedule loop if we are about to schedule
-> > an untrusted process while the core is in such a state. This is possible
-> > if a trusted thread enters the scheduler by way of yielding CPU. This
-> > would involve no transitions through the irq_exit() point to do any
-> > waiting, so we have to explicitly do the waiting there.
-> > 
-> > Every attempt is made to prevent a busy-wait unnecessarily, and in
-> > testing on real-world ChromeOS usecases, it has not shown a performance
-> > drop. In ChromeOS, with this and the rest of the core scheduling
-> > patchset, we see around a 300% improvement in key press latencies into
-> > Google docs when Camera streaming is running simulatenously (90th
-> > percentile latency of ~150ms drops to ~50ms).
-> > 
-> > This fetaure is controlled by the build time config option
-> > CONFIG_SCHED_CORE_IRQ_PAUSE and is enabled by default. There is also a
-> > kernel boot parameter 'sched_core_irq_pause' to enable/disable the
-> > feature at boot time. Default is enabled at boot time.
+> Isn't "where the dependencies are known to the driver core" this a big caveat?
 > 
-> We saw a lot of soft lockups on the screen when we tested v6.
+> > > >
+> > > > That said, in the cases when the dependencies are known to the driver
+> > > > core, it is also unnecessary to reorder dpm_list in
+> > > > deferred_probe_work_func(), because the right ordering of it is going
+> > > > to be determined elsewhere.
 > 
-> [  186.527883] watchdog: BUG: soft lockup - CPU#86 stuck for 22s! [uperf:5551]
-> [  186.535884] watchdog: BUG: soft lockup - CPU#87 stuck for 22s! [uperf:5444]
-> [  186.555883] watchdog: BUG: soft lockup - CPU#89 stuck for 22s! [uperf:5547]
-> [  187.547884] rcu: INFO: rcu_sched self-detected stall on CPU
-> [  187.553760] rcu: 	40-....: (14997 ticks this GP) idle=49a/1/0x4000000000000002 softirq=1711/1711 fqs=7279 
-> [  187.564685] NMI watchdog: Watchdog detected hard LOCKUP on cpu 14
-> [  187.564723] NMI watchdog: Watchdog detected hard LOCKUP on cpu 38
+> Until driver core knows about 100% of the dependencies, we still need
+> to do some kind of dpm_list reordering to have correct ordering. Even
+> with fw_devlink=on, I'd imagine it'd be difficult to achieve 100%
+> dependency being known to driver core.
 > 
-> The problem is gone when we reverted this patch. We are running multiple
-> uperf threads(equal to cpu number) in a cgroup with coresched enabled.
-> This is 100% reproducible on our side.
+> > > >
+> > > > Also commit 494fd7b7ad10 ("PM / core: fix deferred probe breaking
+> > > > suspend resume order") is not the source of the problem here, because
+> > > > the problem would have still been there without it, due to the
+> > > > device_pm_move_last() that was there before, so the Fixes: tag
+> > > > pointing to that commit is misleading.
+> > > >
+> > > > Now, because 716a7a259690 ("driver core: fw_devlink: Add support for
+> > > > batching fwnode parsing") is an optimization and the regression is
+> > > > present because of it AFAICS, the best way to address it at that point
+> > > > would be to revert commit 716a7a259690 for 5.8 and maybe do the
+> > > > optimization more carefully.
+> 
+> No, this patch is not adding any new issues to deferred probe. It just
+> increases the probability of reproducing the issue. That's exactly why
+> I wrote the commit text for this patch without the fwnode batch
+> processing example. Even if you revert the patch, suspend/resume
+> ordering is broken if deferred probe happens.
+> 
+> > > >
+> > > > Greg, what do you think?
+> > >
+> > > I've been ignoreing this and letting you all sort it out :)
+> > >
+> > > But if you think that patch should be reverted, I'll not object and will
+> > > be glad to to it if this solves the issue.
+> >
+> > Well, if Geert can confirm that reverting commit 716a7a259690 makes
+> > the problem go away, IMO this would be the most reasonable thing to do
+> > at this stage of the cycle without risking that more regressions will
+> > be introduced.
+> 
+> I already have a patch to avoid deferred probe during batch fwnode
+> parsing. I'm trying to do a few more tests before I send it out. So,
+> it'd be nice if we don't revert it right now and give me some time to
+> finish testing.
 
-Interesting. I am guessing you are not doing any hotplug since those fixes
-were removed from v6 to expose those hotplug issues..
-
-The last known lockups with this patch were fixed. Appreciate if you can dig
-in more and provide logs/traces. The last one I remember was:
-
-HT1                                  HT2
-                                     irq_enter()
-				     	- sets the core-wide flag
-<softirq running>                    
-      acquires a lock.
-  <gets irq>
-  irq_enter() - do nothing.
-  irq_exit() - busy wait on flag.
-                                     irq_exit()
-				       <softirq running>
-				       acquire a lock and deadlock.
-
-The fix was to call sched_core_irq_enter() when you enter enter a softirq
-from paths other than irq_exit().
-
-Other than this one, we have not seen lockups in heavy testing over the last
-2 months since we redesigned this patch to enter the 'private state' on the
-outer-most core-wide sched_core_irq_enter().
+So this series is no longer needed given your other series that I just
+took?
 
 thanks,
 
- - Joel
-
+greg k-h
