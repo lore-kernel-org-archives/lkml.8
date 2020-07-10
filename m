@@ -2,74 +2,130 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52299C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B2C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F35F20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594383980;
-	bh=6aBy/efwqSNbHGKVg4ZdfQ85XJ40aFOZJto45y2cftA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1sL3HmDCD4+pNDK+JJ4luVm16h/LJtYMjhuQMfKB3NNXTfi78xgMGaJfxvvawxOOW
-	 /zOac/W23VOKq6kRx/3kAq+iPgkgolQP9Pn+5wprF+AxuoVaojs7HCftKMZvmx/Zi2
-	 LxbeqGZdQ1ZOhqtZiQNzzYGULGXsAAEIMPY94D00=
+	by mail.kernel.org (Postfix) with ESMTP id 65FA820748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgGJM0S (ORCPT
+        id S1727947AbgGJMZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727886AbgGJM0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:26:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2698520748;
-        Fri, 10 Jul 2020 12:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594383971;
-        bh=6aBy/efwqSNbHGKVg4ZdfQ85XJ40aFOZJto45y2cftA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FuvBYzFNdOILgKmCl8WTmMc9uSS8TtRrZYsWLdPSFAxtfq1+kcYE+LuW2OMewf2Ib
-         SRdSW9YxYBwNoCddgSNlB9Y802yVLA6F1eXldKyCtWAVowT+aFa8n1TgPe02jfEdxD
-         x8hI83YRkUK4WPcpPky6f/5fN9CqWEI1/zTZP4QE=
-Date:   Fri, 10 Jul 2020 14:26:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org, swboyd@chromium.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on
- wakeup_sysfs_add/remove
-Message-ID: <20200710122616.GA1536085@kroah.com>
-References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
- <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+        Fri, 10 Jul 2020 08:25:59 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:51770 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727060AbgGJMZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:25:55 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
+        with SMTP; 10 Jul 2020 15:25:48 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06ACPmrN012383;
+        Fri, 10 Jul 2020 15:25:48 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06ACPmOo003369;
+        Fri, 10 Jul 2020 15:25:48 +0300
+Received: (from moshe@localhost)
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06ACPm1L003368;
+        Fri, 10 Jul 2020 15:25:48 +0300
+From:   Moshe Shemesh <moshe@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+Subject: [PATCH net-next v3 1/7] devlink: Refactor devlink health reporter constructor
+Date:   Fri, 10 Jul 2020 15:25:07 +0300
+Message-Id: <1594383913-3295-2-git-send-email-moshe@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1594383913-3295-1-git-send-email-moshe@mellanox.com>
+References: <1594383913-3295-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
-> Udev rules that depend on the power/wakeup attribute don't get triggered
-> correctly if device_set_wakeup_capable is called after the device is
-> created. This can happen for several reasons (driver sets wakeup after
-> device is created, wakeup is changed on parent device, etc) and it seems
-> reasonable to emit a changed event when adding or removing attributes on
-> the device.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Prepare a common routine in devlink_health_reporter_create() for usage
+in similar functions for devlink port health reporters.
+
+Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+---
+ net/core/devlink.c | 45 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
+
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 346d385..a203d35 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -5321,6 +5321,31 @@ struct devlink_health_reporter {
+ 	return NULL;
+ }
+ 
++static struct devlink_health_reporter *
++__devlink_health_reporter_create(struct devlink *devlink,
++				 const struct devlink_health_reporter_ops *ops,
++				 u64 graceful_period, void *priv)
++{
++	struct devlink_health_reporter *reporter;
++
++	if (WARN_ON(graceful_period && !ops->recover))
++		return ERR_PTR(-EINVAL);
++
++	reporter = kzalloc(sizeof(*reporter), GFP_KERNEL);
++	if (!reporter)
++		return ERR_PTR(-ENOMEM);
++
++	reporter->priv = priv;
++	reporter->ops = ops;
++	reporter->devlink = devlink;
++	reporter->graceful_period = graceful_period;
++	reporter->auto_recover = !!ops->recover;
++	reporter->auto_dump = !!ops->dump;
++	mutex_init(&reporter->dump_lock);
++	refcount_set(&reporter->refcount, 1);
++	return reporter;
++}
++
+ /**
+  *	devlink_health_reporter_create - create devlink health reporter
+  *
+@@ -5342,25 +5367,11 @@ struct devlink_health_reporter *
+ 		goto unlock;
+ 	}
+ 
+-	if (WARN_ON(graceful_period && !ops->recover)) {
+-		reporter = ERR_PTR(-EINVAL);
++	reporter = __devlink_health_reporter_create(devlink, ops,
++						    graceful_period, priv);
++	if (IS_ERR(reporter))
+ 		goto unlock;
+-	}
+-
+-	reporter = kzalloc(sizeof(*reporter), GFP_KERNEL);
+-	if (!reporter) {
+-		reporter = ERR_PTR(-ENOMEM);
+-		goto unlock;
+-	}
+ 
+-	reporter->priv = priv;
+-	reporter->ops = ops;
+-	reporter->devlink = devlink;
+-	reporter->graceful_period = graceful_period;
+-	reporter->auto_recover = !!ops->recover;
+-	reporter->auto_dump = !!ops->dump;
+-	mutex_init(&reporter->dump_lock);
+-	refcount_set(&reporter->refcount, 1);
+ 	list_add_tail(&reporter->list, &devlink->reporter_list);
+ unlock:
+ 	mutex_unlock(&devlink->reporters_lock);
+-- 
+1.8.3.1
+
