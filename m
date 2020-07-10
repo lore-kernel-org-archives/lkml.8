@@ -2,75 +2,73 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2130EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB43F20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F149020657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F0pFYG7+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eSk70hMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGJXBP (ORCPT
+        id S1726729AbgGJXCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38266 "EHLO
+        Fri, 10 Jul 2020 19:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGJXBN (ORCPT
+        with ESMTP id S1726523AbgGJXCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:01:13 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE480C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:01:12 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so3159277pgc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:01:12 -0700 (PDT)
+        Fri, 10 Jul 2020 19:02:45 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B6BC08E6DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:45 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so3225494pje.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YJc4QERnOgktMF7NqBZjFQHDM5ibkAymhVFvz1eDOmI=;
-        b=F0pFYG7+McnKe83941AK8NN4lM4MoyXsDbWy65c09PV1lBw7xVYl0AMgw5QSkOnrJe
-         Nwrwtsqvg08baI19s2fDAGmvtoL1rXIyVgD9PID1HW49OQGuQkuUJpQbd9SQQ4MzHVzw
-         m7c2lLHklIqQTAETql0ByTPy9X928C9v8zpp4=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCcFDIfWLkWWzSa31vXd7WJo8Tj5ziQlVQDdDR7C5oY=;
+        b=eSk70hMUPgz/3k9+jsUUcyV/2ls1oSHGujFrad521MpLwNTFi3jkIVTuxh/psq9MFB
+         gSIBJUNMurjt6JR179DwAKtpBcb2MiH1TvrZsLOlNzPYmhQrjv4tVtyc47GV5lmLb02U
+         Y1r1UkBY004HeQ7oKUtQr8gSgIwbtrc7TluJM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YJc4QERnOgktMF7NqBZjFQHDM5ibkAymhVFvz1eDOmI=;
-        b=e0XjRw7gwca9nz1NAqxf/5eWvL+dwzaUP3czN3MRyuNsysz+6RJdHfnDh5vgJW3SrV
-         P08SEZ4+RBoeav2Al2XCW8vC7mEp7E7+drZ3zQ6hnyX5GgFwz7ZAQ0C+WW5h6INy2kw7
-         8oSpXKPyjLdOiMSkQwRMD/ZEv4KP0H0x65OghZRGqunmDUs4DNmPjxFqPwnKLTQJq7fN
-         MSmEf21AJZo47ljDySIistcV0j60r/SIQy6jPpOL3DNqAD3fPboxN6AC6oQRuGYL4QUX
-         63HGgfaHwm3EIjSaO19pNUWmH1QPcxVPWZuKfPrjJIEkakXmHY0ZOFIjlw9/L8K8imO8
-         1agQ==
-X-Gm-Message-State: AOAM532CWvHRYDqbMG4xmedpw6mAXJqEsDuE//4vUkWa7zK8M2NJLuYb
-        giLs2dCDhKptKcsppDxKNujqzw==
-X-Google-Smtp-Source: ABdhPJy3YT7KkX4oNIVxegNkh5Z8UYtYGphPRPSA5jmBHeGfmGico3ihLD+kNSyKs3e9ilotKrp3Ig==
-X-Received: by 2002:a62:ab17:: with SMTP id p23mr48997593pff.177.1594422072450;
-        Fri, 10 Jul 2020 16:01:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e5sm6568941pjv.18.2020.07.10.16.01.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCcFDIfWLkWWzSa31vXd7WJo8Tj5ziQlVQDdDR7C5oY=;
+        b=H6giCXc63DOfy8rFp4OT79aPv/Pe/n5eLM1LIzgzBkcavD/CwygwClVzpZCHhKw20x
+         cz5n5iqLTsz8aDDq8nRLH0xUjAbfY2/8+csprVnumKbD1hfGnsFQfSJP0O1lBmeySesu
+         m7kSuhZGEAT4VNxBlJao+A0mib7q/fsbA9ReCk4IQmFpCY1CoZVWNoEIZnrearkJi0WV
+         KbTndZUc8QBsGHnHU0qNaWaU6Wxk0dSSUslVTibyaer5dD/Ob5FHRL+BaAmLGZDHnu/B
+         ga8P1UqEayp/SbaSPjF+xA8/XAAnw0u9HkcXbuOXk+n2xfGFlCdDK7/ArRuH8xPvzLMy
+         u0jA==
+X-Gm-Message-State: AOAM5339I7vswcSO5/RvU+0apXEQdxyKP9rGKKTeMIEQRqoIWoUwXnaR
+        wY3WaSZV8XnYsooM+o2YKDMoSw==
+X-Google-Smtp-Source: ABdhPJz0vohhKOdR4S48Go6SbBkYwUYpvNGQCHrL60amRJ3jBZ6fmwC9ItCPgsI2PgpcjlqG0gq6pA==
+X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr4020800pls.61.1594422164622;
+        Fri, 10 Jul 2020 16:02:44 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 16:01:09 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Tycho Andersen <tycho@tycho.ws>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH for-next/seccomp v2 1/2] selftests/seccomp: Add SKIPs for failed unshare()
-Date:   Fri, 10 Jul 2020 16:01:06 -0700
-Message-Id: <20200710230107.2528890-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200710230107.2528890-1-keescook@chromium.org>
-References: <20200710230107.2528890-1-keescook@chromium.org>
+        Fri, 10 Jul 2020 16:02:44 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and speed booting
+Date:   Fri, 10 Jul 2020 16:02:15 -0700
+Message-Id: <20200710230224.2265647-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,54 +76,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running the seccomp tests as a regular user shouldn't just fail tests
-that require CAP_SYS_ADMIN (for getting a PID namespace). Instead,
-detect those cases and SKIP them. Additionally, gracefully SKIP missing
-CONFIG_USER_NS (and add to "config" since we'd prefer to actually test
-this case).
+I found that if I ever had a little mistake in my kernel config,
+or device tree, or graphics driver that my system would sit in a loop
+at bootup trying again and again and again.  An example log was:
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/seccomp/config        |  1 +
- tools/testing/selftests/seccomp/seccomp_bpf.c | 10 ++++++++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+  msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
+  msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
+  msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
+  [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
+  ...
 
-diff --git a/tools/testing/selftests/seccomp/config b/tools/testing/selftests/seccomp/config
-index db1e11b08c8a..64c19d8eba79 100644
---- a/tools/testing/selftests/seccomp/config
-+++ b/tools/testing/selftests/seccomp/config
-@@ -1,2 +1,3 @@
- CONFIG_SECCOMP=y
- CONFIG_SECCOMP_FILTER=y
-+CONFIG_USER_NS=y
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index c0aa46ce14f6..14b038361549 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -3439,7 +3439,10 @@ TEST(user_notification_child_pid_ns)
- 	struct seccomp_notif req = {};
- 	struct seccomp_notif_resp resp = {};
- 
--	ASSERT_EQ(unshare(CLONE_NEWUSER | CLONE_NEWPID), 0);
-+	ASSERT_EQ(unshare(CLONE_NEWUSER | CLONE_NEWPID), 0) {
-+		if (errno == EINVAL)
-+			SKIP(return, "kernel missing CLONE_NEWUSER support");
-+	};
- 
- 	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-@@ -3504,7 +3507,10 @@ TEST(user_notification_sibling_pid_ns)
- 	}
- 
- 	/* Create the sibling ns, and sibling in it. */
--	ASSERT_EQ(unshare(CLONE_NEWPID), 0);
-+	ASSERT_EQ(unshare(CLONE_NEWPID), 0) {
-+		if (errno == EPERM)
-+			SKIP(return, "CLONE_NEWPID requires CAP_SYS_ADMIN");
-+	}
- 	ASSERT_EQ(errno, 0);
- 
- 	pid2 = fork();
+I finally tracked it down where this was happening:
+  - msm_pdev_probe() is called.
+  - msm_pdev_probe() registers drivers.  Registering drivers kicks
+    off processing of probe deferrals.
+  - component_master_add_with_match() could return -EPROBE_DEFER.
+    making msm_pdev_probe() return -EPROBE_DEFER.
+  - When msm_pdev_probe() returned the processing of probe deferrals
+    happens.
+  - Loop back to the start.
+
+It looks like we can fix this by marking "mdss" as a "simple-bus".
+I have no idea if people consider this the right thing to do or a
+hack.  Hopefully it's the right thing to do.  :-)
+
+Once I do this I notice that my boot gets marginally faster (you
+don't need to probe the sub devices over and over) and also if I
+have a problem it doesn't loop forever (on my system it still
+gets upset about some stuck clocks in that case, but at least I
+can boot up).
+
+Unless someone hates this, I'd expect:
+- Get Rob H to say that the bindings are OK (if they are) and yell
+  that these really need to be converted to yaml (they do).
+- Get Sean or Rob C to land the bindings and driver patch.
+- Get Andy or Bjorn to land the dts bits.
+
+NOTES:
+- The first patch could land either way.  It's just a cleanup.
+- I tried to split the dts files into separate patches to ease
+  backporting if desired.  Also because I can't actually test most
+  of this hardware myself.
+
+
+Douglas Anderson (9):
+  drm/msm: Use the devm variant of of_platform_populate()
+  dt-bindings: msm/dpu: Add simple-bus to dpu bindings
+  dt-bindings: msm/mdp5: Add simple-bus to dpu bindings
+  drm/msm: Avoid manually populating our children if "simple-bus" is
+    there
+  arm64: dts: qcom: sc7180: Add "simple-bus" to our mdss node
+  arm64: dts: qcom: sdm845: Add "simple-bus" to our mdss node
+  arm64: dts: qcom: msm8916: Add "simple-bus" to our mdss node
+  arm64: dts: qcom: msm8996: Add "simple-bus" to our mdss node
+  ARM: dts: qcom: msm8974: Add "simple-bus" to our mdss node
+
+ .../devicetree/bindings/display/msm/dpu.txt   |  4 ++-
+ .../devicetree/bindings/display/msm/mdp5.txt  |  2 +-
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  2 +-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  2 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+ drivers/gpu/drm/msm/msm_drv.c                 | 34 ++++++++-----------
+ 8 files changed, 24 insertions(+), 26 deletions(-)
+
 -- 
-2.25.1
+2.27.0.383.g050319c2ae-goog
 
