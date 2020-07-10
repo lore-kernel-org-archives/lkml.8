@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE2C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA0C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD54E206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E034F207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yz/B5qsH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5cw7rCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGJWUP (ORCPT
+        id S1726684AbgGJWUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        Fri, 10 Jul 2020 18:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgGJWUM (ORCPT
+        with ESMTP id S1726624AbgGJWUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:20:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60379C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:20:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so7333333wrl.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:20:12 -0700 (PDT)
+        Fri, 10 Jul 2020 18:20:16 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEE5C08C5DC;
+        Fri, 10 Jul 2020 15:20:15 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o11so7350274wrv.9;
+        Fri, 10 Jul 2020 15:20:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=i1lY4mOYwbC3YTfhlW/QS2seif89bl0vl1xCMEEs94k=;
-        b=Yz/B5qsHqYqUiq04kd5kePUIy9vGWkUnOtKFFJMfNukQ/Pkj65Vz63fW7GZ9o16B4b
-         jW+3xseRxjwnKDtaKoG7xQCkUukArPJ+twkfFZLws5DGufPIPNTqLKBVl+QX8g8KM+2R
-         f59hTUNb89FfwqLP7+mjT1AfZ+kBsbDTnocvuPCwOCLSzm9CxrVHHRVaFktOF+kIk4Up
-         mPe4IHKxjCMFUaYCUDFmM9zjL/ZyWr0l4+OyjFOEW4RLo5iaIu6ANyZCrc6W28mWt2PO
-         wOTk9Uzjlx3Ffpzz1v51NeYeMaxDppJuqAq5nzBkC014ZBf7RW+9g/kWWfZw4Z/N1v3f
-         iY+w==
+        bh=4W35ujYJlxKgHmJjOxh/l83E+9wVDyy9zXN8EsZkeBk=;
+        b=s5cw7rCE0EWbF55kNa6MNaVUq9gxiw+DyerLx6J8txZcNXN19MIjAyBDqnoBlEoP1h
+         OV4Jf4zPg4eoXxh6lRNIg//4gI/0L4lpCXVaKg5TBN6L/9m+NiW8BwXmYlbEzuabJ0te
+         jLOZiyK1vLPR9AiJmAiEZeCWWxf8niZ1CEI90IICoBeecmKquzqhTb1PltP2NHM98Sob
+         iIIlbZMhMCt3Ylsgi/MEpQujQAYKFP49Dk7kQkX//ko9E6xQs24vUmNBF397HgFDKadZ
+         g9eVCpQO3O6FhhbMsdJrFi1Ufvy7Mfr1Xbev5QW4v2Y1ZBAWUEP5gqmyE9qse3fqBdfQ
+         zCgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=i1lY4mOYwbC3YTfhlW/QS2seif89bl0vl1xCMEEs94k=;
-        b=boivepI+aPQaLEzxORhQ7LDBVohLu13ouuwjVbymB6Obz6Gs0NLtlssJ6pjA5dnGfS
-         DHzQh5c2Ier0OYl8NhD9lwhCwQUTuIAsgjL7Co36VNERlsvAJ1ipLGCsDricYw4S3Ps+
-         18Il3Gf4GQzMOxGCC1TrXdEywSC36BPbh67RoFt8oF9kKyvc1netyZh2KldGEr/mu7u0
-         XKahsFYX/4ZK7TcC8YGMXUz7onafm/0GnQsTDv6uiONNaHiHaVzL2ozFrK7/SjV6oUo/
-         B71rnQPh51HZoY/mT5DRTE6pISuRs2B7kHnpckhC9aswFDvWIELE8v43qt+UkHZVigJr
-         wMbA==
-X-Gm-Message-State: AOAM531qa4BQ1pSaZl5RxJWtgY/pNrez6GgdO1QdPx9rzCya+vNVq05H
-        rEmOcD2FRaLhyJq2hXlv6J8=
-X-Google-Smtp-Source: ABdhPJzLgCNHcIqTU4KKqGwF2qxzIEG2z5ZfBr1mckA0gtBgXK1kkZVOMPXHxvHWg1dVplPIcC2w+w==
-X-Received: by 2002:adf:eec2:: with SMTP id a2mr68357262wrp.127.1594419611018;
-        Fri, 10 Jul 2020 15:20:11 -0700 (PDT)
+        bh=4W35ujYJlxKgHmJjOxh/l83E+9wVDyy9zXN8EsZkeBk=;
+        b=TxOfyD0zDrt/dMQyrKkj2McBX9/9m+VOBtxNOdk24fiZc2A8dMt8oNdNQIMr3rg/A4
+         Nk5oP1HNkPoPqGuhtOlyykW77voK170kDa/fBexSVOC0DWP0BzX95QZ+EpJ8DTyMDPDD
+         av3RNuydhWti1KJwnIuUh5dhTCjbo6dc/XUNJE1zoFobvVhHj4P0G5QeULr3TpiYPsYK
+         XyrBM47dZhYGhhVG8cRWph84UnllZFKsprQytJ+3W3Q1ohvjftKQPp+j3lzTEfojw4uL
+         PnAytchskRKvJ3TMn8pzcELktOm7VBUFDI7dVDuMsWVt/I4up3zNwOF0hj2bhrVFaTCY
+         TvmQ==
+X-Gm-Message-State: AOAM5332iffJetQlB0hlJvORA8nWP1p2YWt/vgmZZ34PzNqFTbmae14a
+        UR/Pbkaj8VAObFV417H8kuk=
+X-Google-Smtp-Source: ABdhPJzPwatony6Cjt8uiw1I+bb2q4igHjoQj2S+/ZwwO9vnHpqlg5m64LJZADjKjjMfX4mcscdugQ==
+X-Received: by 2002:a5d:464e:: with SMTP id j14mr69427633wrs.393.1594419614348;
+        Fri, 10 Jul 2020 15:20:14 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id l18sm12170281wrm.52.2020.07.10.15.20.09
+        by smtp.gmail.com with ESMTPSA id l18sm12170281wrm.52.2020.07.10.15.20.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 15:20:10 -0700 (PDT)
+        Fri, 10 Jul 2020 15:20:13 -0700 (PDT)
 From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        bjorn@helgaas.com, Lukas Wunner <lukas@wunner.de>,
+        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/14 v3] misc: rtsx: Check the return value of pcie_capability_read_*()
-Date:   Fri, 10 Jul 2020 23:20:14 +0200
-Message-Id: <20200710212026.27136-3-refactormyself@gmail.com>
+Subject: [PATCH 5/14 v3] PCI: pciehp: Check the return value of pcie_capability_read_*()
+Date:   Fri, 10 Jul 2020 23:20:17 +0200
+Message-Id: <20200710212026.27136-6-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200710212026.27136-1-refactormyself@gmail.com>
 References: <20200710212026.27136-1-refactormyself@gmail.com>
@@ -79,113 +79,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. In which case (val & PCI_EXP_DEVCTL2_LTR_EN) evaluates to 0.
-However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+On any failure pcie_capability_read_word() sets it's last parameter,
+*val to 0, this value may have be earlier set by pci_config_read_word()
+to ~0. So, any function which check only for a frabricated ~0 will fail
+in this case.
 
-This bug can be avoided without changing the function's behaviour if the
-return value of pcie_capability_read_word is checked to confirm success.
+Checking for the return value of pcie_capability_read_dword() will help
+assert failure or success of this function. But more checks may be needed
+to assure the validity of the value.
 
-Check the return value of pcie_capability_read_word() to ensure success.
+Include a check on the return value of pcie_capability_read_word() to
+confirm success or failure.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
 ---
- drivers/misc/cardreader/rts5227.c | 5 +++--
- drivers/misc/cardreader/rts5249.c | 5 +++--
- drivers/misc/cardreader/rts5260.c | 5 +++--
- drivers/misc/cardreader/rts5261.c | 5 +++--
- 4 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index 3a9467aaa435..7a20a4898d07 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -92,6 +92,7 @@ static void rts5227_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
- static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 53433b37e181..5af281d97d4f 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -86,10 +86,11 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
  {
- 	u16 cap;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 slot_status;
 +	int ret;
  
- 	rtsx_pci_init_cmd(pcr);
- 
-@@ -105,8 +106,8 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
- 	/* LED shine disabled, set initial shine cycle period */
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, OLT_LED_CTL, 0x0F, 0x02);
- 	/* Configure LTR */
--	pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &cap);
--	if (cap & PCI_EXP_DEVCTL2_LTR_EN)
-+	ret = pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &cap);
-+	if (!ret && (cap & PCI_EXP_DEVCTL2_LTR_EN))
- 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LTR_CTL, 0xFF, 0xA3);
- 	/* Configure OBFF */
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, OBFF_CFG, 0x03, 0x03);
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index 6c6c9e95a29f..2b05e8663431 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -95,6 +95,7 @@ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+ 	do {
+-		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-		if (slot_status == (u16) ~0) {
++		ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
++		if (ret || (slot_status == (u16) ~0)) {
+ 			ctrl_info(ctrl, "%s: no response from device\n",
+ 				  __func__);
+ 			return 0;
+@@ -156,6 +157,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
  {
- 	struct rtsx_cr_option *option = &(pcr->option);
- 	u32 lval;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	u16 slot_ctrl_orig, slot_ctrl;
 +	int ret;
  
- 	if (CHK_PCI_PID(pcr, PID_524A))
- 		rtsx_pci_read_config_dword(pcr,
-@@ -118,8 +119,8 @@ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
- 	if (option->ltr_en) {
- 		u16 val;
+ 	mutex_lock(&ctrl->ctrl_lock);
  
--		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		ret = pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
-+		if (!ret && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index 7a9dbb778e84..934aeaeebfaf 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -498,6 +498,7 @@ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
- {
- 	struct rtsx_cr_option *option = &pcr->option;
- 	u32 lval;
-+	int ret;
+@@ -164,8 +166,8 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+ 	 */
+ 	pcie_wait_cmd(ctrl);
  
- 	rtsx_pci_read_config_dword(pcr, PCR_ASPM_SETTING_5260, &lval);
+-	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+-	if (slot_ctrl == (u16) ~0) {
++	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
++	if (ret || (slot_ctrl == (u16) ~0)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		goto out;
+ 	}
+@@ -430,7 +432,7 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
+  * removed immediately after the check so the caller may need to take
+  * this into account.
+  *
+- * It the hotplug controller itself is not available anymore returns
++ * If the hotplug controller itself is not available anymore returns
+  * %-ENODEV.
+  */
+ int pciehp_card_present(struct controller *ctrl)
+@@ -591,8 +593,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	}
  
-@@ -518,8 +519,8 @@ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
- 	if (option->ltr_en) {
- 		u16 val;
- 
--		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		ret = pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
-+		if (!ret && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
-diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
-index 195822ec858e..2b6f61696e19 100644
---- a/drivers/misc/cardreader/rts5261.c
-+++ b/drivers/misc/cardreader/rts5261.c
-@@ -438,9 +438,10 @@ static void rts5261_init_from_cfg(struct rtsx_pcr *pcr)
- 	rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, 0xFF, 0);
- 	if (option->ltr_en) {
- 		u16 val;
-+		int ret;
- 
--		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		ret = pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
-+		if (!ret && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+ read_status:
+-	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+-	if (status == (u16) ~0) {
++	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
++	if (ret || (status == (u16) ~0)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		if (parent)
+ 			pm_runtime_put(parent);
 -- 
 2.18.2
 
