@@ -2,330 +2,131 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EFFC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF79C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A538207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T5riczDa"
+	by mail.kernel.org (Postfix) with ESMTP id 2D8C020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgGJTcH (ORCPT
+        id S1727944AbgGJTgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:32:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24796 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgGJTcG (ORCPT
+        Fri, 10 Jul 2020 15:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgGJTgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:32:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594409523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HTJcxh8CccGfjD+APjh4gj7gkHRF/TKds8h3KugZMhA=;
-        b=T5riczDa1L19yfs/4FWJWQPeAlNeZsDSSMePxN6c+NCfCtkZ39P/Sndq4s3rUCXw/tago6
-        5A9h0cwXBvKoWQLkazcb9IXemeVaY9SNeCNmxHXu3GLAflK9xWXd9I4c2LG8OVRll7GSX5
-        elh87zN2tN18yZGi+WlDtOkzLWa8PsE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-xw9CjLx0MGeLuYNMZIMslA-1; Fri, 10 Jul 2020 15:31:57 -0400
-X-MC-Unique: xw9CjLx0MGeLuYNMZIMslA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2398D100CCC0;
-        Fri, 10 Jul 2020 19:31:55 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-112-154.rdu2.redhat.com [10.10.112.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0630C1002391;
-        Fri, 10 Jul 2020 19:31:52 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     Lee Shawn C <shawn.c.lee@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 1/2] drm/probe_helper: Add drm_connector_helper_funcs.mode_valid_ctx
-Date:   Fri, 10 Jul 2020 15:31:43 -0400
-Message-Id: <20200710193144.94751-2-lyude@redhat.com>
-In-Reply-To: <20200710193144.94751-1-lyude@redhat.com>
-References: <20200710193144.94751-1-lyude@redhat.com>
+        Fri, 10 Jul 2020 15:36:10 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4DAC08C5DC;
+        Fri, 10 Jul 2020 12:36:10 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id DE2C0BC116;
+        Fri, 10 Jul 2020 19:36:04 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: USB MASS STORAGE
+ DRIVER
+To:     Stafford Horne <shorne@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200708095500.13694-1-grandmaster@al2klimov.de>
+ <20200708103928.GC585606@kroah.com>
+ <6b78a3fd-04b9-fc8e-b5c6-f03372a4cd31@al2klimov.de>
+ <20200709061409.GA130260@kroah.com>
+ <20200710103621.GA437393@lianli.shorne-pla.net>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <53342e1a-8430-2557-94c7-1da979a79e68@al2klimov.de>
+Date:   Fri, 10 Jul 2020 21:36:03 +0200
 MIME-Version: 1.0
+In-Reply-To: <20200710103621.GA437393@lianli.shorne-pla.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is just an atomic version of mode_valid, which is intended to be
-used for situations where a driver might need to check the atomic state
-of objects other than the connector itself. One such example is with
-MST, where the maximum possible bandwidth on a connector can change
-dynamically irregardless of the display configuration.
 
-Changes since v1:
-* Use new drm logging functions
-* Make some corrections in the mode_valid_ctx kdoc
-* Return error codes or 0 from ->mode_valid_ctx() on fail, and store the
-  drm_mode_status in an additional function parameter
-Changes since v2:
-* Don't accidentally assign ret to mode->status on success, or we'll
-  squash legitimate mode validation results
-* Don't forget to assign MODE_OK to status in drm_connector_mode_valid()
-  if we have no callbacks
-* Drop leftover hunk in drm_modes.h around enum drm_mode_status
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Lee Shawn C <shawn.c.lee@intel.com>
----
- drivers/gpu/drm/drm_crtc_helper_internal.h |  7 +-
- drivers/gpu/drm/drm_probe_helper.c         | 94 ++++++++++++++--------
- include/drm/drm_modeset_helper_vtables.h   | 42 ++++++++++
- 3 files changed, 109 insertions(+), 34 deletions(-)
+Am 10.07.20 um 12:36 schrieb Stafford Horne:
+> On Thu, Jul 09, 2020 at 08:14:09AM +0200, Greg KH wrote:
+>> On Wed, Jul 08, 2020 at 08:41:54PM +0200, Alexander A. Klimov wrote:
+>>>
+>>>
+>>> Am 08.07.20 um 12:39 schrieb Greg KH:
+>>>> On Wed, Jul 08, 2020 at 11:55:00AM +0200, Alexander A. Klimov wrote:
+>>>>> Rationale:
+>>>>> Reduces attack surface on kernel devs opening the links for MITM
+>>>>> as HTTPS traffic is much harder to manipulate.
+>>>>>
+>>>>> Deterministic algorithm:
+>>>>> For each file:
+>>>>>     If not .svg:
+>>>>>       For each line:
+>>>>>         If doesn't contain `\bxmlns\b`:
+>>>>>           For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>>>> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>>>>>               If both the HTTP and HTTPS versions
+>>>>>               return 200 OK and serve the same content:
+>>>>>                 Replace HTTP with HTTPS.
+>>>>>
+>>>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>>>>
+>>>> Your subject lines are very odd compared to all patches for this
+>>>> subsystem, as well as all other kernel subsystems.  Any reason you are
+>>>> doing it this way and not the normal and standard method of:
+>>>> 	USB: storage: replace http links with https
+>>>>
+>>>> That would look more uniform as well as not shout at anyone.
+> 
+> I would agree.  The OpenRISC patch for this series says:
+>    "OPENRISC ARCHITECTURE:..."
+> 
+> Here it would just be "openrisc:..." I think fixing the whole series is needed.
+> Greg is not the only on complaining.
+> 
+> Ideally, I think, it would be good to have this sent out as a series i.e [PATCH 3/55]
+> rather than individual patches so this could be discussed as a whole.
+1) To who? As right now? As right now plus Torvalds, KH, Miller, etc.?
+    As right now, but all-to-all?
+2) Apropos "series" and "as whole"... I stumbled over
+    `git log --oneline |grep -Fwe treewide`
+    and am wondering:
+    *Shouldn't all of these patches even begin with "treewide: "?*
+    E.g.: "treewide: Replace HTTP links with HTTPS ones: GCC PLUGINS"
 
-diff --git a/drivers/gpu/drm/drm_crtc_helper_internal.h b/drivers/gpu/drm/drm_crtc_helper_internal.h
-index f0a66ef47e5ad..25ce42e799952 100644
---- a/drivers/gpu/drm/drm_crtc_helper_internal.h
-+++ b/drivers/gpu/drm/drm_crtc_helper_internal.h
-@@ -73,8 +73,11 @@ enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc *crtc,
- 					 const struct drm_display_mode *mode);
- enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
- 					    const struct drm_display_mode *mode);
--enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
--					      struct drm_display_mode *mode);
-+int
-+drm_connector_mode_valid(struct drm_connector *connector,
-+			 struct drm_display_mode *mode,
-+			 struct drm_modeset_acquire_ctx *ctx,
-+			 enum drm_mode_status *status);
- 
- struct drm_encoder *
- drm_connector_get_single_encoder(struct drm_connector *connector);
-diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-index e0ed58d291ed9..f7bd1d35aa805 100644
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@ -86,17 +86,19 @@ drm_mode_validate_flag(const struct drm_display_mode *mode,
- 	return MODE_OK;
- }
- 
--static enum drm_mode_status
-+static int
- drm_mode_validate_pipeline(struct drm_display_mode *mode,
--			    struct drm_connector *connector)
-+			   struct drm_connector *connector,
-+			   struct drm_modeset_acquire_ctx *ctx,
-+			   enum drm_mode_status *status)
- {
- 	struct drm_device *dev = connector->dev;
--	enum drm_mode_status ret = MODE_OK;
- 	struct drm_encoder *encoder;
-+	int ret;
- 
- 	/* Step 1: Validate against connector */
--	ret = drm_connector_mode_valid(connector, mode);
--	if (ret != MODE_OK)
-+	ret = drm_connector_mode_valid(connector, mode, ctx, status);
-+	if (ret || *status != MODE_OK)
- 		return ret;
- 
- 	/* Step 2: Validate against encoders and crtcs */
-@@ -104,8 +106,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
- 		struct drm_bridge *bridge;
- 		struct drm_crtc *crtc;
- 
--		ret = drm_encoder_mode_valid(encoder, mode);
--		if (ret != MODE_OK) {
-+		*status = drm_encoder_mode_valid(encoder, mode);
-+		if (*status != MODE_OK) {
- 			/* No point in continuing for crtc check as this encoder
- 			 * will not accept the mode anyway. If all encoders
- 			 * reject the mode then, at exit, ret will not be
-@@ -114,10 +116,10 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
- 		}
- 
- 		bridge = drm_bridge_chain_get_first_bridge(encoder);
--		ret = drm_bridge_chain_mode_valid(bridge,
--						  &connector->display_info,
--						  mode);
--		if (ret != MODE_OK) {
-+		*status = drm_bridge_chain_mode_valid(bridge,
-+						      &connector->display_info,
-+						      mode);
-+		if (*status != MODE_OK) {
- 			/* There is also no point in continuing for crtc check
- 			 * here. */
- 			continue;
-@@ -127,8 +129,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
- 			if (!drm_encoder_crtc_ok(encoder, crtc))
- 				continue;
- 
--			ret = drm_crtc_mode_valid(crtc, mode);
--			if (ret == MODE_OK) {
-+			*status = drm_crtc_mode_valid(crtc, mode);
-+			if (*status == MODE_OK) {
- 				/* If we get to this point there is at least
- 				 * one combination of encoder+crtc that works
- 				 * for this mode. Lets return now. */
-@@ -198,16 +200,26 @@ enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
- 	return encoder_funcs->mode_valid(encoder, mode);
- }
- 
--enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
--					      struct drm_display_mode *mode)
-+int
-+drm_connector_mode_valid(struct drm_connector *connector,
-+			 struct drm_display_mode *mode,
-+			 struct drm_modeset_acquire_ctx *ctx,
-+			 enum drm_mode_status *status)
- {
- 	const struct drm_connector_helper_funcs *connector_funcs =
- 		connector->helper_private;
- 
--	if (!connector_funcs || !connector_funcs->mode_valid)
--		return MODE_OK;
-+	if (!connector_funcs)
-+		*status = MODE_OK;
-+	else if (connector_funcs->mode_valid_ctx)
-+		return connector_funcs->mode_valid_ctx(connector, mode, ctx,
-+						       status);
-+	else if (connector_funcs->mode_valid)
-+		*status = connector_funcs->mode_valid(connector, mode);
-+	else
-+		*status = MODE_OK;
- 
--	return connector_funcs->mode_valid(connector, mode);
-+	return 0;
- }
- 
- #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
-@@ -385,8 +397,9 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
-  *      (if specified)
-  *    - drm_mode_validate_flag() checks the modes against basic connector
-  *      capabilities (interlace_allowed,doublescan_allowed,stereo_allowed)
-- *    - the optional &drm_connector_helper_funcs.mode_valid helper can perform
-- *      driver and/or sink specific checks
-+ *    - the optional &drm_connector_helper_funcs.mode_valid or
-+ *      &drm_connector_helper_funcs.mode_valid_ctx helpers can perform driver
-+ *      and/or sink specific checks
-  *    - the optional &drm_crtc_helper_funcs.mode_valid,
-  *      &drm_bridge_funcs.mode_valid and &drm_encoder_helper_funcs.mode_valid
-  *      helpers can perform driver and/or source specific checks which are also
-@@ -517,22 +530,39 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
- 		mode_flags |= DRM_MODE_FLAG_3D_MASK;
- 
- 	list_for_each_entry(mode, &connector->modes, head) {
--		if (mode->status == MODE_OK)
--			mode->status = drm_mode_validate_driver(dev, mode);
-+		if (mode->status != MODE_OK)
-+			continue;
- 
--		if (mode->status == MODE_OK)
--			mode->status = drm_mode_validate_size(mode, maxX, maxY);
-+		mode->status = drm_mode_validate_driver(dev, mode);
-+		if (mode->status != MODE_OK)
-+			continue;
- 
--		if (mode->status == MODE_OK)
--			mode->status = drm_mode_validate_flag(mode, mode_flags);
-+		mode->status = drm_mode_validate_size(mode, maxX, maxY);
-+		if (mode->status != MODE_OK)
-+			continue;
-+
-+		mode->status = drm_mode_validate_flag(mode, mode_flags);
-+		if (mode->status != MODE_OK)
-+			continue;
- 
--		if (mode->status == MODE_OK)
--			mode->status = drm_mode_validate_pipeline(mode,
--								  connector);
-+		ret = drm_mode_validate_pipeline(mode, connector, &ctx,
-+						 &mode->status);
-+		if (ret) {
-+			drm_dbg_kms(dev,
-+				    "drm_mode_validate_pipeline failed: %d\n",
-+				    ret);
-+
-+			if (drm_WARN_ON_ONCE(dev, ret != -EDEADLK)) {
-+				mode->status = MODE_ERROR;
-+			} else {
-+				drm_modeset_backoff(&ctx);
-+				goto retry;
-+			}
-+		}
- 
--		if (mode->status == MODE_OK)
--			mode->status = drm_mode_validate_ycbcr420(mode,
--								  connector);
-+		if (mode->status != MODE_OK)
-+			continue;
-+		mode->status = drm_mode_validate_ycbcr420(mode, connector);
- 	}
- 
- prune:
-diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-index 421a30f084631..4efec30f8badc 100644
---- a/include/drm/drm_modeset_helper_vtables.h
-+++ b/include/drm/drm_modeset_helper_vtables.h
-@@ -968,6 +968,48 @@ struct drm_connector_helper_funcs {
- 	 */
- 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
- 					   struct drm_display_mode *mode);
-+
-+	/**
-+	 * @mode_valid_ctx:
-+	 *
-+	 * Callback to validate a mode for a connector, irrespective of the
-+	 * specific display configuration.
-+	 *
-+	 * This callback is used by the probe helpers to filter the mode list
-+	 * (which is usually derived from the EDID data block from the sink).
-+	 * See e.g. drm_helper_probe_single_connector_modes().
-+	 *
-+	 * This function is optional, and is the atomic version of
-+	 * &drm_connector_helper_funcs.mode_valid.
-+	 *
-+	 * To allow for accessing the atomic state of modesetting objects, the
-+	 * helper libraries always call this with ctx set to a valid context,
-+	 * and &drm_mode_config.connection_mutex will always be locked with
-+	 * the ctx parameter set to @ctx. This allows for taking additional
-+	 * locks as required.
-+	 *
-+	 * Even though additional locks may be acquired, this callback is
-+	 * still expected not to take any constraints into account which would
-+	 * be influenced by the currently set display state - such constraints
-+	 * should be handled in the driver's atomic check. For example, if a
-+	 * connector shares display bandwidth with other connectors then it
-+	 * would be ok to validate the minimum bandwidth requirement of a mode
-+	 * against the maximum possible bandwidth of the connector. But it
-+	 * wouldn't be ok to take the current bandwidth usage of other
-+	 * connectors into account, as this would change depending on the
-+	 * display state.
-+	 *
-+	 * Returns:
-+	 * 0 if &drm_connector_helper_funcs.mode_valid_ctx succeeded and wrote
-+	 * the &enum drm_mode_status value to @status, or a negative error
-+	 * code otherwise.
-+	 *
-+	 */
-+	int (*mode_valid_ctx)(struct drm_connector *connector,
-+			      struct drm_display_mode *mode,
-+			      struct drm_modeset_acquire_ctx *ctx,
-+			      enum drm_mode_status *status);
-+
- 	/**
- 	 * @best_encoder:
- 	 *
--- 
-2.26.2
-
+> 
+> -Stafford
+> 
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>>>
+>>> Hi,
+>>>
+>>> I'm very sorry.
+>>>
+>>> As Torvalds has merged 93431e0607e5 and many of you devs (including big
+>>> maintainers like David Miller) just applied this stuff, I assumed that's OK.
+>>>
+>>> And now I've rolled out tens of patches via shell loop... *sigh*
+>>>
+>>> As this is the third (I think) change request like this, I assume this rule
+>>> applies to all subsystems – right?
+>>
+>> Yes, you should try to emulate what the subsystem does, look at other
+>> patches for the same files, but the format I suggested is almost always
+>> the correct one.  If not, I'm sure maintainers will be glad to tell you
+>> otherwise :)
+> 
+> 
