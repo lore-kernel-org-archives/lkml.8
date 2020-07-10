@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE97DC433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E8BC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 870FC20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1832206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AqOuod1f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NaDgU9xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGJOf7 (ORCPT
+        id S1727963AbgGJOfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:35:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
+        Fri, 10 Jul 2020 10:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgGJOfq (ORCPT
+        with ESMTP id S1727086AbgGJOfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:35:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41895C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k4so2315603pld.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:46 -0700 (PDT)
+        Fri, 10 Jul 2020 10:35:43 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E7F4C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m16so1130121pls.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Un87GvVkLmhF1eD8x6P9VVT98h6gpLaIkLYOlmueJo8=;
-        b=AqOuod1fwoFP8Tl3n4oeOceJUx+4OJE8UasSb6dQjuRAapdz1DxX6akUzAv3oQPDft
-         EbSf0sKCrk6VrDSDmXxnGhmenTmbuQS3xhrf52FYTv2aBS6h5g6sBtCfXQDYAfYY0+y6
-         95bW4mM0b8sJuOBccqDzwwcSw7gCY3DfSkok4=
+        bh=lq4oKWfRzmN7qYUZamWAxkeEC7peEArNT9jhGOd6XaU=;
+        b=NaDgU9xjbrlzCKuKJKXUa4/036wod7bsLL843LABpUNpZ9hn5vjjvgRHACaR4a8GcL
+         b7y0M8WVL7PDBnebIdQ0LUQe6Wto8vjM0creMFPDPQfbBzDJdCaMpslbkS4qx2K7sp1d
+         FbyRfvfKP4sIi7Nt/k2pOR2XxRCdy9w4hedZE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Un87GvVkLmhF1eD8x6P9VVT98h6gpLaIkLYOlmueJo8=;
-        b=jVyfwdPi0hCLOOXv4ZyLyXxTfOf8g5elaDcmkIUtj8DvCWetKltwKv60UGIKekl86X
-         cRTgm8TARY3HztEelyiVuKjtBpOy4IuBYIZaiSyRG4Fy4uaV+er9MNJT0vHL9skGJJ6T
-         SJIRQiYYVIAO/RvYVH+BWKBPj2AaFzkdOLNRWn+c6HcwLrpfNFvGoxuoLCDElTkEO4DW
-         fCfZtCa05I9qYOrwm9pI7ucFYCC0MbMGttAHvt9FXYNtgI/m+dE3SIkT3vJmOz31C/K+
-         FdPyEeGp8lphVD9s1qpYihY5fnE04o8sHlJrVN1t76jmWDIcmJhwuIk6+fFX0wj7Kn+s
-         Ctbg==
-X-Gm-Message-State: AOAM532zunB3sEy2B2Tw8HPOz7Q8jjWRrlMWvKUoxKc2k49ddMlOmvNq
-        ENUhmA1JdlAY/rQK9+g+3upZvA==
-X-Google-Smtp-Source: ABdhPJyDmDg0FdGBTycWUOByl/yrczi2w0sew0nGDK/z8a2DzZ8JeG1QKYFxbFhxOgBU6mTFElxGqQ==
-X-Received: by 2002:a17:90a:158f:: with SMTP id m15mr5996876pja.93.1594391745744;
-        Fri, 10 Jul 2020 07:35:45 -0700 (PDT)
+        bh=lq4oKWfRzmN7qYUZamWAxkeEC7peEArNT9jhGOd6XaU=;
+        b=kq2WDo/VYTGsGPAcbsu5pm2bMzUXg0t+d5sCJrRu+j9OlWAXbwWhyOVredEH/6g2mf
+         237i3fY6Zd2tHxdXpgp10bCbWrwhSxTTwibLktH2ikcuuOoaXb011ZojPCBlmODEnwgW
+         7X3D3cCi7Z8DRedGFK0t4+MK+4GUb+O4YCKbSfiRxMDkBhLwOia0wKMKxkU/bVnOy3is
+         Ji7eIoESwTUhfT4R6ZpYFBfsJ4CLHbC1zxAH9fKmCA0PWULCERnTpnZaidx7Xhw8W+f0
+         Zddo5PssdwQ5Vt44uW6303TFWozy3G4GuTUGe0NOltM6fp2x/EUekVIGnM0WxsK+k6hC
+         fiVQ==
+X-Gm-Message-State: AOAM5300rOUQ9U+FrxpZ/Uv8ada70f6gzGW1Bq7Mvrmia5Sx3LNPfFSY
+        JMkBIi5zAkVwJl9PjXVfLvX2GA==
+X-Google-Smtp-Source: ABdhPJwxyfxYTqDVoC8g4o6KDNQGSf+I8n8Z/XaZn+3Etw91zJzhun1XTgFSfAfcWUW4FGpeyWZxNA==
+X-Received: by 2002:a17:90a:21c3:: with SMTP id q61mr6098550pjc.207.1594391743034;
+        Fri, 10 Jul 2020 07:35:43 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id gn5sm5951284pjb.23.2020.07.10.07.35.44
+        by smtp.gmail.com with ESMTPSA id gn5sm5951284pjb.23.2020.07.10.07.35.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 07:35:45 -0700 (PDT)
+        Fri, 10 Jul 2020 07:35:42 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -67,10 +67,11 @@ Cc:     sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
         rnayak@codeaurora.org, mkurumel@codeaurora.org,
         Ravi Kumar Bokka <rbokka@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
-Date:   Fri, 10 Jul 2020 07:35:20 -0700
-Message-Id: <20200710073439.v5.4.I70c17309f8b433e900656d7c53a2e6b61888bb68@changeid>
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/4] dt-bindings: nvmem: Add properties needed for blowing fuses
+Date:   Fri, 10 Jul 2020 07:35:18 -0700
+Message-Id: <20200710073439.v5.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200710143520.1206846-1-dianders@chromium.org>
 References: <20200710143520.1206846-1-dianders@chromium.org>
@@ -83,67 +84,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ravi Kumar Bokka <rbokka@codeaurora.org>
 
-This patch adds properties to the qfprom node to enable fuse blowing.
+On some systems it's possible to actually blow the fuses in the qfprom
+from the kernel.  Add properties to support that.
+
+NOTE: Whether this is possible depends on the BIOS settings and
+whether the kernel has permissions here, so not all boards will be
+able to blow fuses in the kernel.
 
 Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Presumably this patch to the device tree file should go through the
-Qualcomm tree.  Now that bindings have been reviewed by Rob it could
-probably land any time.
 
 Changes in v5: None
 Changes in v4:
 - Clock name is "core", not "sec".
+- Example under "soc" to get #address-cells and #size-cells.
 
 Changes in v3:
-- Name is now 'efuse' to match what schema checker wants.
-- Reorganized ranges to match driver/bindings changes.
-- Added 4th range as per driver/binding changes.
-- No more reg-names as per driver/binding changes.
-- Clock name is now just "sec" as per driver/binding changes.
+- Add an extra reg range (at 0x6000 offset for SoCs checked)
+- Define two options for reg: 1 item or 4 items.
+- No reg-names.
+- Add "clocks" and "clock-names" to list of properties.
+- Clock is now "sec", not "secclk".
+- Add "vcc-supply" to list of properties.
+- Fixed up example.
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 10 ++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ .../bindings/nvmem/qcom,qfprom.yaml           | 50 ++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 4e9149d82d09..2a9224e2083f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -287,6 +287,10 @@ vreg_bob: bob {
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+index 39f97c1c83a4..d10a0cf91ba7 100644
+--- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
++++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+@@ -17,8 +17,27 @@ properties:
+     const: qcom,qfprom
  
-+&qfprom {
-+	vcc-supply = <&vreg_l11a_1p8>;
-+};
+   reg:
+-    items:
+-      - description: The corrected region.
++    # If the QFPROM is read-only OS image then only the corrected region
++    # needs to be provided.  If the QFPROM is writable then all 4 regions
++    # must be provided.
++    oneOf:
++      - items:
++          - description: The corrected region.
++      - items:
++          - description: The corrected region.
++          - description: The raw region.
++          - description: The config region.
++          - description: The security control region.
 +
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217bb5bf..fbf9554f1e3a 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -498,9 +498,15 @@ gcc: clock-controller@100000 {
- 			#power-domain-cells = <1>;
- 		};
- 
--		qfprom@784000 {
-+		qfprom: efuse@784000 {
- 			compatible = "qcom,qfprom";
--			reg = <0 0x00784000 0 0x8ff>;
-+			reg = <0 0x00784000 0 0x8ff>,
-+			      <0 0x00780000 0 0x7a0>,
-+			      <0 0x00782000 0 0x100>,
-+			      <0 0x00786000 0 0x1fff>;
++  # Clock must be provided if QFPROM is writable from the OS image.
++  clocks:
++    maxItems: 1
++  clock-names:
++    const: core
 +
-+			clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-+			clock-names = "core";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
++  # Supply reference must be provided if QFPROM is writable from the OS image.
++  vcc-supply:
++    description: Our power supply.
  
+   # Needed if any child nodes are present.
+   "#address-cells":
+@@ -31,6 +50,33 @@ required:
+    - reg
+ 
+ examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      efuse@784000 {
++        compatible = "qcom,qfprom";
++        reg = <0 0x00784000 0 0x8ff>,
++              <0 0x00780000 0 0x7a0>,
++              <0 0x00782000 0 0x100>,
++              <0 0x00786000 0 0x1fff>;
++        clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
++        clock-names = "core";
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        vcc-supply = <&vreg_l11a_1p8>;
++
++        hstx-trim-primary@25b {
++          reg = <0x25b 0x1>;
++          bits = <1 3>;
++        };
++      };
++    };
++
+   - |
+     soc {
+       #address-cells = <2>;
 -- 
 2.27.0.383.g050319c2ae-goog
 
