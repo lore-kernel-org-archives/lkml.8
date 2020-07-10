@@ -2,105 +2,116 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46825C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4D5C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148792078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594385788;
-	bh=2UUua3qgzzBHbKum+Illo/Afn1kWl3g1hfBtYCm5K84=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0pW96+ODExqJcWmpxKcLhXwBP4Eq3m740gj4lARm9hYnMKBNDrFhIthDgHNkz33JG
-	 PQTHGFBJM23caQmE4qpWGdWrBLk01EbPRGodzhXQriw3ua0EU2cLA3dzHocNdI9BPY
-	 yhB4Pr1lo8Smy90cP9+pQIbQwFQ58JK0UPQnRh2A=
+	by mail.kernel.org (Postfix) with ESMTP id 343CF20772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGJM41 (ORCPT
+        id S1727907AbgGJM4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgGJM40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:56:26 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C110320720;
-        Fri, 10 Jul 2020 12:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594385785;
-        bh=2UUua3qgzzBHbKum+Illo/Afn1kWl3g1hfBtYCm5K84=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iEfOi5PBhiZra3tebUjeaBxteXstOfjtJUVtfwCIcl95pCp4PnQiSNtNyS6u4cZ3p
-         9nNgEo1/UqC0QIGd91RZRAtDOvflsKZGq18WkWSJncn4zTM6rxLo0ZW30sLatpap4R
-         MBek6RlI/vd6sMFgtnMwd4QJj+UnQLEIj6MsNRwo=
-Date:   Fri, 10 Jul 2020 21:56:21 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andi Kleen <andi@firstfloor.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 4/4] perf-probe: Warn if the target function is GNU
- Indirect function
-Message-Id: <20200710215621.eca829d202b912b74bec276c@kernel.org>
-In-Reply-To: <20200710115540.GC22500@kernel.org>
-References: <159428201109.56570.3802208017109058146.stgit@devnote2>
-        <159428205174.56570.17588311835868886287.stgit@devnote2>
-        <20200709143654.pw2maoxivsjho6op@two.firstfloor.org>
-        <20200710123008.3af0e5ea78a9ff95d36a29d8@kernel.org>
-        <20200710115540.GC22500@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 10 Jul 2020 08:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgGJM42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:56:28 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2CCC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:56:27 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 9CA1B20C; Fri, 10 Jul 2020 14:56:24 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 14:56:23 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: a question of split_huge_page
+Message-ID: <20200710125623.GH27672@8bytes.org>
+References: <df2597f6-af21-5547-d39c-94c02ad17adb@linux.alibaba.com>
+ <20200709155002.GF12769@casper.infradead.org>
+ <20200709160750.utl46xvavceuvnom@box>
+ <f761007f-4663-f72e-b0da-fc3ce9486b4b@linux.alibaba.com>
+ <441ebbeb-0408-e22e-20f4-1be571c4a18e@nextfour.com>
+ <50113530-fae5-bb36-56c2-5b5c4f90426d@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50113530-fae5-bb36-56c2-5b5c4f90426d@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 08:55:40 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Adding Robin.
 
-> Em Fri, Jul 10, 2020 at 12:30:08PM +0900, Masami Hiramatsu escreveu:
-> > On Thu, 9 Jul 2020 07:36:54 -0700
-> > Andi Kleen <andi@firstfloor.org> wrote:
+On Fri, Jul 10, 2020 at 05:34:52PM +0800, Alex Shi wrote:
+> 在 2020/7/10 下午1:28, Mika Penttilä 写道:
 > > 
-> > > > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> > > > index 1e95a336862c..671176d39569 100644
-> > > > --- a/tools/perf/util/probe-event.c
-> > > > +++ b/tools/perf/util/probe-event.c
-> > > > @@ -379,6 +379,11 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
-> > > >  			address = sym->start;
-> > > >  		else
-> > > >  			address = map->unmap_ip(map, sym->start) - map->reloc;
-> > > > +		if (sym->type == STT_GNU_IFUNC) {
-> > > > +			pr_warning("Warning: The probe address (0x%lx) is in a GNU indirect function.\n"
-> > > > +				"This may not work as you expected unless you intend to probe the indirect function.\n",
-> > > 
-> > > I would say something like this.
-> > > 
-> > > Consider identifying the final function used at run time and set the
-> > > probe directly on that.
-> > > 
-> > > I think that's more useful to the user.
 > > 
-> > Hmm, would you mean the default function which may be used for the symbol?
+> > On 10.7.2020 7.51, Alex Shi wrote:
+> >>
+> >> 在 2020/7/10 上午12:07, Kirill A. Shutemov 写道:
+> >>> On Thu, Jul 09, 2020 at 04:50:02PM +0100, Matthew Wilcox wrote:
+> >>>> On Thu, Jul 09, 2020 at 11:11:11PM +0800, Alex Shi wrote:
+> >>>>> Hi Kirill & Matthew,
+> >>>>>
+> >>>>> In the func call chain, from split_huge_page() to lru_add_page_tail(),
+> >>>>> Seems tail pages are added to lru list at line 963, but in this scenario
+> >>>>> the head page has no lru bit and isn't set the bit later. Why we do this?
+> >>>>> or do I miss sth?
+> >>>> I don't understand how we get to split_huge_page() with a page that's
+> >>>> not on an LRU list.  Both anonymous and page cache pages should be on
+> >>>> an LRU list.  What am I missing?> 
+> >>
+> >> Thanks a lot for quick reply!
+> >> What I am confusing is the call chain: __iommu_dma_alloc_pages()
+> >> to split_huge_page(), in the func, splited page,
+> >> 	page = alloc_pages_node(nid, alloc_flags, order);
+> >> And if the pages were added into lru, they maybe reclaimed and lost,
+> >> that would be a panic bug. But in fact, this never happened for long time.
+> >> Also I put a BUG() at the line, it's nevre triggered in ltp, and run_vmtests
+> > 
+> > 
+> > In  __iommu_dma_alloc_pages, after split_huge_page(),  who is taking a
+> > reference on tail pages? Seems tail pages are freed and the function
+> > errornously returns them in pages[] array for use?
+> > 
 > 
-> Humm, I think he means that the user must somehow, knowing details
-> involved in picking the final function, probe that one instead of the
-> IFUNC one, right Andi?
-
-Ah, I got it. OK, I'll update the message :)
-
-Thank you,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> CC Joerg and iommu list,
+> 
+> That's a good question. seems the split_huge_page was never triggered here,
+> since the func would check the PageLock first. and have page->mapping and PageAnon
+> check, any of them couldn't be matched for the alloced page.
+> 
+> Hi Joerg,
+> would you like look into this? do we still need the split_huge_page() here?
+> 
+> Thanks
+> Alex
+> 
+> int split_huge_page_to_list(struct page *page, struct list_head *list)
+> {
+>         struct page *head = compound_head(page);
+>         struct deferred_split *ds_queue = get_deferred_split_queue(head);
+>         struct anon_vma *anon_vma = NULL;
+>         struct address_space *mapping = NULL;
+>         int count, mapcount, extra_pins, ret;
+>         pgoff_t end;
+> 
+>         VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
+>         VM_BUG_ON_PAGE(!PageLocked(head), head);	<==
+> > 
