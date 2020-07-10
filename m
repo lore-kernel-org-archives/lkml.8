@@ -2,121 +2,152 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62684C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54662C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4895820720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E70207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGJMBz (ORCPT
+        id S1727107AbgGJMFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:01:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45479 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgGJMBy (ORCPT
+        Fri, 10 Jul 2020 08:05:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41218 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgGJMFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:01:54 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jtriy-0000Fg-3q; Fri, 10 Jul 2020 12:01:52 +0000
-Date:   Fri, 10 Jul 2020 14:01:51 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfgang Bumiller <w.bumiller@proxmox.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] nsfs: add NS_GET_INIT_PID ioctl
-Message-ID: <20200710120151.yeoonuttjc4wivaf@wittgenstein>
-References: <20200618084543.326605-1-christian.brauner@ubuntu.com>
- <20200710115836.GA1027@lca.pw>
+        Fri, 10 Jul 2020 08:05:10 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2C6AB2A694F;
+        Fri, 10 Jul 2020 13:05:06 +0100 (BST)
+Date:   Fri, 10 Jul 2020 14:05:02 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 07/12] media: uapi: h264: Add DPB entry field reference
+ flags
+Message-ID: <20200710140502.627b2b54@collabora.com>
+In-Reply-To: <6232d8475e169ee53b5864959af21d14bf0fc620.camel@collabora.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        <20190901124531.23645-1-jonas@kwiboo.se>
+        <HE1PR06MB4011559BF2447047C66285D2ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        <233509924f72d69824920d9312373eced68674c0.camel@collabora.com>
+        <20200710101333.05077f18@collabora.com>
+        <6232d8475e169ee53b5864959af21d14bf0fc620.camel@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710115836.GA1027@lca.pw>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 07:58:36AM -0400, Qian Cai wrote:
-> On Thu, Jun 18, 2020 at 10:45:43AM +0200, Christian Brauner wrote:
-> > Add an ioctl() to return the PID of the init process/child reaper of a pid
-> > namespace as seen in the caller's pid namespace.
-> > 
-> > LXCFS is a tiny fuse filesystem used to virtualize various aspects of
-> > procfs. It is used actively by a large number of users including ChromeOS
-> > and cloud providers. LXCFS is run on the host. The files and directories it
-> > creates can be bind-mounted by e.g. a container at startup and mounted over
-> > the various procfs files the container wishes to have virtualized. When
-> > e.g. a read request for uptime is received, LXCFS will receive the pid of
-> > the reader. In order to virtualize the corresponding read, LXCFS needs to
-> > know the pid of the init process of the reader's pid namespace. In order to
-> > do this, LXCFS first needs to fork() two helper processes. The first helper
-> > process setns() to the readers pid namespace. The second helper process is
-> > needed to create a process that is a proper member of the pid namespace.
-> > The second helper process then creates a ucred message with ucred.pid set
-> > to 1 and sends it back to LXCFS. The kernel will translate the ucred.pid
-> > field to the corresponding pid number in LXCFS's pid namespace. This way
-> > LXCFS can learn the init pid number of the reader's pid namespace and can
-> > go on to virtualize. Since these two forks() are costly LXCFS maintains an
-> > init pid cache that caches a given pid for a fixed amount of time. The
-> > cache is pruned during new read requests. However, even with the cache the
-> > hit of the two forks() is singificant when a very large number of
-> > containers are running. With this simple patch we add an ns ioctl that
-> > let's a caller retrieve the init pid nr of a pid namespace through its
-> > pid namespace fd. This _significantly_ improves our performance with a very
-> > simple change. A caller should do something like:
-> > - pid_t init_pid = ioctl(pid_ns_fd, NS_GET_INIT_PID);
-> > - verify init_pid is still valid (not necessarily both but recommended):
-> >   - opening a pidfd to get a stable reference
-> >   - opening /proc/<init_pid>/ns/pid and verifying that <pid_ns_fd>
-> >     and the pid namespace fd of <init_pid> refer to the same pid namespace
-> > 
-> > Note, it is possible for the init process of the pid namespace (identified
-> > via the child_reaper member in the relevant pid namespace) to die and get
-> > reaped right after the ioctl returned. If that happens there are two cases
-> > to consider:
-> > - if the init process was single threaded, all other processes in the pid
-> >   namespace will be zapped and any new process creation in there will fail;
-> >   A caller can detect this case since either the init pid is still around
-> >   but it is a zombie, or it already has exited and not been recycled, or it
-> >   has exited, been reaped, and also been recycled. The last case is the
-> >   most interesting one but a caller would then be able to detect that the
-> >   recycled process lives in a different pid namespace.
-> > - if the init process was multi-threaded, then the kernel will try to make
-> >   one of the threads in the same thread-group - if any are still alive -
-> >   the new child_reaper. In this case the caller can detect that the thread
-> >   which exited and used to be the child_reaper is no longer alive. If it's
-> >   tid has been recycled in the same pid namespace a caller can detect this
-> >   by parsing through /proc/<tid>/stat, looking at the Nspid: field and if
-> >   there's a entry with pid nr 1 in the respective pid namespace it can be
-> >   sure that it hasn't been recycled.
-> > Both options can be combined with pidfd_open() to make sure that a stable
-> > reference is maintained.
-> > 
-> > Cc: Wolfgang Bumiller <w.bumiller@proxmox.com>
-> > Cc: Serge Hallyn <serge@hallyn.com>
-> > Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> 
-> fs/nsfs.c: In function ‘ns_ioctl’:
-> fs/nsfs.c:195:14: warning: unused variable ‘pid_struct’ [-Wunused-variable]
->   struct pid *pid_struct;
->               ^~~~~~~~~~
-> fs/nsfs.c:194:22: warning: unused variable ‘child_reaper’ [-Wunused-variable]
->   struct task_struct *child_reaper;
->                       ^~~~~~~~~~~~
+On Fri, 10 Jul 2020 08:50:28 -0300
+Ezequiel Garcia <ezequiel@collabora.com> wrote:
 
-Thanks. Fyi, this has been reported by Stephen already.
-Christian
+> On Fri, 2020-07-10 at 10:13 +0200, Boris Brezillon wrote:
+> > On Fri, 10 Jul 2020 01:21:07 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> >   
+> > > Hello Jonas,
+> > > 
+> > > In the context of the uAPI cleanup,
+> > > I'm revisiting this patch.
+> > > 
+> > > On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:  
+> > > > Add DPB entry flags to help indicate when a reference frame is a field picture
+> > > > and how the DPB entry is referenced, top or bottom field or full frame.
+> > > > 
+> > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > > ---
+> > > >  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
+> > > >  include/media/h264-ctrls.h                       |  4 ++++
+> > > >  2 files changed, 16 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > index bc5dd8e76567..eb6c32668ad7 100644
+> > > > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > @@ -2022,6 +2022,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
+> > > >        - 0x00000004
+> > > >        - The DPB entry is a long term reference frame
+> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
+> > > > +      - 0x00000008
+> > > > +      - The DPB entry is a field picture
+> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
+> > > > +      - 0x00000010
+> > > > +      - The DPB entry is a top field reference
+> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
+> > > > +      - 0x00000020
+> > > > +      - The DPB entry is a bottom field reference
+> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
+> > > > +      - 0x00000030
+> > > > +      - The DPB entry is a reference frame
+> > > >  
+> > > >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
+> > > >      Specifies the decoding mode to use. Currently exposes slice-based and
+> > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > > > index e877bf1d537c..76020ebd1e6c 100644
+> > > > --- a/include/media/h264-ctrls.h
+> > > > +++ b/include/media/h264-ctrls.h
+> > > > @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
+> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
+> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
+> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
+> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
+> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
+> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
+> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
+> > > >      
+> > > 
+> > > I've been going thru the H264 spec and I'm unsure,
+> > > are all these flags semantically needed?
+> > > 
+> > > For instance, if one of REF_BOTTOM or REF_TOP (or both)
+> > > are set, doesn't that indicate it's a field picture?
+> > > 
+> > > Or conversely, if neither REF_BOTTOM or REF_TOP are set,
+> > > then it's a frame picture?  
+> > 
+> > I think that's what I was trying to do here [1]
+> > 
+> > [1]https://patchwork.kernel.org/patch/11392095/  
+> 
+> Right. Aren't we missing a DPB_ENTRY_FLAG_TOP_FIELD?
+> 
+> If I understand correctly, the DPB can contain:
+> 
+> * frames (FLAG_FIELD not set)
+> * a field pair, with a single field (FLAG_FIELD and either TOP or BOTTOM).
+> * a field pair, with boths fields (FLAG_FIELD and both TOP or BOTTOM).
+
+Well, my understand is that, if the buffer contains both a TOP and
+BOTTOM field, it actually becomes a full frame, so you actually have
+those cases:
+
+* FLAG_FIELD not set: this a frame (note that a TOP/BOTTOM field
+  decoded buffer can become of frame if it's complemented with the
+  missing field later during the decoding)
+* FLAG_FIELD set + BOTTOM_FIELD not set: this is a TOP field
+* FLAG_FIELD set + BOTTOM_FIELD set: this is a BOTTOM field
+* FLAG_FIELD not set + BOTTOM_FIELD set: invalid combination
+
+but I might be wrong.
