@@ -2,120 +2,114 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0F8207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C119207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fk0BU7ia"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+rSYatf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGJOLs (ORCPT
+        id S1728057AbgGJOMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJOLr (ORCPT
+        Fri, 10 Jul 2020 10:12:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53423 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726977AbgGJOMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:11:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048F7C08C5CE;
-        Fri, 10 Jul 2020 07:11:47 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so6312650wmh.4;
-        Fri, 10 Jul 2020 07:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VGeeR8+VbNtB7URPLqfeyF8R/0u0wMAauszGUX1N1UI=;
-        b=fk0BU7iaq6X8TwybCHTvJwUCTakRRnB6bs6MI80jO2k/15kDhIIIoHZt5ZVGA7a6nv
-         hV6Yh9e81iPov/qajATCsYe/c6NeRIcS20LNg52siwqUX6u3VxeNYDkHCaYpXDz3sesR
-         3Ulry/Xu+YcNYFGogM36GHBVr/nLyKWwB8yN+B4JOfNdNDvsgl6Xyx9sHtC8js15nxNc
-         nklaZ6IT1IayDupdAOiUuueQIAip22AQGlYBr81JJttcMam+vf9cCdSbd7Dr0GbPPo8S
-         WuCA8IGNqtAVATytmAJ1Fk+OlPI//tMI5/RRQlUAb47OVCI6/1nGJ7E0n7Scdyv45XhO
-         GJUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VGeeR8+VbNtB7URPLqfeyF8R/0u0wMAauszGUX1N1UI=;
-        b=abY8ydoh2znbR3wVQPv5/cy10JYdkWgKdo+75Z2CEXQ12HV6M6tB22Zc5gNoGoG6cc
-         i2KArNk9Y2xlAb8HNcpFZe6ZyKCWeDfw8WacJpVx5C+P5chbY1TXRx6DAGXdvJDl7mpp
-         8ZYnUdhv8ZNpM6f7e5sizuMZeuCaMYLS/aZa4obbEl5oqWoErlRRupzFs24+3uUJbooO
-         3G8YwshUZ6GfdFvzCJr9egWuzBxX57S8dQUUN+ZgAhegksfUHoPo7DpWvGldqFoiAVUn
-         dOxqsscScMDmG9apCoPtAVP13Dda8giMUiONEYgl7ovpma4lcqbqhlmPpeH160EFXMIr
-         qkiQ==
-X-Gm-Message-State: AOAM533kd7eKPkaZRLA2DrS+Eqq/y+pkNlMAgPqDZ0YcWsKQK3CRgS/T
-        F0SSyQVIxsMI9zoANrcL+MGLBC7lox5CBwCZoeM=
-X-Google-Smtp-Source: ABdhPJysoJRlQ8UFaxjIgEOwBzA5N40n6EBPhXu9a+0n6/TXYajVrD/1a1tH7ji3ATsg3D0/tZUikVlkV5IOILYSjyk=
-X-Received: by 2002:a1c:9e45:: with SMTP id h66mr5276012wme.15.1594390305664;
- Fri, 10 Jul 2020 07:11:45 -0700 (PDT)
+        Fri, 10 Jul 2020 10:12:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594390327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tC/RDuBXGV/0eBPfyMsRxhpj4+FXW/fTZ0b83kArGak=;
+        b=i+rSYatf8DuJcr6S6MR9boPxcOpW8fI4vMGGLt6kCpibNhGHiQddatCesT6IbXb9Ifa6OU
+        qJTWnJfTQqFtsPHCTQ0YMyuRZiQFDmthojnlnwRRHf4PFof6bAMMmmtcIM3BxU12k9kJmC
+        S1dlwtPfYggU6N6QPD7pVKFIQOEubnc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-8WEcPZc2OI29-Fy4J8_xCg-1; Fri, 10 Jul 2020 10:12:03 -0400
+X-MC-Unique: 8WEcPZc2OI29-Fy4J8_xCg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B2B8186A8E3;
+        Fri, 10 Jul 2020 14:12:01 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EF53774F5E;
+        Fri, 10 Jul 2020 14:11:58 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/9] KVM: nSVM: fixes for CR3/MMU switch upon nested guest entry/exit
+Date:   Fri, 10 Jul 2020 16:11:48 +0200
+Message-Id: <20200710141157.1640173-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <20200709085501.GA64935@infradead.org> <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
- <20200709140053.GA7528@infradead.org> <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
- <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
- <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk> <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
- <20200710131054.GB7491@infradead.org> <20200710134824.GK12769@casper.infradead.org>
- <20200710134932.GA16257@infradead.org> <20200710135119.GL12769@casper.infradead.org>
-In-Reply-To: <20200710135119.GL12769@casper.infradead.org>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Fri, 10 Jul 2020 19:41:19 +0530
-Message-ID: <CA+1E3rKOZUz7oZ_DGW6xZPQaDu+T5iEKXctd+gsJw05VwpGQSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, "Matias Bj??rling" <mb@lightnvm.io>,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 7:21 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Fri, Jul 10, 2020 at 02:49:32PM +0100, Christoph Hellwig wrote:
-> > On Fri, Jul 10, 2020 at 02:48:24PM +0100, Matthew Wilcox wrote:
-> > > If we're going to go the route of changing the CQE, how about:
-> > >
-> > >  struct io_uring_cqe {
-> > >          __u64   user_data;      /* sqe->data submission passed back */
-> > > -        __s32   res;            /* result code for this event */
-> > > -        __u32   flags;
-> > > +   union {
-> > > +           struct {
-> > > +                   __s32   res;            /* result code for this event */
-> > > +                   __u32   flags;
-> > > +           };
-> > > +           __s64   res64;
-> > > +   };
-> > >  };
-> > >
-> > > then we don't need to change the CQE size and it just depends on the SQE
-> > > whether the CQE for it uses res+flags or res64.
-> >
-> > How do you return a status code or short write when you just have
-> > a u64 that is needed for the offset?
->
-> it's an s64 not a u64 so you can return a negative errno.  i didn't
-> think we allowed short writes for objects-which-have-a-pos.
+Changes since v3:
+- Swapped my "KVM: nSVM: stop dereferencing vcpu->arch.mmu to get the
+ context in kvm_init_shadow{,_npt}_mmu()" with Paolo's "KVM: MMU: stop
+ dereferencing vcpu->arch.mmu to get the context for MMU init".
+- keeping nested_svm_init_mmu_context() in nested_prepare_vmcb_control()
+ as this is also used from svm_set_nested_state() [Paolo],
+ nested_svm_load_cr3() becomes a separate step in enter_svm_guest_mode().
+- nested_prepare_vmcb_save() remains 'void' [Paolo]
 
-If we are doing this for zone-append (and not general cases), "__s64
-res64" should work -.
-64 bits = 1 (sign) + 23 (bytes-copied: cqe->res) + 40
-(written-location: chunk_sector bytes limit)
+Original description:
+
+This is a successor of "[PATCH v2 0/3] KVM: nSVM: fix #TF from CR3 switch
+when entering guest" and "[PATCH] KVM: x86: drop erroneous mmu_check_root()
+from fast_pgd_switch()".
+
+The snowball is growing fast! It all started with an intention to fix
+the particular 'tripple fault' issue (now fixed by PATCH7) but now we
+also get rid of unconditional kvm_mmu_reset_context() upon nested guest
+entry/exit and make the code resemble nVMX. There is still a huge room
+for further improvement (proper error propagation, removing unconditional
+MMU sync/TLB flush,...) but at least we're making some progress.
+
+Tested with kvm selftests/kvm-unit-tests and by running nested Hyper-V
+on KVM. The series doesn't seem to introduce any new issues.
+
+Paolo Bonzini (1):
+  KVM: MMU: stop dereferencing vcpu->arch.mmu to get the context for MMU
+    init
+
+Vitaly Kuznetsov (8):
+  KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
+  KVM: nSVM: reset nested_run_pending upon nested_svm_vmrun_msrpm()
+    failure
+  KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
+  KVM: nSVM: introduce nested_svm_load_cr3()/nested_npt_enabled()
+  KVM: nSVM: move kvm_set_cr3() after nested_svm_uninit_mmu_context()
+  KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest
+    switch
+  KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
+  KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
+
+ arch/x86/kvm/mmu.h        |  3 +-
+ arch/x86/kvm/mmu/mmu.c    | 45 ++++++++++++------
+ arch/x86/kvm/svm/nested.c | 97 ++++++++++++++++++++++++++++-----------
+ arch/x86/kvm/svm/svm.c    |  6 ++-
+ arch/x86/kvm/svm/svm.h    |  4 +-
+ 5 files changed, 110 insertions(+), 45 deletions(-)
 
 -- 
-Joshi
+2.25.4
+
