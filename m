@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC24C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9020EC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C32C207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEE72078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399968;
-	bh=ioP+zE3QcZYWtrbP8JNe5R3MHrpHsHsJaawhzRfRFq4=;
+	s=default; t=1594399974;
+	bh=33ol2wfww+buJMx3tza0CIjhnMXSbv1JPshM2dQmTHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7SIFVN2iIIFDnUm47MLSIFVRlLHkvi4tcwfMsM9B1ChnlqVgwOJ5RgwLqD0CtEoj
-	 B1+MYAjPVEnjITCr/wlh94y8Mn4yj9YjcCYS6hPmjQn/c1JpLoHefckzwcrGHk8EU+
-	 PXQyDa7Ckov10fX9yFROwI37JzLiTH0IYKhUx6Oc=
+	b=gG2ncHR5cbOjInlJWe6b7hDxjNUGlI+K+52r6+thrNxMlhzVALU/V1HoI+6DDrebD
+	 vXczWpvuNIoJQx3RaiMf/0R/V+aV0/MKGnsoCcbL/cO6zQI9hEwTjVgK86RnJxbogQ
+	 z6P7BFDwIaeddyv+Hl1wU0kN1h7VoGtjWoHqYVBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgGJQwq (ORCPT
+        id S1728493AbgGJQwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgGJQwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:52:40 -0400
+        id S1728459AbgGJQws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:52:48 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9355D206F4;
-        Fri, 10 Jul 2020 16:52:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE040207FC;
+        Fri, 10 Jul 2020 16:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594399960;
-        bh=ioP+zE3QcZYWtrbP8JNe5R3MHrpHsHsJaawhzRfRFq4=;
+        s=default; t=1594399968;
+        bh=33ol2wfww+buJMx3tza0CIjhnMXSbv1JPshM2dQmTHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olt02LKeAL91nPxgaC1qQAJZnrzmwBteJROoi562TZOoKlwf2GsHdueJYh9wQvHS3
-         ta9HVOXq+Jp+Nl1VoxyEu4NOLAeCoB6OaLnJ5Iop/QE1Nmg6joEiitmdW4N8HXMUXb
-         PbP/PPuekBo452bRN9Tvaf8qj1qEbhU6Ap3dq+mo=
+        b=zmm4Beup9Cb/cXcX+cFkF3Ys9o4W8ykaffV0B1ywu2WmWxk2m0L6n/aOe+2s19P/P
+         KJasSyR2/jQmcHBESwcpm08rw7T3YJ5j1W4OqQj5YlZyMPBPd5Dm5HQf5idVyVBFJY
+         6Px+iT08RxLqWmpNFon2pEOMv6R7ANj0ReBB6LnI=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
@@ -60,9 +60,9 @@ Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH v3 07/19] vhost: Remove redundant use of read_barrier_depends() barrier
-Date:   Fri, 10 Jul 2020 17:51:51 +0100
-Message-Id: <20200710165203.31284-8-will@kernel.org>
+Subject: [PATCH v3 09/19] locking/barriers: Remove definitions for [smp_]read_barrier_depends()
+Date:   Fri, 10 Jul 2020 17:51:53 +0100
+Message-Id: <20200710165203.31284-10-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 References: <20200710165203.31284-1-will@kernel.org>
@@ -73,65 +73,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 76ebbe78f739 ("locking/barriers: Add implicit
-smp_read_barrier_depends() to READ_ONCE()"), there is no need to use
-smp_read_barrier_depends() outside of the Alpha architecture code.
+There are no remaining users of [smp_]read_barrier_depends(), so
+remove it from the generic implementation of 'barrier.h'.
 
-Unfortunately, there is precisely _one_ user in the vhost code, and
-there isn't an obvious READ_ONCE() access making the barrier
-redundant. However, on closer inspection (thanks, Jason), it appears
-that vring synchronisation between the producer and consumer occurs via
-the 'avail_idx' field, which is followed up by an rmb() in
-vhost_get_vq_desc(), making the read_barrier_depends() redundant on
-Alpha.
-
-Jason says:
-
-  | I'm also confused about the barrier here, basically in driver side
-  | we did:
-  |
-  | 1) allocate pages
-  | 2) store pages in indirect->addr
-  | 3) smp_wmb()
-  | 4) increase the avail idx (somehow a tail pointer of vring)
-  |
-  | in vhost we did:
-  |
-  | 1) read avail idx
-  | 2) smp_rmb()
-  | 3) read indirect->addr
-  | 4) read from indirect->addr
-  |
-  | It looks to me even the data dependency barrier is not necessary
-  | since we have rmb() which is sufficient for us to the correct
-  | indirect->addr and driver are not expected to do any writing to
-  | indirect->addr after avail idx is increased
-
-Remove the redundant barrier invocation.
-
-Suggested-by: Jason Wang <jasowang@redhat.com>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- drivers/vhost/vhost.c | 5 -----
- 1 file changed, 5 deletions(-)
+ include/asm-generic/barrier.h | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index d7b8df3edffc..74d135ee7e26 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2092,11 +2092,6 @@ static int get_indirect(struct vhost_virtqueue *vq,
- 		return ret;
- 	}
- 	iov_iter_init(&from, READ, vq->indirect, ret, len);
+diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
+index 8116744bb82c..fec97dc34de7 100644
+--- a/include/asm-generic/barrier.h
++++ b/include/asm-generic/barrier.h
+@@ -46,10 +46,6 @@
+ #define dma_wmb()	wmb()
+ #endif
+ 
+-#ifndef read_barrier_depends
+-#define read_barrier_depends()		do { } while (0)
+-#endif
 -
--	/* We will use the result as an address to read from, so most
--	 * architectures only need a compiler barrier here. */
--	read_barrier_depends();
+ #ifndef __smp_mb
+ #define __smp_mb()	mb()
+ #endif
+@@ -62,10 +58,6 @@
+ #define __smp_wmb()	wmb()
+ #endif
+ 
+-#ifndef __smp_read_barrier_depends
+-#define __smp_read_barrier_depends()	read_barrier_depends()
+-#endif
 -
- 	count = len / sizeof desc;
- 	/* Buffers are chained via a 16 bit next field, so
- 	 * we can have at most 2^16 of these. */
+ #ifdef CONFIG_SMP
+ 
+ #ifndef smp_mb
+@@ -80,10 +72,6 @@
+ #define smp_wmb()	__smp_wmb()
+ #endif
+ 
+-#ifndef smp_read_barrier_depends
+-#define smp_read_barrier_depends()	__smp_read_barrier_depends()
+-#endif
+-
+ #else	/* !CONFIG_SMP */
+ 
+ #ifndef smp_mb
+@@ -98,10 +86,6 @@
+ #define smp_wmb()	barrier()
+ #endif
+ 
+-#ifndef smp_read_barrier_depends
+-#define smp_read_barrier_depends()	do { } while (0)
+-#endif
+-
+ #endif	/* CONFIG_SMP */
+ 
+ #ifndef __smp_store_mb
+@@ -196,7 +180,6 @@ do {									\
+ #define virt_mb() __smp_mb()
+ #define virt_rmb() __smp_rmb()
+ #define virt_wmb() __smp_wmb()
+-#define virt_read_barrier_depends() __smp_read_barrier_depends()
+ #define virt_store_mb(var, value) __smp_store_mb(var, value)
+ #define virt_mb__before_atomic() __smp_mb__before_atomic()
+ #define virt_mb__after_atomic()	__smp_mb__after_atomic()
 -- 
 2.27.0.383.g050319c2ae-goog
 
