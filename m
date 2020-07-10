@@ -2,132 +2,160 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA42C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130F02077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C93B2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="REieOk7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgGJK6d (ORCPT
+        id S1727101AbgGJK7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:58:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40754 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgGJK6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:58:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7A06BAD76;
-        Fri, 10 Jul 2020 10:58:30 +0000 (UTC)
-Subject: Re: [PATCH] mm: Close race between munmap() and
- expand_upwards()/downwards()
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jann Horn <jannh@google.com>, stable@vger.kernel.org,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20200709105309.42495-1-kirill.shutemov@linux.intel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <6f96a9ed-3a24-2478-b84d-5e213baa16d4@suse.cz>
-Date:   Fri, 10 Jul 2020 12:58:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 06:59:03 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:14684 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726965AbgGJK7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 06:59:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594378741; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=XF5zX+cSjtfW85y8H+eiDoai1jMCcmtSdKAnAdC5+d8=; b=REieOk7oJ9Rx1phKc8s21Zh3Stum0epj1kafLGrOMt5cyKrOhm5qW9h2gfVl+ShJXyEKuycM
+ 1ai8EjxoixBdnbgWzQtz4KVn8/YVgn24kEfkYR7H/+StstP37MPSG3LztAZXbeQ60P4zpdwp
+ akSR6cfL2hzRTSb469R9NrRIT2o=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
+ 5f0849e8d07c135855367a80 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 10:58:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 37685C43395; Fri, 10 Jul 2020 10:58:48 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [183.83.66.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 577F3C433C6;
+        Fri, 10 Jul 2020 10:58:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 577F3C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Set IO pins in low power state during
+ suspend
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
+ <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
+ <20200710005233.GN3191083@google.com>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <63323fe2-e3a3-030f-5275-01fa6b04e23b@codeaurora.org>
+Date:   Fri, 10 Jul 2020 16:28:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200709105309.42495-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200710005233.GN3191083@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 12:53 PM, Kirill A. Shutemov wrote:
-> VMA with VM_GROWSDOWN or VM_GROWSUP flag set can change their size under
-> mmap_read_lock(). It can lead to race with __do_munmap():
-> 
-> 	Thread A			Thread B
-> __do_munmap()
->   detach_vmas_to_be_unmapped()
->   mmap_write_downgrade()
-> 				expand_downwards()
-> 				  vma->vm_start = address;
-> 				  // The VMA now overlaps with
-> 				  // VMAs detached by the Thread A
-> 				// page fault populates expanded part
-> 				// of the VMA
->   unmap_region()
->     // Zaps pagetables partly
->     // populated by Thread B
-> 
-> Similar race exists for expand_upwards().
-> 
-> The fix is to avoid downgrading mmap_lock in __do_munmap() if detached
-> VMAs are next to VM_GROWSDOWN or VM_GROWSUP VMA.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-by: Jann Horn <jannh@google.com>
-> Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
-> Cc: <stable@vger.kernel.org> # 4.20
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
+Hi Mathias,
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Thanks!
+On 7/10/2020 6:22 AM, Matthias Kaehlcke wrote:
+> Hi,
+>
+> On Wed, Jul 08, 2020 at 06:41:20PM +0530, Veerabhadrarao Badiganti wrote:
+>> Configure SDHC IO pins with low power configuration when the driver
+>> is in suspend state.
+>>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> ---
+>>   drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index 392d41d57a6e..efd2bae1430c 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -15,6 +15,7 @@
+>>   #include <linux/iopoll.h>
+>>   #include <linux/regulator/consumer.h>
+>>   #include <linux/interconnect.h>
+>> +#include <linux/pinctrl/consumer.h>
+>>   
+>>   #include "sdhci-pltfm.h"
+>>   #include "cqhci.h"
+>> @@ -1352,6 +1353,19 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>>   		sdhci_msm_hs400(host, &mmc->ios);
+>>   }
+>>   
+>> +static int sdhci_msm_set_pincfg(struct sdhci_msm_host *msm_host, bool level)
+>> +{
+>> +	struct platform_device *pdev = msm_host->pdev;
+>> +	int ret;
+>> +
+>> +	if (level)
+>> +		ret = pinctrl_pm_select_default_state(&pdev->dev);
+>> +	else
+>> +		ret = pinctrl_pm_select_sleep_state(&pdev->dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
+>>   {
+>>   	if (IS_ERR(mmc->supply.vmmc))
+>> @@ -1596,6 +1610,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>>   			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
+>>   					pwr_state & REQ_BUS_ON);
+>>   		if (!ret)
+>> +			ret = sdhci_msm_set_pincfg(msm_host,
+>> +					pwr_state & REQ_BUS_ON);
+>> +		if (!ret)
+>>   			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+>>   		else
+>>   			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> I happened to have a debug patch in my tree which logs when regulators
+> are enabled/disabled, with this patch I see the SD card regulator
+> toggling constantly after returning from the first system suspend.
+>
+> I added more logs:
+>
+> [ 1156.085819] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+> [ 1156.248936] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+> [ 1156.301989] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+> [ 1156.462383] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+> [ 1156.525988] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+> [ 1156.670372] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+> [ 1156.717935] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+> [ 1156.878122] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
+> [ 1156.928134] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
+>
+> This is on an SC7180 platform. It doesn't run an upstream kernel though,
+> but v5.4 with plenty of upstream patches.
+I have verified this on couple of sc7180 targets (on Chrome platform 
+with Chrome kernel).
+But didn't see any issue. Its working as expected.
 
-> ---
->  mm/mmap.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 59a4682ebf3f..71df4b36b42a 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -2620,7 +2620,7 @@ static void unmap_region(struct mm_struct *mm,
->   * Create a list of vma's touched by the unmap, removing them from the mm's
->   * vma list as we go..
->   */
-> -static void
-> +static bool
->  detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
->  	struct vm_area_struct *prev, unsigned long end)
->  {
-> @@ -2645,6 +2645,17 @@ detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
->  
->  	/* Kill the cache */
->  	vmacache_invalidate(mm);
-> +
-> +	/*
-> +	 * Do not downgrade mmap_sem if we are next to VM_GROWSDOWN or
-> +	 * VM_GROWSUP VMA. Such VMAs can change their size under
-> +	 * down_read(mmap_sem) and collide with the VMA we are about to unmap.
-> +	 */
-> +	if (vma && (vma->vm_flags & VM_GROWSDOWN))
-> +		return false;
-> +	if (prev && (prev->vm_flags & VM_GROWSUP))
-> +		return false;
-> +	return true;
->  }
->  
->  /*
-> @@ -2825,7 +2836,8 @@ int __do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
->  	}
->  
->  	/* Detach vmas from rbtree */
-> -	detach_vmas_to_be_unmapped(mm, vma, prev, end);
-> +	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
-> +		downgrade = false;
->  
->  	if (downgrade)
->  		mmap_write_downgrade(mm);
-> 
+Let me know if you are observing this issue constantly on multiple 
+boards, I will share you
+a debug patch to check it further.
+
+Thanks
+Veera
+
 
