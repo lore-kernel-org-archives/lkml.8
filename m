@@ -2,85 +2,103 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEFAC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A1A207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB68920657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvaVOM+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGJRIx convert rfc822-to-8bit (ORCPT
+        id S1728040AbgGJRJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:08:53 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42254 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJRIx (ORCPT
+        Fri, 10 Jul 2020 13:09:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50404 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726496AbgGJRJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:08:53 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B137CCED26;
-        Fri, 10 Jul 2020 19:18:48 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] net/bluetooth: Fix
- slab-out-of-bounds read in hci_extended_inquiry_result_evt()
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200710160915.228980-1-yepeilin.cs@gmail.com>
-Date:   Fri, 10 Jul 2020 19:08:51 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <43E6945B-1FFE-4283-9F1B-E84AFDCB528F@holtmann.org>
-References: <20200709130224.214204-1-yepeilin.cs@gmail.com>
- <20200710160915.228980-1-yepeilin.cs@gmail.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 10 Jul 2020 13:09:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594400940;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dIJ9Cu+pL+yyFjMqrEiFKXlTlYcC1jnm87VZK4JkkJ0=;
+        b=bvaVOM+pbgMBPIZ7y/nl0Z7t5nYGBGiGwx8oJZH6IK3KtUXRBnDpTPlTp0AjjF5RHsVTgQ
+        x9MdPW/Rcx1juwLz0MpyHxHkgIJtNEXLEowZYt0nrRK2fpJbBqggW56lg7KD8lWCtI3lIf
+        lZXwB5lMHoY9hCTMwcvFzIVMICwjsbE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-yemVJvaxOsOSsDOYurKUgw-1; Fri, 10 Jul 2020 13:08:56 -0400
+X-MC-Unique: yemVJvaxOsOSsDOYurKUgw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F72A800FF1;
+        Fri, 10 Jul 2020 17:08:54 +0000 (UTC)
+Received: from mail (ovpn-112-112.rdu2.redhat.com [10.10.112.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E437A6FEC3;
+        Fri, 10 Jul 2020 17:08:53 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 13:08:53 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
+        linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
+ available
+Message-ID: <20200710170853.GB11749@redhat.com>
+References: <20200706172051.19465-1-rppt@kernel.org>
+ <20200706172051.19465-2-rppt@kernel.org>
+ <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
+ <20200710164037.GA11749@redhat.com>
+ <20200710165746.GO12769@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710165746.GO12769@casper.infradead.org>
+User-Agent: Mutt/1.14.5 (2020-06-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peilin,
+On Fri, Jul 10, 2020 at 05:57:46PM +0100, Matthew Wilcox wrote:
+> btw, using the hpage_ prefix already caused one problem in the hugetlb
+> code:
+> 
+> https://lore.kernel.org/linux-mm/20200629185003.97202-1-mike.kravetz@oracle.com/
+> 
+> I'd suggest we rename these to THP_PMD_* and THP_PUD_* to make it clear
+> they're only for the THP case.
 
-> Check upon `num_rsp` is insufficient. A malformed event packet with a
-> large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
-> of bounds. Fix it.
-> 
-> This patch fixes the following syzbot bug:
-> 
->    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
-> 
-> Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> Change in v3:
->    - Minimum `skb->len` requirement was 1 byte inaccurate since `info`
->      starts from `skb->data + 1`. Fix it.
-> 
-> Changes in v2:
->    - Use `skb->len` instead of `skb->truesize` as the length limit.
->    - Leave `num_rsp` as of type `int`.
-> 
-> net/bluetooth/hci_event.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+The confusion seem to have happened only about hpage_nr_pages not
+about HPAGE_PMD_*. It's just the hpage_ prefix alone that is commonly
+used by hugetlbfs only and so it's not surprising it caused confusion.
 
-patch has been applied to bluetooth-next tree.
+So I certainly agree hpage_nr_pages would better be renamed to
+something more THP specific (either hpage_pmd_nr_pages or
+trans_huge_nr_pages or as you wish), but HPAGE_PMD_ don't look too
+confusing about the fact it's only for the THP case since the non-THP
+case won't necessarily care about PMDs.
 
-Regards
-
-Marcel
+Thanks,
+Andrea
 
