@@ -2,125 +2,121 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED67EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA20207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89623207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgGJIve (ORCPT
+        id S1728041AbgGJIwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:51:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:47336 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbgGJIv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:51:26 -0400
-IronPort-SDR: e4uxyLUHGTEZnMEV/m8M8lKo7ocxaM+f+jHqiRpR025GltuEx22FJM58hLMzb37XWU/JtLqk7T
- lO+b8Dr/AuHw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146240806"
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="146240806"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 01:51:25 -0700
-IronPort-SDR: LfnhsBzxBWY8tqtpOAFIpp4omzBPhlDDYPvGoaq55B3GhQW54uSzRM82CGAHOdwQ2stvXjmjP5
- rAJiHPvmo/RQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="389432771"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2020 01:51:22 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtokd-0011Rj-Fp; Fri, 10 Jul 2020 11:51:23 +0300
-Date:   Fri, 10 Jul 2020 11:51:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200710085123.GF3703480@smile.fi.intel.com>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 10 Jul 2020 04:52:14 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34540 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726832AbgGJIwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 04:52:13 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxGdQpLAhfS0kBAA--.1768S2;
+        Fri, 10 Jul 2020 16:51:54 +0800 (CST)
+From:   Zhi Li <lizhi01@loongson.cn>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net, kuba@kernel.org,
+        mcoquelin.stm32@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lixuefeng@loongson.cn, chenhc@lemote.com, jiaxun.yang@flygoat.com,
+        yangtiezhu@loongson.cn, Hongbin Li <lihongbin@loongson.cn>
+Subject: [PATCH] stmmac: pci: Add support for LS7A bridge chip
+Date:   Fri, 10 Jul 2020 16:51:50 +0800
+Message-Id: <1594371110-7580-1-git-send-email-lizhi01@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9CxGdQpLAhfS0kBAA--.1768S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWfKw1UCF43tr1fAw4DXFb_yoW8urW5p3
+        y3Aas2grs3JF1xAws8Jw4DZFy5Ja9xKrWDG3y7tw1fWFWqk3yaqFySqFW5AFy7JrWkWw13
+        Xw4UCr4UuF4DC3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26F4j6r
+        4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+        0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwI
+        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU18wI3UUUUU==
+X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:45:47AM +0300, Serge Semin wrote:
-> Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> have non-uniform DMA capabilities per device channels, let's add
-> the DW DMA specific device_caps callback to expose that specifics up to
-> the DMA consumer. It's a dummy function for now. We'll fill it in with
-> capabilities overrides in the next commits.
+Add gmac platform data to support LS7A bridge chip.
 
-Just a reminder (mainly to Vinod) of my view to this.
-Unneeded churn, should be folded to patch 9.
+Co-developed-by: Hongbin Li <lihongbin@loongson.cn>
+Signed-off-by: Hongbin Li <lihongbin@loongson.cn>
+Signed-off-by: Zhi Li <lizhi01@loongson.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch created as a result of the discussion with Vinud and
->   Andy in the framework of DW DMA burst and LLP capabilities.
-> ---
->  drivers/dma/dw/core.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index fb95920c429e..ceded21537e2 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
->  	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
->  }
->  
-> +static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> +{
-> +
-> +}
-> +
->  int do_dma_probe(struct dw_dma_chip *chip)
->  {
->  	struct dw_dma *dw = chip->dw;
-> @@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
->  	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
->  
-> +	dw->dma.device_caps = dwc_caps;
->  	dw->dma.device_config = dwc_config;
->  	dw->dma.device_pause = dwc_pause;
->  	dw->dma.device_resume = dwc_resume;
-> -- 
-> 2.26.2
-> 
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 272cb47..dab2a40 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -138,6 +138,24 @@ static const struct stmmac_pci_info snps_gmac5_pci_info = {
+ 	.setup = snps_gmac5_default_data,
+ };
+ 
++static int loongson_default_data(struct pci_dev *pdev, struct plat_stmmacenent_data *plat)
++{
++	common_default_data(plat);
++
++	plat->bus_id = pci_dev_id(pdev);
++	plat->phy_addr = 0;
++	plat->interface = PHY_INTERFACE_MODE_GMII;
++
++	plat->dma_cfg->pbl = 32;
++	plat->dma_cfg->pblx8 = true;
++
++	return 0;
++}
++
++static struct stmmac_pci_info loongson_pci_info = {
++	.setup = loongson_default_data;
++};
++
+ /**
+  * stmmac_pci_probe
+  *
+@@ -204,6 +222,8 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
+ 	res.addr = pcim_iomap_table(pdev)[i];
+ 	res.wol_irq = pdev->irq;
+ 	res.irq = pdev->irq;
++	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON)
++		res.lpi_irq = pdev->irq + 1;
+ 
+ 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
+ }
+@@ -273,11 +293,13 @@ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, stmmac_pci_suspend, stmmac_pci_resume);
+ 
+ #define PCI_DEVICE_ID_STMMAC_STMMAC		0x1108
+ #define PCI_DEVICE_ID_SYNOPSYS_GMAC5_ID		0x7102
++#define PCI_DEVICE_ID_LOONGSON_GMAC		0x7a03
+ 
+ static const struct pci_device_id stmmac_id_table[] = {
+ 	{ PCI_DEVICE_DATA(STMMAC, STMMAC, &stmmac_pci_info) },
+ 	{ PCI_DEVICE_DATA(STMICRO, MAC, &stmmac_pci_info) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, GMAC5_ID, &snps_gmac5_pci_info) },
++	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_pci_info) },
+ 	{}
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.1.0
 
