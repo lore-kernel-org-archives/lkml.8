@@ -2,99 +2,162 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EED1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0608BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249002078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8FF2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E0sLL2v+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wx7Qn635"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgGJRki (ORCPT
+        id S1728354AbgGJRkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgGJRki (ORCPT
+        Fri, 10 Jul 2020 13:40:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43018 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726925AbgGJRkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:40:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60B3C08C5DC;
-        Fri, 10 Jul 2020 10:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=nzj9xEzg94TiDWiQ2mj7wOcGxexy5FgiHulDtZkhqco=; b=E0sLL2v+dosTWZ483q887n3x/L
-        ongb9Eg5BLuc74OARhk+JyNg+hKdT/4dEJvtxdmYeCiG25LIaUcL06KNdIsf8e7v1123jmPex6Wtc
-        vMoShmm64O2B3f8BixYU08T8GF0h8eXZjHJPhcuXCObxj+AH3tjisMjSDxHM7rkcVwVD87E6rJ3GE
-        nqsaMOp2BrUs0H9u0gLeTYaEhVhTpqhet2OpS4ExVBZvspLqGGClUd1s+QMwgjkEfmF6No41r8Hed
-        TVeEDTDaZpaZ2iiHafIzUEtX0BU+Gx1gKetifX6dcTOXLbiwQDcHb6D39ediV8HpQq4tbCaHAwb3O
-        2tUyTfnA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtx0k-00079r-Uz; Fri, 10 Jul 2020 17:40:35 +0000
-Subject: Re: mmotm 2020-07-09-21-00 uploaded
- (drivers/net/ethernet/mellanox/mlx5/core/en_main.c)
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20200710040047.md-jEb0TK%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8a6f8902-c36c-b46c-8e6f-05ae612d25ea@infradead.org>
-Date:   Fri, 10 Jul 2020 10:40:29 -0700
+        Fri, 10 Jul 2020 13:40:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594402849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d5YCjh7Ir73wQYt476RH2SlBQc/3pjz78qQVd8aGWVE=;
+        b=Wx7Qn6351PkvmUaad78HjLbzOEod4rllaBWiRjO3ctsk+pqf1DngHiEw0vJRD3gmGz2UJZ
+        xQ7PB4AjnehHNz4zuCPK+nUiqg08SI26l70oLO/j7GAUj64Wj4UFhmUceRMXrZa4y2IudF
+        0gJWnsbnzuHBW+dhMz3jjxhbvgKTLNw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-27wpWHwiMfyYV7titEWuiA-1; Fri, 10 Jul 2020 13:40:48 -0400
+X-MC-Unique: 27wpWHwiMfyYV7titEWuiA-1
+Received: by mail-wr1-f71.google.com with SMTP id g14so6697108wrp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:40:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d5YCjh7Ir73wQYt476RH2SlBQc/3pjz78qQVd8aGWVE=;
+        b=ek06+Tk4k9xHti3NTAhCXyumOyK1ZKzzaazAfajQIp+GW+zUgOwdKcQHAw5JlPKZUB
+         PHUkgoxU+Rex5JFe1MWQMkcjZATon2c/rpT1f//OD7aQZtGyIKaAriCgv8GjisELITcr
+         Yzsvng9LDpx0Anl+/csrjT+MFlRU9tdSiC7u4MEsihbkc/vNMri0Q3sgBZepBK0GEwoX
+         KfivEQa0FGW8+rs5MeP6wo9pQIDu4PrqvZxVkniRAS1SepSZkLd4F6WPoYWluc+lt0wX
+         knGOfx10VkZwD6g/9JOUc1RQGf8EU+wLuCVaQkF7Y5Df07BjiIMrdTkFNc9Lazc03lTX
+         kC+w==
+X-Gm-Message-State: AOAM530jpSJ5TH2S13IIdJzZRJAqbql15XhWtT1VIIDHsP1Ts8GjHmPC
+        8HlXMH8qvvHEv//D0WJSO57W/lOk4PAFy1cJ2IJFWlCwdWnQXnd2FGCiX9DxhLCG4mSjg8IpA75
+        zynWvL1s8iWXjJ7ydS29/SYqn
+X-Received: by 2002:adf:ec88:: with SMTP id z8mr68672305wrn.395.1594402846968;
+        Fri, 10 Jul 2020 10:40:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwAyJuA0aVT6OCO/QR9ECKytqX2ohs3nnhcAp0+m2w0tDW3u6NMegvOnDIlWBMqLatUMq+seQ==
+X-Received: by 2002:adf:ec88:: with SMTP id z8mr68672292wrn.395.1594402846714;
+        Fri, 10 Jul 2020 10:40:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id d13sm10875974wrn.61.2020.07.10.10.40.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 10:40:46 -0700 (PDT)
+Subject: Re: [PATCH v3 9/9] KVM: x86: SVM: VMX: Make GUEST_MAXPHYADDR <
+ HOST_MAXPHYADDR support configurable
+To:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Babu Moger <babu.moger@amd.com>
+References: <20200710154811.418214-1-mgamal@redhat.com>
+ <20200710154811.418214-10-mgamal@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c01fb991-8352-53be-3aab-8de808ead5ea@redhat.com>
+Date:   Fri, 10 Jul 2020 19:40:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200710040047.md-jEb0TK%akpm@linux-foundation.org>
+In-Reply-To: <20200710154811.418214-10-mgamal@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 9:00 PM, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2020-07-09-21-00 has been uploaded to
+On 10/07/20 17:48, Mohammed Gamal wrote:
+> The reason behind including this patch is unexpected behaviour we see
+> with NPT vmexit handling in AMD processor.
 > 
->    http://www.ozlabs.org/~akpm/mmotm/
+> With previous patch ("KVM: SVM: Add guest physical address check in
+> NPF/PF interception") we see the followning error multiple times in
+> the 'access' test in kvm-unit-tests:
 > 
-> mmotm-readme.txt says
+>             test pte.p pte.36 pde.p: FAIL: pte 2000021 expected 2000001
+>             Dump mapping: address: 0x123400000000
+>             ------L4: 24c3027
+>             ------L3: 24c4027
+>             ------L2: 24c5021
+>             ------L1: 1002000021
 > 
-> README for mm-of-the-moment:
+> This shows that the PTE's accessed bit is apparently being set by
+> the CPU hardware before the NPF vmexit. This completely handled by
+> hardware and can not be fixed in software.
 > 
-> http://www.ozlabs.org/~akpm/mmotm/
+> This patch introduces a workaround. We add a boolean variable:
+> 'allow_smaller_maxphyaddr'
+> Which is set individually by VMX and SVM init routines. On VMX it's
+> always set to true, on SVM it's only set to true when NPT is not
+> enabled.
 > 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
+> We also add a new capability KVM_CAP_SMALLER_MAXPHYADDR which
+> allows userspace to query if the underlying architecture would
+> support GUEST_MAXPHYADDR < HOST_MAXPHYADDR and hence act accordingly
+> (e.g. qemu can decide if it would ignore the -cpu ..,phys-bits=X)
 > 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
-> 
+> CC: Tom Lendacky <thomas.lendacky@amd.com>
+> CC: Babu Moger <babu.moger@amd.com>
+> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 
-on i386:
+Slightly rewritten commit message:
 
-In file included from ../drivers/net/ethernet/mellanox/mlx5/core/en_main.c:49:0:
-../drivers/net/ethernet/mellanox/mlx5/core/en_accel/en_accel.h: In function ‘mlx5e_accel_sk_get_rxq’:
-../drivers/net/ethernet/mellanox/mlx5/core/en_accel/en_accel.h:153:12: error: implicit declaration of function ‘sk_rx_queue_get’; did you mean ‘sk_rx_queue_set’? [-Werror=implicit-function-declaration]
-  int rxq = sk_rx_queue_get(sk);
-            ^~~~~~~~~~~~~~~
-            sk_rx_queue_set
+    KVM: x86: Add a capability for GUEST_MAXPHYADDR < HOST_MAXPHYADDR support
+    
+    This patch adds a new capability KVM_CAP_SMALLER_MAXPHYADDR which
+    allows userspace to query if the underlying architecture would
+    support GUEST_MAXPHYADDR < HOST_MAXPHYADDR and hence act accordingly
+    (e.g. qemu can decide if it should warn for -cpu ..,phys-bits=X)
+    
+    The complications in this patch are due to unexpected (but documented)
+    behaviour we see with NPF vmexit handling in AMD processor.  If
+    SVM is modified to add guest physical address checks in the NPF
+    and guest #PF paths, we see the followning error multiple times in
+    the 'access' test in kvm-unit-tests:
+    
+                test pte.p pte.36 pde.p: FAIL: pte 2000021 expected 2000001
+                Dump mapping: address: 0x123400000000
+                ------L4: 24c3027
+                ------L3: 24c4027
+                ------L2: 24c5021
+                ------L1: 1002000021
+    
+    This is because the PTE's accessed bit is set by the CPU hardware before
+    the NPF vmexit. This is handled completely by hardware and cannot be fixed
+    in software.
+    
+    Therefore, availability of the new capability depends on a boolean variable
+    allow_smaller_maxphyaddr which is set individually by VMX and SVM init
+    routines. On VMX it's always set to true, on SVM it's only set to true
+    when NPT is not enabled.
+    
+    CC: Tom Lendacky <thomas.lendacky@amd.com>
+    CC: Babu Moger <babu.moger@amd.com>
+    Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+    Message-Id: <20200710154811.418214-10-mgamal@redhat.com>
+    Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
+Paolo
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
