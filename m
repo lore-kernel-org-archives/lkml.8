@@ -2,91 +2,117 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F473C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153322077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594384641;
-	bh=kGJSTjLX0V52wppHj+UqmzpCnQZBkGJku76RlUsl9IQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=06eyFSaY6EWLEVpxY5zmXee2AFVtWHXEWSLSUqGf4glZEvItV+Tk1JphwPM2dwb8f
-	 XomN09VqoMT30VkItM5/AACNYP79FxGV9oUrgtSMSGH5DG4KZ1sJSffJVuDNjhDGml
-	 iYQQCr2xlgn3FAS6bmRip+cPeaXcBN5jVqG/p+Dk=
+	by mail.kernel.org (Postfix) with ESMTP id 970D520772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="b8A3eBvX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HQr9HBfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGJMhU (ORCPT
+        id S1727848AbgGJMh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgGJMhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:37:17 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.179.81.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C621720772;
-        Fri, 10 Jul 2020 12:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594384637;
-        bh=kGJSTjLX0V52wppHj+UqmzpCnQZBkGJku76RlUsl9IQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qXxIu8yfnGBbvXH1IjXDI5x8qklJlWhqn7QbYvHbyfR1s5D+HmnYDNuO0dKitIgX7
-         PY1uKxWMqwOf/sikSyaNFOgbIcW/pX+lMw/CQQ6EwXMZhWEykazbwtKML+GDfPUmGf
-         jyMhiAMoXsz87nauJQZze1mZn+WzxUymM8sLxOmI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37AF1405FF; Fri, 10 Jul 2020 09:37:14 -0300 (-03)
-Date:   Fri, 10 Jul 2020 09:37:14 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf parse-events: report bpf errors
-Message-ID: <20200710123714.GD22500@kernel.org>
-References: <20200707211449.3868944-1-irogers@google.com>
- <20200708184732.GC3581918@krava>
+        Fri, 10 Jul 2020 08:37:27 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:55405 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbgGJMhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:37:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 420E9BA0;
+        Fri, 10 Jul 2020 08:37:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 10 Jul 2020 08:37:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=d
+        gJ3aoc5NiXYKfv58xR0xZCsr1W6r/7ugdtfPSWBvns=; b=b8A3eBvXkGhpO3lzR
+        E7vusMZO/bWx2sr5lbEDQlvB7LDwVl2pMdAaevv0E6Ar/Xih61VxsTZnrWr7Aopd
+        S2JcAX+pU1IfYUr0Ro7p4CnIS3kovnn2vMUhqsssIflFuUog5cUy7zlKSW4tmuHO
+        ZTkF8udIHqJcsFmxk0kUWGSmaGVaEQmjUiEVvEjwdHvGS0OP9X9NakAN/qnw/4fc
+        aePE2w/U4vi9b/cMJqJpc5bekWzOvIsq9ggOc4Nu+X/N5vkun8WmdjOhwxtaX1cP
+        kFoxETysvQN7RWeYc84CJ0Cqm2dPFeAQj9drqtiHXA0ELV9RFglTq8XHpiXqkHhw
+        2RctA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=dgJ3aoc5NiXYKfv58xR0xZCsr1W6r/7ugdtfPSWBv
+        ns=; b=HQr9HBfRjC1cXeIA07LYz0c8ZamnWXn2wJ9N3Nj/pajxSKNL/CI60HxKA
+        8UBhyHNugxVf7roSxTMmmijjNLUd6CyymkFix+iqkm0I26iEZomS6C3h5LWs/jB4
+        08EzYiXkZ5udacOmMwRASP0BzrdpczgnuWOGjUqZHq/lgGvzfMaJKwp0bI638aJz
+        c0dIoZa8eZO0sBltDxRbU7WSlU+TNEJ2p6RDg2XaAhkRv7IBsg0JyRqeCuItvR+c
+        sKM8n8XxsleTUW33QGedESvk0EgAXha5EdU1zUa26O5J2cmeUbTFjOPNrHX76BHp
+        QKkf81q/kdmT/dCEp4Ihxc6GxGB9A==
+X-ME-Sender: <xms:AGEIX_VF2YIwxQaPlLqg_g5PHHnYRxNeQRosxYlfcLyEksUZj8-2Bw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejjeekjedttdethedtfeelteefffduvdevvdfhtdeiudetleejgeelfeef
+    uedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:AGEIX3kDLyfuDnJt50RhzCZPlSqB-rJAjUgyjDOis3SzVSKCHCF87w>
+    <xmx:AGEIX7aIDwXxD3jn55JAYhPPObaFEh-JIStZ6a4YUpJi7Os11x_Mmw>
+    <xmx:AGEIX6UlHD0EEf_cfp9_nX1DnacYVENmET5iVTpGLWVs_MqF1LVxYA>
+    <xmx:AWEIX9wL-1fAtDVWrg48pkcLVkqVqeWUIkk6jPlS_yXa5LvudaavZFsTLGo>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A08D2328005D;
+        Fri, 10 Jul 2020 08:37:19 -0400 (EDT)
+Date:   Fri, 10 Jul 2020 14:37:18 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 04/16] dt-bindings: pinctrl: sunxi: make gpio banks
+ supplies required
+Message-ID: <20200710123718.mrvtk6rzkfuno5kn@gilmour.lan>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-5-frank@allwinnertech.com>
+ <20200709171713.tutnlchji4e6i5pv@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200708184732.GC3581918@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200709171713.tutnlchji4e6i5pv@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 08, 2020 at 08:47:32PM +0200, Jiri Olsa escreveu:
-> On Tue, Jul 07, 2020 at 02:14:49PM -0700, Ian Rogers wrote:
-> > Setting the parse_events_error directly doesn't increment num_errors
-> > causing the error message not to be displayed. Use the
-> > parse_events__handle_error function that sets num_errors and handle
-> > multiple errors.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> looks good
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+Hi,
 
-Thanks, applied.
+On Thu, Jul 09, 2020 at 07:17:13PM +0200, Ond=C5=99ej Jirman wrote:
+> Hello,
+>=20
+> On Wed, Jul 08, 2020 at 03:19:30PM +0800, Frank Lee wrote:
+> > Since we don't really have to care about the existing DT for boards,
+> > it would be great to make the gpio banks supplies required.
+>=20
+> What if the borad doesn't use one of the banks? How would
+> I describe such a board if defining supplies for all banks
+> is required?
 
-- Arnaldo
+If that case ever comes up, we can always drop the requirement, it's going =
+to be backward
+compatible.
+
+Maxime
