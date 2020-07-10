@@ -2,197 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15839C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5CA20725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ryuBq+A5"
+	by mail.kernel.org (Postfix) with ESMTP id F3AA52078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgGJRdi (ORCPT
+        id S1727906AbgGJRfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:33:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33914 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgGJRdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:33:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594402416; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=nBIBjS8TfT8I4G2Q/UfKP196gmJswu2oE3cHLZLGdsE=; b=ryuBq+A5kGZ4mfHs8fY6y5oGOEaoY6fPRkY1/mZj41IyXQuy0c3RlawR4bgiDscIrCnZrASu
- yQBjtfJyZn1P7SJdeEeaWorK5/Xj3Io/5TtO3gx7kEK6cE47+bg+aIvmWWBIW8tzxJtDiyX6
- +9E89L7Er8mm9zYnZ/290wJ6XgQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f08a6642991e765cdf01b17 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 17:33:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C724BC43395; Fri, 10 Jul 2020 17:33:23 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 10 Jul 2020 13:35:38 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:49532 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbgGJRfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:35:38 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01787C433C8;
-        Fri, 10 Jul 2020 17:33:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01787C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 10 Jul 2020 11:33:18 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        kbuild test robot <lkp@intel.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/a6xx: add build_bw_table for A640/A650
-Message-ID: <20200710173318.GE21059@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, kbuild test robot <lkp@intel.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200701030958.24466-1-jonathan@marek.ca>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A9B5E20021;
+        Fri, 10 Jul 2020 19:35:34 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 19:35:33 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: BACKLIGHT
+ CLASS/SUBSYSTEM
+Message-ID: <20200710173533.GD17565@ravnborg.org>
+References: <20200708163847.15250-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701030958.24466-1-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200708163847.15250-1-grandmaster@al2klimov.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=sozttTNsAAAA:8 a=977SQLHdAAAA:8
+        a=5_BfxKqGAAAA:8 a=e5mUnYsNAAAA:8 a=KDW8W4m8GVoiedxZWeEA:9
+        a=tJonOg-6uS59dqR-:21 a=N2so1Rmw42j4sEnq:21 a=CjuIK1q_8ugA:10
+        a=W4TVW4IDbPiebHqcZpNg:22 a=aeg5Gbbo78KNqacMgKqU:22
+        a=X9mgP9w9NIdro0Z1KHhB:22 a=zA12qxjMqGZfkbtkWw8c:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 11:09:57PM -0400, Jonathan Marek wrote:
-> This sets up bw tables for A640/A650 similar to A618/A630, 0 DDR bandwidth
-> vote, and the CNOC vote. A640 has the same CNOC addresses as A630 and was
-> working, but this is required for A650 to work.
+Hi Alexander.
+
+On Wed, Jul 08, 2020 at 06:38:47PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Eventually the bw table should be filled by querying the interconnect
-> driver for each BW in the dts, but use these dummy tables for now.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-And yes, I agree that we need to move this into the generic API sooner rather
-than later, but this should be good enough to get a working GPU/GMU.
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 74 +++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-> index 9921e632f1ca..ccd44d0418f8 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-> @@ -281,6 +281,76 @@ static void a618_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
->  	msg->cnoc_cmds_data[1][0] =  0x60000001;
->  }
->  
-> +static void a640_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
-> +{
-> +	/*
-> +	 * Send a single "off" entry just to get things running
-> +	 * TODO: bus scaling
-> +	 */
-> +	msg->bw_level_num = 1;
-> +
-> +	msg->ddr_cmds_num = 3;
-> +	msg->ddr_wait_bitmask = 0x01;
-> +
-> +	msg->ddr_cmds_addrs[0] = 0x50000;
-> +	msg->ddr_cmds_addrs[1] = 0x5003c;
-> +	msg->ddr_cmds_addrs[2] = 0x5000c;
-> +
-> +	msg->ddr_cmds_data[0][0] =  0x40000000;
-> +	msg->ddr_cmds_data[0][1] =  0x40000000;
-> +	msg->ddr_cmds_data[0][2] =  0x40000000;
-> +
-> +	/*
-> +	 * These are the CX (CNOC) votes - these are used by the GMU but the
-> +	 * votes are known and fixed for the target
-> +	 */
-> +	msg->cnoc_cmds_num = 3;
-> +	msg->cnoc_wait_bitmask = 0x01;
-> +
-> +	msg->cnoc_cmds_addrs[0] = 0x50034;
-> +	msg->cnoc_cmds_addrs[1] = 0x5007c;
-> +	msg->cnoc_cmds_addrs[2] = 0x5004c;
-> +
-> +	msg->cnoc_cmds_data[0][0] =  0x40000000;
-> +	msg->cnoc_cmds_data[0][1] =  0x00000000;
-> +	msg->cnoc_cmds_data[0][2] =  0x40000000;
-> +
-> +	msg->cnoc_cmds_data[1][0] =  0x60000001;
-> +	msg->cnoc_cmds_data[1][1] =  0x20000001;
-> +	msg->cnoc_cmds_data[1][2] =  0x60000001;
-> +}
-> +
-> +static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
-> +{
-> +	/*
-> +	 * Send a single "off" entry just to get things running
-> +	 * TODO: bus scaling
-> +	 */
-> +	msg->bw_level_num = 1;
-> +
-> +	msg->ddr_cmds_num = 3;
-> +	msg->ddr_wait_bitmask = 0x01;
-> +
-> +	msg->ddr_cmds_addrs[0] = 0x50000;
-> +	msg->ddr_cmds_addrs[1] = 0x50004;
-> +	msg->ddr_cmds_addrs[2] = 0x5007c;
-> +
-> +	msg->ddr_cmds_data[0][0] =  0x40000000;
-> +	msg->ddr_cmds_data[0][1] =  0x40000000;
-> +	msg->ddr_cmds_data[0][2] =  0x40000000;
-> +
-> +	/*
-> +	 * These are the CX (CNOC) votes - these are used by the GMU but the
-> +	 * votes are known and fixed for the target
-> +	 */
-> +	msg->cnoc_cmds_num = 1;
-> +	msg->cnoc_wait_bitmask = 0x01;
-> +
-> +	msg->cnoc_cmds_addrs[0] = 0x500a4;
-> +	msg->cnoc_cmds_data[0][0] =  0x40000000;
-> +	msg->cnoc_cmds_data[1][0] =  0x60000001;
-> +}
-> +
->  static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
->  {
->  	/* Send a single "off" entry since the 630 GMU doesn't do bus scaling */
-> @@ -327,6 +397,10 @@ static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
->  
->  	if (adreno_is_a618(adreno_gpu))
->  		a618_build_bw_table(&msg);
-> +	else if (adreno_is_a640(adreno_gpu))
-> +		a640_build_bw_table(&msg);
-> +	else if (adreno_is_a650(adreno_gpu))
-> +		a650_build_bw_table(&msg);
->  	else
->  		a6xx_build_bw_table(&msg);
->  
-> -- 
-> 2.26.1
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
 > 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  drivers/video/backlight/led_bl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> index 3f66549997c8..2c48957e9b60 100644
+> --- a/drivers/video/backlight/led_bl.c
+> +++ b/drivers/video/backlight/led_bl.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  https://www.ti.com/
+>   * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>   *
+>   * Based on pwm_bl.c
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+$grep http drivers/video/backlight/*
+drivers/video/backlight/cr_bllcd.c: * Intel funded Tungsten Graphics (http://www.tungstengraphics.com) to
+drivers/video/backlight/ili9320.c: *	http://armlinux.simtec.co.uk/
+drivers/video/backlight/ili9320.h: * http://armlinux.simtec.co.uk/
+drivers/video/backlight/led_bl.c: * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+drivers/video/backlight/vgg2432a4.c: *	http://armlinux.simtec.co.uk/
+
+Why are they not covered?
+
+	Sam
+
+
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
