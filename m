@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD09C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A0AC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18272065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A971206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgGJPTy (ORCPT
+        id S1726908AbgGJPTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:19:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38270 "EHLO mga09.intel.com"
+        Fri, 10 Jul 2020 11:19:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38306 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgGJPL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:11:59 -0400
-IronPort-SDR: +XW8sqGZY66IHmrC5zzAgKLf7xWiaIKkF8jn7DN/nZpOUBDRFGwP3pPdQg+uuXXUSb0GGKur9j
- O9eNsZTaH2pQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686290"
+        id S1727886AbgGJPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:12:10 -0400
+IronPort-SDR: +XjpWhnI5qEfItBAJEZicv4OvKMYM0P2ruEgPEAKt0C/JGTiIZD5rwNmfRefYGEnHm2Q3twlQm
+ Lef/6mBjAtFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686443"
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="149686290"
+   d="scan'208";a="149686443"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:11:56 -0700
-IronPort-SDR: n1SjVceTeR5yH8vaqkz1549J14IAVEBSpdOG/boll0caxAFVyUpHf5XUrSszoIiNz4aXJwlkEi
- il2ZvxDyDRUQ==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:12:08 -0700
+IronPort-SDR: /5BmnwL+SFpM9Ijdth3B95De6plWp5ZkImMC3j1wmeWmmFaazjbkZ3O53Zm2Pibupqln7639VP
+ 3GPpBgulvFiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="484675492"
+   d="scan'208";a="484675561"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:11:54 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:12:06 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 05/12] perf auxtrace: Add optional error flags to the itrace 'e' option
-Date:   Fri, 10 Jul 2020 18:10:57 +0300
-Message-Id: <20200710151104.15137-6-adrian.hunter@intel.com>
+Subject: [PATCH V2 11/12] perf intel-pt: Add support for decoding FUP/TIP only
+Date:   Fri, 10 Jul 2020 18:11:03 +0300
+Message-Id: <20200710151104.15137-12-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200710151104.15137-1-adrian.hunter@intel.com>
 References: <20200710151104.15137-1-adrian.hunter@intel.com>
@@ -52,139 +52,384 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the 'e' option to be followed by flags which will affect what errors
-will or will not be reported. Each flag must be preceded by either '+' or
-'-'. The flags are:
-	o	overflow
-	l	trace data lost
+Use the new itrace 'q' option to add support for a mode of decoding that
+ignores TNT, does not walk object code, but gets the ip from FUP and TIP
+packets.
+
+Example:
+
+ $ perf record -e intel_pt//u grep -rI pudding drivers
+ [ perf record: Woken up 52 times to write data ]
+ [ perf record: Captured and wrote 57.870 MB perf.data ]
+ $ time perf script --itrace=bi | wc -l
+ 58948289
+
+ real    1m23.863s
+ user    1m23.251s
+ sys     0m7.452s
+ $ time perf script --itrace=biq | wc -l
+ 3385694
+
+ real    0m4.453s
+ user    0m4.455s
+ sys     0m0.328s
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Documentation/itrace.txt |  6 ++++
- tools/perf/util/auxtrace.c          | 44 +++++++++++++++++++++++++++++
- tools/perf/util/auxtrace.h          | 12 +++++++-
- 3 files changed, 61 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-intel-pt.txt    |  31 ++++
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 167 +++++++++++++++++-
+ .../util/intel-pt-decoder/intel-pt-decoder.h  |   1 +
+ tools/perf/util/intel-pt.c                    |   6 +-
+ 4 files changed, 200 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index e817179c5027..114d0544d7c7 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -47,3 +47,9 @@
- 	--itrace=i0nss1000000
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 4666e4a83615..f9fe4a4040ba 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -825,6 +825,7 @@ The letters are:
+ 	l	synthesize last branch entries (use with i or x)
+ 	L	synthesize last branch entries on existing event records
+ 	s	skip initial number of events
++	q	quicker (less detailed) decoding
  
- 	skips the first million instructions.
+ "Instructions" events look like they were recorded by "perf record -e
+ instructions".
+@@ -969,6 +970,36 @@ at the beginning. This is useful to ignore initialization code.
+ 
+ skips the first million instructions.
+ 
++The q option changes the way the trace is decoded.  The decoding is much faster
++but much less detailed.  Specifically, with the q option, the decoder does not
++decode TNT packets, and does not walk object code, but gets the ip from FUP and
++TIP packets.  The q option can be used with the b and i options but the period
++is not used.  The q option decodes more quickly, but is useful only if the
++control flow of interest is represented or indicated by FUP, TIP, TIP.PGE, or
++TIP.PGD packets (refer below).  However the q option could be used to find time
++ranges that could then be decoded fully using the --time option.
 +
-+	The 'e' option may be followed by flags which affect what errors will or
-+	will not be reported. Each flag must be preceded by either '+' or '-'.
-+	The flags are:
-+		o	overflow
-+		l	trace data lost
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 25c639ac4ad4..f0b0758830ee 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1349,6 +1349,47 @@ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
- 	synth_opts->initial_skip = 0;
++What will *not* be decoded with the (single) q option:
++
++	- direct calls and jmps
++	- conditional branches
++	- non-branch instructions
++
++What *will* be decoded with the (single) q option:
++
++	- asynchronous branches such as interrupts
++	- indirect branches
++	- function return target address *if* the noretcomp config term (refer
++	config terms section) was used
++	- start of (control-flow) tracing
++	- end of (control-flow) tracing, if it is not out of context
++	- power events, ptwrite, transaction start and abort
++	- instruction pointer associated with PSB packets
++
++Note the q option does not specify what events will be synthesized e.g. the p
++option must be used also to show power events.
++
++
+ dump option
+ ~~~~~~~~~~~
+ 
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index 7ffcbd6fcd1a..ccb204b1a050 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -55,6 +55,7 @@ enum intel_pt_pkt_state {
+ 	INTEL_PT_STATE_TIP_PGD,
+ 	INTEL_PT_STATE_FUP,
+ 	INTEL_PT_STATE_FUP_NO_TIP,
++	INTEL_PT_STATE_RESAMPLE,
+ };
+ 
+ static inline bool intel_pt_sample_time(enum intel_pt_pkt_state pkt_state)
+@@ -65,6 +66,7 @@ static inline bool intel_pt_sample_time(enum intel_pt_pkt_state pkt_state)
+ 	case INTEL_PT_STATE_ERR_RESYNC:
+ 	case INTEL_PT_STATE_IN_SYNC:
+ 	case INTEL_PT_STATE_TNT_CONT:
++	case INTEL_PT_STATE_RESAMPLE:
+ 		return true;
+ 	case INTEL_PT_STATE_TNT:
+ 	case INTEL_PT_STATE_TIP:
+@@ -109,6 +111,8 @@ struct intel_pt_decoder {
+ 	bool fixup_last_mtc;
+ 	bool have_last_ip;
+ 	bool in_psb;
++	bool hop;
++	bool hop_psb_fup;
+ 	enum intel_pt_param_flags flags;
+ 	uint64_t pos;
+ 	uint64_t last_ip;
+@@ -235,6 +239,7 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
+ 	decoder->data               = params->data;
+ 	decoder->return_compression = params->return_compression;
+ 	decoder->branch_enable      = params->branch_enable;
++	decoder->hop                = params->quick >= 1;
+ 
+ 	decoder->flags              = params->flags;
+ 
+@@ -275,6 +280,9 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
+ 	intel_pt_log("timestamp: tsc_ctc_mult %u\n", decoder->tsc_ctc_mult);
+ 	intel_pt_log("timestamp: tsc_slip %#x\n", decoder->tsc_slip);
+ 
++	if (decoder->hop)
++		intel_pt_log("Hop mode: decoding FUP and TIPs, but not TNT\n");
++
+ 	return decoder;
  }
  
-+static int get_flag(const char **ptr, unsigned int *flags)
+@@ -1730,8 +1738,14 @@ static int intel_pt_walk_psbend(struct intel_pt_decoder *decoder)
+ 
+ 		case INTEL_PT_FUP:
+ 			decoder->pge = true;
+-			if (decoder->packet.count)
++			if (decoder->packet.count) {
+ 				intel_pt_set_last_ip(decoder);
++				if (decoder->hop) {
++					/* Act on FUP at PSBEND */
++					decoder->ip = decoder->last_ip;
++					decoder->hop_psb_fup = true;
++				}
++			}
+ 			break;
+ 
+ 		case INTEL_PT_MODE_TSX:
+@@ -1875,6 +1889,118 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+ 	}
+ }
+ 
++static int intel_pt_resample(struct intel_pt_decoder *decoder)
 +{
-+	while (1) {
-+		char c = **ptr;
++	decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
++	decoder->state.type = INTEL_PT_INSTRUCTION;
++	decoder->state.from_ip = decoder->ip;
++	decoder->state.to_ip = 0;
++	return 0;
++}
 +
-+		if (c >= 'a' && c <= 'z') {
-+			*flags |= 1 << (c - 'a');
-+			++*ptr;
-+			return 0;
-+		} else if (c == ' ') {
-+			++*ptr;
-+			continue;
-+		} else {
-+			return -1;
++#define HOP_PROCESS	0
++#define HOP_IGNORE	1
++#define HOP_RETURN	2
++#define HOP_AGAIN	3
++
++/* Hop mode: Ignore TNT, do not walk code, but get ip from FUPs and TIPs */
++static int intel_pt_hop_trace(struct intel_pt_decoder *decoder, bool *no_tip, int *err)
++{
++	switch (decoder->packet.type) {
++	case INTEL_PT_TNT:
++		return HOP_IGNORE;
++
++	case INTEL_PT_TIP_PGD:
++		if (!decoder->packet.count)
++			return HOP_IGNORE;
++		intel_pt_set_ip(decoder);
++		decoder->state.type |= INTEL_PT_TRACE_END;
++		decoder->state.from_ip = 0;
++		decoder->state.to_ip = decoder->ip;
++		return HOP_RETURN;
++
++	case INTEL_PT_TIP:
++		if (!decoder->packet.count)
++			return HOP_IGNORE;
++		intel_pt_set_ip(decoder);
++		decoder->state.type = INTEL_PT_INSTRUCTION;
++		decoder->state.from_ip = decoder->ip;
++		decoder->state.to_ip = 0;
++		return HOP_RETURN;
++
++	case INTEL_PT_FUP:
++		if (!decoder->packet.count)
++			return HOP_IGNORE;
++		intel_pt_set_ip(decoder);
++		if (intel_pt_fup_event(decoder))
++			return HOP_RETURN;
++		if (!decoder->branch_enable)
++			*no_tip = true;
++		if (*no_tip) {
++			decoder->state.type = INTEL_PT_INSTRUCTION;
++			decoder->state.from_ip = decoder->ip;
++			decoder->state.to_ip = 0;
++			return HOP_RETURN;
 +		}
++		*err = intel_pt_walk_fup_tip(decoder);
++		if (!*err)
++			decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
++		return HOP_RETURN;
++
++	case INTEL_PT_PSB:
++		decoder->last_ip = 0;
++		decoder->have_last_ip = true;
++		decoder->hop_psb_fup = false;
++		*err = intel_pt_walk_psbend(decoder);
++		if (*err == -EAGAIN)
++			return HOP_AGAIN;
++		if (*err)
++			return HOP_RETURN;
++		if (decoder->hop_psb_fup) {
++			decoder->hop_psb_fup = false;
++			decoder->state.type = INTEL_PT_INSTRUCTION;
++			decoder->state.from_ip = decoder->ip;
++			decoder->state.to_ip = 0;
++			return HOP_RETURN;
++		}
++		if (decoder->cbr != decoder->cbr_seen) {
++			decoder->state.type = 0;
++			return HOP_RETURN;
++		}
++		return HOP_IGNORE;
++
++	case INTEL_PT_BAD:
++	case INTEL_PT_PAD:
++	case INTEL_PT_TIP_PGE:
++	case INTEL_PT_TSC:
++	case INTEL_PT_TMA:
++	case INTEL_PT_MODE_EXEC:
++	case INTEL_PT_MODE_TSX:
++	case INTEL_PT_MTC:
++	case INTEL_PT_CYC:
++	case INTEL_PT_VMCS:
++	case INTEL_PT_PSBEND:
++	case INTEL_PT_CBR:
++	case INTEL_PT_TRACESTOP:
++	case INTEL_PT_PIP:
++	case INTEL_PT_OVF:
++	case INTEL_PT_MNT:
++	case INTEL_PT_PTWRITE:
++	case INTEL_PT_PTWRITE_IP:
++	case INTEL_PT_EXSTOP:
++	case INTEL_PT_EXSTOP_IP:
++	case INTEL_PT_MWAIT:
++	case INTEL_PT_PWRE:
++	case INTEL_PT_PWRX:
++	case INTEL_PT_BBP:
++	case INTEL_PT_BIP:
++	case INTEL_PT_BEP:
++	case INTEL_PT_BEP_IP:
++	default:
++		return HOP_PROCESS;
 +	}
 +}
 +
-+static int get_flags(const char **ptr, unsigned int *plus_flags, unsigned int *minus_flags)
-+{
-+	while (1) {
-+		switch (**ptr) {
-+		case '+':
-+			++*ptr;
-+			if (get_flag(ptr, plus_flags))
-+				return -1;
-+			break;
-+		case '-':
-+			++*ptr;
-+			if (get_flag(ptr, minus_flags))
-+				return -1;
-+			break;
-+		case ' ':
-+			++*ptr;
-+			break;
-+		default:
-+			return 0;
+ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+ {
+ 	bool no_tip = false;
+@@ -1885,6 +2011,19 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+ 		if (err)
+ 			return err;
+ next:
++		if (decoder->hop) {
++			switch (intel_pt_hop_trace(decoder, &no_tip, &err)) {
++			case HOP_IGNORE:
++				continue;
++			case HOP_RETURN:
++				return err;
++			case HOP_AGAIN:
++				goto next;
++			default:
++				break;
++			}
 +		}
-+	}
-+}
 +
- /*
-  * Please check tools/perf/Documentation/perf-script.txt for information
-  * about the options parsed here, which is introduced after this cset,
-@@ -1436,6 +1477,9 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
+ 		switch (decoder->packet.type) {
+ 		case INTEL_PT_TNT:
+ 			if (!decoder->packet.count)
+@@ -1914,6 +2053,12 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+ 			decoder->state.from_ip = 0;
+ 			decoder->state.to_ip = decoder->ip;
+ 			decoder->state.type |= INTEL_PT_TRACE_BEGIN;
++			/*
++			 * In hop mode, resample to get the to_ip as an
++			 * "instruction" sample.
++			 */
++			if (decoder->hop)
++				decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
+ 			return 0;
+ 		}
+ 
+@@ -2033,7 +2178,7 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+ 
+ 		case INTEL_PT_MODE_TSX:
+ 			/* MODE_TSX need not be followed by FUP */
+-			if (!decoder->pge) {
++			if (!decoder->pge || decoder->in_psb) {
+ 				intel_pt_update_in_tx(decoder);
+ 				break;
+ 			}
+@@ -2424,7 +2569,11 @@ static int intel_pt_sync_ip(struct intel_pt_decoder *decoder)
+ 	if (err)
+ 		return err;
+ 
+-	decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
++	/* In hop mode, resample to get the to_ip as an "instruction" sample */
++	if (decoder->hop)
++		decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
++	else
++		decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 	decoder->overflow = false;
+ 
+ 	decoder->state.from_ip = 0;
+@@ -2545,7 +2694,14 @@ static int intel_pt_sync(struct intel_pt_decoder *decoder)
+ 
+ 	if (decoder->ip) {
+ 		decoder->state.type = 0; /* Do not have a sample */
+-		decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
++		/*
++		 * In hop mode, resample to get the PSB FUP ip as an
++		 * "instruction" sample.
++		 */
++		if (decoder->hop)
++			decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
++		else
++			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 	} else {
+ 		return intel_pt_sync_ip(decoder);
+ 	}
+@@ -2609,6 +2765,9 @@ const struct intel_pt_state *intel_pt_decode(struct intel_pt_decoder *decoder)
+ 			if (err == -EAGAIN)
+ 				err = intel_pt_walk_trace(decoder);
  			break;
- 		case 'e':
- 			synth_opts->errors = true;
-+			if (get_flags(&p, &synth_opts->error_plus_flags,
-+				      &synth_opts->error_minus_flags))
-+				goto out_err;
++		case INTEL_PT_STATE_RESAMPLE:
++			err = intel_pt_resample(decoder);
++			break;
+ 		default:
+ 			err = intel_pt_bug(decoder);
  			break;
- 		case 'd':
- 			synth_opts->log = true;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index e3ce5fb03ca0..cfe6d00d8624 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -55,6 +55,9 @@ enum itrace_period_type {
- 	PERF_ITRACE_PERIOD_NANOSECS,
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
+index e289e463d635..8645fc265481 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
+@@ -250,6 +250,7 @@ struct intel_pt_params {
+ 	uint32_t tsc_ctc_ratio_n;
+ 	uint32_t tsc_ctc_ratio_d;
+ 	enum intel_pt_param_flags flags;
++	unsigned int quick;
  };
  
-+#define AUXTRACE_ERR_FLG_OVERFLOW	(1 << ('o' - 'a'))
-+#define AUXTRACE_ERR_FLG_DATA_LOST	(1 << ('l' - 'a'))
-+
- /**
-  * struct itrace_synth_opts - AUX area tracing synthesis options.
-  * @set: indicates whether or not options have been set
-@@ -91,6 +94,8 @@ enum itrace_period_type {
-  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
-  * @ptime_range: time intervals to trace or NULL
-  * @range_num: number of time intervals to trace
-+ * @error_plus_flags: flags to affect what errors are reported
-+ * @error_minus_flags: flags to affect what errors are reported
-  */
- struct itrace_synth_opts {
- 	bool			set;
-@@ -124,6 +129,8 @@ struct itrace_synth_opts {
- 	unsigned long		*cpu_bitmap;
- 	struct perf_time_interval *ptime_range;
- 	int			range_num;
-+	unsigned int		error_plus_flags;
-+	unsigned int		error_minus_flags;
- };
+ struct intel_pt_decoder;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index bddeb18648df..7cb3cf769d4d 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -1030,6 +1030,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+ 	params.mtc_period = intel_pt_mtc_period(pt);
+ 	params.tsc_ctc_ratio_n = pt->tsc_ctc_ratio_n;
+ 	params.tsc_ctc_ratio_d = pt->tsc_ctc_ratio_d;
++	params.quick = pt->synth_opts.quick;
  
- /**
-@@ -613,7 +620,10 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
- "				p:	    		synthesize power events\n"			\
- "				o:			synthesize other events recorded due to the use\n" \
- "							of aux-output (refer to perf record)\n"	\
--"				e:	    		synthesize error events\n"			\
-+"				e[flags]:		synthesize error events\n" \
-+"							each flag must be preceded by + or -\n" \
-+"							error flags are: o (overflow)\n" \
-+"									 l (data lost)\n" \
- "				d:	    		create a debug log\n"			\
- "				f:	    		synthesize first level cache events\n" \
- "				m:	    		synthesize last level cache events\n" \
+ 	if (pt->filts.cnt > 0)
+ 		params.pgd_ip = intel_pt_pgd_ip;
+@@ -1423,7 +1424,10 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
+ 
+ 	sample.id = ptq->pt->instructions_id;
+ 	sample.stream_id = ptq->pt->instructions_id;
+-	sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
++	if (pt->synth_opts.quick)
++		sample.period = 1;
++	else
++		sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
+ 
+ 	sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_in_cyc_cnt;
+ 	if (sample.cyc_cnt) {
 -- 
 2.17.1
 
