@@ -2,109 +2,144 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A28BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EB420748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C55206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594387094;
-	bh=yvoZVi3E0/UpDfzsZqUsBbugQqbpY2zB6NVoG6jwr+0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hSjuNbhomtlU2+TPSEuiOoY70HyqmIx2xNaxceyEGaFWLq924/rwDHXZhsSpgs+O9
-	 HMX8+qCaxe28rMfw8yFs907/KAgRwZXSPB6g9PtonDTuoiZAW+ugkIJv/MpjnGYD62
-	 F1Cxt/BpBylLTqc400VjctPpP6mCnRuy0qru578M=
+	s=default; t=1594387172;
+	bh=d1/GXsN4FtvvQ3dpuuOh+qoLNWXh5+3KkXm5CGMHXcI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jIojeKaYx7B/hx4DhmOo28T1CF7SQWcRousTsM5WuZfkm9EqpjblR6dmmXU3mu+wJ
+	 p7JSY6oNhLUb94tLMm10Px/KViZ317sERh9DaHUg8gi6bGbk6NM8sgCGZ32/txO8c5
+	 O6WBr2Q1Qpadewe7y9I9vsuTx+qLYiEz8qaQ/YUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgGJNSM (ORCPT
+        id S1727085AbgGJNTc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgGJNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:18:12 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFF8B206A5;
-        Fri, 10 Jul 2020 13:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594387091;
-        bh=yvoZVi3E0/UpDfzsZqUsBbugQqbpY2zB6NVoG6jwr+0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rJUjxoC3SbojUnpJq46ZYWSTVhKLEtlY0eyl4YKTc4Gb8CVAr6Q9RCMUKZgAWnoz4
-         7fC4E0a5Q/4/bZQrf3TMOjgjUfdj0HouK0YLF7X79SvHftqjw7/ecJXgNJdNnROz+o
-         gX7XW/SBKgRgNOv0xYEzm3BSCGptHbdWEEwa+nSw=
-Date:   Fri, 10 Jul 2020 22:18:02 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, hch@lst.de
-Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
-Message-Id: <20200710221802.da2f4cf077ce1bb51c7e11ca@kernel.org>
-In-Reply-To: <20200710113238.GH4800@hirez.programming.kicks-ass.net>
-References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
-        <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
-        <20200710113238.GH4800@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 10 Jul 2020 09:19:32 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:39596 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgGJNT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:19:26 -0400
+Received: by mail-ej1-f65.google.com with SMTP id w6so5998956ejq.6;
+        Fri, 10 Jul 2020 06:19:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aiyaF2FytE8HZZpLNpK3zBFemn/CG6XpT/cnzXTCJwM=;
+        b=qIvbPknn9kJz6NyTQzcE4XGs4Klbgd760knstF5NEfcadE/OgnMvvDWCHTHJqmZy9u
+         NlU7oxxbEqkLXweC3pzNNZ2LEJBhvC6JigDhYOLjBrCpNqdUl1b0yZUa356EFLeaO6N1
+         eFVR9UeySKpqaHCLh5PZJtkLXWBwnM8xdlEiIjPublXbEYnOj+Pp6SvTqwe1fbnWaTRQ
+         09+I1wmYlFMNxZY1rs1KBfWpxvwhoppNmjbcuRgQFPtJck7b/dkAOgp5wSqafsmxbKDY
+         KRZYesKRDaCWwkYpMOH0gvb5UCle9DxWiI3/tRY6bZagCI88R8hjQ3tWpYKtwXmpBtmh
+         xJ6g==
+X-Gm-Message-State: AOAM530yX5vSyg0LRUVubrMpZVDhpmAPtSt0e44uWb71x6JbYLIeagRx
+        NSxic3fioxOtLBKeJv9z2Vk=
+X-Google-Smtp-Source: ABdhPJyaUT+p8gosJzUaxrGPh/H7xAs294fLsRt3d6RK4D5/YPUDPN6b8icRktecgzIS+lDpaBenkw==
+X-Received: by 2002:a17:906:4a17:: with SMTP id w23mr63943545eju.360.1594387164434;
+        Fri, 10 Jul 2020 06:19:24 -0700 (PDT)
+Received: from pi3 ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id fi29sm3600252ejb.83.2020.07.10.06.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 06:19:23 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 15:19:21 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
+Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+Message-ID: <20200710131921.GA23039@pi3>
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+ <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
+ <20200708153420.29484-2-lukasz.luba@arm.com>
+ <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
+ <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
+ <c016e256-65a6-8075-d88d-c3fad4815b4d@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <c016e256-65a6-8075-d88d-c3fad4815b4d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 13:32:38 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Fri, Jul 10, 2020 at 07:32:57PM +0900, Masami Hiramatsu wrote:
-> > > -	page = module_alloc(PAGE_SIZE);
-> > > +	page = vmalloc(PAGE_SIZE);
-> > 
-> > No, you can not use vmalloc here. The reason why we use module_alloc()
-> > is to allocate the executable memory for trampoline code.
-> > So, you need to use vmalloc_exec() instead.
+On Fri, Jul 10, 2020 at 03:13:18PM +0200, Marek Szyprowski wrote:
+> Hi Lukasz,
 > 
-> vmalloc_exec() would be broken too, also hch recently got rid of that
-> thing.
+> On 10.07.2020 10:34, Lukasz Luba wrote:
+> > Hi Chanwoo,
+> >
+> > On 7/9/20 5:08 AM, Chanwoo Choi wrote:
+> >> Hi Lukasz,
+> >>
+> >> On 7/9/20 12:34 AM, Lukasz Luba wrote:
+> >>> In order to react faster and make better decisions under some 
+> >>> workloads,
+> >>> benchmarking the memory subsystem behavior, adjust the polling interval
+> >>> and upthreshold value used by the simple_ondemand governor.
+> >>>
+> >>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> >>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> >>> ---
+> >>>   drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+> >>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/memory/samsung/exynos5422-dmc.c 
+> >>> b/drivers/memory/samsung/exynos5422-dmc.c
+> >>> index 93e9c2429c0d..e03ee35f0ab5 100644
+> >>> --- a/drivers/memory/samsung/exynos5422-dmc.c
+> >>> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> >>> @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct 
+> >>> platform_device *pdev)
+> >>>            * Setup default thresholds for the devfreq governor.
+> >>>            * The values are chosen based on experiments.
+> >>>            */
+> >>> -        dmc->gov_data.upthreshold = 30;
+> >>> +        dmc->gov_data.upthreshold = 10;
+> >>>           dmc->gov_data.downdifferential = 5;
+> >>>   -        exynos5_dmc_df_profile.polling_ms = 500;
+> >>> +        exynos5_dmc_df_profile.polling_ms = 100;
+> >>>       }
+> >>>
+> >>
+> >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> >>
+> >
+> > Thank you for the review. Do you think this patch could go through
+> > your tree together with your patches?
+> >
+> > I don't know Krzysztof's opinion about the patch 2/2, but
+> > I would expect, assuming the patch itself is correct, he would
+> > like to take it into his next/dt branch.
 > 
-> module_alloc() really is the only sane choice here.
-> 
-> We should make module_alloc() unconditionally available, and maybe even
-> rename it to text_alloc().
+> Is there really a need to remove the interrupts property? imho they are 
+> correct hw description, it just a matter of the driver to use or not to 
+> use them.
 
-Agreed. As far as I know, ftrace and bpf also depends on module_alloc(),
-so text_alloc() will help them too.
+That's actually very good point. I would also prefer to leave them.
+However I understood that driver chooses mode depending on the property.
 
-Thank you,
+In such case, maybe as you said, let's switch to polling mode
+unconditionally?
 
+Best regards,
+Krzysztof
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
