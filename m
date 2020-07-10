@@ -2,179 +2,123 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F22CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36451C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DDE2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3122078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGJHbQ (ORCPT
+        id S1727033AbgGJHch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:31:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7832 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbgGJHbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:31:15 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C4F5854D36CBD665BFCE;
-        Fri, 10 Jul 2020 15:31:12 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 10 Jul
- 2020 15:31:11 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-References: <20200709053027.351974-1-jaegeuk@kernel.org>
- <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
- <20200709190545.GA3001066@google.com>
- <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
- <20200710032616.GC545837@google.com>
- <01d0db54-eee1-f6cd-76c3-ebe59a7abae4@huawei.com>
- <20200710035053.GH545837@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <77041117-f615-e6e6-591c-b02bf99e58c2@huawei.com>
-Date:   Fri, 10 Jul 2020 15:31:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 10 Jul 2020 03:32:37 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:54267 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725851AbgGJHcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 03:32:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0U2Gmw93_1594366344;
+Received: from 30.27.116.248(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2Gmw93_1594366344)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 10 Jul 2020 15:32:26 +0800
+Subject: Re: [PATCH v6 0/5] clean up redundant 'kvm_run' parameters
+To:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200623131418.31473-1-tianjia.zhang@linux.alibaba.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <6604e273-d7b1-5007-8721-75c4a4dec68e@linux.alibaba.com>
+Date:   Fri, 10 Jul 2020 15:32:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200710035053.GH545837@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+In-Reply-To: <20200623131418.31473-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/10 11:50, Jaegeuk Kim wrote:
-> On 07/10, Chao Yu wrote:
->> On 2020/7/10 11:26, Jaegeuk Kim wrote:
->>> On 07/10, Chao Yu wrote:
->>>> On 2020/7/10 3:05, Jaegeuk Kim wrote:
->>>>> On 07/09, Chao Yu wrote:
->>>>>> On 2020/7/9 13:30, Jaegeuk Kim wrote:
->>>>>>> It doesn't need to bypass flushing quota data in background.
->>>>>>
->>>>>> The condition is used to flush quota data in batch to avoid random
->>>>>> small-sized udpate, did you hit any problem here?
->>>>>
->>>>> I suspect this causes fault injection test being stuck by waiting for inode
->>>>> writeback completion. With this patch, it has been running w/o any issue so far.
->>>>> I keep an eye on this.
->>>>
->>>> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
->>>> issue deeper.
->>>>
->>>> How about just keeping this patch in our private branch to let fault injection
->>>> test not be stuck? until we find the root cause in upstream codes.
->>>
->>> Well, I don't think this hides something. When the issue happens, I saw inodes
->>> being stuck due to writeback while only quota has some dirty data. At that time,
->>> there was no dirty data page from other inodes.
->>
->> Okay,
->>
->>>
->>> More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
->>> waits for wb_wait_for_completion().
->>
->> Did you record any callstack after the issue happened?
+Hi Paolo,
+
+Any opinion on this series patches? Can I help with this patchset ?
+
+Thanks and best,
+Tianjia
+
+On 2020/6/23 21:14, Tianjia Zhang wrote:
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
 > 
-> I found this.
+> This series of patches has completely cleaned the architecture of
+> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
+> the large number of modified codes, a separate patch is made for each
+> platform. On the ppc platform, there is also a redundant structure
+> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
+> separately.
 > 
-> [213389.297642]  __schedule+0x2dd/0x780^M
-> [213389.299224]  schedule+0x55/0xc0^M
-> [213389.300745]  wb_wait_for_completion+0x56/0x90^M
-> [213389.302469]  ? wait_woken+0x80/0x80^M
-> [213389.303997]  __writeback_inodes_sb_nr+0xa8/0xd0^M
-> [213389.305760]  writeback_inodes_sb+0x4b/0x60^M
-> [213389.307439]  sync_filesystem+0x2e/0xa0^M
-> [213389.308999]  generic_shutdown_super+0x27/0x110^M
-> [213389.310738]  kill_block_super+0x27/0x50^M
-> [213389.312327]  kill_f2fs_super+0x76/0xe0 [f2fs]^M
-> [213389.314014]  deactivate_locked_super+0x3b/0x80^M
-> [213389.315692]  deactivate_super+0x3e/0x50^M
-> [213389.317226]  cleanup_mnt+0x109/0x160^M
-> [213389.318718]  __cleanup_mnt+0x12/0x20^M
-> [213389.320177]  task_work_run+0x70/0xb0^M
-> [213389.321609]  exit_to_usermode_loop+0x131/0x160^M
-> [213389.323306]  do_syscall_64+0x170/0x1b0^M
-> [213389.324762]  entry_SYSCALL_64_after_hwframe+0x44/0xa9^M
-> [213389.326477] RIP: 0033:0x7fc4b5e6a35b^M
-
-Does this only happen during umount? If so, will below change help?
-
-	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-+			!is_sbi_flag_set(sbi, SBI_IS_CLOSE) &&
-			wbc->sync_mode == WB_SYNC_NONE &&
-			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
-			f2fs_available_free_memory(sbi, DIRTY_DENTS))
-		goto skip_write;
-
+> ---
+> v6 changes:
+>    Rearrange patch sets, only keep the unmerged patch.
+>    rebase on mainline.
 > 
->>
->> Still I'm confused that why directory's data written could be skipped, but
->> quota's data couldn't, what's the difference?
+> v5 change:
+>    ppc: fix for review.
 > 
-> I suspect different blocking timing from cp_error between quota and dentry.
-> e.g., we block dir operations right after cp_error, while quota can make
-
-No guarantee that there is no dirty dentry being created after
-cp_error, right?
-
-e.g.
-
-Thread A				Thread B
-- f2fs_create
-- bypass f2fs_cp_error
-					- set cp_error
-- create dirty dentry
-
-BTW, do you know what __writeback_inodes_sb_nr is waiting for?
-
-> dirty pages in more fine granularity.
+> v4 change:
+>    mips: fixes two errors in entry.c.
 > 
->>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>>>> ---
->>>>>>>  fs/f2fs/data.c | 2 +-
->>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>>>>>> index 44645f4f914b6..72e8b50e588c1 100644
->>>>>>> --- a/fs/f2fs/data.c
->>>>>>> +++ b/fs/f2fs/data.c
->>>>>>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
->>>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->>>>>>>  		goto skip_write;
->>>>>>>  
->>>>>>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
->>>>>>> +	if (S_ISDIR(inode->i_mode) &&
->>>>>>>  			wbc->sync_mode == WB_SYNC_NONE &&
->>>>>>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
->>>>>>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
+> v3 change:
+>    Keep the existing `vcpu->run` in the function body unchanged.
+> 
+> v2 change:
+>    s390 retains the original variable name and minimizes modification.
+> 
+> Tianjia Zhang (5):
+>    KVM: s390: clean up redundant 'kvm_run' parameters
+>    KVM: arm64: clean up redundant 'kvm_run' parameters
+>    KVM: PPC: clean up redundant kvm_run parameters in assembly
+>    KVM: MIPS: clean up redundant 'kvm_run' parameters
+>    KVM: MIPS: clean up redundant kvm_run parameters in assembly
+> 
+>   arch/arm64/include/asm/kvm_coproc.h   |  12 +--
+>   arch/arm64/include/asm/kvm_host.h     |  11 +--
+>   arch/arm64/include/asm/kvm_mmu.h      |   2 +-
+>   arch/arm64/kvm/arm.c                  |   6 +-
+>   arch/arm64/kvm/handle_exit.c          |  36 ++++----
+>   arch/arm64/kvm/mmio.c                 |  11 +--
+>   arch/arm64/kvm/mmu.c                  |   5 +-
+>   arch/arm64/kvm/sys_regs.c             |  13 ++-
+>   arch/mips/include/asm/kvm_host.h      |  32 ++------
+>   arch/mips/kvm/emulate.c               |  59 +++++--------
+>   arch/mips/kvm/entry.c                 |  21 ++---
+>   arch/mips/kvm/mips.c                  |  14 ++--
+>   arch/mips/kvm/trap_emul.c             | 114 +++++++++++---------------
+>   arch/mips/kvm/vz.c                    |  26 +++---
+>   arch/powerpc/include/asm/kvm_ppc.h    |   2 +-
+>   arch/powerpc/kvm/book3s_interrupts.S  |  22 +++--
+>   arch/powerpc/kvm/book3s_pr.c          |   9 +-
+>   arch/powerpc/kvm/booke.c              |   9 +-
+>   arch/powerpc/kvm/booke_interrupts.S   |   9 +-
+>   arch/powerpc/kvm/bookehv_interrupts.S |  10 +--
+>   arch/s390/kvm/kvm-s390.c              |  23 ++++--
+>   21 files changed, 188 insertions(+), 258 deletions(-)
 > 
