@@ -2,129 +2,196 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE877C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48F4C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADB92076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02272078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gqZnUZmj"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XndmATdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgGJRlc (ORCPT
+        id S1727941AbgGJRm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:41:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54934 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728262AbgGJRlb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:41:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594402890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7T4TcT2qNwd8q//O8oeeKh44NiN7UalnMtay1RITTRY=;
-        b=gqZnUZmjM2Fe/lT5G3swUzgeTIQsfDOiRI/HRNfwlY6opG0Q9ftbQvZunTZmajzvnGr/VD
-        gHSqnY+2AYA2+CbONUypNhqEIHuCr3qS9yUjZuekwwI7rDtO78f4znfTKOpD9KPLK7iMxc
-        BVbocoi4KfhfHuqFwvqU7FHlAdEUBTU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-XF3EN_DgO9ukbKDmKDmI3g-1; Fri, 10 Jul 2020 13:41:28 -0400
-X-MC-Unique: XF3EN_DgO9ukbKDmKDmI3g-1
-Received: by mail-wr1-f71.google.com with SMTP id z1so6677234wrn.18
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:41:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7T4TcT2qNwd8q//O8oeeKh44NiN7UalnMtay1RITTRY=;
-        b=mCLjvBSWCqos+PbTvk0vrRr6G0ddzUTzn2tslecndYbfnUBiU/hkkCgke7DajNxDAd
-         SZNbu6EJECSklmKKeQh8kMPUpkYqVD1TJllmFlQa2aPGc/Yj714/sZVxNBukVf7OataC
-         ESWuxuXbd12GT8tfx/GT9ysVZePEwMdqHQxqAZuxV8Hvp1LoUBsA6zjY6BUDfsDtF9su
-         MoMLFdw6xssWQpL3BYKXwqA7Vp/9OxjMTk4zbupoB6XH5n/AWhsARG7yhVuoPq57A6p/
-         QG5oaWKWuyffRV2kcKsnV1LxL3/xOiw7uxLoz3Wxo3+dKVTBzSfGxCoSfjm3i/nmVo9h
-         X71w==
-X-Gm-Message-State: AOAM531EyhBJNNy/yvGzVlMZ1P40ulmCrCzQtSmVYQT7LVmo3ujZeg6r
-        UmvwtYFsfPJv09FBMzqnpBa4qkNqRoZpJQsLRqGNLavBfQ3/LMr4hitDiXKmgUo0t7aqfoNLYgl
-        8WWTPbzgRk92iwb2lUjL5xouj
-X-Received: by 2002:adf:ded2:: with SMTP id i18mr69328398wrn.109.1594402887030;
-        Fri, 10 Jul 2020 10:41:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzwrtPwmb9f55CL4HZe2X7qWuIbLQhQOjCKYpZfEsOm39uG7VPPyBFZshHpOp8qjLfKKI0zQQ==
-X-Received: by 2002:adf:ded2:: with SMTP id i18mr69328381wrn.109.1594402886824;
-        Fri, 10 Jul 2020 10:41:26 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id j14sm11250889wrs.75.2020.07.10.10.41.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 10:41:26 -0700 (PDT)
-Subject: Re: [PATCH v3 3/9] KVM: x86: mmu: Add guest physical address check in
- translate_gpa()
-To:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org
-References: <20200710154811.418214-1-mgamal@redhat.com>
- <20200710154811.418214-4-mgamal@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2cb33bf8-f4f9-6a5b-ca72-d2dbcafc436d@redhat.com>
-Date:   Fri, 10 Jul 2020 19:41:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 13:42:56 -0400
+Received: from mail-eopbgr750084.outbound.protection.outlook.com ([40.107.75.84]:12814
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726962AbgGJRmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:42:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HeVfTYTvgTZxK4lCyWEZ6bZwRtkOeTFx/SFLkD/Ij97N8kh3571/twWylrMMjLjAjgvoRtMzrCTIGfpWWmGosl0+efEMJcZAET0UIsT3QwT0et4lv2cZqo1PO43Y1NWrrimHk0CUQgBctmN5Qk2E2fdFYCqX7HxEHzTwowcial1WyhXeHTMAhgfHxh+OgJ5RbpxD4I2MD5N9CiwXD3sEyfgYiy3aG7xzzwIr0FjAnZgezDNFoo+vM05VGDIGpVTRxyL7iH5EGbaqDsv1tiE9aS9T/FD6l0H7cZ42WhKEGU1bTeeZ0xqaaZzf4tF7ox6nlwexFOCno5pZevujj9J29w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/7mZzv7Xl/KY/HtaYlkOQSAy9lO8krjgsxp4FLAY7sM=;
+ b=YgLx5zC7Trz33FEAdb1DR2TOK6UC1VY2AuSXa1QOkabvT040Q/mtbLXWzHwGbeKuDHFCdwXppJR/ts9oYTCVVwk1ROdSBvHh1/xnFfJ6b+gjSlLP5xzS2MRbmDsLXlnmgo98IeCKbAkI+7wDhYGEa/zq36paUWMWFpwlKfqAWQ6MGGF+jYa3djWqR3i1av9hRMnVyig6Qhk/K31a0fa9nqiujbJg/zvxmnbVxdZMZch4fxN/7wjKVPOylFwlfiYvfbDp5nt+cydQfc8lLWlrYMuLBK+orxakqwWgicxygfDOrdZxBBdWgPu8vZvuY43kxn0X60eGUBtzaUQaAMShkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/7mZzv7Xl/KY/HtaYlkOQSAy9lO8krjgsxp4FLAY7sM=;
+ b=XndmATdh/2rnL9FJIp7oUA+mRU/1eq9YnGpAaYsq6gO1oNVk15Q84gOibSu9K6jGiO8BwqvWOi4qW1GFP0WOIrlxSp/l6D8d6jfdmKj4FL0z4Xrg+JuKHstnCngAKH3yt5NyTK3H24hZCCmL6DbSd9YXVeXxhL2dgEVgivvNHBA=
+Received: from MN2PR15CA0058.namprd15.prod.outlook.com (2603:10b6:208:237::27)
+ by DM5PR02MB3894.namprd02.prod.outlook.com (2603:10b6:4:b1::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Fri, 10 Jul
+ 2020 17:42:50 +0000
+Received: from BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:237:cafe::81) by MN2PR15CA0058.outlook.office365.com
+ (2603:10b6:208:237::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend
+ Transport; Fri, 10 Jul 2020 17:42:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT030.mail.protection.outlook.com (10.152.77.172) with Microsoft SMTP
+ Server id 15.20.3174.21 via Frontend Transport; Fri, 10 Jul 2020 17:42:50
+ +0000
+Received: from [149.199.38.66] (port=52371 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <stefano.stabellini@xilinx.com>)
+        id 1jtx1N-0005rt-TG; Fri, 10 Jul 2020 10:41:13 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <stefano.stabellini@xilinx.com>)
+        id 1jtx2w-0000B6-0G; Fri, 10 Jul 2020 10:42:50 -0700
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06AHgj2Z020161;
+        Fri, 10 Jul 2020 10:42:45 -0700
+Received: from [10.23.120.244] (helo=localhost)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <stefanos@xilinx.com>)
+        id 1jtx2q-0000AD-VH; Fri, 10 Jul 2020 10:42:45 -0700
+Date:   Fri, 10 Jul 2020 10:42:44 -0700 (PDT)
+From:   Stefano Stabellini <stefano.stabellini@xilinx.com>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+cc:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Rob Herring <robh@kernel.org>,
+        Ben Levinsky <BLEVINSK@xilinx.com>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        Michal Simek <michals@xilinx.com>,
+        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefano Stabellini <stefanos@xilinx.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+In-Reply-To: <20200630022029.GC407764@builder.lan>
+Message-ID: <alpine.DEB.2.21.2007101023470.4124@sstabellini-ThinkPad-T480s>
+References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com> <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com> <20200511221755.GA13585@bogus> <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
+ <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com> <alpine.DEB.2.21.2006291734370.8121@sstabellini-ThinkPad-T480s> <20200630022029.GC407764@builder.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200710154811.418214-4-mgamal@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(7916004)(396003)(39860400002)(136003)(346002)(376002)(46966005)(478600001)(8676002)(26005)(5660300002)(44832011)(426003)(9786002)(336012)(186003)(2906002)(81166007)(82310400002)(356005)(9686003)(316002)(8936002)(33716001)(6916009)(83380400001)(70586007)(107886003)(54906003)(4326008)(70206006)(47076004)(82740400003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0ec5cbec-15ab-4463-9daf-08d824f8aa82
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3894:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB38940C23640C9790BF30B32AA0650@DM5PR02MB3894.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3ISK0oNbGxf+sH2GYI/jLr/UkA+I/a5VQfyBQV8Wc24gvee5V8dBqPzI32t9/dL6HCZxnSFIGVoKrbRQKRN5IDqyuIdH8mYfT2HgjGy5NXdNy2V8F0f6cwkesebHNFz7BJlNfwunwuS1+0Qxbza+zmnlrEW8utTHZj0cpvRHqcGcPOFFuMqtL3LAhFJVONupNBw7CTt+BiBgypTaaKOLf++2aY8FKZB14tSVo1/6I84wyxGQaqoBiHDemDhHQfLPuBfeuZqmcLkhAm9XtDz1krYKtuncCqlW6nRqtJfwH/ai/JzTsN4F2GZ5s/dBhgBCALLyuIeTAv/WRSpV0hbxeXWVBud1omwXC8rPzGfU/eEVN6DOwsMUylMYnlyvrjGu+3Fz267LHVJYNgaBMY3zD/TO26QuwifYE3/vUYnJBYL6qMh+/nCulAR0sCL2N1Yil2mkS/oGULoWvY6shejj87yV+aL87I4tqgTLfTZLgjQ=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 17:42:50.3981
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ec5cbec-15ab-4463-9daf-08d824f8aa82
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3894
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/20 17:48, Mohammed Gamal wrote:
-> In case of running a guest with 4-level page tables on a 5-level page
-> table host, it might happen that a guest might have a physical address
-> with reserved bits set, but the host won't see that and trap it.
+Sorry for the late reply, a couple of conferences kept me busy.
+
+
+On Mon, 29 Jun 2020, Bjorn Andersson wrote:
+> > However, given the fragmentation of the remoteproc bindings across
+> > multiple vendors (they are all different), I think it is a good idea for
+> > Linux, for System Device Tree, and in general to come up with simpler
+> > remoteproc bindings, more aligned between the vendors. If nothing else,
+> > it is going to make Lopper's development easier.
+> > 
 > 
-> Hence, we need to check page faults' physical addresses against the guest's
-> maximum physical memory and if it's exceeded, we need to add
-> the PFERR_RSVD_MASK bits to the PF's error code.
+> In my view the big reason for the fragmentation between bindings is
+> because they all describe different hardware. There has been common
+> properties of remoteprocs discussed, but apart from the firmware-name
+> property I don't think we have agreed on any.
+
+Yeah, it is as you wrote.
+
+I meant to say that there might be room for improvement if the vendors
+come together and agree on a few more common properties. However, I
+don't have any concrete suggestions on this yet.  Also, as mentioned, we
+can work with today's bindings just fine from a system device tree
+perspective.
+
+
+> Can you give some examples of how you will be able to describe the
+> hardware involved in powering/clocking resources surrounding your
+> remoteproc and the necessary resources in a "simpler and vendor neutral"
+> way that then can be further lopped(?) into something that Linux can use
+> to control any remoteproc?
+
+The description at the system device tree level looks a bit different,
+which might make the problem a bit easier, or at least different.
+
+Let me give you some context. Lopper
+(https://github.com/devicetree-org/lopper) is a tool that takes a system
+device tree as input and generates one or more traditional device trees
+as output (i.e. today's device tree for Linux.)
+
+System device tree comes with the description of multiple "execution
+domains" (https://connect.linaro.org/resources/ltd20/ltd20-205/) and
+the ability to assign resources to each of them. That part is
+vendor-neutral.  We also have the ability to define a vendor-specific
+flag when assigning resources.
+
+All together it enables us to describe an openamp/remoteproc system with
+only very few vendor-specific info. I am working on a full example of an
+input system device tree with openamp information and the resulting
+traditional Linux devicetree. I'll make sure to reach out when I have it
+ready.
+
+
+
+> > So I think it is a good idea to take this opportunity to simplify the
+> > Xilinx remoteproc bindings as you suggested. The idea of to removing the
+> > TCM nodes is a good one. In addition I asked Ben to have a look at
+> > whether the mboxes and mbox-names properties can be removed too.
+> > 
 > 
-> Also make sure the error code isn't overwritten by the page table walker.
-> 
+> If your remoteproc uses a mailbox for signaling, then this should be
+> described in devicetree. This will allow you to reuse components in
+> other designs where either part is replaced or reused.
 
-New commit message:
-
-
-    KVM: x86: mmu: Add guest physical address check in translate_gpa()
-    
-    Intel processors of various generations have supported 36, 39, 46 or 52
-    bits for physical addresses.  Until IceLake introduced MAXPHYADDR==52,
-    running on a machine with higher MAXPHYADDR than the guest more or less
-    worked, because software that relied on reserved address bits (like KVM)
-    generally used bit 51 as a marker and therefore the page faults where
-    generated anyway.
-    
-    Unfortunately this is not true anymore if the host MAXPHYADDR is 52,
-    and this can cause problems when migrating from a MAXPHYADDR<52
-    machine to one with MAXPHYADDR==52.  Typically, the latter are machines
-    that support 5-level page tables, so they can be identified easily from
-    the LA57 CPUID bit.
-    
-    When that happens, the guest might have a physical address with reserved
-    bits set, but the host won't see that and trap it.  Hence, we need
-    to check page faults' physical addresses against the guest's maximum
-    physical memory and if it's exceeded, we need to add the PFERR_RSVD_MASK
-    bits to the page fault error code.
-    
-    This patch does this for the MMU's page walks.  The next patches will
-    ensure that the correct exception and error code is produced whenever
-    no host-reserved bits are set in page table entries.
-
-Paolo
-
+OK
