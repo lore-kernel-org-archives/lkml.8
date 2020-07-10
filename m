@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E04C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7353DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCBD20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA8020772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMRQJYeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arCHEQlS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgGJJyo (ORCPT
+        id S1728031AbgGJJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
+        Fri, 10 Jul 2020 05:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgGJJy1 (ORCPT
+        with ESMTP id S1727943AbgGJJy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:54:27 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC09DC08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:27 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id l17so5489362wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:27 -0700 (PDT)
+        Fri, 10 Jul 2020 05:54:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399C5C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so5271711wml.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vGrB4C2EapNRMSvNvzwinnqh7atFRSmJOU/XyLZhEhE=;
-        b=MMRQJYehw8ZQxxFT5CqPiRrGsbm364F4MVV/yZWQp1C+52h+7xpyjj46Xj+tgW0zyU
-         AvB0zj5LduZikGya+Y2tPRfS2wzszgBc/5FP/xJQgtR0qrzyJYzBXJ3zhmUKmCSSQ0Mg
-         Y0oowsdZX17mt+QREO7oYdJeLf4sN3ajCGwcQR9vhnpOvRKZ6mnWeEyUPTdSCUlHBhhb
-         huZCxkWq6OVL3sipFjWcoIjtzlhr8ERlCkfkZRBSfRbtTriB1PwTZarV8WgMt+66xYfv
-         d5u6NhGC1UyZrHSPqECxrYoXk4r5KMUVDkjlfni0Q15OzKegnU8jihN9CkckWWFLSTeM
-         kRiw==
+        bh=8VG9wQ36+6wND2b+1ll55zwCVUgbhF9bJxt2xblFID8=;
+        b=arCHEQlSPWMax2PHYcz1oSUlwEmdK/gJoipdUagX+JC4fIdh2+uF0ipKITX1uERJ7a
+         McyCu8VSAkzZ2X1uIPcoPYrt57DcBTgqlbaDnNPj1+EzZGCWMo6kPGoxlvm6ekXMCbdK
+         ZgycShxzBoHe4pSmN2YkIrKtYK8tgCZaaOlmVmjsBjG6dlStcaYLaOqVqrh36TACYRj7
+         47pOHc8JeQNlLbRjrFIJL7ukWLVyoqlDy542+r+MRB9cTeXb4XCdZzr6xb/GSkPsvY62
+         DZCA6xa1A+MqBlVYeB5j1lR+2q9QVXpaJnFxpa52glDuRuTPkWF4gIBGRGhNrXRCZ6hc
+         RJIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vGrB4C2EapNRMSvNvzwinnqh7atFRSmJOU/XyLZhEhE=;
-        b=pigyUaB9cYItaUvh1QnViTTimgZn31YLn64tcrItkcNawjNCPL1bMa+aGzln4XYXcf
-         y6fF0Y4BDHvggeWV8EpjEMD4h4iVjaS8IbAXDQmtD8YSsCx3/97Bk7Frsx0sjJA6C+1y
-         BKGe9FhzmVvnP9i5ZE0psJ73+kT9mL8XM/cEAl/x5ujM/lzIx84mgT3PmaHFFHSePGYR
-         Fnt/Uwh/E6Ii6BvXYcvMa4iWJ+msN5LW3kaqqowXeLdIWVLIMjj4DaHIJ+T8lt5sJXXE
-         9DCWzIkkpJqfm4mD+BTkf5OeZypYaUrxffPItRyDd71rvR2FvH8ECuNvKkhlJJuR8zyA
-         NuFw==
-X-Gm-Message-State: AOAM533+xpYDJ7jZIUGO+m8KqRc7l3pW25D+rF6+gtNYfQt9LcXBcZV0
-        Y+st0+UeuxTuMecp08y1Fr9W/AD15t4=
-X-Google-Smtp-Source: ABdhPJxvOyxWrFrfdSeYFgEZW0vN3ESP+d6i5l29mIhd8ro9UaD9Zd651omuIzA2cece87Wv0D2yrA==
-X-Received: by 2002:a1c:dfc5:: with SMTP id w188mr4526829wmg.182.1594374865613;
-        Fri, 10 Jul 2020 02:54:25 -0700 (PDT)
+        bh=8VG9wQ36+6wND2b+1ll55zwCVUgbhF9bJxt2xblFID8=;
+        b=iIG+JKWZXgdjnp3940JDR23fGxBZzNHYje2D/rtk0Dzm9/L1frIqN+dSByqqMrOwSZ
+         AMmH7/jEg9oXsqeCN5uXkyYqBzT7ZgR4QQRADR6Q3ZT27f9W5BvO3TBzNcJKl0G6VO6R
+         VyBgCvz+Zm7RsME1LYsraaWN8WDHS9K40XbWdEKfryKJi67nq2F15bp72QFuAzcIV+sy
+         +UxdRWm1e/03+s+hzQ60qdxtDfdprnNA/LN2RczUskoZ1Nd7mXA7rq4X2ZI9xdwP+kWD
+         Zw/2q1V/BxaB2EIXk0VeMt+Y59EyrVl+nyly/PlcXWuqGPDW6jC/AKkbG9hral6dUVYX
+         JAIg==
+X-Gm-Message-State: AOAM532OkMxfOGI301ZPW3c7mPJq6/tEShGNV/FSFwQJy2baFT8kJT+P
+        jt3BrORY5QWC/7wVcbamTaQ=
+X-Google-Smtp-Source: ABdhPJyCS0Byis+30zzDr4BEH6T3l1hR4Yd0kDf359JHDMzQ2V1yzUqlbi3l5elMmoSteGmC6tQ0gA==
+X-Received: by 2002:a1c:5646:: with SMTP id k67mr4515905wmb.61.1594374866911;
+        Fri, 10 Jul 2020 02:54:26 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id u23sm10176092wru.94.2020.07.10.02.54.24
+        by smtp.gmail.com with ESMTPSA id u23sm10176092wru.94.2020.07.10.02.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 02:54:24 -0700 (PDT)
+        Fri, 10 Jul 2020 02:54:26 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 11/14] arm64: defconfig: Enable devfreq cooling device
-Date:   Fri, 10 Jul 2020 11:54:06 +0200
-Message-Id: <20200710095409.407087-12-peron.clem@gmail.com>
+Subject: [PATCH v5 12/14] arm64: dts: allwinner: h6: Add cooling map for GPU
+Date:   Fri, 10 Jul 2020 11:54:07 +0200
+Message-Id: <20200710095409.407087-13-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200710095409.407087-1-peron.clem@gmail.com>
 References: <20200710095409.407087-1-peron.clem@gmail.com>
@@ -85,29 +85,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devfreq cooling device framework is used in Panfrost
-to throttle GPU in order to regulate its temperature.
-
-Enable this driver for ARM64 SoC.
+Add a simple cooling map for the GPU.
 
 Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 89538d9e39e5..8a295bcb4dd3 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -504,6 +504,7 @@ CONFIG_SENSORS_INA2XX=m
- CONFIG_SENSORS_INA3221=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
-+CONFIG_DEVFREQ_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_QORIQ_THERMAL=m
- CONFIG_SUN8I_THERMAL=y
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 9ce78a7b117d..1c939c55aaea 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -175,6 +175,7 @@ gpu: gpu@1800000 {
+ 			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
+ 			clock-names = "core", "bus";
+ 			resets = <&ccu RST_BUS_GPU>;
++			#cooling-cells = <2>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -1013,6 +1014,27 @@ gpu-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 1>;
++
++			trips {
++				gpu_alert: gpu-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.25.1
 
