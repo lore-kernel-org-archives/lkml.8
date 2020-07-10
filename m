@@ -2,105 +2,98 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A5EC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE9AC433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822952063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594388505;
-	bh=i75CBXIgGhcZUa4Q5eVv78+LmWfKj2lmU+kA47/adfU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FFGIYE1LTv2EVq4zWdgO2kaDfAcAMcBIaA6JbqqgVGqSMZzxn9YiaBf2L55DHiyPs
-	 J18hLz8g0izdPPFH5T2JKU9ohgkBLyKG5ePlFITXxoBeGSsduu9S2T2ZfkE2fXwvSn
-	 L/p2NxpFtUlL/lIUFfe1zOZ6i8ilSgDnnSwIvTXY=
+	by mail.kernel.org (Postfix) with ESMTP id 38490207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vuz2JZoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgGJNlo (ORCPT
+        id S1727989AbgGJNlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgGJNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:41:43 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95917207DF;
-        Fri, 10 Jul 2020 13:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594388502;
-        bh=i75CBXIgGhcZUa4Q5eVv78+LmWfKj2lmU+kA47/adfU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BVP2jY9BJ54jjApBEPD0xvCJ3d7zT7Oyt4yCdw6oxKWIRmgnSMcGpIU28L0X3wCxh
-         bXzut1P37bZxexmGGjWs8ERCJodOW/vggL3EuRUxtOy4TZBDtPsFf8/2Lxaz6AIvYX
-         2BbnS0Pdbqa9ra4kz6hbuXtlqtqQ4nbR47BzrjBc=
-Received: by mail-ot1-f51.google.com with SMTP id h1so4179773otq.12;
-        Fri, 10 Jul 2020 06:41:42 -0700 (PDT)
-X-Gm-Message-State: AOAM530r2+Cz20n1SpT+xeudNBFl0PqXzFDpPWvhjHJxIkTRQOhXAmYS
-        52xXlgRGrJjKt0kTaFIKzgrMHWGS3tEPsBxuvN8=
-X-Google-Smtp-Source: ABdhPJzMDks2bKtBSSU06I1kMxmshqTzgvxqZ+s5CEUL5PYeC51lRTbaxITZFvhimohokw08oLmR71FMFMUIrqKF7Zk=
-X-Received: by 2002:a9d:7553:: with SMTP id b19mr11274563otl.77.1594388501943;
- Fri, 10 Jul 2020 06:41:41 -0700 (PDT)
+        Fri, 10 Jul 2020 09:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgGJNlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:41:50 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDCAC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:41:50 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g75so6211378wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=e/ZA0Mv8NdkQdP738drSY8vNZ7QUvkBua0yy5iWDaA8=;
+        b=vuz2JZoJqFAW0+FjDz7LUDip+uu6EGgOtzTmR+2TUNwxSBMoB5XOpkxEnyrbPCj8qJ
+         q8pj+Yv3r4zZhyrfWdfqUbeH/VzNh9/007rxkOntOqXFdlERnU2NFzV+5s8GgkDIglkv
+         xVww0jfxdL3XLqjigWsKEuh+gRSVc6WTFo5zwgGhyDvRTLvNohS/cfmBku4m4Yx6C7Ot
+         Kk169VbdkV8RpOt7kEixxTcduLOTXvVVz63q9Mi65X6gIYQl2x8jzQm9xG5+3getfZMh
+         xt4saUboqABXxU1aUPw2ijTAfoolymk+/WW2dAlpFmEnU0ZswXWRwnDwOyJouXp18mqk
+         HLrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e/ZA0Mv8NdkQdP738drSY8vNZ7QUvkBua0yy5iWDaA8=;
+        b=NNSWx/AgF9f22pG+wqdFF3fABbSf+ERb+ZOUr2XT3PxVZeixvIlJDtWJiLoXZyNYhP
+         zUJH0v/OWE4AcUoenSv6lDLkRt8To5n/vr1U7LpAKSflDLrRTc3U0RZ1tHqq3eqDSt+5
+         iqeHTJymi4go71qJ1jPkfr0sFRJTpXcP5z/AsDAU1EntSJOCnZH1IvVERgC7X2rbzndg
+         2PtVuh1pZwdLg8cPuhIYnA3vis8di9Yv/xpgJrkN6B7npQLXuezQ+VZDTR6oWfWu0d6j
+         cwFyMtSSqSsiG04Mxl7aEAABbeCX2BauXeqs5oukAvycBQR8joLCMOqe41NPux8XmTW+
+         h4nA==
+X-Gm-Message-State: AOAM532Og3TTZ9gQ+OcI93f5hN0npuwUNtO/ifceS44RDiajTYrHjc7j
+        oBaalg0Pw26VyoULYZUV+Oa3NA==
+X-Google-Smtp-Source: ABdhPJy7mN8DlGdbaVh/uhawD0B97hOHCbVHTpQzoL9nDsGzKMxgMryaSi16uOFHKGvedQnIuww9XA==
+X-Received: by 2002:a7b:cc91:: with SMTP id p17mr5556402wma.90.1594388508960;
+        Fri, 10 Jul 2020 06:41:48 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id b62sm9386006wmh.38.2020.07.10.06.41.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 06:41:48 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 14:41:46 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3] kdb: remove unnecessary null check of dbg_io_ops
+Message-ID: <20200710134146.xk6je7ttp7ksmhj3@holly.lan>
+References: <CAFA6WYNpCG2xPERd=NeKf+EthbX+1R4iieOL52kWnBp8y_+Nbw@mail.gmail.com>
+ <20200630082922.28672-1-cengiz@kernel.wtf>
+ <CAD=FV=XbMfwAQ+M7oMksd0dv9xjkQrGhU8hVNahn7+vxTuhT6A@mail.gmail.com>
+ <4b91d92eda95cf4f1e153544ff4c17e1@kernel.wtf>
 MIME-Version: 1.0
-References: <20200610141052.13258-1-jgross@suse.com> <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
- <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
- <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com> <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
- <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com> <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
-In-Reply-To: <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Jul 2020 16:41:30 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGsAsOiBsbhT9TXNBsjba=GXHegYbGOpaVFR0vZ8w3+bw@mail.gmail.com>
-Message-ID: <CAMj1kXGsAsOiBsbhT9TXNBsjba=GXHegYbGOpaVFR0vZ8w3+bw@mail.gmail.com>
-Subject: Re: [PATCH] efi: avoid error message when booting under Xen
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b91d92eda95cf4f1e153544ff4c17e1@kernel.wtf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 at 16:38, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote=
-:
->
-> On 10.07.20 15:27, Ard Biesheuvel wrote:
-> > On Fri, 10 Jul 2020 at 13:17, Bartlomiej Zolnierkiewicz
-> > <b.zolnierkie@samsung.com> wrote:
-> >>
-> >>
-> >> [ added EFI Maintainer & ML to Cc: ]
-> >>
-> >> Hi,
-> >>
-> >> On 7/9/20 11:17 AM, J=C3=BCrgen Gro=C3=9F wrote:
-> >>> On 28.06.20 10:50, J=C3=BCrgen Gro=C3=9F wrote:
-> >>>> Ping?
-> >>>>
-> >>>> On 10.06.20 16:10, Juergen Gross wrote:
-> >>>>> efifb_probe() will issue an error message in case the kernel is boo=
-ted
-> >>>>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoi=
-d
-> >>>>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
-> >>>>> isn't set.
-> >>>>>
-> >
-> > Why not test for EFI_MEMMAP instead of EFI_BOOT?
->
-> Honestly I'm not sure EFI_BOOT is always set in that case. If you tell
-> me it is fine to just replace the test to check for EFI_MEMMAP I'm fine
-> to modify my patch.
->
+On Fri, Jul 10, 2020 at 03:15:55PM +0300, Cengiz Can wrote:
+> Hello Daniel,
+> 
+> On 2020-07-01 01:32, Doug Anderson wrote:
+> > 
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Tested-by: Douglas Anderson <dianders@chromium.org>
+> 
+> Wanted to ask about the status of this proposed patch.
+> 
+> I have checked your tree in git.kernel.org but you might be
+> collecting them somewhere else perhaps.
+
+It's applied... but then holiday happened. Should be pushed out soon.
 
 
-Yes please
+Daniel.
