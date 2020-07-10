@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7450C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D24C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E242078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E250B2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594400114;
-	bh=das7VozmdKMpxCnnu9V9d1M8qijYd1MvL60anUbk9KQ=;
+	s=default; t=1594400126;
+	bh=cUWvaNw36CURi1cf7rCqKXQeFUfDzNnJTX52vYnWDHE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=punCJvOqRjde4lhsfwPAKwHjiisI7F4CNJpfGV5Tuz0fX0xnYPIrodW7HtaPnlhXY
-	 At5ZoCxWv5Kt81V7PAxik0/jdGIG/I2kAZtmF49HUkya56vGwnDP1HnW9UAV6ay36n
-	 24tCoz+8GVlc7Ol549/MssbTiico1r07KpTxyrlo=
+	b=il80YYSoyNCqW57Bd0gcB12aQdvyqoYzAz/Pyv+Eu6K6Wr1JOCWFPcLKbu2JKbozi
+	 F0Z3cQjTV9fsUIalUOc9LasGoFIBUsxj5MPejMoGDK15PENcYKSLFSj+CYgRSk5JqZ
+	 yDTwYHYmzrFlCUEycfw1o7g750GIMIbYtxLNEWOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgGJQzN (ORCPT
+        id S1728778AbgGJQzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgGJQzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:55:05 -0400
-Subject: Re: [GIT PULL] more s390 updates for 5.8-rc5
+        id S1728214AbgGJQzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:55:07 -0400
+Subject: Re: [GIT PULL] pin control fixes for the v5.8 series
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594400105;
-        bh=das7VozmdKMpxCnnu9V9d1M8qijYd1MvL60anUbk9KQ=;
+        s=default; t=1594400106;
+        bh=cUWvaNw36CURi1cf7rCqKXQeFUfDzNnJTX52vYnWDHE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hPpIt0LBwoqPsDFTdu1fF2BnAZKbM2QMH+sOvY5pNw1vJhh7fJksxUIvZeR5twUP3
-         U5F4cvkYrBc0KJby8o+BrmV+R3T974BW0u7dCUxHSBLVDjLsGa4aaymtxMa6sVYSkW
-         wJNKI7Zdv0IpXQrVOwoXYwy6qYB6wb2LiLG13YT4=
+        b=ajKd6ncvQ+vtBDsOApGgi5rdwACvZe3RIozFgWZpPeJqlZy4NTuxJTvnE6xaIVYCX
+         Lvsgdik4jJo/dthdlHmEdHmW3f9fv/KxqU8F9KE6jZIqjgwKYekzBlIcTEC6Ldtyjc
+         gGA8bbiUFLbDnVbVf8Ocja8Eh0g6wyZa8h2lRNlk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200710134740.GA14845@osiris>
-References: <20200710134740.GA14845@osiris>
+In-Reply-To: <CACRpkda48QqW7P9wKghFTk6T9B74drHLSxjQSANgfEFxmgm=Dw@mail.gmail.com>
+References: <CACRpkda48QqW7P9wKghFTk6T9B74drHLSxjQSANgfEFxmgm=Dw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200710134740.GA14845@osiris>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
-X-PR-Tracked-Commit-Id: dd9ce2d6eeaebbdd342cbe095b7a195d569f18d3
+X-PR-Tracked-Message-Id: <CACRpkda48QqW7P9wKghFTk6T9B74drHLSxjQSANgfEFxmgm=Dw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ tags/pinctrl-v5.8-3
+X-PR-Tracked-Commit-Id: f8e99dde21995d185e2379e34ea2b96acf85702b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e8749d068855c2b075b3de1985e6af836a02b257
-Message-Id: <159440010524.18761.7709098818759791442.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Jul 2020 16:55:05 +0000
-To:     Heiko Carstens <hca@linux.ibm.com>
+X-PR-Merge-Commit-Id: 25aadbd2a8ad05ed0477cb94c7659075f540d158
+Message-Id: <159440010686.18761.8126690621871435872.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Jul 2020 16:55:06 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jul 2020 15:47:40 +0200:
+The pull request you sent on Fri, 10 Jul 2020 17:40:37 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.8-3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e8749d068855c2b075b3de1985e6af836a02b257
+https://git.kernel.org/torvalds/c/25aadbd2a8ad05ed0477cb94c7659075f540d158
 
 Thank you!
 
