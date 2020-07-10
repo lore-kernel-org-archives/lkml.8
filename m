@@ -2,153 +2,133 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1232EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B94C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0FE2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D520720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="TmqySOYT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pEe0x1D2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGJWpo (ORCPT
+        id S1726831AbgGJWod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:45:44 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:48538 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgGJWpo (ORCPT
+        Fri, 10 Jul 2020 18:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgGJWoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:45:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yfpklkI0Uly04vToX/pHdtTu+UTS4eaBLrvZbAHOPmk=; b=TmqySOYTTQGIPLD1sUww08Ijk5
-        C0NMmGEIhicVx2C+JFTUHWV4O0e/kmG5QqKp+MlWcF/ZLZI5l0meDwr6eZC07Co4v9iuB8EvPeGdL
-        Gg48OyeARxA8TBk5wW08ARVUddvtqCbUmx11Uy21PoosR2n2g1QWOXgliGEhWTk17+0Y=;
-Received: from cpe-107-184-2-226.socal.res.rr.com ([107.184.2.226] helo=zen.bslabs.net)
-        by mail.codeweavers.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <bshanks@codeweavers.com>)
-        id 1ju1lx-0006qf-7t; Fri, 10 Jul 2020 17:45:40 -0500
-From:   Brendan Shanks <bshanks@codeweavers.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ricardo.neri-calderon@linux.intel.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        ebiederm@xmission.com, andi@notmuch.email, Babu.Moger@amd.com,
-        Brendan Shanks <bshanks@codeweavers.com>
-Subject: [PATCH v5] x86/umip: Add emulation/spoofing for SLDT and STR instructions
-Date:   Fri, 10 Jul 2020 15:45:25 -0700
-Message-Id: <20200710224525.21966-1-bshanks@codeweavers.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 10 Jul 2020 18:44:32 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545E1C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id x2so1292139oog.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
+        b=pEe0x1D2oXhrROhhsfdBSl2Of0HeeOQzHLu21ytP7olDdMMZPcgjiV0SFxkgRAMS/a
+         zblIckErEPPlyKbegdkpsh0OW2Xqu9dnKnUdDl8IU+qez3avQGV8FZM14sbgNWmRlm7w
+         Ko1PO1Prn7C0/+tMbFDpECoaIDNxX4OffjwTb6Ox7od3D9ZNzpnW3pgRUR/h8hQQQUnw
+         NAWhdtBgvYpwFCMZjLHabISmRiZm6E7qj3wdj04qmnUqNzmD90pKyk3HAmgJ+Eu491o1
+         m/JxPxczvMRz7ZVoUvv+TZ8LvVDcYiZGgoZQEAs290rCxG9VW0H0QJwbyUdRTgYdcdoP
+         jx5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
+        b=VBkyRMK5TArfeHWKioPQpej2GEs+O/HpBVewMFKz946muJbpQKNFr5TcbXxQ5Tq96+
+         rYqxblRtT++qcQFnZbGJe5i2stgTXDzmHzk0rhC62tM9bLECI2N1ufdKBAPD3WI1SGdU
+         V8FoVxMkSSjMd2dmRGjh/xSSd2b0WzhJNksTiOjV6CzIkuaGn8V65BTzAWfFM1KevcXX
+         7EzNzgnBvxjWkrIQLiSAO3XXwzWsuoJ5AJdBT75pCDEi6WuoEbUZBDwvGdQIh0GH6Ndk
+         OufT4GNM1sD0PmzXAdNN7/aWtNeZL/USGUXZOqJ2McN2WdQQQqnyOrpPHhIzlIhH1wDa
+         W0cg==
+X-Gm-Message-State: AOAM530kykD1CzK8mWixbfETQlzrMgYog+expNFGUXAW8yAVytEdimEo
+        5BEC3fuaQ5sfM1Ne1gbjkEYOrRb3EbICbLeg6GZiLg==
+X-Google-Smtp-Source: ABdhPJwHQLhjN0fx5nsYDQ/5gAMYf/FtTG+FNllJpIvQ3csH/hy0WBxDIT6X+tOsNnJi0NtINvoXzdjwg4qm1AYXGVE=
+X-Received: by 2002:a4a:d08a:: with SMTP id i10mr60007237oor.88.1594421071672;
+ Fri, 10 Jul 2020 15:44:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200625001039.56174-1-john.stultz@linaro.org>
+ <20200625001039.56174-4-john.stultz@linaro.org> <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+ <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+ <87wo3setn8.wl-maz@kernel.org> <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
+In-Reply-To: <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 10 Jul 2020 15:44:18 -0700
+Message-ID: <CALAqxLW14f4Gn6Q3b89X10y7=Zct2NJSgjagUqxez_bObcp42w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a
+ permanent module
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
-processes.
+On Thu, Jul 9, 2020 at 11:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> Quoting Marc Zyngier (2020-06-27 02:37:47)
+> > On Sat, 27 Jun 2020 02:34:25 +0100,
+> > John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > >
+> > > > Is there any reason to use IRQCHIP_DECLARE if this can work as a
+> > > > platform device driver?
+> > > >
+> > >
+> > > Hey! Thanks so much for the review!
+> > >
+> > > Mostly it was done this way to minimize the change in the non-module
+> > > case. But if you'd rather avoid the #ifdefery I'll respin it without.
+> >
+> > That would certainly be my own preference. In general, IRQCHIP_DECLARE
+> > and platform drivers should be mutually exclusive in the same driver:
+> > if you can delay the probing and have it as a proper platform device,
+> > then this should be the one true way.
+> >
+>
+> Does it work? I haven't looked in detail but I worry that the child
+> irqdomain (i.e. pinctrl-msm) would need to delay probing until this
+> parent irqdomain is registered. Or has the hierarchical irqdomain code
+> been updated to handle the parent child relationship and wait for things
+> to probe or be loaded?
 
-Wine users have found a small number of Windows apps using SLDT that
-were crashing when run on UMIP-enabled systems.
+So I can't say I know the underlying hardware particularly well, but
+I've been using this successfully on the Dragonboard 845c with both
+static builds as well as module enabled builds.
+And the same patch has been in the android-mainline and android-5.4
+kernels for a while without objections from QCOM.
 
-Reported-by: Andreas Rammhold <andi@notmuch.email>
-Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
----
+As to the probe ordering question, Saravana can maybe speak in more
+detail if it's involved in this case but the fw_devlink code has
+addressed many of these sorts of ordering issues.
+However, I'm not sure if I'm lucking into the right probe order, as we
+have been able to boot android-mainline w/ both fw_devlink=on and
+fw_devlink=off (though in the =off case, we need
+deferred_probe_timeout=30 to give us a bit more time for modules to
+load after init starts).
 
-v5: Capitalize instruction names in comments.
-
- arch/x86/kernel/umip.c | 40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 8d5cbe1bbb3b..2c304fd0bb1a 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -45,11 +45,12 @@
-  * value that, lies close to the top of the kernel memory. The limit for the GDT
-  * and the IDT are set to zero.
-  *
-- * Given that SLDT and STR are not commonly used in programs that run on WineHQ
-- * or DOSEMU2, they are not emulated.
-- *
-- * The instruction smsw is emulated to return the value that the register CR0
-+ * The instruction SMSW is emulated to return the value that the register CR0
-  * has at boot time as set in the head_32.
-+ * SLDT and STR are emulated to return the values that the kernel programmatically
-+ * assigns:
-+ * - SLDT returns (GDT_ENTRY_LDT * 8) if an LDT has been set, 0 if not.
-+ * - STR returns (GDT_ENTRY_TSS * 8).
-  *
-  * Emulation is provided for both 32-bit and 64-bit processes.
-  *
-@@ -244,16 +245,34 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
- 		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
- 		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
- 
--	} else if (umip_inst == UMIP_INST_SMSW) {
--		unsigned long dummy_value = CR0_STATE;
-+	} else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
-+		   umip_inst == UMIP_INST_STR) {
-+		unsigned long dummy_value;
-+
-+		if (umip_inst == UMIP_INST_SMSW) {
-+			dummy_value = CR0_STATE;
-+		} else if (umip_inst == UMIP_INST_STR) {
-+			dummy_value = GDT_ENTRY_TSS * 8;
-+		} else if (umip_inst == UMIP_INST_SLDT) {
-+#ifdef CONFIG_MODIFY_LDT_SYSCALL
-+			down_read(&current->mm->context.ldt_usr_sem);
-+			if (current->mm->context.ldt)
-+				dummy_value = GDT_ENTRY_LDT * 8;
-+			else
-+				dummy_value = 0;
-+			up_read(&current->mm->context.ldt_usr_sem);
-+#else
-+			dummy_value = 0;
-+#endif
-+		}
- 
- 		/*
--		 * Even though the CR0 register has 4 bytes, the number
-+		 * For these 3 instructions, the number
- 		 * of bytes to be copied in the result buffer is determined
- 		 * by whether the operand is a register or a memory location.
- 		 * If operand is a register, return as many bytes as the operand
- 		 * size. If operand is memory, return only the two least
--		 * siginificant bytes of CR0.
-+		 * siginificant bytes.
- 		 */
- 		if (X86_MODRM_MOD(insn->modrm.value) == 3)
- 			*data_size = insn->opnd_bytes;
-@@ -261,7 +280,6 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
- 			*data_size = 2;
- 
- 		memcpy(data, &dummy_value, *data_size);
--	/* STR and SLDT  are not emulated */
- 	} else {
- 		return -EINVAL;
- 	}
-@@ -383,10 +401,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	umip_pr_warn(regs, "%s instruction cannot be used by applications.\n",
- 			umip_insns[umip_inst]);
- 
--	/* Do not emulate (spoof) SLDT or STR. */
--	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
--		return false;
--
- 	umip_pr_warn(regs, "For now, expensive software emulation returns the result.\n");
- 
- 	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
--- 
-2.26.2
-
+thanks
+-john
