@@ -2,154 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FEBC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B515AC433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCA62075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001E20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NEduGS65"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo/NdRrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgGJQLL (ORCPT
+        id S1726496AbgGJQLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:11:11 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1586 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbgGJQLH (ORCPT
+        Fri, 10 Jul 2020 12:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727915AbgGJQLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:11:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0892ae0000>; Fri, 10 Jul 2020 09:09:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 09:11:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 Jul 2020 09:11:07 -0700
-Received: from [10.26.72.135] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 16:11:05 +0000
-Subject: Re: [PATCH v2 4/6] devres: handle zero size in devm_kmalloc()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Jonathan Corbet <corbet@lwn.net>,
+        Fri, 10 Jul 2020 12:11:06 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0286DC08C5DC;
+        Fri, 10 Jul 2020 09:11:05 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id k18so4804257qtm.10;
+        Fri, 10 Jul 2020 09:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y861TMCTvpy5racGqaIyx07iIXHTPCR4jkREHmo0X5A=;
+        b=Wo/NdRrrqJwONxOj542PxpeohJSIuPR2d8D8UJ1NhigILOhHqNScqYXo4FuVZW2m3/
+         4RPeZrUFgFC2r6OcczdiXafs3KAFyuFac9hPAx3VIFAquc2YLN5wZfJR2/AZuPOe/1IB
+         80KfxaoKKw1yQV2CGz+SqD5mNjW2/O6nfzxTVu+Rj1AiYHvNEG5AMiv3ZGINdzhcZQFi
+         i24JSldDuvZ+7xCh4BqUniylYKz/mZrnfDtPiG32tlf5xy6WYBzVSuI3/TBYee1hqDwc
+         kYBrYUkhB0uSwY/2RQ0g13WfbTUrqPAhz991mdMZprIDnTXUlkHEb6evurkptYXEuxON
+         7XdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y861TMCTvpy5racGqaIyx07iIXHTPCR4jkREHmo0X5A=;
+        b=J+QlFEn0nDg0PmFFtiooI0TqHzzfeonzKbATDgoqyNfi72egORJrFMmsbueit2S7pz
+         TmZQy/oDow4zkGl4gdlYU+/J8nbPHgUFW63LxJt3pGSxekN6vxyMsC+DJJhMaZbv6/tG
+         noaJnMSzPt0au+B9KYEYk27nroLKBpeqZTO4LhpQU5DYDVZe4hLNRoSy7iQsoQFlg8bw
+         1P7wEPnkUTKeq87TPSy06kiUrgaRqfXzfYub1Wq/se3uiywFv2ETUuigfcqFtUY3fqdq
+         L+JSu3C/5ZY1kf95j/bzUqaxezJj43s8lZm56xhr6VxbCSHN5wcrhlh0UwyhR6l3fDDw
+         /iPg==
+X-Gm-Message-State: AOAM5337nmwuiiVT+cjxBGrO2GMRuMunhj9Q4X00PSRfnpRdVK81wXhx
+        hQi+7bCJ8VPIbZehsxN5G5o1ZoJpiioU
+X-Google-Smtp-Source: ABdhPJzpzxl71N47ydC8eo3OOanW2bRGZsq9dHQ51PlHyGRFUZjTOqsaik7xr3g2ncxiofZqEgzKxA==
+X-Received: by 2002:ac8:7454:: with SMTP id h20mr26634878qtr.84.1594397465192;
+        Fri, 10 Jul 2020 09:11:05 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id o18sm7360586qkk.91.2020.07.10.09.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:11:04 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-hwmon@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629065008.27620-1-brgl@bgdev.pl>
- <20200629065008.27620-5-brgl@bgdev.pl>
- <5c2e7514-b6d0-1331-37b0-d17a0cdb9693@nvidia.com>
- <CAMRc=Mf1Laqa65hEOG3iLSQu6J-u5yHmrMNh8NMJmt3amw2A6Q@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <9cd4521b-aba0-616b-8957-8f21b9ba3068@nvidia.com>
-Date:   Fri, 10 Jul 2020 17:11:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v3] net/bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
+Date:   Fri, 10 Jul 2020 12:09:15 -0400
+Message-Id: <20200710160915.228980-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200709130224.214204-1-yepeilin.cs@gmail.com>
+References: <20200709130224.214204-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=Mf1Laqa65hEOG3iLSQu6J-u5yHmrMNh8NMJmt3amw2A6Q@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594397358; bh=37GibReic1eAmzIGr99yNGskjoHn0RX7lIZ5PnIec+I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=NEduGS65Web3MkJIb7aFBdcebALGdw9f8SNbQn89SQwXxg6rFVvt1dtEIopjfhNp1
-         R2EFGBmWotyKN+LYeWUHdJRp08cl8wcGz10W3MxIEjAJIMJ19chpkmhUnBADvJWH9I
-         XCcH4rOx1K5tdDD4LKCvmgwqNeaM3HytP40kcyUOEBd/R3bbL3/G/jfyHr4sWUCFPU
-         DKH1LjHNGWI/qGSnpLfK8NHoYUw2tg9zLxVwxQbPKu8PlVwi/0M79b0EV5GUGIaDPu
-         3j0RtWi8Q1oEUyijwNFyck25EVpQY/Zbjki5OKcETIK/Yjxb+u/t8DAYqAkFLAOsK6
-         so8qAfbpa6vQA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Check upon `num_rsp` is insufficient. A malformed event packet with a
+large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
+of bounds. Fix it.
 
-On 10/07/2020 17:03, Bartosz Golaszewski wrote:
-> On Fri, Jul 10, 2020 at 3:46 PM Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->> Hi Bartosz,
->>
->> On 29/06/2020 07:50, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> Make devm_kmalloc() behave similarly to non-managed kmalloc(): return
->>> ZERO_SIZE_PTR when requested size is 0. Update devm_kfree() to handle
->>> this case.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> ---
->>>  drivers/base/devres.c | 9 ++++++---
->>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
->>> index 1df1fb10b2d9..ed615d3b9cf1 100644
->>> --- a/drivers/base/devres.c
->>> +++ b/drivers/base/devres.c
->>> @@ -819,6 +819,9 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
->>>  {
->>>       struct devres *dr;
->>>
->>> +     if (unlikely(!size))
->>> +             return ZERO_SIZE_PTR;
->>> +
->>>       /* use raw alloc_dr for kmalloc caller tracing */
->>>       dr = alloc_dr(devm_kmalloc_release, size, gfp, dev_to_node(dev));
->>>       if (unlikely(!dr))
->>> @@ -950,10 +953,10 @@ void devm_kfree(struct device *dev, const void *p)
->>>       int rc;
->>>
->>>       /*
->>> -      * Special case: pointer to a string in .rodata returned by
->>> -      * devm_kstrdup_const().
->>> +      * Special cases: pointer to a string in .rodata returned by
->>> +      * devm_kstrdup_const() or NULL/ZERO ptr.
->>>        */
->>> -     if (unlikely(is_kernel_rodata((unsigned long)p)))
->>> +     if (unlikely(is_kernel_rodata((unsigned long)p) || ZERO_OR_NULL_PTR(p)))
->>>               return;
->>>
->>>       rc = devres_destroy(dev, devm_kmalloc_release,
->>
->>
->> This change caught a bug in one of our Tegra drivers, which I am in the
->> process of fixing. Once I bisected to this commit it was easy to track
->> down, but I am wondering if there is any reason why we don't add a
->> WARN_ON() if size is 0 in devm_kmalloc? It was essentially what I ended
->> up doing to find the bug.
->>
->> Jon
->>
->> --
->> nvpublic
-> 
-> Hi Jon,
-> 
-> this is in line with what the regular kmalloc() does. If size is zero,
-> it returns ZERO_SIZE_PTR. It's not an error condition. Actually in
-> user-space malloc() does a similar thing: for size == 0 it allocates
-> one-byte and returns a pointer to it (at least in glibc).
+This patch fixes the following syzbot bug:
 
+    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
 
-Yes that's fine, I was just wondering if there is any reason not to WARN
-as well?
+Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v3:
+    - Minimum `skb->len` requirement was 1 byte inaccurate since `info`
+      starts from `skb->data + 1`. Fix it.
 
-Cheers
-Jon
+Changes in v2:
+    - Use `skb->len` instead of `skb->truesize` as the length limit.
+    - Leave `num_rsp` as of type `int`.
 
+ net/bluetooth/hci_event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 03a0759f2fc2..13d8802b8137 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4375,7 +4375,7 @@ static void hci_extended_inquiry_result_evt(struct hci_dev *hdev,
+ 
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+ 
+-	if (!num_rsp)
++	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
+ 		return;
+ 
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 -- 
-nvpublic
+2.25.1
+
