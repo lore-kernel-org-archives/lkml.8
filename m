@@ -2,136 +2,976 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B1C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A972C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8D720772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594385939;
-	bh=NPi+BprmqxvTT+BgXIflNFzBb/CjOYnP/bbukjcUlqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KRJ8A4K0r46Rvoku8Hs/R/j4yFjaO61xPvyLzX0F5PJLLVgyrFWnimknGd9TDNG15
-	 kcOs+WvpzrZkZ9mjZGCo8lkU1e0dWs4XoyHZcqa6VHvHuXmPIrEr2LHUoSEkzAEW7D
-	 /T2pFJbfdFpfS68lvVZ5F0047Q5w9LJSL1oj5RGg=
+	by mail.kernel.org (Postfix) with ESMTP id 0432820720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgGJM66 (ORCPT
+        id S1727950AbgGJM7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:58:58 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:39136 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJM64 (ORCPT
+        Fri, 10 Jul 2020 08:59:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41774 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJM7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:58:56 -0400
-Received: by mail-ej1-f65.google.com with SMTP id w6so5925866ejq.6;
-        Fri, 10 Jul 2020 05:58:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o3vs3eoWNKLgdeaOgka2di4fFfsPGUfmp/HII8PLK2Q=;
-        b=lz/8OqVJ5gkHALTWf7MfFaqrt0oeDStIs1THrUoqkMyVRTqSKAcZruuiwj2rh5P5R3
-         PQ+nYEzBbEyMncKiTlVrl/lKBSW3/U7iAV8nl4tPWFfqFXJuTfmfHJnP8068iHjofhKp
-         AgBGhur43UYQLLkoHalbE5HCgr/zM18O44lPMa5zE4VxwudJ71kjPUC/zUDhVhp5PxTZ
-         291CqV7VD96XlSzQCZ+IzrPlImTIWk4rkwveJBH/QP22PDSTxoyv2mjKhHmXEsEAvqKw
-         WB5MU5KGUQOk1ashuAUrtCOR3d9Civtn7Yh0CchFupr39o2xqW3IKSEE+p1tyAAYaW2C
-         4lHQ==
-X-Gm-Message-State: AOAM531v7u7xlOvy0BKXXW1qPuxiXtKarJAqccvrKX7BizsRdlIas2rT
-        JWTIpPz6OdzTWBv9a08w1gM=
-X-Google-Smtp-Source: ABdhPJx2Svx+XMVDHg6qJCDn1flaIzKpTLG6PM81LpgTFxtvt80lYM3e18Ho2rBRAsbMVx6gZsA9Lw==
-X-Received: by 2002:a17:906:3152:: with SMTP id e18mr63163905eje.137.1594385934419;
-        Fri, 10 Jul 2020 05:58:54 -0700 (PDT)
-Received: from localhost (ip-37-188-148-171.eurotel.cz. [37.188.148.171])
-        by smtp.gmail.com with ESMTPSA id f17sm3637904ejr.71.2020.07.10.05.58.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 05:58:53 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 14:58:52 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, rientjes@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm, oom: make the calculation of oom badness more
- accurate
-Message-ID: <20200710125852.GC3022@dhcp22.suse.cz>
-References: <1594309987-9919-1-git-send-email-laoar.shao@gmail.com>
- <20200710124253.GA1125@lca.pw>
+        Fri, 10 Jul 2020 08:59:45 -0400
+Received: from [IPv6:2003:cb:8737:cf00:b1e0:33ea:13e:2fa7] (p200300cb8737cf00b1e033ea013e2fa7.dip0.t-ipconnect.de [IPv6:2003:cb:8737:cf00:b1e0:33ea:13e:2fa7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0EE8F2A69DA;
+        Fri, 10 Jul 2020 13:59:39 +0100 (BST)
+Subject: Re: [PATCH v8 03/14] media: rkisp1: Add user space ABI definitions
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-4-helen.koike@collabora.com>
+ <20190815184659.GA5011@pendragon.ideasonboard.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <0614045e-ec3f-1aef-9d51-d3bd8276a47a@collabora.com>
+Date:   Fri, 10 Jul 2020 14:59:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710124253.GA1125@lca.pw>
+In-Reply-To: <20190815184659.GA5011@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10-07-20 08:42:53, Qian Cai wrote:
-> On Thu, Jul 09, 2020 at 11:53:07AM -0400, Yafang Shao wrote:
-> > Recently we found an issue on our production environment that when memcg
-> > oom is triggered the oom killer doesn't chose the process with largest
-> > resident memory but chose the first scanned process. Note that all
-> > processes in this memcg have the same oom_score_adj, so the oom killer
-> > should chose the process with largest resident memory.
-> > 
-> > Bellow is part of the oom info, which is enough to analyze this issue.
-> > [7516987.983223] memory: usage 16777216kB, limit 16777216kB, failcnt 52843037
-> > [7516987.983224] memory+swap: usage 16777216kB, limit 9007199254740988kB, failcnt 0
-> > [7516987.983225] kmem: usage 301464kB, limit 9007199254740988kB, failcnt 0
-> > [...]
-> > [7516987.983293] [ pid ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> > [7516987.983510] [ 5740]     0  5740      257        1    32768        0          -998 pause
-> > [7516987.983574] [58804]     0 58804     4594      771    81920        0          -998 entry_point.bas
-> > [7516987.983577] [58908]     0 58908     7089      689    98304        0          -998 cron
-> > [7516987.983580] [58910]     0 58910    16235     5576   163840        0          -998 supervisord
-> > [7516987.983590] [59620]     0 59620    18074     1395   188416        0          -998 sshd
-> > [7516987.983594] [59622]     0 59622    18680     6679   188416        0          -998 python
-> > [7516987.983598] [59624]     0 59624  1859266     5161   548864        0          -998 odin-agent
-> > [7516987.983600] [59625]     0 59625   707223     9248   983040        0          -998 filebeat
-> > [7516987.983604] [59627]     0 59627   416433    64239   774144        0          -998 odin-log-agent
-> > [7516987.983607] [59631]     0 59631   180671    15012   385024        0          -998 python3
-> > [7516987.983612] [61396]     0 61396   791287     3189   352256        0          -998 client
-> > [7516987.983615] [61641]     0 61641  1844642    29089   946176        0          -998 client
-> > [7516987.983765] [ 9236]     0  9236     2642      467    53248        0          -998 php_scanner
-> > [7516987.983911] [42898]     0 42898    15543      838   167936        0          -998 su
-> > [7516987.983915] [42900]  1000 42900     3673      867    77824        0          -998 exec_script_vr2
-> > [7516987.983918] [42925]  1000 42925    36475    19033   335872        0          -998 python
-> > [7516987.983921] [57146]  1000 57146     3673      848    73728        0          -998 exec_script_J2p
-> > [7516987.983925] [57195]  1000 57195   186359    22958   491520        0          -998 python2
-> > [7516987.983928] [58376]  1000 58376   275764    14402   290816        0          -998 rosmaster
-> > [7516987.983931] [58395]  1000 58395   155166     4449   245760        0          -998 rosout
-> > [7516987.983935] [58406]  1000 58406 18285584  3967322 37101568        0          -998 data_sim
-> > [7516987.984221] oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=3aa16c9482ae3a6f6b78bda68a55d32c87c99b985e0f11331cddf05af6c4d753,mems_allowed=0-1,oom_memcg=/kubepods/podf1c273d3-9b36-11ea-b3df-246e9693c184,task_memcg=/kubepods/podf1c273d3-9b36-11ea-b3df-246e9693c184/1f246a3eeea8f70bf91141eeaf1805346a666e225f823906485ea0b6c37dfc3d,task=pause,pid=5740,uid=0
-> > [7516987.984254] Memory cgroup out of memory: Killed process 5740 (pause) total-vm:1028kB, anon-rss:4kB, file-rss:0kB, shmem-rss:0kB
-> > [7516988.092344] oom_reaper: reaped process 5740 (pause), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> > 
-> > We can find that the first scanned process 5740 (pause) was killed, but its
-> > rss is only one page. That is because, when we calculate the oom badness in
-> > oom_badness(), we always ignore the negtive point and convert all of these
-> > negtive points to 1. Now as oom_score_adj of all the processes in this
-> > targeted memcg have the same value -998, the points of these processes are
-> > all negtive value. As a result, the first scanned process will be killed.
-> > 
-> > The oom_socre_adj (-998) in this memcg is set by kubelet, because it is a
-> > a Guaranteed pod, which has higher priority to prevent from being killed by
-> > system oom.
-> > 
-> > To fix this issue, we should make the calculation of oom point more
-> > accurate. We can achieve it by convert the chosen_point from 'unsigned
-> > long' to 'long'.
-> > 
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+
+
+On 15.08.19 20:46, Laurent Pinchart wrote:
+> Hi Helen,
 > 
-> Reverting this commit fixed the crash below while recovering from kenrel OOM,
+> Thank you ofor the patch.
+> 
+> On Tue, Jul 30, 2019 at 03:42:45PM -0300, Helen Koike wrote:
+>> From: Jeffy Chen <jeffy.chen@rock-chips.com>
+>>
+>> Add the header for userspace
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+>> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+>> [update for upstream]
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>>
+>> ---
+>> Hi,
+>>
+>> I don't have the "REF_01 - ISP_user_manual, Rev 2.57" document that was
+>> mentioned in previous version, so I'm adding a TODO for now to improve
+>> the docs once we collect the information.
+> 
+> I would keep the document name in the TODO entry, for reference.
+> 
+>> If Rockchip people could help here it would be great.
+> 
+> As you don't have access to the documentation I won't focus on the
+> issues that you can't address, but in general I think we need more
+> documentation than what is provided here. In particular we need a
+> description of the pipeline, with the order of the processing blocks.
+> 
+>> Changes in v8: None
+>> Changes in v7:
+>> - Fix checkpatch errors (lines over 80 and SPDX)
+>> - Add TODO to improve docs
+>>
+>>   include/uapi/linux/rkisp1-config.h | 816 +++++++++++++++++++++++++++++
+>>   1 file changed, 816 insertions(+)
+>>   create mode 100644 include/uapi/linux/rkisp1-config.h
+>>
+>> diff --git a/include/uapi/linux/rkisp1-config.h b/include/uapi/linux/rkisp1-config.h
+>> new file mode 100644
+>> index 000000000000..9ab979bb4adb
+>> --- /dev/null
+>> +++ b/include/uapi/linux/rkisp1-config.h
+>> @@ -0,0 +1,816 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Rockchip isp1 driver
+> 
+> Maybe "Rockchip ISP1 userspace API" ?
+> 
+>> + * Copyright (C) 2017 Rockchip Electronics Co., Ltd.
+>> + */
+>> +
+>> +/*
+>> + * TODO: Improve documentation, mostly regarding abbreviation and hardware
+>> + * specificities.
+>> + */
+>> +
+>> +#ifndef _UAPI_RKISP1_CONFIG_H
+>> +#define _UAPI_RKISP1_CONFIG_H
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/v4l2-controls.h>
+> 
+> Is v4l2-controls.h needed ?
+> 
+>> +
+>> +#define CIFISP_MODULE_DPCC              (1 << 0)
+>> +#define CIFISP_MODULE_BLS               (1 << 1)
+>> +#define CIFISP_MODULE_SDG               (1 << 2)
+>> +#define CIFISP_MODULE_HST               (1 << 3)
+>> +#define CIFISP_MODULE_LSC               (1 << 4)
+>> +#define CIFISP_MODULE_AWB_GAIN          (1 << 5)
+>> +#define CIFISP_MODULE_FLT               (1 << 6)
+>> +#define CIFISP_MODULE_BDM               (1 << 7)
+>> +#define CIFISP_MODULE_CTK               (1 << 8)
+>> +#define CIFISP_MODULE_GOC               (1 << 9)
+>> +#define CIFISP_MODULE_CPROC             (1 << 10)
+>> +#define CIFISP_MODULE_AFC               (1 << 11)
+>> +#define CIFISP_MODULE_AWB               (1 << 12)
+>> +#define CIFISP_MODULE_IE                (1 << 13)
+>> +#define CIFISP_MODULE_AEC               (1 << 14)
+>> +#define CIFISP_MODULE_WDR               (1 << 15)
+>> +#define CIFISP_MODULE_DPF               (1 << 16)
+>> +#define CIFISP_MODULE_DPF_STRENGTH      (1 << 17)
+> 
+> Should we use BIT() here ?
+> 
+>> +
+>> +#define CIFISP_CTK_COEFF_MAX            0x100
+>> +#define CIFISP_CTK_OFFSET_MAX           0x800
+>> +
+>> +#define CIFISP_AE_MEAN_MAX              25
+>> +#define CIFISP_HIST_BIN_N_MAX           16
+>> +#define CIFISP_AFM_MAX_WINDOWS          3
+>> +#define CIFISP_DEGAMMA_CURVE_SIZE       17
+>> +
+>> +#define CIFISP_BDM_MAX_TH               0xFF
+> 
+> Hex constants are usually expressed lower-case in the kernel.
+> 
+>> +
+>> +/*
+>> + * Black level compensation
+>> + */
+>> +/* maximum value for horizontal start address */
+>> +#define CIFISP_BLS_START_H_MAX             0x00000FFF
+>> +/* maximum value for horizontal stop address */
+>> +#define CIFISP_BLS_STOP_H_MAX              0x00000FFF
+>> +/* maximum value for vertical start address */
+>> +#define CIFISP_BLS_START_V_MAX             0x00000FFF
+>> +/* maximum value for vertical stop address */
+>> +#define CIFISP_BLS_STOP_V_MAX              0x00000FFF
+>> +/* maximum is 2^18 = 262144*/
+>> +#define CIFISP_BLS_SAMPLES_MAX             0x00000012
+>> +/* maximum value for fixed black level */
+>> +#define CIFISP_BLS_FIX_SUB_MAX             0x00000FFF
+>> +/* minimum value for fixed black level */
+>> +#define CIFISP_BLS_FIX_SUB_MIN             0xFFFFF000
+>> +/* 13 bit range (signed)*/
+>> +#define CIFISP_BLS_FIX_MASK                0x00001FFF
+>> +
+>> +/*
+>> + * Automatic white balance measurments
+>> + */
+>> +#define CIFISP_AWB_MAX_GRID                1
+>> +#define CIFISP_AWB_MAX_FRAMES              7
+>> +
+>> +/*
+>> + * Gamma out
+>> + */
+>> +/* Maximum number of color samples supported */
+>> +#define CIFISP_GAMMA_OUT_MAX_SAMPLES       17
+>> +
+>> +/*
+>> + * Lens shade correction
+>> + */
+>> +#define CIFISP_LSC_GRAD_TBL_SIZE           8
+>> +#define CIFISP_LSC_SIZE_TBL_SIZE           8
+>> +/*
+>> + * The following matches the tuning process,
+>> + * not the max capabilities of the chip.
+>> + * Last value unused.
+>> + */
+>> +#define	CIFISP_LSC_DATA_TBL_SIZE           290
+>> +
+>> +/*
+>> + * Histogram calculation
+>> + */
+>> +/* Last 3 values unused. */
+>> +#define CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE 28
+>> +
+>> +/*
+>> + * Defect Pixel Cluster Correction
+>> + */
+>> +#define CIFISP_DPCC_METHODS_MAX       3
+>> +
+>> +/*
+>> + * Denoising pre filter
+>> + */
+>> +#define CIFISP_DPF_MAX_NLF_COEFFS      17
+>> +#define CIFISP_DPF_MAX_SPATIAL_COEFFS  6
+>> +
+>> +/*
+>> + * Measurement types
+>> + */
+>> +#define CIFISP_STAT_AWB           (1 << 0)
+>> +#define CIFISP_STAT_AUTOEXP       (1 << 1)
+>> +#define CIFISP_STAT_AFM_FIN       (1 << 2)
+>> +#define CIFISP_STAT_HIST          (1 << 3)
+>> +
+>> +enum cifisp_histogram_mode {
+>> +	CIFISP_HISTOGRAM_MODE_DISABLE,
+>> +	CIFISP_HISTOGRAM_MODE_RGB_COMBINED,
+>> +	CIFISP_HISTOGRAM_MODE_R_HISTOGRAM,
+>> +	CIFISP_HISTOGRAM_MODE_G_HISTOGRAM,
+>> +	CIFISP_HISTOGRAM_MODE_B_HISTOGRAM,
+>> +	CIFISP_HISTOGRAM_MODE_Y_HISTOGRAM
+>> +};
+>> +
+>> +enum cifisp_awb_mode_type {
+>> +	CIFISP_AWB_MODE_MANUAL,
+>> +	CIFISP_AWB_MODE_RGB,
+>> +	CIFISP_AWB_MODE_YCBCR
+>> +};
+>> +
+>> +enum cifisp_flt_mode {
+>> +	CIFISP_FLT_STATIC_MODE,
+>> +	CIFISP_FLT_DYNAMIC_MODE
+>> +};
+>> +
+>> +/**
+>> + * enum cifisp_exp_ctrl_autostop - stop modes
+>> + * @CIFISP_EXP_CTRL_AUTOSTOP_0: continuous measurement
+>> + * @CIFISP_EXP_CTRL_AUTOSTOP_1: stop measuring after a complete frame
+>> + */
+>> +enum cifisp_exp_ctrl_autostop {
+>> +	CIFISP_EXP_CTRL_AUTOSTOP_0 = 0,
+>> +	CIFISP_EXP_CTRL_AUTOSTOP_1 = 1,
+>> +};
+>> +
+>> +/**
+>> + * enum cifisp_exp_meas_mode - Exposure measure mode
+>> + * @CIFISP_EXP_MEASURING_MODE_0: Y = 16 + 0.25R + 0.5G + 0.1094B
+>> + * @CIFISP_EXP_MEASURING_MODE_1: Y = (R + G + B) x (85/256)
+>> + */
+>> +enum cifisp_exp_meas_mode {
+>> +	CIFISP_EXP_MEASURING_MODE_0,
+>> +	CIFISP_EXP_MEASURING_MODE_1,
+>> +};
+>> +
+>> +/*---------- PART1: Input Parameters ------------*/
+>> +
+>> +struct cifisp_window {
+>> +	__u16 h_offs;
+>> +	__u16 v_offs;
+>> +	__u16 h_size;
+>> +	__u16 v_size;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_bls_fixed_val - BLS fixed subtraction values
+>> + *
+>> + * The values will be subtracted from the sensor
+>> + * values. Therefore a negative value means addition instead of subtraction!
+>> + *
+>> + * @r: Fixed (signed!) subtraction value for Bayer pattern R
+>> + * @gr: Fixed (signed!) subtraction value for Bayer pattern Gr
+>> + * @gb: Fixed (signed!) subtraction value for Bayer pattern Gb
+>> + * @b: Fixed (signed!) subtraction value for Bayer pattern B
+>> + */
+>> +struct cifisp_bls_fixed_val {
+>> +	__s16 r;
+>> +	__s16 gr;
+>> +	__s16 gb;
+>> +	__s16 b;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_bls_config - Configuration used by black level subtraction
+>> + *
+>> + * @enable_auto: Automatic mode activated means that the measured values
+>> + *		 are subtracted. Otherwise the fixed subtraction
+>> + *		 values will be subtracted.
+>> + * @en_windows: enabled window
+>> + * @bls_window1: Measurement window 1 size
+>> + * @bls_window2: Measurement window 2 size
+>> + * @bls_samples: Set amount of measured pixels for each Bayer position
+>> + *		 (A, B,C and D) to 2^bls_samples.
+>> + * @cifisp_bls_fixed_val: Fixed subtraction values
+>> + */
+>> +struct cifisp_bls_config {
+>> +	__u8 enable_auto;
+>> +	__u8 en_windows;
+>> +	struct cifisp_window bls_window1;
+>> +	struct cifisp_window bls_window2;
+>> +	__u8 bls_samples;
+>> +	struct cifisp_bls_fixed_val fixed_val;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpcc_methods_config - Methods Configuration used by DPCC
+>> + *
+>> + * Methods Configuration used by Defect Pixel Cluster Correction
+>> + *
+>> + * @method: Method enable bits
+>> + * @line_thresh: Line threshold
+>> + * @line_mad_fac: Line MAD factor
+>> + * @pg_fac: Peak gradient factor
+>> + * @rnd_thresh: Rank Neighbor Difference threshold
+>> + * @rg_fac: Rank gradient factor
+>> + */
+>> +struct cifisp_dpcc_methods_config {
+>> +	__u32 method;
+>> +	__u32 line_thresh;
+>> +	__u32 line_mad_fac;
+>> +	__u32 pg_fac;
+>> +	__u32 rnd_thresh;
+>> +	__u32 rg_fac;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpcc_methods_config - Configuration used by DPCC
+> 
+> Should be cifisp_dpcc_config.
+> 
+>> + *
+>> + * Configuration used by Defect Pixel Cluster Correction
+>> + *
+>> + * @mode: dpcc output mode
+>> + * @output_mode: whether use hard coded methods
+>> + * @set_use: stage1 methods set
+>> + * @methods: methods config
+>> + * @ro_limits: rank order limits
+>> + * @rnd_offs: differential rank offsets for rank neighbor difference
+>> + */
+>> +struct cifisp_dpcc_config {
+>> +	__u32 mode;
+>> +	__u32 output_mode;
+>> +	__u32 set_use;
+>> +	struct cifisp_dpcc_methods_config methods[CIFISP_DPCC_METHODS_MAX];
+>> +	__u32 ro_limits;
+>> +	__u32 rnd_offs;
+>> +} __attribute__ ((packed));
+>> +
+>> +struct cifisp_gamma_corr_curve {
+>> +	__u16 gamma_y[CIFISP_DEGAMMA_CURVE_SIZE];
+>> +} __attribute__ ((packed));
+>> +
+>> +struct cifisp_gamma_curve_x_axis_pnts {
+>> +	__u32 gamma_dx0;
+>> +	__u32 gamma_dx1;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_gamma_corr_curve - Configuration used by sensor degamma
+> 
+> Should be cifisp_sdg_config
+> 
+>> + *
+>> + * @curve_x: gamma curve point definition axis for x
+>> + * @xa_pnts: x increments
+>> + */
+>> +struct cifisp_sdg_config {
+>> +	struct cifisp_gamma_corr_curve curve_r;
+>> +	struct cifisp_gamma_corr_curve curve_g;
+>> +	struct cifisp_gamma_corr_curve curve_b;
+>> +	struct cifisp_gamma_curve_x_axis_pnts xa_pnts;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_lsc_config - Configuration used by Lens shading correction
+>> + *
+>> + * refer to REF_01 for details
+>> + */
+>> +struct cifisp_lsc_config {
+>> +	__u32 r_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+>> +	__u32 gr_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+>> +	__u32 gb_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+>> +	__u32 b_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
+>> +
+>> +	__u32 x_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
+>> +	__u32 y_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
+>> +
+>> +	__u32 x_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
+>> +	__u32 y_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
+>> +	__u16 config_width;
+>> +	__u16 config_height;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_ie_config - Configuration used by image effects
+>> + *
+>> + * @eff_mat_1: 3x3 Matrix Coefficients for Emboss Effect 1
+>> + * @eff_mat_2: 3x3 Matrix Coefficients for Emboss Effect 2
+>> + * @eff_mat_3: 3x3 Matrix Coefficients for Emboss 3/Sketch 1
+>> + * @eff_mat_4: 3x3 Matrix Coefficients for Sketch Effect 2
+>> + * @eff_mat_5: 3x3 Matrix Coefficients for Sketch Effect 3
+>> + * @eff_tint: Chrominance increment values of tint (used for sepia effect)
+>> + */
+>> +struct cifisp_ie_config {
+>> +	__u16 effect;
+>> +	__u16 color_sel;
+>> +	__u16 eff_mat_1;
+>> +	__u16 eff_mat_2;
+>> +	__u16 eff_mat_3;
+>> +	__u16 eff_mat_4;
+>> +	__u16 eff_mat_5;
+>> +	__u16 eff_tint;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_cproc_config - Configuration used by Color Processing
+>> + *
+>> + * @c_out_range: Chrominance pixel clipping range at output.
+>> + *		 (0 for limit, 1 for full)
+>> + * @y_in_range: Luminance pixel clipping range at output.
+>> + * @y_out_range: Luminance pixel clipping range at output.
+>> + * @contrast: 00~ff, 0.0~1.992
+>> + * @brightness: 80~7F, -128~+127
+>> + * @sat: saturation, 00~FF, 0.0~1.992
+>> + * @hue: 80~7F, -90~+87.188
+>> + */
+>> +struct cifisp_cproc_config {
+>> +	__u8 c_out_range;
+>> +	__u8 y_in_range;
+>> +	__u8 y_out_range;
+>> +	__u8 contrast;
+>> +	__u8 brightness;
+>> +	__u8 sat;
+>> +	__u8 hue;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_awb_meas_config - Configuration used by auto white balance
+>> + *
+>> + * @awb_wnd: white balance measurement window (in pixels)
+>> + *	     (from enum cifisp_awb_mode_type)
+>> + * @max_y: only pixels values < max_y contribute to awb measurement, set to 0
+>> + *	   to disable this feature
+>> + * @min_y: only pixels values > min_y contribute to awb measurement
+>> + * @max_csum: Chrominance sum maximum value, only consider pixels with Cb+Cr,
+>> + *	      smaller than threshold for awb measurements
+>> + * @min_c: Chrominance minimum value, only consider pixels with Cb/Cr
+>> + *	   each greater than threshold value for awb measurements
+>> + * @frames: number of frames - 1 used for mean value calculation
+>> + *	    (ucFrames=0 means 1 Frame)
+>> + * @awb_ref_cr: reference Cr value for AWB regulation, target for AWB
+>> + * @awb_ref_cb: reference Cb value for AWB regulation, target for AWB
+>> + */
+>> +struct cifisp_awb_meas_config {
+>> +	/*
+>> +	 * Note: currently the h and v offsets are mapped to grid offsets
+>> +	 */
+>> +	struct cifisp_window awb_wnd;
+>> +	__u32 awb_mode;
+>> +	__u8 max_y;
+>> +	__u8 min_y;
+>> +	__u8 max_csum;
+>> +	__u8 min_c;
+>> +	__u8 frames;
+>> +	__u8 awb_ref_cr;
+>> +	__u8 awb_ref_cb;
+>> +	__u8 enable_ymax_cmp;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_awb_gain_config - Configuration used by auto white balance gain
+>> + *
+>> + * out_data_x = ( AWB_GEAIN_X * in_data + 128) >> 8
+>> + */
+>> +struct cifisp_awb_gain_config {
+>> +	__u16 gain_red;
+>> +	__u16 gain_green_r;
+>> +	__u16 gain_blue;
+>> +	__u16 gain_green_b;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_flt_config - Configuration used by ISP filtering
+>> + *
+>> + * @mode: ISP_FILT_MODE register fields (from enum cifisp_flt_mode)
+>> + * @grn_stage1: ISP_FILT_MODE register fields
+>> + * @chr_h_mode: ISP_FILT_MODE register fields
+>> + * @chr_v_mode: ISP_FILT_MODE register fields
+>> + *
+>> + * refer to REF_01 for details.
+>> + */
+>> +
+>> +struct cifisp_flt_config {
+>> +	__u32 mode;
+>> +	__u8 grn_stage1;
+>> +	__u8 chr_h_mode;
+>> +	__u8 chr_v_mode;
+>> +	__u32 thresh_bl0;
+>> +	__u32 thresh_bl1;
+>> +	__u32 thresh_sh0;
+>> +	__u32 thresh_sh1;
+>> +	__u32 lum_weight;
+>> +	__u32 fac_sh1;
+>> +	__u32 fac_sh0;
+>> +	__u32 fac_mid;
+>> +	__u32 fac_bl0;
+>> +	__u32 fac_bl1;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_bdm_config - Configuration used by Bayer DeMosaic
+>> + *
+>> + * @demosaic_th: threshod for bayer demosaicing texture detection
+>> + */
+>> +struct cifisp_bdm_config {
+>> +	__u8 demosaic_th;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_ctk_config - Configuration used by Cross Talk correction
+>> + *
+>> + * @coeff: color correction matrix
+>> + * @ct_offset_b: offset for the crosstalk correction matrix
+>> + */
+>> +struct cifisp_ctk_config {
+>> +	__u16 coeff0;
+>> +	__u16 coeff1;
+>> +	__u16 coeff2;
+>> +	__u16 coeff3;
+>> +	__u16 coeff4;
+>> +	__u16 coeff5;
+>> +	__u16 coeff6;
+>> +	__u16 coeff7;
+>> +	__u16 coeff8;
+>> +	__u16 ct_offset_r;
+>> +	__u16 ct_offset_g;
+>> +	__u16 ct_offset_b;
+>> +} __attribute__ ((packed));
+>> +
+>> +enum cifisp_goc_mode {
+>> +	CIFISP_GOC_MODE_LOGARITHMIC,
+>> +	CIFISP_GOC_MODE_EQUIDISTANT
+>> +};
+>> +
+>> +/**
+>> + * struct cifisp_goc_config - Configuration used by Gamma Out correction
+>> + *
+>> + * @mode: goc mode (from enum cifisp_goc_mode)
+>> + * @gamma_y: gamma out curve y-axis for all color components
+>> + */
+>> +struct cifisp_goc_config {
+>> +	__u32 mode;
+>> +	__u16 gamma_y[CIFISP_GAMMA_OUT_MAX_SAMPLES];
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_hst_config - Configuration used by Histogram
+>> + *
+>> + * @mode: histogram mode (from enum cifisp_histogram_mode)
+>> + * @histogram_predivider: process every stepsize pixel, all other pixels are
+>> + *			  skipped
+>> + * @meas_window: coordinates of the measure window
+>> + * @hist_weight: weighting factor for sub-windows
+>> + */
+>> +struct cifisp_hst_config {
+>> +	__u32 mode;
+>> +	__u8 histogram_predivider;
+>> +	struct cifisp_window meas_window;
+>> +	__u8 hist_weight[CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_aec_config - Configuration used by Auto Exposure Control
+>> + *
+>> + * @mode: Exposure measure mode (from enum cifisp_exp_meas_mode)
+>> + * @autostop: stop mode (from enum cifisp_exp_ctrl_autostop)
+>> + * @meas_window: coordinates of the measure window
+>> + */
+>> +struct cifisp_aec_config {
+>> +	__u32 mode;
+>> +	__u32 autostop;
+>> +	struct cifisp_window meas_window;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_afc_config - Configuration used by Auto Focus Control
+>> + *
+>> + * @num_afm_win: max CIFISP_AFM_MAX_WINDOWS
+>> + * @afm_win: coordinates of the meas window
+>> + * @thres: threshold used for minimizing the influence of noise
+>> + * @var_shift: the number of bits for the shift operation at the end of the
+>> + *	       calculation chain.
+>> + */
+>> +struct cifisp_afc_config {
+>> +	__u8 num_afm_win;
+>> +	struct cifisp_window afm_win[CIFISP_AFM_MAX_WINDOWS];
+>> +	__u32 thres;
+>> +	__u32 var_shift;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * enum cifisp_dpf_gain_usage - dpf gain usage
+>> + * @CIFISP_DPF_GAIN_USAGE_DISABLED: don't use any gains in preprocessing stage
+>> + * @CIFISP_DPF_GAIN_USAGE_NF_GAINS: use only the noise function gains from
+>> + *				    registers DPF_NF_GAIN_R, ...
+>> + * @CIFISP_DPF_GAIN_USAGE_LSC_GAINS:  use only the gains from LSC module
+>> + * @CIFISP_DPF_GAIN_USAGE_NF_LSC_GAINS: use the noise function gains and the
+>> + *					gains from LSC module
+>> + * @CIFISP_DPF_GAIN_USAGE_AWB_GAINS: use only the gains from AWB module
+>> + * @CIFISP_DPF_GAIN_USAGE_AWB_LSC_GAINS: use the gains from AWB and LSC module
+>> + * @CIFISP_DPF_GAIN_USAGE_MAX: upper border (only for an internal evaluation)
+>> + */
+>> +enum cifisp_dpf_gain_usage {
+>> +	CIFISP_DPF_GAIN_USAGE_DISABLED,
+>> +	CIFISP_DPF_GAIN_USAGE_NF_GAINS,
+>> +	CIFISP_DPF_GAIN_USAGE_LSC_GAINS,
+>> +	CIFISP_DPF_GAIN_USAGE_NF_LSC_GAINS,
+>> +	CIFISP_DPF_GAIN_USAGE_AWB_GAINS,
+>> +	CIFISP_DPF_GAIN_USAGE_AWB_LSC_GAINS,
+>> +	CIFISP_DPF_GAIN_USAGE_MAX
+>> +};
+>> +
+>> +/**
+>> + * enum cifisp_dpf_gain_usage - dpf gain usage
+> 
+> This should be cifisp_dpf_rb_filtersize and the description should be
+> updated.
+> 
+>> + * @CIFISP_DPF_RB_FILTERSIZE_13x9: red and blue filter kernel size 13x9
+>> + *				   (means 7x5 active pixel)
+>> + * @CIFISP_DPF_RB_FILTERSIZE_9x9: red and blue filter kernel size 9x9
+>> + *				   (means 5x5 active pixel)
+>> + */
+>> +enum cifisp_dpf_rb_filtersize {
+>> +	CIFISP_DPF_RB_FILTERSIZE_13x9,
+>> +	CIFISP_DPF_RB_FILTERSIZE_9x9,
+>> +};
+>> +
+>> +/**
+>> + * enum cifisp_dpf_nll_scale_mode - dpf noise level scale mode
+>> + * @CIFISP_NLL_SCALE_LINEAR: use a linear scaling
+>> + * @CIFISP_NLL_SCALE_LOGARITHMIC: use a logarithmic scaling
+>> + */
+>> +enum cifisp_dpf_nll_scale_mode {
+>> +	CIFISP_NLL_SCALE_LINEAR,
+>> +	CIFISP_NLL_SCALE_LOGARITHMIC,
+>> +};
+>> +
+>> +/**
+>> + * struct cifisp_dpf_nll - Noise level lookup
+>> + *
+>> + * @coeff: Noise level Lookup coefficient
+>> + * @scale_mode: dpf noise level scale mode (from enum cifisp_dpf_nll_scale_mode)
+>> + */
+>> +struct cifisp_dpf_nll {
+>> +	__u16 coeff[CIFISP_DPF_MAX_NLF_COEFFS];
+>> +	__u32 scale_mode;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpf_rb_flt - Red blue filter config
+>> + *
+>> + * @fltsize: The filter size for the red and blue pixels
+>> + *	     (from enum cifisp_dpf_rb_filtersize)
+>> + * @spatial_coeff: Spatial weights
+>> + * @r_enable: enable filter processing for red pixels
+>> + * @b_enable: enable filter processing for blue pixels
+>> + */
+>> +struct cifisp_dpf_rb_flt {
+>> +	__u32 fltsize;
+>> +	__u8 spatial_coeff[CIFISP_DPF_MAX_SPATIAL_COEFFS];
+>> +	__u8 r_enable;
+>> +	__u8 b_enable;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpf_g_flt - Green filter Configuration
+>> + *
+>> + * @spatial_coeff: Spatial weights
+>> + * @gr_enable: enable filter processing for green pixels in green/red lines
+>> + * @gb_enable: enable filter processing for green pixels in green/blue lines
+>> + */
+>> +struct cifisp_dpf_g_flt {
+>> +	__u8 spatial_coeff[CIFISP_DPF_MAX_SPATIAL_COEFFS];
+>> +	__u8 gr_enable;
+>> +	__u8 gb_enable;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpf_gain - Noise function Configuration
+>> + *
+>> + * @mode: dpf gain usage  (from enum cifisp_dpf_gain_usage)
+>> + * @nf_r_gain: Noise function Gain that replaces the AWB gain for red pixels
+>> + * @nf_b_gain: Noise function Gain that replaces the AWB gain for blue pixels
+>> + * @nf_gr_gain: Noise function Gain that replaces the AWB gain
+>> + *		for green pixels in a red line
+>> + * @nf_gb_gain: Noise function Gain that replaces the AWB gain
+>> + *		for green pixels in a blue line
+>> + */
+>> +struct cifisp_dpf_gain {
+>> +	__u32 mode;
+>> +	__u16 nf_r_gain;
+>> +	__u16 nf_b_gain;
+>> +	__u16 nf_gr_gain;
+>> +	__u16 nf_gb_gain;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpf_config - Configuration used by De-noising pre-filter
+>> + *
+>> + * @gain: noise function gain
+>> + * @g_flt: green filter config
+>> + * @rb_flt: red blue filter config
+>> + * @nll: noise level lookup
+>> + */
+>> +struct cifisp_dpf_config {
+>> +	struct cifisp_dpf_gain gain;
+>> +	struct cifisp_dpf_g_flt g_flt;
+>> +	struct cifisp_dpf_rb_flt rb_flt;
+>> +	struct cifisp_dpf_nll nll;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_dpf_strength_config - strength of the filter
+>> + *
+>> + * @r: filter strength of the RED filter
+>> + * @g: filter strength of the GREEN filter
+>> + * @b: filter strength of the BLUE filter
+>> + */
+>> +struct cifisp_dpf_strength_config {
+>> +	__u8 r;
+>> +	__u8 g;
+>> +	__u8 b;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_isp_other_cfg - Parameters for some blocks in rockchip isp1
+>> + *
+>> + * @dpcc_config: Defect Pixel Cluster Correction config
+>> + * @bls_config: Black Level Subtraction config
+>> + * @sdg_config: sensor degamma config
+>> + * @lsc_config: Lens Shade config
+>> + * @awb_gain_config: Auto White balance gain config
+>> + * @flt_config: filter config
+>> + * @bdm_config: demosaic config
+>> + * @ctk_config: cross talk config
+>> + * @goc_config: gamma out config
+>> + * @bls_config: black level subtraction config
+>> + * @dpf_config: De-noising pre-filter config
+>> + * @dpf_strength_config: dpf strength config
+>> + * @cproc_config: color process config
+>> + * @ie_config: image effects config
+>> + */
+>> +struct cifisp_isp_other_cfg {
+>> +	struct cifisp_dpcc_config dpcc_config;
+>> +	struct cifisp_bls_config bls_config;
+>> +	struct cifisp_sdg_config sdg_config;
+>> +	struct cifisp_lsc_config lsc_config;
+>> +	struct cifisp_awb_gain_config awb_gain_config;
+>> +	struct cifisp_flt_config flt_config;
+>> +	struct cifisp_bdm_config bdm_config;
+>> +	struct cifisp_ctk_config ctk_config;
+>> +	struct cifisp_goc_config goc_config;
+>> +	struct cifisp_dpf_config dpf_config;
+>> +	struct cifisp_dpf_strength_config dpf_strength_config;
+>> +	struct cifisp_cproc_config cproc_config;
+>> +	struct cifisp_ie_config ie_config;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_isp_meas_cfg - Rockchip ISP1 Measure Parameters
+>> + *
+>> + * @awb_meas_config: auto white balance config
+>> + * @hst_config: histogram config
+>> + * @aec_config: auto exposure config
+>> + * @afc_config: auto focus config
+>> + */
+>> +struct cifisp_isp_meas_cfg {
+>> +	struct cifisp_awb_meas_config awb_meas_config;
+>> +	struct cifisp_hst_config hst_config;
+>> +	struct cifisp_aec_config aec_config;
+>> +	struct cifisp_afc_config afc_config;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct rkisp1_isp_params_cfg - Rockchip ISP1 Input Parameters Meta Data
+>> + *
+>> + * @module_en_update: mask the enable bits of which module should be updated
+>> + * @module_ens: mask the enable value of each module, only update the module
+>> + *		which correspond bit was set in module_en_update
+>> + * @module_cfg_update: mask the config bits of which module should be updated
+>> + * @meas: measurement config
+>> + * @others: other config
+>> + */
+>> +struct rkisp1_isp_params_cfg {
+>> +	__u32 module_en_update;
+>> +	__u32 module_ens;
+>> +	__u32 module_cfg_update;
+>> +
+>> +	struct cifisp_isp_meas_cfg meas;
+>> +	struct cifisp_isp_other_cfg others;
+>> +} __attribute__ ((packed));
+> 
+> As far as I understand most (all ?) of the structures defined above are
+> not used directly by the hardware, is that right ? In that case, do they
+> need to be packed ?
 
-I suspect that the previous version of the patch has been tested (in
-Linux next). Does this version exhibit the same problem?
+Hi,
+I guess the 'packed' is a mean to serialize the struct since it is sent to userspace as
+a buffer. I see that the ipu3 also uses 'packed' for the
+metadata formats. If we don't have the 'packed' it means we relay on that
+the userspace uses the same padding as the kernel for the struct.
+Is it ok to assume that?
 
-I will have a closer look. Is the full dmesg available somewhere?
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Dafna
+
+
+> 
+> Some of the structures have a _cfg suffix, while others have a _config
+> suffix. Should we standardise on one of the two ?
+> 
+>> +
+>> +/*---------- PART2: Measurement Statistics ------------*/
+>> +
+>> +/**
+>> + * struct cifisp_bls_meas_val - AWB measured values
+> 
+> This should be cifisp_awb_meas
+> 
+>> + *
+>> + * @cnt: White pixel count, number of "white pixels" found during laster
+> 
+> s/laster/last/ ?
+> 
+>> + *	 measurement
+>> + * @mean_y_or_g: Mean value of Y within window and frames,
+>> + *		 Green if RGB is selected.
+>> + * @mean_cb_or_b: Mean value of Cb within window and frames,
+>> + *		  Blue if RGB is selected.
+>> + * @mean_cr_or_r: Mean value of Cr within window and frames,
+>> + *		  Red if RGB is selected.
+>> + */
+>> +struct cifisp_awb_meas {
+>> +	__u32 cnt;
+>> +	__u8 mean_y_or_g;
+>> +	__u8 mean_cb_or_b;
+>> +	__u8 mean_cr_or_r;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_awb_stat - statistics automatic white balance data
+>> + *
+>> + * @awb_mean: Mean measured data
+>> + */
+>> +struct cifisp_awb_stat {
+>> +	struct cifisp_awb_meas awb_mean[CIFISP_AWB_MAX_GRID];
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_bls_meas_val - BLS measured values
+>> + *
+>> + * @meas_r: Mean measured value for Bayer pattern R
+>> + * @meas_gr: Mean measured value for Bayer pattern Gr
+>> + * @meas_gb: Mean measured value for Bayer pattern Gb
+>> + * @meas_b: Mean measured value for Bayer pattern B
+>> + */
+>> +struct cifisp_bls_meas_val {
+>> +	__u16 meas_r;
+>> +	__u16 meas_gr;
+>> +	__u16 meas_gb;
+>> +	__u16 meas_b;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_ae_stat - statistics auto exposure data
+>> + *
+>> + * @exp_mean: Mean luminance value of block xx
+>> + * @bls_val:  BLS measured values
+>> + *
+>> + * Image is divided into 5x5 blocks.
+>> + */
+>> +struct cifisp_ae_stat {
+>> +	__u8 exp_mean[CIFISP_AE_MEAN_MAX];
+>> +	struct cifisp_bls_meas_val bls_val;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_af_meas_val - AF measured values
+>> + *
+>> + * @sum: sharpness, refer to REF_01 for definition
+>> + * @lum: luminance, refer to REF_01 for definition
+> 
+> That will be lovely to use without documentation...
+> 
+>> + */
+>> +struct cifisp_af_meas_val {
+>> +	__u32 sum;
+>> +	__u32 lum;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_af_stat - statistics auto focus data
+>> + *
+>> + * @window: AF measured value of window x
+>> + *
+>> + * The module measures the sharpness in 3 windows of selectable size via
+>> + * register settings(ISP_AFM_*_A/B/C)
+>> + */
+>> +struct cifisp_af_stat {
+>> +	struct cifisp_af_meas_val window[CIFISP_AFM_MAX_WINDOWS];
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct cifisp_hist_stat - statistics histogram data
+>> + *
+>> + * @hist_bins: measured bin counters
+>> + *
+>> + * Measurement window divided into 25 sub-windows, set
+>> + * with ISP_HIST_XXX
+> 
+> What is ISP_HIST_XXX ?
+> 
+>> + */
+>> +struct cifisp_hist_stat {
+>> +	__u16 hist_bins[CIFISP_HIST_BIN_N_MAX];
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Data
+>> + *
+>> + * @cifisp_awb_stat: statistics data for automatic white balance
+>> + * @cifisp_ae_stat: statistics data for auto exposure
+>> + * @cifisp_af_stat: statistics data for auto focus
+>> + * @cifisp_hist_stat: statistics histogram data
+>> + */
+>> +struct cifisp_stat {
+>> +	struct cifisp_awb_stat awb;
+>> +	struct cifisp_ae_stat ae;
+>> +	struct cifisp_af_stat af;
+>> +	struct cifisp_hist_stat hist;
+>> +} __attribute__ ((packed));
+>> +
+>> +/**
+>> + * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Meta Data
+>> + *
+>> + * @meas_type: measurement types (CIFISP_STAT_ definitions)
+>> + * @frame_id: frame ID for sync
+>> + * @params: statistics data
+>> + */
+>> +struct rkisp1_stat_buffer {
+>> +	__u32 meas_type;
+>> +	__u32 frame_id;
+>> +	struct cifisp_stat params;
+>> +} __attribute__ ((packed));
+>> +
+>> +#endif /* _UAPI_RKISP1_CONFIG_H */
+> 
