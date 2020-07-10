@@ -2,178 +2,292 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC00BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C254C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98CE207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkPnN2eU"
+	by mail.kernel.org (Postfix) with ESMTP id 08DC62078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGJSbW (ORCPT
+        id S1728116AbgGJScG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:31:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36793 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726872AbgGJSbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:31:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594405879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRqWXRqtM1jmKDk24CkRG8osdjmpDaMTznOjUGxYXsQ=;
-        b=GkPnN2eUi56blBhzItpMEkXbHIfvI5GIbzKnCSdOVA6ChXCwjjsl/RsSB5vXjRCQwbQWD7
-        jZBwjO7lH0MGFoVg28748OfizdBJrrlXisAGrzr+jHLElPI/5TndBats7Ab/jM4/52+zik
-        TD1Q122kgZKhJoA02zYPKatBShHGhFw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-Dpe36TqMP-esFQn4fKd4GA-1; Fri, 10 Jul 2020 14:31:16 -0400
-X-MC-Unique: Dpe36TqMP-esFQn4fKd4GA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 10 Jul 2020 14:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgGJScG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:32:06 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA03518FF661;
-        Fri, 10 Jul 2020 18:31:14 +0000 (UTC)
-Received: from redhat.com (ovpn-112-73.rdu2.redhat.com [10.10.112.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6457D5C6DD;
-        Fri, 10 Jul 2020 18:31:10 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 14:31:08 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, Shuah Khan <shuah@kernel.org>,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/livepatch: adopt to newer sysctl error format
-Message-ID: <20200710183108.GA17581@redhat.com>
-References: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
- <20200710152735.GA20226@alley>
+        by mail.kernel.org (Postfix) with ESMTPSA id 233202075D;
+        Fri, 10 Jul 2020 18:32:01 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 19:31:59 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
+        steven.price@arm.com, guohanjun@huawei.com, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+Message-ID: <20200710183158.GE11839@gaia>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <20200710094420.517-3-yezhenyu2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710152735.GA20226@alley>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200710094420.517-3-yezhenyu2@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 05:27:35PM +0200, Petr Mladek wrote:
-> On Fri 2020-07-10 10:40:43, Kamalesh Babulal wrote:
-> > With procfs v3.3.16, the sysctl command doesn't prints the set key and
-> > value on error.  This change breaks livepatch selftest test-ftrace.sh,
-> > that tests the interaction of sysctl ftrace_enabled:
-> > 
-
-Good catch, it looks like it was this procps commit that modified that
-behavior:
-
-  commit da82fe49b1476d227874905068adb69577e11d96
-  Author: Patrick Steinhardt <ps@pks.im>
-  Date:   Tue May 29 13:29:03 2018 +0200
-  
-      sysctl: do not report set key in case `close_stream` fails
-      
-      As we're using buffered I/O when writing kernel parameters, write errors
-      may get delayed until we close the `FILE` stream. As we are currently
-      outputting the key that is to be set disregarding the return value of
-      `close_stream`, we may end up in a situation where we report error and
-      success:
-      
-          $ sysctl kernel.printk_ratelimit=100000000000000
-          sysctl: setting key "kernel.printk_ratelimit": error code 22
-          kernel.printk_ratelimit = 100000000000000
-      
-      Fix the issue by only outputting the updated value in case
-      `close_stream` does not report an error.
-      
-      Signed-off-by: Patrick Steinhardt <ps@pks.im>
-
-And I'd agree that echoing the failed new value was confusing to see
-from a user's perspective.
-
-> >  # selftests: livepatch: test-ftrace.sh
-> >  # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
-> >  #
-> >  # --- expected
-> >  # +++ result
-> >  # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
-> >  #  livepatch: 'test_klp_livepatch': starting patching transition
-> >  #  livepatch: 'test_klp_livepatch': completing patching transition
-> >  #  livepatch: 'test_klp_livepatch': patching complete
-> >  # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
-> >     resource busy kernel.ftrace_enabled = 0
-> >  # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
-> >     resource busy
-> >  #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
-> >  #  livepatch: 'test_klp_livepatch': initializing unpatching transition
-> >  #  livepatch: 'test_klp_livepatch': starting unpatching transition
-> >  #
-> >  # ERROR: livepatch kselftest(s) failed
-> > 
-> > on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
-> > set key and value is displayed.
-> > 
-> > This patch fixes it by limiting the output from both the cases to eight
-> > words, that includes the error message or set key and value on failure
-> > and success. The upper bound of eight words is enough to display the
-> > only tracked error message. Also, adjust the check_result string in
-> > test-ftrace.sh to match the expected output.
+On Fri, Jul 10, 2020 at 05:44:20PM +0800, Zhenyu Ye wrote:
+> Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
 > 
-> This looks really tricky.
+> When cpu supports TLBI feature, the minimum range granularity is
+> decided by 'scale', so we can not flush all pages by one instruction
+> in some cases.
 > 
-> I wonder if we could use "sysctl -q" to refuse printing the value
-> even with older versions. The following patch works here with
-> sysctl 3.3.15:
+> For example, when the pages = 0xe81a, let's start 'scale' from
+> maximum, and find right 'num' for each 'scale':
 > 
-
-FWIW, --quiet was added to procps way back in 2004, so it should be safe
-to use... and there's already a bunch of net selftests using it.
-
-> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-> index 2aab9791791d..47aa4c762bb4 100644
-> --- a/tools/testing/selftests/livepatch/functions.sh
-> +++ b/tools/testing/selftests/livepatch/functions.sh
-> @@ -64,7 +64,8 @@ function set_dynamic_debug() {
->  }
+> 1. scale = 3, we can flush no pages because the minimum range is
+>    2^(5*3 + 1) = 0x10000.
+> 2. scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
+>    flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
+>    Remaining pages is 0x1a;
+> 3. scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
+>    can be flushed.
+> 4. scale = 0, we flush the remaining 0x1a pages, the num =
+>    0x1a/0x2 - 1 = 0xd.
+> 
+> However, in most scenarios, the pages = 1 when flush_tlb_range() is
+> called. Start from scale = 3 or other proper value (such as scale =
+> ilog2(pages)), will incur extra overhead.
+> So increase 'scale' from 0 to maximum, the flush order is exactly
+> opposite to the example.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/tlbflush.h | 138 +++++++++++++++++++++++-------
+>  1 file changed, 109 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index 39aed2efd21b..edfec8139ef8 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -60,6 +60,31 @@
+>  		__ta;						\
+>  	})
 >  
->  function set_ftrace_enabled() {
-> -	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
-> +	result=$(sysctl -q kernel.ftrace_enabled="$1" 2>&1 && \
-> +		 sysctl kernel.ftrace_enabled 2>&1)
->  	echo "livepatch: $result" > /dev/kmsg
->  }
+> +/*
+> + * Get translation granule of the system, which is decided by
+> + * PAGE_SIZE.  Used by TTL.
+> + *  - 4KB	: 1
+> + *  - 16KB	: 2
+> + *  - 64KB	: 3
+> + */
+> +#define TLBI_TTL_TG_4K		1
+> +#define TLBI_TTL_TG_16K		2
+> +#define TLBI_TTL_TG_64K		3
+> +
+> +static inline unsigned long get_trans_granule(void)
+> +{
+> +	switch (PAGE_SIZE) {
+> +	case SZ_4K:
+> +		return TLBI_TTL_TG_4K;
+> +	case SZ_16K:
+> +		return TLBI_TTL_TG_16K;
+> +	case SZ_64K:
+> +		return TLBI_TTL_TG_64K;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+>  /*
+>   * Level-based TLBI operations.
+>   *
+> @@ -73,9 +98,6 @@
+>   * in asm/stage2_pgtable.h.
+>   */
+>  #define TLBI_TTL_MASK		GENMASK_ULL(47, 44)
+> -#define TLBI_TTL_TG_4K		1
+> -#define TLBI_TTL_TG_16K		2
+> -#define TLBI_TTL_TG_64K		3
 >  
-> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
-> index e2a76887f40a..aa967c5d0558 100755
-> --- a/tools/testing/selftests/livepatch/test-ftrace.sh
-> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-> @@ -53,7 +53,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
->  livepatch: '$MOD_LIVEPATCH': starting patching transition
->  livepatch: '$MOD_LIVEPATCH': completing patching transition
->  livepatch: '$MOD_LIVEPATCH': patching complete
-> -livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
-> +livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
->  % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
->  livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
->  livepatch: '$MOD_LIVEPATCH': starting unpatching transition
-> 
-> 
+>  #define __tlbi_level(op, addr, level) do {				\
+>  	u64 arg = addr;							\
+> @@ -83,19 +105,7 @@
+>  	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&		\
+>  	    level) {							\
+>  		u64 ttl = level & 3;					\
+> -									\
+> -		switch (PAGE_SIZE) {					\
+> -		case SZ_4K:						\
+> -			ttl |= TLBI_TTL_TG_4K << 2;			\
+> -			break;						\
+> -		case SZ_16K:						\
+> -			ttl |= TLBI_TTL_TG_16K << 2;			\
+> -			break;						\
+> -		case SZ_64K:						\
+> -			ttl |= TLBI_TTL_TG_64K << 2;			\
+> -			break;						\
+> -		}							\
+> -									\
+> +		ttl |= get_trans_granule() << 2;			\
+>  		arg &= ~TLBI_TTL_MASK;					\
+>  		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
+>  	}								\
+> @@ -108,6 +118,39 @@
+>  		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
+>  } while (0)
+>  
+> +/*
+> + * This macro creates a properly formatted VA operand for the TLBI RANGE.
+> + * The value bit assignments are:
+> + *
+> + * +----------+------+-------+-------+-------+----------------------+
+> + * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
+> + * +-----------------+-------+-------+-------+----------------------+
+> + * |63      48|47  46|45   44|43   39|38   37|36                   0|
+> + *
+> + * The address range is determined by below formula:
+> + * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
+> + *
+> + */
+> +#define __TLBI_VADDR_RANGE(addr, asid, scale, num, ttl)		\
+> +	({							\
+> +		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
+> +		__ta &= GENMASK_ULL(36, 0);			\
+> +		__ta |= (unsigned long)(ttl & 3) << 37;		\
+> +		__ta |= (unsigned long)(num & 31) << 39;	\
+> +		__ta |= (unsigned long)(scale & 3) << 44;	\
+> +		__ta |= (get_trans_granule() & 3) << 46;	\
+> +		__ta |= (unsigned long)(asid) << 48;		\
+> +		__ta;						\
+> +	})
 
-I think this method is less fragile than word count / cutting and we get
-to drop that strange 'paste' invocation (I had to look that up in the
-mapages to remember why we used it).
+Nitpick: we don't need the additional masking here (e.g. ttl & 3) since
+the values are capped anyway.
 
-Regards,
+> +
+> +/* These macros are used by the TLBI RANGE feature. */
+> +#define __TLBI_RANGE_PAGES(num, scale)	(((num) + 1) << (5 * (scale) + 1))
+> +#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
+> +
+> +#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
+> +#define __TLBI_RANGE_NUM(range, scale)	\
+> +	(((range) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK)
+> +
+>  /*
+>   *	TLB Invalidation
+>   *	================
+> @@ -232,32 +275,69 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  				     unsigned long stride, bool last_level,
+>  				     int tlb_level)
+>  {
+> +	int num = 0;
+> +	int scale = 0;
+>  	unsigned long asid = ASID(vma->vm_mm);
+>  	unsigned long addr;
+> +	unsigned long pages;
+>  
+>  	start = round_down(start, stride);
+>  	end = round_up(end, stride);
+> +	pages = (end - start) >> PAGE_SHIFT;
+>  
+> -	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+> +	if ((!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+> +	    (end - start) >= (MAX_TLBI_OPS * stride)) ||
+> +	    pages >= MAX_TLBI_RANGE_PAGES) {
+>  		flush_tlb_mm(vma->vm_mm);
+>  		return;
+>  	}
 
--- Joe
+I think we can use strictly greater here rather than greater or equal.
+MAX_TLBI_RANGE_PAGES can be encoded as num 31, scale 3.
 
+>  
+> -	/* Convert the stride into units of 4k */
+> -	stride >>= 12;
+> +	dsb(ishst);
+>  
+> -	start = __TLBI_VADDR(start, asid);
+> -	end = __TLBI_VADDR(end, asid);
+> +	/*
+> +	 * When cpu does not support TLBI RANGE feature, we flush the tlb
+> +	 * entries one by one at the granularity of 'stride'.
+> +	 * When cpu supports the TLBI RANGE feature, then:
+> +	 * 1. If pages is odd, flush the first page through non-RANGE
+> +	 *    instruction;
+> +	 * 2. For remaining pages: The minimum range granularity is decided
+> +	 *    by 'scale', so we can not flush all pages by one instruction
+> +	 *    in some cases.
+> +	 *    Here, we start from scale = 0, flush corresponding pages
+> +	 *    (from 2^(5*scale + 1) to 2^(5*(scale + 1) + 1)), and increase
+> +	 *    it until no pages left.
+> +	 */
+> +	while (pages > 0) {
+
+I did some simple checks on ((end - start) % stride) and never
+triggered. I had a slight worry that pages could become negative (and
+we'd loop forever since it's unsigned long) for some mismatched stride
+and flush size. It doesn't seem like.
+
+> +		if (!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) ||
+> +		    pages % 2 == 1) {
+> +			addr = __TLBI_VADDR(start, asid);
+> +			if (last_level) {
+> +				__tlbi_level(vale1is, addr, tlb_level);
+> +				__tlbi_user_level(vale1is, addr, tlb_level);
+> +			} else {
+> +				__tlbi_level(vae1is, addr, tlb_level);
+> +				__tlbi_user_level(vae1is, addr, tlb_level);
+> +			}
+> +			start += stride;
+> +			pages -= stride >> PAGE_SHIFT;
+> +			continue;
+> +		}
+>  
+> -	dsb(ishst);
+> -	for (addr = start; addr < end; addr += stride) {
+> -		if (last_level) {
+> -			__tlbi_level(vale1is, addr, tlb_level);
+> -			__tlbi_user_level(vale1is, addr, tlb_level);
+> -		} else {
+> -			__tlbi_level(vae1is, addr, tlb_level);
+> -			__tlbi_user_level(vae1is, addr, tlb_level);
+> +		num = __TLBI_RANGE_NUM(pages, scale) - 1;
+> +		if (num >= 0) {
+> +			addr = __TLBI_VADDR_RANGE(start, asid, scale,
+> +						  num, tlb_level);
+> +			if (last_level) {
+> +				__tlbi(rvale1is, addr);
+> +				__tlbi_user(rvale1is, addr);
+> +			} else {
+> +				__tlbi(rvae1is, addr);
+> +				__tlbi_user(rvae1is, addr);
+> +			}
+> +			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
+> +			pages -= __TLBI_RANGE_PAGES(num, scale);
+>  		}
+> +		scale++;
+>  	}
+>  	dsb(ish);
+
+The logic looks fine to me now. I can fix the above nitpicks myself and
+maybe adjust the comment a bit. I plan to push them into next to see if
+anything explodes.
+
+Thanks.
+
+-- 
+Catalin
