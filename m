@@ -2,197 +2,249 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E86DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B21C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A29B2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED3D2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJZfH/tm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ra31CPzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgGJE0b (ORCPT
+        id S1726773AbgGJE1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgGJE0b (ORCPT
+        Fri, 10 Jul 2020 00:27:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10577 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726461AbgGJE1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:26:31 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E54C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:26:30 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e8so4922855ljb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IDb3g5vxr/qWKzrtnhotFmzcC0SHY54b9+eqVy5+8NQ=;
-        b=PJZfH/tmK25TBftSy5/M6juOuRHXquLDyvbKyrrLRCX61V2LqMKbxKpcoMka91bVn2
-         k+Xew+QRGh6XCY5DGIJVM1jhssPxW81Rw+9GEfjbVsbpSE5oidFlytX+1nyWKS7DKub+
-         vEGQ9XQn+DKAWIPOXI3eciE1yeHB5vu6FvOnwJ3Lv+wEJS57hTVXRA9zwBlOj15dLv5k
-         bPhGPitcjicnNfeWeh8o3zJWIBOVy+IcArEePs6bZsNAGaNpWNubf6V1tFgs3FRvUY4u
-         fV+mezFb0C8oTUR2oIVee7ZV+lJp4QZv/xxgWhNxHogc4gPTM+2bdZD5HP9JisUIcSZM
-         YiHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IDb3g5vxr/qWKzrtnhotFmzcC0SHY54b9+eqVy5+8NQ=;
-        b=RgDv8cwutPQEqM1DWQ2FSV6abpz9fp6H4ep6Q6EXi2BW1w5hzZr9GCxdoM5iJAIN2C
-         EqECDj7BMb4CtuKFFyqYYlCulD+Im02cPRe1GEqBrGY2yrrCs7op1xinVyAWHkD02+bp
-         ITqxiAfTpRmbAYyoT3HhUviBOFXM4obQ6dQbcp9c5/fBlGNfv26uwNfBOX0Jxz6MIHLO
-         cWFgTsONmHYnUbAOUe8Tr3cUBTGJr50VkLNzqzJBQ+BPzgeT9r96htYPVXduEoyFnqrX
-         URmp3J1ZQhBpMHHZ0WKixBzsbPKt0pjiMhNRfGmcSi1dzCcZWXLhiXu5eDyA8UiEEGcM
-         DP8w==
-X-Gm-Message-State: AOAM532npNOiwzYcDnXnVQAuP+5ucDLYEpT9b84InnEANYKkOyrAavKR
-        YiwyiVIafZ0TF4L0BxN3Qq8DeLwGByJbgA0Ax2U=
-X-Google-Smtp-Source: ABdhPJyZYWzkEiDKOx6X2h2aclsw1W0QryWEfiD9Zrapu4xZynRTvKmpnMtKBlPxlcfcbigRHcH9uHWHK4tGx4lPbR4=
-X-Received: by 2002:a2e:8e68:: with SMTP id t8mr30798793ljk.335.1594355189016;
- Thu, 09 Jul 2020 21:26:29 -0700 (PDT)
+        Fri, 10 Jul 2020 00:27:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594355264; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Wo79ogPKXRyrrdLfPbUvGaueappb89mVN3N+SG+jZaE=; b=Ra31CPzUAwy3SmuyaoLYZgRtqKjsK/5Mvn0dqaS6bVrxZM+rDbD6uRqt53o2tCkuaPk+PPc0
+ ajafbVXnkdU4ws7LuCj9ULOZnNqs3bX2ptYhNj6CobCn5vE0p+najH0Rc6+q3m4EWhlN6DGC
+ 0tp4FZuqTTeGX0F0EtQv5eqoKfY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f07ee2aa33b1a3dd4926108 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:27:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 00F6DC433C6; Fri, 10 Jul 2020 04:27:21 +0000 (UTC)
+Received: from [192.168.1.11] (unknown [117.247.20.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6B4EC433C8;
+        Fri, 10 Jul 2020 04:27:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6B4EC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
+To:     Douglas Anderson <dianders@chromium.org>, linus.walleij@linaro.org
+Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        cychiang@chromium.org, ilina@codeaurora.org, agross@kernel.org,
+        mkshah@codeaurora.org, bjorn.andersson@linaro.org,
+        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <b7736f60-ba4f-8bc3-c749-7e0b4746b09e@codeaurora.org>
+Date:   Fri, 10 Jul 2020 09:57:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710021505.2405872-1-daeho43@gmail.com> <20200710030246.GA545837@google.com>
- <62c9dd7a-5d18-8bb6-8e43-c055fcff51cc@huawei.com> <20200710033100.GE545837@google.com>
- <ede6620c-6fc9-797d-e3ea-e630eb76b309@huawei.com> <20200710035215.GI545837@google.com>
-In-Reply-To: <20200710035215.GI545837@google.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Fri, 10 Jul 2020 13:26:17 +0900
-Message-ID: <CACOAw_zRXYv_Vo2Q2=FnU-DL-fROuFi40xymrRPrJ91v=TFjKQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in F2FS_IOC_SEC_TRIM_FILE
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>, Daeho Jeong <daehojeong@google.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To handle that case, I think we need to handle range.len(-1) differently.
-When range.len is -1, we need to find out every block belongs to the
-inode regardless of i_size and discard it.
 
-2020=EB=85=84 7=EC=9B=94 10=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 12:52, =
-Jaegeuk Kim <jaegeuk@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 07/10, Chao Yu wrote:
-> > On 2020/7/10 11:31, Jaegeuk Kim wrote:
-> > > On 07/10, Chao Yu wrote:
-> > >> On 2020/7/10 11:02, Jaegeuk Kim wrote:
-> > >>> On 07/10, Daeho Jeong wrote:
-> > >>>> From: Daeho Jeong <daehojeong@google.com>
-> > >>>>
-> > >>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
-> > >>>>  1. Added -1 value support for range.len to signify the end of fil=
-e.
-> > >>>>  2. If the end of the range passes over the end of file, it means =
-until
-> > >>>>     the end of file.
-> > >>>>  3. ignored the case of that range.len is zero to prevent the func=
-tion
-> > >>>>     from making end_addr zero and triggering different behaviour o=
-f
-> > >>>>     the function.
-> > >>>>
-> > >>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> > >>>> ---
-> > >>>>  fs/f2fs/file.c | 16 +++++++---------
-> > >>>>  1 file changed, 7 insertions(+), 9 deletions(-)
-> > >>>>
-> > >>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > >>>> index 368c80f8e2a1..1c4601f99326 100644
-> > >>>> --- a/fs/f2fs/file.c
-> > >>>> +++ b/fs/f2fs/file.c
-> > >>>> @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file =
-*filp, unsigned long arg)
-> > >>>>          file_start_write(filp);
-> > >>>>          inode_lock(inode);
-> > >>>>
-> > >>>> -        if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(in=
-ode)) {
-> > >>>> +        if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(in=
-ode) ||
-> > >>>> +                        range.start >=3D inode->i_size) {
-> > >>>>                  ret =3D -EINVAL;
-> > >>>>                  goto err;
-> > >>>>          }
-> > >>>>
-> > >>>> -        if (range.start >=3D inode->i_size) {
-> > >>>> -                ret =3D -EINVAL;
-> > >>>> +        if (range.len =3D=3D 0)
-> > >>>>                  goto err;
-> > >>>> -        }
-> > >>>>
-> > >>>> -        if (inode->i_size - range.start < range.len) {
-> > >>>> -                ret =3D -E2BIG;
-> > >>>> -                goto err;
-> > >>>> -        }
-> > >>>> -        end_addr =3D range.start + range.len;
-> > >>>> +        if (range.len =3D=3D (u64)-1 || inode->i_size - range.sta=
-rt < range.len)
-> > >>>> +                end_addr =3D inode->i_size;
-> > >>
-> > >> We can remove 'range.len =3D=3D (u64)-1' condition since later condi=
-tion can cover
-> > >> this?
-> > >>
-> > >>>
-> > >>> Hmm, what if there are blocks beyond i_size? Do we need to check i_=
-blocks for
-> > >>
-> > >> The blocks beyond i_size will never be written, there won't be any v=
-alid message
-> > >> there, so we don't need to worry about that.
-> > >
-> > > I don't think we have a way to guarantee the order of i_size and bloc=
-k
-> > > allocation in f2fs. See f2fs_write_begin and f2fs_write_end.
-> >
-> > However, write_begin & write_end are covered by inode_lock, it could no=
-t be
-> > racy with inode size check in f2fs_sec_trim_file() as it hold inode_loc=
-k as
-> > well?
->
-> Like Daeho said, write_begin -> checkpoint -> power-cut can give bigger i=
-_blocks
-> than i_size.
->
-> >
-> > >
-> > >>
-> > >> Thanks,
-> > >>
-> > >>> ending criteria?
-> > >>>
-> > >>>> +        else
-> > >>>> +                end_addr =3D range.start + range.len;
-> > >>>>
-> > >>>>          to_end =3D (end_addr =3D=3D inode->i_size);
-> > >>>>          if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
-> > >>>> --
-> > >>>> 2.27.0.383.g050319c2ae-goog
-> > >>>>
-> > >>>>
-> > >>>>
-> > >>>> _______________________________________________
-> > >>>> Linux-f2fs-devel mailing list
-> > >>>> Linux-f2fs-devel@lists.sourceforge.net
-> > >>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> > >>>
-> > >>>
-> > >>> _______________________________________________
-> > >>> Linux-f2fs-devel mailing list
-> > >>> Linux-f2fs-devel@lists.sourceforge.net
-> > >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> > >>> .
-> > >>>
-> > > .
-> > >
+On 7/9/2020 2:46 AM, Douglas Anderson wrote:
+> As per Qualcomm, there is a PDC hardware issue (with the specific IP
+> rev that exists on sc7180) that causes the PDC not to work properly
+> when configured to handle dual edges.
+> 
+> Let's work around this by emulating only ever letting our parent see
+> requests for single edge interrupts on affected hardware.
+> 
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks Doug, this looks like a much better solution than what I was
+proposing :)
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+> ---
+> As far as I can tell everything here should work and the limited
+> testing I'm able to give it shows that, in fact, I can detect both
+> edges.
+> 
+> Please give this an extra thorough review since it's trying to find
+> the exact right place to insert this code and I'm not massively
+> familiar with all the frameworks.
+> 
+> If someone has hardware where it's easy to stress test this that'd be
+> wonderful too.  The board I happen to have in front of me doesn't have
+> any easy-to-toggle GPIOs where I can just poke a button or a switch to
+> generate edges.  My testing was done by hacking the "write protect"
+> GPIO on my board into gpio-keys as a dual-edge interrupt and then
+> sending commands to our security chip to toggle it--not exactly great
+> for testing to make sure there are no race conditions if the interrupt
+> bounces a lot.
+> 
+>   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
+>   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
+>   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
+>   3 files changed, 85 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 83b7d64bc4c1..45ca09ebb7b3 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+>   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>   }
+>   
+> +/**
+> + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
+> + * @d: The irq dta.
+> + *
+> + * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
+> + * normally handled by the parent irqchip.  The logic here is slightly
+> + * different due to what's easy to do with our parent, but in principle it's
+> + * the same.
+> + */
+> +static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> +	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
+> +	unsigned long flags;
+> +	int loop_limit = 100;
+> +	unsigned int val;
+> +	unsigned int type;
+> +
+> +	/* Read the value and make a guess about what edge we need to catch */
+> +	val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+> +	type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
+> +
+> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +	do {
+> +		/* Set the parent to catch the next edge */
+> +		irq_chip_set_type_parent(d, type);
+> +
+> +		/*
+> +		 * Possibly the line changed between when we last read "val"
+> +		 * (and decided what edge we needed) and when set the edge.
+> +		 * If the value didn't change (or changed and then changed
+> +		 * back) then we're done.
+> +		 */
+> +		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+> +		if (type == IRQ_TYPE_EDGE_RISING) {
+> +			if (!val)
+> +				break;
+> +			type = IRQ_TYPE_EDGE_FALLING;
+> +		} else if (type == IRQ_TYPE_EDGE_FALLING) {
+> +			if (val)
+> +				break;
+> +			type = IRQ_TYPE_EDGE_RISING;
+> +		}
+> +	} while (loop_limit-- > 0);
+> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +
+> +	if (!loop_limit)
+> +		dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+> +}
+> +
+> +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
+> +{
+> +	struct irq_data	*d = &desc->irq_data;
+> +
+> +	/* Make sure we're primed for the next edge */
+> +	msm_gpio_update_dual_edge_parent(d);
+> +
+> +	/* Pass on to the normal interrupt handler */
+> +	handle_fasteoi_irq(desc);
+> +}
+> +
+> +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
+> +						       unsigned int type)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> +
+> +	return type == IRQ_TYPE_EDGE_BOTH &&
+> +	       pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
+> +	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
+> +}
+> +
+>   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>   {
+>   	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>   	unsigned long flags;
+>   	u32 val;
+>   
+> +	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
+> +		irq_set_handler_locked(d, msm_gpio_handle_dual_edge_parent_irq);
+> +		msm_gpio_update_dual_edge_parent(d);
+> +
+> +		return 0;
+> +	}
+> +
+>   	if (d->parent_data)
+>   		irq_chip_set_type_parent(d, type);
+>   
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+> index 9452da18a78b..7486fe08eb9b 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+> @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
+>    * @pull_no_keeper: The SoC does not support keeper bias.
+>    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
+>    * @nwakeirq_map:   The number of entries in @wakeirq_map
+> + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
+> + *                            to be aware that their parent can't handle dual
+> + *                            edge interrupts.
+>    */
+>   struct msm_pinctrl_soc_data {
+>   	const struct pinctrl_pin_desc *pins;
+> @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
+>   	const int *reserved_gpios;
+>   	const struct msm_gpio_wakeirq_map *wakeirq_map;
+>   	unsigned int nwakeirq_map;
+> +	bool wakeirq_dual_edge_errata;
+>   };
+>   
+>   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> index 1b6465a882f2..1d9acad3c1ce 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> @@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+>   	.ntiles = ARRAY_SIZE(sc7180_tiles),
+>   	.wakeirq_map = sc7180_pdc_map,
+>   	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
+> +	.wakeirq_dual_edge_errata = true,
+>   };
+>   
+>   static int sc7180_pinctrl_probe(struct platform_device *pdev)
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
