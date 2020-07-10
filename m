@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D267BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F44C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62842078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B512078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594400041;
-	bh=3K5XTQlitj/bwe8CUOw07Oa86EAGRdA3nrYZ6K6ZBqU=;
+	s=default; t=1594400049;
+	bh=kg+o40FwM+uHn0pA7V5zFqwWP0HjsEZrR4OqChGKd5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KH8XDvCmiaY+HIN6oh9L7dcFwiVyx1G5D7U7mGUhnfKe3Rp8d3oC5S/WVzA94VK68
-	 j3M+MYamLWKScOsR2HPhIY3ps5niBsaVJ7uJCLaqhIfnrJAtgKyLZTxfkvL+FDkTQB
-	 I35X20PhAk3AMPPFMk1m1mxzEUdh26nIWV/LS6ws=
+	b=jwkN69mPm6eBVrfjCL4MyfUka00N9Mkx8xqnLKylkb4ZPX7WYC7MTJFqUQEALsDLV
+	 G9O5DsAj1iq3EKnyt0qxgIuextmfZr8av4EwZwRusQyEp0NXEYsjbKDsSYSRC8NqoS
+	 GxeH+9UqY860PaBpZoDL0WwQuXYfAC87fVbNbmF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgGJQxH (ORCPT
+        id S1728731AbgGJQyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgGJQxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:53:01 -0400
+        id S1728362AbgGJQwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:52:45 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 439142078D;
-        Fri, 10 Jul 2020 16:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F4E2078B;
+        Fri, 10 Jul 2020 16:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594399980;
-        bh=3K5XTQlitj/bwe8CUOw07Oa86EAGRdA3nrYZ6K6ZBqU=;
+        s=default; t=1594399964;
+        bh=kg+o40FwM+uHn0pA7V5zFqwWP0HjsEZrR4OqChGKd5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFzrVhw9Xba3gfX7j5r6u6ydOqRSwtCuUnYHNbVIVRx5hVppjJ3pCseUfBBWyAxBi
-         FaE2beH0RhWvr3MvlG/QqqT28zxasoef19BeRngckScT21HhXcALLG4Nsl7ToVxzbB
-         86U8+/rWbiYfNi1NznvF1uhROfq8/TxZcx2FXfnc=
+        b=cdnYPtdLMTCP2QVBq2Q/L1lGIbfGXUbfjgUO1eWQbxfhgNQEzBkmiH5N+qcJ7FDqV
+         BA3iOc7kpzWgtCqV4MYfanOICXcUT/3JP43fYdEq5kaRgijE7kaMOaPUcJgPo8DMsg
+         1aaFw1eIoBg3geVsPqSgVPuDcAQrKGj3a8PGm59I=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
@@ -60,9 +60,9 @@ Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH v3 12/19] tools/memory-model: Remove smp_read_barrier_depends() from informal doc
-Date:   Fri, 10 Jul 2020 17:51:56 +0100
-Message-Id: <20200710165203.31284-13-will@kernel.org>
+Subject: [PATCH v3 08/19] alpha: Replace smp_read_barrier_depends() usage with smp_[r]mb()
+Date:   Fri, 10 Jul 2020 17:51:52 +0100
+Message-Id: <20200710165203.31284-9-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 References: <20200710165203.31284-1-will@kernel.org>
@@ -73,61 +73,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-smp_read_barrier_depends() has gone the way of mmiowb() and so many
-esoteric memory barriers before it. Drop the two mentions of this
-deceased barrier from the LKMM informal explanation document.
+In preparation for removing smp_read_barrier_depends() altogether,
+move the Alpha code over to using smp_rmb() and smp_mb() directly.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- .../Documentation/explanation.txt             | 26 +++++++++----------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ arch/alpha/include/asm/atomic.h  | 16 ++++++++--------
+ arch/alpha/include/asm/pgtable.h | 10 +++++-----
+ mm/memory.c                      |  2 +-
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index e91a2eb19592..01adf9e0ebac 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -1122,12 +1122,10 @@ maintain at least the appearance of FIFO order.
- In practice, this difficulty is solved by inserting a special fence
- between P1's two loads when the kernel is compiled for the Alpha
- architecture.  In fact, as of version 4.15, the kernel automatically
--adds this fence (called smp_read_barrier_depends() and defined as
--nothing at all on non-Alpha builds) after every READ_ONCE() and atomic
--load.  The effect of the fence is to cause the CPU not to execute any
--po-later instructions until after the local cache has finished
--processing all the stores it has already received.  Thus, if the code
--was changed to:
-+adds this fence after every READ_ONCE() and atomic load on Alpha.  The
-+effect of the fence is to cause the CPU not to execute any po-later
-+instructions until after the local cache has finished processing all
-+the stores it has already received.  Thus, if the code was changed to:
+diff --git a/arch/alpha/include/asm/atomic.h b/arch/alpha/include/asm/atomic.h
+index 2144530d1428..2f8f7e54792f 100644
+--- a/arch/alpha/include/asm/atomic.h
++++ b/arch/alpha/include/asm/atomic.h
+@@ -16,10 +16,10 @@
  
- 	P1()
- 	{
-@@ -1146,14 +1144,14 @@ READ_ONCE() or another synchronization primitive rather than accessed
- directly.
+ /*
+  * To ensure dependency ordering is preserved for the _relaxed and
+- * _release atomics, an smp_read_barrier_depends() is unconditionally
+- * inserted into the _relaxed variants, which are used to build the
+- * barriered versions. Avoid redundant back-to-back fences in the
+- * _acquire and _fence versions.
++ * _release atomics, an smp_mb() is unconditionally inserted into the
++ * _relaxed variants, which are used to build the barriered versions.
++ * Avoid redundant back-to-back fences in the _acquire and _fence
++ * versions.
+  */
+ #define __atomic_acquire_fence()
+ #define __atomic_post_full_fence()
+@@ -70,7 +70,7 @@ static inline int atomic_##op##_return_relaxed(int i, atomic_t *v)	\
+ 	".previous"							\
+ 	:"=&r" (temp), "=m" (v->counter), "=&r" (result)		\
+ 	:"Ir" (i), "m" (v->counter) : "memory");			\
+-	smp_read_barrier_depends();					\
++	smp_mb();							\
+ 	return result;							\
+ }
  
- The LKMM requires that smp_rmb(), acquire fences, and strong fences
--share this property with smp_read_barrier_depends(): They do not allow
--the CPU to execute any po-later instructions (or po-later loads in the
--case of smp_rmb()) until all outstanding stores have been processed by
--the local cache.  In the case of a strong fence, the CPU first has to
--wait for all of its po-earlier stores to propagate to every other CPU
--in the system; then it has to wait for the local cache to process all
--the stores received as of that time -- not just the stores received
--when the strong fence began.
-+share this property: They do not allow the CPU to execute any po-later
-+instructions (or po-later loads in the case of smp_rmb()) until all
-+outstanding stores have been processed by the local cache.  In the
-+case of a strong fence, the CPU first has to wait for all of its
-+po-earlier stores to propagate to every other CPU in the system; then
-+it has to wait for the local cache to process all the stores received
-+as of that time -- not just the stores received when the strong fence
-+began.
+@@ -88,7 +88,7 @@ static inline int atomic_fetch_##op##_relaxed(int i, atomic_t *v)	\
+ 	".previous"							\
+ 	:"=&r" (temp), "=m" (v->counter), "=&r" (result)		\
+ 	:"Ir" (i), "m" (v->counter) : "memory");			\
+-	smp_read_barrier_depends();					\
++	smp_mb();							\
+ 	return result;							\
+ }
  
- And of course, none of this matters for any architecture other than
- Alpha.
+@@ -123,7 +123,7 @@ static __inline__ s64 atomic64_##op##_return_relaxed(s64 i, atomic64_t * v)	\
+ 	".previous"							\
+ 	:"=&r" (temp), "=m" (v->counter), "=&r" (result)		\
+ 	:"Ir" (i), "m" (v->counter) : "memory");			\
+-	smp_read_barrier_depends();					\
++	smp_mb();							\
+ 	return result;							\
+ }
+ 
+@@ -141,7 +141,7 @@ static __inline__ s64 atomic64_fetch_##op##_relaxed(s64 i, atomic64_t * v)	\
+ 	".previous"							\
+ 	:"=&r" (temp), "=m" (v->counter), "=&r" (result)		\
+ 	:"Ir" (i), "m" (v->counter) : "memory");			\
+-	smp_read_barrier_depends();					\
++	smp_mb();							\
+ 	return result;							\
+ }
+ 
+diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
+index 162c17b2631f..660b14ce1317 100644
+--- a/arch/alpha/include/asm/pgtable.h
++++ b/arch/alpha/include/asm/pgtable.h
+@@ -277,9 +277,9 @@ extern inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= __DIRTY_BITS; retur
+ extern inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= __ACCESS_BITS; return pte; }
+ 
+ /*
+- * The smp_read_barrier_depends() in the following functions are required to
+- * order the load of *dir (the pointer in the top level page table) with any
+- * subsequent load of the returned pmd_t *ret (ret is data dependent on *dir).
++ * The smp_rmb() in the following functions are required to order the load of
++ * *dir (the pointer in the top level page table) with any subsequent load of
++ * the returned pmd_t *ret (ret is data dependent on *dir).
+  *
+  * If this ordering is not enforced, the CPU might load an older value of
+  * *ret, which may be uninitialized data. See mm/memory.c:__pte_alloc for
+@@ -293,7 +293,7 @@ extern inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= __ACCESS_BITS; retu
+ extern inline pmd_t * pmd_offset(pud_t * dir, unsigned long address)
+ {
+ 	pmd_t *ret = (pmd_t *) pud_page_vaddr(*dir) + ((address >> PMD_SHIFT) & (PTRS_PER_PAGE - 1));
+-	smp_read_barrier_depends(); /* see above */
++	smp_rmb(); /* see above */
+ 	return ret;
+ }
+ #define pmd_offset pmd_offset
+@@ -303,7 +303,7 @@ extern inline pte_t * pte_offset_kernel(pmd_t * dir, unsigned long address)
+ {
+ 	pte_t *ret = (pte_t *) pmd_page_vaddr(*dir)
+ 		+ ((address >> PAGE_SHIFT) & (PTRS_PER_PAGE - 1));
+-	smp_read_barrier_depends(); /* see above */
++	smp_rmb(); /* see above */
+ 	return ret;
+ }
+ #define pte_offset_kernel pte_offset_kernel
+diff --git a/mm/memory.c b/mm/memory.c
+index 87ec87cdc1ff..e1f2c730d8bb 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -437,7 +437,7 @@ int __pte_alloc(struct mm_struct *mm, pmd_t *pmd)
+ 	 * of a chain of data-dependent loads, meaning most CPUs (alpha
+ 	 * being the notable exception) will already guarantee loads are
+ 	 * seen in-order. See the alpha page table accessors for the
+-	 * smp_read_barrier_depends() barriers in page table walking code.
++	 * smp_rmb() barriers in page table walking code.
+ 	 */
+ 	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+ 
 -- 
 2.27.0.383.g050319c2ae-goog
 
