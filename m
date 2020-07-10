@@ -2,243 +2,185 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39DF220720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D922820720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YQN3wyrU"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="tw2TiHJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGJGMg (ORCPT
+        id S1727043AbgGJGOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJGMa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:12:30 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31CC5C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:12:30 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so2164040pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
-        b=YQN3wyrUqnoKyW6LkEnOAXbo1yEYXD4zeVsZah3jneZODo1vRwD80P1/DO3vAgKpo4
-         4q8jvKxSP8roPZPEXCfRBPzFVAixIeBB1c06dFtSgvQWiC4i1sfPaCzF76ziNbXao2h1
-         AXjyXvLz3UKJ8luQEI2qPMVB2HLJzTpYO79yA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
-        b=kZ/+vDyywZdpmovIDGT8sJEf5UDv4XXM+2w4I27bf7P7na6HGdGheEyZ5YC1GHswwU
-         OiX0ta9R8MlSDRgzxXih/Y1BIWtV3Byj2N1eRC79tTPrxn1c350qEz7LIkY+3TlNBkfC
-         Djd5KceRH+CK2U7g7MPDC2O0o6M4lhgZ8GDANn2Bovf3WtVerjuPPf/QKgYJ8Omc5AKv
-         vGQ88PzsdGzUdu3yezqXHusvSKz1Nn3qB3MFFGaHMHV13be8/Ol7x73uzaE6SCtgMOyX
-         1ulkyMTCeJGhRhwpBWrN9e+sBWC8kIp1ia+EtXdhAXDArhdD3Vj9kMRWb0ndcYGzkvEv
-         Fwaw==
-X-Gm-Message-State: AOAM532YSIt/QwxkoRicJsnmw86YMYy/gxKWZksW1GZY9K2l2RNJ8BKu
-        VhF3vOpgbcC7UXg/0HKKzxg8kA==
-X-Google-Smtp-Source: ABdhPJwPvKjchWKFqAIbyd/TdHITo1hj1fnDIECweruqTh33U9CzcEdR1JMeCauMakY0xW7tmhE7Hg==
-X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr3871837pjq.1.1594361549533;
-        Thu, 09 Jul 2020 23:12:29 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id z26sm4709566pfr.187.2020.07.09.23.12.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 23:12:28 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Fri, 10 Jul 2020 02:14:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:8969 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbgGJGOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:14:23 -0400
+IronPort-SDR: CQIaZkqwaRBwpS0YaOXKh3hyKkJbnLSVzK7VUy3E9cU2VQNXsKSEo2KaDbq7bDclVz9j+XFkG+
+ l+tHPa/FX+WA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="127748810"
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208";a="127748810"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 23:14:21 -0700
+IronPort-SDR: DYrjkeNDTDE+0PeUvDulaksFLuvo12c7J85VIUTELK0uiRi7Nz1XS0Icj/is35EfXwN680sZQg
+ Dp9MAc6zN5OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208";a="267632581"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Jul 2020 23:14:21 -0700
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Jul 2020 23:14:21 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Jul 2020 23:14:21 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 9 Jul 2020 23:14:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJsgm767m+R8OZzhwHl1XNxzGhuSdKGhyfnC/UIJyZl+iQtiOGl13zSSwnHnMMq/El8kKHbr9U6ab37ZqSKL7GVqQDOSwMHyueqNO6deImzmzt6cq+aoXa8o2lh0wRnAskKIcq8n0EhGvW3G4nhcyTOEVvBY8Xp7hnlcnYVo7Ghhu7ouAP3U9S4GAyb7Q9YBB2bhKneITMpCLOjdAeSUYDdXAPsjI3Ume5OMtGXWSSq0PqE5YOnd/rDe9QB4jDDK/JkQ61css4424ljXEvhMcrRBDNDKOjF/DU1ZGeim4v/Ds/Z3VX0gXYRgiXDHkUEJYx7BsJ3w7ap3vAXTvmrNFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vghefcwCSH88jKC69AJMZnndDh/2LId7LS7zeySOEb8=;
+ b=HBHLieSU8MEM3iE+wHFiw8q8iFTU/8IyfczVx2V9K1Nd1NBTQIAgxvpdfPZ81Eiu2ZgZB1X7y5Hv1ZaJZpjr91TtF2mKOJ7WgjibO3s0hXVZ8+LOcqCSCB0Tupdi4tkYfNmztW/bONKh8bquSkjuRqZ+ILQuccbZUaD2dbQVdLpP9c1rwL0OkMa69Uk8+qj6KkFyH1mxCvT2x1XFEq9M1BPo9x6vH7HhtrWjPMcNHly6G2/Oh3ZCxcEjOvMYeCUz9rIJw0PUTx+k+oSysOiBM05D5423/nGT7Db/rjN4a2/HaUTFvvy2F+Yq85cA9+CTxfBbud824B5I2Nj3mERwTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vghefcwCSH88jKC69AJMZnndDh/2LId7LS7zeySOEb8=;
+ b=tw2TiHJ3NRiBmL8YWWoO72F5ATlShTZ20E2n2tzEMSq1elIabzDrz6BzoRgd/AvfZ43EQCI5VlMF/Cpv2Ip3DVtaMtEwYaI2gDroDeHFBH3fqQGCls5vizai04Ue2DHGrpd4nj59XZMWY/5vYc4JbcOMn3oO6ORrR97ubPoJ9U8=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB3545.namprd11.prod.outlook.com (2603:10b6:5:141::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
+ 2020 06:14:19 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
+ 06:14:19 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>
+CC:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: RE: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Thread-Topic: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Thread-Index: AQHWVcomDnRuf5Ios0uozSMTJLBb7aj+8y7ggAAJzICAAAjeAIAAMHgAgAES8YCAAAzw8A==
+Date:   Fri, 10 Jul 2020 06:14:19 +0000
+Message-ID: <DM6PR11MB3819BF1B54D64AD706BF832E85650@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200709093527.GA32541@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+ <20200710052443.GB8689@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200710052443.GB8689@yilunxu-OptiPlex-7050>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.102.204.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e7cfd86-9ee7-4d7f-c97d-08d824987b7c
+x-ms-traffictypediagnostic: DM6PR11MB3545:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB35451B1CF9C23EE9D9ACD1C585650@DM6PR11MB3545.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3t9EwkGoIckfO+O7tOWLdsZT/Tx3hn9oIuy8H9Kv4HsSs2ZSPedWrhuz+jvXlDtkL5eG5Z4fXN8JYFQdJfT46F0UQagbUP+V/Yf5WrirzZOSS4bzsYT+YmoT6e5TRCyQNHXP9Ub8AQ2mJxlJM0BvfRsLghXasy5hRtMi1GmXpLUGS14BgblGVHlfoixw6Q35E73EDHjL2TbBi+++R35YC/ljUFGbLB771QFuu+pn/BtBA3quJlehEv8T1Gzamthlk037JFPXAQwJWzfb0BFBFzgc8wUJcOZyduM/0U794tzlQ1wwkx+/oOeLUfUFvCd4nyjFPc0kw9mRmdXEJyn6rw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(366004)(376002)(396003)(186003)(316002)(478600001)(110136005)(54906003)(8936002)(86362001)(4326008)(8676002)(2906002)(26005)(5660300002)(66946007)(76116006)(71200400001)(55016002)(66446008)(66556008)(7696005)(66476007)(64756008)(53546011)(6506007)(33656002)(52536014)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 15LgN48fABBac9En745C80uzRbIailKiQzgnQrmQFh2xEhXvRr8TvP8dDn24kbhWaeu7nnnXQSiasUGtNbd72BHUO8qEZVngX4+58ohqVFgdzbHkxxOxsiFxIZg09JkF7k5QZ36bzy96Uh7gP7I+B47TZjmjPIzp26dcr9uySHx54oa+fGfw4HmPJHF/YRIceXKLsqH3JvNe20R+atc+OLdl0Fq/rWvQdm7bo5DnDyIOjeamfWOoMPC6UewaMsV6zAmZbXO5P3HXXGj3S9oWI3MNMTbaKHawDqo6BAgco1c6ccbFhkLupuCChZy2RiIX7Kq6Yt2oMgY2tIMdomAiiA0KXQUTy41N9O25G+//ktVZX9HPo8Nz3lZjsfgKU2vkh/xQ9sSYwIi/hlvGNh5nmg9MRvS6GZ+OeR29il8PAaol3nyIYDN8L2UO4KVi8LpTnX6f2+Gt6LmR8SvQQ98zXL7/ylJDLMQUlYzVfYioci13XI4BH22s/ZjVHXp4Vtac
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
-References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org> <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] usb: dwc3: qcom: Configure wakeup interrupts and set genpd active wakeup flag
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Thu, 09 Jul 2020 23:12:27 -0700
-Message-ID: <159436154779.1987609.882978770178758503@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e7cfd86-9ee7-4d7f-c97d-08d824987b7c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 06:14:19.8029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mpi1hs8lZD4U/diSJF3EqHoL53OI/DLUNqNbxnpmDvejOKsf8u4AlC2MD6TBG8wxJ7lHj5rMP0z0wPLmJL9PNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3545
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-07-08 12:10:16)
-> configure interrupts based on hs_phy_flag. Set genpd active wakeup flag
-
-Please capitalize the start of a sentence. What is 'hs_phy_flag'?
-
-> for usb gdsc if wakeup capable devices are connected.
-
-This tells us what is happening in the code but doesn't tell us the
-important part, i.e. _why_ this patch is important. Why do we need to
-set the genpd active wakeup flag? Why configure interrupt based on
-hs_phy_flag, whatever that is.
-
+> On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
+> >
+> > On 7/9/20 3:14 AM, Wu, Hao wrote:
+> > >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
+> > >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC =
+N3000
+> > >>>>
+> > >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
+> > >>>>
+> > >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > >>>> ---
+> > >>>>  drivers/fpga/dfl-pci.c | 2 ++
+> > >>>>  1 file changed, 2 insertions(+)
+> > >>>>
+> > >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > >>>> index 73b5153..824aecf 100644
+> > >>>> --- a/drivers/fpga/dfl-pci.c
+> > >>>> +++ b/drivers/fpga/dfl-pci.c
+> > >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev
+> *pcidev)
+> > >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
+> > >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
+> > >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
+> > >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
+> > >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
+> > >> I think we could keep _PF_, also there is no need to support VF of p=
+ac
+> > >> n3000 in product now, but it does exist (ID: 0x0b31).
+> >
+> > I was wondering about the vf id, thanks!
+> >
+> > >>
+> > >> And add _INTEL_ is good to me.
+> > >>
+> > >> Then how about this one:
+> > >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+> > > I am just considering the alignment with ids defined in
+> include/linux/pci_ids.h
+> > > So drop _PF_ before _INTEL_ would be better? : )
+> >
+> > To be consistent, all the id's are intel and all could drop pf.
 >=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 73 ++++++++++++++++++++++++++++++++++----=
-------
->  1 file changed, 57 insertions(+), 16 deletions(-)
+> That's good to me after checking the pci_ids.h. So we have:
 >=20
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024..8902670 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -192,21 +194,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
-om *qcom)
-> =20
->  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
->  {
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +
->         if (qcom->hs_phy_irq) {
->                 disable_irq_wake(qcom->hs_phy_irq);
->                 disable_irq_nosync(qcom->hs_phy_irq);
->         }
-> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
-> +               }
-> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               }
-> +       } else {
-> =20
-> -       if (qcom->dp_hs_phy_irq) {
-> -               disable_irq_wake(qcom->dp_hs_phy_irq);
-> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
-> -       }
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
-> +               }
-> =20
-> -       if (qcom->dm_hs_phy_irq) {
-> -               disable_irq_wake(qcom->dm_hs_phy_irq);
-> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               }
->         }
-> -
+> #define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
 
-I liked the newline. Please keep it.
+Sounds good to me.
 
->         if (qcom->ss_phy_irq) {
->                 disable_irq_wake(qcom->ss_phy_irq);
->                 disable_irq_nosync(qcom->ss_phy_irq);
-> @@ -215,21 +230,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
-3_qcom *qcom)
-> =20
->  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
->  {
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +
->         if (qcom->hs_phy_irq) {
->                 enable_irq(qcom->hs_phy_irq);
->                 enable_irq_wake(qcom->hs_phy_irq);
->         }
-> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       enable_irq(qcom->dp_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
-> +               }
-> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       enable_irq(qcom->dm_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               }
-> +       } else {
-> =20
-> -       if (qcom->dp_hs_phy_irq) {
-> -               enable_irq(qcom->dp_hs_phy_irq);
-> -               enable_irq_wake(qcom->dp_hs_phy_irq);
-> -       }
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       enable_irq(qcom->dp_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
-> +               }
-> =20
-> -       if (qcom->dm_hs_phy_irq) {
-> -               enable_irq(qcom->dm_hs_phy_irq);
-> -               enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       enable_irq(qcom->dm_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               }
->         }
-> -
->         if (qcom->ss_phy_irq) {
->                 enable_irq(qcom->ss_phy_irq);
->                 enable_irq_wake(qcom->ss_phy_irq);
-
-Can we use the wakeup irq support code in the kernel here? That would be
-preferred to having the driver enable and disable irq wake at various
-times when the irq is enabled and disabled (which is also odd by the
-way). Why can't we request the irqs and leave them enabled all the time?
-Also it seems like the binding should have 'wakeup-source' in it (see
-Documentation/devicetree/bindings/power/wakeup-source.txt for more
-info).
-
-> @@ -240,6 +268,14 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  {
->         u32 val;
->         int i;
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
-> +       struct generic_pm_domain *genpd;
-> +
-> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
-> +
-> +       if (genpd && usb_wakeup_enabled_descendants(hcd->self.root_hub))
-
-Feels like a comment would be good to explain why wakeup enabled
-descendants matters here.
-
-> +               genpd->flags |=3D GENPD_FLAG_ACTIVE_WAKEUP;
-> =20
->         if (qcom->is_suspended)
->                 return 0;
-> @@ -261,6 +297,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->  {
->         int ret;
->         int i;
-> +       struct generic_pm_domain *genpd;
-> +
-> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
-
-This does container_of() so it can't return NULL.
-
-> +       if (genpd)
-
-So this check is wrong?
-
-> +               genpd->flags &=3D !GENPD_FLAG_ACTIVE_WAKEUP;
+Hao
