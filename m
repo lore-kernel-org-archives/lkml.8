@@ -2,173 +2,185 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B01C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF70207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19893207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZu9+pWQ"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Vl8XVPAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgGJNp0 (ORCPT
+        id S1728301AbgGJNpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:45:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgGJNpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:45:10 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B10C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:45:10 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ls15so2644851pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N7KG5QWQXC0DT5Wy+0SYBLxbROhm08sns0ssVfXKln0=;
-        b=XZu9+pWQbTy60PSoHQBwjwbQMrb5r4JmvOsB9uKCfCWtvev3RcGAQV8lvPW3ltvX1E
-         R5UcMS9cEg1j4lDqHhwSBPctGD6+ljgmsZZg7vQnJf+ASoMZlCKBAkl/vqg+zA1I2uRQ
-         CKgN5yukxYU/RL7vL54n4pYNwOlVlL+Cgh8MoMlcLzUveSTAwKDBQZikNCf414IRQev6
-         HPYQUQDPGCCNMFSlsscQB1S1zDfLoN1yVXsXaf0w9vA8tGTgQsXfuS2vPcror/QnM0VX
-         aXo6S9llVhSQHFgnTaawneCqilaAJybBQfRsAdwity5LvMDMizJH6gDlQDhlupuAgYS7
-         Z7aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N7KG5QWQXC0DT5Wy+0SYBLxbROhm08sns0ssVfXKln0=;
-        b=FmLGO6CTlRhW7kxHxoWhAR9klcwYzKTPR+p5i3+mWQpZxfcHaTpqpje5EIk9M6XgY3
-         xTCrABTC6vielaGfW4XKUfz64MAGSdjdGYGfYR2rR8BbkI4/ZwkUTFMLSb0aOGN3zG2F
-         ClovXEx3algx1hinZ3GgECf9cJgRg0nQserqANueZz2o70KFFsWNd3WGTk7q6rWdvLBM
-         L8jBwI1piA6Yf0oHp49Qgwvg7wsgovFDe7sYfYuB4OBZ8NXm6zWuZSjskpv2nybNDfVp
-         8DKqKEGANTEpXwocv5bgRWBzsLAYBxgfh4qrufwNyM+AeCGDCsWtHbJDDqPUs0snF6dt
-         9T/Q==
-X-Gm-Message-State: AOAM5327tHhtWknBsnK6QSOlL7M85pMpj1FDqur71+mBFxHWp2HSyqzL
-        C4MI/6Y8D/tf6/cd/lTR0bs=
-X-Google-Smtp-Source: ABdhPJz6IiPHNSVd7i9nrd6Wo9FhX15AQTUgKDWGi6ePstv+AqsYEYYLey0QJ14cXLSvSRME/KMLlg==
-X-Received: by 2002:a17:902:820a:: with SMTP id x10mr8288876pln.135.1594388710310;
-        Fri, 10 Jul 2020 06:45:10 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:45:09 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 12/17] perf ftrace: add support for tracing option 'irq-info'
-Date:   Fri, 10 Jul 2020 21:43:17 +0800
-Message-Id: <20200710134322.15400-13-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
-References: <20200710134322.15400-1-changbin.du@gmail.com>
+        Fri, 10 Jul 2020 09:45:23 -0400
+Received: from mail-eopbgr30125.outbound.protection.outlook.com ([40.107.3.125]:50564
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728256AbgGJNpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:45:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZI/ORH2CYU8q1lk95q/06d7ZBlIf3Sh2H9zwna+gCmCNjeEMzHNnw6WPXOuwHfuyhQ7OoNUOKmCRUBWHpj+tiNuQyGMdgPeKKR5vao4L0OFli+pmuI35Mo5XZnWAXVDHrEbrlNdf1LF7lr3Iqmtb7jbWN+7ZMt6NGYZjGlGwJlSq/gxD+kqgV+SMoTPwDaNQxVTwXvWOWY2s1l21O5nmDYHZhrlxQ7aoqXQ/ZL7xo4bKzDzAImETMBe8FLrxfiXyStz4KHQLNgrh1VsyQ/l3SAvDP9y0EU0fcr84UtZi3wt6BD2kn/tyC4XdAQ70NIwnX8KSAcnQjEzFHwac6MQk4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qpd2uUPaqSozCmyeKhLS97Zygta7MdhckfKU9sl//Cw=;
+ b=goaczf3lur0KkDlpLiE3e6qYY0qwRPkDWOT8OHTZFJ6mMsQ27ILuAggUvEiQSzdZ5FPr2PBaZf20ettUFubsqLbgVNvno6N2ZOMn9hnvFUNvlCvPnp9EoyPLVkmx6tdyL2xx5iLk/fJpFVv7y+lQ7uKJO5GZCxNOrssXrdv7RX1+MEiPusqBeNddyitq8ZzryePnjw6h2k4HpDMOFvEgGVDdTHr4wc2j76g6157Lg96SXaRuflfjU53RtzhAj/6qIhCuBgqf3NV4N9KN9jOAQAZ4i8x9936VT2/xQOA2tTo0NNWbVN17ErQkETrfegm0Fe00tmznSgWFLNEDEgltfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qpd2uUPaqSozCmyeKhLS97Zygta7MdhckfKU9sl//Cw=;
+ b=Vl8XVPArPuMVTBoEmhLo7GvHx0UBYKT1pKUVHd5rqxoUPyeP4sqgEYfOTjfH8K0+zQy9ONViVN+nrHj3RjW5+fpzYh/uXkg367Svut91uPq2RSSI0sLpWe5kWNTngPEiRx2SFLb9shV+CioZGP6xsy8ykesxX5/Ed24NlhpQPLU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=toradex.com;
+Received: from AM0PR05MB6002.eurprd05.prod.outlook.com (2603:10a6:208:129::19)
+ by AM4PR05MB3363.eurprd05.prod.outlook.com (2603:10a6:205:10::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 10 Jul
+ 2020 13:45:15 +0000
+Received: from AM0PR05MB6002.eurprd05.prod.outlook.com
+ ([fe80::343d:a818:80a7:3e6]) by AM0PR05MB6002.eurprd05.prod.outlook.com
+ ([fe80::343d:a818:80a7:3e6%7]) with mapi id 15.20.3174.022; Fri, 10 Jul 2020
+ 13:45:15 +0000
+X-Gm-Message-State: AOAM532P03WdI2WDjcKr5RMNJ44/lV8XuuQAoEYfioR/5ftYfKX9RJj/
+        8nKETKCYW22nKZHzvY4wjAM7Dpte2Oeu3rbAv00=
+X-Google-Smtp-Source: ABdhPJzrVZzrQQ3IreQoVEx9rLcjQ0aExSWAX3ApSKTQcIwqwcSYN1KQaIzIn3gNdGu2IzP5JfEDnDDPguLD1Phr5FA=
+X-Received: by 2002:ac8:4b4f:: with SMTP id e15mr74159750qts.305.1594388711736;
+ Fri, 10 Jul 2020 06:45:11 -0700 (PDT)
+References: <20200710132423.497230-1-philippe.schenker@toradex.com> <20200710132423.497230-2-philippe.schenker@toradex.com>
+In-Reply-To: <20200710132423.497230-2-philippe.schenker@toradex.com>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Fri, 10 Jul 2020 16:45:00 +0300
+X-Gmail-Original-Message-ID: <CAGgjyvE2DX0ntVDtM0_dDRE1j-VWofNXNkoccuDXuk1Q6A7ytw@mail.gmail.com>
+Message-ID: <CAGgjyvE2DX0ntVDtM0_dDRE1j-VWofNXNkoccuDXuk1Q6A7ytw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: colibri-imx6: add usb dual-role switch capability
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-ClientProxiedBy: MN2PR19CA0009.namprd19.prod.outlook.com
+ (2603:10b6:208:178::22) To AM0PR05MB6002.eurprd05.prod.outlook.com
+ (2603:10a6:208:129::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-qt1-f178.google.com (209.85.160.178) by MN2PR19CA0009.namprd19.prod.outlook.com (2603:10b6:208:178::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Fri, 10 Jul 2020 13:45:15 +0000
+Received: by mail-qt1-f178.google.com with SMTP id e12so4379253qtr.9;        Fri, 10 Jul 2020 06:45:15 -0700 (PDT)
+X-Gm-Message-State: AOAM532P03WdI2WDjcKr5RMNJ44/lV8XuuQAoEYfioR/5ftYfKX9RJj/
+        8nKETKCYW22nKZHzvY4wjAM7Dpte2Oeu3rbAv00=
+X-Google-Smtp-Source: ABdhPJzrVZzrQQ3IreQoVEx9rLcjQ0aExSWAX3ApSKTQcIwqwcSYN1KQaIzIn3gNdGu2IzP5JfEDnDDPguLD1Phr5FA=
+X-Received: by 2002:ac8:4b4f:: with SMTP id
+ e15mr74159750qts.305.1594388711736; Fri, 10 Jul 2020 06:45:11 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvE2DX0ntVDtM0_dDRE1j-VWofNXNkoccuDXuk1Q6A7ytw@mail.gmail.com>
+X-Originating-IP: [209.85.160.178]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2d85eb8-a256-459f-e523-08d824d779cd
+X-MS-TrafficTypeDiagnostic: AM4PR05MB3363:
+X-Microsoft-Antispam-PRVS: <AM4PR05MB336348B002C41BF3342B01E0F9650@AM4PR05MB3363.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3m6jKf3Rxsnmw+ftRgTSVdU/MZ2DUpf3hVuC7xzIveCV9t9of3MxEBfBWAzoZtEWzN8Ay99jy5nltYuxY2AQdmo/RWIVWFFTUJC0RSL4cZ/CIisEm2xIH1qHbsK4PDc86v4aMjKXAms7xemFc7ZM2U1RD6j5l7ArvtQd7EcNHIH9Xy5nFGleUg8+nR+s/We89tab4bEe9+O98BBREq9JfYJZaw1BpmwQGea3DNGkK49JHhRDklf/e0YHwol7/RfqNkM2twqtRrbrXuOroJUhtI0Gvf8k33Mlqr0HnvCddA3rDT9lU69Nu0wz3C83QWqA
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB6002.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(346002)(366004)(136003)(376002)(450100002)(8936002)(8676002)(5660300002)(4326008)(9686003)(83380400001)(6862004)(6666004)(6636002)(66556008)(66476007)(66946007)(86362001)(44832011)(53546011)(2906002)(478600001)(55446002)(26005)(52116002)(42186006)(55236004)(54906003)(186003)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 5V0n1qkI6ItKaq/qgEN7tJLJUaEZ5tXlZxdCNfDnR0sE22RCAtcn/WmYkG4dZBsEFkAD8MnQWzXsktBgCBwVsxeTWBGe2FKK1NT1XVoQMc6+po84IeqFdw4F2SPrS1tVa32hxMuODWY5g6Li2QqpQcNvIIQo9cB4xZIb5aC+J5kovOXWbOGtN2ZmwUjlkpm5IYXMYkXREPGw5638wz3zd6lqUurzyxte0Av78fZHa1p2ookC3y4QGyDqZEbaP+F2ZLnB+gPQyGg0H+dL7KZ6gjB6hIy7OSo8rDviNDYQiGk8fnrpO6Nb2jJymmAbLNe5yuTjJ4Ig5A1uY5NIYG+7m3YqSa/DI6TMxOUzNZzJj62GI938wY0Q16MGRfILWLdzts50f+FuCd8YWM+UwOU4P3wRfZ9BmxXsvQYRngGbMjpR3WmVsLFvjQT7L2SdbH5D648RBYWGk27bLVkOBNB58/PWqlu637xrDw/TSD73H/E=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2d85eb8-a256-459f-e523-08d824d779cd
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB6002.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 13:45:15.4449
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kem6mo+twIM22dm3+VtY2I06Ww7a7YDcg96YArnf8Wmmsnch1pMyC3CXvCn5rcpgSlm2vvqEhKNjc/hgFNQP1IlCNFbNWWKAFQiVGsT4AQg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3363
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support to display irq context info for function tracer. To do
-this, just specify a '--func-opts irq-info' option.
+On Fri, Jul 10, 2020 at 4:26 PM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+>
+> Since the runtime-pm wakeup bug was fixed in
+> drivers/usb/chipidea/core.c usb dual-role host/device switching is
+> working. So make use of it.
+>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/Documentation/perf-ftrace.txt |  1 +
- tools/perf/builtin-ftrace.c              | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 2e16e1e588d9..e6e9564d6c2e 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -81,6 +81,7 @@ OPTIONS
- --func-opts::
- 	List of options allowed to set:
- 	  call-graph - Display kernel stack trace for function tracer.
-+	  irq-info   - Display irq context info for function tracer.
- 
- -G::
- --graph-funcs=::
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 179c5da678e3..a5906258c413 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -42,6 +42,7 @@ struct perf_ftrace {
- 	unsigned long		percpu_buffer_size;
- 	bool			inherit;
- 	int			func_stack_trace;
-+	int			func_irq_info;
- 	int			graph_nosleep_time;
- 	int			graph_noirqs;
- };
-@@ -204,6 +205,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
- 	write_tracing_option_file("func_stack_trace", "0");
- 	write_tracing_option_file("sleep-time", "1");
- 	write_tracing_option_file("funcgraph-irqs", "1");
-+	write_tracing_option_file("irq-info", "0");
- }
- 
- static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-@@ -291,6 +293,17 @@ static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
- 	return 0;
- }
- 
-+static int set_tracing_func_irqinfo(struct perf_ftrace *ftrace)
-+{
-+	if (!ftrace->func_irq_info)
-+		return 0;
-+
-+	if (write_tracing_option_file("irq-info", "1") < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int reset_tracing_cpu(void)
- {
- 	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
-@@ -466,6 +479,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
- 	}
- 
-+	if (set_tracing_func_irqinfo(ftrace) < 0) {
-+		pr_err("failed to set tracing option irq-info\n");
-+		goto out_reset;
-+	}
-+
- 	if (set_tracing_filters(ftrace) < 0) {
- 		pr_err("failed to set tracing filters\n");
- 		goto out_reset;
-@@ -656,6 +674,7 @@ static int parse_func_tracer_opts(const struct option *opt,
- 	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
- 	struct sublevel_option func_tracer_opts[] = {
- 		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
-+		{ .name = "irq-info",	.value_ptr = &ftrace->func_irq_info },
- 		{ .name = NULL, }
- 	};
- 
-@@ -723,7 +742,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
- 		     "do not trace given functions", parse_filter_func),
- 	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
--		     "function tracer options, available options: call-graph",
-+		     "function tracer options, available options: call-graph,irq-info",
- 		     parse_func_tracer_opts),
- 	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
- 		     "trace given functions using function_graph tracer",
+> ---
+>
+>  arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi       | 2 +-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> index 65359aece950..c978b3f19a2d 100644
+> --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> @@ -45,6 +45,13 @@ clk16m: clock-16m {
+>                 clock-output-names = "clk16m";
+>         };
+>
+> +       extcon_usbc_det: usbc_det {
+> +               compatible = "linux,extcon-usb-gpio";
+> +               id-gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_usbc_det>;
+> +       };
+> +
+>         gpio-keys {
+>                 compatible = "gpio-keys";
+>                 pinctrl-names = "default";
+> @@ -220,6 +227,7 @@ &usbh1 {
+>  };
+>
+>  &usbotg {
+> +       extcon = <0>, <&extcon_usbc_det>;
+>         status = "okay";
+>  };
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index a4a54c82e28f..de49f9faa426 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -363,7 +363,7 @@ &uart3 {
+>
+>  &usbotg {
+>         disable-over-current;
+> -       dr_mode = "peripheral";
+> +       dr_mode = "otg";
+>         status = "disabled";
+>  };
+>
+> --
+> 2.27.0
+>
+
+
 -- 
-2.25.1
+Best regards
 
+Oleksandr Suvorov
+cryosay@gmail.com
+
+-- 
+Best regards
+Oleksandr Suvorov
+
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
