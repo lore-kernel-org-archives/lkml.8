@@ -2,87 +2,136 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86842C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A45C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0D720725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6015D20725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594395981;
+	bh=Qbd5trfsSxgCdDKMFu1eS/0P1MgYXxivECC40jPjoeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DkBc3SrJCjrwco5AgBYdFpU0rWDr/tM8NcxSsAzGEZbhUOIfR+Pi1/MZzFoPZInHH
+	 6ieGtz6OVviL7L2nAkqsslj0EEPIO3Tqug0SUmOm+pNP3IlYVGHm5e/xskHVyg+aU9
+	 GX2Spipwe1AWgbms5x+Z+7hYAgOWJcJJ1mRFrSOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGJPpa (ORCPT
+        id S1728001AbgGJPqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:45:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:53414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGJPpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:45:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EA7C1FB;
-        Fri, 10 Jul 2020 08:45:29 -0700 (PDT)
-Received: from [10.37.12.58] (unknown [10.37.12.58])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BBB63F8F8;
-        Fri, 10 Jul 2020 08:45:26 -0700 (PDT)
-Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
- interval and uptreshold
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
-        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-References: <20200708153420.29484-1-lukasz.luba@arm.com>
- <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
- <20200708153420.29484-2-lukasz.luba@arm.com>
- <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
- <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
- <c016e256-65a6-8075-d88d-c3fad4815b4d@samsung.com>
- <20200710131921.GA23039@pi3> <4bfa227e-3a6b-dfe2-140b-b402dea52231@arm.com>
- <20200710144947.GB23140@pi3>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <df121ab9-a84e-41ac-057a-e7e9d0cbab48@arm.com>
-Date:   Fri, 10 Jul 2020 16:45:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Jul 2020 11:46:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37495 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJPqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:46:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s26so2707990pfm.4;
+        Fri, 10 Jul 2020 08:46:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yhTtJRTJXOvcoXVeEriil9VP131no0hEgltA/Dirf4w=;
+        b=sFdnvmQpyiIRigGTtkAokRm67w1E+0OjAeXUUC6q+imb7MlHMDYT1lXRx+o2HL/wC3
+         eMJuSUNd/jBOqQQ1IBzrwcPj2ev82fQYfS48Dv4g9sRreGz2bE8bnr+OOiXJVItXJpEd
+         o+0RpecNglrwhYh322QxykIrjGftGs25l8wsspqZUVaZOgspwDgati6x9Cz5yVp2WsCQ
+         iaGJH+sATzM0H1kh4zZ1KmnaMCWpInPmvteRSnQkpuVlnvTdg5hRkCyUpl5m1WRl4ljj
+         dZPO31tLjJstJIsQSPVnMVuxmsKrHdmvnadyacWwcfKiSitidSekKywB2siI6OTo7jdX
+         v8Ug==
+X-Gm-Message-State: AOAM533i4G110HG+jVRYzd6H4KQektO7CgmmO6bSLigoZIqTz3H/9JQ7
+        60hXK5AAxCuKhnL5i4i7q0Q=
+X-Google-Smtp-Source: ABdhPJxNBJS20J2XnwaWY7SBoEH0afToq2nuqUFeImqSskMnzcdKItU72mJCXWho82jrh2RBs74ctA==
+X-Received: by 2002:aa7:930b:: with SMTP id 11mr60057545pfj.320.1594395978749;
+        Fri, 10 Jul 2020 08:46:18 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id c27sm6130825pfj.163.2020.07.10.08.46.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 08:46:18 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 08:46:16 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "Xu, Yilun" <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Message-ID: <20200710154616.GA130068@epycbox.lan>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200709093527.GA32541@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+ <20200710052443.GB8689@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819BF1B54D64AD706BF832E85650@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710144947.GB23140@pi3>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3819BF1B54D64AD706BF832E85650@DM6PR11MB3819.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/10/20 3:49 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jul 10, 2020 at 02:41:28PM +0100, Lukasz Luba wrote:
->>
->>
->> On 7/10/20 2:19 PM, Krzysztof Kozlowski wrote:
->>> On Fri, Jul 10, 2020 at 03:13:18PM +0200, Marek Szyprowski wrote:
->   > In such case, maybe as you said, let's switch to polling mode
->>> unconditionally?
->>
->> I can make happen that the polling mode will be unconditionally
->> set as default.
->>
->> Do you think that the interrupt mode code can still stay in the
->> driver, because maybe in future could be fixed?
+On Fri, Jul 10, 2020 at 06:14:19AM +0000, Wu, Hao wrote:
+> > On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
+> > >
+> > > On 7/9/20 3:14 AM, Wu, Hao wrote:
+> > > >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
+> > > >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+> > > >>>>
+> > > >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
+> > > >>>>
+> > > >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > > >>>> ---
+> > > >>>>  drivers/fpga/dfl-pci.c | 2 ++
+> > > >>>>  1 file changed, 2 insertions(+)
+> > > >>>>
+> > > >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > > >>>> index 73b5153..824aecf 100644
+> > > >>>> --- a/drivers/fpga/dfl-pci.c
+> > > >>>> +++ b/drivers/fpga/dfl-pci.c
+> > > >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev
+> > *pcidev)
+> > > >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
+> > > >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
+> > > >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
+> > > >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
+> > > >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
+> > > >> I think we could keep _PF_, also there is no need to support VF of pac
+> > > >> n3000 in product now, but it does exist (ID: 0x0b31).
+> > >
+> > > I was wondering about the vf id, thanks!
+> > >
+> > > >>
+> > > >> And add _INTEL_ is good to me.
+> > > >>
+> > > >> Then how about this one:
+> > > >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+> > > > I am just considering the alignment with ids defined in
+> > include/linux/pci_ids.h
+> > > > So drop _PF_ before _INTEL_ would be better? : )
+> > >
+> > > To be consistent, all the id's are intel and all could drop pf.
+> > 
+> > That's good to me after checking the pci_ids.h. So we have:
+> > 
+> > #define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
 > 
-> How interrupt mode would exist in such case? Or rather: how would it be
-> used? There is no point to keep dead code and code once removed, can be
-> easily brought back.
+> Sounds good to me.
+> 
+> Hao
 
-I can make a module param i.e. irq-mode=1, while in default where
-the user don't provide param, we use polling mode. Then I don't have to
-remove DT interrupts and the related code from the driver.
+Heads up I was gonna send out the PR early next week. I can fix this up
+myself if you want if you want or you can resend it?
 
-Regards,
-Lukasz
+Thanks,
+Moritz
