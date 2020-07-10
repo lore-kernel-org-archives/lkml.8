@@ -2,258 +2,161 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDDBC206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hglxT3H3"
+	by mail.kernel.org (Postfix) with ESMTP id 645E3206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGJFK1 (ORCPT
+        id S1726920AbgGJFLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:10:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12967 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgGJFKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:10:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594357813; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4cCihej0NMnulNb+7EXZtddOEx9DS7eYQDlDXZSl83s=; b=hglxT3H3R5ViZiPgo0hV4Dvf2UqYbxpGPsw9gx+MCcV7IMbv11P9rBv9bO+Zw3j6oiqQ/npo
- Ay+Q39eLY2gAC5j0dVI607emLLbZtqu8EzcPlWA2ZQ152+Gz5sgUvdsUZdBXgOmhSdU3FIsA
- 8a/CWdVs2E8UntWNR3l9k54z+yY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f07f81ac431f7323b0102bf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 05:09:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 09032C433B1; Fri, 10 Jul 2020 05:09:46 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.65.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25F0AC43395;
-        Fri, 10 Jul 2020 05:09:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 25F0AC43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
-To:     Douglas Anderson <dianders@chromium.org>, linus.walleij@linaro.org
-Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        cychiang@chromium.org, ilina@codeaurora.org, agross@kernel.org,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        Fri, 10 Jul 2020 01:11:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbgGJFLk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:11:40 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A51nP2107497;
+        Fri, 10 Jul 2020 01:11:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpqqpfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 01:10:59 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06A52F7F108851;
+        Fri, 10 Jul 2020 01:10:59 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpqqpeh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 01:10:59 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06A55FfG018835;
+        Fri, 10 Jul 2020 05:10:56 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 326bch84q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 05:10:56 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06A5Ari353018686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 05:10:54 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBB9B52057;
+        Fri, 10 Jul 2020 05:10:53 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com.com (unknown [9.199.48.201])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C4E205205A;
+        Fri, 10 Jul 2020 05:10:51 +0000 (GMT)
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
-Date:   Fri, 10 Jul 2020 10:39:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: [PATCH] selftests/livepatch: adopt to newer sysctl error format
+Date:   Fri, 10 Jul 2020 10:40:43 +0530
+Message-Id: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_01:2020-07-09,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1011 priorityscore=1501 mlxlogscore=999
+ malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007100029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+With procfs v3.3.16, the sysctl command doesn't prints the set key and
+value on error.  This change breaks livepatch selftest test-ftrace.sh,
+that tests the interaction of sysctl ftrace_enabled:
 
-On 7/9/2020 2:46 AM, Douglas Anderson wrote:
-> As per Qualcomm, there is a PDC hardware issue (with the specific IP
-> rev that exists on sc7180) that causes the PDC not to work properly
-> when configured to handle dual edges.
->
-> Let's work around this by emulating only ever letting our parent see
-> requests for single edge interrupts on affected hardware.
->
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> As far as I can tell everything here should work and the limited
-> testing I'm able to give it shows that, in fact, I can detect both
-> edges.
->
-> Please give this an extra thorough review since it's trying to find
-> the exact right place to insert this code and I'm not massively
-> familiar with all the frameworks.
->
-> If someone has hardware where it's easy to stress test this that'd be
-> wonderful too.  The board I happen to have in front of me doesn't have
-> any easy-to-toggle GPIOs where I can just poke a button or a switch to
-> generate edges.  My testing was done by hacking the "write protect"
-> GPIO on my board into gpio-keys as a dual-edge interrupt and then
-> sending commands to our security chip to toggle it--not exactly great
-> for testing to make sure there are no race conditions if the interrupt
-> bounces a lot.
->
->   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
->   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
->   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
->   3 files changed, 85 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 83b7d64bc4c1..45ca09ebb7b3 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
->   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->   }
->   
-> +/**
-> + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
-> + * @d: The irq dta.
-> + *
-> + * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
-> + * normally handled by the parent irqchip.  The logic here is slightly
-> + * different due to what's easy to do with our parent, but in principle it's
-> + * the same.
-> + */
-> +static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
-> +	unsigned long flags;
-> +	int loop_limit = 100;
-> +	unsigned int val;
-> +	unsigned int type;
-> +
-> +	/* Read the value and make a guess about what edge we need to catch */
-> +	val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> +	type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-> +
-> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
-can you please move this spinlock covering above two lines as well?
-> +	do {
-> +		/* Set the parent to catch the next edge */
-> +		irq_chip_set_type_parent(d, type);
-> +
-> +		/*
-> +		 * Possibly the line changed between when we last read "val"
-> +		 * (and decided what edge we needed) and when set the edge.
-> +		 * If the value didn't change (or changed and then changed
-> +		 * back) then we're done.
-> +		 */
-> +		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> +		if (type == IRQ_TYPE_EDGE_RISING) {
-> +			if (!val)
-> +				break;
-> +			type = IRQ_TYPE_EDGE_FALLING;
-> +		} else if (type == IRQ_TYPE_EDGE_FALLING) {
-> +			if (val)
-> +				break;
-> +			type = IRQ_TYPE_EDGE_RISING;
-> +		}
-> +	} while (loop_limit-- > 0);
-> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +	if (!loop_limit)
-> +		dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+ # selftests: livepatch: test-ftrace.sh
+ # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
+ #
+ # --- expected
+ # +++ result
+ # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
+ #  livepatch: 'test_klp_livepatch': starting patching transition
+ #  livepatch: 'test_klp_livepatch': completing patching transition
+ #  livepatch: 'test_klp_livepatch': patching complete
+ # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
+    resource busy kernel.ftrace_enabled = 0
+ # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
+    resource busy
+ #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
+ #  livepatch: 'test_klp_livepatch': initializing unpatching transition
+ #  livepatch: 'test_klp_livepatch': starting unpatching transition
+ #
+ # ERROR: livepatch kselftest(s) failed
 
-you will never enter this if condtion since loop_limit will become 
-negative value in above do..while loop.
+on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
+set key and value is displayed.
 
-need to update this check to if (loop_limit <= 0)
+This patch fixes it by limiting the output from both the cases to eight
+words, that includes the error message or set key and value on failure
+and success. The upper bound of eight words is enough to display the
+only tracked error message. Also, adjust the check_result string in
+test-ftrace.sh to match the expected output.
 
-other than above comment this change looks good to me.
+With the patch, the test-ftrace.sh passes on v3.3.15, v3.3.16 versions
+of sysctl:
+ ...
+ # selftests: livepatch: test-ftrace.sh
+ # TEST: livepatch interaction with ftrace_enabled sysctl ... ok
+ ok 5 selftests: livepatch: test-ftrace.sh
 
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+---
+Based on livepatching/for-5.9/selftests-cleanup, to be merged
+through livepatching.git
 
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
+ tools/testing/selftests/livepatch/functions.sh   | 3 ++-
+ tools/testing/selftests/livepatch/test-ftrace.sh | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Thanks,
-Maulik
+diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+index 36648ca367c2..e3c0490d5a45 100644
+--- a/tools/testing/selftests/livepatch/functions.sh
++++ b/tools/testing/selftests/livepatch/functions.sh
+@@ -75,7 +75,8 @@ function set_dynamic_debug() {
+ }
+ 
+ function set_ftrace_enabled() {
+-	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
++	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ' | \
++		 cut -d" " -f1-8)
+ 	echo "livepatch: $result" > /dev/kmsg
+ }
+ 
+diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+index 9160c9ec3b6f..552e165512f4 100755
+--- a/tools/testing/selftests/livepatch/test-ftrace.sh
++++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+@@ -51,7 +51,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
+ livepatch: '$MOD_LIVEPATCH': starting patching transition
+ livepatch: '$MOD_LIVEPATCH': completing patching transition
+ livepatch: '$MOD_LIVEPATCH': patching complete
+-livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
++livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
+ % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
+ livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
+ livepatch: '$MOD_LIVEPATCH': starting unpatching transition
 
-> +}
-> +
-> +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_data	*d = &desc->irq_data;
-> +
-> +	/* Make sure we're primed for the next edge */
-> +	msm_gpio_update_dual_edge_parent(d);
-> +
-> +	/* Pass on to the normal interrupt handler */
-> +	handle_fasteoi_irq(desc);
-> +}
-> +
-> +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
-> +						       unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +
-> +	return type == IRQ_TYPE_EDGE_BOTH &&
-> +	       pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
-> +	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
-> +}
-> +
->   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->   {
->   	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->   	unsigned long flags;
->   	u32 val;
->   
-> +	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-> +		irq_set_handler_locked(d, msm_gpio_handle_dual_edge_parent_irq);
-> +		msm_gpio_update_dual_edge_parent(d);
-> +
-> +		return 0;
-> +	}
-> +
->   	if (d->parent_data)
->   		irq_chip_set_type_parent(d, type);
->   
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 9452da18a78b..7486fe08eb9b 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
->    * @pull_no_keeper: The SoC does not support keeper bias.
->    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
->    * @nwakeirq_map:   The number of entries in @wakeirq_map
-> + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
-> + *                            to be aware that their parent can't handle dual
-> + *                            edge interrupts.
->    */
->   struct msm_pinctrl_soc_data {
->   	const struct pinctrl_pin_desc *pins;
-> @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
->   	const int *reserved_gpios;
->   	const struct msm_gpio_wakeirq_map *wakeirq_map;
->   	unsigned int nwakeirq_map;
-> +	bool wakeirq_dual_edge_errata;
->   };
->   
->   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> index 1b6465a882f2..1d9acad3c1ce 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> @@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
->   	.ntiles = ARRAY_SIZE(sc7180_tiles),
->   	.wakeirq_map = sc7180_pdc_map,
->   	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
-> +	.wakeirq_dual_edge_errata = true,
->   };
->   
->   static int sc7180_pinctrl_probe(struct platform_device *pdev)
-
+base-commit: 3fd9bd8b7e41a1908bf8bc0cd06606f2b787cd39
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
 
