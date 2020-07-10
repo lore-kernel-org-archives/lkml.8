@@ -2,128 +2,96 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0205C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C95C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9214205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF0F20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGJXIW (ORCPT
+        id S1727850AbgGJXIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:08:22 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:1331 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgGJXIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:08:20 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2BDC2240005;
-        Fri, 10 Jul 2020 23:08:18 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 2/9] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-Date:   Sat, 11 Jul 2020 01:08:06 +0200
-Message-Id: <20200710230813.1005150-3-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200710230813.1005150-1-alexandre.belloni@bootlin.com>
-References: <20200710230813.1005150-1-alexandre.belloni@bootlin.com>
+        Fri, 10 Jul 2020 19:08:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgGJXI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 19:08:29 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C8020767;
+        Fri, 10 Jul 2020 23:08:27 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 19:08:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v6 13/17] static_call: Add static_call_cond()
+Message-ID: <20200710190825.02c75c04@oasis.local.home>
+In-Reply-To: <20200710134336.918547865@infradead.org>
+References: <20200710133831.943894387@infradead.org>
+        <20200710134336.918547865@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
+On Fri, 10 Jul 2020 15:38:44 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 42 +++++++++++++++----
- 1 file changed, 33 insertions(+), 9 deletions(-)
+> +static void __static_call_transform(void *insn, enum insn_type type, void *func)
+>  {
+> -	const void *code = text_gen_insn(opcode, insn, func);
+> +	int size = CALL_INSN_SIZE;
+> +	const void *code;
+>  
+> -	if (WARN_ONCE(*(u8 *)insn != opcode,
+> -		      "unexpected static call insn opcode 0x%x at %pS\n",
+> -		      opcode, insn))
 
-diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-index 9d680e0b9109..d226fd7d5258 100644
---- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
- 
-@@ -36,15 +37,6 @@ properties:
-     description:
-       List of clock names. Always includes t0_clk and slow clk. Also includes
-       t1_clk and t2_clk if a clock per channel is available.
--    oneOf:
--      - items:
--        - const: t0_clk
--        - const: slow_clk
--      - items:
--        - const: t0_clk
--        - const: t1_clk
--        - const: t2_clk
--        - const: slow_clk
-     minItems: 2
-     maxItems: 4
- 
-@@ -75,6 +67,38 @@ patternProperties:
-       - compatible
-       - reg
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          oneOf:
-+            - items:
-+              - const: t0_clk
-+              - const: slow_clk
-+            - items:
-+              - const: t0_clk
-+              - const: t1_clk
-+              - const: t2_clk
-+              - const: slow_clk
-+
- required:
-   - compatible
-   - reg
--- 
-2.26.2
+I would still feel better if we did some sort of sanity check before
+just writing to the text. Confirm this is a jmp, call, ret or nop?
 
+-- Steve
+
+
+> -		return;
+> +	switch (type) {
+> +	case CALL:
+> +		code = text_gen_insn(CALL_INSN_OPCODE, insn, func);
+> +		break;
+> +
+> +	case NOP:
+> +		code = ideal_nops[NOP_ATOMIC5];
+> +		break;
+> +
+> +	case JMP:
+> +		code = text_gen_insn(JMP32_INSN_OPCODE, insn, func);
+> +		break;
+> +
+> +	case RET:
+> +		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
+> +		size = RET_INSN_SIZE;
+> +		break;
+> +	}
+>  
+> -	if (memcmp(insn, code, CALL_INSN_SIZE) == 0)
+> +	if (memcmp(insn, code, size) == 0)
+>  		return;
+>  
+> -	text_poke_bp(insn, code, CALL_INSN_SIZE, NULL);
+> +	text_poke_bp(insn, code, size, NULL);
+>  }
+>  
