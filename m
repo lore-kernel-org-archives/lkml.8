@@ -2,121 +2,131 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7025C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89623207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EBB207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ydtyon2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGJIwO (ORCPT
+        id S1728003AbgGJIwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:52:14 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34540 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726832AbgGJIwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:52:13 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxGdQpLAhfS0kBAA--.1768S2;
-        Fri, 10 Jul 2020 16:51:54 +0800 (CST)
-From:   Zhi Li <lizhi01@loongson.cn>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net, kuba@kernel.org,
-        mcoquelin.stm32@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lixuefeng@loongson.cn, chenhc@lemote.com, jiaxun.yang@flygoat.com,
-        yangtiezhu@loongson.cn, Hongbin Li <lihongbin@loongson.cn>
-Subject: [PATCH] stmmac: pci: Add support for LS7A bridge chip
-Date:   Fri, 10 Jul 2020 16:51:50 +0800
-Message-Id: <1594371110-7580-1-git-send-email-lizhi01@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9CxGdQpLAhfS0kBAA--.1768S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urWfKw1UCF43tr1fAw4DXFb_yoW8urW5p3
-        y3Aas2grs3JF1xAws8Jw4DZFy5Ja9xKrWDG3y7tw1fWFWqk3yaqFySqFW5AFy7JrWkWw13
-        Xw4UCr4UuF4DC3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26F4j6r
-        4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-        0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwI
-        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU18wI3UUUUU==
-X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
+        Fri, 10 Jul 2020 04:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbgGJIwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 04:52:35 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4F6C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:52:34 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so5550350ljv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=SOf7VhktuFKx34ZBJi++opyzeaVIB9yGYq7CWp3mcyA=;
+        b=Ydtyon2yZkRskjNRgg9ckcUMJhuBUZC9/N1BgTM9oRG5sHrjthBBFCoeMaYrSRRLl1
+         mbYBa9Mam9gU02NSM67e6IEf6o6Y6j7L8w8IGEXOmy0S1VSCP72clbky59RRtAR+279e
+         KM0jAvq2C2H3s4E8CMrbxa4pyK/FR81uP0GTHU6RGsatBY1LQQLs34LJYEHjqFZjmb17
+         61bDBO7qWJ5XsIJFRZiH/f0nANLe6ZIJvMSf4m6EhxdbrdKrNKy/Zsi3wwy/tRAQ//DO
+         WdZUP57cru6wQgwd/VC9Ihcx+oe+cFSQ7hAeICXCHFheCXRLFF4/Y3Y9rDMyQ2JoDMnX
+         Vbfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=SOf7VhktuFKx34ZBJi++opyzeaVIB9yGYq7CWp3mcyA=;
+        b=kJaC0mW231zHch6qKg6UCSiVd5t5D0HzJV6QZ0TmdbCWQgzk3vniAcU6uATWHkeTra
+         PK21ISYdpeGof+abHvY5Hp59zf/RwWSha6Ir7SHt8YLzgORYFlYBH8Py+L5JuB+mGhJz
+         fzAefyq02vcP3/6BGX1a8VLDOC1vcqILtagwzm3JZANo9hdwWWzF6b2bNI+KONoykAs3
+         Pw3mE8L/q3O/sJ8QGLAboDDFEdWpNHicL6/b5p+IAmmHoaCEdQZYQS2rVgcMdgfai3ex
+         749Ler5100FEvwDAaIiMQkf6n0j+AgEKwu8Li10109s9ByQ3IKyrtuL8taltLQiFy9E1
+         pqlA==
+X-Gm-Message-State: AOAM531ICgmMN5Vkjw1ryVbrpeVTfx6zRCNxH0NYVEwtgQ2JsVCIsp2W
+        dGJqmQ1eAGx2wIeWI5vOrclUWA==
+X-Google-Smtp-Source: ABdhPJzsqEaYR4D2UhGTLMEzgTZ8UByj8LNtRq/174vcISNAaOMoiTIZUE7Ht2Hh67s5i3KuNIuqng==
+X-Received: by 2002:a2e:9619:: with SMTP id v25mr40788978ljh.324.1594371153084;
+        Fri, 10 Jul 2020 01:52:33 -0700 (PDT)
+Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id q13sm1919854lfb.55.2020.07.10.01.52.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 01:52:32 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 10:52:30 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        tee-dev@lists.linaro.org, op-tee@lists.trustedfirmware.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [GIT PULL] optee bus for v5.9
+Message-ID: <20200710085230.GA1312913@jade>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add gmac platform data to support LS7A bridge chip.
+Hello arm-soc maintainers,
 
-Co-developed-by: Hongbin Li <lihongbin@loongson.cn>
-Signed-off-by: Hongbin Li <lihongbin@loongson.cn>
-Signed-off-by: Zhi Li <lizhi01@loongson.cn>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Please pull these patches enabling multi-stage OP-TEE bus enumeration
+and also adds a TPM driver for a OP-TEE based fTPM Trusted Application.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 272cb47..dab2a40 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -138,6 +138,24 @@ static const struct stmmac_pci_info snps_gmac5_pci_info = {
- 	.setup = snps_gmac5_default_data,
- };
- 
-+static int loongson_default_data(struct pci_dev *pdev, struct plat_stmmacenent_data *plat)
-+{
-+	common_default_data(plat);
-+
-+	plat->bus_id = pci_dev_id(pdev);
-+	plat->phy_addr = 0;
-+	plat->interface = PHY_INTERFACE_MODE_GMII;
-+
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+
-+	return 0;
-+}
-+
-+static struct stmmac_pci_info loongson_pci_info = {
-+	.setup = loongson_default_data;
-+};
-+
- /**
-  * stmmac_pci_probe
-  *
-@@ -204,6 +222,8 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 	res.addr = pcim_iomap_table(pdev)[i];
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
-+	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON)
-+		res.lpi_irq = pdev->irq + 1;
- 
- 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
- }
-@@ -273,11 +293,13 @@ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, stmmac_pci_suspend, stmmac_pci_resume);
- 
- #define PCI_DEVICE_ID_STMMAC_STMMAC		0x1108
- #define PCI_DEVICE_ID_SYNOPSYS_GMAC5_ID		0x7102
-+#define PCI_DEVICE_ID_LOONGSON_GMAC		0x7a03
- 
- static const struct pci_device_id stmmac_id_table[] = {
- 	{ PCI_DEVICE_DATA(STMMAC, STMMAC, &stmmac_pci_info) },
- 	{ PCI_DEVICE_DATA(STMICRO, MAC, &stmmac_pci_info) },
- 	{ PCI_DEVICE_DATA(SYNOPSYS, GMAC5_ID, &snps_gmac5_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_pci_info) },
- 	{}
- };
- 
--- 
-2.1.0
+The TPM driver depends on and takes advantage of the multi-stage OP-TEE bus
+enumeration by indicating that it should be probed after tee-supplicant has
+been started.
 
+Jarkko, one of the TPM maintainers, has been involved in reviewing these
+patches and agrees that I can include the TPM patch in the pull request.
+
+Thanks,
+Jens
+
+The following changes since commit 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162:
+
+  Linux 5.7 (2020-05-31 16:49:15 -0700)
+
+are available in the Git repository at:
+
+  git://git.linaro.org/people/jens.wiklander/linux-tee.git tags/optee-bus-for-v5.9
+
+for you to fetch changes up to 9f1944c23c8cb1c033b73de80cf6c612a2a80a2b:
+
+  tpm_ftpm_tee: register driver on TEE bus (2020-07-10 09:41:58 +0200)
+
+----------------------------------------------------------------
+Enable multi-stage OP-TEE bus enumeration
+
+Probes drivers on the OP-TEE bus in two steps. First for drivers which
+do not depend on tee-supplicant. After tee-supplicant has been started
+probe the devices which do depend on tee-supplicant.
+
+Also introduces driver which uses an OP-TEE based fTPM Trusted
+Application depends on tee-supplicant NV RAM implementation based on
+RPMB secure storage.
+
+----------------------------------------------------------------
+Maxim Uvarov (3):
+      optee: use uuid for sysfs driver entry
+      optee: enable support for multi-stage bus enumeration
+      tpm_ftpm_tee: register driver on TEE bus
+
+ Documentation/ABI/testing/sysfs-bus-optee-devices |  8 +++
+ MAINTAINERS                                       |  1 +
+ drivers/char/tpm/tpm_ftpm_tee.c                   | 70 +++++++++++++++++++----
+ drivers/tee/optee/core.c                          | 27 ++++++++-
+ drivers/tee/optee/device.c                        | 38 ++++++------
+ drivers/tee/optee/optee_private.h                 | 10 +++-
+ 6 files changed, 119 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
