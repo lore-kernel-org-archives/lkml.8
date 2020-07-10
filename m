@@ -2,129 +2,223 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B00E92072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E86B2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Tl7s1pRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGJE6V (ORCPT
+        id S1726560AbgGJFEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:58:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22339 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgGJE6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:58:20 -0400
-IronPort-SDR: 4LwEiUcUnmrH2Ggn2gGw30ia7ld6V7rP//wHc2zS/yoSKbmetB6g/Tr4Zbi+FWI9X1zeRoItPJ
- P6OOn4mon7yA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="145645382"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="145645382"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 21:58:19 -0700
-IronPort-SDR: iYtFy0YA4DZG08J4aL8gUwJX3Js0JS9r5dOKli8Uxl0HiAdTCX9cdDov+oZpXeD+ouz1Oj0nXV
- w3RNzE3LHCwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="298307698"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2020 21:58:19 -0700
-Date:   Thu, 9 Jul 2020 21:58:19 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200710045819.GB24919@linux.intel.com>
-References: <20200626180732.GB175520@xz-x1>
- <20200626181820.GG6583@linux.intel.com>
- <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
- <20200630154726.GD7733@linux.intel.com>
- <20200709182220.GG199122@xz-x1>
- <20200709192440.GD24919@linux.intel.com>
- <20200709210919.GI199122@xz-x1>
- <20200709212652.GX24919@linux.intel.com>
- <20200709215046.GJ199122@xz-x1>
- <610241d9-b2ab-8643-1ede-3f957573dff3@redhat.com>
+        Fri, 10 Jul 2020 01:04:13 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:13748 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725995AbgGJFEM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:04:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594357451; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=KilR/VqLipT8uIZpR6gEOQZ5SOim8a1e0XSTSCjBCeo=; b=Tl7s1pRouaUYg6w9OVx15ceHSc1j47OSLSu88Ujlpc/3tf97joUgSXn8Xnba4TO5mLr3dRIx
+ rfGIlMhbP+cj7SZ2VX+jB2VvGQforsnKluSw0BW2UjB/kJOvgl2e/+vq+ONZtOPwQ33MsU4/
+ Ge3aplIy6lMW6eH3GcoiHsQ8y7o=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f07f6cba19992ac65b60c35 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 05:04:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C07B0C433CB; Fri, 10 Jul 2020 05:04:10 +0000 (UTC)
+Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51DA4C433C6;
+        Fri, 10 Jul 2020 05:04:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51DA4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+Subject: Re: [PATCH 1/4] interconnect: Add sync state support
+To:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org
+Cc:     saravanak@google.com, okukatla@codeaurora.org,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200709110705.30359-1-georgi.djakov@linaro.org>
+ <20200709110705.30359-2-georgi.djakov@linaro.org>
+From:   Mike Tipton <mdtipton@codeaurora.org>
+Message-ID: <50291b4d-7ca7-48a0-384f-beefcc94f7cc@codeaurora.org>
+Date:   Thu, 9 Jul 2020 22:04:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <610241d9-b2ab-8643-1ede-3f957573dff3@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200709110705.30359-2-georgi.djakov@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:11:54AM +0200, Paolo Bonzini wrote:
-> On 09/07/20 23:50, Peter Xu wrote:
-> >> Sean: Objection your honor.
-> >> Paolo: Overruled, you're wrong.
-> >> Sean: Phooey.
-> >>
-> >> My point is that even though I still object to this series, Paolo has final
-> >> say.
-> >
-> > I could be wrong, but I feel like Paolo was really respecting your input, as
-> > always.
+On 7/9/2020 4:07 AM, Georgi Djakov wrote:
+> The bootloaders often do some initial configuration of the interconnects
+> in the system and we want to keep this configuration until all consumers
+> have probed and expressed their bandwidth needs. This is because we don't
+> want to change the configuration by starting to disable unused paths until
+> every user had a chance to request the amount of bandwidth it needs.
 > 
-> I do respect Sean's input
+> To accomplish this we will implement an interconnect specific sync_state
+> callback which will synchronize (aggregate and set) the current bandwidth
+> settings when all consumers have been probed.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>   drivers/interconnect/core.c           | 56 +++++++++++++++++++++++++++
+>   include/linux/interconnect-provider.h |  3 ++
+>   2 files changed, 59 insertions(+)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index e5f998744501..e53adfee1ee3 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -26,6 +26,8 @@
+>   
+>   static DEFINE_IDR(icc_idr);
+>   static LIST_HEAD(icc_providers);
+> +static int providers_count;
+> +static bool synced_state;
+>   static DEFINE_MUTEX(icc_lock);
+>   static struct dentry *icc_debugfs_dir;
+>   
+> @@ -255,6 +257,10 @@ static int aggregate_requests(struct icc_node *node)
+>   			continue;
+>   		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+>   			     &node->avg_bw, &node->peak_bw);
+> +
+> +		/* during boot use the initial bandwidth as a floor value */
+> +		if (!synced_state)
+> +			node->peak_bw = max(node->peak_bw, node->init_bw);
+>   	}
+>   
+>   	return 0;
+> @@ -919,6 +925,12 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
+>   	node->provider = provider;
+>   	list_add_tail(&node->node_list, &provider->nodes);
+>   
+> +	/* get the bandwidth value and sync it with the hardware */
+> +	if (node->init_bw && provider->set) {
+> +		node->peak_bw = node->init_bw;
+> +		provider->set(node, node);
+> +	}
+> +
 
-Ya, my comments were in jest.  Sorry if I implied I was grumpy about Paolo
-taking this patch, because I'm not.  Just stubborn :-)
+We'll need separate initial values for avg_bw/peak_bw. Some of our BCMs 
+only support one or the other. Voting for one it doesn't support is a 
+NOP. Additionally, some targets bring multiple subsystems out of reset 
+in bootloaders and in those cases we'd need BCM to sum our initial 
+avg_bw with the other subsystems.
 
-> but I also believe that in this case there's three questions:
-> 
-> a) should KVM be allowed to use the equivalent of rdmsr*_safe() on guest
-> MSRs?  I say a mild yes, Sean says a strong no.
+>   	mutex_unlock(&icc_lock);
+>   }
+>   EXPORT_SYMBOL_GPL(icc_node_add);
+> @@ -1014,8 +1026,52 @@ int icc_provider_del(struct icc_provider *provider)
+>   }
+>   EXPORT_SYMBOL_GPL(icc_provider_del);
+>   
+> +static int of_count_icc_providers(struct device_node *np)
+> +{
+> +	struct device_node *child;
+> +	int count = 0;
+> +
+> +	for_each_available_child_of_node(np, child) {
+> +		if (of_property_read_bool(child, "#interconnect-cells"))
+> +			count++;
+> +		count += of_count_icc_providers(child);
+> +	}
+> +	of_node_put(np);
+> +
+> +	return count;
+> +}
+> +
+> +void icc_sync_state(struct device *dev)
+> +{
+> +	struct icc_provider *p;
+> +	struct icc_node *n;
+> +	static int count;
+> +
+> +	count++;
+> +
+> +	if (count < providers_count)
+> +		return;
+> +
+> +	mutex_lock(&icc_lock);
+> +	list_for_each_entry(p, &icc_providers, provider_list) {
+> +		dev_dbg(p->dev, "interconnect provider is in synced state\n");
+> +		list_for_each_entry(n, &p->nodes, node_list) {
+> +			aggregate_requests(n);
+> +			p->set(n, n);
 
-It's more that I don't think host_initiated=true is the equivalent of
-rdmsr_safe().  It kind of holds true for rdmsr, but that's most definitely
-not the case for wrmsr where host_initiated=true completely changes what
-is/isn't allow.  And if using host_initiated=true for rdmsr is allowed,
-then logically using it for wrmsr is also allowed.
+We could skip re-aggregating/setting for nodes that don't specify an 
+initial BW. That'll save a lot of unnecessary HW voting. In practice, 
+we'll only need to specify an initial minimum BW for a small subset of 
+nodes (likely only one per-BCM we care about). Technically we only need 
+to re-aggregate/set if the current BW vote is limited by init_bw, but 
+that optimization is less important than skipping the majority that 
+don't have an init_bw.
 
-> b) is it good to separate the "1" and "-EINVAL" results so that
-> ignore_msrs handling can be moved out of the MSR access functions?  I
-> say yes because KVM should never rely on ignore_msrs; Sean didn't say
-> anything (it's not too relevant if you answer no to the first question).
+> +		}
+> +	}
+> +	mutex_unlock(&icc_lock);
+> +	synced_state = true;
+> +}
+> +EXPORT_SYMBOL_GPL(icc_sync_state);
+> +
+>   static int __init icc_init(void)
+>   {
+> +	struct device_node *root = of_find_node_by_path("/");
+> +
+> +	providers_count = of_count_icc_providers(root);
+> +	of_node_put(root);
+> +
+>   	icc_debugfs_dir = debugfs_create_dir("interconnect", NULL);
+>   	debugfs_create_file("interconnect_summary", 0444,
+>   			    icc_debugfs_dir, NULL, &icc_summary_fops);
+> diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+> index 0c494534b4d3..153fb7616f96 100644
+> --- a/include/linux/interconnect-provider.h
+> +++ b/include/linux/interconnect-provider.h
+> @@ -71,6 +71,7 @@ struct icc_provider {
+>    * @req_list: a list of QoS constraint requests associated with this node
+>    * @avg_bw: aggregated value of average bandwidth requests from all consumers
+>    * @peak_bw: aggregated value of peak bandwidth requests from all consumers
+> + * @init_bw: the bandwidth value that is read from the hardware during init
+>    * @data: pointer to private data
+>    */
+>   struct icc_node {
+> @@ -87,6 +88,7 @@ struct icc_node {
+>   	struct hlist_head	req_list;
+>   	u32			avg_bw;
+>   	u32			peak_bw;
+> +	u32			init_bw;
+>   	void			*data;
+>   };
+>   
+> @@ -103,6 +105,7 @@ void icc_node_del(struct icc_node *node);
+>   int icc_nodes_remove(struct icc_provider *provider);
+>   int icc_provider_add(struct icc_provider *provider);
+>   int icc_provider_del(struct icc_provider *provider);
+> +void icc_sync_state(struct device *dev);
+>   
+>   #else
+>   
 > 
-> c) is it possible to reimplement TSX_CTRL_MSR to avoid using the
-> equivalent of rdmsr*_safe()?  Sean says yes and it's not really possible
-> to argue against that, but then it doesn't really matter if you answer
-> yes to the first two questions.
-> 
-> Sean sees your patch mostly as answering "yes" to the question (a), and
-> therefore disagrees with it.  I see your patch mostly as answering "yes"
-> to question (b), and therefore like it.  I would also accept a patch
-> that reimplements TSX_CTRL_MSR (question c), but I consider your patch
-> to be an improvement anyway (question b).
-> 
-> > It's just as simple as a 2:1 vote, isn't it? (I can still count myself
-> > in for the vote, right? :)
-> 
-> I do have the final say but I try to use that as little as possible (or
-> never).  And then it happens that ever so rare disagreements cluster in
-> the same week!
-> 
-> The important thing is to analyze the source of the disagreement.
-> Usually when that happens, it's because a change has multiple purposes
-> and people see it in a different way.
-> 
-> In this case, I'm happy to accept this patch (and overrule Sean) not
-> because he's wrong on question (a), but because in my opinion the actual
-> motivation of the patch is question (b).
-> 
-> To be fair, I would prefer it if ignore_msrs didn't apply to
-> host-initiated MSR accesses at all (only guest accesses).  That would
-> make this series much much simpler.  It wouldn't solve the disagremement
-> on question (a), but perhaps it would be a patch that Sean would agree on.
-
-I think I could get behind that.  It shoudn't interfere with my crusade to
-vanquish host_initiated :-)
