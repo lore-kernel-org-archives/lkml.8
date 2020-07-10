@@ -2,100 +2,225 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF00FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9D1A20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664F92067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOS7slEj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rY863hSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGJIaa (ORCPT
+        id S1727807AbgGJIbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbgGJIa3 (ORCPT
+        Fri, 10 Jul 2020 04:31:15 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57176 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgGJIbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:30:29 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F632C08C5CE;
-        Fri, 10 Jul 2020 01:30:29 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s9so5471122ljm.11;
-        Fri, 10 Jul 2020 01:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mDEWF/gOHqnVFbtfXXs3ljAiSAYlhLzutQWngIQGuuA=;
-        b=gOS7slEjmfSIMc70Zc4XyrJRIJM2oHl+hs03QvhWxULpvqVJRwvk+8TrRA6a3vCwqD
-         DbzkKYHptOiixHhYHah4akFTFUzgKK/cjSeM0PDbl3yQ0KZ8xjvt5Wagm6mb27m/v/EG
-         rRsnTdmxRbeG3kpNoeF5b53oEJpXDhJpUZJQmTOOYLx5Pk4GrnIQoKiIhX3PoWDndD6c
-         y4M/J5bldXsB6uD2BkNgJgZun2FiluzeNRLyg7D+M2yWbCpy99AenMdqyoyrJnq+E7lg
-         nKMc4FfS4GhtjeJBDu8QQ2KBB9v0eh6uGLktxEBwjwka6RawpQ/YKimwwvqRM0zzs8DT
-         bWXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mDEWF/gOHqnVFbtfXXs3ljAiSAYlhLzutQWngIQGuuA=;
-        b=HV7MOc2LziQ80Cf72csrRckMsZHGDJHzPTVfbkkyZARlPV74/huXnj1slDuXfovuD5
-         +3LkBOittJT5qWRO4JyAJA/lZg7QJXHk3xbmv///GM94oiBOIFqEOMdF8B6cawtHwk4d
-         W2J3iILB4Hgar+kG2lAho+2S7YyarmCIEcnMArWzCw+cGQuacPz4v7mGAYqrOA/YroMb
-         BDR5Mbj2BhwJuY5cIN1LEKNjDtMd8TDIJ1TuOi4IclppOD7BQdynsQngLLAOFCnaeE9X
-         vBesNX2HYf69DjrQBREj9q7TxsBscISoBGulmd7Q7qIY2UT1j0rPVeuSFtM48YGZeBnJ
-         aFDw==
-X-Gm-Message-State: AOAM530cju8szFpK7DFzyVSSUI1LgWFOBTm1tAzpi9y3LpnQVJyRTQpN
-        s6YSH3eyl2w6M5HTgk2CnVtzyYwW
-X-Google-Smtp-Source: ABdhPJyUbobhnRfuG8Q1eZvawPHgCwKO9ruGuN4OGU+5ociRzwSU/5mMHtbE8iYfIW16kZia9aABLg==
-X-Received: by 2002:a2e:9e89:: with SMTP id f9mr4747347ljk.212.1594369827440;
-        Fri, 10 Jul 2020 01:30:27 -0700 (PDT)
-Received: from grain.localdomain ([5.18.102.224])
-        by smtp.gmail.com with ESMTPSA id 2sm1900072lfr.48.2020.07.10.01.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 01:30:26 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-        id E95A91A007B; Fri, 10 Jul 2020 11:30:25 +0300 (MSK)
-Date:   Fri, 10 Jul 2020 11:30:25 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kcmp: add separate Kconfig symbol for kcmp syscall
-Message-ID: <20200710083025.GD1999@grain>
-References: <20200710075632.14661-1-linux@rasmusvillemoes.dk>
+        Fri, 10 Jul 2020 04:31:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06A8Uj5W051326;
+        Fri, 10 Jul 2020 03:30:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594369845;
+        bh=aASjBaynNGHy9YdF4r1xWy8RE/lfoom+1VXoKmsjynU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rY863hSGr3T9f1kgsDiKQ375WtTBh+aeC0eOEp9Mj04P/Yxa3nZxHgELd350a8TRY
+         19EGMjWn0sDwHciPLMQCmesYJL5qDGdBJ2sFsrOi4+/1LXa+xHPZMW+BKQWcLZIDJb
+         HvHodxqEc/KRu/7jR14UpQtxR5AHnUnLNZgVliNI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06A8Uj5O067706
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 03:30:45 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 03:30:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 03:30:45 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06A8UgXj109862;
+        Fri, 10 Jul 2020 03:30:42 -0500
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+Date:   Fri, 10 Jul 2020 11:31:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710075632.14661-1-linux@rasmusvillemoes.dk>
-User-Agent: Mutt/1.14.5 (2020-06-23)
+In-Reply-To: <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:56:31AM +0200, Rasmus Villemoes wrote:
-> The ability to check open file descriptions for equality (without
-> resorting to unreliable fstat() and fcntl(F_GETFL) comparisons) can be
-> useful outside of the checkpoint/restore use case - for example,
-> systemd uses kcmp() to deduplicate the per-service file descriptor
-> store.
-> 
-> Make it possible to have the kcmp() syscall without the full
-> CONFIG_CHECKPOINT_RESTORE.
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
+
+On 10/07/2020 1.45, Serge Semin wrote:
+> Some devices may lack the support of the hardware accelerated SG list
+> entries automatic walking through and execution. In this case a burden =
+of
+> the SG list traversal and DMA engine re-initialization lies on the
+> DMA engine driver (normally implemented by using a DMA transfer complet=
+ion
+> IRQ to recharge the DMA device with a next SG list entry). But such
+> solution may not be suitable for some DMA consumers. In particular SPI
+> devices need both Tx and Rx DMA channels work synchronously in order
+> to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+> some time while the Tx DMA channel works implicitly pulling data into t=
+he
+> Rx FIFO, the later will be eventually overflown, which will cause the d=
+ata
+> loss. So if SG list entries aren't automatically fetched by the DMA
+> engine, but are one-by-one manually selected for execution in the
+> ISRs/deferred work/etc., such problem will eventually happen due to the=
+
+> non-deterministic latencies of the service execution.
+
+It is not really the number of sg nents which is the problem, but the
+combination of total number of bytes _and_ the number of nents used to
+map them.
+Obviously the TX and RX number of bytes must match in duplex case and at
+the same time neither nents should be over the number of SGs the DMA
+device can handle without interruption (linking, chaining, or whatever
+means).
+
+The EDMA from TI have similar limitation (we set the limit to 20 nents).
+Longer lists will be broken up to maximum of 20 segment transfers.
+This setup has bigger impact on audio (cyclic) as we need to limit the
+number of periods to not exceed this limit of 20.
+
+The sDMA on the other hand has different limits. Earlier versions
+without linking support can execute one SG chunk at the time and needs
+to reconfigure for the next one -> max_sg_nents is 1 for the older sDMAs.=
+=2E.
+
+> In order to let the DMA consumer know about the DMA device capabilities=
+
+> regarding the hardware accelerated SG list traversal we introduce the
+> max_sg_list capability. It is supposed to be initialized by the DMA eng=
+ine
+> driver with 0 if there is no limitation for the number of SG entries
+> atomically executed and with non-zero value if there is such constraint=
+s,
+> so the upper limit is determined by the number set to the property.
+>=20
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+>=20
 > ---
-> I deliberately drop the ifdef in the eventpoll.h header rather than
-> replace with KCMP_SYSCALL; it's harmless to declare a function that
-> isn't defined anywhere.
+>=20
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud =
+and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+>=20
+> Changelog v4:
+> - Fix of->if typo. It should be definitely of.
+> ---
+>  drivers/dma/dmaengine.c   | 1 +
+>  include/linux/dmaengine.h | 8 ++++++++
+>  2 files changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index b332ffe52780..ad56ad58932c 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struc=
+t dma_slave_caps *caps)
+>  	caps->directions =3D device->directions;
+>  	caps->min_burst =3D device->min_burst;
+>  	caps->max_burst =3D device->max_burst;
+> +	caps->max_sg_nents =3D device->max_sg_nents;
+>  	caps->residue_granularity =3D device->residue_granularity;
+>  	caps->descriptor_reuse =3D device->descriptor_reuse;
+>  	caps->cmd_pause =3D !!device->device_pause;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 0c7403b27133..a7e4d8dfdd19 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single a=
+tomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number of entries.
 
-Could you please point why setting #fidef KCMP_SYSCALL in eventpoll.h
-is not suitable? Still the overall idea is fine for me, thanks!
+Without looking at the comment the name max_sg_nents implies that the
+DMA can not handle longer lists, but it is not really true.
+max_sg_nents_burst might be a bit cleaner for the first look?
 
-Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+>   * @cmd_pause: true, if pause is supported (i.e. for reading residue o=
+r
+>   *	       for resume later)
+>   * @cmd_resume: true, if resume is supported
+> @@ -481,6 +484,7 @@ struct dma_slave_caps {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool cmd_pause;
+>  	bool cmd_resume;
+>  	bool cmd_terminate;
+> @@ -773,6 +777,9 @@ struct dma_filter {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single a=
+tomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number of entries.
+>   * @residue_granularity: granularity of the transfer residue reported
+>   *	by tx_status
+>   * @device_alloc_chan_resources: allocate resources and return the
+> @@ -844,6 +851,7 @@ struct dma_device {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool descriptor_reuse;
+>  	enum dma_residue_granularity residue_granularity;
+> =20
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
