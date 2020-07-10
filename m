@@ -2,121 +2,112 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A391CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC8B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED3C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c0yaHTcY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nScvOLV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGJKtM (ORCPT
+        id S1727863AbgGJKtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:49:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46414 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727863AbgGJKtJ (ORCPT
+        Fri, 10 Jul 2020 06:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgGJKtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594378147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=UIoKJgwiwHBXzqx7bTTScO5nMJSnsWEl2/CTLb7XXEY=;
-        b=c0yaHTcYMtIsTfjEMokuVAY5njscDvANLbK25B9byCkzYZ8GA8/33FICVxmMgYwd/hTXQm
-        LLxgnKpgeYUevm9obiqlnmcFN+7MJXHg+t7XhJprAzQEvDYI6aQpwvqa1o9xFeYlBpcorg
-        3bJTTo9KWSD1wbHu5OpGsDLXHFm50ZA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-AhwqG07ZPMOs1uCh8XsnSw-1; Fri, 10 Jul 2020 06:49:05 -0400
-X-MC-Unique: AhwqG07ZPMOs1uCh8XsnSw-1
-Received: by mail-wr1-f70.google.com with SMTP id g14so5649849wrp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:49:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=UIoKJgwiwHBXzqx7bTTScO5nMJSnsWEl2/CTLb7XXEY=;
-        b=Txwe0U+1h8Kt7r7goLf3X9CCjdYEHO+XZhBUPbRQyvQsTw6q6S/5bVx+C0O1Hk/vm1
-         OLLb7IRIb/E5jY2aVsrzNBVNvMoVSZ8hCzF9B64AYr4otfiKlgmpO54f3OcyG7hOWDo7
-         wBOwjHxgW080xjew27Y91vW26+f4YCj4nn61Gjl0fEP3jtk2kEa0lQpQbQTeScNcyAw5
-         MCyuXMo3lIquSFjjYzIV+nfO+OSVlrgZeA5UaGwrZwoAq1s/xeh0LJ4pKnjkzEa9ffrl
-         2585HEoVbNmj2R1ma4yo6lQ20gsbfjBqxNTFDj7nZhu1zlvtP3OJrKI+q0uEkZSvhk/e
-         nt6g==
-X-Gm-Message-State: AOAM533WX9Ov2XPAGaq//HhkuB2m5UJ1NyBv3AXeXLErReEqXQ3/0XsV
-        zpXTpXfrYPXNFA/9L3HIQ0p2uKWmUxWufXhWyj1S5vJuqxZNV+EBUNdBrZyyQIyan5zHI/lyCC2
-        zCWKXB2gByy4gUaNxzrFWE/GI
-X-Received: by 2002:a7b:ce83:: with SMTP id q3mr4450499wmj.5.1594378144464;
-        Fri, 10 Jul 2020 03:49:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxiVqSPwoFJmCuv4VkKtHKz+ZUBx2usJsVcKLHafPXfNp1z3D30HjV2wwFh+wFmgF6XIFZOHw==
-X-Received: by 2002:a7b:ce83:: with SMTP id q3mr4450472wmj.5.1594378144099;
-        Fri, 10 Jul 2020 03:49:04 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id d13sm9162933wrq.89.2020.07.10.03.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 03:49:03 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 06:49:01 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] virtio_ring: sparse warning fixup
-Message-ID: <20200710104900.406084-1-mst@redhat.com>
+        Fri, 10 Jul 2020 06:49:42 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FBEC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AxVVCQeeOzIrbDpXQzQLviQKPDCJ2J00omBMDFGGswA=; b=nScvOLV2wKB/e07W1eR8zN31B+
+        sIw1iq3WWW2WdZmC6cnHsjTYL8yYk7Jc5yg9xqiG3XF8axzK+SjlXhcZsMIt16vdpeYbYJ472IPNq
+        jTbZmbZe6K2iNxrwb4CpkZ/lFddq3HqhexM11q1O6meST/E2YlduPJBFaP3AuBePqzAyYcluSASNo
+        yBMMao1Uh/UiNpPsP9V03KxIgzu98Ki2ETwV127tvN7KO/+wrVr/NtO3FtAulAtTE/UUngqGPHh/P
+        x9ACcuip1oCfrPOvisqY5vxLxxixqWMlbRa7SToliZPQ9NYZLJQqgyIIYVsvG3to3N2MSSkhDj3dq
+        mcQRqXyg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtqae-0001YG-P0; Fri, 10 Jul 2020 10:49:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4FAA3059C6;
+        Fri, 10 Jul 2020 12:49:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AAA8820A2955A; Fri, 10 Jul 2020 12:49:10 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 12:49:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
+Message-ID: <20200710104910.GG4800@hirez.programming.kicks-ass.net>
+References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
+ <20200710090344.GX4800@hirez.programming.kicks-ass.net>
+ <20200710103638.GA2614@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+In-Reply-To: <20200710103638.GA2614@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio_store_mb was built with split ring in mind so it accepts
-__virtio16 arguments. Packed ring uses __le16 values, so sparse
-complains.  It's just a store with some barriers so let's convert it to
-a macro, we don't loose too much type safety by doing that.
+On Fri, Jul 10, 2020 at 01:36:38PM +0300, Jarkko Sakkinen wrote:
+> Just so that I know (and learn), what did exactly disable optprobes?
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- include/linux/virtio_ring.h | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+So regular, old-skool style kprobe is:
 
-diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
-index 3dc70adfe5f5..b485b13fa50b 100644
---- a/include/linux/virtio_ring.h
-+++ b/include/linux/virtio_ring.h
-@@ -46,16 +46,15 @@ static inline void virtio_wmb(bool weak_barriers)
- 		dma_wmb();
- }
- 
--static inline void virtio_store_mb(bool weak_barriers,
--				   __virtio16 *p, __virtio16 v)
--{
--	if (weak_barriers) {
--		virt_store_mb(*p, v);
--	} else {
--		WRITE_ONCE(*p, v);
--		mb();
--	}
--}
-+#define virtio_store_mb(weak_barriers, p, v) \
-+do { \
-+	if (weak_barriers) { \
-+		virt_store_mb(*p, v); \
-+	} else { \
-+		WRITE_ONCE(*p, v); \
-+		mb(); \
-+	} \
-+} while (0) \
- 
- struct virtio_device;
- struct virtqueue;
--- 
-MST
+  - copy original instruction out
+  - replace instruction with breakpoint (int3 on x86)
+  - have exception handler return to the copied instruction with
+    single-step on
+  - have single step exception handler return to the original
+    instruction stream
+
+which is 2 exceptions.
+
+optprobes avoid the single-step by not only writing a single
+instruction, but additionally placing a JMP instruction behind it such
+that it will automagically continue in the original instruction stream.
+
+This brings the requirement that the copied instruction is placed
+within the JMP displacement of the regular kernel text (s32 on x86).
+
+module_alloc() ensures the memory provided is within that range.
+
 
