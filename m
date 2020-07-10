@@ -2,288 +2,136 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2957C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57072076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F082076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="Ue29ejgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgGJF3L (ORCPT
+        id S1727849AbgGJF3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:29:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:20778 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbgGJF0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:26:04 -0400
-IronPort-SDR: wbJF9zqyWDeByJeOMrFkbfqlwrcozAHCkeGnAZ45ztkTmPLo4Mn+yfJ9l5zq060rRiSUkgvQRp
- Fs+wQo1qk+Hw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="148142446"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="148142446"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:25:37 -0700
-IronPort-SDR: 4j1ShUqut6A/r8IhoUGs/RIzlFrgal+5jxzG2jIA7llcRJ+31FQnBAAPVZpv43cmICMrFm2BGN
- t9X91ktzGD3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="298313649"
-Received: from xzhou33-mobl1.ccr.corp.intel.com (HELO [10.255.31.159]) ([10.255.31.159])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2020 22:25:35 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] iommu/vt-d: Report page request faults for guest
- SVA
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <20200709070537.18473-1-baolu.lu@linux.intel.com>
- <20200709070537.18473-4-baolu.lu@linux.intel.com>
- <MWHPR11MB1645D22D2CBCECE1257CBFEF8C650@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <027ccdd4-003e-9cf7-c519-d5655606b702@linux.intel.com>
-Date:   Fri, 10 Jul 2020 13:25:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 01:29:19 -0400
+Received: from outbound-ip13b.ess.barracuda.com ([209.222.82.195]:41500 "EHLO
+        outbound-ip13b.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726965AbgGJFZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:25:00 -0400
+X-Greylist: delayed 1928 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jul 2020 01:24:56 EDT
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177]) by mx3.us-east-2b.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Fri, 10 Jul 2020 05:24:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RE9yJyWCEP7xW9NVnO8nOh3oZcSQPNgAl/kkCUBAssRGVYL66o5wjkj7nRN8VzYf3ba3mmjci4x6EWf0D7I2LhCYgPIsnqew24ogRwVkCuR05ZEAbyWGm/EkzHIcm6uop2MCue+rL5qMN0Yctt7vz1ff8kFGExHBFNNNxaEve3VZpwbDb+q1pcW0gAG3oiD+pmOlQW3tBcwoFpRqp6+8s6pJW4b8VusmS8b9Gb/YOD/LM9UP8kcOGnjzjHNsMar5Tdre85ZgmjPN2ijFSX5mXuXG1iyABv8GLcvqyP/NXLsnBPSC5JUykb6QVxsm72y4D7H5+1bCYNgBy/IUs41pLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aB7LHCU83g3GScrDEkfm/x62x74cFXbvcHPqH3RRB5c=;
+ b=ARXe/SZUDMHaD8sUEPAoWgKXskP54d6Iq3gQW+2oeeEF8ZU+kpGg/HAoBeWBR+ypf2ZchqME8czdEENZNMJTY1fC0BslSFRDgwMrAwBbcVS5SXWmtDUkcL9IjE1fkuHNsvwLDbK2svK9kPTikWSzXfAhQnwMMn4wtyKlavrZvgcrPWydtdHRo+DZtayEq30e5lK+PRM6738vle/tWrM8xOYO6DELO7o3YruJrj6dSN0GxKKHaFj0r1RCp7wgx2P199DuZKV11LVNcwAr/S8oJjUb+TCreBwV/wh8fyXY38BGa8N6gUsdW3V8GcQ5DOBUNSgGblCYXfuJ1PgK4yLsQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
+ dkim=pass header.d=biamp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aB7LHCU83g3GScrDEkfm/x62x74cFXbvcHPqH3RRB5c=;
+ b=Ue29ejgqeOuXSd1WGBfzaGVwiLpLOxYvz4N3LY5YGCQ89i4pD6xXoAB4VdJstrsxHHdvn3ZxgXP40Cb7UTJYxMq4p/DhUHTbHRLFgvtTm+Q2sSx+iN61f6wmitn4h+3QnO98+s4kf2TF6/iEw6xVQq6XrUir9LfTBaWQP81eCMM=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=biamp.com;
+Received: from MN2PR17MB2974.namprd17.prod.outlook.com (2603:10b6:208:dc::30)
+ by MN2PR17MB2944.namprd17.prod.outlook.com (2603:10b6:208:de::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
+ 2020 04:52:18 +0000
+Received: from MN2PR17MB2974.namprd17.prod.outlook.com
+ ([fe80::917e:95f1:fd23:39ac]) by MN2PR17MB2974.namprd17.prod.outlook.com
+ ([fe80::917e:95f1:fd23:39ac%5]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
+ 04:52:17 +0000
+From:   Shreyas Joshi <shreyas.joshi@biamp.com>
+To:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        shreyasjoshi15@gmail.com
+CC:     linux-kernel@vger.kernel.org,
+        Shreyas Joshi <shreyas.joshi@biamp.com>
+Subject: [PATCH] spi: spi-cadence: add support for chip select high
+Date:   Fri, 10 Jul 2020 14:51:40 +1000
+Message-ID: <20200710045140.458-1-shreyas.joshi@biamp.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SY3PR01CA0112.ausprd01.prod.outlook.com
+ (2603:10c6:0:1a::21) To MN2PR17MB2974.namprd17.prod.outlook.com
+ (2603:10b6:208:dc::30)
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645D22D2CBCECE1257CBFEF8C650@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from D19-03074.biamp.com (203.54.172.50) by SY3PR01CA0112.ausprd01.prod.outlook.com (2603:10c6:0:1a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Fri, 10 Jul 2020 04:52:15 +0000
+X-Mailer: git-send-email 2.23.0.windows.1
+X-Originating-IP: [203.54.172.50]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cd908667-1455-443c-f860-08d8248d0577
+X-MS-TrafficTypeDiagnostic: MN2PR17MB2944:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR17MB29448B855953454854F8AC30FC650@MN2PR17MB2944.namprd17.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Yaeq9i8PWzMT8wja9WcD+W7MVyCYR31hoalXpgLYUasiJr1UT5uKG6F/C/Ss9TAsI9Xnw18D2dLOWXB9qY1PDdi35nXJQjrH/lGuEE55MvXwu48Jtzg7sid/CsdqyXXggIohnZ3EhO004hYjiAWPsoqW7Jm+KSLrZf8cnyKupaxBnSivy9bQSx+nSb8Is/MwWhl/dAvYxJea9qQUSrM/8WsSgiMfg0m6nV5m8nPfQ6Fo+Usiu2VjSwQSsYU8BQLam2BwN5o49hJPp5rNoINp/JDwdwmCFxR7ZuLY7PCpoma7/sJoRmwH3Xik3xkgeJosZAQcOvHo8z8i5d1a9aS6dw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR17MB2974.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(376002)(39850400004)(136003)(396003)(4744005)(83380400001)(36756003)(66556008)(66476007)(107886003)(66946007)(7696005)(2906002)(52116002)(956004)(2616005)(8936002)(5660300002)(26005)(86362001)(16526019)(478600001)(186003)(44832011)(4326008)(1076003)(8676002)(316002)(6666004)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: N8pWsrSjylLKE6Ik5oU/fl67z5EtMsuRIZlmGSjqmzdIGjmL0PY1GgPxB1UGqOXtliCUDo9iDoFHn3EFr1lkTllFS3To7HBds241nIQYqBpERdEXE4+FSZ7SWe1m2PxRqKYyPqMnYuI02Hg4a9IQGp+PdiBiVpuV+OzfIlAY9q/g12aAao9NXt/lQlF05f/Nd36Xi3mx1g3zgGbPF0tWVxCoKr5K+vqH2violD9h3byR797SxLLjPk2wg/P/qGsVR7qXvuo111OMReFQBJGARzmM8lweGexhQlJfjHKz5KOyGK+LrGY0jtDJ2kvfjE4BmGCBUoTN59n2vTYc3a8z8tMeHgFo2txNSgn6XTNOOZSe2cl5CqfQlcAkLlvOERHytenksFnil2gOuw2c0s0SFSxWJXWTsEJj6xjoNaQwtbUoW6Ai1SFKE+bB9Q7MdxYsyV9/+7OOrNJqu+Punf5Y98HMGLNEV+XTqVma+5VkypE=
+X-OriginatorOrg: biamp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd908667-1455-443c-f860-08d8248d0577
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR17MB2974.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 04:52:17.8549
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P4m3oaq2UikoWCvl2na3+5VY0+hmET2htOpRIhL/ssZDQYG5QAVu+lFRZpDSevW6PnCACHT2WtgLQ2uDXzKFDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB2944
+X-BESS-ID: 1594358672-893005-16231-43785-1
+X-BESS-VER: 2019.1_20200709.1706
+X-BESS-Apparent-Source-IP: 104.47.56.177
+X-BESS-Outbound-Spam-Score: 1.50
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.225362 [from 
+        cloudscan21-151.us-east-2b.ess.aws.cudaops.com]
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------
+        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+        0.00 MSGID_FROM_MTA_HEADER  META: Message-Id was added by a relay 
+        1.50 MSGID_FROM_MTA_HEADER_2 META: Message-Id was added by a relay 
+X-BESS-Outbound-Spam-Status: SCORE=1.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND, MSGID_FROM_MTA_HEADER, MSGID_FROM_MTA_HEADER_2
+X-BESS-BRTS-Status: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+spi cadence driver should support spi-cs-high in mode bits
+so that the peripherals that needs the chip select to be high active can
+use it. Add the SPI-CS-HIGH flag in the supported mode bits.
 
-On 2020/7/10 10:24, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Thursday, July 9, 2020 3:06 PM
->>
->> A pasid might be bound to a page table from a VM guest via the iommu
->> ops.sva_bind_gpasid. In this case, when a DMA page fault is detected
->> on the physical IOMMU, we need to inject the page fault request into
->> the guest. After the guest completes handling the page fault, a page
->> response need to be sent back via the iommu ops.page_response().
->>
->> This adds support to report a page request fault. Any external module
->> which is interested in handling this fault should regiester a notifier
->> with iommu_register_device_fault_handler().
->>
->> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/svm.c | 103 +++++++++++++++++++++++++++++++-------
->>   1 file changed, 85 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
->> index c23167877b2b..d24e71bac8db 100644
->> --- a/drivers/iommu/intel/svm.c
->> +++ b/drivers/iommu/intel/svm.c
->> @@ -815,8 +815,63 @@ static void intel_svm_drain_prq(struct device *dev,
->> int pasid)
->>   	}
->>   }
->>
->> +static int prq_to_iommu_prot(struct page_req_dsc *req)
->> +{
->> +	int prot = 0;
->> +
->> +	if (req->rd_req)
->> +		prot |= IOMMU_FAULT_PERM_READ;
->> +	if (req->wr_req)
->> +		prot |= IOMMU_FAULT_PERM_WRITE;
->> +	if (req->exe_req)
->> +		prot |= IOMMU_FAULT_PERM_EXEC;
->> +	if (req->pm_req)
->> +		prot |= IOMMU_FAULT_PERM_PRIV;
->> +
->> +	return prot;
->> +}
->> +
->> +static int
->> +intel_svm_prq_report(struct device *dev, struct page_req_dsc *desc)
->> +{
->> +	struct iommu_fault_event event;
->> +
->> +	/* Fill in event data for device specific processing */
->> +	memset(&event, 0, sizeof(struct iommu_fault_event));
->> +	event.fault.type = IOMMU_FAULT_PAGE_REQ;
->> +	event.fault.prm.addr = desc->addr;
->> +	event.fault.prm.pasid = desc->pasid;
->> +	event.fault.prm.grpid = desc->prg_index;
->> +	event.fault.prm.perm = prq_to_iommu_prot(desc);
->> +
->> +	if (!dev || !dev_is_pci(dev))
->> +		return -ENODEV;
-> 
-> move the check before memset.
+Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+---
+ drivers/spi/spi-cadence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes.
+diff --git a/drivers/spi/spi-cadence.c b/drivers/spi/spi-cadence.c
+index 82a0ee09cbe1..2b6b9c1ad9d0 100644
+--- a/drivers/spi/spi-cadence.c
++++ b/drivers/spi/spi-cadence.c
+@@ -556,7 +556,7 @@ static int cdns_spi_probe(struct platform_device *pdev)
+ 	master->unprepare_transfer_hardware =3D cdns_unprepare_transfer_hardware;
+ 	master->set_cs =3D cdns_spi_chipselect;
+ 	master->auto_runtime_pm =3D true;
+-	master->mode_bits =3D SPI_CPOL | SPI_CPHA;
++	master->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 	/* Set to default valid value */
+ 	master->max_speed_hz =3D clk_get_rate(xspi->ref_clk) / 4;
+--
+2.20.1
 
-> 
->> +
->> +	if (desc->lpig)
->> +		event.fault.prm.flags |=
->> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
->> +	if (desc->pasid_present) {
->> +		event.fault.prm.flags |=
->> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
->> +		event.fault.prm.flags |=
->> IOMMU_FAULT_PAGE_RESPONSE_NEEDS_PASID;
->> +	}
-> 
-> if pasid is not present, should we return error directly instead of
-> submitting the req and let iommu core to figure out? I don't have
-
-This has been done in prq_event_thread(), so I don't need to check it
-again here.
-
-> a strong preference, thus:
-> 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-
-Thanks a lot for your time.
-
-Best regards,
-baolu
-
-> 
->> +	if (desc->priv_data_present) {
->> +		/*
->> +		 * Set last page in group bit if private data is present,
->> +		 * page response is required as it does for LPIG.
->> +		 * iommu_report_device_fault() doesn't understand this
->> vendor
->> +		 * specific requirement thus we set last_page as a
->> workaround.
->> +		 */
->> +		event.fault.prm.flags |=
->> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
->> +		event.fault.prm.flags |=
->> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
->> +		memcpy(event.fault.prm.private_data, desc->priv_data,
->> +		       sizeof(desc->priv_data));
->> +	}
->> +
->> +	return iommu_report_device_fault(dev, &event);
->> +}
->> +
->>   static irqreturn_t prq_event_thread(int irq, void *d)
->>   {
->> +	struct intel_svm_dev *sdev = NULL;
->>   	struct intel_iommu *iommu = d;
->>   	struct intel_svm *svm = NULL;
->>   	int head, tail, handled = 0;
->> @@ -828,7 +883,6 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) &
->> PRQ_RING_MASK;
->>   	head = dmar_readq(iommu->reg + DMAR_PQH_REG) &
->> PRQ_RING_MASK;
->>   	while (head != tail) {
->> -		struct intel_svm_dev *sdev;
->>   		struct vm_area_struct *vma;
->>   		struct page_req_dsc *req;
->>   		struct qi_desc resp;
->> @@ -864,6 +918,20 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   			}
->>   		}
->>
->> +		if (!sdev || sdev->sid != req->rid) {
->> +			struct intel_svm_dev *t;
->> +
->> +			sdev = NULL;
->> +			rcu_read_lock();
->> +			list_for_each_entry_rcu(t, &svm->devs, list) {
->> +				if (t->sid == req->rid) {
->> +					sdev = t;
->> +					break;
->> +				}
->> +			}
->> +			rcu_read_unlock();
->> +		}
->> +
->>   		result = QI_RESP_INVALID;
->>   		/* Since we're using init_mm.pgd directly, we should never
->> take
->>   		 * any faults on kernel addresses. */
->> @@ -874,6 +942,17 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   		if (!is_canonical_address(address))
->>   			goto bad_req;
->>
->> +		/*
->> +		 * If prq is to be handled outside iommu driver via receiver of
->> +		 * the fault notifiers, we skip the page response here.
->> +		 */
->> +		if (svm->flags & SVM_FLAG_GUEST_MODE) {
->> +			if (sdev && !intel_svm_prq_report(sdev->dev, req))
->> +				goto prq_advance;
->> +			else
->> +				goto bad_req;
->> +		}
->> +
->>   		/* If the mm is already defunct, don't handle faults. */
->>   		if (!mmget_not_zero(svm->mm))
->>   			goto bad_req;
->> @@ -892,24 +971,11 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   			goto invalid;
->>
->>   		result = QI_RESP_SUCCESS;
->> -	invalid:
->> +invalid:
->>   		mmap_read_unlock(svm->mm);
->>   		mmput(svm->mm);
->> -	bad_req:
->> -		/* Accounting for major/minor faults? */
->> -		rcu_read_lock();
->> -		list_for_each_entry_rcu(sdev, &svm->devs, list) {
->> -			if (sdev->sid == req->rid)
->> -				break;
->> -		}
->> -		/* Other devices can go away, but the drivers are not
->> permitted
->> -		 * to unbind while any page faults might be in flight. So it's
->> -		 * OK to drop the 'lock' here now we have it. */
->> -		rcu_read_unlock();
->> -
->> -		if (WARN_ON(&sdev->list == &svm->devs))
->> -			sdev = NULL;
->> -
->> +bad_req:
->> +		WARN_ON(!sdev);
->>   		if (sdev && sdev->ops && sdev->ops->fault_cb) {
->>   			int rwxp = (req->rd_req << 3) | (req->wr_req << 2) |
->>   				(req->exe_req << 1) | (req->pm_req);
->> @@ -920,7 +986,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   		   and these can be NULL. Do not use them below this point!
->> */
->>   		sdev = NULL;
->>   		svm = NULL;
->> -	no_pasid:
->> +no_pasid:
->>   		if (req->lpig || req->priv_data_present) {
->>   			/*
->>   			 * Per VT-d spec. v3.0 ch7.7, system software must
->> @@ -945,6 +1011,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   			resp.qw3 = 0;
->>   			qi_submit_sync(iommu, &resp, 1, 0);
->>   		}
->> +prq_advance:
->>   		head = (head + sizeof(*req)) & PRQ_RING_MASK;
->>   	}
->>
->> --
->> 2.17.1
-> 
