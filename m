@@ -2,189 +2,171 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3559CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A0C20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B82820748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Smcoh1p/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cSghd0A1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgGJUaD (ORCPT
+        id S1727984AbgGJUeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:30:03 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:6554 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgGJUaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:30:01 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f08cfc60000>; Sat, 11 Jul 2020 04:29:58 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 13:29:58 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Fri, 10 Jul 2020 13:29:58 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 20:29:57 +0000
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
- by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 10 Jul 2020 20:29:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aw5hhF1MW1UL5B8uvRxHhqLGnarVOzVesa10V+HSZcYXakwqfNtj0fnwm7OMvAdmGKqYaLDxOr4zS46YDFT8nP0XnL9tgU4hGKWz1JupBFYVzatPN5xGuhP7i8uzBs15UwfZZ5RTspZYB9GzheH6SpRicYOQV+rhJHSW+Q5XyPXA/pZjCfci7sydMcOat/3ozWlj+s9BuNdMSwdkCMw8LQRJOyHzrpWFLrqDRXuDnb/vmBeeY6G16VXEuZYTUHpZUTM5/XBqfVrVwsnWfZYai7XdmVB7OxZEIAbxiE4tjwHDe2IwvBxrDXBRZS3mewhawGzXEpCgYXiq+SdC1Znm0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EmV8bfmQ8MFo4bzA2Q41Ohx9MfS0VJSqHj698eSkUmo=;
- b=IGM8th0vDvb0hcdrfG3Guj75eLR+lK3FG2jMw48eyxlGaMWdyZCvrrtKid1ABlCySOCrFHw+ZUWL+m0ZdI87/S8kCGuZnZvRMFza71OOJtODhzIzheoyQokMEAaG38pmDFqg3v2EWbQpr2rxaKYmsxxv+plmdjTXJgh4bvu/uvtyVF6Vq5NRbIvhLOOD7Jg52TFIiEHNXdwIjwP1jLa/r+l4LNMVEjAK+OOnwbNKLrZhOoDa/tyHH/G4lhmE4o8fkF7T7E8ywxSE7bTA8OofHaMh/+EtzvPq06XBbtvprLykK/wncarZxFVHDh6zAGCXFshAqUYCtY6flQ33GpUU0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
- by BYAPR12MB2984.namprd12.prod.outlook.com (2603:10b6:a03:da::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
- 2020 20:29:55 +0000
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3174.021; Fri, 10 Jul 2020
- 20:29:55 +0000
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Yu-Huan Hsu <YHsu@nvidia.com>,
-        Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Subject: RE: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
- SMMU
-Thread-Topic: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
- SMMU
-Thread-Index: AQHWVOS3zMIxJUroL0+UAGESja2lEaj/sR8AgAGTnSA=
-Date:   Fri, 10 Jul 2020 20:29:55 +0000
-Message-ID: <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-5-vdumpa@nvidia.com> <20200709201348.GA808454@bogus>
-In-Reply-To: <20200709201348.GA808454@bogus>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-07-10T20:29:53.5607832Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=23cc9e9f-01f6-44f5-8d5a-b542cf46bcbb;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [216.228.112.22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b4df9d0-2f6a-4aff-4194-08d8251001da
-x-ms-traffictypediagnostic: BYAPR12MB2984:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB2984D7E03CA683FC0F61CE7BB3650@BYAPR12MB2984.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ui6Aca/1DauNO4+g7LOV5k3iXJ/ZI6bAv+4kpP/pO/9iGZ/cpzQkeMCYsLQ/tpK9NXznUwE2jG/ZzYCl5y57X6Fz4A0YaH3hcC9Pf38XVRQ0ZxXGQua+PGWLMDsVt1nWUBzhIj/kTI302DGPpgoNahAC8FlYNPnI7clnBZpSSlNadPp4AXZTNTNAaSI5GuqwUUwQYXgrLmOZPXUZirbEt2+W6aiWvx7ywzMqmJW67TmtJ/fbt3G/eVGOpRJk69e9WjHX2LgDhNuSvwGMBaDV1logX0TAxTdG48SdVtkknnbCWrq59qGjusuxsHr/8EeLJQptrEi+MjwgLACqPZm3MA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(33656002)(66476007)(66556008)(66446008)(186003)(64756008)(7416002)(8936002)(26005)(54906003)(316002)(110136005)(66946007)(2906002)(52536014)(86362001)(55016002)(7696005)(5660300002)(4744005)(4326008)(6506007)(9686003)(478600001)(76116006)(71200400001)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: BlzVI7A2I+2R7bY/sKk4p6BqG4YHIqwSmYX7GcDadXz45h69LrdL5NjkY0pN3R9G0mwMozflB44C/hV4L91tGdusrWnpsE6ZyO5909EMx6cvZDeaEn6N13vb+3vsOH1AZHP7jTTQPG4c6x4FU4Xob+0EST1FhXQ70yg5eiXVpdkJLBl+oZ588+CLAMiBLT1AZS+6KuEBzP5Ye2VdW51ryW6L6+ufEILAs7UXXXNPJG/aEu5GntIYs0NqIbsp+gjRvjD+CsqNtVKh1sXPBMSkaFVIEpGs3XkqIkRZ0WUZ1BeUpGrlGmXJXY1wVzXNu1zV4fRJU2J8aIWgexpNd5JRaCcUGsnxDbIQGe5jMIGLmfhN4r8vZ2PNXdOwCEfK3v7S40viRyng/HkWQYsIV2ZmeflkAWa1+6XveG/iMdvqr32LuEPwKJ9tRe/zNxL1qASXOTbtECYYOxoDm6HSMt15ILNLn7wqURASHJJxYI8rerF14x82RiCwI4CubMcUrSyB
+        Fri, 10 Jul 2020 16:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbgGJUen (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:34:43 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77466C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:34:43 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id rk21so7441204ejb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0/SBX7F0TUuVX6qnc8J+wosE+QUcqZiPheTHOsrFz+o=;
+        b=cSghd0A1bHl6W8BQItpavDDiPVX9ofld8ObVhrg13LiaUthO66J/KJplp2qR3dzsMZ
+         /u7c/45w7w7s73JYiydlitSF//6ydNly6eZdccTZaDdszRaimsFMYdgyAlOZ35xoLVDm
+         R61ZzHcKOAH1/n39wljQZh0t5jNcRo4QhhJhg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0/SBX7F0TUuVX6qnc8J+wosE+QUcqZiPheTHOsrFz+o=;
+        b=T4Da1y1PtIZdcrtRHEBNj9zO1/8TE5NCG1cFoqoxnsmqUVj3nyraGE9lFM1wWZnYr5
+         U3txGJzEgzEFpZzEpQ3cfE+iiPaoslGThAUqZcBBH/f6PVKxCRw7OqXszngKEgk4wDM1
+         hV/nuzXqYQeHOl/1exPTuI95lwvVfPD2xI8jJbsTIoTAAouxpm9Q2xV9EjJP7m2h34Jw
+         MTV94eA9eNUEhpGbvmdkvYWwnDMTubkSjRkmpLyRIOyL6Nkxl+KY5eEV7LScWFpj41Xr
+         NjVQsLms630xI9RQJhAiiBcW4xb5V5w73Dc3oSKCxU3229jRxvKKk7R1jO9/4lbCE94o
+         Covg==
+X-Gm-Message-State: AOAM532i+7FytghWIxme+nwDoOQ1KCH1r5pplaE/uQaC2R9scVHdHflG
+        3vYlg7rFDcgmAui0FtaHioaelXmb9LQ=
+X-Google-Smtp-Source: ABdhPJzffQOvkng3FLr1U/vIAPs/sQQus9pvmZOpQ5aOmuthv0Po5gI8nURpCAv/vozO57yMefgmvg==
+X-Received: by 2002:a17:906:6847:: with SMTP id a7mr61159629ejs.306.1594413281827;
+        Fri, 10 Jul 2020 13:34:41 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id y22sm4243897ejf.108.2020.07.10.13.34.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 13:34:41 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a1so7395018ejg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:34:40 -0700 (PDT)
+X-Received: by 2002:a17:906:7005:: with SMTP id n5mr43500276ejj.130.1594413280262;
+ Fri, 10 Jul 2020 13:34:40 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b4df9d0-2f6a-4aff-4194-08d8251001da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 20:29:55.1431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iSB5184FiW0ez3CQRcv4/OMWuSS/Lc6NCXceU5Kt+sYA79zQcGI4IAY+D3cdb+OGIGUumSl06rk4dDjGRnAX6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2984
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594412998; bh=EmV8bfmQ8MFo4bzA2Q41Ohx9MfS0VJSqHj698eSkUmo=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
-         x-microsoft-antispam:x-microsoft-antispam-message-info:
-         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
-         MIME-Version:X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=Smcoh1p/Qe0iB9mVdM7x+GFNPHk/7d7z4fb4F1pERMyAEkzEZ554ycZRSkZjYVSpB
-         hSA/JLxTTiSsqaX9esjloPx5SG01bvjVq5xNhzCivVfcTFy9D00IoX2gsIhV5h7Muu
-         QsQR6YxUNM4LN3wI1KOWkOMO8euxUoyIbLsHgNOIy9K2mR6eWdoX0zpxOXUPN6q6FI
-         6owwum0vPOtHISMXUjBsDLHzBTDCANB6ZnNLX3J3og0XG9DgaFiAUxofZ2B0zJa4gD
-         2EswYE8bLLSzY67Q8HuAsyqa0xj1CkZxDfEoPad9xACnL0Gi4996L7fZmIqbEAIaTX
-         HVBPBNA/AHevg==
+References: <20200710002209.6757-1-apronin@chromium.org> <1594408113.4494.16.camel@HansenPartnership.com>
+In-Reply-To: <1594408113.4494.16.camel@HansenPartnership.com>
+From:   Andrey Pronin <apronin@chromium.org>
+Date:   Fri, 10 Jul 2020 13:34:28 -0700
+X-Gmail-Original-Message-ID: <CAP7wa8+0Bkbm-QCW=xwJ7auZ18Bj1jJev9LcMxuA=i=6ZfT9yA@mail.gmail.com>
+Message-ID: <CAP7wa8+0Bkbm-QCW=xwJ7auZ18Bj1jJev9LcMxuA=i=6ZfT9yA@mail.gmail.com>
+Subject: Re: [PATCH] tpm: avoid accessing cleared ops during shutdown
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Rob. One question on setting "minItems: ". Please see below.
+On Fri, Jul 10, 2020 at 12:08 PM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Thu, 2020-07-09 at 17:22 -0700, Andrey Pronin wrote:
+> > This patch prevents NULL dereferencing when using chip->ops while
+> > sending TPM2_Shutdown command if both tpm_class_shutdown handler and
+> > tpm_del_char_device are called during system shutdown.
+> >
+> > Both these handlers set chip->ops to NULL but don't check if it's
+> > already NULL when they are called before using it.
+> >
+> > This issue was revealed in Chrome OS after a recent set of changes
+> > to the unregister order for spi controllers, such as:
+> >   b4c6230bb0ba spi: Fix controller unregister order
+> >   f40913d2dca1 spi: pxa2xx: Fix controller unregister order
+> > and similar for other controllers.
+> >
+> > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > ---
+> >  drivers/char/tpm/tpm-chip.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-
+> > chip.c
+> > index 8c77e88012e9..a410ca40a3c5 100644
+> > --- a/drivers/char/tpm/tpm-chip.c
+> > +++ b/drivers/char/tpm/tpm-chip.c
+> > @@ -296,7 +296,7 @@ static int tpm_class_shutdown(struct device *dev)
+> >       struct tpm_chip *chip = container_of(dev, struct tpm_chip,
+> > dev);
+> >
+> >       down_write(&chip->ops_sem);
+> > -     if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> > +     if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
+> >               if (!tpm_chip_start(chip)) {
+> >                       tpm2_shutdown(chip, TPM2_SU_CLEAR);
+> >                       tpm_chip_stop(chip);
+> > @@ -479,7 +479,7 @@ static void tpm_del_char_device(struct tpm_chip
+> > *chip)
+> >
+> >       /* Make the driver uncallable. */
+> >       down_write(&chip->ops_sem);
+> > -     if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> > +     if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
+> >               if (!tpm_chip_start(chip)) {
+> >                       tpm2_shutdown(chip, TPM2_SU_CLEAR);
+> >                       tpm_chip_stop(chip);
+>
+> I really don't think this is the right fix.  The problem is that these
+> two functions are trying to open code tpm_try_get_ops/tpm_put_ops (only
+> really for the tpm2 shutdown) because they want to NULL out the ops
+> before final mutex unlock.  The problem with the current open coding is
+> it doesn't shut down the clock if required (not really a problem for
+> shutdown, but might cause issues for simple rmmod).  I think this is
+> because no-one noticed the open coding when get/put was updated.
+>
+> This code should all be abstracted into a single function and shared
+> with tpm_try_get_ops/tpm_put_ops so we can't have this happen in
+> future.  Possibly there should be a chip shutdown function which is
+> only active for TPM2 which does the correct try_get/shutdown/put
+> operation and then a separate simple get mutex, null ops, put mutex one
+> that's guaranteed to be called last.
 
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - nvidia,tegra194-smmu
->> +    then:
->> +      properties:
->> +        reg:
->> +          minItems: 2
->> +          maxItems: 2
+Yes, went for a minimal patch here to stop kernel panics, didn't try to
+refactor. Note that we do hold chip->ops_sem in both cases, and it's a
+write-lock, not a read-lock (as tpm_try_get_ops uses) since we are
+changing chip->ops. Thanks to this write-lock there, shouldn't be parallel
+operations that use chip->ops (so not locking chip->tpm_mutex shouldn't
+affect it).
 
->This doesn't work. The main part of the schema already said there's only
->1 reg region. This part is ANDed with that, not an override. You need to a=
-dd an else clause with 'maxItems: 1' and change the base schema to
->{minItems: 1, maxItems: 2}.
+So, if I understand the idea right, can refactor to something like:
+1) extract common code between tpm_del_char_device and
+tpm_class_shutdown into a shared method;
+2) further extract the part between up/down(chip->ops_sem) to be
+re-used between tpm_try_get_ops/tpm_put_ops and this flow;
+3) still have down_write/up_write in this flow vs
+get/put_device + down_read/up_read in tpm_try_get_ops case.
 
-As the earlier version of base schema doesn't have "minItems: " set, should=
- it be set to 0 for backward compatibility?  Or can it just be omitted sett=
-ing in base schema as before?
+Please let me know if that's a bad idea.
 
-"else" part to set "maxItems: 1" and setting "maxItems: 2" in base schema i=
-s clear to me.
+Will be unavailable next week, but will continue after that.
+
+>
+> James
+>
 
 
--KR
+-- 
+Andrey
