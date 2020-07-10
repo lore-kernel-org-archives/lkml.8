@@ -2,566 +2,341 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D16C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F40BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCBFF20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD0220720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGJQOX (ORCPT
+        id S1728316AbgGJQO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:14:23 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:47036 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgGJQOX (ORCPT
+        Fri, 10 Jul 2020 12:14:57 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:51130 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgGJQO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:14:23 -0400
-X-Greylist: delayed 1944 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jul 2020 12:14:21 EDT
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 06AFYSj6031844;
-        Fri, 10 Jul 2020 11:41:55 -0400
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap02.intersil.com with ESMTP id 325k328snd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 11:41:55 -0400
-Received: from pbmxdp03.intersil.corp (132.158.200.224) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1979.3; Fri, 10 Jul 2020 11:41:54 -0400
-Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
- (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Fri, 10 Jul 2020 11:41:53 -0400
-From:   <min.li.xe@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Min Li <min.li.xe@renesas.com>
-Subject: [PATCH net-next] ptp: add debugfs support for IDT family of timing devices
-Date:   Fri, 10 Jul 2020 11:41:25 -0400
-Message-ID: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-MML: disable
+        Fri, 10 Jul 2020 12:14:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 098748040A69;
+        Fri, 10 Jul 2020 16:14:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id P55LJbe8nxTn; Fri, 10 Jul 2020 19:14:47 +0300 (MSK)
+Date:   Fri, 10 Jul 2020 19:14:45 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200710161445.t6eradkgt4terdr3@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_10:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2006250000 definitions=main-2007100106
-X-Proofpoint-Spam-Reason: mlx
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Min Li <min.li.xe@renesas.com>
+On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
+> Hi Sergey,
+> 
+> On 10/07/2020 12.27, Serge Semin wrote:
+> > Hello Peter
+> > 
+> > On Fri, Jul 10, 2020 at 11:31:47AM +0300, Peter Ujfalusi wrote:
+> >>
+> >>
+> >> On 10/07/2020 1.45, Serge Semin wrote:
+> >>> Some devices may lack the support of the hardware accelerated SG list
+> >>> entries automatic walking through and execution. In this case a burden of
+> >>> the SG list traversal and DMA engine re-initialization lies on the
+> >>> DMA engine driver (normally implemented by using a DMA transfer completion
+> >>> IRQ to recharge the DMA device with a next SG list entry). But such
+> >>> solution may not be suitable for some DMA consumers. In particular SPI
+> >>> devices need both Tx and Rx DMA channels work synchronously in order
+> >>> to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+> >>> some time while the Tx DMA channel works implicitly pulling data into the
+> >>> Rx FIFO, the later will be eventually overflown, which will cause the data
+> >>> loss. So if SG list entries aren't automatically fetched by the DMA
+> >>> engine, but are one-by-one manually selected for execution in the
+> >>> ISRs/deferred work/etc., such problem will eventually happen due to the
+> >>> non-deterministic latencies of the service execution.
+> >>
+> > 
+> >> It is not really the number of sg nents which is the problem, but the
+> >> combination of total number of bytes _and_ the number of nents used to
+> >> map them.
+> > 
+> > No, in the case described above the latency only matters.
+> 
 
-This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
-It will create a debugfs directory called idtptp{x} and x is the ptp index.
-Three inerfaces are present, which are cmd, help and regs. help is read
-only and will display a brief help message. regs is read only amd will show
-all register values. cmd is write only and will accept certain commands.
-Currently, the accepted commands are combomode to set comobo mode and write
-to write up to 4 registers.
+> Sure, the latency comes in (at least for EDMA) when moving from one
+> sub-sg_list to the next one when needing to break the long list into
+> smaller chunks. In the sub-completion we need to move to the next chunk.
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- drivers/ptp/Kconfig           |   2 +
- drivers/ptp/Makefile          |   4 +-
- drivers/ptp/ptp_idt_debugfs.c | 354 ++++++++++++++++++++++++++++++++++++++++++
- drivers/ptp/ptp_idt_debugfs.h |  83 ++++++++++
- 4 files changed, 442 insertions(+), 1 deletion(-)
- create mode 100644 drivers/ptp/ptp_idt_debugfs.c
- create mode 100644 drivers/ptp/ptp_idt_debugfs.h
+Right. It's crucial. In our case "sub-sg_list" is just a single SG-list entry
+because hardware-accelerated Linked-list traversal is unsupported. AFAIU in your
+case the sub-sg_list might contain several entries.
 
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index 942f72d..25b74a2 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -118,6 +118,7 @@ config PTP_1588_CLOCK_KVM
- config PTP_1588_CLOCK_IDT82P33
- 	tristate "IDT 82P33xxx PTP clock"
- 	depends on PTP_1588_CLOCK && I2C
-+	select DEBUG_FS
- 	default n
- 	help
- 	  This driver adds support for using the IDT 82P33xxx as a PTP
-@@ -130,6 +131,7 @@ config PTP_1588_CLOCK_IDT82P33
- config PTP_1588_CLOCK_IDTCM
- 	tristate "IDT CLOCKMATRIX as PTP clock"
- 	depends on PTP_1588_CLOCK && I2C
-+	select DEBUG_FS
- 	default n
- 	help
- 	  This driver adds support for using IDT CLOCKMATRIX(TM) as a PTP
-diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
-index 7aff75f..a4a9e35 100644
---- a/drivers/ptp/Makefile
-+++ b/drivers/ptp/Makefile
-@@ -12,6 +12,8 @@ obj-$(CONFIG_PTP_1588_CLOCK_KVM)	+= ptp_kvm.o
- obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp-qoriq.o
- ptp-qoriq-y				+= ptp_qoriq.o
- ptp-qoriq-$(CONFIG_DEBUG_FS)		+= ptp_qoriq_debugfs.o
--obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_clockmatrix.o
-+obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_idtcm.o
- obj-$(CONFIG_PTP_1588_CLOCK_IDT82P33)	+= ptp_idt82p33.o
- obj-$(CONFIG_PTP_1588_CLOCK_VMW)	+= ptp_vmw.o
-+
-+ptp_idtcm-objs += ptp_clockmatrix.o ptp_idt_debugfs.o
-diff --git a/drivers/ptp/ptp_idt_debugfs.c b/drivers/ptp/ptp_idt_debugfs.c
-new file mode 100644
-index 0000000..0ae02f7
---- /dev/null
-+++ b/drivers/ptp/ptp_idt_debugfs.c
-@@ -0,0 +1,354 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * PTP debugfs interface for the IDT family of timing and
-+ * synchronization devices.
-+ *
-+ * Copyright (C) 2019 Integrated Device Technology, Inc., a Renesas Company.
-+ */
-+#include <linux/debugfs.h>
-+#include <linux/module.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+
-+#include "ptp_idt_debugfs.h"
-+
-+MODULE_LICENSE("GPL");
-+
-+#define DEBUGFS_CMD_MAX_WRITE_SIZE (4)
-+#define DEBUGFS_CMD_MENU_SIZE (4)
-+#define DEBUGFS_CMD_MAX_SIZE (64)
-+#define DEBUGFS_CMD_HELP \
-+	"1) set combomode:\n" \
-+	"echo -n \"combomode:mode[current/fast/slow/hold]\" > cmd\n" \
-+	"2) write up to 4 registers:\n" \
-+	"echo -n \"write:addr[hex]:value[hex]:num of bytes[max 4]\" > cmd\n" \
-+	"3) show all registers:\n" \
-+	"cat regs"
-+
-+struct idtptp_debugfs {
-+	idtptp_debugfs_handle handle;
-+	struct ptp_clock_info *info;
-+	debugfs_cmd_handler handler;
-+	struct idtptp_debugfs_regs space;
-+	struct dentry *root;
-+	struct dentry *cmd;
-+	struct dentry *regs;
-+	struct dentry *help;
-+};
-+
-+struct idtptp_debugfs_menu {
-+	const char *input[DEBUGFS_CMD_MENU_SIZE];
-+	const int output[DEBUGFS_CMD_MENU_SIZE];
-+	const int size;
-+};
-+
-+static struct idtptp_debugfs_menu cmdmenu = {
-+	.input = {"combomode", "write", "read"},
-+	.output = {IDTPTP_DEBUGFS_COMBOMODE,
-+		   IDTPTP_DEBUGFS_WRITE_REG,
-+		   IDTPTP_DEBUGFS_READ_REG},
-+	.size = 3,
-+};
-+
-+static struct idtptp_debugfs_menu combomodemenu = {
-+	.input = {"current", "fast", "slow", "hold"},
-+	.output = {E_COMBOMODE_CURRENT,
-+		   E_COMBOMODE_FASTAVG,
-+		   E_COMBOMODE_SLOWAVG,
-+		   E_COMBOMODE_HOLDOVER},
-+	.size = 4,
-+};
-+
-+static inline int
-+idtptp_debugfs_parse_menu(char *input,
-+			  struct idtptp_debugfs_menu *menu)
-+{
-+	int i;
-+
-+	for (i = 0; i < menu->size; i++) {
-+		if (strcmp(input, menu->input[i]) == 0)
-+			return menu->output[i];
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static inline int
-+idtptp_debugfs_parse_combomode(char *param,
-+			       struct idtptp_debugfs_data *data)
-+{
-+	char **strp = &param;
-+	char *modein;
-+
-+	modein = strsep(strp, ":");
-+	if (modein == NULL)
-+		return -EINVAL;
-+
-+	data->combomode = idtptp_debugfs_parse_menu(modein, &combomodemenu);
-+
-+	return data->combomode;
-+}
-+
-+static inline int
-+idtptp_debugfs_parse_write(char *param,
-+			   struct idtptp_debugfs_regs space,
-+			   struct idtptp_debugfs_data *data)
-+{
-+	struct idtptp_debugfs_wr *wr = &data->wr;
-+	char *addrin, *valuein, *bytesin;
-+	unsigned int addr, value, bytes;
-+	char **strp = &param;
-+	int ret, i;
-+
-+	addrin = strsep(strp, ":");
-+	if (addrin == NULL)
-+		return -EINVAL;
-+
-+	ret = kstrtouint(addrin, 16, &addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (addr < space.addr || addr > space.addr + space.length - 1)
-+		return -EINVAL;
-+
-+	valuein = strsep(strp, ":");
-+	if (valuein == NULL)
-+		return -EINVAL;
-+
-+	ret = kstrtouint(valuein, 16, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	bytesin = strsep(strp, ":");
-+	if (bytesin == NULL)
-+		return -EINVAL;
-+
-+	ret = kstrtouint(bytesin, 16, &bytes);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (bytes > DEBUGFS_CMD_MAX_WRITE_SIZE)
-+		return -EINVAL;
-+
-+	wr->addr = (u16)addr;
-+	wr->length = bytes;
-+
-+	for (i = 0; i < bytes; i++) {
-+		wr->buf[i] = value & 0xff;
-+		value >>= 8;
-+	}
-+
-+	return 0;
-+}
-+
-+
-+static int idtptp_debugfs_help_show(struct seq_file *m, void *data)
-+{
-+	seq_printf(m, "%s\n", DEBUGFS_CMD_HELP);
-+
-+	return 0;
-+}
-+
-+static int idtptp_debugfs_help_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, idtptp_debugfs_help_show, inode->i_private);
-+}
-+
-+static const struct file_operations fops_help = {
-+	.owner = THIS_MODULE,
-+	.open = idtptp_debugfs_help_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static int idtptp_debugfs_reg_show(struct seq_file *m, void *data)
-+{
-+	struct idtptp_debugfs *dbg = m->private;
-+	struct idtptp_debugfs_data wrdata;
-+	u16 regaddr = dbg->space.addr;
-+	u8 buf[8] = {0};
-+	int i, err;
-+
-+	wrdata.wr.buf = buf;
-+	wrdata.wr.length = 8;
-+
-+	for (i = 0; i < dbg->space.length; i += 8, regaddr += 8) {
-+		wrdata.wr.addr = regaddr;
-+
-+		err = dbg->handler(dbg->info, IDTPTP_DEBUGFS_READ_REG, &wrdata);
-+
-+		if (err)
-+			return err;
-+
-+		seq_printf(m,
-+			   "%04x %03x: %02x %02x %02x %02x %02x %02x %02x %02x\n",
-+			   regaddr, i,
-+			   buf[0], buf[1], buf[2], buf[3],
-+			   buf[4], buf[5], buf[6], buf[7]);
-+	}
-+
-+	return err;
-+}
-+
-+static int idtptp_debugfs_reg_r_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, idtptp_debugfs_reg_show, inode->i_private);
-+}
-+
-+static const struct file_operations fops_reg_r = {
-+	.owner = THIS_MODULE,
-+	.open = idtptp_debugfs_reg_r_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static int idtptp_debugfs_parse(struct idtptp_debugfs *dbg,
-+				char *cmdstr,
-+				struct idtptp_debugfs_data *data)
-+{
-+	char **strp = &cmdstr;
-+	int cmd, ret;
-+	char *cmdin;
-+
-+	cmdin = strsep(strp, ":");
-+	if (cmdin == NULL)
-+		return -EINVAL;
-+
-+	cmd = idtptp_debugfs_parse_menu(cmdin, &cmdmenu);
-+
-+	switch (cmd) {
-+	case IDTPTP_DEBUGFS_COMBOMODE:
-+		ret = idtptp_debugfs_parse_combomode(cmdstr, data);
-+		break;
-+	case IDTPTP_DEBUGFS_WRITE_REG:
-+		ret = idtptp_debugfs_parse_write(cmdstr, dbg->space, data);
-+		break;
-+	case IDTPTP_DEBUGFS_READ_REG:
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return cmd;
-+}
-+
-+static ssize_t idtptp_debugfs_cmd(struct file *file,
-+				  const char __user *ptr,
-+				  size_t len, loff_t *off)
-+{
-+	struct idtptp_debugfs *dbg = file->private_data;
-+
-+	struct idtptp_debugfs_data data;
-+	char cmdstr[DEBUGFS_CMD_MAX_SIZE];
-+	int cmd, err;
-+	u8 wr_buf[DEBUGFS_CMD_MAX_WRITE_SIZE] = {0};
-+
-+	if (*off != 0)
-+		return 0;
-+
-+	if (len > DEBUGFS_CMD_MAX_SIZE - 1)
-+		len = DEBUGFS_CMD_MAX_SIZE - 1;
-+
-+	err = strncpy_from_user(cmdstr, ptr, len);
-+	if (err < 0)
-+		return err;
-+	cmdstr[len] = '\0';
-+
-+	data.wr.buf = wr_buf;
-+	data.wr.length = sizeof(wr_buf);
-+
-+	cmd = idtptp_debugfs_parse(dbg, cmdstr, &data);
-+	if (cmd < 0)
-+		return cmd;
-+
-+	err = dbg->handler(dbg->info, cmd, &data);
-+	if (err < 0)
-+		return err;
-+
-+	return len;
-+}
-+
-+static const struct file_operations fops_cmd = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.write = idtptp_debugfs_cmd,
-+	.llseek = noop_llseek,
-+};
-+
-+idtptp_debugfs_handle *
-+idtptp_debugfs_init(int index, struct ptp_clock_info *info,
-+		    debugfs_cmd_handler handler,
-+		    struct idtptp_debugfs_regs space)
-+{
-+	struct idtptp_debugfs *dbg;
-+	char name[16];
-+	int err = 0;
-+
-+	dbg = kzalloc(sizeof(struct idtptp_debugfs), GFP_KERNEL);
-+	if (dbg == NULL)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dbg->info = info;
-+	dbg->handle = index;
-+	dbg->handler = handler;
-+	dbg->space = space;
-+
-+	snprintf(name, sizeof(name), "idtptp%u", index);
-+
-+	dbg->root = debugfs_create_dir(name, NULL);
-+	if (!dbg->root) {
-+		err = -ENOMEM;
-+		goto ret;
-+	}
-+
-+	dbg->help = debugfs_create_file("help", S_IFREG | S_IRUSR,
-+					dbg->root, dbg, &fops_help);
-+	if (!dbg->help) {
-+		err = -ENOMEM;
-+		goto ret;
-+	}
-+
-+	dbg->regs = debugfs_create_file("regs", S_IFREG | S_IRUSR,
-+					dbg->root, dbg, &fops_reg_r);
-+	if (!dbg->regs) {
-+		err = -ENOMEM;
-+		goto ret;
-+	}
-+
-+	dbg->cmd = debugfs_create_file("cmd", S_IFREG | S_IWUSR,
-+					dbg->root, dbg, &fops_cmd);
-+	if (!dbg->cmd) {
-+		err = -ENOMEM;
-+		goto ret;
-+	}
-+
-+ret:
-+	if (err < 0) {
-+		idtptp_debugfs_exit(&dbg->handle);
-+		return ERR_PTR(err);
-+	}
-+	return &dbg->handle;
-+}
-+EXPORT_SYMBOL(idtptp_debugfs_init);
-+
-+void idtptp_debugfs_exit(idtptp_debugfs_handle *handle)
-+{
-+	struct idtptp_debugfs *dbg =
-+		container_of(handle, struct idtptp_debugfs, handle);
-+
-+	if (dbg == NULL)
-+		return;
-+
-+	debugfs_remove(dbg->help);
-+	debugfs_remove(dbg->regs);
-+	debugfs_remove(dbg->cmd);
-+	debugfs_remove(dbg->root);
-+
-+	kfree(dbg);
-+}
-+EXPORT_SYMBOL(idtptp_debugfs_exit);
-diff --git a/drivers/ptp/ptp_idt_debugfs.h b/drivers/ptp/ptp_idt_debugfs.h
-new file mode 100644
-index 0000000..3c5e670
---- /dev/null
-+++ b/drivers/ptp/ptp_idt_debugfs.h
-@@ -0,0 +1,83 @@
-+/* SPDX-License-Identifier: GPL-2.0+
-+ *
-+ * PTP debugfs interface for the IDT family of timing and
-+ * synchronization devices.
-+ *
-+ * Copyright (C) 2019 Integrated Device Technology, Inc., a Renesas Company.
-+ */
-+#ifndef PTP_IDT_DEBUGFS_H
-+#define PTP_IDT_DEBUGFS_H
-+
-+enum idtptp_debugfs_cmd {
-+	IDTPTP_DEBUGFS_READ_REG = 0, /* read registers */
-+	IDTPTP_DEBUGFS_WRITE_REG,    /* write registers */
-+	IDTPTP_DEBUGFS_COMBOMODE,    /* set combo mode */
-+	IDTPTP_DEBUGFS_MAX,
-+};
-+
-+/**
-+ * @brief Enumerated type listing DPLL combination modes
-+ */
-+enum idtdpll_combomode {
-+	E_COMBOMODE_CURRENT = 0,   /* CURRENT/INSTANEOUS HOLDOVER OFFSET */
-+	E_COMBOMODE_FASTAVG,       /* FAST AVERAGED HOLDOVER OFFSET */
-+	E_COMBOMODE_SLOWAVG,       /* SLOW AVERAGED HOLDOVER OFFSET */
-+	E_COMBOMODE_HOLDOVER,      /* HOLDER OVER OFFSET REGISTER VALUE USED */
-+	E_COMBOMODE_MAX,
-+};
-+
-+/* for register read/write */
-+struct idtptp_debugfs_wr {
-+	u16 addr;
-+	u8 *buf;
-+	u16 length;
-+};
-+
-+/* device register space */
-+struct idtptp_debugfs_regs {
-+	u16 addr;
-+	u16 length;
-+};
-+
-+/* data passing to phc driver */
-+struct idtptp_debugfs_data {
-+	union {
-+		enum idtdpll_combomode combomode;
-+		struct idtptp_debugfs_wr wr;
-+	};
-+};
-+
-+struct ptp_clock_info;
-+
-+/* command handler provided by phc driver to handle idtptp_debugfs_cmd */
-+typedef int (*debugfs_cmd_handler)(struct ptp_clock_info *info,
-+				   enum idtptp_debugfs_cmd cmd,
-+				   struct idtptp_debugfs_data *data);
-+
-+typedef int idtptp_debugfs_handle;
-+
-+/**
-+ * idtptp_debugfs_init() - initialize idtptp debugfs interface
-+ *
-+ * @index   idtptp${index} as debugfs dir name
-+ * @info    phc registered ptp_clock_info
-+ * @handler handle idtptp_debugfs_cmd
-+ * @space   device register space
-+ *
-+ * Returns a valid handle pointer on success or PTR_ERR on failure.
-+ */
-+idtptp_debugfs_handle *
-+idtptp_debugfs_init(int index, struct ptp_clock_info *info,
-+		    debugfs_cmd_handler handler,
-+		    struct idtptp_debugfs_regs space);
-+
-+/**
-+ * idtptp_debugfs_exit() - delete idtptp debugfs interface
-+ *
-+ * @handle  handle pointer from idtptp_debugfs_init
-+ *
-+ */
-+void idtptp_debugfs_exit(idtptp_debugfs_handle *handle);
-+
-+#endif/* PTP_IDT_DEBUGFS_H */
-+
--- 
-2.7.4
+> 
+> > The length of the SG
+> > entries doesn't (at most of extents). The same is with the nents. If there are
+> > more than one SG entries in the Rx SG-list handled with the non-deterministic
+> > latency, the problem may happen at the moment of any Rx SG entry reload.
+> 
 
+> You have latency in the hardware when progressing between the sg entries?
+
+Since there is no support of hardware accelerated SG-list traversal in our
+DMA engine, then I can't give you an answer to that question. My message was
+that due to the lack of the automatic SG-list entries reloading, each SG-list
+entry is re-submitted one-by-one by the DW DMAC driver by means of the
+IRQ/tasklet service routines (AFAIU in your case the re-submission is done
+for each sub-sg_list). IRQs/tasklet handling may cause the non-deterministic
+latency in case if the system is heavy loaded with some other activity. That
+latency is dangerous in case if the Tx and Rx data flows are inter-dependent.
+In case of SPI If an Rx DMA channel doesn't start fetching data from an SPI Rx
+FIFO on time, the later one might get to be overflown eventually.
+
+On the other hand theoretically some latency may still persist even for DMA
+engines with hardware accelerated SG-list traversal. That latency can be caused
+by an intensive high-priority traffic on the memory-bus generated by CPUs, other
+devices or DMAs. But since we haven't got any reports about problems concerning
+it so far, then most likely that latency is negligible small. So I assume
+that if hardware accelerated SG-list traversal is supported, then the
+DMAengine-based operations are working well for any case.
+
+> 
+> > (In fact the DW DMAC driver is working with so called Linked-List entries,
+> > which are used to map the SG-list entries into the list of items with length
+> > less than or equal to the max block size the engine supports. But for
+> > simplicity I call them the SG-list entries, since if dma_set_max_seg_size()
+> > is specified the mapping will be uniform.)
+> 
+
+> Right, I'll come back to the dma_set_max_seq_size() later for my cases ;)
+
+For reference see the patch "[PATCH v7 07/11] dmaengine: dw: Set DMA device max
+segment size parameter" in this series. Please also note, that in order to have
+the uniform mapping, the DMA client must take into account the max segment size
+when creating the SG-list entries.
+
+> 
+> >> The EDMA from TI have similar limitation (we set the limit to 20 nents).
+> >> Longer lists will be broken up to maximum of 20 segment transfers.
+> >> This setup has bigger impact on audio (cyclic) as we need to limit the
+> >> number of periods to not exceed this limit of 20.
+> > 
+> > As I said the problem described above isn't about the number of entries, but
+> > about how they are handled. If there is a latency, then the problem may and most
+> > like will eventually happen.
+> > 
+> > The complexity of the situation is that the DW DMAC driver may split a SG-list
+> > entry up if its length exceeds max block size the engine supports. That's
+> > why in order to fix the problem described in the patch log the DMA client driver
+> > developed needs to take into account the next two points:
+> > 1) Detect the maximum number of SG entries the DMA engine can handle without the
+> > non-deterministic latency (you called it max_sg_nents_burst). So the client
+> > drivers would know, that the DMA-channels responsible for Tx and Rx transfers
+> > may be executed with latencies.
+> 
+
+> This is really useful information for the clients. But in some cases
+> they just don't care how the list is going to be processed, given if
+> they have large enough internal FIFO to hold on while the DMA moves from
+> one chunk to another.
+
+Well, I'd say, not in some but in most of the cases they don't care. The problem
+may happen if the DMA-engine is relatively slow to handle in incoming data at
+required pace or a slave-device is relatively slow or the slave-device FIFO is
+too small. Alas in our case all of those factors exist. The DMA-engine is
+clocked with 50MHz, the SPI-bus is clocked with up to 25MHz. That's the
+combination when the problem happens very often. The less the SPI-bus speed the
+less often the Rx FIFO overflow happens.
+
+> 
+> > 2) Make sure the length of each SG-list entry doesn't exceed the max block size
+> > the DW DMAC supports. If some of them does, then the DW DMAC code will break
+> > these SG-entries up into the smaller DMA Linked-list entries, which will get us
+> > back to the re-submission latency problem described in the patch log. This
+> > peculiarity is covered by calling dma_set_max_seg_size() method in the DW DMAC
+> > driver (at least for SPI subsystem it works out-of-box).
+> 
+
+> This is what does not work for me for neither EDMA or sDMA... The
+> max_seq_size depends on the src/dst_addr_width the peripheral is
+> configured. It is different for each DMA_SLAVE_BUSWIDTH_*_BYTES _and_
+> also for the burst used.
+
+Firstly noone prevents a DMA client from creating SG-list entries with length
+greater than the max_seg_size value and the DMA-engine driver shall correctly
+handle such SG-lists. In our case the max segment size in <bytes> also depends
+on the addr-width parameter (MAX SG-list entry length in fact is (add_width *
+max_block_size) bytes), but setting max_seg_size for smallest resolution
+(addr_width = 1 byte) will keep us on a safe side for any case. No matter with
+what address-width the DMA-engine channel is configured If a DMA client submits
+a buffer with length less the max_seg_size it will always be handled as a
+single Linked-List entry.
+
+> 
+> It is on my to-do list to clean up and send this:
+> https://github.com/omap-audio/linux-audio/commit/dd81de1a343810468b6e7a601e90a9161f46cab1
+> 
+> For EDMA the implementation is:
+> https://github.com/omap-audio/linux-audio/commit/ee93c45667d0f250baa1e224e5d1266fae2e7c80
+> 
+> along the same lines for sDMA:
+> https://github.com/omap-audio/linux-audio/commit/d6ac68692efcdac8ec233c70b802d37f594d6d4d
+> 
+> What is obviously missing is that if the driver does not implement the
+> device_get_max_len, then dma_get_max_seg_size() of the device should be
+> returned.
+> 
+> Other option would be:
+> https://github.com/omap-audio/linux-audio/commit/95dda19c92a38437741850309374a2ca4ef1e361
+> 
+> I'm still hesitating which would be more generic to be acceptable.
+> 
+> And to make things a bit more interesting the UDMA have also different
+> dma_sg_len() supported depending on what mode the channel is used (TR or
+> packet mode), but that's another story in itself.
+> 
+> >> The sDMA on the other hand has different limits. Earlier versions
+> >> without linking support can execute one SG chunk at the time and needs
+> >> to reconfigure for the next one -> max_sg_nents is 1 for the older sDMAs...
+> > 
+> > Yes, this is our case.
+> 
+
+> Interesting. So you prefer that your clients will use
+> dmaengine_prep_slave_single() if possible?
+
+Yes. I just don't see another way to solve the problem. (Please see the history of
+this patchset review, links to the biggest part of which I've collected in the
+cover-letter. We pretty much thoroughly discussed it with Andy, Vinod and Viresh).
+The DW APB SSI driver (DW DMAC engine client) will synchronously walk over the
+SG-lists passed for Tx and Rx transfers and re-charge the DMA-engine channels with
+each entry. (The solution will be a bit more complicated since the Tx and Rx SG-lists
+might have different number of entries, but in particular case it will look as I
+described).
+
+> 
+> >>> In order to let the DMA consumer know about the DMA device capabilities
+> >>> regarding the hardware accelerated SG list traversal we introduce the
+> >>> max_sg_list capability. It is supposed to be initialized by the DMA engine
+> >>> driver with 0 if there is no limitation for the number of SG entries
+> >>> atomically executed and with non-zero value if there is such constraints,
+> >>> so the upper limit is determined by the number set to the property.
+> >>>
+> >>> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> >>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >>> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> >>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> >>> Cc: Arnd Bergmann <arnd@arndb.de>
+> >>> Cc: Rob Herring <robh+dt@kernel.org>
+> >>> Cc: linux-mips@vger.kernel.org
+> >>> Cc: devicetree@vger.kernel.org
+> >>>
+> >>> ---
+> >>>
+> >>> Changelog v3:
+> >>> - This is a new patch created as a result of the discussion with Vinud and
+> >>>   Andy in the framework of DW DMA burst and LLP capabilities.
+> >>>
+> >>> Changelog v4:
+> >>> - Fix of->if typo. It should be definitely of.
+> >>> ---
+> >>>  drivers/dma/dmaengine.c   | 1 +
+> >>>  include/linux/dmaengine.h | 8 ++++++++
+> >>>  2 files changed, 9 insertions(+)
+> >>>
+> >>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> >>> index b332ffe52780..ad56ad58932c 100644
+> >>> --- a/drivers/dma/dmaengine.c
+> >>> +++ b/drivers/dma/dmaengine.c
+> >>> @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> >>>  	caps->directions = device->directions;
+> >>>  	caps->min_burst = device->min_burst;
+> >>>  	caps->max_burst = device->max_burst;
+> >>> +	caps->max_sg_nents = device->max_sg_nents;
+> >>>  	caps->residue_granularity = device->residue_granularity;
+> >>>  	caps->descriptor_reuse = device->descriptor_reuse;
+> >>>  	caps->cmd_pause = !!device->device_pause;
+> >>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> >>> index 0c7403b27133..a7e4d8dfdd19 100644
+> >>> --- a/include/linux/dmaengine.h
+> >>> +++ b/include/linux/dmaengine.h
+> >>> @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+> >>>   *	should be checked by controller as well
+> >>>   * @min_burst: min burst capability per-transfer
+> >>>   * @max_burst: max burst capability per-transfer
+> >>> + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> >>> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> >>> + *	value means unlimited number of entries.
+> >>
+> > 
+> >> Without looking at the comment the name max_sg_nents implies that the
+> >> DMA can not handle longer lists, but it is not really true.
+> >> max_sg_nents_burst might be a bit cleaner for the first look?
+> > 
+> > Seems reasonable. I also thought of a better naming so there wouldn't be need to
+> > read a comment in order get a notion what exactly the parameter is responsible
+> > for. Although at the moment of the patchset preparation nothing better got in my
+> > mind.
+> > 
+> > I like what you suggest, but I'd better make it "max_sg_burst" or "max_sg_chain".
+> > What do you think?
+> 
+
+> Since we should be able to handle longer lists and this is kind of a
+> hint for clients that above this number of nents the list will be broken
+> up to smaller 'bursts', which when traversing could cause latency.
+> 
+> sg_chunk_len might be another candidate.
+
+Ok. We've got four candidates:
+- max_sg_nents_burst
+- max_sg_burst
+- max_sg_chain
+- sg_chunk_len
+
+@Vinod, @Andy, what do you think?
+
+-Sergey
+
+> 
+> > Vinod?
+> > Andy (since you've already acked the patch)?
+> > 
+> > -Sergey
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
