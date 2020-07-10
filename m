@@ -2,108 +2,116 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2672C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B01C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88462065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QK7mXTa+"
+	by mail.kernel.org (Postfix) with ESMTP id C570820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594351578;
+	bh=7gmNfMi/rLNIENPbSZx/x5H/MTRJkr2euZEuEvVPgUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2kBCvH5Yq9gRCj4aC23nFuwXlSWDH7xr6YtX+t5sun+W1YLxYu/W4qPKlX2YSlIZk
+	 T+eioKAjA4v10I8dewJR+K4KW6bMJSkKKukCB+NwDEVXJsFx4CBH4Quedvn6v7wrPK
+	 zH9o23yePqNV9XPD8hlYQmfVkD2TRmsGvXULGdoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgGJD0H (ORCPT
+        id S1727007AbgGJD0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgGJD0G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:26:06 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F243C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:26:06 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id t11so1987249qvk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=eFy7G8MFh5j0dWXgNTfhYT55Z/WQldbqa04KvJF1NIk=;
-        b=QK7mXTa+VJP3XCY/WLX/zRxgMT0Ii7iOBVxRxjXH1puvNbSdonlAYLgfylTKR/h69b
-         ZS0KjOAejKEYw9VVZWy1xRSR2L+6xIdQiUbEK+8GwTUvf/qTyxPPgj5+eV9bgQoDoGe+
-         hzJb4L62Ysd18Fam+KcjOm8SxE3S3qqRinec+dFfiJhZp0QbSj6PdaYyQZibjI637Aad
-         e0MrJaRDenfU0H4k4Vf7RqoGSILBdjSfSkTW+rWdY0c/fT9sBh/ZpaSTZNUr5RVpSzrI
-         gzF6w0XY6tjfvLbU3qopm4SdEiOpVDuMtYLzJ9N4JY1331WI0Zfefknn3QrRDvwulK0H
-         kpZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=eFy7G8MFh5j0dWXgNTfhYT55Z/WQldbqa04KvJF1NIk=;
-        b=PN1mOnFbXkUWdXkd60ZE/wzWDs375Gxiod9D6lhAYpIdc0/ebTKzvxKCwYDBNdVKC/
-         NOJ3GuZhgYmiwJkX/AW4V8CNwzadqqNSLwBb+HwtahCCjVKF9Sk0SNzGMCsy+GpF5mpI
-         phXpMWdNDStQ4eg/x0V2wN9+/KoOQyQKlEUaGP1LaFDqOhjnXz1eyOkax6NIW0YdnL3e
-         /iHtRgq3he4zgmX4O0ZW/w+eTIf7o1czCe+CtWrD7P9+HdHeCCb2N4f64TtRKMjwFCRo
-         PGR4gylqvwCByZx6sVPCyxILobfJu+pdZws1a+Mv3ntdQETMJ6hzrHRUUhTlQLOJasv8
-         8C5g==
-X-Gm-Message-State: AOAM532T849w/1dFGxSpzzBpk9xr3fMxNFRezegTEBKT6DDtsiGc4n3i
-        qMUjFEThD7mgFjAu628NKgIV8w==
-X-Google-Smtp-Source: ABdhPJySjIDUPTcCvWRvsyo70Q3CiQUo/bQVf3SzYv2WKDHX2B7fNAAUwB/k5mRHSOAN2A1xkCYYxg==
-X-Received: by 2002:a0c:bd88:: with SMTP id n8mr67662598qvg.194.1594351563883;
-        Thu, 09 Jul 2020 20:26:03 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u20sm6442583qtj.39.2020.07.09.20.26.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 20:26:03 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Date:   Thu, 9 Jul 2020 23:26:02 -0400
-Message-Id: <6F39E573-C325-4D94-ABBE-E869E146B05E@lca.pw>
-References: <20200710013852.GB81727@shbuild999.sh.intel.com>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-In-Reply-To: <20200710013852.GB81727@shbuild999.sh.intel.com>
-To:     Feng Tang <feng.tang@intel.com>
-X-Mailer: iPhone Mail (17F80)
+        Thu, 9 Jul 2020 23:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbgGJD0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:26:17 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADC62065C;
+        Fri, 10 Jul 2020 03:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594351576;
+        bh=7gmNfMi/rLNIENPbSZx/x5H/MTRJkr2euZEuEvVPgUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b9CaNGGMcFwZccyYv5fh7EOp8Y1iQNgL/U5aRlkn/hkKwXR6hDo5OEPj2dUz8ncyL
+         O+yY0glchFxS3hl8voOv6GiuHIQt4DKSyDS5R3GBod4TnXRwZb954mpzTTR3E+Qf69
+         V/qcV/+xeB2c3x7DypQ5D+xqTPX5ktJDR3L5+ypE=
+Date:   Thu, 9 Jul 2020 20:26:16 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
+Message-ID: <20200710032616.GC545837@google.com>
+References: <20200709053027.351974-1-jaegeuk@kernel.org>
+ <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
+ <20200709190545.GA3001066@google.com>
+ <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/10, Chao Yu wrote:
+> On 2020/7/10 3:05, Jaegeuk Kim wrote:
+> > On 07/09, Chao Yu wrote:
+> >> On 2020/7/9 13:30, Jaegeuk Kim wrote:
+> >>> It doesn't need to bypass flushing quota data in background.
+> >>
+> >> The condition is used to flush quota data in batch to avoid random
+> >> small-sized udpate, did you hit any problem here?
+> > 
+> > I suspect this causes fault injection test being stuck by waiting for inode
+> > writeback completion. With this patch, it has been running w/o any issue so far.
+> > I keep an eye on this.
+> 
+> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
+> issue deeper.
+> 
+> How about just keeping this patch in our private branch to let fault injection
+> test not be stuck? until we find the root cause in upstream codes.
 
+Well, I don't think this hides something. When the issue happens, I saw inodes
+being stuck due to writeback while only quota has some dirty data. At that time,
+there was no dirty data page from other inodes.
 
-> On Jul 9, 2020, at 9:38 PM, Feng Tang <feng.tang@intel.com> wrote:
->=20
-> Give it a second thought, my previous way has more indents and lines,
-> but it is easier to be understood that we have special handling for
-> 'write' case. So I would prefer using it.=20
->=20
-> Thoughts?
+More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
+waits for wb_wait_for_completion().
 
-I don=E2=80=99t feel it is easier to understand. I generally prefer to bail o=
-ut early if possible to also make code a bit more solid for future extension=
-s (once the indentation reached 3+ levels, we will need to rework it).
-
-But, I realize that I have spent too much time debugging than actually writi=
-ng code those days, so my taste is probably not all that good. Thus, feel fr=
-ee to submit what style you prefer, so other people have more experience cod=
-ing could review them more.=
+> 
+> Thanks,
+> 
+> > 
+> > Thanks,
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>> ---
+> >>>  fs/f2fs/data.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> >>> index 44645f4f914b6..72e8b50e588c1 100644
+> >>> --- a/fs/f2fs/data.c
+> >>> +++ b/fs/f2fs/data.c
+> >>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
+> >>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+> >>>  		goto skip_write;
+> >>>  
+> >>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
+> >>> +	if (S_ISDIR(inode->i_mode) &&
+> >>>  			wbc->sync_mode == WB_SYNC_NONE &&
+> >>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
+> >>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
+> >>>
+> > .
+> > 
