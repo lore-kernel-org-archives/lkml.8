@@ -2,58 +2,136 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED38DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFF820672
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFEB2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:51:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GATO1WWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGJGu7 (ORCPT
+        id S1727853AbgGJGve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:50:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:42097 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgGJGu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:50:59 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1999E68BEB; Fri, 10 Jul 2020 08:50:55 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 08:50:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, hch@lst.de,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dma-pool: Get rid of dma_in_atomic_pool()
-Message-ID: <20200710065054.GA19416@lst.de>
-References: <20200709161903.26229-1-nsaenzjulienne@suse.de> <20200709161903.26229-3-nsaenzjulienne@suse.de> <alpine.DEB.2.23.453.2007091449540.972523@chino.kir.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.23.453.2007091449540.972523@chino.kir.corp.google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Fri, 10 Jul 2020 02:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJGvd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:51:33 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B511BC08C5CE;
+        Thu,  9 Jul 2020 23:51:33 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so2117887pgf.0;
+        Thu, 09 Jul 2020 23:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=aRcbte67HllyMh/6ETwbp4yTc4PE6dJTpZ82C/YKUPY=;
+        b=GATO1WWYVJXlZLIbU/IfrVtJ8g2rTA/j/KNE2PnLuFrcPoo4qSGk6a6R84CQTJz6X5
+         lhxjqeLd4ii//W3aDE5KKE3aHdlxe8MI5snbT8yFKil0bsQBu1+roed7E8VISlKTCzpU
+         s7sH4LL2XmlVOp0RZ52wzMTyC95KLTgLbh3D6H01E1+UvwgPJ3y669XS3Oc7kzhcGvJs
+         QkJJsENMDhiw5AXslt6rEFMoALS0f5glxfnXXpl6GQv+k6RTP3GuissFXEfYtnMbguDb
+         dhXYwoECBJiayg0dZRjkpYOB0EUfu3wDuA09endprrsZF884FRGnKrGwy3RmDJJx6r9Z
+         VapA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=aRcbte67HllyMh/6ETwbp4yTc4PE6dJTpZ82C/YKUPY=;
+        b=DlfV8mo9/S+5bdHIU0vOPA45sCq5t7RSkWUfV19a0YItLRfjqdPhBfH2nWLhX9lW3Z
+         iQK1C+pq5NuQNPrnxsq3uhIuZ/8VTFa2gEUYf4pOJniQEH/DKpkL0/d/bL2XAo1CrbOW
+         7js6yYSQqNQd3Wc66NQg8jC3zi96FKVG0586mSZz/imGC0zUIvGJ1a3m4AYtcUPD4F+b
+         T+dQChV67OSnTImdPjyV5kiOq3eWp1LinflWKB06anzubsB0yZDcezJjMqz3/KmthtFw
+         kRPk3D8ikAcP3oKMYyoNPNpWu8LJ5xV69DVNyuMCFnqlX6jDAYRE/ZzJ/AcM67lEO2IM
+         CerQ==
+X-Gm-Message-State: AOAM532TwEfJ+mscDwNdSB1DMqCpzwJUqk1yvzREQd1TTpK1hCx6sIVc
+        ZdFUI7N8M2HLz56HcsN1+AU=
+X-Google-Smtp-Source: ABdhPJzrwJm9DDCFDBnHxszZ8U5EoHgrwcdfMEkjEfYHwCs0UFauOr6/vhv6f82txMbpH1fic+XsAQ==
+X-Received: by 2002:a63:9d45:: with SMTP id i66mr58396630pgd.25.1594363893201;
+        Thu, 09 Jul 2020 23:51:33 -0700 (PDT)
+Received: from intel-CCE-SH.Home (x-plane.vip. [104.238.153.221])
+        by smtp.googlemail.com with ESMTPSA id 137sm4688648pgg.72.2020.07.09.23.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 23:51:32 -0700 (PDT)
+From:   Wei Shuai <cpuwolf@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     cpuwolf@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Borislav Petkov <bp@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
+        Mark Gross <mgross@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Erwan Velu <e.velu@criteo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...)
+Subject: [PATCH] break joystick limitation of maximum 80 buttons
+Date:   Fri, 10 Jul 2020 14:51:10 +0800
+Message-Id: <20200710065112.18286-1-cpuwolf@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cpuwolf@gmail.com>
+References: <cpuwolf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 02:51:13PM -0700, David Rientjes wrote:
-> On Thu, 9 Jul 2020, Nicolas Saenz Julienne wrote:
-> 
-> > The function is only used once and can be simplified to a one-liner.
-> > 
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> I'll leave this one to Christoph to decide on.  One thing I really liked 
-> about hacking around in kernel/dma is the coding style, it really follows 
-> "one function does one thing and does it well" even if there is only one 
-> caller.  dma_in_atomic_pool() was an attempt to follow in those footsteps.
+The 80 limitation comes from
 
-While I like the helper aswell, I don't see how it could work nicely
-with the changes in patch 4.
+include/uapi/linux/input-event-codes.h
+
+according to function hidinput_configure_usage() in file drivers/hid/hid-input.c
+
+the joystick button mapping is not a continues space
+generally speaking, the mapping space is from
+
+1. BTN_JOYSTICK~BTN_DEAD
+2. BTN_TRIGGER_HAPPY~KEY_MAX
+
+and
+
+Finally I got the max limitation is 80.
+
+Signed-off-by: Wei Shuai <cpuwolf@gmail.com>
+---
+ include/linux/mod_devicetable.h        | 2 +-
+ include/uapi/linux/input-event-codes.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 8d764aab29de..35eb59ae1f19 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -311,7 +311,7 @@ struct pcmcia_device_id {
+ /* Input */
+ #define INPUT_DEVICE_ID_EV_MAX		0x1f
+ #define INPUT_DEVICE_ID_KEY_MIN_INTERESTING	0x71
+-#define INPUT_DEVICE_ID_KEY_MAX		0x2ff
++#define INPUT_DEVICE_ID_KEY_MAX		0x4ff
+ #define INPUT_DEVICE_ID_REL_MAX		0x0f
+ #define INPUT_DEVICE_ID_ABS_MAX		0x3f
+ #define INPUT_DEVICE_ID_MSC_MAX		0x07
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index b6a835d37826..ad1b9bed3828 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -774,7 +774,7 @@
+ 
+ /* We avoid low common keys in module aliases so they don't get huge. */
+ #define KEY_MIN_INTERESTING	KEY_MUTE
+-#define KEY_MAX			0x2ff
++#define KEY_MAX			0x4ff
+ #define KEY_CNT			(KEY_MAX+1)
+ 
+ /*
+-- 
+2.17.1
+
