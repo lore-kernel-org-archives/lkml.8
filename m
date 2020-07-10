@@ -2,125 +2,178 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4620C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC00BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9C32075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98CE207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkPnN2eU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgGJSa6 (ORCPT
+        id S1728089AbgGJSbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:30:58 -0400
-Received: from outboundhk.mxmail.xiaomi.com ([207.226.244.123]:53391 "EHLO
-        xiaomi.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726872AbgGJSa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:30:58 -0400
-Received: from CNBOX13.mioffice.cn (10.237.8.153) by hkbox2.mioffice.cn
- (10.56.8.142) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
- 2020 19:28:14 +0800
-Received: from CNBOX07.mioffice.cn (10.237.8.127) by cnbox13.mioffice.cn
- (10.237.8.153) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
- 2020 19:28:13 +0800
-Received: from CNBOX07.mioffice.cn ([10.237.8.127]) by CNBOX07.mioffice.cn
- ([10.237.8.127]) with mapi id 15.00.1497.006; Fri, 10 Jul 2020 19:28:13 +0800
-From:   =?gb2312?B?RmVpMSBKaWFuZyC9r7fJ?= <jiangfei1@xiaomi.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Qiwu Huang <yanziily@gmail.com>
-CC:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?gb2312?B?u8bG5M7k?= <huangqiwu@xiaomi.com>
-Subject: =?gb2312?B?tPC4tDogW0V4dGVybmFsIE1haWxdUmU6IFtQQVRDSCAyLzVdIHBvd2VyOiBz?=
- =?gb2312?B?dXBwbHk6IGNvcmU6IGFkZCB3aXJlbGVzcyBjaGFyZ2VyIGFkYXB0ZXIgdHlw?=
- =?gb2312?Q?e_property?=
-Thread-Topic: [External Mail]Re: [PATCH 2/5] power: supply: core: add wireless
- charger adapter type property
-Thread-Index: AQHWVqD0zsJp6UOKY0iRxmhQr3LJaKkAq+mt
-Date:   Fri, 10 Jul 2020 11:28:13 +0000
-Message-ID: <1594380492771.51916@xiaomi.com>
-References: <20200710084841.1933254-1-yanziily@gmail.com>
- <20200710084841.1933254-2-yanziily@gmail.com>,<20200710100037.GB1197607@kroah.com>
-In-Reply-To: <20200710100037.GB1197607@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.237.8.11]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 10 Jul 2020 14:31:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36793 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726872AbgGJSbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:31:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594405879;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lRqWXRqtM1jmKDk24CkRG8osdjmpDaMTznOjUGxYXsQ=;
+        b=GkPnN2eUi56blBhzItpMEkXbHIfvI5GIbzKnCSdOVA6ChXCwjjsl/RsSB5vXjRCQwbQWD7
+        jZBwjO7lH0MGFoVg28748OfizdBJrrlXisAGrzr+jHLElPI/5TndBats7Ab/jM4/52+zik
+        TD1Q122kgZKhJoA02zYPKatBShHGhFw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-Dpe36TqMP-esFQn4fKd4GA-1; Fri, 10 Jul 2020 14:31:16 -0400
+X-MC-Unique: Dpe36TqMP-esFQn4fKd4GA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA03518FF661;
+        Fri, 10 Jul 2020 18:31:14 +0000 (UTC)
+Received: from redhat.com (ovpn-112-73.rdu2.redhat.com [10.10.112.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6457D5C6DD;
+        Fri, 10 Jul 2020 18:31:10 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 14:31:08 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, Shuah Khan <shuah@kernel.org>,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/livepatch: adopt to newer sysctl error format
+Message-ID: <20200710183108.GA17581@redhat.com>
+References: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
+ <20200710152735.GA20226@alley>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710152735.GA20226@alley>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3JlZywNCg0KT3VyIG5ldyBzaXggcG93ZXIgc3VwcGx5IHByb3BlcnRpZXMgIHJldHVybiB2
-YWx1ZXMgYXJlIGFsbCBpbnRlZ2VyLCBzbyBwbGVhc2UNCg0KYWRkIHRoZW0gYWJvdmUgIlByb3Bl
-cnRpZXMgb2YgdHlwZSBgY29uc3QgY2hhciIgY29tbWVudA0KeHh4DQouLi4NCi8qIFByb3BlcnRp
-ZXMgb2YgdHlwZSBgY29uc3QgY2hhciAqJyAqLw0KDQoNClRoYW5rcyENCg0KQiZSDQpGZWkgSmlh
-bmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogR3Jl
-ZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQq3osvNyrG85DogMjAyMMTqN9TCMTDI
-1SAxODowMA0KytW8/sjLOiBRaXd1IEh1YW5nDQqzrcvNOiBzcmVAa2VybmVsLm9yZzsgbGludXgt
-cG1Admdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBGZWkxIEpp
-YW5nIL2vt8k7ILvGxuTO5A0K1vfM4jogW0V4dGVybmFsIE1haWxdUmU6IFtQQVRDSCAyLzVdIHBv
-d2VyOiBzdXBwbHk6IGNvcmU6IGFkZCB3aXJlbGVzcyBjaGFyZ2VyIGFkYXB0ZXIgdHlwZSBwcm9w
-ZXJ0eQ0KDQpPbiBGcmksIEp1bCAxMCwgMjAyMCBhdCAwNDo0ODozOFBNICswODAwLCBRaXd1IEh1
-YW5nIHdyb3RlOg0KPiBGcm9tOiBRaXd1IEh1YW5nIDxodWFuZ3Fpd3VAeGlhb21pLmNvbT4NCj4N
-Cj4gUmVwb3J0cyB3aGF0IHR5cGUgb2Ygd2lyZWxlc3MgYWRhcHRlciBjb25uZWN0aW9uIGlzDQo+
-IGN1cnJlbnRseSBhY3RpdmUgZm9ydGhlIHN1cHBseS4NCj4gZm9yIGV4YW1wbGUgaXQgY2FuIHNo
-b3cgaWYgQURBUFRFUl9QRCBjYXBhYmxlIHNvdXJjZSBpcyBhdHRhY2hlZC4NCj4NCj4gU2lnbmVk
-LW9mZi1ieTogUWl3dSBIdWFuZyA8aHVhbmdxaXd1QHhpYW9taS5jb20+DQo+IC0tLQ0KPiAgRG9j
-dW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1wb3dlciB8IDEzICsrKysrKysrKysr
-KysNCj4gIGRyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9zeXNmcy5jICAgfCAgMSAr
-DQo+ICBpbmNsdWRlL2xpbnV4L3Bvd2VyX3N1cHBseS5oICAgICAgICAgICAgICAgIHwgIDEgKw0K
-PiAgMyBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspDQo+DQo+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNsYXNzLXBvd2VyIGIvRG9jdW1lbnRhdGlv
-bi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1wb3dlcg0KPiBpbmRleCAwZDlkNmI0NmUyMzkuLjIw
-OTljZjE5NGE4OSAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNm
-cy1jbGFzcy1wb3dlcg0KPiArKysgYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNs
-YXNzLXBvd2VyDQo+IEBAIC03MTgsMyArNzE4LDE2IEBAIENvbnRhY3Q6IEZlaSBKaWFuZyA8amlh
-bmdmZWkxQHhpYW9taS5jb20+DQo+ICAgICAgICAgICAgICAgQWNjZXNzOiBSZWFkLU9ubHkNCj4g
-ICAgICAgICAgICAgICBWYWxpZCB2YWx1ZXM6ICJRVUlDS19DSEFSR0VfTk9STUFMIiwgIlFVSUNL
-X0NIQVJHRV9GQVNUIiwgIlFVSUNLX0NIQVJHRV9GTEFTSCIsDQo+ICAgICAgICAgICAgICAgIlFV
-SUNLX0NIQVJHRV9UVVJCRSIsICJRVUlDS19DSEFSR0VfU1VQRVIiLg0KPiArDQo+ICs9PT09PSBX
-aXJlbGVzcyBDaGFyZ2VyIFByb3BlcnRpZXMgPT09PT0NCj4gK1doYXQ6ICAgICAgICAgICAgICAg
-IC9zeXMvY2xhc3MvcG93ZXJfc3VwcGx5LzxzdXBwbHlfbmFtZT4vdHhfYWRhcHRlcg0KPiArRGF0
-ZTogICAgICAgICAgICAgICAgSnVsIDIwMjANCj4gK0NvbnRhY3Q6ICAgICBGZWkgSmlhbmcgPGpp
-YW5nZmVpMUB4aWFvbWkuY29tPg0KPiArRGVzY3JpcHRpb246DQo+ICsgICAgICAgICAgICAgUmVw
-b3J0cyB3aGF0IHR5cGUgb2Ygd2lyZWxlc3MgYWRhcHRlciBjb25uZWN0aW9uIGlzIGN1cnJlbnRs
-eSBhY3RpdmUgZm9yDQo+ICsgICAgICAgICAgICAgdGhlIHN1cHBseSwgZm9yIGV4YW1wbGUgaXQg
-Y2FuIHNob3cgaWYgQURBUFRFUl9QRCBjYXBhYmxlIHNvdXJjZQ0KPiArICAgICAgICAgICAgIGlz
-IGF0dGFjaGVkLg0KPiArDQo+ICsgICAgICAgICAgICAgQWNjZXNzOiBSZWFkLU9ubHkNCj4gKyAg
-ICAgICAgICAgICBWYWxpZCB2YWx1ZXM6ICJBREFQVEVSX05PTkUiLCAiQURBUFRFUl9TRFAiLCAi
-QURBUFRFUl9EQ1AiLCAiQURBUFRFUl9DRFAiLA0KPiArICAgICAgICAgICAgICJBREFQVEVSX1FD
-MiIsICJBREFQVEVSX1FDMyIsICJBREFQVEVSX1BEIiBvciBvdGhlciBwcml2YXRlIGFkYXB0ZXIu
-DQoNCldoeSBhcmUgdGhlc2Ugc3RyaW5ncyBub3QgaW4gdGhlIHBhdGNoIGFzIHdlbGw/DQoNCj4g
-XCBObyBuZXdsaW5lIGF0IGVuZCBvZiBmaWxlDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2Vy
-L3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYyBiL2RyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2Vy
-X3N1cHBseV9zeXNmcy5jDQo+IGluZGV4IGY5NTU3NGM0MTg5OC4uYzg2NGExNDgyOWVjIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYw0KPiAr
-KysgYi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYw0KPiBAQCAtMjA3
-LDYgKzIwNyw3IEBAIHN0YXRpYyBzdHJ1Y3QgcG93ZXJfc3VwcGx5X2F0dHIgcG93ZXJfc3VwcGx5
-X2F0dHJzW10gPSB7DQo+ICAgICAgIFBPV0VSX1NVUFBMWV9BVFRSKE1BTlVGQUNUVVJFUiksDQo+
-ICAgICAgIFBPV0VSX1NVUFBMWV9BVFRSKFNFUklBTF9OVU1CRVIpLA0KPiAgICAgICBQT1dFUl9T
-VVBQTFlfQVRUUihxdWlja19jaGFyZ2VfdHlwZSksDQo+ICsgICAgIFBPV0VSX1NVUFBMWV9BVFRS
-KHR4X2FkYXB0ZXIpLA0KDQp1cHBlciBjYXNlPw0KDQp0aGFua3MsDQoNCmdyZWcgay1oDQojLyoq
-KioqKrG+08q8/rywxuS4vbz+uqzT0NChw9e5q8u+tcSxo8Pc0MXPoqOsvfbP3tPat6LLzbj4yc/D
-5rXY1rfW0MHQs/a1xLj2yMu78si61+mho7371rnIzrrOxuTL+8jL0tTIzrrO0M7Kvcq508OjqLD8
-wKi1q7K7z97T2sirsr+78rK/t9a12NC5wrahori01sahorvyyaK3oqOpsb7Tyrz+1tC1xNDFz6Kh
-o8jnufvE+rTtytXBy7G+08q8/qOsx+vE+sGivLS157uwu/LTyrz+zajWqreivP7Iy7Kiyb6z/bG+
-08q8/qOhIFRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29udGFpbiBjb25maWRlbnRp
-YWwgaW5mb3JtYXRpb24gZnJvbSBYSUFPTUksIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRo
-ZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNl
-IG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3YXkgKGluY2x1ZGlu
-ZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1cmUsIHJlcHJv
-ZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRl
-bmRlZCByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1h
-aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBwaG9uZSBvciBlbWFpbCBp
-bW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0ISoqKioqKi8jDQo=
+On Fri, Jul 10, 2020 at 05:27:35PM +0200, Petr Mladek wrote:
+> On Fri 2020-07-10 10:40:43, Kamalesh Babulal wrote:
+> > With procfs v3.3.16, the sysctl command doesn't prints the set key and
+> > value on error.  This change breaks livepatch selftest test-ftrace.sh,
+> > that tests the interaction of sysctl ftrace_enabled:
+> > 
+
+Good catch, it looks like it was this procps commit that modified that
+behavior:
+
+  commit da82fe49b1476d227874905068adb69577e11d96
+  Author: Patrick Steinhardt <ps@pks.im>
+  Date:   Tue May 29 13:29:03 2018 +0200
+  
+      sysctl: do not report set key in case `close_stream` fails
+      
+      As we're using buffered I/O when writing kernel parameters, write errors
+      may get delayed until we close the `FILE` stream. As we are currently
+      outputting the key that is to be set disregarding the return value of
+      `close_stream`, we may end up in a situation where we report error and
+      success:
+      
+          $ sysctl kernel.printk_ratelimit=100000000000000
+          sysctl: setting key "kernel.printk_ratelimit": error code 22
+          kernel.printk_ratelimit = 100000000000000
+      
+      Fix the issue by only outputting the updated value in case
+      `close_stream` does not report an error.
+      
+      Signed-off-by: Patrick Steinhardt <ps@pks.im>
+
+And I'd agree that echoing the failed new value was confusing to see
+from a user's perspective.
+
+> >  # selftests: livepatch: test-ftrace.sh
+> >  # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
+> >  #
+> >  # --- expected
+> >  # +++ result
+> >  # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
+> >  #  livepatch: 'test_klp_livepatch': starting patching transition
+> >  #  livepatch: 'test_klp_livepatch': completing patching transition
+> >  #  livepatch: 'test_klp_livepatch': patching complete
+> >  # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
+> >     resource busy kernel.ftrace_enabled = 0
+> >  # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
+> >     resource busy
+> >  #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
+> >  #  livepatch: 'test_klp_livepatch': initializing unpatching transition
+> >  #  livepatch: 'test_klp_livepatch': starting unpatching transition
+> >  #
+> >  # ERROR: livepatch kselftest(s) failed
+> > 
+> > on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
+> > set key and value is displayed.
+> > 
+> > This patch fixes it by limiting the output from both the cases to eight
+> > words, that includes the error message or set key and value on failure
+> > and success. The upper bound of eight words is enough to display the
+> > only tracked error message. Also, adjust the check_result string in
+> > test-ftrace.sh to match the expected output.
+> 
+> This looks really tricky.
+> 
+> I wonder if we could use "sysctl -q" to refuse printing the value
+> even with older versions. The following patch works here with
+> sysctl 3.3.15:
+> 
+
+FWIW, --quiet was added to procps way back in 2004, so it should be safe
+to use... and there's already a bunch of net selftests using it.
+
+> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+> index 2aab9791791d..47aa4c762bb4 100644
+> --- a/tools/testing/selftests/livepatch/functions.sh
+> +++ b/tools/testing/selftests/livepatch/functions.sh
+> @@ -64,7 +64,8 @@ function set_dynamic_debug() {
+>  }
+>  
+>  function set_ftrace_enabled() {
+> -	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
+> +	result=$(sysctl -q kernel.ftrace_enabled="$1" 2>&1 && \
+> +		 sysctl kernel.ftrace_enabled 2>&1)
+>  	echo "livepatch: $result" > /dev/kmsg
+>  }
+>  
+> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+> index e2a76887f40a..aa967c5d0558 100755
+> --- a/tools/testing/selftests/livepatch/test-ftrace.sh
+> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+> @@ -53,7 +53,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
+>  livepatch: '$MOD_LIVEPATCH': starting patching transition
+>  livepatch: '$MOD_LIVEPATCH': completing patching transition
+>  livepatch: '$MOD_LIVEPATCH': patching complete
+> -livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
+> +livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
+>  % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
+>  livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
+>  livepatch: '$MOD_LIVEPATCH': starting unpatching transition
+> 
+> 
+
+I think this method is less fragile than word count / cutting and we get
+to drop that strange 'paste' invocation (I had to look that up in the
+mapages to remember why we used it).
+
+Regards,
+
+-- Joe
+
