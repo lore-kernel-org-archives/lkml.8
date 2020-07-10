@@ -2,85 +2,85 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA602C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6436EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA954207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A772207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgGJIxB (ORCPT
+        id S1727772AbgGJIxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:53:01 -0400
-Received: from mga01.intel.com ([192.55.52.88]:6065 "EHLO mga01.intel.com"
+        Fri, 10 Jul 2020 04:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgGJIxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:53:01 -0400
-IronPort-SDR: l9fjHArwszqsaGn3r9+wIPdu85PhiqRIGY4VE9BJHjU1s2kp2McgB/dZHAfGasNRvzNH743Oj6
- gu/p8t+QQ4Aw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="166261589"
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="166261589"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 01:53:00 -0700
-IronPort-SDR: 4aHkhL0w0yOuCrWxuFpni5YCq9aksJvJK62MuowlK8S8jL8LTaItN+0eIApHptMMJXbflEoguA
- W/AH5SXeMSJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="298361965"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2020 01:52:57 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtomA-0011SQ-4A; Fri, 10 Jul 2020 11:52:58 +0300
-Date:   Fri, 10 Jul 2020 11:52:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200710085258.GG3703480@smile.fi.intel.com>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
- <20200710085123.GF3703480@smile.fi.intel.com>
+        id S1726615AbgGJIxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 04:53:34 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EA0207BC;
+        Fri, 10 Jul 2020 08:53:29 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 09:53:27 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [RESEND PATCH v5 3/6] arm64: Add tlbi_user_level TLB
+ invalidation helper
+Message-ID: <20200710085326.GA11839@gaia>
+References: <20200625080314.230-1-yezhenyu2@huawei.com>
+ <20200625080314.230-4-yezhenyu2@huawei.com>
+ <20200709164845.GB6579@gaia>
+ <33a5dc75-8209-e198-bb41-8b4ab82c000e@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710085123.GF3703480@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <33a5dc75-8209-e198-bb41-8b4ab82c000e@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:51:23AM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 01:45:47AM +0300, Serge Semin wrote:
-> > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> > have non-uniform DMA capabilities per device channels, let's add
-> > the DW DMA specific device_caps callback to expose that specifics up to
-> > the DMA consumer. It's a dummy function for now. We'll fill it in with
-> > capabilities overrides in the next commits.
+On Fri, Jul 10, 2020 at 09:20:59AM +0800, Zhenyu Ye wrote:
+> On 2020/7/10 0:48, Catalin Marinas wrote:
+> > On Thu, Jun 25, 2020 at 04:03:11PM +0800, Zhenyu Ye wrote:
+> >> @@ -189,8 +195,9 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+> >>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+> >>  
+> >>  	dsb(ishst);
+> >> -	__tlbi(vale1is, addr);
+> >> -	__tlbi_user(vale1is, addr);
+> >> +	/* This function is only called on a small page */
+> >> +	__tlbi_level(vale1is, addr, 3);
+> >> +	__tlbi_user_level(vale1is, addr, 3);
+> >>  }
+> > 
+> > Actually, that's incorrect. It was ok in v2 of your patches when I
+> > suggested to drop level 0, just leave the function unchanged but I
+> > missed that you updated it to pass level 3.
+> > 
+> > pmdp_set_access_flags -> ptep_set_access_flags ->
+> > flush_tlb_fix_spurious_fault -> flush_tlb_page -> flush_tlb_page_nosync.
 > 
-> Just a reminder (mainly to Vinod) of my view to this.
-> Unneeded churn, should be folded to patch 9.
+> How do you want to fix this error? I notice that this series have been applied
+> to arm64 (for-next/tlbi).  Should I send a new series based on arm64 (for-next/tlbi)?
 
-Sorry, s/9/10/ (also the sign that they should be in one, rather than spread
-over the series).
+Just a patch on top with a Fixes: tag.
+
+Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Catalin
