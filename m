@@ -2,136 +2,110 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED46C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B929B20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C372076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594361300;
-	bh=0oFpgD9D9qzya4+Km3ZH6Km/e2tBwdXbf0TuXwfXHxQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Bcp1tzryDjngHGLrWOqRJeRlwyvkh5n9dDe1+I/koWMuDuKWtKHDYqsnebvrHJYIL
-	 cbFUkumZos2h+3U58aNKn82ujzfOP6s35H+liVAFJm9S2ad3tAaCe+7l7qBOIiBNrZ
-	 fcn7L5cOYFuEV+QFDHTtgzf7FqFGBhURLGL05rIU=
+	s=default; t=1594361310;
+	bh=blnFmOCbcj7GlYVM5qLLg3maWpJyP/hMJGZDDez7ibI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X121S2Y3uvX41jVRgbjHd/cZ0nP/rz6Uwso2dIcXSfvJ58sloj5wBQ6gp8zRiGHAt
+	 ooICiAPTiKJO2LnucpAsHpZFce9fNk/ijsjuNIHjU4G4BEWNNwivL0FhcYezTT1bNr
+	 mZnDahtr1r7znVS85wbJ+blNNGuXgOIkYAoFzB2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGJGIT (ORCPT
+        id S1727785AbgGJGI2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJGIQ (ORCPT
+        Fri, 10 Jul 2020 02:08:28 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:42725 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJGI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:08:16 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81421C08C5CE;
-        Thu,  9 Jul 2020 23:08:16 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so5086973ljv.5;
-        Thu, 09 Jul 2020 23:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
-        b=Kz6CctuCGvLTKE/zff1VDJnM5l9JFbToUmtSnV+Ak0hGdyS8MkDYxYaf50tYG6xVwl
-         EhkoKRTzCKFutu5+uMot2oIkrXduH11LSNmTVZYoAZykJjqsMfKguC11TRqXwaoJqmIN
-         VXUQgtsd0uNhcDtpKRPXKPRpoE6mLoXwo9o29f4sJmJMxiyDBaGOQTCWjFTQKE7i0LL5
-         P+rCf8rg3fnKgRPuqTs+QdhbUEBARbhEFbwwn0RGyRbh6rM7AMo8kP6sI8UADZStU2d7
-         BgZSOs9pGkV+wabPGNT3aqtt6bpLDIZKWy3upYwC5A7Vz+PbZBXCL84Jb7NrhkPU841h
-         ZIPg==
+        Fri, 10 Jul 2020 02:08:27 -0400
+Received: by mail-ej1-f68.google.com with SMTP id f12so4762562eja.9;
+        Thu, 09 Jul 2020 23:08:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
-        b=KKoar2uwI4QtQIUwxNCEMS/TnhnimOpaZM7xHoSs/duO3qyR7r48M6RtrKKf8X2ihs
-         KR2HhwLPw+/h4ZCniOWl91r5AdQbYL3fnZUH5wdMTZoiCTRNe7fp4HtT2HlbQlM9EpD7
-         THqISFE2nhKB6SgZogBFtPoegf75bCJlmhvmH5usKkE8k69M1toYXb7HtOtuGFL6SYzh
-         8q3lkJ1BMVBb2Z3ybFKzJMLKHw7AEM3kzPUyrQEAhbMYBUXRszgBFkq1nm5Nj+y1A0BJ
-         9TmeDGkZSkocp9LQGNmCgkcw342aoFbypNEUJvmzAD3wxgXv8+FWtirsN0RF0wK7nTcN
-         nCNw==
-X-Gm-Message-State: AOAM530YE6ChIdfH9XdkmhQ9vxYGaSRj+0HnHei+MpC2OZH6SRxymiKL
-        yW4QMw54FKZlrIAvnvSCobg=
-X-Google-Smtp-Source: ABdhPJxGGMmuPkrDz1atQLdBX2QRyj5KbJAuPHduR2muUCVw+/VATbS8wijHIodTpTMmPpG0A/ezCg==
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr29940355ljc.124.1594361294942;
-        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id s8sm1545691ljh.74.2020.07.09.23.08.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Ramuthevar\,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, robh@kernel.org,
-        p.zabel@pengutronix.de
-Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-In-Reply-To: <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com> <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Date:   Fri, 10 Jul 2020 09:08:09 +0300
-Message-ID: <87blknrjg6.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sZWbg5n4QuCPXZ3uCh/ygFqQbxWrFH3XWXvFripTxS8=;
+        b=KWmu6k0Ex4bXaHzUlouaUdzaRdqW9yI9AW3cUjQeNuRGsM2LLE0MBdXQOYzpDlS6YC
+         50MkrG+EWjW9RZgYlUa2SIMsnMm5alq2Mob3beWEpMlUZ2SiZxH9SuI+8iEdajKmF/pa
+         HA5GHpC6UN6s0rLla+og9aDHE731g0jA000PYcksHvVrUHhibKzDL/r9PwiIzOxSZ7AF
+         QaGnQWAktrzFfGgbMlATsT5RTsbqSdulk1wwu6dT64LpUz3woRPKENijBZFJkg3M89FO
+         rR5xabhLq4AAx0m5qlzP5odNCvJJT3XoiWGJNo8QSC+XqG+T/lnaIMEYih2I7LR1pZbd
+         lc6g==
+X-Gm-Message-State: AOAM531ZlKxnbFDfxwhAkiAJ9ulXxyPC2wyNCrto/Lw0lmGRihM+XThf
+        NFd/OrNbaRWaZG/MUlmYyZOlQocyTikt0Uf6FCI=
+X-Google-Smtp-Source: ABdhPJxdUrgp68rxovcdZIrJ5SI2MVqjC9OM5no2eX8hPvILncnfI9RiixNPMhVNOwVR+yxcWDbMzdf9vSFJ56vaUJU=
+X-Received: by 2002:a17:906:284e:: with SMTP id s14mr58791027ejc.498.1594361305183;
+ Thu, 09 Jul 2020 23:08:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <250d35cb489c3c4c066f7ce256d27f36712a1979.1591618255.git.baolin.wang7@gmail.com>
+In-Reply-To: <250d35cb489c3c4c066f7ce256d27f36712a1979.1591618255.git.baolin.wang7@gmail.com>
+From:   Barry Song <baohua@kernel.org>
+Date:   Fri, 10 Jul 2020 18:08:14 +1200
+Message-ID: <CAGsJ_4y25psj9vAyjstFQiGwAd_TfTdyeNt41YbXfphOXoFVig@mail.gmail.com>
+Subject: Re: [PATCH] hwspinlock: sirf: Remove the redundant 'of_match_ptr'
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, bjorn.andersson@linaro.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> writes:
-
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
-.com>
+Baolin Wang <baolin.wang7@gmail.com> 于2020年6月9日周二 上午12:22写道：
 >
-> Add support for USB PHY on Intel LGM SoC.
+> Remove the the redundant 'of_match_ptr' macro to fix below warning
+> when the CONFIG_OF is not selected.
 >
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
-nux.intel.com>
+> All warnings:
+> drivers/hwspinlock/sirf_hwspinlock.c:87:34: warning: unused variable
+> 'sirf_hwpinlock_ids' [-Wunused-const-variable]
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 > ---
->  drivers/usb/phy/Kconfig       |  11 ++
->  drivers/usb/phy/Makefile      |   1 +
->  drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++=
-++++++
+>  drivers/hwspinlock/sirf_hwspinlock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
+> index 823d3c4f621e..a3f77120bad7 100644
+> --- a/drivers/hwspinlock/sirf_hwspinlock.c
+> +++ b/drivers/hwspinlock/sirf_hwspinlock.c
+> @@ -94,7 +94,7 @@ static struct platform_driver sirf_hwspinlock_driver = {
+>         .probe = sirf_hwspinlock_probe,
+>         .driver = {
+>                 .name = "atlas7_hwspinlock",
+> -               .of_match_table = of_match_ptr(sirf_hwpinlock_ids),
+> +               .of_match_table = sirf_hwpinlock_ids,
 
-new phy drivers should use drivers/phy instead.
+is it better to do?
 
-=2D-=20
-balbi
+#ifdef CONFIG_OF
+static const struct of_device_id sirf_hwpinlock_ids[] = {
+        { .compatible = "sirf,hwspinlock", },
+        {},
+};
+MODULE_DEVICE_TABLE(of, sirf_hwpinlock_ids);
+#endif
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>         },
+>  };
+>
+> --
+> 2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8IBckACgkQzL64meEa
-mQYZ6BAAu5MqDG/JYVcpiey75QpGHGvsHZBZTk7WOeelxqLVV3w2Nt2hv3678T0Q
-MZE47NTCyKryH6pNph9WdUxTdPLWqIAnUNXEZYbyGJypSesojI+MDvOH/lNFLzn0
-aJsg8mngVJoQeOe7vY694PvQYgpf2NlTiw8pqPRUkhaDRKTSyEZ03e0RQnsJx+I4
-Rf3cKvvfhRY5o1PFa1XIZt8hBJ/6HbYBfXObxwdr3tNV8hjSArKzh8AnT017VGHq
-THQPa1pxGRsyTthgUAT03sqiDIbeEmNdvjhST5OcfrH00kLztJflLO35c8TWiZGQ
-P3vcM/jFBKYMSt6vkRWiejslL/wxFi+hDaNM3jYSGRXeblqfhP9wuTCXlymVJ3Oq
-9sga4yDpXvDF4w89IVyOMyheXEM+L3TRcs+3EzLXnbOWzeJroyIPPvcDPzhg0X9J
-VQp+ZirKFKJDBj2420O+a17l76m0q5Gru1qEDfmBiktYRw527RQkH+zU6Viv3PR5
-H/cXhIEjQt2mofRiVfMyvOC37r2Fv0ucfHCAWRr1LHKsRLt6PyWztOqWZ6vuPlma
-Nl5qRGSo7OHDYmETGiolEYqE09zv5zzCJT3D3eVf5nMyn2VoDSyEWH705Xq3XOSj
-IyWcMERI9OthanyVYWeRG0lChTC1XAUHUltZ3TCvewjwAlK6b0A=
-=i/Uk
------END PGP SIGNATURE-----
---=-=-=--
+Thanks
+barry
