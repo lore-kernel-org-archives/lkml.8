@@ -2,144 +2,217 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A466C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F858C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8ED2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C902077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF3AbrPJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+4os/xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgGJHPi (ORCPT
+        id S1726965AbgGJHQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:15:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59033 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725966AbgGJHPg (ORCPT
+        Fri, 10 Jul 2020 03:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgGJHQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:15:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594365333;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JBLK5CBk2nZNnzlnXGDcyKLYPLiIIdnLjccWhrFJFtQ=;
-        b=dF3AbrPJCs+eAxYnsNg4mYA56rUTiQWWiF1M7/5Q24PEvueBejr1mp7jASoGoZNOuhma+r
-        Hd6f9QVU/u56iwONR2HPdiWYqGoal2nh70Zn2R6K+sCSb/484a6QRav1V+FgaDEF503doE
-        jKsY2VSYrWMTKmxQ0WK3sCI06Fphzpg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-SptwtkxbNRKEHy_p2C8BYA-1; Fri, 10 Jul 2020 03:15:31 -0400
-X-MC-Unique: SptwtkxbNRKEHy_p2C8BYA-1
-Received: by mail-wm1-f69.google.com with SMTP id y204so5575671wmd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 00:15:31 -0700 (PDT)
+        Fri, 10 Jul 2020 03:16:09 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E0BC08C5CE;
+        Fri, 10 Jul 2020 00:16:09 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 12so4044880oir.4;
+        Fri, 10 Jul 2020 00:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=04fvwvp36XWQGO6WnlynMTR2NxVi2WuyRxfDLjiMyIA=;
+        b=B+4os/xlBuPxbO8zrez1X+udsD+5089fUms0mHlrwKomYV4CJRmN3pE+4vXK019egg
+         YeUVoMVd8bOsCZQ4hEw7/pLbTEB/dO9qodmT7iPcm+KMqkk7YhrXBEktbc6FeT4IdpHP
+         1ufqjBZptj6qoJ8WojKwovjRnyaeAvYcLBPZIND3uw7TDHQTZG3VixrV6Szii71tWGoL
+         evoohqDUgTC9rajjt/8g4jPd7TsBD9iToencWeFh3D8jg7QpkWdj3636ClhNmcVtKfLn
+         xM1olSrBFB8tn+wj6DH9wi81gTx0+wtqfvGyIrQwQ75IAe6RtLjs7WXjsR9SdYY86aYa
+         cDmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JBLK5CBk2nZNnzlnXGDcyKLYPLiIIdnLjccWhrFJFtQ=;
-        b=FYoESRDkYosgAzZj92rX87IO86igSPbQErKZ0aD+ev/C267WZB8GFlf7v3Jqvc+WVd
-         q8qHh0qHd/H9x97327sH8Ndwo3PezdOT99DrvNbc5T/eDQVJ+uQ4JdIynshbo+AVDfdw
-         8G3iMvTq0LYRu/zdyIvL1FTVbRC0UNWRKto+HXgMjQdeIavzg7ygVr+nUfuRQVie/QK5
-         YO92lLhauIex1rpWCbH5V6sNGUyrcANblM8DoW/X6u0ZAdnHTeElXZMKiwTisKihRv+R
-         hDqBI7N2oelTnXphroaztmPbA1nUn8TeCKkaplATjZrr7yY25D1+Me6BAf5+BT+pmh3K
-         yHMQ==
-X-Gm-Message-State: AOAM531fPuy38OFiwLAo0FASJpR4lqrkVzLVPue/E+M42jhKGnCNbUXv
-        Gi6I1EndkioMCwKJEiXMzSZ0Q2kyPCg/LZh3+3Ir2evg/pInFnnbJAUI8rLyZe3v3kywr/fEDlm
-        ZfrumAA4sAMSiQ51Bd+upazMh
-X-Received: by 2002:a1c:9650:: with SMTP id y77mr3688205wmd.101.1594365330842;
-        Fri, 10 Jul 2020 00:15:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzLkZi5TShL/4z4VHn340jG1ycyGRH/hNP2ypKvwJnucrUd9Azxl5ktb84UOxWF5Uhkivwtrg==
-X-Received: by 2002:a1c:9650:: with SMTP id y77mr3688190wmd.101.1594365330615;
-        Fri, 10 Jul 2020 00:15:30 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id v18sm9533001wrv.49.2020.07.10.00.15.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 00:15:30 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/3] MIPS KVM related clean-ups
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200710063047.154611-1-jiaxun.yang@flygoat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b43cbc19-79d2-756e-b5eb-0a7e16d92e84@redhat.com>
-Date:   Fri, 10 Jul 2020 09:15:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=04fvwvp36XWQGO6WnlynMTR2NxVi2WuyRxfDLjiMyIA=;
+        b=sNj4QQ+Dcab9yq3oRSZE8wATSCnogmS9lj6AKonU2DpdrEHQcnpX65zV6uNQVW9+62
+         tHtNTHZ35lILnJ6bb4XiGomi44xTvXQhRei+4ier22soadHThY7t2h1Ql54ZXQujwNyv
+         O6RZkr8teNyQTUKPPI3HTLqoYWaOQs0KxKk/w1rRVuWj0H6CatYzbR49bNXoNkwXqyIx
+         X04domomcGDJ4+1wK2ELHBo4OYBdAVTuKrxLsLgyCfzgakuWmlGQeKrbiiVJWI3dOds9
+         Dk8LD1/WF29P0l3AoVEebOLrztH4CVdl1G4/0H66K0JxWWz+Lg/A7OTxs7VPiubiGmDb
+         X17Q==
+X-Gm-Message-State: AOAM532lY/NPogMKDW8LpjMVqoY23P1cXg6IMFlQvbJcn+83bnJ0R/55
+        J1fM92plY6uYTlV9E6iTVPXnihmCiPmc0bUDrOq9TpTaLAo=
+X-Google-Smtp-Source: ABdhPJy4ysN01c2WAbVgZG4Cbv0racHKjYXQ7wJJ4yxuYBlZhawNKDB0VNUTWu9CYc68PqYOGxpdtse4MhEzohwE0Q0=
+X-Received: by 2002:aca:4fd3:: with SMTP id d202mr3269407oib.142.1594365368348;
+ Fri, 10 Jul 2020 00:16:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200710063047.154611-1-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200709072814.24218-1-grandmaster@al2klimov.de> <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
+In-Reply-To: <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 10 Jul 2020 08:15:42 +0100
+Message-ID: <CA+V-a8sDzvRoi8pSdrtTQ6VpGLDmw_pqv-5rQH-tfONQuwNhvQ@mail.gmail.com>
+Subject: Re: [PATCH] TI DAVINCI SERIES MEDIA DRIVER: Replace HTTP links with
+ HTTPS ones
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/20 08:30, Jiaxun Yang wrote:
-> Retire some features that never worked in the real world.
-> 
-> Also I wonder if there are any actual user of TE KVM.
-> Will Huacai or Alexsander take care relevant code?
+On Thu, Jul 9, 2020 at 9:43 AM Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
+>
+> Hi Alexander,
+>
+> On 09/07/2020 08:28, Alexander A. Klimov wrote:
+> > Rationale:
+> > Reduces attack surface on kernel devs opening the links for MITM
+> > as HTTPS traffic is much harder to manipulate.
+> >
+> > Deterministic algorithm:
+> > For each file:
+> >   If not .svg:
+> >     For each line:
+> >       If doesn't contain `\bxmlns\b`:
+> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> >         If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+> >             If both the HTTP and HTTPS versions
+> >             return 200 OK and serve the same content:
+> >               Replace HTTP with HTTPS.
+> >
+> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>
+> This non-https link redirects to the https link already with a 301, so
+> the content is expectedly the same.
+>
+> I doubt many people click on these links, as I guess they're usually
+> rendered as text so it depends on the editor, I expect as much as
+> anything it's 'advertising' or confirmation of the copyright notice.
+>
+> But still, I've just clicked on them ... and I think this is a
+> reasonable step.
+>
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>
+> > ---
+> >  Continuing my work started at 93431e0607e5.
+> >  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> >  (Actually letting a shell for loop submit all this stuff for me.)
+> >
+> >  If there are any URLs to be removed completely or at least not HTTPSified:
+> >  Just clearly say so and I'll *undo my change*.
+> >  See also: https://lkml.org/lkml/2020/6/27/64
+> >
+> >  If there are any valid, but yet not changed URLs:
+> >  See: https://lkml.org/lkml/2020/6/26/837
+> >
+> >  If you apply the patch, please let me know.
+> >
+> >
+> >  drivers/media/platform/davinci/vpbe_display.c | 2 +-
+> >  drivers/media/platform/davinci/vpif.c         | 2 +-
+> >  drivers/media/platform/davinci/vpif.h         | 2 +-
+> >  drivers/media/platform/davinci/vpif_display.c | 2 +-
+> >  drivers/media/platform/davinci/vpif_display.h | 2 +-
+> >  include/media/davinci/vpbe_display.h          | 2 +-
+> >  6 files changed, 6 insertions(+), 6 deletions(-)
+> >
+Reviewed-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
 
-Queued patches 2 and 3, thanks.  One is outside my maintenance area.
+Cheers,
+--Prabhakar
 
-Paolo
-
-> Thanks.
-> 
-> Jiaxun Yang (3):
->   MIPS: Retire kvm paravirt
->   MIPS: KVM: Limit Trap-and-Emulate to MIPS32R2 only
->   MIPS: KVM: Remove outdated README
-> 
->  arch/mips/Kbuild.platforms                |   1 -
->  arch/mips/Kconfig                         |  20 +-
->  arch/mips/configs/mips_paravirt_defconfig |  98 ------
->  arch/mips/include/asm/Kbuild              |   1 +
->  arch/mips/include/asm/kvm_para.h          | 115 -------
->  arch/mips/include/uapi/asm/Kbuild         |   2 +
->  arch/mips/include/uapi/asm/kvm_para.h     |   5 -
->  arch/mips/kvm/00README.txt                |  31 --
->  arch/mips/kvm/Kconfig                     |   3 +-
->  arch/mips/paravirt/Kconfig                |   7 -
->  arch/mips/paravirt/Makefile               |  14 -
->  arch/mips/paravirt/Platform               |   7 -
->  arch/mips/paravirt/paravirt-irq.c         | 368 ----------------------
->  arch/mips/paravirt/paravirt-smp.c         | 145 ---------
->  arch/mips/paravirt/serial.c               |  39 ---
->  arch/mips/paravirt/setup.c                |  67 ----
->  arch/mips/pci/Makefile                    |   1 -
->  arch/mips/pci/pci-virtio-guest.c          | 131 --------
->  18 files changed, 6 insertions(+), 1049 deletions(-)
->  delete mode 100644 arch/mips/configs/mips_paravirt_defconfig
->  delete mode 100644 arch/mips/include/asm/kvm_para.h
->  delete mode 100644 arch/mips/include/uapi/asm/kvm_para.h
->  delete mode 100644 arch/mips/kvm/00README.txt
->  delete mode 100644 arch/mips/paravirt/Kconfig
->  delete mode 100644 arch/mips/paravirt/Makefile
->  delete mode 100644 arch/mips/paravirt/Platform
->  delete mode 100644 arch/mips/paravirt/paravirt-irq.c
->  delete mode 100644 arch/mips/paravirt/paravirt-smp.c
->  delete mode 100644 arch/mips/paravirt/serial.c
->  delete mode 100644 arch/mips/paravirt/setup.c
->  delete mode 100644 arch/mips/pci/pci-virtio-guest.c
-> 
-
+> > diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
+> > index 7ab13eb7527d..d19bad997f30 100644
+> > --- a/drivers/media/platform/davinci/vpbe_display.c
+> > +++ b/drivers/media/platform/davinci/vpbe_display.c
+> > @@ -1,6 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /*
+> > - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+> >   */
+> >  #include <linux/kernel.h>
+> >  #include <linux/init.h>
+> > diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
+> > index df66461f5d4f..e9794c9fc7fe 100644
+> > --- a/drivers/media/platform/davinci/vpif.c
+> > +++ b/drivers/media/platform/davinci/vpif.c
+> > @@ -5,7 +5,7 @@
+> >   * The hardware supports SDTV, HDTV formats, raw data capture.
+> >   * Currently, the driver supports NTSC and PAL standards.
+> >   *
+> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> >   * modify it under the terms of the GNU General Public License as
+> > diff --git a/drivers/media/platform/davinci/vpif.h b/drivers/media/platform/davinci/vpif.h
+> > index 2466c7c77deb..c6d1d890478a 100644
+> > --- a/drivers/media/platform/davinci/vpif.h
+> > +++ b/drivers/media/platform/davinci/vpif.h
+> > @@ -1,7 +1,7 @@
+> >  /*
+> >   * VPIF header file
+> >   *
+> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> >   * modify it under the terms of the GNU General Public License as
+> > diff --git a/drivers/media/platform/davinci/vpif_display.c b/drivers/media/platform/davinci/vpif_display.c
+> > index 7d55fd45240e..46afc029138f 100644
+> > --- a/drivers/media/platform/davinci/vpif_display.c
+> > +++ b/drivers/media/platform/davinci/vpif_display.c
+> > @@ -2,7 +2,7 @@
+> >   * vpif-display - VPIF display driver
+> >   * Display driver for TI DaVinci VPIF
+> >   *
+> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+> >   * Copyright (C) 2014 Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> > diff --git a/drivers/media/platform/davinci/vpif_display.h b/drivers/media/platform/davinci/vpif_display.h
+> > index af2765fdcea8..f731a65eefd6 100644
+> > --- a/drivers/media/platform/davinci/vpif_display.h
+> > +++ b/drivers/media/platform/davinci/vpif_display.h
+> > @@ -1,7 +1,7 @@
+> >  /*
+> >   * VPIF display header file
+> >   *
+> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> >   * modify it under the terms of the GNU General Public License as
+> > diff --git a/include/media/davinci/vpbe_display.h b/include/media/davinci/vpbe_display.h
+> > index 56d05a855140..6d2a93740130 100644
+> > --- a/include/media/davinci/vpbe_display.h
+> > +++ b/include/media/davinci/vpbe_display.h
+> > @@ -1,6 +1,6 @@
+> >  /* SPDX-License-Identifier: GPL-2.0-only */
+> >  /*
+> > - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
+> > + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+> >   */
+> >  #ifndef VPBE_DISPLAY_H
+> >  #define VPBE_DISPLAY_H
+> >
+>
