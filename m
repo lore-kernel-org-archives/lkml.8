@@ -2,178 +2,208 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE26C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6167FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C497E2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJ6DbLIM"
+	by mail.kernel.org (Postfix) with ESMTP id 407AE2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGJE3K (ORCPT
+        id S1726890AbgGJE3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJE3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:29:09 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E4BC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:29:09 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id k15so2432328lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mjMEHo8189HJa7MEyvNdBopJi1aBYqswf36F3ZzUmHE=;
-        b=zJ6DbLIMI9RS1PmJSJo6xFsTDH6O8QB//0z7B26kKdSld9NfBya8Rtu3IZ074XA+CR
-         PguXCBuyQSrp48FDSdtpHC7sXpIeoytzCn4yZJuMc4a+HhVuBhkF65tWkHci0v9jDyUp
-         3fl2+D4AVaXwcR1us0SK9O6PhX8yo08LWb6Mxp+3I4gmL5zBBb3qeS/YuWiuhbm4s8Xs
-         7ksKitvvtr6ndfV5SLJDDI7VIU+LC2QXgmVFC8XA8RoGWoMj9/yHZ4lepjWHA0Xo6Nft
-         SUxflY6EifOYbS7WQHtSt2iGPYeDGj2yyPGJyFWP7+NMTKzk4hkjYkEiZMyAFMVSkByI
-         D5Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mjMEHo8189HJa7MEyvNdBopJi1aBYqswf36F3ZzUmHE=;
-        b=iqXI1NE1DIRlHVmcnvRzCQk3/TEJlR5rFbbEP6e++7emfM0PoQQtfk/QUX5iPwyfH7
-         BWodxYEXonT2qxCGAd2js7fOuhqL1Fi7DCCNU9PvNl8ma18Yz36pi5yvFlo3UWoDW+Xi
-         kRCIRxnnyhcAhQW/MApZVCnuV65KGut8QsPU6dZm1EaXTKabvahoBHn5OVd0p4zx/iKH
-         c5OXFPG8a1lspdS8QIjk2WTIU0THWMLd/bOIm3Ze6meF3Oijki3nzffMdaKT+sAXGlMn
-         rD1ezrEQb9czx3VKgXazJLS8P0f49IryxmklfOAmVc5BFtyMtejF2l6WldnzGR4axeSd
-         8Kew==
-X-Gm-Message-State: AOAM533ZQkH+/8c2VC1c3YG4SgmH9b8WjChf2m6mieosR9lVHYr5Ty2o
-        IxlHHigsSPZ8NkPEWmS+SnUvkMiA91ZrgXws/YYBZg==
-X-Google-Smtp-Source: ABdhPJybWciRrhe576e0XFkP5ZOq4e0ax7CtRCdKFW0nOqW2ctV9r+kQAZVIQT05SbrSdysuc/SYrSucY8LQCyzy0w0=
-X-Received: by 2002:ac2:5226:: with SMTP id i6mr42252318lfl.55.1594355347306;
- Thu, 09 Jul 2020 21:29:07 -0700 (PDT)
+        Fri, 10 Jul 2020 00:29:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2989 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgGJE3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:29:25 -0400
+IronPort-SDR: tjFobKb2MMSutOITl6D+wzPRxYpcEUwdXCZjlUX55Q6YFDbeHqMfFLsOr3R3idZivVew7QX1sF
+ kkV5vFS0D+jg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="213038514"
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208,223";a="213038514"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 21:29:24 -0700
+IronPort-SDR: cB1+QOOezwxeVMptN3mDk3xOc9OQ97oM3KfYGeQaL7kq67L+K4PaB4y3aeYj5hEddGnWBRp6i1
+ HDGiuyEY/5fA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208,223";a="484518895"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Jul 2020 21:29:23 -0700
+Date:   Thu, 9 Jul 2020 21:29:22 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiong Zhang <xiong.y.zhang@intel.com>,
+        Wayne Boyer <wayne.boyer@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
+ affected memslot
+Message-ID: <20200710042922.GA24919@linux.intel.com>
+References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
+ <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
+ <20200709211253.GW24919@linux.intel.com>
+ <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
 MIME-Version: 1.0
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 10 Jul 2020 09:58:55 +0530
-Message-ID: <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="PNTmBPCT7hxwcZjr"
+Content-Disposition: inline
+In-Reply-To: <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 at 00:42, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Jul 8, 2020 at 10:28 PM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > While running LTP mm test suite on i386 or qemu_i386 this kernel warning
-> > has been noticed from stable 5.4 to stable 5.7 branches and mainline 5.8.0-rc4
-> > and linux next.
->
-> Hmm
->
-> If this is repeatable, would you mind making the warning also print
-> out the old range and new addresses and pmd value?
 
-Your patch applied and re-tested.
-warning triggered 10 times.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
++Alex, whom I completely spaced on Cc'ing.
 
-Here is the crash output log,
-thp01.c:98: PASS: system didn't crash.
-[  741.507000] ------------[ cut here ]------------
-[  741.511684] WARNING: CPU: 1 PID: 15173 at mm/mremap.c:211
-move_page_tables.cold+0x0/0x2b
-[  741.519812] Modules linked in: x86_pkg_temp_thermal fuse
-[  741.525163] CPU: 1 PID: 15173 Comm: true Not tainted 5.8.0-rc4 #1
-[  741.531313] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[  741.538760] EIP: move_page_tables.cold+0x0/0x2b
-[  741.543337] Code: b1 a0 03 00 00 81 c1 cc 04 00 00 bb ea ff ff ff
-51 68 e0 bc 68 d8 c6 05 dc 29 97 d8 01 e8 13 26 e9 ff 83 c4 0c e9 70
-ea ff ff <0f> 0b 52 50 ff 75 08 ff 75 b4 ff 75 d4 68 3c bd 68 d8 e8 f4
-25 e9
-[  741.562140] EAX: 7d530067 EBX: e9c90ff8 ECX: 00000000 EDX: 00000000
-[  741.568456] ESI: 00000000 EDI: 7d5ba007 EBP: cef67dd0 ESP: cef67d28
-[  741.574776] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010202
-[  741.581623] CR0: 80050033 CR2: b7d53f50 CR3: 107da000 CR4: 003406f0
-[  741.587941] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[  741.594259] DR6: fffe0ff0 DR7: 00000400
-[  741.598159] Call Trace:
-[  741.600694]  setup_arg_pages+0x22b/0x310
-[  741.604654]  ? _raw_spin_unlock_irqrestore+0x45/0x50
-[  741.609677]  ? trace_hardirqs_on+0x4b/0x110
-[  741.613930]  ? get_random_u32+0x4e/0x80
-[  741.617809]  ? get_random_u32+0x4e/0x80
-[  741.621687]  load_elf_binary+0x31e/0x10f0
-[  741.625714]  ? __do_execve_file+0x5b4/0xbf0
-[  741.629917]  ? find_held_lock+0x24/0x80
-[  741.633839]  __do_execve_file+0x5a8/0xbf0
-[  741.637893]  __ia32_sys_execve+0x2a/0x40
-[  741.641875]  do_syscall_32_irqs_on+0x3d/0x2c0
-[  741.646246]  ? find_held_lock+0x24/0x80
-[  741.650105]  ? lock_release+0x8a/0x260
-[  741.653890]  ? __might_fault+0x41/0x80
-[  741.657660]  do_fast_syscall_32+0x60/0xf0
-[  741.661691]  do_SYSENTER_32+0x15/0x20
-[  741.665373]  entry_SYSENTER_32+0x9f/0xf2
-[  741.669328] EIP: 0xb7f38549
-[  741.672140] Code: Bad RIP value.
-[  741.675430] EAX: ffffffda EBX: bfe19bf0 ECX: 08067420 EDX: bfe19e24
-[  741.681708] ESI: 08058a14 EDI: bfe19bf9 EBP: bfe19c98 ESP: bfe19bc8
-[  741.687991] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-[  741.694804] irq event stamp: 23911
-[  741.698253] hardirqs last  enabled at (23929): [<d756f075>]
-console_unlock+0x4a5/0x610
-[  741.706181] hardirqs last disabled at (23946): [<d756ec5a>]
-console_unlock+0x8a/0x610
-[  741.714041] softirqs last  enabled at (23962): [<d82b975c>]
-__do_softirq+0x2dc/0x3da
-[  741.721849] softirqs last disabled at (23973): [<d74a8275>]
-call_on_stack+0x45/0x50
-[  741.729513] ---[ end trace 170f646c1b6225e0 ]---
-[  741.734151]  old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
+Alex, this is related to the dreaded VFIO memslot zapping issue from last
+year.  Start of thread: https://patchwork.kernel.org/patch/11640719/.
 
-Build link: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/
-vmlinux: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/vmlinux.xz
-system.map: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/System.map
+The TL;DR of below: can you try the attached patch with your reproducer
+from the original bug[*]?  I honestly don't know whether it has a legitimate
+chance of working, but it's the one thing in all of this that I know was
+definitely a bug.  I'd like to test it out if only to sate my curiosity.
+Absolutely no rush.
+
+[*] https://patchwork.kernel.org/patch/10798453/#22817321
+
+On Fri, Jul 10, 2020 at 12:18:17AM +0200, Paolo Bonzini wrote:
+> On 09/07/20 23:12, Sean Christopherson wrote:
+> >> It's bad that we have no clue what's causing the bad behavior, but I
+> >> don't think it's wise to have a bug that is known to happen when you
+> >> enable the capability. :/
+> 
+> (Note that this wasn't a NACK, though subtly so).
+> 
+> > I don't necessarily disagree, but at the same time it's entirely possible
+> > it's a Qemu bug.
+> 
+> No, it cannot be.  QEMU is not doing anything but
+> KVM_SET_USER_MEMORY_REGION, and it's doing that synchronously with
+> writes to the PCI configuration space BARs.
+
+I'm not saying it's likely, but it's certainly possible.  The failure
+went away when KVM zapped SPTEs for seemingly unrelated addresses, i.e. the
+error likely goes beyond just the memslot aspect.
+
+> > Even if this is a kernel bug, I'm fairly confident at this point that it's
+> > not a KVM bug.  Or rather, if it's a KVM "bug", then there's a fundamental
+> > dependency in memslot management that needs to be rooted out and documented.
+> 
+> Heh, here my surmise is that  it cannot be anything but a KVM bug,
+> because  Memslots are not used by anything outside KVM...  But maybe I'm
+> missing something.
+
+As above, it's not really a memslot issue, it's more of a paging/TLB issue,
+or possibly none of the above.  E.g. it could be a timing bug that goes away
+simply because zapping and rebuilding slows things down to the point where
+the timing window is closed.
+
+I should have qualified "fairly confident ... that it's not a KVM bug" as
+"not a KVM bug related to removing SPTEs for the deleted/moved memslot _as
+implemented in this patch_".
+
+Digging back through the old thread, I don't think we ever tried passing
+%true for @lock_flush_tlb when zapping rmaps.  And a comment from Alex also
+caught my eye, where he said of the following: "If anything, removing this
+chunk seems to make things worse."
+
+	if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
+		kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+		flush = false;
+		cond_resched_lock(&kvm->mmu_lock);
+	}
+
+A somewhat far fetched theory is that passing %false to kvm_zap_rmapp()
+via slot_handle_all_level() created a window where a vCPU could have both
+the old stale entry and the new memslot entry in its TLB if the equivalent
+to above lock dropping in slot_handle_level_range() triggered.
+
+Removing the above intermediate flush would exacerbate the theoretical
+problem by further delaying the flush, i.e. would create a bigger window
+for the guest to access the stale SPTE.
+
+Where things get really far fetched is how zapping seemingly random SPTEs
+fits in.  Best crazy guess is that zapping enough random things while holding
+MMU lock would eventually zap a SPTE that caused the guest to block in the
+EPT violation handler.
+
+I'm not exactly confident that the correct zapping approach will actually
+resolve the VFIO issue, but I think it's worth trying since not flushing
+during rmap zapping was definitely a bug.
+
+> > And we're kind of in a catch-22; it'll be extremely difficult to narrow down
+> > exactly who is breaking what without being able to easily test the optimized
+> > zapping with other VMMs and/or setups.
+> 
+> I agree with this, and we could have a config symbol that depends on
+> BROKEN and enables it unconditionally.  However a capability is the
+> wrong tool.
+
+Ya, a capability is a bad idea.  I was coming at it from the angle that, if
+there is a fundamental requirement with e.g. GPU passthrough that requires
+zapping all SPTEs, then enabling the precise capability on a per-VM basis
+would make sense.  But adding something to the ABI on pure speculation is
+silly.
+
+--PNTmBPCT7hxwcZjr
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-KVM-x86-mmu-Zap-only-relevant-last-leaf-sptes-when-r.patch"
+
+From b68a2e6095d76574322ce7cf6e63406436fef36d Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Date: Thu, 9 Jul 2020 21:25:11 -0700
+Subject: [PATCH] KVM: x86/mmu: Zap only relevant last/leaf sptes when removing
+ a memslot
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 3dd0af7e75151..9f468337f832c 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5810,7 +5810,18 @@ static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
+ 			struct kvm_memory_slot *slot,
+ 			struct kvm_page_track_notifier_node *node)
+ {
+-	kvm_mmu_zap_all_fast(kvm);
++	bool flush;
++
++	/*
++	 * Zapping non-leaf SPTEs, a.k.a. not-last SPTEs, isn't required, worst
++	 * case scenario we'll have unused shadow pages lying around until they
++	 * are recycled due to age or when the VM is destroyed.
++	 */
++	spin_lock(&kvm->mmu_lock);
++	flush = slot_handle_all_level(kvm, slot, kvm_zap_rmapp, true);
++	if (flush)
++		kvm_flush_remote_tlbs(kvm);
++	spin_unlock(&kvm->mmu_lock);
+ }
+ 
+ void kvm_mmu_init_vm(struct kvm *kvm)
+-- 
+2.26.0
 
 
-full test log,
-https://lkft.validation.linaro.org/scheduler/job/1554181#L10557
-
-- Naresh
-
->
-> Something like the attached (UNTESTED!) patch.
->
->          Linus
+--PNTmBPCT7hxwcZjr--
