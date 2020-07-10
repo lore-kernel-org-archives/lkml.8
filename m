@@ -2,130 +2,127 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5463FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D70DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3499D2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594385110;
-	bh=bThxQmBC/sua3xMwY13n7PfHZ6TW93stgNJnctYA0EY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tAQKYoBkM5lgC75Ta31NQrFI5cizMvJSqQntI6AZx4BgXrsmTDmVCiHs2RXaWqCBF
-	 voNexeR5QcjAC+51RojO9MRs/f37XdafWytXe0Db56qLYVOj9xJVnGaoSTyPYBBO+G
-	 PZ9tfWllIkXcZ9YrzcO8yjZ/WI4P48d8r/wuvCQE=
+	by mail.kernel.org (Postfix) with ESMTP id 2DB3A2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vd2IDop9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgGJMpJ (ORCPT
+        id S1727101AbgGJMrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:45:09 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41146 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJMpI (ORCPT
+        Fri, 10 Jul 2020 08:47:23 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:49507 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJMrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:45:08 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e22so4543385edq.8;
-        Fri, 10 Jul 2020 05:45:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ABCar9XaLCL6nQFaJkwQvjmy7wFbtvMLNqM9yovrz04=;
-        b=oJv2kPqAhDjy/9Bqdy5ZYO6cynzW5Hf2+DLrhBkvMhgYhkPn4xbBidRn+gBmWJYkTi
-         NkJ8kKFxkZMeSKdhzgrA2D1WOYTXfikL1EqejcGVBvWyd/Hxa0eJB5Yxfh1JzZnoFARu
-         n4ZmIxDqu0oNMA2LUNCYd8iMDml2OcAyBx3HXI3wUufDaq00BC+MjEutBhZbRExEKqNz
-         4tf0W4lCeTx4o44zJ/uVu+Y1NcTmOEg7pvN7n3YUHmZMkgREWDgs5yKQsU5SHNZjtku8
-         FcAifWSGh1ckZQFur5VHJwmKmxE4ahKYaX99Ve1sKO2ZaG41BaHmeCcTsGv7aV/iRO0i
-         girQ==
-X-Gm-Message-State: AOAM533YrlgZkyJDPmfaZ5GSvpVoGpa0CJ7Fsz1dU3bm1y9gyt3iQBV/
-        FcVPlCIAa1Tpz5hQfqT+900=
-X-Google-Smtp-Source: ABdhPJwaB+c1mORjF8jaO+c/+QMJ0GE5nK3K8F4mfLhSS6Mvk1IPL6raXjJal+9PnCv8TJGdi0CJSA==
-X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr60633676edb.72.1594385106109;
-        Fri, 10 Jul 2020 05:45:06 -0700 (PDT)
-Received: from pi3 ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id d12sm4379131edx.80.2020.07.10.05.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 05:45:05 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 14:45:03 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
-        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
- interval and uptreshold
-Message-ID: <20200710124503.GB22897@pi3>
-References: <20200708153420.29484-1-lukasz.luba@arm.com>
- <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
- <20200708153420.29484-2-lukasz.luba@arm.com>
- <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
- <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
+        Fri, 10 Jul 2020 08:47:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594385242; x=1625921242;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xLfmshkpWd2aPH7pkCemLYvnT4Uwrw+Ep4bfRxiIgoI=;
+  b=vd2IDop9IMn2PlGdA93Fp808vN8C1Uaowf5Vx+AX3qlQrSldIrw0edIZ
+   NrYnp4y2ASAmT9TyC/q9krHrraehBVZbztr9mMo+BIXhVyIRuL9i1uaqP
+   S4gQgYeAG6vdY59v35tWSjeOCNKm9hJ4WokDV/ijhK7Ciu+0so7dEeOQn
+   e0qNEZXc54iWRjsvVpvulGyAnQxXYNa81xx7FH2wcK5ryQyBE85PWh7W4
+   jkO1EO1EXHf8N8odUQCIG0kiea/R/e1NK3/zn0s+DwhBeQk3zrPvVX9ge
+   jE0Xe51KZefqYvlVyJ3lJC9KOgokvtcYqMiAr0eQfh+WFncHpTmQQgkCW
+   A==;
+IronPort-SDR: 29sAthIvWYA09TD6RubA5XnKXwmkVwup5JbrbBbAFI2mNB6uqYyGe53H3DmoFlRU1QOdjoR1nA
+ 5YJNC32onJ7wLmZkxhaU0I29tXzYTqqe1xlixE7dtO0gb1QnGQbdnyya1VX5AHdHKMh1Gc2Px5
+ nFOxOAIe2Ync+HoubkPzulMaeC3wh3UtTp3j1vgwbCaxPjEXW4yTzoGeVuHgAsNIP+Nqs4TCj0
+ 0hhx1QdaULMWTbomAWh25qkAaQMkEYFVUX3A0dLo+w9w7fUxnKTn9/hqjY9sagt2VWE0N6rJbf
+ yPo=
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="87021923"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jul 2020 05:47:22 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 10 Jul 2020 05:46:54 -0700
+Received: from ness.mchp-main.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 10 Jul 2020 05:47:18 -0700
+From:   <nicolas.ferre@microchip.com>
+To:     <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+        <netdev@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>, <f.fainelli@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <antoine.tenart@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH v5 0/5] net: macb: Wake-on-Lan magic packet fixes and GEM handling
+Date:   Fri, 10 Jul 2020 14:46:40 +0200
+Message-ID: <cover.1594384335.git.nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:34:45AM +0100, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> On 7/9/20 5:08 AM, Chanwoo Choi wrote:
-> > Hi Lukasz,
-> > 
-> > On 7/9/20 12:34 AM, Lukasz Luba wrote:
-> > > In order to react faster and make better decisions under some workloads,
-> > > benchmarking the memory subsystem behavior, adjust the polling interval
-> > > and upthreshold value used by the simple_ondemand governor.
-> > > 
-> > > Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> > > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> > > ---
-> > >   drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> > > index 93e9c2429c0d..e03ee35f0ab5 100644
-> > > --- a/drivers/memory/samsung/exynos5422-dmc.c
-> > > +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> > > @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
-> > >   		 * Setup default thresholds for the devfreq governor.
-> > >   		 * The values are chosen based on experiments.
-> > >   		 */
-> > > -		dmc->gov_data.upthreshold = 30;
-> > > +		dmc->gov_data.upthreshold = 10;
-> > >   		dmc->gov_data.downdifferential = 5;
-> > > -		exynos5_dmc_df_profile.polling_ms = 500;
-> > > +		exynos5_dmc_df_profile.polling_ms = 100;
-> > >   	}
-> > > 
-> > 
-> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > 
-> 
-> Thank you for the review. Do you think this patch could go through
-> your tree together with your patches?
-> 
-> I don't know Krzysztof's opinion about the patch 2/2, but
-> I would expect, assuming the patch itself is correct, he would
-> like to take it into his next/dt branch.
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-In the cover letter you mentioned that this is a follow up for the
-Chanwoo's patchset. But are these patches really depending on it? Can
-they be picked up independently?
-
-The DTS patch must go through arm soc, so I will take it. If it really
-depends on driver changes, then it has to wait for next release.
+Hi,
+Here is a split series to fix WoL magic-packet on the current macb driver. Only
+fixes in this one based on current net/master.
 
 Best regards,
-Krzysztof
+  Nicolas
+
+Changes in v5:
+- Addressed the error code returned by phylink_ethtool_set_wol() as suggested
+  by Russell.
+  If PHY handles WoL, MAC doesn't stay in the way.
+- Removed Florian's tag on 3/5 because of the above changes.
+- Correct the "Fixes" tag on 1/5.
+
+Changes in v4:
+- Pure bug fix series for 'net'. GEM addition and MACB update removed: will be
+  sent later.
+
+Changes in v3:
+- Revert some of the v2 changes done in macb_resume(). Now the resume function
+  supports in-depth re-configuration of the controller in order to deal with
+  deeper sleep states. Basically as it was before changes introduced by this
+  series
+- Tested for non-regression with our deeper Power Management mode which cuts
+  power to the controller completely
+
+Changes in v2:
+- Add patch 4/7 ("net: macb: fix macb_suspend() by removing call to netif_carrier_off()")
+  needed for keeping phy state consistent
+- Add patch 5/7 ("net: macb: fix call to pm_runtime in the suspend/resume functions") that prevent
+  putting the macb in runtime pm suspend mode when WoL is used
+- Collect review tags on 3 first patches from Florian: Thanks!
+- Review of macb_resume() function
+- Addition of pm_wakeup_event() in both MACB and GEM WoL IRQ handlers
+
+
+Nicolas Ferre (5):
+  net: macb: fix wakeup test in runtime suspend/resume routines
+  net: macb: mark device wake capable when "magic-packet" property
+    present
+  net: macb: fix macb_get/set_wol() when moving to phylink
+  net: macb: fix macb_suspend() by removing call to netif_carrier_off()
+  net: macb: fix call to pm_runtime in the suspend/resume functions
+
+ drivers/net/ethernet/cadence/macb_main.c | 31 +++++++++++++++---------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
+
+-- 
+2.27.0
 
