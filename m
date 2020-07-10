@@ -2,51 +2,37 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF654C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9608E2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594404296;
-	bh=BuGVKM7rrsUCZjTvAdy2HByYM2r2OiEDWrLNJoH0UjU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZswqGMm1Bbu3d//W5XoBuQQY4z4bedMXo52SgVT3LY3972qyIYILbWk8khTDiv46w
-	 HWaBChOFEDKEYTBq9vGwgQafyvvknfyTMfZmeLewCJTIf8GQislkwsTBbLtD1QNJr4
-	 POCfPbVON2kV42BXkqfgkOlUYzjUS1Bj/kiPg4OU=
+	by mail.kernel.org (Postfix) with ESMTP id AF0CE20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGJSEz (ORCPT
+        id S1727873AbgGJSKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43220 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 14:10:13 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:58232 "EHLO vps-vb.mhejs.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgGJSEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:04:54 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1490A2076A;
-        Fri, 10 Jul 2020 18:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594404294;
-        bh=BuGVKM7rrsUCZjTvAdy2HByYM2r2OiEDWrLNJoH0UjU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EAhxjKT01Wmfvs25rU5P5FvNC5R7IdOhaemCWQm7R9286cKrGR/bFaj13K3G80UEw
-         WH2C6X4jk4fO1A6XYy4AxgoiAlYBWKci/8sYV1zJm5Au8ZOUJJE1Ge+7toUM0LXTx1
-         J62tU8gILHTkJjqlc//RCL1JqyAKA9LcbUgZ3meM=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     Michael Kerrisk <mtk.manpages@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] seccomp.2: Improve x32 and nr truncation notes
-Date:   Fri, 10 Jul 2020 11:04:51 -0700
-Message-Id: <4c7e1cfa3978de83713b71a3f29c8c5f250cf0c6.1594404029.git.luto@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        id S1726925AbgGJSKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:10:13 -0400
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.93.0.4)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1jtxTN-0003CC-Ct; Fri, 10 Jul 2020 20:10:09 +0200
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: (drivetemp) Avoid SCT usage on Toshiba DT01ACA family drives
+Date:   Fri, 10 Jul 2020 20:10:03 +0200
+Message-Id: <42108b47d0e3d64c6d36618425c9f920ff469600.1594404501.git.mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,74 +40,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+It has been observed that Toshiba DT01ACA family drives have
+WRITE FPDMA QUEUED command timeouts and sometimes just freeze until
+power-cycled under heavy write loads when their temperature is getting
+polled in SCT mode. The SMART mode seems to be fine, though.
+
+Let's make sure we don't use SCT mode for these drives then.
+
+While only the 3 TB model was actually caught exhibiting the problem let's
+play safe here to avoid data corruption and extend the ban to the whole
+family.
+
+Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
+Cc: stable@vger.kernel.org
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 ---
- man2/seccomp.2 | 44 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 33 insertions(+), 11 deletions(-)
+Sending again since the previous message bounced for most recipients.
 
-diff --git a/man2/seccomp.2 b/man2/seccomp.2
-index a1b1a28db9bf..e491825600e8 100644
---- a/man2/seccomp.2
-+++ b/man2/seccomp.2
-@@ -342,16 +342,38 @@ is used on the system call number to tell the two ABIs apart.
- .\"     an extra instruction in system_call to mask off the extra bit,
- .\"     so that the syscall table indexing still works.
- .PP
--This means that in order to create a seccomp-based
--deny-list for system calls performed through the x86-64 ABI,
--it is necessary to not only check that
--.IR arch
--equals
--.BR AUDIT_ARCH_X86_64 ,
--but also to explicitly reject all system calls that contain
-+This means that a policy must either deny all syscalls with
- .BR __X32_SYSCALL_BIT
--in
--.IR nr .
-+or it must recognize syscalls with and without
-+.BR __X32_SYSCALL_BIT
-+set.  A list of syscalls to be denied based on
-+.IR nr
-+that does not also contain
-+.IR nr
-+values with
-+.BR __X32_SYSCALL_BIT
-+set can be bypassed by a malicious program that sets
-+.BR __X32_SYSCALL_BIT .
-+.PP
-+Additionally, kernels prior to 5.4 incorrectly permitted
-+.IR nr
-+in the ranges 512-547 as well as the corresponding non-x32 syscalls ored
-+with
-+.BR __X32_SYSCALL_BIT .
-+For example,
-+.IR nr
-+== 521 and
-+.IR nr
-+== (101 |
-+.BR __X32_SYSCALL_BIT )
-+would result in invocations of
-+.BR ptrace (2)
-+with potentially confused x32-vs-x86_64 semantics in the kernel.
-+Policies intended to work on kernels before 5.4 must ensure that they
-+deny or otherwise correctly handle these system calls.  On kernels
-+5.4 and newer, such system calls will return -ENOSYS without doing
-+anything.
-+.\" commit 6365b842aae4490ebfafadfc6bb27a6d3cc54757
- .PP
- The
- .I instruction_pointer
-@@ -368,8 +390,8 @@ and
- system calls to prevent the program from subverting such checks.)
- .PP
- When checking values from
--.IR args
--against a deny-list, keep in mind that arguments are often
-+.IR args,
-+keep in mind that arguments are often
- silently truncated before being processed, but after the seccomp check.
- For example, this happens if the i386 ABI is used on an
- x86-64 kernel: although the kernel will normally not look beyond
--- 
-2.25.4
+Notes:
+    This behavior was observed on two different DT01ACA3 drives.
+    
+    Usually, a series of queued WRITE FPDMA QUEUED commands just time out,
+    but sometimes the whole drive freezes. Merely disconnecting and
+    reconnecting SATA interface cable then does not unfreeze the drive.
+    
+    One has to disconnect and reconnect the drive power connector for the
+    drive to be detected again (suggesting the drive firmware itself has
+    crashed).
+    
+    This only happens when the drive temperature is polled very often (like
+    every second), so occasional SCT usage via smartmontools is probably
+    safe.
 
+ drivers/hwmon/drivetemp.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
+index 0d4f3d97ffc6..4fd51fa8c6e3 100644
+--- a/drivers/hwmon/drivetemp.c
++++ b/drivers/hwmon/drivetemp.c
+@@ -285,6 +285,36 @@ static int drivetemp_get_scttemp(struct drivetemp_data *st, u32 attr, long *val)
+ 	return err;
+ }
+ 
++static const char * const sct_blacklist_models[] = {
++/*
++ * These drives will have WRITE FPDMA QUEUED command timeouts and sometimes just
++ * freeze until power-cycled under heavy write loads when their temperature is
++ * getting polled in SCT mode. The SMART mode seems to be fine, though.
++ *
++ * While only the 3 TB model was actually caught exhibiting the problem
++ * let's play safe here to avoid data corruption and ban the whole family.
++ */
++	"TOSHIBA DT01ACA0",
++	"TOSHIBA DT01ACA1",
++	"TOSHIBA DT01ACA2",
++	"TOSHIBA DT01ACA3",
++};
++
++static bool drivetemp_sct_blacklisted(struct drivetemp_data *st)
++{
++	struct scsi_device *sdev = st->sdev;
++	unsigned int ctr;
++
++	if (!sdev->model)
++		return false;
++
++	for (ctr = 0; ctr < ARRAY_SIZE(sct_blacklist_models); ctr++)
++		if (strncmp(sdev->model, sct_blacklist_models[ctr], 16) == 0)
++			return true;
++
++	return false;
++}
++
+ static int drivetemp_identify_sata(struct drivetemp_data *st)
+ {
+ 	struct scsi_device *sdev = st->sdev;
+@@ -326,6 +356,13 @@ static int drivetemp_identify_sata(struct drivetemp_data *st)
+ 	/* bail out if this is not a SATA device */
+ 	if (!is_ata || !is_sata)
+ 		return -ENODEV;
++
++	if (have_sct && drivetemp_sct_blacklisted(st)) {
++		dev_notice(&sdev->sdev_gendev,
++			   "will avoid using SCT for temperature monitoring\n");
++		have_sct = false;
++	}
++
+ 	if (!have_sct)
+ 		goto skip_sct;
+ 
