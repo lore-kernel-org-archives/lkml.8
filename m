@@ -2,101 +2,171 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4594EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE56C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2035B207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594387962;
-	bh=LvFpSzqSKplJUBC4M+6P3hI6hqjY33Q33k8lxTdHleU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YFITBJ6bnHjQJmgIC49hCfYUKVCNX6f+LR4bhciGQ7YNeOczDuS5v2aSPQY/zrcQg
-	 LBLSjY+L1ltdLhw0V7AHaP0tkMU5dc2A/y2Oz2zgZ2q6Mw0+GH81/ur14M2h+pnNu/
-	 vhAFPNa8rBnk82yT7Iedy6bvwndjAU3NqTD8w5bg=
+	by mail.kernel.org (Postfix) with ESMTP id 87A7220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="J1TuL69J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgGJNck (ORCPT
+        id S1727871AbgGJNdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:32:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgGJNck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:32:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 10 Jul 2020 09:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgGJNdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:33:17 -0400
+X-Greylist: delayed 595 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Jul 2020 06:33:17 PDT
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78511C08C5CE;
+        Fri, 10 Jul 2020 06:33:17 -0700 (PDT)
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD1820748;
-        Fri, 10 Jul 2020 13:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594387959;
-        bh=LvFpSzqSKplJUBC4M+6P3hI6hqjY33Q33k8lxTdHleU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BBbOiE5hhOsBivO33CLPtIU5TOtJfk+tBMFKLSF2X16VVkk/+wcPWHpsudr4+EugE
-         llAdtz76rk6lGxBV8gi6lc7Dn8xKcXOQca0TwaOCABidwlXXVByqREpv1zqhoIq+k2
-         bkljtQSz+u5p9RdemV0/q30rEZRUaG0q92coJ/oU=
-Date:   Fri, 10 Jul 2020 14:32:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v1] regmap: Switch to use fwnode instead of OF one
-Message-ID: <20200710133233.GF5653@sirena.org.uk>
-References: <20200708161232.17914-1-andriy.shevchenko@linux.intel.com>
- <20200708162117.GV4655@sirena.org.uk>
- <20200710100558.GI3703480@smile.fi.intel.com>
- <20200710110132.GA5653@sirena.org.uk>
- <20200710114622.GJ3703480@smile.fi.intel.com>
- <20200710120856.GD5653@sirena.org.uk>
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 3E94A7C1278;
+        Fri, 10 Jul 2020 15:23:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1594387397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T0a47GLKOaTiWzGq8XsdXklDdSZ4NNZ9YA/m4rMqQRc=;
+        b=J1TuL69JeYwZWoKtV+F+2RVX5EevU5myizrh5IdpnW0CZBoYkIc+cRqFm9tfHZQIMvyc8i
+        RVVUJLIXbz6tZI6C8PVx9hQamgWTx4PVGtGauA6p1syNbUYu8PiNQYtRhCuQlSuAwJeJTb
+        hVde8USor0K+SSvZ3ACV4y31kMERGpY=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H4SyuGOnfnj3aJqJ"
-Content-Disposition: inline
-In-Reply-To: <20200710120856.GD5653@sirena.org.uk>
-X-Cookie: Use only in a well-ventilated area.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Fri, 10 Jul 2020 15:23:17 +0200
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, krisman@collabora.com, kernel@collabora.com,
+        dvhart@infradead.org, mingo@redhat.com,
+        pgriffais@valvesoftware.com, fweimer@redhat.com,
+        libc-alpha@sourceware.org, malteskarupke@web.de,
+        linux-api@vger.kernel.org, arnd@arndb.de
+Subject: Re: [RFC v2 0/4] futex2: Add new futex interface
+In-Reply-To: <20200709175921.211387-1-andrealmeid@collabora.com>
+References: <20200709175921.211387-1-andrealmeid@collabora.com>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <4d9163924224d4265c280fc2ca6481c3@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello.
 
---H4SyuGOnfnj3aJqJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 09.07.2020 19:59, André Almeida wrote:
+> This RFC is a followup to the previous discussion initiated from my 
+> last
+> patch "futex: Implement mechanism to wait on any of several 
+> futexes"[1].
+> As stated in the thread, the correct approach to move forward with the
+> wait multiple operation would be to create a new syscall that would 
+> have
+> all new cool features.
+> 
+> The first patch adds the new interface and just translate the call for
+> the old interface, without implementing new features. The goal here is
+> to establish the interface and to check if everyone is happy with this
+> API. The rest of patches are selftests to show the interface in action.
+> I have the following questions:
+> 
+> - What suggestions do you have to implement this? Start from scratch or
+>   reuse the most code possible?
+> 
+> - The interface seems correct and implements the requirements asked by 
+> you?
+> 
+> Those are the cool new features that this syscall should address some
+> day:
+> 
+> - Operate with variable bit size futexes, not restricted to 32:
+>   8, 16 and 64
+> 
+> - Wait on multiple futexes, using the following semantics:
+> 
+>   struct futex_wait {
+> 	void *uaddr;
+> 	unsigned long val;
+> 	unsigned long flags;
+>   };
+> 
+>   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
+> 		  unsigned long flags, struct __kernel_timespec *timo);
+> 
+> - Have NUMA optimizations: if FUTEX_NUMA_FLAG is set, the `void *uaddr`
+>   argument won't be a value of type u{8, 16, 32, 64} anymore, but a 
+> struct
+>   containing a NUMA node hint:
+> 
+>   struct futex32_numa {
+> 	  u32 value __attribute__ ((aligned (8)));
+> 	  u32 hint;
+>   };
+> 
+>   struct futex64_numa {
+> 	  u64 value __attribute__ ((aligned (16)));
+> 	  u64 hint;
+>   };
+> 
+> Thanks,
+> 	André
+> 
+> Changes since v1:
+>  - The timeout argument now uses __kernel_timespec as type
+>  - time32 interface was removed
+>  v1: https://lore.kernel.org/patchwork/cover/1255437/
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1194339/
+> 
+> André Almeida (4):
+>   futex2: Add new futex interface
+>   selftests: futex: Add futex2 wake/wait test
+>   selftests: futex: Add futex2 timeout test
+>   selftests: futex: Add futex2 wouldblock test
+> 
+>  MAINTAINERS                                   |   2 +-
+>  arch/x86/entry/syscalls/syscall_32.tbl        |   2 +
+>  arch/x86/entry/syscalls/syscall_64.tbl        |   2 +
+>  include/linux/syscalls.h                      |   7 ++
+>  include/uapi/asm-generic/unistd.h             |   8 +-
+>  include/uapi/linux/futex.h                    |  10 ++
+>  init/Kconfig                                  |   7 ++
+>  kernel/Makefile                               |   1 +
+>  kernel/futex2.c                               |  73 ++++++++++++
+>  kernel/sys_ni.c                               |   4 +
+>  tools/include/uapi/asm-generic/unistd.h       |   7 +-
+>  .../selftests/futex/functional/.gitignore     |   1 +
+>  .../selftests/futex/functional/Makefile       |   4 +-
+>  .../selftests/futex/functional/futex2_wait.c  | 111 ++++++++++++++++++
+>  .../futex/functional/futex_wait_timeout.c     |  38 ++++--
+>  .../futex/functional/futex_wait_wouldblock.c  |  33 +++++-
+>  .../testing/selftests/futex/functional/run.sh |   3 +
+>  .../selftests/futex/include/futex2test.h      |  77 ++++++++++++
+>  18 files changed, 373 insertions(+), 17 deletions(-)
+>  create mode 100644 kernel/futex2.c
+>  create mode 100644 
+> tools/testing/selftests/futex/functional/futex2_wait.c
+>  create mode 100644 tools/testing/selftests/futex/include/futex2test.h
 
-On Fri, Jul 10, 2020 at 01:08:56PM +0100, Mark Brown wrote:
-> On Fri, Jul 10, 2020 at 02:46:22PM +0300, Andy Shevchenko wrote:
+What branch/tag this submission is based on please? It seems it is not a 
+5.8 but rather 5.7 since the second patch misses faccessat2() syscall 
+and fails to be applied cleanly.
 
-> > You mean it's being synchronised with git.kernel.org, but not yet contains that
-> > patch? Okay, I will monitor the regmap tree (as of now I didn't see any update).
+Thanks.
 
-> 5cc2013bfeee756a1ee6da9bfbe42e52b4695035
-
-Oh, I see your patch covered a different bit of code without covering
-the stuff in regmap-irq (which I'd just handled when your patch came in)
-for some reason so the changelog made it sound like the same code, and
-at the time you submitted it the patch was incomplete.
-
-
---H4SyuGOnfnj3aJqJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8IbfEACgkQJNaLcl1U
-h9D8IAf/VP45nyPEwll3Z25cy3/wht5HFrNOUs744RQ7vWr9oS+b4vbibjm+WX4t
-gFAheMYtBrSnMyxzmloQE5kwkrcxBtnxFMMxjk83LMM4P5N0vxHsF5u5w30Rf7+v
-/4qBxTBx/+kPRqoEO4sM/qvUvTmHPRjlKcz7k9r8aM/hYzdflv/YUPQQH0GMZveQ
-pljk5YHkLtIfoHbp+B9Zh7+quJvT1msNJuLvoTC+9tDO4ks1HjvdlfssBmqJRQSs
-vH8FuRv0Vh9emTW7d+JBhUn4jFtXfxvn3znVf1Y9qIzYU/6avE7AfIx0qeaouL2V
-i11CB9utaDLxPDXUGUndr6mnmnKHgg==
-=1MOn
------END PGP SIGNATURE-----
-
---H4SyuGOnfnj3aJqJ--
+-- 
+   Oleksandr Natalenko (post-factum)
