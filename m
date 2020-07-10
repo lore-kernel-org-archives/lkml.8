@@ -2,97 +2,173 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43ADD20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C802072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Z0lNoGhG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jL7zy/Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgGJDER (ORCPT
+        id S1727099AbgGJDIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJDEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:04:16 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37299C08C5CE;
-        Thu,  9 Jul 2020 20:04:16 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id dm19so3414451edb.13;
-        Thu, 09 Jul 2020 20:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YLfw68r/hxoh0NgCLBxSxGfsf8FdyOcJYnFgZuru9c8=;
-        b=Z0lNoGhGxomlXESnJmJIj3kaLlNfCpfGBY6uILkYPuZZ9qub3uS3pGM34slmHTbaLj
-         +0gus1ZS50pj/Rg3hgjpyR5wff9NX1Ufq6Uu8ucnJW3va9mS5yhDd4NyuQZPyzZSAKhH
-         PneheiBTt10S8gJdhP0qMjFUgIW6DvjkkgEVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YLfw68r/hxoh0NgCLBxSxGfsf8FdyOcJYnFgZuru9c8=;
-        b=rRf8GI/aASv6dUGTACnZrA9xf/EJ5QviiLNb7y5jvN+RHpQ+Gr+xraJfB5IZV8/CW1
-         y++ZqnTmiTwftTGmv+Y4/LYE0LQdgny0ZiK7j0lc1UJTO7otkBu/XSkSV8e5eEbegAnX
-         1Kg2JdtKuvoM2bDmEYg4PG4rfwtjfLPtSayjXyyQrDDx1SnlfrfQGrSmmVEuQa6Mks3J
-         /+/De0g4WxEDNPkuhJFLMl4XbQgZIK6FvLdhTUH70J5VD2SanRZVrcblMVEvZLn0E8xS
-         psRmFmSITJe4PbyNYnpG2tUsUL9xafrgO7jPgVlF2y5elkkXizpDpE+1iTNK2gcqA7OK
-         IDtw==
-X-Gm-Message-State: AOAM531mSthAHS4VKPtD3lz1+o0R4xuVv5ojcohvp6+6BzRT2lToDrS7
-        vwrVFzBVsgnSlsX8QzkrYRcteF3FOf6TEUMAERs=
-X-Google-Smtp-Source: ABdhPJzpdveYcIc6pgM/Fe1jdllnZf80Q1VMKGv/QELC2YPCTMnO/7YKXw2PDoRwqL2q3b7XfvqI/pFBrn+kpAQhutY=
-X-Received: by 2002:a05:6402:202e:: with SMTP id ay14mr75165877edb.233.1594350254944;
- Thu, 09 Jul 2020 20:04:14 -0700 (PDT)
+        Thu, 9 Jul 2020 23:08:52 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37442 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbgGJDIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:08:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594350530; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=u61ezaq/mKofrwr3vkAw+UCv+XkcrfufCL8jWoBDK3M=; b=jL7zy/SyJmlwWdk4Su+nnOZovYH34nZ1f0cm2vn2wdO7XwxouroFafXexJMnusurZ8htSbsa
+ jtpnEG4Y1rv8NFQMPBziBBPNLWv4jdX7rcEmO5OHZIUH+KphwKnVYXijkXcUSgB5mKLlWnTN
+ ds2mLje5HbbEXEUJV9yMi4g2h00=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f07dbc119b27ae9cedbee14 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 03:08:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E7FEC433CA; Fri, 10 Jul 2020 03:08:47 +0000 (UTC)
+Received: from [10.110.59.15] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD3F5C433C8;
+        Fri, 10 Jul 2020 03:08:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD3F5C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v5 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
+        broonie@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org,
+        bryan.odonoghue@linaro.org
+References: <20200703015102.27295-1-wcheng@codeaurora.org>
+ <20200703015102.27295-3-wcheng@codeaurora.org>
+ <20200709224626.GA1021653@bogus>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <bef7638a-3f1d-2c92-a7a0-c7a17d2f63c0@codeaurora.org>
+Date:   Thu, 9 Jul 2020 20:08:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200709195706.12741-1-eajames@linux.ibm.com> <20200709195706.12741-3-eajames@linux.ibm.com>
- <4acad452-33c7-4fb2-ba90-19a824558b94@www.fastmail.com>
-In-Reply-To: <4acad452-33c7-4fb2-ba90-19a824558b94@www.fastmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 10 Jul 2020 03:04:03 +0000
-Message-ID: <CACPK8XcWEn-M291U1va7T=5R0qHp3D0hy53-fkEw7pa_iQu6tA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-of-aspeed: Fix clock divider calculation
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Eddie James <eajames@linux.ibm.com>, linux-clk@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200709224626.GA1021653@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 at 01:14, Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Fri, 10 Jul 2020, at 05:27, Eddie James wrote:
-> > When calculating the clock divider, start dividing at 2 instead of 1.
-> > The divider is divided by two at the end of the calculation, so starting
-> > at 1 may result in a divider of 0, which shouldn't happen.
-> >
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
->
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-Acked-by: Joel Stanley <joel@jms.id.au>
-Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+On 7/9/2020 3:46 PM, Rob Herring wrote:
+> 
+> Why is all the connector schema duplicated here? You only need things 
+> that are further constrained like 'compatible'.
+> 
 
-Stephen, I think this should go to stable too along with 1/2.
+Hi Rob,
 
-Cheers,
+Most of the properties in this dt-binding are going to be constrained by
+the definitions/values specified by usb-connector.  I can add individual
+references to each property, such as compatible, power-role, data-role
+and ports, if that is the recommended approach.
 
-Joel
+> 
+> 'remote-endpoint' in not an array.
+> 
+
+Agreed, I have removed the maxItems parameter.
+
+> 
+> So USB-SS data can come from 'type C mux' or 'role switch node'? That 
+> seems odd.
+> 
+
+This was one of the interpretations, which might work with the current
+usb-connector model.  From the previous block diagram I shared, we can
+see that the SS path has two potential "endpoints," one to the mux and
+another to the USB controller on the SOC.
+
+Another design consideration is when the device supports the "Audio
+Adapter Accessory Mode."  The audio accessory is mentioned in the type C
+spec as an adapter which will utilize the USB D+/- lines for audio
+output.  So now, you could potentially have something like below:
+
+				   _______		 _______
+                            ______|FUSB302|		|SOC	|
+			   |	  |Type C |		|	|
+			   |      |Cntrl  |__I2C_______	|	|
+			   |	  |_______|		|	|
+ ___                       |       			|	|
+|   |______ CC1/2 _________|				|	|
+|   |				   _______		|	|
+|   |			     ____*|Charger|		|	|
+|   |			    |	  |HW     |		|	|
+|   |			    |     |_______|		|	|
+|   |			    |	   ________      	|	|
+|   |______ HS DP/DM _______|____*|MAX20328|_HS D+/D-__	|	|
+|   |				  |________|__Audio Out_|	|
+|   |				   ________		|	|
+|   |______ SS RX/TX1 __________**|FUSB304 |_SS RX/TX**_|	|
+|   |______ SS RX/TX2 ____________|USB Mux |		|_______|
+|   |                             |________|
+|   |
+|___|
+
+With this kind of device, it would make sense to have multiple endpoints
+per path, which can be represented like the following:
+
+connector {
+        compatible = "usb-c-connector";
+	...
+        ports {
+        	port@0 {
+			...
+			//Charger endpoint*
+			usb_con_hs_chg: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&max77865_usbc_hs>;
+			};
+			//Audio accessory adapter mux*
+			usb_con_hs_audio: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&analog_audio>;
+			};
+                };
+		port@1 {
+			...
+			//USB3 lane mux**
+			usb3_data_ss: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&qmp_ss_mux>;
+			};
+			//USB3 SOC controller**
+			usb3_role: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&dwc3_drd_switch>;
+			};
+		};
+	};
+};
+
+Thanks
+Wesley Cheng
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
