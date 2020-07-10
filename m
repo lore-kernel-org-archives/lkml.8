@@ -2,117 +2,64 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F850C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F4520720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CE920836
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGJP1i (ORCPT
+        id S1727780AbgGJP3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:27:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56972 "EHLO mx2.suse.de"
+        Fri, 10 Jul 2020 11:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728013AbgGJP1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:27:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 502F9AC24;
-        Fri, 10 Jul 2020 15:27:36 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 17:27:35 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/livepatch: adopt to newer sysctl error format
-Message-ID: <20200710152735.GA20226@alley>
-References: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
+        id S1726925AbgGJP3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:29:12 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F090120720;
+        Fri, 10 Jul 2020 15:29:10 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     will@kernel.org, Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     arm@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        xiexiangyou@huawei.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1] arm64: tlb: don't set the ttl value in flush_tlb_page_nosync
+Date:   Fri, 10 Jul 2020 16:29:08 +0100
+Message-Id: <159439494095.22236.16676727348403184772.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200710094158.468-1-yezhenyu2@huawei.com>
+References: <20200710094158.468-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-07-10 10:40:43, Kamalesh Babulal wrote:
-> With procfs v3.3.16, the sysctl command doesn't prints the set key and
-> value on error.  This change breaks livepatch selftest test-ftrace.sh,
-> that tests the interaction of sysctl ftrace_enabled:
+On Fri, 10 Jul 2020 17:41:58 +0800, Zhenyu Ye wrote:
+> flush_tlb_page_nosync() may be called from pmd level, so we
+> can not set the ttl = 3 here.
 > 
->  # selftests: livepatch: test-ftrace.sh
->  # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
->  #
->  # --- expected
->  # +++ result
->  # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
->  #  livepatch: 'test_klp_livepatch': starting patching transition
->  #  livepatch: 'test_klp_livepatch': completing patching transition
->  #  livepatch: 'test_klp_livepatch': patching complete
->  # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
->     resource busy kernel.ftrace_enabled = 0
->  # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
->     resource busy
->  #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
->  #  livepatch: 'test_klp_livepatch': initializing unpatching transition
->  #  livepatch: 'test_klp_livepatch': starting unpatching transition
->  #
->  # ERROR: livepatch kselftest(s) failed
+> The callstack is as follows:
 > 
-> on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
-> set key and value is displayed.
-> 
-> This patch fixes it by limiting the output from both the cases to eight
-> words, that includes the error message or set key and value on failure
-> and success. The upper bound of eight words is enough to display the
-> only tracked error message. Also, adjust the check_result string in
-> test-ftrace.sh to match the expected output.
+> 	pmdp_set_access_flags
+> 		ptep_set_access_flags
+> 			flush_tlb_fix_spurious_fault
+> 				flush_tlb_page
+> 					flush_tlb_page_nosync
 
-This looks really tricky.
+Applied to arm64 (for-next/tlbi), thanks!
 
-I wonder if we could use "sysctl -q" to refuse printing the value
-even with older versions. The following patch works here with
-sysctl 3.3.15:
+[1/1] arm64: tlb: don't set the ttl value in flush_tlb_page_nosync
+      https://git.kernel.org/arm64/c/61c11656b67b
 
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index 2aab9791791d..47aa4c762bb4 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -64,7 +64,8 @@ function set_dynamic_debug() {
- }
- 
- function set_ftrace_enabled() {
--	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
-+	result=$(sysctl -q kernel.ftrace_enabled="$1" 2>&1 && \
-+		 sysctl kernel.ftrace_enabled 2>&1)
- 	echo "livepatch: $result" > /dev/kmsg
- }
- 
-diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
-index e2a76887f40a..aa967c5d0558 100755
---- a/tools/testing/selftests/livepatch/test-ftrace.sh
-+++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-@@ -53,7 +53,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
- livepatch: '$MOD_LIVEPATCH': starting patching transition
- livepatch: '$MOD_LIVEPATCH': completing patching transition
- livepatch: '$MOD_LIVEPATCH': patching complete
--livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
-+livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
- % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
- livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
- livepatch: '$MOD_LIVEPATCH': starting unpatching transition
+-- 
+Catalin
 
-
-Best Regards,
-Petr
