@@ -2,78 +2,63 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084692073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67932073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCXjs8bI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b6mZDEKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgGJB56 (ORCPT
+        id S1727930AbgGJB6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgGJB5W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:57:22 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE35C08C5CE;
-        Thu,  9 Jul 2020 18:57:22 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md7so1922418pjb.1;
-        Thu, 09 Jul 2020 18:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TndaA+7n10SOeC82kaRc/SAF/MahQj0lom1PGKrEXvU=;
-        b=gCXjs8bI2mKELHWhu45fBwg1UfGpXWYrZpw6lFS/SvzlUgi0yqDt8mR0Swy0XW/Eoh
-         OxqpNXxxb+SbP/lNioVntQfSfi4+giY2ZWkfv6+c2VV1Qi1h2qu8pfPyehvx7JDtU+cj
-         fvFVZxq2JpBW77ynSZam+fy+gVUFRdFqePTsZSQz9vkfcGVU7meycx1z83dKI6D6L/tX
-         IeuWG+VZDdlxt2r8ZWdEGs3JCuZlfe+MRZJkfZUwxv0/SwopWrbT5G8its/MryhEKJ/d
-         ClkJ1u2tLeLTb181Zjyjn82cQDXUyvsMLzzmGPsgTdpCvZWDM2JzPr7Eb1HexxQB+tSM
-         +CWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TndaA+7n10SOeC82kaRc/SAF/MahQj0lom1PGKrEXvU=;
-        b=OjuZz7WnMJLmJ2vRRV49CyeoGD6FcW0YS8f6WxZvVehsN5hgBN4URSRPIq3fF3EhAn
-         uFMlfESMn5acz0eMSAcT1udDHYWsZ+/XFp/E4phYKhQcqOAeDWEnKHEkaNmJDqvglazZ
-         8RdkvlwtpmsYR28ChctWTSD23jmZH8mZQgCNrzPleboZug2zdZf5lhRkbsTeER3g/n8I
-         TZuvfjOhen0t0v6akJ6xPO+do2gopR6cI+5BAdx9dWg7NRzj9wVfBBDs49f/GJOEfq23
-         1YyWGrFFV5iOeAN3w6FeBuEYRwEBUVD4uRqzC37eEOOTTYYOe2qtaI05HO+ETVSMKEzs
-         3JLQ==
-X-Gm-Message-State: AOAM531HaF6XW7rkGTlsOZo+LSLB0jgiivqgv6r0xAAMywqxsjnBUmB3
-        vupKSfq77L/ZWiQtPLtNrPKWK45d
-X-Google-Smtp-Source: ABdhPJzaWKUBO6GLgF6DS/ZblFwcTQFZaXYAVtzx8AT9SnnyhUC2nMRdbyYbGy72wTEeylcuoM1gzw==
-X-Received: by 2002:a17:90a:4bc7:: with SMTP id u7mr3117178pjl.217.1594346241669;
-        Thu, 09 Jul 2020 18:57:21 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (220-245-19-62.static.tpgi.com.au. [220.245.19.62])
-        by smtp.gmail.com with ESMTPSA id 7sm3912834pgw.85.2020.07.09.18.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 18:57:21 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, x86@kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, Anton Blanchard <anton@ozlabs.org>
-Subject: [RFC PATCH 3/7] mm: introduce exit_lazy_tlb
-Date:   Fri, 10 Jul 2020 11:56:42 +1000
-Message-Id: <20200710015646.2020871-4-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200710015646.2020871-1-npiggin@gmail.com>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
+        Thu, 9 Jul 2020 21:58:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37361 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727915AbgGJB6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 21:58:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594346283; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=F4eXeq25Q9ZWoEpyuwr/eiFhZ8aoX1bXVjTCKxaL/gc=; b=b6mZDEKI+9iavevDIb0w6nRL/okGv5PxO5cFdNKLuDUJfuKmQm30uzGPt0h0nmCLpPPMw6rN
+ fDxRPe8ZjI0wTxg9CQolHD8rAu80IPWmXJ1J60JBWjIbv9YxiJwDpS1J5yQlUrQfz2zUV5bI
+ e1nK/VE+vzUl54L4f6kz2TAwfJ4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f07caf4d07c1358558afff0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2B8A8C433A1; Fri, 10 Jul 2020 01:57:07 +0000 (UTC)
+Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4098BC433A0;
+        Fri, 10 Jul 2020 01:57:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4098BC433A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+From:   Mike Tipton <mdtipton@codeaurora.org>
+To:     georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH v2 3/6] interconnect: qcom: Support bcm-voter-specific TCS wait behavior
+Date:   Thu,  9 Jul 2020 18:56:49 -0700
+Message-Id: <20200710015652.19206-4-mdtipton@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200710015652.19206-1-mdtipton@codeaurora.org>
+References: <20200710015652.19206-1-mdtipton@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,87 +66,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- fs/exec.c                         |  5 +++--
- include/asm-generic/mmu_context.h | 20 ++++++++++++++++++++
- kernel/kthread.c                  |  1 +
- kernel/sched/core.c               |  2 ++
- 4 files changed, 26 insertions(+), 2 deletions(-)
+Currently, all bcm-voters set tcs_cmd::wait=true for the last VCD
+command in each TCS (AMC, WAKE, and SLEEP). However, some bcm-voters
+don't need the completion and instead need to optimize for latency. For
+instance, disabling wait-for-completion in the WAKE set can decrease
+resume latency and allow for certain operations to occur in parallel
+with the WAKE TCS triggering. This is only safe in very specific
+situations. Keep the default behavior of always waiting, but allow it to
+be overridden in devicetree.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..e2ab71e88293 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1117,9 +1117,10 @@ static int exec_mmap(struct mm_struct *mm)
- 		setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
- 		mm_update_next_owner(old_mm);
- 		mmput(old_mm);
--		return 0;
-+	} else {
-+		exit_lazy_tlb(active_mm, tsk);
-+		mmdrop(active_mm);
+Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+---
+ drivers/interconnect/qcom/bcm-voter.c | 32 ++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+index a3d2ef1d9903..4bba3b42b648 100644
+--- a/drivers/interconnect/qcom/bcm-voter.c
++++ b/drivers/interconnect/qcom/bcm-voter.c
+@@ -27,6 +27,7 @@ static DEFINE_MUTEX(bcm_voter_lock);
+  * @commit_list: list containing bcms to be committed to hardware
+  * @ws_list: list containing bcms that have different wake/sleep votes
+  * @voter_node: list of bcm voters
++ * @tcs_wait: mask for which buckets require TCS completion
+  */
+ struct bcm_voter {
+ 	struct device *dev;
+@@ -35,6 +36,7 @@ struct bcm_voter {
+ 	struct list_head commit_list;
+ 	struct list_head ws_list;
+ 	struct list_head voter_node;
++	u32 tcs_wait;
+ };
+ 
+ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+@@ -89,7 +91,7 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ }
+ 
+ static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
+-			       u32 addr, bool commit)
++			       u32 addr, bool commit, bool wait)
+ {
+ 	bool valid = true;
+ 
+@@ -114,15 +116,16 @@ static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
+ 	 * Set the wait for completion flag on command that need to be completed
+ 	 * before the next command.
+ 	 */
+-	cmd->wait = commit;
++	cmd->wait = wait;
+ }
+ 
+-static void tcs_list_gen(struct list_head *bcm_list, int bucket,
+-			 struct tcs_cmd tcs_list[MAX_BCMS],
++static void tcs_list_gen(struct bcm_voter *voter, int bucket,
++			 struct tcs_cmd tcs_list[MAX_VCD],
+ 			 int n[MAX_VCD + 1])
+ {
++	struct list_head *bcm_list = &voter->commit_list;
+ 	struct qcom_icc_bcm *bcm;
+-	bool commit;
++	bool commit, wait;
+ 	size_t idx = 0, batch = 0, cur_vcd_size = 0;
+ 
+ 	memset(n, 0, sizeof(int) * (MAX_VCD + 1));
+@@ -135,8 +138,11 @@ static void tcs_list_gen(struct list_head *bcm_list, int bucket,
+ 			commit = true;
+ 			cur_vcd_size = 0;
+ 		}
++
++		wait = commit && (voter->tcs_wait & BIT(bucket));
++
+ 		tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
+-			    bcm->vote_y[bucket], bcm->addr, commit);
++			    bcm->vote_y[bucket], bcm->addr, commit, wait);
+ 		idx++;
+ 		n[batch]++;
+ 		/*
+@@ -261,8 +267,7 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+ 	 * Construct the command list based on a pre ordered list of BCMs
+ 	 * based on VCD.
+ 	 */
+-	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
+-
++	tcs_list_gen(voter, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
+ 	if (!commit_idx[0])
+ 		goto out;
+ 
+@@ -298,7 +303,7 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+ 
+ 	list_sort(NULL, &voter->commit_list, cmp_vcd);
+ 
+-	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
++	tcs_list_gen(voter, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
+ 
+ 	ret = rpmh_write_batch(voter->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
+ 	if (ret) {
+@@ -306,7 +311,7 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+ 		goto out;
  	}
--	mmdrop(active_mm);
- 	return 0;
- }
  
-diff --git a/include/asm-generic/mmu_context.h b/include/asm-generic/mmu_context.h
-index 86cea80a50df..3fc4c3879b79 100644
---- a/include/asm-generic/mmu_context.h
-+++ b/include/asm-generic/mmu_context.h
-@@ -24,6 +24,26 @@ static inline void enter_lazy_tlb(struct mm_struct *mm,
- }
- #endif
+-	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
++	tcs_list_gen(voter, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
  
-+/*
-+ * exit_lazy_tlb - Called after switching away from a lazy TLB mode mm.
-+ *
-+ * mm:  the lazy mm context that was switched away from
-+ * tsk: the task that was switched to non-lazy mm
-+ *
-+ * tsk->mm will not be NULL.
-+ *
-+ * Note this is not symmetrical to enter_lazy_tlb, this is not
-+ * called when tasks switch into the lazy mm, it's called after the
-+ * lazy mm becomes non-lazy (either switched to a different mm or the
-+ * owner of the mm returns).
-+ */
-+#ifndef exit_lazy_tlb
-+static inline void exit_lazy_tlb(struct mm_struct *mm,
-+			struct task_struct *tsk)
-+{
-+}
-+#endif
+ 	ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
+ 	if (ret) {
+@@ -325,6 +330,7 @@ EXPORT_SYMBOL_GPL(qcom_icc_bcm_voter_commit);
+ 
+ static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	struct bcm_voter *voter;
+ 
+ 	voter = devm_kzalloc(&pdev->dev, sizeof(*voter), GFP_KERNEL);
+@@ -332,7 +338,11 @@ static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	voter->dev = &pdev->dev;
+-	voter->np = pdev->dev.of_node;
++	voter->np = np;
 +
- /**
-  * init_new_context - Initialize context of a new mm_struct.
-  * @tsk: task struct for the mm
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 132f84a5fde3..e813d92f2eab 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -1253,6 +1253,7 @@ void kthread_use_mm(struct mm_struct *mm)
- 
- 	if (active_mm != mm)
- 		mmdrop(active_mm);
-+	exit_lazy_tlb(active_mm, tsk);
- 
- 	to_kthread(tsk)->oldfs = get_fs();
- 	set_fs(USER_DS);
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ca5db40392d4..debc917bc69b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3439,6 +3439,8 @@ context_switch(struct rq *rq, struct task_struct *prev,
- 		switch_mm_irqs_off(prev->active_mm, next->mm, next);
- 
- 		if (!prev->mm) {                        // from kernel
-+			exit_lazy_tlb(prev->active_mm, next);
++	if (of_property_read_u32(np, "qcom,tcs-wait", &voter->tcs_wait))
++		voter->tcs_wait = QCOM_ICC_TAG_ALWAYS;
 +
- 			/* will mmdrop() in finish_task_switch(). */
- 			rq->prev_mm = prev->active_mm;
- 			prev->active_mm = NULL;
+ 	mutex_init(&voter->lock);
+ 	INIT_LIST_HEAD(&voter->commit_list);
+ 	INIT_LIST_HEAD(&voter->ws_list);
 -- 
-2.23.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
