@@ -2,109 +2,82 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E29C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47542076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E3C2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+XxOvBj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QbSlvJqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgGJF6c (ORCPT
+        id S1727050AbgGJF7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:58:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40425 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725943AbgGJF6a (ORCPT
+        Fri, 10 Jul 2020 01:59:00 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:2731 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726288AbgGJF67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:58:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594360708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=C4LnrvqT9+DNx24YkEZw2+SXe1o6FKiLlzwpTypzG8A=;
-        b=Y+XxOvBjEbl9F7XdtOTWEY97JVlA/4JP9m1OmOM/D/jNmDESGG8eUGLrkYTpi8iDjHO65f
-        DcJzt/9EtJvnxVr49HXpyCfTyPviqACGraWwl9LAp+nvbzYOwfs3ZJ/2BEaJ1Ey//5I0mk
-        Ry4yH4AO8/XNtQnB4TbTvmqSHnhav1M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-FPdUbiyrNYmCVsD8AM-1aw-1; Fri, 10 Jul 2020 01:58:27 -0400
-X-MC-Unique: FPdUbiyrNYmCVsD8AM-1aw-1
-Received: by mail-wm1-f70.google.com with SMTP id e15so5249118wme.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 22:58:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C4LnrvqT9+DNx24YkEZw2+SXe1o6FKiLlzwpTypzG8A=;
-        b=J6omiadZEEwjiC/SEAhdJDZqsBK0WzE0Nv6moqC5rx7lwom4Iz85HW8i5tSYe6FHVz
-         6p7Z9wvdO8Jrr88Aof0yFf3UB0Lvs42NwTpgk4J5r2zzI6MBQU5AEJC0hj95MjFfzyvw
-         JgHmuvCbTlSsdgInJnA27Ab3WRvbJlcPtKZaoo7Bj6IGfxNwUyw9PEOFDFt2Fb0ffrYO
-         p5praA2zGNcgUwF9S5DZjAKK6X1NvZsBZoE7f9IJKMntOS62nVLFgZodFP0Efin0O+Nh
-         BIQxToaVEIItnKvVYzY2yZHpgRed87ndLYS+KhC5jZYWX8po/ff4OO2nSsTkvmlOPXT0
-         htbg==
-X-Gm-Message-State: AOAM53095lDKME82Aw7nfu++auOf/JLnIyvbDQcUfSsADmGyjcey0/6v
-        Og8s6NRYFdbaaUZVGKuRXuKiy/QvyijtLhY8B/mte3Nty45mz9ZC7Q7xk/qgvhgOl/ymirGlVVX
-        NRyJ6GEWZPlxYgrTezmLcuvSS
-X-Received: by 2002:a7b:c38f:: with SMTP id s15mr3394783wmj.152.1594360705673;
-        Thu, 09 Jul 2020 22:58:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLn6mDVLNvrd8u4soiaqjHIlkFvr4sTxn75hYjrWzq/00SA7DFxiythkthHZ5njp79o9gOug==
-X-Received: by 2002:a7b:c38f:: with SMTP id s15mr3394766wmj.152.1594360705488;
-        Thu, 09 Jul 2020 22:58:25 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id j15sm8366155wrx.69.2020.07.09.22.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 22:58:24 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 01:58:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200710015615-mutt-send-email-mst@kernel.org>
-References: <20200622122546-mutt-send-email-mst@kernel.org>
- <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
- <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
- <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
- <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
- <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
+        Fri, 10 Jul 2020 01:58:59 -0400
+X-UUID: 608734bb72ea495f801e4bd979a00c26-20200710
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=NXSoc40w/vzs0ddT+Wgmf68IXPtgdbuXrs4l5A4rBb8=;
+        b=QbSlvJqPSnMFhxDlQjAwuFfqCFVI8kw/C7eolqgnJz5u2aKy00V+DxPsVgxoWxdDdDoLi3iddwQt7gT09KYlLmZRn0W3Kcxkq69Zf5jpDlxhrofjBPuxqcggQy6vfLBc+hJ+wEu+6uqetrP7p/GYtuhk2NOeiG8jh1k0uXpWgHc=;
+X-UUID: 608734bb72ea495f801e4bd979a00c26-20200710
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 758997052; Fri, 10 Jul 2020 13:58:52 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 10 Jul 2020 13:58:48 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 10 Jul 2020 13:58:49 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Mathias Nyman <mathias.nyman@intel.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        stable <stable@vger.kernel.org>
+Subject: [v2 PATCH] usb: xhci-mtk: fix the failure of bandwidth allocation
+Date:   Fri, 10 Jul 2020 13:57:52 +0800
+Message-ID: <1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A4E306D334522FFBCC74B2420148282F0928E1E8771E2A2BEF95B67EF98867B52000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 07:39:26AM +0200, Eugenio Perez Martin wrote:
-> > > How about playing with the batch size? Make it a mod parameter instead
-> > > of the hard coded 64, and measure for all values 1 to 64 ...
-> >
-> >
-> > Right, according to the test result, 64 seems to be too aggressive in
-> > the case of TX.
-> >
-> 
-> Got it, thanks both!
-
-In particular I wonder whether with batch size 1
-we get same performance as without batching
-(would indicate 64 is too aggressive)
-or not (would indicate one of the code changes
-affects performance in an unexpected way).
-
--- 
-MST
+VGhlIHdNYXhQYWNrZXRTaXplIGZpZWxkIG9mIGVuZHBvaW50IGRlc2NyaXB0b3IgbWF5IGJlIHpl
+cm8NCmFzIGRlZmF1bHQgdmFsdWUgaW4gYWx0ZXJuYXRlIGludGVyZmFjZSwgYW5kIHRoZXkgYXJl
+IG5vdA0KYWN0dWFsbHkgc2VsZWN0ZWQgd2hlbiBzdGFydCBzdHJlYW0sIHNvIHNraXAgdGhlbSB3
+aGVuIHRyeSB0bw0KYWxsb2NhdGUgYmFuZHdpZHRoLg0KDQpDYzogc3RhYmxlIDxzdGFibGVAdmdl
+ci5rZXJuZWwub3JnPg0KRml4ZXM6IDBjYmQ0YjM0Y2RhOSgieGhjaTogbWVkaWF0ZWs6IHN1cHBv
+cnQgTVRLIHhIQ0kgaG9zdCBjb250cm9sbGVyIikNClNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1
+biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KVjI6IGFkZCBGaXhlcyBzdWdnZXN0
+ZWQgYnkgTmljb2xhcw0KLS0tDQogZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYyB8IDQg
+KysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvdXNiL2hvc3QveGhjaS1tdGstc2NoLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRr
+LXNjaC5jDQppbmRleCBmZWE1NTU1Li40NWM1NGQ1NiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdXNi
+L2hvc3QveGhjaS1tdGstc2NoLmMNCisrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGstc2No
+LmMNCkBAIC01NTcsNiArNTU3LDEwIEBAIHN0YXRpYyBib29sIG5lZWRfYndfc2NoKHN0cnVjdCB1
+c2JfaG9zdF9lbmRwb2ludCAqZXAsDQogCWlmIChpc19mc19vcl9scyhzcGVlZCkgJiYgIWhhc190
+dCkNCiAJCXJldHVybiBmYWxzZTsNCiANCisJLyogc2tpcCBlbmRwb2ludCB3aXRoIHplcm8gbWF4
+cGt0ICovDQorCWlmICh1c2JfZW5kcG9pbnRfbWF4cCgmZXAtPmRlc2MpID09IDApDQorCQlyZXR1
+cm4gZmFsc2U7DQorDQogCXJldHVybiB0cnVlOw0KIH0NCiANCi0tIA0KMS45LjENCg==
 
