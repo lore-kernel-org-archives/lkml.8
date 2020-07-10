@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05911C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E352BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC6542080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A3F2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgGJFps (ORCPT
+        id S1727107AbgGJFp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:45:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6254 "EHLO mga12.intel.com"
+        Fri, 10 Jul 2020 01:45:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:8821 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgGJFpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:45:47 -0400
-IronPort-SDR: 0sjGS86LktXHEQoHyx9/yDVAM+frjfmpZLqNmSw2E0VCpB3AHuPi2ljlJmeovKXXZo5Y0wymWr
- ayiG74BK02IQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="127746459"
+        id S1725851AbgGJFp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:45:58 -0400
+IronPort-SDR: w6d9pamLU2loniUPy6x4isGsok4kWBb9VKHDr/N9eaJHRMxtrqnCzXXLnwHfZp2a99QhFN7Xta
+ TSe9DEKVAYdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="213043203"
 X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="127746459"
+   d="scan'208";a="213043203"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:45:46 -0700
-IronPort-SDR: /pjnPDcFoQrhsqbMvzTo+YmOk3my75hKoILGcKIQ5ZH6hdke2HzWYrIUhrs+9S7l1eJm/jpcfo
- 2BpLyD2iF55A==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:45:57 -0700
+IronPort-SDR: 3lzHHSmVB3M60izl6pInT9zZ5MZS3Cr0pw8YBzQPlR03N2bCTiSqZNdN3/Zu93ySTMu+1ZtQWl
+ GpNu7LPOQWqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="458178167"
+   d="scan'208";a="389383213"
 Received: from lkp-server02.sh.intel.com (HELO 0fc60ea15964) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jul 2020 22:45:45 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 22:45:45 -0700
 Received: from kbuild by 0fc60ea15964 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jtlqy-00002X-GM; Fri, 10 Jul 2020 05:45:44 +0000
-Date:   Fri, 10 Jul 2020 13:45:07 +0800
+        id 1jtlqy-00002U-FW; Fri, 10 Jul 2020 05:45:44 +0000
+Date:   Fri, 10 Jul 2020 13:45:11 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Paul E. McKenney" <paulmck@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.07.08a] BUILD SUCCESS
- cb2d297b305225704e58759373684f365ae103d4
-Message-ID: <5f080063.siU6a+NPd8AhFn3n%lkp@intel.com>
+Subject: [rcu:dev.2020.07.09a] BUILD SUCCESS
+ f40a25f3eefe71e02df81089e3331eb271ff55be
+Message-ID: <5f080067.vb+ijlbLV2xUEmhl%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,8 +54,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.08a
-branch HEAD: cb2d297b305225704e58759373684f365ae103d4  rcu: Fix kerneldoc comments in rcuupdate.h
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.09a
+branch HEAD: f40a25f3eefe71e02df81089e3331eb271ff55be  squash! scftorture: Add smp_call_function_single() memory-ordering checks
 
 elapsed time: 722m
 
