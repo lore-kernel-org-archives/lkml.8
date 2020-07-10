@@ -2,116 +2,257 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6227C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD51CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE012065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594340054;
-	bh=1Q5ejM91y+rZdlPiC9UJgo7wuGqE1YmvLc2GRbXroko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wZ2hFbqErN1FqxnXYXmQNOynEAzpqyZNqeBW/EQWvE6TTu5AtCEU+ybpDInyPjxyt
-	 c3CFlouG4DWdo1mEGSgNt6JdbkLssHpOp2BNvLSSEb2UmOxZzRHAj3M3JnB7Hzd+up
-	 Zo2k3FsZoZ8qJrofpxOtPPxsLwhLjDYsqLVGLyA8=
+	by mail.kernel.org (Postfix) with ESMTP id AD9982065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgGJAOI (ORCPT
+        id S1726496AbgGJARz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgGJAOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:14:08 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2EE52065F;
-        Fri, 10 Jul 2020 00:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594340048;
-        bh=1Q5ejM91y+rZdlPiC9UJgo7wuGqE1YmvLc2GRbXroko=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2a1Son6W+Y/jnNfWf/6l+CVIii/kSqwRfl7ye9cOmeJxHyIkrxFAKYiE+Kbt3PD6d
-         E+d1KyZ02ruY1rVQjHcKdPW8+RrhIKlIUcKaH85ObpDYyAI+tK7DIf9zThvjJM8pPn
-         X9oQEEgT+CVubZkBJGaw6L7zIIzaVuByKHmwCqbM=
-Date:   Thu, 9 Jul 2020 19:14:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/11 RFC] PCI: pciehp: Make "Power On" the default
-Message-ID: <20200710001406.GA30420@bjorn-Precision-5520>
+        Thu, 9 Jul 2020 20:17:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35430 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGJARz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 20:17:55 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id C01A72A2520
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Gofman <gofmanp@gmail.com>
+Subject: Re: [PATCH v2] kernel: Implement selective syscall userspace redirection
+Organization: Collabora
+References: <20200709043840.4189530-1-krisman@collabora.com>
+        <202007091549.1E457D4@keescook>
+Date:   Thu, 09 Jul 2020 20:17:49 -0400
+In-Reply-To: <202007091549.1E457D4@keescook> (Kees Cook's message of "Thu, 9
+        Jul 2020 16:33:57 -0700")
+Message-ID: <874kqg6x5e.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706093121.9731-6-refactormyself@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:31:15AM +0200, Saheed Olayemi Bolarinwa wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> The default case of the switch statement is redundant since 
-> PCI_EXP_SLTCTL_PCC is only a single bit. pcie_capability_read_word()
-> currently causes "On" value to be set if it fails. Patch 11/11
-> changes the behaviour of pcie_capability_read_word() so on falure the
-> "Off" value will be set.
+Kees Cook <keescook@chromium.org> writes:
 
-s/falure/failure/
+> On Thu, Jul 09, 2020 at 12:38:40AM -0400, Gabriel Krisman Bertazi wrote:
+>> [...]
+>> +config SYSCALL_USER_DISPATCH
+>> +	bool "Support rejecting syscalls not coming from a dispatcher"
+>
+> bike shed: this doesn't really describe why it's useful. Maybe:
+>
+> 	bool "Support syscall redirection to userspace dispatcher"
+>
+>> +	depends on HAVE_ARCH_SYSCALL_USER_DISPATCH
+>> +	help
+>> +	  Enable tasks to ask the kernel to redirect syscalls not
+>> +	  issued from a predefined dispatcher back to userspace,
+>> +	  depending on a userspace selector.
+>
+> 	depending on a userspace memory selector.
+>
+> ?
+>
+>> [...]
+>> --- a/arch/x86/entry/common.c
+>> +++ b/arch/x86/entry/common.c
+>> @@ -138,6 +138,11 @@ static long syscall_trace_enter(struct pt_regs *regs)
+>>  			return -1L;
+>>  	}
+>>  
+>> +	if (work & _TIF_SYSCALL_USER_DISPATCH) {
+>> +		if (do_syscall_user_dispatch(regs))
+>> +			return -1L;
+>> +	}
+>> +
+>
+> Nice; I like this! It's very small, and now I want to refactor seccomp
+> to be so pretty. :)
+>
+>> [...]
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index e6e8a9a70327..44f0ce352a0d 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1502,6 +1502,8 @@ void setup_new_exec(struct linux_binprm * bprm)
+>>  
+>>  	arch_setup_new_exec();
+>>  
+>> +	clear_tsk_syscall_user_dispatch(me);
+>> +
+>
+> To keep this as arch-agnostic as possible, I actually think this belongs
+> in begin_new_exec() instead, after the personality clearing. If it were
+> to be less arch-agnostic, I'd recommend it live in arch_setup_new_exec()
+> (which most other TIF flags get cleared), but I'd like to have this
+> feature as a good example of an "easy" refactor into arch-agnostic in
+> the future. :P
+>
+>> [...]
+>> @@ -285,6 +285,7 @@ typedef struct siginfo {
+>>   */
+>>  #define SYS_SECCOMP	1	/* seccomp triggered */
+>>  #define NSIGSYS		1
+>> +#define SYS_USER_REDIRECT 2
+>
+> More than just what willy suggested, but you also need to bump NSIGSYS
+> (I missed that in the RFC). This should read as:
+>
+> #define SYS_SECCOMP		1	/* seccomp triggered */
+> #define SYS_USER_REDIRECT	2
+> #define NSIGSYS			2
+>
+> (i.e. NSIGSYS is "how many si codes are there for sigsys?")
 
-Split this into two patches.  The removal of the default case should
-be in its own patch to make it trivial to review.
+Hey Kees,
 
-> Make the function set status to "Power On" by default and only set to
-> Set "Power Off" only if pcie_capability_read_word() is successful and
-> (slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 0b691e37fd04..78f806a9c6f1 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -399,22 +399,16 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
->  {
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	u16 slot_ctrl;
-> +	int ret;
->  
-> -	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-> +	*status = 1;	/* On */
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
->  	ctrl_dbg(ctrl, "%s: SLOTCTRL %x value read %x\n", __func__,
->  		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
->  
-> -	switch (slot_ctrl & PCI_EXP_SLTCTL_PCC) {
-> -	case PCI_EXP_SLTCTL_PWR_ON:
-> -		*status = 1;	/* On */
-> -		break;
-> -	case PCI_EXP_SLTCTL_PWR_OFF:
-> +	if (!ret &&
-> +	    ((slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF))
->  		*status = 0;	/* Off */
-> -		break;
-> -	default:
-> -		*status = 0xFF;
-> -		break;
-> -	}
->  }
->  
->  void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
-> -- 
-> 2.18.2
-> 
+Thanks for the very detailed feedback.
+
+I was actually asking myself what NSIGSYS was and, if it meant something
+else, whether it was a bug to have the same value as SYS_SECCOMP.  The
+name isn't very meaningful to me :).  I'll slip in a comment here in my
+next version.
+
+
+>> [...]
+>> +int do_syscall_user_dispatch(struct pt_regs *regs)
+>> +{
+>> +	int state;
+>> +
+>> +	if (current->syscall_dispatch.dispatcher == instruction_pointer(regs))
+>> +		return 0;
+>
+> Just to clarify what willy was talking about -- since you're using
+> "dispatcher" as a scalar (and not dereferencing it, etc), it can just
+> stay "unsigned long" without __user.
+
+Thanks, i think I got the __user flag correctly now.
+
+I was actually wondering more if this should be (void*), (uintptr) or
+some other type, and if ulong was the right call, but looking at other
+code in the kernel ulong seems fine.
+
+> In the documentation for the future "range inclusive" check, maybe also
+> note that it's the inclusive ranger covering the _starting_ address of
+> the syscall entry, in case anyone thinks they need to decode instruction
+> lengths to get the right range, which they don't and I imagine you don't
+> care about.
+
+This is something I was wondering.  For the end of the range, shouldn't
+we document it must include exactly the __end__ of the syscall
+instruction, i.e., the start of the next instruction, instead of the
+start?  If syscall is in the last address of the range, we get IP for
+whatever is next and in that case, a syscall issued from a "valid"
+address is rejected.  This is a corner case, for sure, but for
+simplicity I think we could just let the kernel reject the syscall,
+otherwise we need to find the actual syscall address when checking the
+range.  Is that fine?
+>
+>> +
+>> +	if (current->syscall_dispatch.selector) {
+>> +		if (__get_user(state, current->syscall_dispatch.selector))
+>> +			do_exit(SIGSEGV);
+>> +
+>> +		switch (state) {
+>> +		case PR_SYSCALL_DISPATCH_DISABLE:
+>> +			return 0;
+>> +		case PR_SYSCALL_DISPATCH_ENABLE:
+>> +			break;
+>> +		default:
+>> +			do_exit(SIGSEGV);
+>> +		}
+>> +	}
+>> +
+>> +	syscall_rollback(current, regs);
+>> +	trigger_sigsys(regs);
+>> +
+>> +	return 1;
+>
+> How should do_syscall_user_dispatch() approach branch hinting? For example,
+> is dispatcher == instruction_pointer going to be the common case for
+> users of this? I would expect not. So maybe, at the top:
+>
+> 	if (unlikely(current->syscall_dispatch.dispatcher == instruction_pointer(regs)))
+> 		return 0;
+>
+> and what about the selector? I assume it would be common for the selector
+> to be set, and enabled:
+>
+> 	if (likely(current->syscall_dispatch.selector)) {
+> 		if (__get_user(state, current->syscall_dispatch.selector))
+> 			do_exit(SIGSEGV);
+>
+> 		if (unlikely(state != PR_SYSCALL_DISPATCH_ENABLE)) {
+> 			if (likely(state == PR_SYSCALL_DISPATCH_DISABLE))
+> 				return 0;
+> 			do_exit(SIGSEGV);
+> 		}
+> 	}
+>
+> 	syscall_rollback...
+
+My first version had all the unlikely/likely added, but I didn't observe
+high branch misses when profiling so I dropped before sending the
+RFC. The fast path, considering the new range scheme (specially when you
+allow the glibc range), is entering the first 'if' condition, so that
+should be made likely. Once we are reading selector then __get_user has
+such a high cost with SMAP that I didn't notice any difference in the
+wall-clock time.
+
+Also, I think placing the DISABLE check before ENABLE might be
+better, since we won't pay the high cost of SIGSYS in that case.  Once
+we know that we will either SIGSEGV or SIGSYS, a branch miss won't do
+much difference..  Does the following sound good?
+
+if (likely(current->syscall_dispatch.dispatcher == instruction_pointer(regs)))
+	return 0;
+
+if (likely(current->syscall_dispatch.selector)) {
+	if (__get_user(state, current->syscall_dispatch.selector))
+		do_exit(SIGSEGV);
+
+	if (likely(state == PR_SYSCALL_DISPATCH_DISABLE)
+		return 0;
+
+	if (state != PR_SYSCALL_DISPATCH_ENABLE)
+		do_exit(SIGSEGV);
+}
+
+// syscall_rollback
+
+
+>
+> Or, perhaps micro-optimization doesn't matter at all here give the
+> overhead of signal delivery, and you can just ignore me and leave this
+> as-is, which is fine too. :)
+>
+> This continues to look really nice. Very simple, very powerful. I think
+> I'd like to see one more thing: a selftest! I think it should be very
+> easy to add; model it after the seccomp selftests:
+>
+> tools/testing/selftests/seccomp/seccomp_bpf.c
+>
+> The testing harness there should make it very easy to produce a test,
+> and it's easy to wire up to the Makefiles. I'm happy to help point you
+> in the right directions. If you want, you could even share seccomp's
+> directory, but maybe you want your own. :)
+
+Definitely. Added to my todo list for the next iteration.
+
+Thanks!
+
+-- 
+Gabriel Krisman Bertazi
