@@ -2,93 +2,133 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6881C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8DA2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gw45VV3n"
+	by mail.kernel.org (Postfix) with ESMTP id 30A3820708
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgGJB6J (ORCPT
+        id S1726828AbgGJCDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:58:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:61278 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727911AbgGJB6H (ORCPT
+        Thu, 9 Jul 2020 22:03:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55171 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgGJCDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:58:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594346287; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=skG1sNc6a9bKW7iRy/ErFo7Z5EjunK0kUA/gn4pjeGg=; b=gw45VV3n050dgtru5ObkYysqpbm8+gkVcWAtccAMjejADDP4X9UEjk+CQ5h3Dzo8//J5Gk76
- VweuRNpBNnlmAGxA74sLJsC6yM18Oaqauo9pDPzq3XiyD+NYPclm1xyO6Ej5Y3CmC5UelXPH
- bZ5HIuEfWVTQ21axuudZS448cNo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f07caf278e7807b5eecf9fd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 70C59C433C8; Fri, 10 Jul 2020 01:57:05 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A72B2C433C6;
-        Fri, 10 Jul 2020 01:57:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A72B2C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH v2 0/6] interconnect: qcom: Misc bcm-voter changes and fixes
-Date:   Thu,  9 Jul 2020 18:56:46 -0700
-Message-Id: <20200710015652.19206-1-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 9 Jul 2020 22:03:53 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <koba.ko@canonical.com>)
+        id 1jtiOE-0001KK-EI
+        for linux-kernel@vger.kernel.org; Fri, 10 Jul 2020 02:03:50 +0000
+Received: by mail-ot1-f71.google.com with SMTP id z23so2419496ote.14
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 19:03:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SQxlxH8w1XRv/PIUz5GYKxBrNAiYJPuPTh1GdFkqGIs=;
+        b=R1SsomCbWD0FtkQ82r6U7c0fb4WPmA6LSZMGrs3+BY/WQAd8YCM1noxSWEMP24+TWc
+         S/jbQ6tiSETwtbM5rPDESByyy7Q5fj5SPAmV/qjl13NmPIMCQg93DojIBlqTnDw6+awk
+         iUW3tYXLoXg1qHS4rFQxcVkXiD5yiKv/xWKIt1aESQ8qEpkq8LXlDPMLEEfeDNoqEsxX
+         ZLO4gzbAG0cP+nYzAHgYzQDv6pAKv88X7vdFbzYN3zZPAr7KQkvgUMRZe/RkvrwCaBIB
+         lKcI5RrKjMmWcw1ZtBAFri9KnJYi8cgf3oXpEkJCSf4oTKIBa0GrTXQ863DxXTyQIvkW
+         enew==
+X-Gm-Message-State: AOAM530M1FvR8B5MKwnR+AjrBUjRyAqLZsDQYvk5ebi99HWJtUOk3hR2
+        fkxTo1sE5gEQ2ms8p2/QKcUVUeJjdBOxhAVdZXWjVyJVyPiNEa6ROl9yXIxgPPkEqiAdq4W0UrO
+        naIU76Q45IY97v/II6fs7wtPm4m2KLQXm2TzFq3YbwFwf0SFggcErJR5vMw==
+X-Received: by 2002:aca:53cc:: with SMTP id h195mr2497084oib.49.1594346629475;
+        Thu, 09 Jul 2020 19:03:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz90EXEBZzxChOGSMn3vAPnhPKqsDehoEfZ24XLl6I6F50PLmaY8HIRbNnEjkQ9CdqtwnBSbeAYwTS32c6cGEs=
+X-Received: by 2002:aca:53cc:: with SMTP id h195mr2497064oib.49.1594346629211;
+ Thu, 09 Jul 2020 19:03:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJB-X+VcHvYWngtMVHw5f_XaqA4i4T61yt=h7YvuD=eo3y7Rog@mail.gmail.com>
+ <DM6PR19MB2636E5A28FB655C2F657FDF8FA640@DM6PR19MB2636.namprd19.prod.outlook.com>
+In-Reply-To: <DM6PR19MB2636E5A28FB655C2F657FDF8FA640@DM6PR19MB2636.namprd19.prod.outlook.com>
+From:   Koba Ko <koba.ko@canonical.com>
+Date:   Fri, 10 Jul 2020 10:03:38 +0800
+Message-ID: <CAJB-X+UJx+xTJ05snD9xuf7N-ofvTk3ddeSTtNfrGZ738SRvYg@mail.gmail.com>
+Subject: Re: [Issue]platform/x86: iommu: System can't shutdown because iommu
+ driver keeps checking the status of DMA_GSTS_TES
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Kellner <ckellner@redhat.com>,
+        Anthony Wong <anthony.wong@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These changes are mostly unrelated, but there are some dependencies
-between them.
+Hi Mario
+On Fri, Jul 10, 2020 at 4:58 AM Limonciello, Mario
+<Mario.Limonciello@dell.com> wrote:
+>
+> > -----Original Message-----
+> > From: iommu <iommu-bounces@lists.linux-foundation.org> On Behalf Of Koba Ko
+> > Sent: Sunday, June 14, 2020 10:47 PM
+> > To: David Woodhouse; Lu Baolu; Joerg Roedel
+> > Cc: iommu@lists.linux-foundation.org; Kai Heng Feng; Linux Kernel Mailing
+> > List
+> > Subject: [Issue]platform/x86: iommu: System can't shutdown because iommu
+> > driver keeps checking the status of DMA_GSTS_TES
+> >
+> > hi All,
+> > I have a machine and there's only intel gpu.
+> > the secureboot and vt-d is enabled in BIOS.
+> > On the Ubuntu desktop, I do s2idle first and restart the machine.
+> > The machine can't restart successfully, so I need to press the power
+> > button to shutdown.
+> > I tried  each of the following and the issue can't be triggered.
+> > 1. disable secure boot in BIOS.
+>
+> Just to explain why this happens, on many of Dell's systems VT-d is only enabled
+> when secure boot is enabled.
+>
+> > 2. intel_iommu=off.
+> > 3. intel_iomm=igfx_off.
+> > 4. nomodeset
+> > 5. i915.modeset=0.
+> >
+> > After I investigate further, find inte_iommu keeps checking the status
+> > of DMA_GSTS_TES.
+> > During the procedure of restart, the driver would disable iommu translation
+> > and
+> > check the status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
+> >
+> > If you need more information, I can provide it.
+> >
+> > Thanks
+> > Koba Ko
+> > _______________________________________________
+> > iommu mailing list
+> > iommu@lists.linux-foundation.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>
+> This is reported on TGL pre-production system, but actually same symptom is also
+> happening in ICL production systems such as XPS 7390 2-in-1 and XPS 9300.
+>
+> Details for the ICL issue are available here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206571
+>
+> A user did bisect it back to commit 6c3a44ed3c553c324845744f30bcd1d3b07d61fd in
+> 5.5.  Glancing through the code and comparing the suspend case, I would ask is it
+> just a case of missing a flush at shutdown (IE iommu_flush_all)?
+>
+If dma translation doesn't be disabled during shutdown, the machine
+would be powered off successfully.
+I have tried to flush before disabled and this can't affect the result
+of the issue.
 
-v2:
-- New patch for generic qcom,icc.h bindings
-- New patch for documenting qcom,tcs-wait property
-- Update bcm_div() 'base' parameter from u64 to u32
-
-Mike Tipton (6):
-  dt-bindings: interconnect: Add generic qcom bindings
-  dt-bindings: interconnect: Add property to set BCM TCS wait behavior
-  interconnect: qcom: Support bcm-voter-specific TCS wait behavior
-  interconnect: qcom: Only wait for completion in AMC/WAKE by default
-  interconnect: qcom: Add support for per-BCM scaling factors
-  interconnect: qcom: Fix small BW votes being truncated to zero
-
- .../bindings/interconnect/qcom,bcm-voter.yaml | 13 ++++
- drivers/interconnect/qcom/bcm-voter.c         | 63 ++++++++++++-------
- drivers/interconnect/qcom/icc-rpmh.c          |  3 +
- drivers/interconnect/qcom/icc-rpmh.h          | 20 ++----
- include/dt-bindings/interconnect/qcom,icc.h   | 26 ++++++++
- 5 files changed, 88 insertions(+), 37 deletions(-)
- create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+koba ko
