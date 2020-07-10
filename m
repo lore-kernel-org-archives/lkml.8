@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AB5C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41024C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA862082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182212082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RJataCKV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NvN591Ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgGJOMU (ORCPT
+        id S1728306AbgGJOMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:12:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28722 "EHLO
+        Fri, 10 Jul 2020 10:12:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56862 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728182AbgGJOMS (ORCPT
+        by vger.kernel.org with ESMTP id S1728208AbgGJOM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:12:18 -0400
+        Fri, 10 Jul 2020 10:12:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594390336;
+        s=mimecast20190719; t=1594390346;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6FchqiKTNfD7SANtadf7uzNNvcrA+BUGouO31rgAiwk=;
-        b=RJataCKVO8yDipavHQc9z58UEhCEzPWeZDPwNSRDY4a20SG2lOiHi5jsN77TOt+Hkz4P4U
-        hTg79Udr3w1XTboPRUZpbkQswc4jM3wePL96LIDexB1gPQbr9vPF4S+yO4qUEnYGe0dcKn
-        wvl82ml0w23igWswjEkWOc9OmVR2YPY=
+        bh=XmvusRmRBvAWHNl6x2vdSNs3ESLbQ79QZieDa9NwqUw=;
+        b=NvN591YeLKK8FMw2IoZZbFw/C6KLduCLOYWoutSD2NmWRxkLuDbv1jltEJXpEMxANlvh36
+        CBipFi/lWHBavRcyRfzCUpt/iN0GB5LKtQ9UOQrDQ6yy7efx2Nq+fytEKQLv/YuIrvVud3
+        umooTUQ8lWiPlJCWyi81kbNdLVsfHP8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-CkkStAsCMsGbe_E3vSa7vg-1; Fri, 10 Jul 2020 10:12:13 -0400
-X-MC-Unique: CkkStAsCMsGbe_E3vSa7vg-1
+ us-mta-99-sh3p7GSJOGCcPKFg0z6B8w-1; Fri, 10 Jul 2020 10:12:25 -0400
+X-MC-Unique: sh3p7GSJOGCcPKFg0z6B8w-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADEE38015F7;
-        Fri, 10 Jul 2020 14:12:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C48251080;
+        Fri, 10 Jul 2020 14:12:23 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80D5B1CA;
-        Fri, 10 Jul 2020 14:12:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4AC81CA;
+        Fri, 10 Jul 2020 14:12:19 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -52,9 +52,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Junaid Shahid <junaids@google.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/9] KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
-Date:   Fri, 10 Jul 2020 16:11:52 +0200
-Message-Id: <20200710141157.1640173-5-vkuznets@redhat.com>
+Subject: [PATCH v4 8/9] KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
+Date:   Fri, 10 Jul 2020 16:11:56 +0200
+Message-Id: <20200710141157.1640173-9-vkuznets@redhat.com>
 In-Reply-To: <20200710141157.1640173-1-vkuznets@redhat.com>
 References: <20200710141157.1640173-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -65,114 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some operations in enter_svm_guest_mode() may fail, e.g. currently
-we suppress kvm_set_cr3() return value. Prepare the code to proparate
-errors.
+Make nSVM code resemble nVMX where nested_vmx_load_cr3() is used on
+both guest->host and host->guest transitions. Also, we can now
+eliminate unconditional kvm_mmu_reset_context() and speed things up.
 
-No functional change intended.
+Note, nVMX has two different paths: load_vmcs12_host_state() and
+nested_vmx_restore_host_state() and the later is used to restore from
+'partial' switch to L2, it always uses kvm_mmu_reset_context().
+nSVM doesn't have this yet. Also, nested_svm_vmexit()'s return value
+is almost always ignored nowadays.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 26 ++++++++++++++++----------
- arch/x86/kvm/svm/svm.c    |  6 ++++--
- arch/x86/kvm/svm/svm.h    |  4 ++--
- 3 files changed, 22 insertions(+), 14 deletions(-)
+ arch/x86/kvm/svm/nested.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 1cc8592b1820..5e6c988a4e6b 100644
+index 219871752dc5..434e527096b7 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -379,7 +379,7 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
- 	mark_all_dirty(svm->vmcb);
+@@ -317,7 +317,7 @@ static inline bool nested_npt_enabled(struct vcpu_svm *svm)
  }
  
--void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-+int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 			  struct vmcb *nested_vmcb)
- {
- 	svm->nested.vmcb = vmcb_gpa;
-@@ -388,6 +388,8 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	nested_prepare_vmcb_control(svm);
+ /*
+- * Load guest's cr3 at nested entry. @nested_npt is true if we are
++ * Load guest's/host's cr3 at nested entry. @nested_npt is true if we are
+  * emulating VM-Entry into a guest with NPT enabled.
+  */
+ static int nested_svm_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3,
+@@ -651,15 +651,12 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
  
- 	svm_set_gif(svm, true);
-+
-+	return 0;
- }
+ 	nested_svm_uninit_mmu_context(&svm->vcpu);
  
- int nested_svm_vmrun(struct vcpu_svm *svm)
-@@ -465,18 +467,22 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
- 	copy_vmcb_control_area(&hsave->control, &vmcb->control);
- 
- 	svm->nested.nested_run_pending = 1;
--	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
- 
--	if (!nested_svm_vmrun_msrpm(svm)) {
--		svm->nested.nested_run_pending = 0;
-+	if (enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb))
-+		goto out_exit_err;
- 
--		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
--		svm->vmcb->control.exit_code_hi = 0;
--		svm->vmcb->control.exit_info_1  = 0;
--		svm->vmcb->control.exit_info_2  = 0;
-+	if (nested_svm_vmrun_msrpm(svm))
-+		goto out;
- 
--		nested_svm_vmexit(svm);
+-	if (npt_enabled) {
+-		svm->vmcb->save.cr3 = hsave->save.cr3;
+-		svm->vcpu.arch.cr3 = hsave->save.cr3;
+-	} else {
+-		(void)kvm_set_cr3(&svm->vcpu, hsave->save.cr3);
 -	}
-+out_exit_err:
-+	svm->nested.nested_run_pending = 0;
-+
-+	svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-+	svm->vmcb->control.exit_code_hi = 0;
-+	svm->vmcb->control.exit_info_1  = 0;
-+	svm->vmcb->control.exit_info_2  = 0;
-+
-+	nested_svm_vmexit(svm);
++	rc = nested_svm_load_cr3(&svm->vcpu, hsave->save.cr3, false);
++	if (rc)
++		return 1;
  
- out:
- 	kvm_vcpu_unmap(&svm->vcpu, &map, true);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c0da4dd78ac5..b8ec56fe5478 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3843,6 +3843,7 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
- 	struct kvm_host_map map;
- 	u64 guest;
- 	u64 vmcb;
-+	int ret = 0;
+-	kvm_mmu_reset_context(&svm->vcpu);
+-	kvm_mmu_load(&svm->vcpu);
++	if (npt_enabled)
++		svm->vmcb->save.cr3 = hsave->save.cr3;
  
- 	guest = GET_SMSTATE(u64, smstate, 0x7ed8);
- 	vmcb = GET_SMSTATE(u64, smstate, 0x7ee0);
-@@ -3851,10 +3852,11 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
- 		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
- 			return 1;
- 		nested_vmcb = map.hva;
--		enter_svm_guest_mode(svm, vmcb, nested_vmcb);
-+		ret = enter_svm_guest_mode(svm, vmcb, nested_vmcb);
- 		kvm_vcpu_unmap(&svm->vcpu, &map, true);
- 	}
--	return 0;
-+
-+	return ret;
- }
- 
- static void enable_smi_window(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 6ac4c00a5d82..f98649af11d1 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -387,8 +387,8 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
- 	return (svm->nested.ctl.intercept & (1ULL << INTERCEPT_NMI));
- }
- 
--void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
--			  struct vmcb *nested_vmcb);
-+int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-+			 struct vmcb *nested_vmcb);
- void svm_leave_nested(struct vcpu_svm *svm);
- int nested_svm_vmrun(struct vcpu_svm *svm);
- void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
+ 	/*
+ 	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
 -- 
 2.25.4
 
