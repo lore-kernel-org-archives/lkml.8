@@ -2,95 +2,143 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D27C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C4BC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 837A520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6302078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594386450;
-	bh=o/mPzTY7nlKT10eOi8BaYv4MIX1aiAOyJRwz5K2JXRM=;
+	s=default; t=1594386456;
+	bh=wjSIUpxX6Ea5CgBfCSyg/TMOt/2UDZnOyntEmUuAgpo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x2SWBUHSFZieQ6TyIJMjBHRBmwmC/KcVYvjjaeCxC2d6m1a2Vm/ccU5+aspV/OGbt
-	 VUUhU1cnGOSa1LItc8+/67n7qssHyfyhWZeioPgQjTV2OmhpY+dhiqOhhM8S1FLx0e
-	 cgmG61mwLzMfb2PMEgKra74UUvF7mmMUXGxLTcio=
+	b=W9Iw5WuO2PsZM4W9q87yyXMH0NWMFvEgFgkGW3gZV0GbzXJbPbFRoMG9RqhkPuZFK
+	 8Iy17Pax/JU/0HL86U6irbmsy54VP3pDhCfXqkzm8O4AyOySPlbMF8NZI6sq8DF+na
+	 WV7PD8d+dAkRozgk3vr0t0Qyl+aswWWscNarLYKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgGJNH2 (ORCPT
+        id S1727995AbgGJNHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:07:28 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:46910 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgGJNH1 (ORCPT
+        Fri, 10 Jul 2020 09:07:35 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38762 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgGJNHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:07:27 -0400
-Received: by mail-ej1-f65.google.com with SMTP id p20so5934287ejd.13;
-        Fri, 10 Jul 2020 06:07:26 -0700 (PDT)
+        Fri, 10 Jul 2020 09:07:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id n2so4607632edr.5;
+        Fri, 10 Jul 2020 06:07:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=pfcMmD264TAA0dG7QgEoTJZr3IrsKKESoJiHSw+ewYE=;
-        b=XIdNqvNjuOqHgg1Fp5jq+hGWLCk/i7kZANMap3jdTHzNGCcy77fYMZMKyPSBpCUqRc
-         CypVMEVOkRyQ5Aj1aayQTFzQY2t+Glp0kluZFAVZf2gK+WiRvCNc49ZQ795MLgmXqxgZ
-         UhBxw67j3kePSlUrARd4KZXR5SML548B1NDg7yncAlmLvUjpHoLsWPLZtsSlKEDwlZ2g
-         S4BarsDLtDbpXh7opgjwQMN/WkLTP3LzKxnR9zzqSUsGAy0P9YGmdcfwEMyGNMfPgypM
-         2GurpuYuk/EB9wMSTB6+U2K8exnDTT1pm7YQncHPZdNAz5q43R7VZqh1N5pzVlEHJ/+B
-         g9NA==
-X-Gm-Message-State: AOAM533B0Rq2jR/eMkreCW6CCq8dbte5uUSs12yY6PpfsptcJBlSJhDJ
-        hFPtW31iEgBFoCsF3Ic8zMY=
-X-Google-Smtp-Source: ABdhPJzcCCNv0glzJfkwqkDnWUvTMpd4BkwXYu6/DqoyRKcGl+Nm4u0bPblVcZU65jx0Zx/rJB1N8A==
-X-Received: by 2002:a17:906:e089:: with SMTP id gh9mr36717032ejb.482.1594386446427;
-        Fri, 10 Jul 2020 06:07:26 -0700 (PDT)
-Received: from localhost (ip-37-188-148-171.eurotel.cz. [37.188.148.171])
-        by smtp.gmail.com with ESMTPSA id u13sm4330481eds.10.2020.07.10.06.07.25
+        bh=IhjbyydRkafatOFYJUQWB8jqmQKoDEwVSOznMMqxhFo=;
+        b=Nad8aXsjhnZkSxA7iE8zeoTezfltjopOXl8RE+9tGURXHPD4jSwClzBvCcBPDpa4UU
+         dw+zlSGaTc+vt2foNOdBEftsjzbyTpDtglHNSaMk18yO8Y1WyEhJdTTsr+lbqvcHiadn
+         78COdQOG/Tkw3c70Wh1XLmEHBZg1uyHGYqbJ/6viiJIPrhk6SpsDWS86I9ASteSDENh2
+         JOvlUkkrpzPVAsMlLwS4mkaQD5js5tblkoVzWbItDUxB1We0oSWrlcP2eCU1iFCgzFVW
+         ZxgGzLuWZmFlPdFML45oC0zgT4n29aPkGQHQ9hklDVdsgp6jyOv0QQRaQkHCqEmUcLW0
+         zL1w==
+X-Gm-Message-State: AOAM532EQ9cDIYGCaUHmZc7sz19h0MkWPwoQ0HHkzNfrcjkbFQSXbyyv
+        4KZDtMnTVAF1MP2RgWJZa0c=
+X-Google-Smtp-Source: ABdhPJy7GvB0YGcvjriG0PCDBYS91figVPtXSFiWz8TRbw35P+rdTnGn8EDvM7zDY0obC6Fi35h29w==
+X-Received: by 2002:aa7:da8d:: with SMTP id q13mr73846957eds.339.1594386450284;
+        Fri, 10 Jul 2020 06:07:30 -0700 (PDT)
+Received: from pi3 ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id lj18sm3602276ejb.43.2020.07.10.06.07.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:07:25 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 15:07:24 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, rientjes@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm, oom: make the calculation of oom badness more
- accurate
-Message-ID: <20200710130724.GD3022@dhcp22.suse.cz>
-References: <1594309987-9919-1-git-send-email-laoar.shao@gmail.com>
- <20200710124253.GA1125@lca.pw>
- <20200710125852.GC3022@dhcp22.suse.cz>
+        Fri, 10 Jul 2020 06:07:29 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 15:07:27 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
+Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+Message-ID: <20200710130727.GA22991@pi3>
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+ <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
+ <20200708153420.29484-2-lukasz.luba@arm.com>
+ <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
+ <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
+ <20200710124503.GB22897@pi3>
+ <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200710125852.GC3022@dhcp22.suse.cz>
+In-Reply-To: <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10-07-20 14:58:54, Michal Hocko wrote:
-[...]
-> I will have a closer look. Is the full dmesg available somewhere?
+On Fri, Jul 10, 2020 at 01:56:33PM +0100, Lukasz Luba wrote:
+> 
+> 
+> On 7/10/20 1:45 PM, Krzysztof Kozlowski wrote:
+> > On Fri, Jul 10, 2020 at 09:34:45AM +0100, Lukasz Luba wrote:
+> > > Hi Chanwoo,
+> > > 
+> > > On 7/9/20 5:08 AM, Chanwoo Choi wrote:
+> > > > Hi Lukasz,
+> > > > 
+> > > > On 7/9/20 12:34 AM, Lukasz Luba wrote:
+> > > > > In order to react faster and make better decisions under some workloads,
+> > > > > benchmarking the memory subsystem behavior, adjust the polling interval
+> > > > > and upthreshold value used by the simple_ondemand governor.
+> > > > > 
+> > > > > Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> > > > > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> > > > > ---
+> > > > >    drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+> > > > >    1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> > > > > index 93e9c2429c0d..e03ee35f0ab5 100644
+> > > > > --- a/drivers/memory/samsung/exynos5422-dmc.c
+> > > > > +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> > > > > @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
+> > > > >    		 * Setup default thresholds for the devfreq governor.
+> > > > >    		 * The values are chosen based on experiments.
+> > > > >    		 */
+> > > > > -		dmc->gov_data.upthreshold = 30;
+> > > > > +		dmc->gov_data.upthreshold = 10;
+> > > > >    		dmc->gov_data.downdifferential = 5;
+> > > > > -		exynos5_dmc_df_profile.polling_ms = 500;
+> > > > > +		exynos5_dmc_df_profile.polling_ms = 100;
+> > > > >    	}
+> > > > > 
+> > > > 
+> > > > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > > > 
+> > > 
+> > > Thank you for the review. Do you think this patch could go through
+> > > your tree together with your patches?
+> > > 
+> > > I don't know Krzysztof's opinion about the patch 2/2, but
+> > > I would expect, assuming the patch itself is correct, he would
+> > > like to take it into his next/dt branch.
+> > 
+> > In the cover letter you mentioned that this is a follow up for the
+> > Chanwoo's patchset. But are these patches really depending on it? Can
+> > they be picked up independently?
+> 
+> 
+> They are not heavily dependent on Chanwoo's patches.
+> Yes, they can be picked up independently.
+> I just wanted to mention that the patch 1/2 was produced on the
+> code base which had already applied Chanwoo's patch for DMC.
+> If you like to take both 1/2 and 2/2 into your tree, it's good.
 
-Ups, I have missed this:
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 2dd5a90f2f81..7f01835862f4 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -306,7 +306,7 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
- static int oom_evaluate_task(struct task_struct *task, void *arg)
- {
- 	struct oom_control *oc = arg;
--	unsigned long points;
-+	long points;
- 
- 	if (oom_unkillable_task(task))
- 		goto next;
+Then let me take them. If there is more development ongoing, it would
+create unnecessary merges between trees.
 
-Does it help?
--- 
-Michal Hocko
-SUSE Labs
+Best regards,
+Krzysztof
+
