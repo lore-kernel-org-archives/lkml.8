@@ -2,217 +2,151 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F858C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA54CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C902077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CE62077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+4os/xl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EP60IbkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGJHQJ (ORCPT
+        id S1727085AbgGJHSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgGJHQJ (ORCPT
+        Fri, 10 Jul 2020 03:18:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32158 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726004AbgGJHSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:16:09 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E0BC08C5CE;
-        Fri, 10 Jul 2020 00:16:09 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 12so4044880oir.4;
-        Fri, 10 Jul 2020 00:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=04fvwvp36XWQGO6WnlynMTR2NxVi2WuyRxfDLjiMyIA=;
-        b=B+4os/xlBuPxbO8zrez1X+udsD+5089fUms0mHlrwKomYV4CJRmN3pE+4vXK019egg
-         YeUVoMVd8bOsCZQ4hEw7/pLbTEB/dO9qodmT7iPcm+KMqkk7YhrXBEktbc6FeT4IdpHP
-         1ufqjBZptj6qoJ8WojKwovjRnyaeAvYcLBPZIND3uw7TDHQTZG3VixrV6Szii71tWGoL
-         evoohqDUgTC9rajjt/8g4jPd7TsBD9iToencWeFh3D8jg7QpkWdj3636ClhNmcVtKfLn
-         xM1olSrBFB8tn+wj6DH9wi81gTx0+wtqfvGyIrQwQ75IAe6RtLjs7WXjsR9SdYY86aYa
-         cDmg==
+        Fri, 10 Jul 2020 03:18:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594365487;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FGoPGTEznFk5h14aCUBaJwrGf/5Nb40zpROvBbNiTpA=;
+        b=EP60IbkZ8RsasnJp8wui+wFake4Ai1zn0hRUOAgQ8AoWBVjWRey9+udl3KNYIuaZGflpVd
+        sokWs+goDX0EN/WnxD7+uKCZiPeaMwSgxurFaEpJ+M13IDkxWso3ZVNEvCWTIuzG420HRJ
+        r1ZNjT1XTTf2CSS3KwyjOBovG3z9uCU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-236-XNwFKQXnOHC0GAnQtDDHOA-1; Fri, 10 Jul 2020 03:18:02 -0400
+X-MC-Unique: XNwFKQXnOHC0GAnQtDDHOA-1
+Received: by mail-wm1-f70.google.com with SMTP id f68so8577708wmf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 00:18:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=04fvwvp36XWQGO6WnlynMTR2NxVi2WuyRxfDLjiMyIA=;
-        b=sNj4QQ+Dcab9yq3oRSZE8wATSCnogmS9lj6AKonU2DpdrEHQcnpX65zV6uNQVW9+62
-         tHtNTHZ35lILnJ6bb4XiGomi44xTvXQhRei+4ier22soadHThY7t2h1Ql54ZXQujwNyv
-         O6RZkr8teNyQTUKPPI3HTLqoYWaOQs0KxKk/w1rRVuWj0H6CatYzbR49bNXoNkwXqyIx
-         X04domomcGDJ4+1wK2ELHBo4OYBdAVTuKrxLsLgyCfzgakuWmlGQeKrbiiVJWI3dOds9
-         Dk8LD1/WF29P0l3AoVEebOLrztH4CVdl1G4/0H66K0JxWWz+Lg/A7OTxs7VPiubiGmDb
-         X17Q==
-X-Gm-Message-State: AOAM532lY/NPogMKDW8LpjMVqoY23P1cXg6IMFlQvbJcn+83bnJ0R/55
-        J1fM92plY6uYTlV9E6iTVPXnihmCiPmc0bUDrOq9TpTaLAo=
-X-Google-Smtp-Source: ABdhPJy4ysN01c2WAbVgZG4Cbv0racHKjYXQ7wJJ4yxuYBlZhawNKDB0VNUTWu9CYc68PqYOGxpdtse4MhEzohwE0Q0=
-X-Received: by 2002:aca:4fd3:: with SMTP id d202mr3269407oib.142.1594365368348;
- Fri, 10 Jul 2020 00:16:08 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FGoPGTEznFk5h14aCUBaJwrGf/5Nb40zpROvBbNiTpA=;
+        b=mJAwHbkIC+mmQ+yIO3mLqkdyDwHbFeMgq4isn2TowLc4KX1U0Kdr00Bn2LwI5tyIP7
+         16v+G3G5AMF3KuRdw9p4+BP3SfjlDkTofTwHAzDANXoidQNy/Lijtq0ZhsmySwrHMvpI
+         k2kMKLVTye7r6W2Q35gWVckCBxn7Mm+N+MdjE0cHUpQIZ2MWVuoOx8cMBsZ9fw5NxfzS
+         1WjeTLNBOEaAIOfukUZoqfFWy9Tz/9DgQKYvjjoug6Wms8O1T34QpsJ2+T5vyO12KW0z
+         I+oaWxigSCYCr86LgWwAlxY1R+g4khSYEJ3SuiigMp6AF/bEwIw6ivAR9e6k0yclO5BK
+         iEgA==
+X-Gm-Message-State: AOAM532QXfYMrCSvve5jvSXoXHfSUMbRe3jx1eo2mXqkn5+ncIk3risq
+        hpeOGyY4Io0ag/CaJawfQiouwOOJKdiePhO/2RtcrOFoabj0Ws2aRUUkRFBgDaFqncUIgJ7qy/R
+        mYyJpH/FlO7ua8z79n39q1uVS
+X-Received: by 2002:a05:6000:12c3:: with SMTP id l3mr27335918wrx.356.1594365481352;
+        Fri, 10 Jul 2020 00:18:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy8Rr8IAsbJamgn8rqldry9PUjrzvHl5OLB3NeoeT73v1oK2Um8w8bXswITBBP+sRvLWq5k6w==
+X-Received: by 2002:a05:6000:12c3:: with SMTP id l3mr27335889wrx.356.1594365481075;
+        Fri, 10 Jul 2020 00:18:01 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id w14sm8969677wrt.55.2020.07.10.00.18.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 00:18:00 -0700 (PDT)
+Subject: Re: [PATCH] scsi: virtio_scsi: Remove unnecessary condition checks
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <a197f532-7020-0d8e-21bf-42bb66e8daec@web.de>
+ <e87746e6-813e-7c0e-e21e-5921e759da5d@redhat.com>
+ <8eb9a827-45f1-e71c-0cbf-1c29acd8e310@web.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <58e3feb8-1ffb-f77f-cf3a-75222b3cd524@redhat.com>
+Date:   Fri, 10 Jul 2020 09:17:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200709072814.24218-1-grandmaster@al2klimov.de> <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
-In-Reply-To: <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 10 Jul 2020 08:15:42 +0100
-Message-ID: <CA+V-a8sDzvRoi8pSdrtTQ6VpGLDmw_pqv-5rQH-tfONQuwNhvQ@mail.gmail.com>
-Subject: Re: [PATCH] TI DAVINCI SERIES MEDIA DRIVER: Replace HTTP links with
- HTTPS ones
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8eb9a827-45f1-e71c-0cbf-1c29acd8e310@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 9:43 AM Kieran Bingham
-<kieran.bingham+renesas@ideasonboard.com> wrote:
->
-> Hi Alexander,
->
-> On 09/07/2020 08:28, Alexander A. Klimov wrote:
-> > Rationale:
-> > Reduces attack surface on kernel devs opening the links for MITM
-> > as HTTPS traffic is much harder to manipulate.
-> >
-> > Deterministic algorithm:
-> > For each file:
-> >   If not .svg:
-> >     For each line:
-> >       If doesn't contain `\bxmlns\b`:
-> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> >         If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> >             If both the HTTP and HTTPS versions
-> >             return 200 OK and serve the same content:
-> >               Replace HTTP with HTTPS.
-> >
-> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->
-> This non-https link redirects to the https link already with a 301, so
-> the content is expectedly the same.
->
-> I doubt many people click on these links, as I guess they're usually
-> rendered as text so it depends on the editor, I expect as much as
-> anything it's 'advertising' or confirmation of the copyright notice.
->
-> But still, I've just clicked on them ... and I think this is a
-> reasonable step.
->
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
->
-> > ---
-> >  Continuing my work started at 93431e0607e5.
-> >  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> >  (Actually letting a shell for loop submit all this stuff for me.)
-> >
-> >  If there are any URLs to be removed completely or at least not HTTPSified:
-> >  Just clearly say so and I'll *undo my change*.
-> >  See also: https://lkml.org/lkml/2020/6/27/64
-> >
-> >  If there are any valid, but yet not changed URLs:
-> >  See: https://lkml.org/lkml/2020/6/26/837
-> >
-> >  If you apply the patch, please let me know.
-> >
-> >
-> >  drivers/media/platform/davinci/vpbe_display.c | 2 +-
-> >  drivers/media/platform/davinci/vpif.c         | 2 +-
-> >  drivers/media/platform/davinci/vpif.h         | 2 +-
-> >  drivers/media/platform/davinci/vpif_display.c | 2 +-
-> >  drivers/media/platform/davinci/vpif_display.h | 2 +-
-> >  include/media/davinci/vpbe_display.h          | 2 +-
-> >  6 files changed, 6 insertions(+), 6 deletions(-)
-> >
-Reviewed-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+On 10/07/20 08:32, Markus Elfring wrote:
+>>>> +	mempool_destroy(virtscsi_cmd_pool);
+>>>> +	virtscsi_cmd_pool = NULL;
+>>>> +	kmem_cache_destroy(virtscsi_cmd_cache);
+>>>> +	virtscsi_cmd_cache = NULL;
+>>>>  	return ret;
+>>>>  }
+>>>
+>>> How do you think about to add a jump target so that the execution
+>>> of a few statements can be avoided according to a previous
+>>> null pointer check?
+>>
+>> The point of the patch is precisely to simplify the code,
+> 
+> I suggest to reconsider also Linux coding style aspects
+> for the implementation of the function “init”.
+> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/scsi/virtio_scsi.c#L980
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/virtio_scsi.c?id=42f82040ee66db13525dc6f14b8559890b2f4c1c#n980
+> 
+>  	if (!virtscsi_cmd_cache) {
+>  		pr_err("kmem_cache_create() for virtscsi_cmd_cache failed\n");
+> -		goto error;
+> +		return -ENOMEM;
+> 	}
 
-Cheers,
---Prabhakar
+Could be doable, but I don't see a particular benefit.  Having a single
+error loop is an advantage by itself.
 
-> > diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-> > index 7ab13eb7527d..d19bad997f30 100644
-> > --- a/drivers/media/platform/davinci/vpbe_display.c
-> > +++ b/drivers/media/platform/davinci/vpbe_display.c
-> > @@ -1,6 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >  /*
-> > - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
-> >   */
-> >  #include <linux/kernel.h>
-> >  #include <linux/init.h>
-> > diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
-> > index df66461f5d4f..e9794c9fc7fe 100644
-> > --- a/drivers/media/platform/davinci/vpif.c
-> > +++ b/drivers/media/platform/davinci/vpif.c
-> > @@ -5,7 +5,7 @@
-> >   * The hardware supports SDTV, HDTV formats, raw data capture.
-> >   * Currently, the driver supports NTSC and PAL standards.
-> >   *
-> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-> >   *
-> >   * This program is free software; you can redistribute it and/or
-> >   * modify it under the terms of the GNU General Public License as
-> > diff --git a/drivers/media/platform/davinci/vpif.h b/drivers/media/platform/davinci/vpif.h
-> > index 2466c7c77deb..c6d1d890478a 100644
-> > --- a/drivers/media/platform/davinci/vpif.h
-> > +++ b/drivers/media/platform/davinci/vpif.h
-> > @@ -1,7 +1,7 @@
-> >  /*
-> >   * VPIF header file
-> >   *
-> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-> >   *
-> >   * This program is free software; you can redistribute it and/or
-> >   * modify it under the terms of the GNU General Public License as
-> > diff --git a/drivers/media/platform/davinci/vpif_display.c b/drivers/media/platform/davinci/vpif_display.c
-> > index 7d55fd45240e..46afc029138f 100644
-> > --- a/drivers/media/platform/davinci/vpif_display.c
-> > +++ b/drivers/media/platform/davinci/vpif_display.c
-> > @@ -2,7 +2,7 @@
-> >   * vpif-display - VPIF display driver
-> >   * Display driver for TI DaVinci VPIF
-> >   *
-> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-> >   * Copyright (C) 2014 Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> >   *
-> >   * This program is free software; you can redistribute it and/or
-> > diff --git a/drivers/media/platform/davinci/vpif_display.h b/drivers/media/platform/davinci/vpif_display.h
-> > index af2765fdcea8..f731a65eefd6 100644
-> > --- a/drivers/media/platform/davinci/vpif_display.h
-> > +++ b/drivers/media/platform/davinci/vpif_display.h
-> > @@ -1,7 +1,7 @@
-> >  /*
-> >   * VPIF display header file
-> >   *
-> > - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
-> >   *
-> >   * This program is free software; you can redistribute it and/or
-> >   * modify it under the terms of the GNU General Public License as
-> > diff --git a/include/media/davinci/vpbe_display.h b/include/media/davinci/vpbe_display.h
-> > index 56d05a855140..6d2a93740130 100644
-> > --- a/include/media/davinci/vpbe_display.h
-> > +++ b/include/media/davinci/vpbe_display.h
-> > @@ -1,6 +1,6 @@
-> >  /* SPDX-License-Identifier: GPL-2.0-only */
-> >  /*
-> > - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-> > + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
-> >   */
-> >  #ifndef VPBE_DISPLAY_H
-> >  #define VPBE_DISPLAY_H
-> >
->
+The coding style is a suggestion.  Note the difference between
+
+		kfree(foo->bar);
+		kfree(foo);
+
+and
+
+		kfree(bar);
+		kfree(foo);
+
+> See also:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=42f82040ee66db13525dc6f14b8559890b2f4c1c#n461
+> 
+> 
+>> executing a couple more instruction is not an issue.
+> 
+> With which update steps would like to achieve such a code variant?
+> 
+> destroy_pool:
+> 	mempool_destroy(virtscsi_cmd_pool);
+> 	virtscsi_cmd_pool = NULL;
+> destroy_cache:
+> 	kmem_cache_destroy(virtscsi_cmd_cache);
+> 	virtscsi_cmd_cache = NULL;
+> 	return ret;
+
+... while there's no advantage in this.
+
+Paolo
+
