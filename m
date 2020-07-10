@@ -2,139 +2,170 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CCCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3464EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2F3206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mURRFeUf"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB94206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGJRDV (ORCPT
+        id S1728339AbgGJRDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgGJRDT (ORCPT
+        Fri, 10 Jul 2020 13:03:23 -0400
+Received: from out28-171.mail.aliyun.com ([115.124.28.171]:33565 "EHLO
+        out28-171.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgGJRDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 13:03:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EC0C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:03:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so6687496wrw.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bQIq5s2dqiEjFMbe0CzvCv9st0ZbiUVbOFEQGKrFNck=;
-        b=mURRFeUfOBx1wJXzGFTph66BgqHt3V4hjdmsPFdNsVFXPQaHMrU5IJUWGGdYv7710W
-         eOPIghtkf6x+HlTYf1cy3I+w7wN59ujxzVZz+sU7aolWPXZ1cZkcX6gKy6Qg5ywYvBgW
-         eGbA2a2xMlHu/GP1lk3xan46biuy1Xq6t2TEFUYZnQ976Gu1/ya4oPToMvpHmDNO9YnN
-         OvUi+cdt//YwZ6J1aZIHLAvuTQS4e+RuuNvbBIOYH0dQnxkf3rr06HoOdjc7rWnjLqsE
-         9PzU1+e8Z9RnVcaurg4QMbk7tMk8PbZUaTPXCBMYR+XvDwZpx3NiXIEQjbEqKH+Ug648
-         /gug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bQIq5s2dqiEjFMbe0CzvCv9st0ZbiUVbOFEQGKrFNck=;
-        b=B5Gw4Bqg/1nJ3T069zoDBIRhVGTOfk3RSUX/VvilT546NHiaI49l/R9REVP16qWkGo
-         rg7HT4E4gpZS+mAhygp7hudgr8C5WnNKJN1P5N0iBFJGcUUbPdyfiLKAqj//92Yf7Sqf
-         p1Uqiyabi0Cw7FTYxamjSQbaQfbOmKGboOsQn2sxGmvVyvw2wLw3S5YkgouGQgOK2LjZ
-         uhHqVGAlv7Zs8VVeX0uCRSvNUghp5uhLPxsmz6/93EesXj+XJla7GALgMxe4cFmnS2UC
-         lJ0jfnX46qzNlJXNqxzJJ1eHQ665Mq91Bhab5ruah0vM1HguX51YYpTalnUKXBo9m+ZN
-         8BYw==
-X-Gm-Message-State: AOAM532q3hya7yj9O9pSaordmx1zCcYpX3iTyJQZSOnFUohHJwXNztUQ
-        CQfJyUNYafed5Qno3l2e2cfSEDX2
-X-Google-Smtp-Source: ABdhPJzLGmptrY+IgiSU0K4LC8+1xvwXLEosLWz/REgg/voxbg/LOtpNoaLvxJBCLnSlI9S67zclxw==
-X-Received: by 2002:a5d:4b0f:: with SMTP id v15mr32810907wrq.216.1594400597923;
-        Fri, 10 Jul 2020 10:03:17 -0700 (PDT)
-Received: from ogabbay-VM ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id r8sm10613363wrp.40.2020.07.10.10.03.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 Jul 2020 10:03:16 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 20:03:22 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs fixes pull request for kernel 5.8-rc4/5
-Message-ID: <20200710170322.GA29124@ogabbay-VM>
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.133134|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0255796-0.000597234-0.973823;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I.khRXN_1594400587;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I.khRXN_1594400587)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Sat, 11 Jul 2020 01:03:14 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v6 1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
+Date:   Sat, 11 Jul 2020 01:02:58 +0800
+Message-Id: <20200710170259.29028-2-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+Add the OST bindings for the X10000 SoC from Ingenic.
 
-This pull request is for the next rc (rc4 or 5) and it contains:
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-1. Important bug fix for the GAUDI command parsing code.
+Notes:
+    v1->v2:
+    No change.
+    
+    v2->v3:
+    Fix wrong parameters in "clocks".
+    
+    v3->v4:
+    1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+    2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+    3.Modify the description in "ingenic,sysost.yaml".
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    1.Drop "oneOf" and the blank line.
+    2.Add "additionalProperties: false".
 
-2. Change in debugfs interface that is relevant only for GAUDI and
-   therefore can still be changed in this release.
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
+ include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+ 2 files changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+ create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
 
-3. Workaround for a timeout problem in GOYA and GAUDI.
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+new file mode 100644
+index 000000000000..1dae2e538725
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for SYSOST in Ingenic XBurst family SoCs
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++
++description:
++  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
++  and one or more 32bit timers for clockevent.
++
++properties:
++  "#clock-cells":
++    const: 1
++
++  compatible:
++    enum:
++      - ingenic,x1000-ost
++      - ingenic,x2000-ost
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ost
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - "#clock-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/x1000-cgu.h>
++
++    ost: timer@12000000 {
++    		compatible = "ingenic,x1000-ost";
++    		reg = <0x12000000 0x3c>;
++
++    		#clock-cells = <1>;
++
++    		clocks = <&cgu X1000_CLK_OST>;
++    		clock-names = "ost";
++
++    		interrupt-parent = <&cpuintc>;
++    		interrupts = <3>;
++    	};
++...
+diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
+new file mode 100644
+index 000000000000..9ac88e90babf
+--- /dev/null
++++ b/include/dt-bindings/clock/ingenic,sysost.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,tcu DT binding.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
++#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
++
++#define OST_CLK_PERCPU_TIMER	0
++#define OST_CLK_GLOBAL_TIMER	1
++
++#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+-- 
+2.11.0
 
-Details are in the tag message below.
-
-Thanks,
-Oded
-
-The following changes since commit 897c44f0bae574c5fb318c759b060bebf9dd6013:
-
-  virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial (2020-07-10 15:12:48 +0200)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2020-07-10
-
-for you to fetch changes up to 788cacf308871db0a619952321bedfec8f1773e2:
-
-  habanalabs: set 4s timeout for message to device CPU (2020-07-10 19:53:03 +0300)
-
-----------------------------------------------------------------
-This tag contains the following fixes for 5.8-rc4/5:
-
-- Prevent user from using command WREG_BULK in PCI DMA channel. The command
-  won't be parsed correctly by the driver and will cause unknown behavior.
-  As the user doesn't need to use that command in that channel, its better
-  to just prevent it completely.
-
-- Change the interface of the clock gating debugfs property from true/false
-  to bitmask with bit per engine. This will allow the user to debug the
-  ASIC while disabling the clock gating feature with fine-grain
-  granularity.
-
-- Increase message-to-ASIC-CPU timeout to 4s (from 100ms/1s). The ASIC CPU
-  might respond sometimes after a large delay due to slow external
-  interfaces (such as temperature sensors) and that will result in a driver
-  timeout which will lead to ASIC reset.
-
-----------------------------------------------------------------
-Oded Gabbay (3):
-      habanalabs: block WREG_BULK packet on PDMA
-      habanalabs: set clock gating per engine
-      habanalabs: set 4s timeout for message to device CPU
-
- .../ABI/testing/debugfs-driver-habanalabs          |  11 +-
- drivers/misc/habanalabs/debugfs.c                  |  23 ++--
- drivers/misc/habanalabs/device.c                   |   2 +-
- drivers/misc/habanalabs/firmware_if.c              |  10 +-
- drivers/misc/habanalabs/gaudi/gaudi.c              | 123 ++++++++++++++-------
- drivers/misc/habanalabs/goya/goya.c                |  20 ++--
- drivers/misc/habanalabs/habanalabs.h               |  19 +++-
- drivers/misc/habanalabs/habanalabs_drv.c           |   2 +-
- drivers/misc/habanalabs/hwmon.c                    |  19 ++--
- drivers/misc/habanalabs/sysfs.c                    |  11 +-
- 10 files changed, 147 insertions(+), 93 deletions(-)
