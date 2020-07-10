@@ -2,116 +2,137 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6474920708
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BC920720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ckgoHMtu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3NWQcCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGJAW1 (ORCPT
+        id S1726757AbgGJAYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgGJAW1 (ORCPT
+        Thu, 9 Jul 2020 20:24:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50310 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgGJAYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:22:27 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157E4C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:22:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x72so1734247pfc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:22:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ckUCzQFimvD7NIA+QWWbpWCLSB8Zqmc22c9Qilpan44=;
-        b=ckgoHMtuW/ok71oWR0jOY1AL7WiG2m/KZ0cSVRSnnNLRJGV4T3oyqnZe4i6+5CiH6T
-         ZUv0jWl8XzBU6YDr5Zat6lHWAaAMqb4UBToJjBPAwJSzaOjfQww1OsjiKl3BAS9eiUKv
-         iWhKmfG3dMoPDC0aGyfFjaEzw5XakcyXRvrLY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ckUCzQFimvD7NIA+QWWbpWCLSB8Zqmc22c9Qilpan44=;
-        b=XEy9wyd9re5vrHEmgbnRz2M70WQ92PDTHr6qzn0+zhkUzocUwQIyp4ZeFHQDaPc+lg
-         Djy4hfs3VMd/YOl8IyOus6pc9SjHF+o1+JK7IzTr02u2jRWBXeoqdF0lppqvEa+1h/wf
-         1eWPK+80ASgbO1WW9lNrtFldcNqkUq2mPMA5sIMi+AGNFTtxi9elhlGJvxx4/kl0s7/f
-         9I0QNeX8ifYDy4zQ7SGE9ZNhMkwx4ysmJG3GXbbnE1X1m+21nYC2RmYmD3VdwWAqmtdD
-         yGwOiGgVDGltzAImy8CZfV3ze8w8hp+fQneIftsFxgnLMFZbVYDcRb1ImRCK5qWx9TKI
-         DgJQ==
-X-Gm-Message-State: AOAM5316wuKm1Glgz64mbOorumV7S/MtgOMhTzuJLc9OXEJiCAokM2KL
-        woDp0u9/yRvarYhh53SqI+RJiw==
-X-Google-Smtp-Source: ABdhPJyJ1Zl/XnIDYWubLFLNW5SV+UOx5qKUJXZPfzwDdsESHi5oJ223rZL0TXg/zVt4L12uoNyf4A==
-X-Received: by 2002:a63:4c48:: with SMTP id m8mr57041634pgl.290.1594340546587;
-        Thu, 09 Jul 2020 17:22:26 -0700 (PDT)
-Received: from andrey-Z390.lan (c-67-164-102-32.hsd1.ca.comcast.net. [67.164.102.32])
-        by smtp.gmail.com with ESMTPSA id i63sm3840181pfc.22.2020.07.09.17.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 17:22:26 -0700 (PDT)
-From:   Andrey Pronin <apronin@chromium.org>
-To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com
-Cc:     jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, groeck@chromium.org,
-        Andrey Pronin <apronin@chromium.org>
-Subject: [PATCH] tpm: avoid accessing cleared ops during shutdown
-Date:   Thu,  9 Jul 2020 17:22:09 -0700
-Message-Id: <20200710002209.6757-1-apronin@chromium.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 9 Jul 2020 20:24:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06A07Hx0102872;
+        Fri, 10 Jul 2020 00:24:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=zJ71shxFuZz9AsflxxmVD772uEc/naqgyywzJ2rhY8Y=;
+ b=i3NWQcCD7FVFTUCxEnPW5BJhh4Z0gMQNizCDIwI/AuoiTVY1YrzjNY9BCtUa0DVEbpLA
+ LCXlwkA78abHW3rpFPtiLdVzDx9xk9FD6WiW+nVPITvPLB8Pxf6CmMLUbrfkEPTDjLHG
+ aeRmaBU6sptGpB3cOJM/ydyPbExNkTqCPsUdrpaoFDAXPIYzZpvsvhw1b9IDoj4M0LAd
+ 7P8CcR6izOu6uKzv5lKbALPcm+giHyqYuo5Vqk97y2SaWPUPnkBXytABYUbDppPBk7hG
+ OpZj5GRRLGPFTjD99UHePu+eEcwFJnSrBjcErdEjIw0Q3WS3ZmR+e/WDrVX02wKRv9Zp 7w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 325y0ampp6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 00:24:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06A09cGn188665;
+        Fri, 10 Jul 2020 00:24:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 325k3hv3r8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 00:24:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06A0OG3P007144;
+        Fri, 10 Jul 2020 00:24:16 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Jul 2020 17:24:16 -0700
+Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma is
+ enable
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
+ <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
+ <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
+ <20200708184615.GA251665@carbon.dhcp.thefacebook.com>
+ <B926444035E5E2439431908E3842AFD2560E41@DGGEMI525-MBS.china.huawei.com>
+ <b2a98ab7-0a36-ad3d-f40d-1cc9216c7961@oracle.com>
+ <B926444035E5E2439431908E3842AFD256460F@DGGEMI525-MBS.china.huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <99dd3c24-a864-c0e2-4f02-33a7fbc97bc7@oracle.com>
+Date:   Thu, 9 Jul 2020 17:24:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <B926444035E5E2439431908E3842AFD256460F@DGGEMI525-MBS.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch prevents NULL dereferencing when using chip->ops while
-sending TPM2_Shutdown command if both tpm_class_shutdown handler and
-tpm_del_char_device are called during system shutdown.
+On 7/9/20 4:45 PM, Song Bao Hua (Barry Song) wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
+>> Sent: Friday, July 10, 2020 6:58 AM
+>> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; Roman
+>> Gushchin <guro@fb.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>; linux-mm@kvack.org;
+>> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Jonathan
+>> Cameron <jonathan.cameron@huawei.com>
+>> Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma
+>> is enable
+>>
+>> Looks like this produced a warning in linux-next.  I suspect it is due to the
+>> combination CONFIG_HUGETLB_PAGE && !CONFIG_CMA.
+>>
+>> Instead of adding the routine hugetlb_cma_enabled() to scan the hugetlb_cma
+>> array, could we just use a boolean as follows?  It can simply be set in
+>> hugetlb_cma_reserve when we reserve CMA.
+> 
+> Maybe just use hugetlb_cma_size? If hugetlb_cma_size is not 0, someone is trying to use
+> cma, then bootmem for gigantic pages will be totally ignored according to discussion here:
+> https://lkml.org/lkml/2020/7/8/1288
+> 
+> if somebody sets a wrong hugetlb_cma_size which causes that cma is not reserved. 
+> It is the fault of users? We just need to document hugetlb_cma will overwrite bootmem
+> reservations?
+> 
 
-Both these handlers set chip->ops to NULL but don't check if it's
-already NULL when they are called before using it.
+Yes, I think using hugetlb_cma_size would be sufficient.  If someone
+specifies hugetlb_cma=<N> and hugepagesz=<gigantic_page_size> hugepages=<X>
+that is wrong.  I don't think we need to worry about 'falling back' to
+preallocating X gigantic pages if N is a bad value.  Or, even if the arch
+does not support cma allocation.
 
-This issue was revealed in Chrome OS after a recent set of changes
-to the unregister order for spi controllers, such as:
-  b4c6230bb0ba spi: Fix controller unregister order
-  f40913d2dca1 spi: pxa2xx: Fix controller unregister order
-and similar for other controllers.
-
-Signed-off-by: Andrey Pronin <apronin@chromium.org>
----
- drivers/char/tpm/tpm-chip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 8c77e88012e9..a410ca40a3c5 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -296,7 +296,7 @@ static int tpm_class_shutdown(struct device *dev)
- 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
- 
- 	down_write(&chip->ops_sem);
--	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-+	if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
- 		if (!tpm_chip_start(chip)) {
- 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
- 			tpm_chip_stop(chip);
-@@ -479,7 +479,7 @@ static void tpm_del_char_device(struct tpm_chip *chip)
- 
- 	/* Make the driver uncallable. */
- 	down_write(&chip->ops_sem);
--	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-+	if (chip->ops && (chip->flags & TPM_CHIP_FLAG_TPM2)) {
- 		if (!tpm_chip_start(chip)) {
- 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
- 			tpm_chip_stop(chip);
+I am working on a patch to check this earlier in command processing.  That
+will make this check unnecessary.  However, that patch is based on new
+command line processing code only in 5.8.  So, I think we still need to do
+this so that it can be backported to stable.
 -- 
-2.25.1
-
+Mike Kravetz
