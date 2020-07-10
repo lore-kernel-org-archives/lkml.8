@@ -2,121 +2,90 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F005BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A1D20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:16:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UHGvPuSx"
+	by mail.kernel.org (Postfix) with ESMTP id 9822620725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgGJRQY (ORCPT
+        id S1728233AbgGJRVt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:16:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54288 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728215AbgGJRQX (ORCPT
+        Fri, 10 Jul 2020 13:21:49 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:41325 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgGJRVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:16:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594401382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VYYAKT69qJC8cXBBjJthRJSXfG2nYGjV6nWSQ+iUBs0=;
-        b=UHGvPuSxw+Jz10fbJ3FSyUHbTRiXmdqF/9kFq9UZd+a7OQMakLWfcKKcR62aEmPAohi1mO
-        RU3m2kOreQ4Vs2sI6Z2h5KXgX2JJXtIlX1Hp02iFGG+4IX/bXvkUskFsw78zBvb2lkYnPS
-        ZAftfhM2liv8QxLo5Z73Pl6dgmtPHJw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-RGxl7ilzNA6B9YhG-v_W6g-1; Fri, 10 Jul 2020 13:16:18 -0400
-X-MC-Unique: RGxl7ilzNA6B9YhG-v_W6g-1
-Received: by mail-wm1-f69.google.com with SMTP id e15so7417556wme.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:16:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VYYAKT69qJC8cXBBjJthRJSXfG2nYGjV6nWSQ+iUBs0=;
-        b=g7iKmY3Kkk3C5QY8EGyZ1pK5HugAt5T4AUj+JB5HKKTWYkIyyYeAjm37C3hMSny87r
-         1P2y2925nqt/b9KFSEpbRgoY2xkfIXqA5hYgDxe0tSnUchk+f/96KqW2eH2jMBj5Qyp4
-         8aQO2WcWkBJs4/3Mf504aLqMHxGDuyinnQwvNepj0TivRQMzpaAklwMzN/dW1rWr90CM
-         SmS5ZcD5ox7qiWg8zLz1zmYbD9m1s+AXf6Mk/b3EtYFMsXwN0mYOQeL6dhGUl/OHza65
-         TzMkmWR8dwwzZUd6WRIqs21NuqxFCG67VPI/wAWkrPllTvxvp42ysAdievPD284AWc+p
-         6L8g==
-X-Gm-Message-State: AOAM530Zb+yUNEnHGwH70plMNDSDuC5rKGktzAzQ2itQ8VRjuzKSyP19
-        Jt/6Fq6f+qiacNmaKuo4KHjueMrVVRR5Rjx1gMIUD6FbLumHP+DWqx7zeljCW4y4A5wvAM7Ib/P
-        CGpdYKMtjd4KThm/LY0nETyv/
-X-Received: by 2002:adf:db42:: with SMTP id f2mr68136088wrj.298.1594401377387;
-        Fri, 10 Jul 2020 10:16:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxXnEfdioHVFKguZS3kZcS8dBW7ubOyBPqnpSZpaWNF4miTy+T6IbMEcoEtCVas5nZXP6TxGw==
-X-Received: by 2002:adf:db42:: with SMTP id f2mr68136068wrj.298.1594401377138;
-        Fri, 10 Jul 2020 10:16:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id r1sm10847140wrt.73.2020.07.10.10.16.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 10:16:16 -0700 (PDT)
-Subject: Re: [PATCH v3 0/9] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200710154811.418214-1-mgamal@redhat.com>
- <CALMp9eRfZ50iyrED0-LU75VWhHu_kVoB2Qw55VzEFzZ=0QCGow@mail.gmail.com>
- <0c892b1e-6fe6-2aa7-602e-f5fadc54c257@redhat.com>
- <CALMp9eQXHGnXo4ACX2-qYww4XdRODMn-O6CAvhupib67Li9S2w@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9e784c62-15ee-63b7-4942-474493bac536@redhat.com>
-Date:   Fri, 10 Jul 2020 19:16:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <CALMp9eQXHGnXo4ACX2-qYww4XdRODMn-O6CAvhupib67Li9S2w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 10 Jul 2020 13:21:49 -0400
+Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 5FB0ECED26;
+        Fri, 10 Jul 2020 19:31:44 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: BLUETOOTH SUBSYSTEM
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200708133638.14589-1-grandmaster@al2klimov.de>
+Date:   Fri, 10 Jul 2020 19:21:46 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <330C715F-ADB9-42B7-93CF-7605F5E9A9D2@holtmann.org>
+References: <20200708133638.14589-1-grandmaster@al2klimov.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/20 19:13, Jim Mattson wrote:
-> On Fri, Jul 10, 2020 at 10:06 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 10/07/20 18:30, Jim Mattson wrote:
->>>>
->>>> This can be problem when having a mixed setup of machines with 5-level page
->>>> tables and machines with 4-level page tables, as live migration can change
->>>> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
->>>
->>> Huh? Changing MAXPHYADDR while the guest runs should be illegal. Or
->>> have I missed some peculiarity of LA57 that makes MAXPHYADDR a dynamic
->>> CPUID information field?
->>
->> Changing _host_ MAXPHYADDR while the guest runs, such as if you migrate
->> from a host-maxphyaddr==46 to a host-maxphyaddr==52 machine (while
->> keeping guest-maxphyaddr==46).
+Hi Alexander,
+
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Ah, but what does that have to do with LA57?
+> Deterministic algorithm:
+> For each file:
+>  If not .svg:
+>    For each line:
+>      If doesn't contain `\bxmlns\b`:
+>        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>            If both the HTTP and HTTPS versions
+>            return 200 OK and serve the same content:
+>              Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+> Continuing my work started at 93431e0607e5.
+> See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> (Actually letting a shell for loop submit all this stuff for me.)
+> 
+> If there are any URLs to be removed completely or at least not HTTPSified:
+> Just clearly say so and I'll *undo my change*.
+> See also: https://lkml.org/lkml/2020/6/27/64
+> 
+> If there are any valid, but yet not changed URLs:
+> See: https://lkml.org/lkml/2020/6/26/837
+> 
+> If you apply the patch, please let me know.
+> 
+> 
+> net/bluetooth/Kconfig | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Intel only has MAXPHYADDR > 46 on LA57 machines (because in general OSes
-like to have a physical 1:1 map into the kernel part of the virtual
-address space, so having a higher MAXPHYADDR would be of limited use
-with 48-bit linear addresses).
+patch has been applied to bluetooth-next tree.
 
-In other words, while this issue has existed forever it could be ignored
-until IceLake introduced MAXPHYADDR==52 machines.  I'll introduce
-something like this in a commit message.
+Regards
 
-Paolo
+Marcel
 
