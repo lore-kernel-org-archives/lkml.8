@@ -2,141 +2,254 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BECFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4E22077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A42C2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="yljIXpRG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B1vDPUKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGJKRJ (ORCPT
+        id S1727820AbgGJKSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:17:09 -0400
-Received: from mail-eopbgr1310044.outbound.protection.outlook.com ([40.107.131.44]:52592
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726955AbgGJKRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:17:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+wqaUvtJloU4sDYukIJk5ezSa7SQ0acM2LJ+Yud/4Lyaxk8+E2aRNot3W8kS5D9VQK2wtCwYyTiPTCOWG3mHNgPdgVT2ApZMIo9zwpj6m0rMPjfvR6Ik/oTL4jegmstLywRX2jB/Hk2c3k768JtkKe8i2N508GRCEGA1W45IfgPVYUJyKVa6uCD97GqJYvX4cOO09qASemjdlH73pkL1h9n5JwCBxlqXaN97mZxssu1jh1CqebQyOLO4ssDAuECtU4jkN0pQRub6sAONTY5nQHBkfJVyDUlpDcV6od2hfT/9ksIVwrn+Gx1X6AXGJTor4uHa5ENM43nEMcoHDN7eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eVKOCT+dI4v0T1xaUP4JnYuygX8fE7YkFq7ywfv2yyA=;
- b=GlyoRQoyrZfEF6pL2zgL4DxKvf4wio2RcaNKvprdQ6T/4Ao9ASo7Gy1w2iV5YqeitpiI5xs3c+HNVz0o+8Dhw465th8YAyPVEsDtisWEWn+b92p+AZcxyG/kUWFdBKHr4ipjN9pP9yVezOKBHtLLcxQldKFHUI+xEZZjTecXzS8O50IHJXPahDm7wkevWSJ5OEjGUmHJ6gfJAPr3Y8JEZzUknXNMtgpjC9+UwWQ8rXQK4cyQMjWlX9tpcIuTgDAqqhenLb8NbEid+sfXVbCj9llzoVcNsQ6zW+3jtBoBNkx+n/X2sZ7Bo97Yi9py44FXtbeadR1GmEH5tt3GLC0yxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
+        Fri, 10 Jul 2020 06:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgGJKSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 06:18:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC7BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:18:37 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so5835031ljn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:18:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eVKOCT+dI4v0T1xaUP4JnYuygX8fE7YkFq7ywfv2yyA=;
- b=yljIXpRGVGCXAq7gp49VtQnw2eXmu5a/4qteiOiFEKf7VIWo/tqmaehyuPT60e3iKq7dUwtYaCl518moVNh6xZSqaHPmvYyilqe6gRed6EoDJ17Yg77Q/Xcwp1XiVH1f4/lFRPiVpuUjQoDOH5jfqmTaYEWq0lFon1ocpevjMl0=
-Received: from HKAPR02MB4291.apcprd02.prod.outlook.com (2603:1096:203:d3::12)
- by HKAPR02MB4387.apcprd02.prod.outlook.com (2603:1096:203:c6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 10 Jul
- 2020 10:17:03 +0000
-Received: from HKAPR02MB4291.apcprd02.prod.outlook.com
- ([fe80::d4d8:820c:6e00:69d2]) by HKAPR02MB4291.apcprd02.prod.outlook.com
- ([fe80::d4d8:820c:6e00:69d2%8]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
- 10:17:03 +0000
-From:   =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
-To:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
- plt_max_entries is 0
-Thread-Topic: [PATCH] arm64/module-plts: Consider the special case where
- plt_max_entries is 0
-Thread-Index: AdZVxomlyXL2KYiRQzS3gTED+d01Tw==
-Date:   Fri, 10 Jul 2020 10:17:03 +0000
-Message-ID: <HKAPR02MB4291B9C45F1411607620575CE0650@HKAPR02MB4291.apcprd02.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oppo.com;
-x-originating-ip: [58.252.5.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4bde3113-4e18-4150-c936-08d824ba63fb
-x-ms-traffictypediagnostic: HKAPR02MB4387:
-x-microsoft-antispam-prvs: <HKAPR02MB4387BA1FB9D4242D235465E4E0650@HKAPR02MB4387.apcprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ryr7ODXf1DQfIzAqrlelUiZS8x1DC8UQHSiVQV+Cs1T70fo714gieEAJWhSiwYpgC9l9FV6eXJudWjCUAg88F7LgqItmvYlRAlfij4tFOeY11ddmBkGEPWOT4hiZCH4C0SiKRK2X9LWX7LcqhWUMlnMY3DC3uMJAPfT1q3a3cvdwqhYn4OJYoX9wUgDxbLBMKF3pzdlx9mpDbBPDLSUJVLbx9U7CAa03xdSGl0XwbaFzgulZNfD81uHtEx2ezoq217weDk2YMBZXrneUgTu3VjsFWmqHCLRhI8FzkI0fT8Tr0gluaILty2O3pvk1vtBaR54kEiO7hUo/H9YqTZUK7CbG0lQoU9bGnHGipJ8hkBQFdENkDtvn4YMGA2TwgaGX
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HKAPR02MB4291.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(396003)(366004)(346002)(136003)(66446008)(64756008)(6506007)(66556008)(85182001)(186003)(66476007)(26005)(71200400001)(9686003)(33656002)(316002)(8676002)(86362001)(2906002)(478600001)(83380400001)(110136005)(55016002)(76116006)(52536014)(66946007)(4326008)(5660300002)(8936002)(7696005)(54906003)(11606004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: T0YjH3qSUr/bBvN+hGcF1njcpMLmGHpO21xZ8SBOIqvcBhtKaS1y7dq2JZW8tP9E86dghSS/RhqugFs7ezfoopFyJCJ2xQHSUBrMvu+tpUiKfSeL6GYe0FrPpioQdpJv8rskb4JvX7G/oFubup2hZuSV+aARkpexVssfoJmafp8knZ8dqOBw5aSiiyD9LHj/SLIaw96EFG6KwjOqVB5d1ajoMTzjITf/f+ccwGwtv4dPB4xv7q4n8QzSQVE4IIpYR1gFMXO0tiJijJ2aARvEF2DbUAZ3v+C55wb2sBdDPXB8dQbeX1rPCUdDkQvaOjWzM+1TmxaOjR79u+iWvG5U2w2WU5gpchnqAWaoOvVPNBW2fd5HNJkIBq+C5d1KvpeP+xMgPKhST2WpbvsF0ajwlwEwor8LfeYdFcEF6X18+epKEEq68BWHZpeHROcgT2eHfJ4m7TMx0NSblOntzXVPY5sTyLq69SEBdJa0+A5nAHg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aNlhWaUWCBPVhy661vfoazTLs0ZKDar97UjH0WY+K3c=;
+        b=B1vDPUKoKnVTDDpNpciAZgi50kcfqil9mM+SxWS09qJ8zJV6qOL5inFmx3sUNU0h/+
+         U+UyqOKwaFWkNqD1h2MrS1cFgKhFz6kGOVg/Kg4O6kBpXyiJF+SM64jgmBTBARbf2gCK
+         FFnd0Y+617jScXRsnreCMmbuGkNZ8S253MA6MTZH2G2iy/6YodrxWLXfpyeTqL0YrhY5
+         M1b2wGHTdxs56wg6BNgK3/RXNFs2011undw5YV4G1GhKHyWPBqv5JnJV/Q8a/N9Am6mQ
+         psyctBEMvtmFwZWTmpelsPgm5C8GOZe9NKxyimfxpNHhPEmcpHqh4RRfVE6KCotHz58a
+         YgSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aNlhWaUWCBPVhy661vfoazTLs0ZKDar97UjH0WY+K3c=;
+        b=qeMs6QaOTkk9BLVAC59BNqLuiDKCrow6uQ680jEI+8H43pL3NGv9zz3dhEnCwyNaJH
+         e1y0FrRxVkHlhmCyPYajf+6NcafoBKYhC68AA9RuSxNATGij+anTdCyJ2sj5C1f3Ca5t
+         2Cb7QZK6PenMUvA6m3+fnOESIitpUYyAUzXeLyCo9gAvgWTnUZ5xREh5LS3ClvyjTxy1
+         SGtG8+OTAdM0CY9kKWTnANKqrimXGJZ9zZj8m5XZF5GYJxVCKIP0WL/WbW0YGH3wrPws
+         R68/KZkrefYdR2s2G1bpcWApzl7HgCwOkpS9JhTumdMF/+Ehzq4fum3k5334cr/DTDyx
+         mwIA==
+X-Gm-Message-State: AOAM531OFyoiXIM+zo9zT7cwqn4VTmDSRy5+T5YTyZ9OSX8VVRnTeRBe
+        4nylzpJ6rcMkazlsYyKrWdgn2SwSPYU=
+X-Google-Smtp-Source: ABdhPJzkx9TpkYo2DZKCGkBnZL3bjt8a/XUFApAqKawWzy/CRsiVPSvoFzptSDJTMAfRN7OgX5ekaw==
+X-Received: by 2002:a2e:b16c:: with SMTP id a12mr38815976ljm.146.1594376315304;
+        Fri, 10 Jul 2020 03:18:35 -0700 (PDT)
+Received: from jade.urgonet (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id w19sm1746753ljh.106.2020.07.10.03.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 03:18:34 -0700 (PDT)
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        op-tee@lists.trustedfirmware.org
+Cc:     Cedric Neveux <cedric.neveux@nxp.com>,
+        Michael Whitfield <michael.whitfield@nxp.com>,
+        Joakim Bech <joakim.bech@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH] driver: tee: Handle NULL pointer indication from client
+Date:   Fri, 10 Jul 2020 12:18:08 +0200
+Message-Id: <20200710101808.1316522-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HKAPR02MB4291.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bde3113-4e18-4150-c936-08d824ba63fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 10:17:03.0727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WcknUF4fKSsptVRKhAW6zYVE08g3243Nkjb4I+VOaEUVP2Q7VEdIAzYRVBsufn+w+xy7a2zxpGle9NWVdaXzaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR02MB4387
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCBKdWwgMDksIDIwMjAgYXQgMDc6MTg6MDFBTSArMDAwMCwgUGVuZyBIYW8oUmljaGFy
-ZCkgd3JvdGU6DQo+PiBPbiBUaHUsIDkgSnVsIDIwMjAgYXQgMDk6NTAsIFBlbmcgSGFvIChSaWNo
-YXJkKSA8cmljaGFyZC5wZW5nQG9wcG8uY29tPiB3cm90ZToNCj4+ID4+ID5BcHBhcmVudGx5LCB5
-b3UgYXJlIGhpdHRpbmcgYSBSX0FBUkNINjRfSlVNUDI2IG9yIFJfQUFSQ0g2NF9DQUxMMjYNCj4+
-ID4+ID5yZWxvY2F0aW9uIHRoYXQgb3BlcmF0ZXMgb24gYSBiIG9yIGJsIGluc3RydWN0aW9uIHRo
-YXQgaXMgbW9yZSB0aGFuDQo+PiA+PiA+MTI4IG1lZ2FieXRlcyBhd2F5IGZyb20gaXRzIHRhcmdl
-dC4NCj4+ID4+ID4NCj4+ID4+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBhIG1vZHVsZSB0aGF0
-IGNhbGxzIGZ1bmN0aW9ucyB0aGF0IGFyZSBub3QgcGFydCBvZiB0aGUgbW9kdWxlIHdpbGwgdXNl
-IFBMVC4NCj4+ID4+IFBsdF9tYXhfZW50cmllcyA9MCBNYXkgb2NjdXIgaWYgYSBtb2R1bGUgZG9l
-cyBub3QgZGVwZW5kIG9uIG90aGVyIG1vZHVsZSBmdW5jdGlvbnMuDQo+PiA+Pg0KPj4gPg0KPj4g
-PkEgUExUIHNsb3QgaXMgYWxsb2NhdGVkIGZvciBlYWNoIGIgb3IgYmwgaW5zdHJ1Y3Rpb24gdGhh
-dCByZWZlcnMgdG8gYQ0KPj4gPnN5bWJvbCB0aGF0IGxpdmVzIGluIGEgZGlmZmVyZW50IHNlY3Rp
-b24sIGVpdGhlciBvZiB0aGUgc2FtZSBtb2R1bGUNCj4+ID4gKGUuZy4sIGJsIGluIC5pbml0IGNh
-bGxpbmcgaW50byAudGV4dCksIG9mIGFub3RoZXIgbW9kdWxlLCBvciBvZiB0aGUNCj4+ID5jb3Jl
-IGtlcm5lbC4NCj4+ID4NCj4+ID5JIGRvbid0IHNlZSBob3cgeW91IGVuZCB1cCB3aXRoIHBsdF9t
-YXhfZW50cmllcyBpbiB0aGlzIGNhc2UsIHRob3VnaC4NCj4+IGlmIGEgbW9kdWxlIGRvZXMgbm90
-IGRlcGVuZCBvbiBvdGhlciBtb2R1bGUgZnVuY3Rpb25zLCBQTFQgZW50cmllcyBpbiB0aGUgbW9k
-dWxlIGlzIGVxdWFsIHRvIDAuDQo+DQo+VGhpcyBicmluZ3MgbWUgYmFjayB0byBteSBlYXJsaWVy
-IHF1ZXN0aW9uOiBpZiB0aGVyZSBhcmUgbm8gUExUIGVudHJpZXMgaW4NCj50aGUgbW9kdWxlLCB0
-aGVuIGNvdW50X3BsdHMoKSB3aWxsIG5vdCBmaW5kIGFueSBSX0FBUkNINjRfSlVNUDI2IG9yDQo+
-Ul9BQVJDSDY0X0NBTEwyNiByZWxvY2F0aW9ucyB0aGF0IHJlcXVpcmUgUExUcyBhbmQgd2lsbCB0
-aGVyZWZvcmUgcmV0dXJuIDAuDQo+VGhlIGFic2VuY2Ugb2YgdGhlc2UgcmVsb2NhdGlvbnMgbWVh
-bnMgdGhhdCBtb2R1bGVfZW1pdF9wbHRfZW50cnkoKSB3aWxsIG5vdA0KPmJlIGNhbGxlZCBieSBh
-cHBseV9yZWxvY2F0ZV9hZGQoKSwgYW5kIHNvIHlvdXIgcGF0Y2ggc2hvdWxkIGhhdmUgbm8gZWZm
-ZWN0Lg0KPg0KPllvdSBzZWVtIHRvIGJlIHNheWluZyB0aGF0IG1vZHVsZV9lbWl0X3BsdF9lbnRy
-eSgpIF9pc18gYmVpbmcgY2FsbGVkLA0KPmRlc3BpdGUgY291bnRfcGx0cygpIHJldHVybmluZyAw
-LiBPbmUgd2F5IHRoYXQgY2FuIGhhcHBlbiBpcyBpZiBQTFRzIGFyZQ0KPm5lZWRlZCBmb3IgYnJh
-bmNoZXMgd2l0aGluIGEgc2luZ2xlLCB2ZXJ5IGxhcmdlIHRleHQgc2VjdGlvbiwgYnV0IHlvdSBh
-bHNvDQo+c2F5IHRoYXQncyBub3QgdGhlIGNhc2UuDQo+DQpPbmUgb2YgeWVzdGVyZGF5J3MgcmVw
-bHkgd2FzIHdyb25nLiBXYXJuaW5nIGFwcGVhcnMgb24gdGhlIHR3byBzZXJ2ZXJzIHdob3NlIENP
-TkZJR19SQU5ET01JWkVfQkFTRSBpcyBuLg0KdGhlcmUgaXMgYSBzZXJ2ZXIgaXMgc29tZW9uZSBj
-b3BpZWQgYSBuZXcgY29uZmlnLCB3aGljaCBjYW4gZW5hYmxlIENPTkZJR19SQU5ET01JWkVfQkFT
-RSwNCiBjb21waWxlZCB0aGUga2VybmVsLCBidXQgaGFzIG5vdCByZXN0YXJ0ZWQgdGhlIGhvc3Qu
-IEBBcmQNCg0KPlNvIEkgdGhpbmsgd2UgbmVlZCBtb3JlIGluZm9ybWF0aW9uIGZyb20geW91IHNv
-IHRoYXQgd2UgY2FuIGVpdGhlciByZXByb2R1Y2UNCj50aGlzIG91cnNlbHZlcywgb3IgYmV0dGVy
-IHVuZGVyc3RhbmQgd2hlcmUgdGhpbmdzIGFyZSBnb2luZyB3cm9uZy4NCj4NCkFmdGVyIEkgYWRk
-IHRoZSBwcmludCBpbmZvcm1hdGlvbiwgdGhlIG1vZHVsZSB0aGF0IHRyaWdnZXJlZCB0aGUgd2Fy
-bmluZyBkaWZmZXJzIGVhY2ggdGltZSBJIHJlc3RhcnQgdGhlIGhvc3QuDQo+RmluYWxseSwgeW91
-IHNhaWQgdGhhdCB5b3VyIGtlcm5lbCBpcyAiNS42LjAtcmMzKyIuIEFyZSB5b3UgYWJsZSB0bw0K
-PnJlcHJvZHVjZSB3aXRoIG1haW5saW5lICg1LjgtcmM0KT8NCj4NCkkgd2lsbCB0cnkgaXQuDQo+
-V2lsbA0KPg0KPlAuUy4gd2hlbmV2ZXIgeW91IHJlcGx5LCB0aGUgbWFpbCB0aHJlYWRpbmcgYnJl
-YWtzIDooDQpNYXliZSB0aGUgbWFpbGJveCBjbGllbnQgYXV0b21hdGljYWxseSBhcHBlbmRzIENo
-aW5lc2UgY2hhcmFjdGVycy4NCkknbGwgYWRqdXN0IGl0IGFuZCBzZWUgaWYgSSBjYW4gZml4IGl0
-Lg0K
+From: Cedric Neveux <cedric.neveux@nxp.com>
+
+TEE Client introduce a new capability "TEE_GEN_CAP_MEMREF_NULL"
+to handle the support of the shared memory buffer with a NULL pointer.
+
+This capability depends on TEE Capabilities and driver support.
+Driver and TEE exchange capabilities at driver initialization.
+
+Signed-off-by: Michael Whitfield <michael.whitfield@nxp.com>
+Signed-off-by: Cedric Neveux <cedric.neveux@nxp.com>
+Reviewed-by: Joakim Bech <joakim.bech@linaro.org>
+Tested-by: Joakim Bech <joakim.bech@linaro.org> (QEMU)
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+---
+ drivers/tee/optee/core.c      |  7 +++++
+ drivers/tee/optee/optee_smc.h |  3 +++
+ drivers/tee/tee_core.c        | 49 ++++++++++++++++++++++-------------
+ include/linux/tee_drv.h       |  3 +++
+ include/uapi/linux/tee.h      | 13 ++++++++++
+ 5 files changed, 57 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+index 99698b8a3a74..8ef66e75b65e 100644
+--- a/drivers/tee/optee/core.c
++++ b/drivers/tee/optee/core.c
+@@ -215,6 +215,8 @@ static void optee_get_version(struct tee_device *teedev,
+ 
+ 	if (optee->sec_caps & OPTEE_SMC_SEC_CAP_DYNAMIC_SHM)
+ 		v.gen_caps |= TEE_GEN_CAP_REG_MEM;
++	if (optee->sec_caps & OPTEE_SMC_SEC_CAP_MEMREF_NULL)
++		v.gen_caps |= TEE_GEN_CAP_MEMREF_NULL;
+ 	*vers = v;
+ }
+ 
+@@ -246,6 +248,11 @@ static int optee_open(struct tee_context *ctx)
+ 	mutex_init(&ctxdata->mutex);
+ 	INIT_LIST_HEAD(&ctxdata->sess_list);
+ 
++	if (optee->sec_caps & OPTEE_SMC_SEC_CAP_MEMREF_NULL)
++		ctx->cap_memref_null  = true;
++	else
++		ctx->cap_memref_null = false;
++
+ 	ctx->data = ctxdata;
+ 	return 0;
+ }
+diff --git a/drivers/tee/optee/optee_smc.h b/drivers/tee/optee/optee_smc.h
+index c72122d9c997..777ad54d4c2c 100644
+--- a/drivers/tee/optee/optee_smc.h
++++ b/drivers/tee/optee/optee_smc.h
+@@ -215,6 +215,9 @@ struct optee_smc_get_shm_config_result {
+  */
+ #define OPTEE_SMC_SEC_CAP_DYNAMIC_SHM		BIT(2)
+ 
++/* Secure world supports Shared Memory with a NULL buffer reference */
++#define OPTEE_SMC_SEC_CAP_MEMREF_NULL		BIT(4)
++
+ #define OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES	9
+ #define OPTEE_SMC_EXCHANGE_CAPABILITIES \
+ 	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES)
+diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+index 64637e09a095..ce0f0309b6ac 100644
+--- a/drivers/tee/tee_core.c
++++ b/drivers/tee/tee_core.c
+@@ -383,25 +383,38 @@ static int params_from_user(struct tee_context *ctx, struct tee_param *params,
+ 		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+ 		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+ 			/*
+-			 * If we fail to get a pointer to a shared memory
+-			 * object (and increase the ref count) from an
+-			 * identifier we return an error. All pointers that
+-			 * has been added in params have an increased ref
+-			 * count. It's the callers responibility to do
+-			 * tee_shm_put() on all resolved pointers.
++			 * If a NULL pointer is passed to a TA in the TEE,
++			 * the ip.c IOCTL parameters is set to TEE_MEMREF_NULL
++			 * indicating a NULL memory reference.
+ 			 */
+-			shm = tee_shm_get_from_id(ctx, ip.c);
+-			if (IS_ERR(shm))
+-				return PTR_ERR(shm);
+-
+-			/*
+-			 * Ensure offset + size does not overflow offset
+-			 * and does not overflow the size of the referred
+-			 * shared memory object.
+-			 */
+-			if ((ip.a + ip.b) < ip.a ||
+-			    (ip.a + ip.b) > shm->size) {
+-				tee_shm_put(shm);
++			if (ip.c != TEE_MEMREF_NULL) {
++				/*
++				 * If we fail to get a pointer to a shared
++				 * memory object (and increase the ref count)
++				 * from an identifier we return an error. All
++				 * pointers that has been added in params have
++				 * an increased ref count. It's the callers
++				 * responibility to do tee_shm_put() on all
++				 * resolved pointers.
++				 */
++				shm = tee_shm_get_from_id(ctx, ip.c);
++				if (IS_ERR(shm))
++					return PTR_ERR(shm);
++
++				/*
++				 * Ensure offset + size does not overflow
++				 * offset and does not overflow the size of
++				 * the referred shared memory object.
++				 */
++				if ((ip.a + ip.b) < ip.a ||
++				    (ip.a + ip.b) > shm->size) {
++					tee_shm_put(shm);
++					return -EINVAL;
++				}
++			} else if (ctx->cap_memref_null) {
++				/* Pass NULL pointer to OP-TEE */
++				shm = NULL;
++			} else {
+ 				return -EINVAL;
+ 			}
+ 
+diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+index d074302989dd..cdd049a724b1 100644
+--- a/include/linux/tee_drv.h
++++ b/include/linux/tee_drv.h
+@@ -47,6 +47,8 @@ struct tee_shm_pool;
+  *              and just return with an error code. It is needed for requests
+  *              that arises from TEE based kernel drivers that should be
+  *              non-blocking in nature.
++ * @cap_memref_null: flag indicating if the TEE Client support shared
++ *                   memory buffer with a NULL pointer.
+  */
+ struct tee_context {
+ 	struct tee_device *teedev;
+@@ -54,6 +56,7 @@ struct tee_context {
+ 	struct kref refcount;
+ 	bool releasing;
+ 	bool supp_nowait;
++	bool cap_memref_null;
+ };
+ 
+ struct tee_param_memref {
+diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+index b619f37ee03e..d67cadf221fc 100644
+--- a/include/uapi/linux/tee.h
++++ b/include/uapi/linux/tee.h
+@@ -51,6 +51,9 @@
+ #define TEE_GEN_CAP_GP		(1 << 0)/* GlobalPlatform compliant TEE */
+ #define TEE_GEN_CAP_PRIVILEGED	(1 << 1)/* Privileged device (for supplicant) */
+ #define TEE_GEN_CAP_REG_MEM	(1 << 2)/* Supports registering shared memory */
++#define TEE_GEN_CAP_MEMREF_NULL	(1 << 3)/* NULL MemRef support */
++
++#define TEE_MEMREF_NULL		(__u64)(-1) /* NULL MemRef Buffer */
+ 
+ /*
+  * TEE Implementation ID
+@@ -200,6 +203,16 @@ struct tee_ioctl_buf_data {
+  * a part of a shared memory by specifying an offset (@a) and size (@b) of
+  * the object. To supply the entire shared memory object set the offset
+  * (@a) to 0 and size (@b) to the previously returned size of the object.
++ *
++ * A client may need to present a NULL pointer in the argument
++ * passed to a trusted application in the TEE.
++ * This is also a requirement in GlobalPlatform Client API v1.0c
++ * (section 3.2.5 memory references), which can be found at
++ * http://www.globalplatform.org/specificationsdevice.asp
++ *
++ * If a NULL pointer is passed to a TA in the TEE, the (@c)
++ * IOCTL parameters value must be set to TEE_MEMREF_NULL indicating a NULL
++ * memory reference.
+  */
+ struct tee_ioctl_param {
+ 	__u64 attr;
+-- 
+2.25.1
+
