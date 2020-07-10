@@ -2,89 +2,100 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47218C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D252C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5C02078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3733B2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYvO2CeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgGJGmV (ORCPT
+        id S1727068AbgGJGoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:42:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11563 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgGJGmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:42:20 -0400
-IronPort-SDR: goCKN8fJFrRqUYMG8LSHBGlNkDBlj6eVldNjYymrP4hBzEVLqaT7Fi0UAsG+Qb5UuEVD4O23Mb
- qiUSDMNVU8FQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="127751004"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="127751004"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 23:42:20 -0700
-IronPort-SDR: OdJt/DPOJXTDMtl6BzBoR7MaAS7AcbsrG9FJ0PXw5fygo6H4LpeFs/7DaaQQ4xt/62Ii+Vx3wz
- VKyUNZcouXUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="389396441"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 23:42:13 -0700
-Subject: Re: [PATCH 2/2] mmc: sdhci-of-aspeed: Fix clock divider calculation
-To:     Eddie James <eajames@linux.ibm.com>, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-mmc@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        ulf.hansson@linaro.org, sboyd@kernel.org, mturquette@baylibre.com
-References: <20200709195706.12741-1-eajames@linux.ibm.com>
- <20200709195706.12741-3-eajames@linux.ibm.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <fe0c6b0f-0fa1-a4e4-1f60-5258b30c14f9@intel.com>
-Date:   Fri, 10 Jul 2020 09:41:32 +0300
+        Fri, 10 Jul 2020 02:44:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48644 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726201AbgGJGoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:44:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594363458;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MzGyARVdJCOFDOhVSOMVsmLn0aigNSts0XTYJa817V4=;
+        b=bYvO2CeRc5VMgOoFQEauPf+lyXE69zqL1wbKy4PgfqGJJ1ij8sQ1erw26iaaoXrUkY6onE
+        EnXUx7gz81IfmsKEJRpNM+SqyrHPMx9mIA5M5cIv+7pr92m1iK+OhISQDxr8AMDX9UCTr3
+        0/CCrdOTlZPUAUfbsNaxrMhUsCBhtLc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-KQOJWU4-NHmNmPCiOqvlnQ-1; Fri, 10 Jul 2020 02:44:16 -0400
+X-MC-Unique: KQOJWU4-NHmNmPCiOqvlnQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5459B8015CB;
+        Fri, 10 Jul 2020 06:44:15 +0000 (UTC)
+Received: from [10.72.13.228] (ovpn-13-228.pek2.redhat.com [10.72.13.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 167F419D7D;
+        Fri, 10 Jul 2020 06:44:09 +0000 (UTC)
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     Eugenio Perez Martin <eperezma@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
+ <20200622114622-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+ <20200622122546-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+ <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
+ <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
+ <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
+ <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
+ <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
+ <20200709133438-mutt-send-email-mst@kernel.org>
+ <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
+ <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6282b6d5-4d2b-a996-c090-6bc7ae6043ce@redhat.com>
+Date:   Fri, 10 Jul 2020 14:44:08 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200709195706.12741-3-eajames@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/07/20 10:57 pm, Eddie James wrote:
-> When calculating the clock divider, start dividing at 2 instead of 1.
-> The divider is divided by two at the end of the calculation, so starting
-> at 1 may result in a divider of 0, which shouldn't happen.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On 2020/7/10 下午1:39, Eugenio Perez Martin wrote:
+> It is allocated 1 thread in lcore 1 (F_THREAD=1) which belongs to the
+> same NUMA as testpmd. Actually, it is the testpmd master core, so it
+> should be a good idea to move it to another lcore of the same NUMA
+> node.
+>
+> Is this enough for pktgen to allocate the memory in that numa node?
+> Since the script only write parameters to /proc, I assume that it has
+> no effect to run it under numactl/taskset, and pktgen will allocate
+> memory based on the lcore is running. Am I right?
+>
+> Thanks!
+>
 
-> ---
->  drivers/mmc/host/sdhci-of-aspeed.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-> index 56912e30c47e..a1bcc0f4ba9e 100644
-> --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> @@ -68,7 +68,7 @@ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  	if (WARN_ON(clock > host->max_clk))
->  		clock = host->max_clk;
->  
-> -	for (div = 1; div < 256; div *= 2) {
-> +	for (div = 2; div < 256; div *= 2) {
->  		if ((parent / div) <= clock)
->  			break;
->  	}
-> 
+I think you're right.
+
+Thanks
 
