@@ -8,128 +8,109 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78424C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3D02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B713D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWVyxLVd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPOmhpn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgGJUg3 (ORCPT
+        id S1728142AbgGJUgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44142 "EHLO
+        Fri, 10 Jul 2020 16:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJUg3 (ORCPT
+        with ESMTP id S1726725AbgGJUgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:36:29 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DEEC08C5DC;
-        Fri, 10 Jul 2020 13:36:29 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id p1so2718548pls.4;
-        Fri, 10 Jul 2020 13:36:29 -0700 (PDT)
+        Fri, 10 Jul 2020 16:36:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9675C08C5DC;
+        Fri, 10 Jul 2020 13:36:44 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f2so2712888plr.8;
+        Fri, 10 Jul 2020 13:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CBeOH8xn997iN4AWW1cm6Q7EpJLMNZfyo6PWOD7fGV0=;
-        b=FWVyxLVdbt50VvwsbdoJOl5kguGk80kYfbE9yz1SBzDDzd7YvKTABMonsDlaDK+DY8
-         c2FgUdOCvrNbv8D5FLfB1pyQtPOknA+3uLlOEGb5y+5ICfvJxjU/vSRMEC+8Q4M5AXp1
-         LsLJj9zlIVspRMfSLaFhCfoeBvICxkRtfo3p+p1e9NZMxdKDfyQ8XIPBX/PAE1BQsnh1
-         kc1Gev815pieKt1a364W1rME65HciMphubQ+VNE7bm3P+sihsaM/jh21D1NEtud0xm9b
-         eVj+ZwG74/G1VksxjZqKuNe22/yfR00UxCyUxocbmaHkY9dIuTIdYYa9gF8P9U3CL301
-         b1bw==
+        bh=v/g5Ik4XxeXHychspflxS0Ipi8xCX8rGY0IAzYGaiEE=;
+        b=ZPOmhpn/yEv3Hq5GaGhNywYoYKWi5DwBF+PgbNfwQS566GAiFsFlXCtM/LJLr0F3RE
+         7YWhwXh0JCDWjgaWyRi8VP1jkGLEPpHIwdjNRza0bUmkNb/AXczDBQ8nZg0auMTURqgy
+         /f8u5/MujHHwTRKiIGsUNl8bI4Ho42evW6G/YSdWupEqNUzL/ocUpZih+0Tk6MsTc36T
+         otcPPkCw+x128F2+VS1BZynuQ0umPOIMulveSvoqjfTUZyFCMsIhM03TyHjNdVCa/jFt
+         ipe7pYPD0hH8OprOcaNVGe8JzUAblvp/SOaLCyJXMjuXuPTnIjmyvL1cSgYZ8gW/BWY+
+         s93A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CBeOH8xn997iN4AWW1cm6Q7EpJLMNZfyo6PWOD7fGV0=;
-        b=tjl00UluAszRUoYzMNUy8sqqW+HJZe2tQJsZ0hzP29y0USK+SC4+yl9PMea1VpgdtF
-         7MoAwWpYGVPGbsvVxNUI3/aldYFtnWXI9ZbivCKC6k2F3+vIgcWpAGIcqlpidyrgpEtE
-         QZ4WApgRaQGc3wOEw7JHOy/UHsoQZPkWqnEumqUHxH9IxMG6yMbDyUgHYbc2jMD/AzJW
-         /eUmjfBIjZHch0CQKts5VFbfOMjzrsZT2hXSDOAtCnBl7p9dasbzWD2rd0iNPCE8TyZ0
-         z3ZEmw0jkiBrBMYadFk7d77eywj0dBjH9JFeY5otd5uRevMfwYffg/eCLhzBcdQoWDfy
-         b6TA==
-X-Gm-Message-State: AOAM531Qq3niJYuVhV0aPt/xvFWeGpiccNQ1QDg79LvAxjdmihD6hCxV
-        tVVQTKYjEBHfPWuXULN2wWkBFCncEonlqMF1N/k=
-X-Google-Smtp-Source: ABdhPJwaudV8tXyCRsPfnZ9NnDzY+/0o7ua2r2Wku8+nR2tKGXe27SsKXfqTtQIxQDU/5xxT08RNKVdwxYKXN7m3oSg=
-X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr7850296pjb.129.1594413388823;
- Fri, 10 Jul 2020 13:36:28 -0700 (PDT)
+        bh=v/g5Ik4XxeXHychspflxS0Ipi8xCX8rGY0IAzYGaiEE=;
+        b=hzpH4G5dsPPlRHh2TaDDac6GoWzRslUmezFFTUV9ByosMnxNOMnvmvuEnfkvNCKteG
+         GaagYGEysAUWNBLroY6oiPGttdepWRR0oKgAufmAdVQKVKoWN2zPq60J15OJTleZi26k
+         R6s3LbMQKk9pA8fo3eqMhZwNK8HX9l+daOh3l3OOccaYWFyMEZmfC1KvwSid5FzOMJBx
+         RBGEXOB/8nPrm30qji2JrQ6QilYG9eJskx57IQDF+vuKzQW1jGd4ELBKstqO4AaLxrGm
+         nqEijOUlK+VbND0+v92D4x6HqkaWksNJEJk7RmKDh+bo7ohnOtXNZ0eVfZJ6t3WKT3XV
+         RJ3w==
+X-Gm-Message-State: AOAM532aQ6he2cPK/H64VbeZjH4seN1cqF4KoJvDIcNSQR8xIyPoulKC
+        lPBzXsLSUVhV7E0XaQcmwOVQUb66G0uAs6WHG/g=
+X-Google-Smtp-Source: ABdhPJxb0Hbc0iAwqzzvWKgvkq+Bd+3y6ilkaPBBehR+XumxcMmqm0tgPauRnfVQdgZvox+7S2zVpaQT8/eRFh8xKyA=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr7449485pjb.181.1594413404291;
+ Fri, 10 Jul 2020 13:36:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624175138.3835436-1-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200624175138.3835436-1-srinivas.pandruvada@linux.intel.com>
+References: <20200625061616.85278-1-sathyanarayana.nujella@intel.com>
+In-Reply-To: <20200625061616.85278-1-sathyanarayana.nujella@intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 10 Jul 2020 23:36:12 +0300
-Message-ID: <CAHp75VdXQW9NdXi6MNZQOJf0xg3yZxSQKaqpw79fSyaNp1L2Uw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: ISST: Add new PCI device ids
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
+Date:   Fri, 10 Jul 2020 23:36:28 +0300
+Message-ID: <CAHp75VfzHCudPC90j=6T1UQqF8TPmxXk0wQ_AS4aU5Dc3tjjcg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: update TGL's LPM0 reg bit
+ map name
+To:     Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
         Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Andy Shevchenko <andy@infradead.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Arava Jairaj <jairaj.arava@intel.com>,
+        "David E . Box" <david.e.box@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 8:52 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
+On Thu, Jun 25, 2020 at 9:16 AM Sathyanarayana Nujella
+<sathyanarayana.nujella@intel.com> wrote:
 >
-> Added new PCI device ids for supporting mailbox and MMIO interface for
-> Sapphire Rapids.
+> PMC debug tools use lpm0's 23rd bit to reflect Main PLL, not just
+> Audio PLL. So, update tgl_lpm0 debug reg bit map name.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Signed-off-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+> Signed-off-by: Arava Jairaj <jairaj.arava@intel.com>
+> Acked-by: David E. Box <david.e.box@intel.com>
 > ---
->  drivers/platform/x86/intel_speed_select_if/isst_if_common.h   | 3 +++
->  drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 1 +
->  drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c     | 1 +
->  3 files changed, 5 insertions(+)
+>  drivers/platform/x86/intel_pmc_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-> index 1409a5bb5582..4f6f7f0761fc 100644
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-> @@ -13,6 +13,9 @@
->  #define INTEL_RAPL_PRIO_DEVID_0        0x3451
->  #define INTEL_CFG_MBOX_DEVID_0 0x3459
->
-> +#define INTEL_RAPL_PRIO_DEVID_1 0x3251
-> +#define INTEL_CFG_MBOX_DEVID_1  0x3259
-> +
->  /*
->   * Validate maximum commands in a single request.
->   * This is enough to handle command to every core in one ioctl, or all
-> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-> index d84e2174cbde..95f01e7a87d5 100644
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-> @@ -147,6 +147,7 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
->
->  static const struct pci_device_id isst_if_mbox_ids[] = {
->         { PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
-> +       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
->         { 0 },
->  };
->  MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
-> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> index 3584859fcc42..aa17fd7817f8 100644
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> @@ -72,6 +72,7 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
->
->  static const struct pci_device_id isst_if_ids[] = {
->         { PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0)},
-> +       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1)},
->         { 0 },
->  };
->  MODULE_DEVICE_TABLE(pci, isst_if_ids);
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index d2a5d4c36715..60bf93638f55 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -415,7 +415,7 @@ static const struct pmc_bit_map tgl_lpm0_map[] = {
+>         {"PCIe_Gen3PLL_OFF_STS",                BIT(20)},
+>         {"OPIOPLL_OFF_STS",                     BIT(21)},
+>         {"OCPLL_OFF_STS",                       BIT(22)},
+> -       {"AudioPLL_OFF_STS",                    BIT(23)},
+> +       {"MainPLL_OFF_STS",                     BIT(23)},
+>         {"MIPIPLL_OFF_STS",                     BIT(24)},
+>         {"Fast_XTAL_Osc_OFF_STS",               BIT(25)},
+>         {"AC_Ring_Osc_OFF_STS",                 BIT(26)},
 > --
-> 2.25.4
+> 2.27.0
 >
 
 
