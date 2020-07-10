@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
 	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216532075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA48F20772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgGJV4G (ORCPT
+        id S1726671AbgGJV5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:56:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60418 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 17:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgGJV4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:56:06 -0400
+        id S1726628AbgGJV5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 17:57:08 -0400
 Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646B920725;
-        Fri, 10 Jul 2020 21:56:04 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 17:56:02 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 890B42075D;
+        Fri, 10 Jul 2020 21:57:06 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 17:57:05 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
@@ -35,12 +35,12 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
         ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
         pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
         linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 06/17] static_call: Add basic static call
+Subject: Re: [PATCH v6 07/17] static_call: Add inline static call
  infrastructure
-Message-ID: <20200710175602.1a84c355@oasis.local.home>
-In-Reply-To: <20200710134336.500117453@infradead.org>
+Message-ID: <20200710175705.5c20f7f7@oasis.local.home>
+In-Reply-To: <20200710134336.560096994@infradead.org>
 References: <20200710133831.943894387@infradead.org>
-        <20200710134336.500117453@infradead.org>
+        <20200710134336.560096994@infradead.org>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -50,35 +50,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 15:38:37 +0200
+On Fri, 10 Jul 2020 15:38:38 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
 > From: Josh Poimboeuf <jpoimboe@redhat.com>
 > 
-> Static calls are a replacement for global function pointers.  They use
-> code patching to allow direct calls to be used instead of indirect
-> calls.  They give the flexibility of function pointers, but with
-> improved performance.  This is especially important for cases where
-> retpolines would otherwise be used, as retpolines can significantly
-> impact performance.
+> Add infrastructure for an arch-specific CONFIG_HAVE_STATIC_CALL_INLINE
+> option, which is a faster version of CONFIG_HAVE_STATIC_CALL.  At
+> runtime, the static call sites are patched directly, rather than using
+> the out-of-line trampolines.
 > 
-> The concept and code are an extension of previous work done by Ard
-> Biesheuvel and Steven Rostedt:
+> Compared to out-of-line static calls, the performance benefits are more
+> modest, but still measurable.  Steven Rostedt did some tracepoint
+> measurements:
 > 
->   https://lkml.kernel.org/r/20181005081333.15018-1-ard.biesheuvel@linaro.org
->   https://lkml.kernel.org/r/20181006015110.653946300@goodmis.org
+>   https://lkml.kernel.org/r/20181126155405.72b4f718@gandalf.local.home
 > 
-> There are two implementations, depending on arch support:
-> 
->  1) out-of-line: patched trampolines (CONFIG_HAVE_STATIC_CALL)
->  2) basic function pointers
+> This code is heavily inspired by the jump label code (aka "static
+> jumps"), as some of the concepts are very similar.
 > 
 > For more details, see the comments in include/linux/static_call.h.
 > 
-> [peterz: simplified interface]
+> [peterz: simplified interface; merged trampolines]
 > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
 -- Steve
+
+
+> ---
+>  arch/Kconfig                      |    4 
+>  include/asm-generic/vmlinux.lds.h |    7 
+>  include/linux/module.h            |    5 
+>  include/linux/static_call.h       |   36 ++++
+>  include/linux/static_call_types.h |   13 +
+>  kernel/Makefile                   |    1 
+>  kernel/module.c                   |    5 
+>  kernel/static_call.c              |  303 ++++++++++++++++++++++++++++++++++++++
+>  8 files changed, 373 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/static_call.c
