@@ -2,90 +2,93 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9822620725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFFD207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594401805;
+	bh=rAuE9jeGeeqGhOCjOngLXVOcRpO0n8j8ZAoZml36l+k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bOVCG5njt0mmhAtufgWEkuYYMdrrFr0sHCUZgzFcQ3Ry1MnQBt8+rJhhsIzlazluJ
+	 +IMfuxyOzzGQfCcB3KYCVlZOPqH+wa2qg32skKAcY0W0P2ZDSG7KJoSLEPYYOq6mLr
+	 EMIzidDWNxIHr1GvmUfC44V9dOGkXcd6wehBoATo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgGJRVt convert rfc822-to-8bit (ORCPT
+        id S1728283AbgGJRXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:21:49 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:41325 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgGJRVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:21:49 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 5FB0ECED26;
-        Fri, 10 Jul 2020 19:31:44 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: BLUETOOTH SUBSYSTEM
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200708133638.14589-1-grandmaster@al2klimov.de>
-Date:   Fri, 10 Jul 2020 19:21:46 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <330C715F-ADB9-42B7-93CF-7605F5E9A9D2@holtmann.org>
-References: <20200708133638.14589-1-grandmaster@al2klimov.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 10 Jul 2020 13:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbgGJRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:23:23 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D2520725;
+        Fri, 10 Jul 2020 17:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594401803;
+        bh=rAuE9jeGeeqGhOCjOngLXVOcRpO0n8j8ZAoZml36l+k=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=GCGvc7A2swdSgZQM9VLG6v6Isa3U81e3H+SQmUSOjoXi7vktetME438dMXRJ34H42
+         aHNMQA5n4X6fIhkjfedVLzGsZTRHDfLQzo6Rgey4siWO2M2zMc4v1OOqc5/8LkhvZ0
+         kmIReJDrRl+BKA5/P1OJYrcEUZELDKqQOgt+LAAk=
+Date:   Fri, 10 Jul 2020 10:23:22 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+cc:     Stefano Stabellini <sstabellini@kernel.org>, jgross@suse.com,
+        Peng Fan <peng.fan@nxp.com>, konrad.wilk@oracle.com,
+        jasowang@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, linux-imx@nxp.com,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+In-Reply-To: <20200701172219-mutt-send-email-mst@kernel.org>
+Message-ID: <alpine.DEB.2.21.2007101019340.4124@sstabellini-ThinkPad-T480s>
+References: <20200624050355-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s> <20200624163940-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s> <20200626110629-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006291621300.8121@sstabellini-ThinkPad-T480s> <20200701133456.GA23888@infradead.org>
+ <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s> <20200701172219-mutt-send-email-mst@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+Sorry for the late reply -- a couple of conferences kept me busy.
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->  If not .svg:
->    For each line:
->      If doesn't contain `\bxmlns\b`:
->        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->            If both the HTTP and HTTPS versions
->            return 200 OK and serve the same content:
->              Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
-> Continuing my work started at 93431e0607e5.
-> See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> (Actually letting a shell for loop submit all this stuff for me.)
-> 
-> If there are any URLs to be removed completely or at least not HTTPSified:
-> Just clearly say so and I'll *undo my change*.
-> See also: https://lkml.org/lkml/2020/6/27/64
-> 
-> If there are any valid, but yet not changed URLs:
-> See: https://lkml.org/lkml/2020/6/26/837
-> 
-> If you apply the patch, please let me know.
-> 
-> 
-> net/bluetooth/Kconfig | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-patch has been applied to bluetooth-next tree.
+On Wed, 1 Jul 2020, Michael S. Tsirkin wrote:
+> On Wed, Jul 01, 2020 at 10:34:53AM -0700, Stefano Stabellini wrote:
+> > Would you be in favor of a more flexible check along the lines of the
+> > one proposed in the patch that started this thread:
+> > 
+> >     if (xen_vring_use_dma())
+> >             return true;
+> > 
+> > 
+> > xen_vring_use_dma would be implemented so that it returns true when
+> > xen_swiotlb is required and false otherwise.
+> 
+> Just to stress - with a patch like this virtio can *still* use DMA API
+> if PLATFORM_ACCESS is set. So if DMA API is broken on some platforms
+> as you seem to be saying, you guys should fix it before doing something
+> like this..
 
-Regards
+Yes, DMA API is broken with some interfaces (specifically: rpmesg and
+trusty), but for them PLATFORM_ACCESS is never set. That is why the
+errors weren't reported before. Xen special case aside, there is no
+problem under normal circumstances.
 
-Marcel
 
+If you are OK with this patch (after a little bit of clean-up), Peng,
+are you OK with sending an update or do you want me to?
