@@ -2,249 +2,157 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8997EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25FBC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6407F20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDF920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q53oHFKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgGJNeY (ORCPT
+        id S1727949AbgGJNed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:34:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbgGJNeX (ORCPT
+        Fri, 10 Jul 2020 09:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgGJNec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:34:23 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ADW6mL006648;
-        Fri, 10 Jul 2020 09:33:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpr3apw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 09:33:46 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06ADWPAd007505;
-        Fri, 10 Jul 2020 09:33:42 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpr39v3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 09:33:42 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06AD4wgt012132;
-        Fri, 10 Jul 2020 13:32:42 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 326bcf0ngm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 13:32:42 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ADVPdD59965518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 13:31:25 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E7BAA4051;
-        Fri, 10 Jul 2020 13:31:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7A08A404D;
-        Fri, 10 Jul 2020 13:31:21 +0000 (GMT)
-Received: from [9.199.38.25] (unknown [9.199.38.25])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Jul 2020 13:31:21 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Message-ID: <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
-Date:   Fri, 10 Jul 2020 19:01:21 +0530
+        Fri, 10 Jul 2020 09:34:32 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7036DC08C5CE;
+        Fri, 10 Jul 2020 06:34:32 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so5948889wmf.0;
+        Fri, 10 Jul 2020 06:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RNU/6302rcOODFLCEwANfmyQpoUQ2vOd8B0eKLChpSE=;
+        b=Q53oHFKsaw4OCYx49+iBVCsst7Y23PSx8gEhnEI2UKg0iwX6IkQ0CBC6B0RDNn5s4d
+         DK2QjnkLusfxi72FE6JTvMdjJ87VRBrt/0YbjVaWHPPx8YuwhYTkdQbYSP71h6RbKf6a
+         4lGKKX+4tqrHetgXHFWXML1Oub7m6pxY/GYXBIM6HBsbZsOlcQ71S+GucXslavCvZpvM
+         RE750aTeLEev9RNXORjzl6/cRUCbh0g3Un2CFnxBLPcu8ez3dEp9IRDXRvRVEsi9YwgK
+         E8+2ZZph3FZs0VJgREz+venk9okouoeUCh1cEh67QCjs5Fru0XTjiyJPZtkOub9rTFUY
+         ELCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RNU/6302rcOODFLCEwANfmyQpoUQ2vOd8B0eKLChpSE=;
+        b=hCfAOdaTfhuTuZUxMRWN31e9miNnuLTRi+3j0Atge85m4kxh1bEB5ckIfpUcDZ3VUH
+         EVdBrIVgiVx1CKHAhZ3DK8bcd9+Sg4l8K+wutdJ77IOW0gsQR3jwDqFPSWs0hneqipe2
+         VQCFtVjW3aHM30l6S7Dc9fo5Zf3fqBwn8TSh3r7o0nvMd3PC0AYxRJ7bnvT0vUfAk1oQ
+         cxuPtoGq3AsvJtNxiY1DqY+FtuJBkOeDtiCAN49Fmi5Dhyw3WiHz/96Skz3sx+yUp9Qa
+         T07emHwSNFiMwBRnqpTo4rwGNyXVSZm5oogIvdFQwq3UPjWVK5EBQSIEpWQ3FzJBt//k
+         mPWA==
+X-Gm-Message-State: AOAM532pv/sf5pouT9LGTbPkVwivgZ+J/PFPjiVE6q4TyXKaq4bZ58DO
+        dJWArZengAWsntC6PuCQBMw=
+X-Google-Smtp-Source: ABdhPJxwuzAwkiVu4PKL02+ytwiGtWwViRpoEp4epFrba7W8NasX5QwhcrD97o5Wahrp3YlAFpJopQ==
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr5118147wmd.86.1594388071128;
+        Fri, 10 Jul 2020 06:34:31 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.245])
+        by smtp.gmail.com with ESMTPSA id l3sm9911568wrx.22.2020.07.10.06.34.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 06:34:30 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: mt8173: Re-measure capacity-dmips-mhz
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ikjoon Jang <ikjn@chromium.org>
+References: <20200706083705.2343150-1-hsinyi@chromium.org>
+ <71bc5fa2-0869-5d91-6bb8-e8d59176e19c@gmail.com>
+ <CAJMQK-iGwXFwkvY_1nYiVQ6D-N5yU8YNqxeaSy-1XNMJHj1H0A@mail.gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <fe75ae59-99a7-3eec-b481-f1ec3264a86f@gmail.com>
+Date:   Fri, 10 Jul 2020 15:34:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+In-Reply-To: <CAJMQK-iGwXFwkvY_1nYiVQ6D-N5yU8YNqxeaSy-1XNMJHj1H0A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_07:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 mlxlogscore=999
- malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007100093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexey,
 
-> Currently access to perf_events, i915_perf and other performance
-> monitoring and observability subsystems of the kernel is open only for
-> a privileged process [1] with CAP_SYS_ADMIN capability enabled in the
-> process effective set [2].
+
+On 08/07/2020 20:55, Hsin-Yi Wang wrote:
+> On Thu, Jul 9, 2020 at 1:01 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>
+>>
+>>
+>> On 06/07/2020 10:37, Hsin-Yi Wang wrote:
+>>> Re measure capacity-dmips-mhz on elm and hana:
+>>>
+>>> cpu 1:  9502 DMIPS @ 1703 Mhz
+>>> cpu 3: 16250 DMIPS @ 2106 Mhz
+>>>
+>>> ==> 740 : 1024
+>>
+>> I have some trouble to match the commit message to the actual patch. Commit
+>> message talks about cpu 1 but patch changes cpu0. Where are the values of the
+>> other CPUs?
 > 
-> This patch set introduces CAP_PERFMON capability designed to secure
-> system performance monitoring and observability operations so that
-> CAP_PERFMON would assist CAP_SYS_ADMIN capability in its governing role
-> for performance monitoring and observability subsystems of the kernel.
+> Small cpu on 8173 is cpu0 & cpu1, while big cpu is cpu2 & cpu3.
+> Small cpu: 9502 DMIPS @ 1703 Mhz
+> Big cpu:   16250 DMIPS @ 2106 Mhz
+> 
+> 9502/1703 : 16250/2106 = 740 : 1024 (scale big cpu to 1024), and this patch
+> changes the small cpu value to 740.
+> 
+> 
 
-I'm seeing an issue with CAP_PERFMON when I try to record data for a
-specific target. I don't know whether this is sort of a regression or
-an expected behavior.
+applied to v5.8-next/dts64
 
-Without setting CAP_PERFMON:
+Thanks!
 
-   $ getcap ./perf
-   $ ./perf stat -a ls
-     Error:
-     Access to performance monitoring and observability operations is limited.
-   $ ./perf stat ls
-     Performance counter stats for 'ls':
-    
-                  2.06 msec task-clock:u              #    0.418 CPUs utilized
-                     0      context-switches:u        #    0.000 K/sec
-                     0      cpu-migrations:u          #    0.000 K/sec
 
-With CAP_PERFMON:
 
-   $ getcap ./perf
-     ./perf = cap_perfmon+ep
-   $ ./perf stat -a ls
-     Performance counter stats for 'system wide':
-    
-                142.42 msec cpu-clock                 #   25.062 CPUs utilized
-                   182      context-switches          #    0.001 M/sec
-                    48      cpu-migrations            #    0.337 K/sec
-   $ ./perf stat ls
-     Error:
-     Access to performance monitoring and observability operations is limited.
-
-Am I missing something silly?
-
-Analysis:
----------
-A bit more analysis lead me to below kernel code fs/exec.c:
-
-   begin_new_exec()
-   {
-         ...
-         if (bprm->interp_flags & BINPRM_FLAGS_ENFORCE_NONDUMP ||
-             !(uid_eq(current_euid(), current_uid()) &&
-               gid_eq(current_egid(), current_gid())))
-                 set_dumpable(current->mm, suid_dumpable);
-         else
-                 set_dumpable(current->mm, SUID_DUMP_USER);
-
-         ...
-         commit_creds(bprm->cred);
-   }
-
-When I execute './perf stat ls', it's going into else condition and thus sets
-dumpable flag as SUID_DUMP_USER. Then in commit_creds():
-
-   int commit_creds(struct cred *new)
-   {
-         ...
-         /* dumpability changes */
-         if (...
-             !cred_cap_issubset(old, new)) {
-                 if (task->mm)
-                         set_dumpable(task->mm, suid_dumpable);
-   }
-
-!cred_cap_issubset(old, new) fails for perf without any capability and thus
-it doesn't execute set_dumpable(). Whereas that condition passes for perf
-with CAP_PERFMON and thus it overwrites old value (SUID_DUMP_USER) with
-suid_dumpable in mm_flags. On an Ubuntu, suid_dumpable default value is
-SUID_DUMP_ROOT. On Fedora, it's SUID_DUMP_DISABLE. (/proc/sys/fs/suid_dumpable).
-
-Now while opening an event:
-
-   perf_event_open()
-     ptrace_may_access()
-       __ptrace_may_access() {
-                 ...
-                 if (mm &&
-                     ((get_dumpable(mm) != SUID_DUMP_USER) &&
-                      !ptrace_has_cap(cred, mm->user_ns, mode)))
-                     return -EPERM;
-       }
-
-This if condition passes for perf with CAP_PERFMON and thus it returns -EPERM.
-But it fails for perf without CAP_PERFMON and thus it goes ahead and returns
-success. So opening an event fails when perf has CAP_PREFMON and tries to open
-process specific event as normal user.
-
-Workarounds:
-------------
-Based on above analysis, I found couple of workarounds (examples are on
-Ubuntu 18.04.4 powerpc):
-
-Workaround1:
-Setting SUID_DUMP_USER as default (in /proc/sys/fs/suid_dumpable) solves the
-issue.
-
-   # echo 1 > /proc/sys/fs/suid_dumpable
-   $ getcap ./perf
-     ./perf = cap_perfmon+ep
-   $ ./perf stat ls
-     Performance counter stats for 'ls':
-    
-                  1.47 msec task-clock                #    0.806 CPUs utilized
-                     0      context-switches          #    0.000 K/sec
-                     0      cpu-migrations            #    0.000 K/sec
-
-Workaround2:
-Using CAP_SYS_PTRACE along with CAP_PERFMON solves the issue.
-
-   $ cat /proc/sys/fs/suid_dumpable
-     2
-   # setcap "cap_perfmon,cap_sys_ptrace=ep" ./perf
-   $ ./perf stat ls
-     Performance counter stats for 'ls':
-    
-                  1.41 msec task-clock                #    0.826 CPUs utilized
-                     0      context-switches          #    0.000 K/sec
-                     0      cpu-migrations            #    0.000 K/sec
-
-Workaround3:
-Adding CAP_PERFMON to parent of perf (/bin/bash) also solves the issue.
-
-   $ cat /proc/sys/fs/suid_dumpable
-     2
-   # setcap "cap_perfmon=ep" /bin/bash
-   # setcap "cap_perfmon=ep" ./perf
-   $ bash
-   $ ./perf stat ls
-     Performance counter stats for 'ls':
-    
-                  1.47 msec task-clock                #    0.806 CPUs utilized
-                     0      context-switches          #    0.000 K/sec
-                     0      cpu-migrations            #    0.000 K/sec
-
-- Ravi
+> 
+>>
+>> Regards,
+>> Matthias
+>>
+>>>
+>>> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>>> ---
+>>>    arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
+>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> index 70b1ffcab7f0..5e046f9d48ce 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> @@ -167,7 +167,7 @@ cpu0: cpu@0 {
+>>>                                 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>                        clock-names = "cpu", "intermediate";
+>>>                        operating-points-v2 = <&cluster0_opp>;
+>>> -                     capacity-dmips-mhz = <526>;
+>>> +                     capacity-dmips-mhz = <740>;
+>>>                };
+>>>
+>>>                cpu1: cpu@1 {
+>>> @@ -182,7 +182,7 @@ cpu1: cpu@1 {
+>>>                                 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>                        clock-names = "cpu", "intermediate";
+>>>                        operating-points-v2 = <&cluster0_opp>;
+>>> -                     capacity-dmips-mhz = <526>;
+>>> +                     capacity-dmips-mhz = <740>;
+>>>                };
+>>>
+>>>                cpu2: cpu@100 {
+>>>
