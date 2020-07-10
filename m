@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC27C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339A2C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAB5207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B40A207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399958;
-	bh=gTXZQO1RyYx1KEQLncc7UQSL6etty75iDnDOorylNyo=;
+	s=default; t=1594399964;
+	bh=0ddB4nB8xvkRzosqnCLtYbbkuDFtWWfHraJbh6SPJb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYXaaT530h+WQNx/uswHXyLa46aLqMN7UcMCeJmXuv+SdPlnVkBmXDLj09BsF0SlG
-	 1CE/H8CBtr63E3JhQOyfrbMYVqEVDSwEt3WBRA2sxENieZyxoqtHXSA8hC7DqZwUeo
-	 h7lFC1FRjEUNVDVQSMnG/IX236fCA9wnHfXA5JCM=
+	b=dddjVWIi5iyUG0BsVIhc34uhKr2r3PXS+iJQkw1WHUUCbfgsKRY3kWXAdy6w7nD3C
+	 fc6OvcwJ9oC8vYhqjrF++RJqLGPq8g0EnN8FnHs7Qk2sCGidGc3rilxJnLwmPJoMVy
+	 aQkmdzG6+Co3qi9kVDkjyzOMyNNeyipmD8Ie0LiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgGJQwg (ORCPT
+        id S1728430AbgGJQwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59386 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgGJQwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:52:32 -0400
+        id S1728362AbgGJQwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:52:36 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FF0207BB;
-        Fri, 10 Jul 2020 16:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96F9820874;
+        Fri, 10 Jul 2020 16:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594399952;
-        bh=gTXZQO1RyYx1KEQLncc7UQSL6etty75iDnDOorylNyo=;
+        s=default; t=1594399956;
+        bh=0ddB4nB8xvkRzosqnCLtYbbkuDFtWWfHraJbh6SPJb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qPyTLF3pqs4qb8U2JHB2vHzU3ThHJ3PE1k3ZZAAEPzT80q2DNbs8iyNQFOoFd/cRV
-         TdSU3YBe0OXAcoaCD0tdjrKCzw5McHlOyx8HVGl2NHy2tJp2UJHuW9xFuXvHeusZ4O
-         518hS8o32/DrYn3LkGZXqBF3E+Vl9slsioyn3KsE=
+        b=aNB0k5WKE8LUxXBlSBVjGZVKtO5lq8jeqkQ5MqWCSyjxry5pHBfrGHXuOMaxyF3Zj
+         1PiYSOGjnGuKARE4F2MX3Iu7uVYAV4mF3SptJ7n4dSo7s4QnjeD3oyfIZ3gdLK48qY
+         VFXaV0oJBiIGP8+ZjIEuoztf54X9JbzKht4crhzw=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
@@ -60,9 +60,9 @@ Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH v3 05/19] asm/rwonce: Remove smp_read_barrier_depends() invocation
-Date:   Fri, 10 Jul 2020 17:51:49 +0100
-Message-Id: <20200710165203.31284-6-will@kernel.org>
+Subject: [PATCH v3 06/19] asm/rwonce: Don't pull <asm/barrier.h> into 'asm-generic/rwonce.h'
+Date:   Fri, 10 Jul 2020 17:51:50 +0100
+Message-Id: <20200710165203.31284-7-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 References: <20200710165203.31284-1-will@kernel.org>
@@ -73,62 +73,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alpha overrides __READ_ONCE() directly, so there's no need to use
-smp_read_barrier_depends() in the core code. This also means that
-__READ_ONCE() can be relied upon to provide dependency ordering.
+Now that 'smp_read_barrier_depends()' has gone the way of the Norwegian
+Blue, drop the inclusion of <asm/barrier.h> in 'asm-generic/rwonce.h'.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+This requires fixups to some architecture vdso headers which were
+previously relying on 'asm/barrier.h' coming in via 'linux/compiler.h'.
+
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/asm-generic/rwonce.h | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ arch/arm/include/asm/vdso/gettimeofday.h          | 1 +
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h | 1 +
+ arch/arm64/include/asm/vdso/gettimeofday.h        | 1 +
+ arch/riscv/include/asm/vdso/gettimeofday.h        | 1 +
+ include/asm-generic/rwonce.h                      | 2 --
+ include/linux/nospec.h                            | 2 ++
+ 6 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/include/asm/vdso/gettimeofday.h b/arch/arm/include/asm/vdso/gettimeofday.h
+index 36dc18553ed8..1b207cf07697 100644
+--- a/arch/arm/include/asm/vdso/gettimeofday.h
++++ b/arch/arm/include/asm/vdso/gettimeofday.h
+@@ -7,6 +7,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <asm/barrier.h>
+ #include <asm/errno.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso/cp15.h>
+diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+index b6907ae78e53..bcf7649999a4 100644
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -7,6 +7,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <asm/barrier.h>
+ #include <asm/unistd.h>
+ #include <asm/errno.h>
+ 
+diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+index afba6ba332f8..127fa63893e2 100644
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -7,6 +7,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <asm/barrier.h>
+ #include <asm/unistd.h>
+ 
+ #define VDSO_HAS_CLOCK_GETRES		1
+diff --git a/arch/riscv/include/asm/vdso/gettimeofday.h b/arch/riscv/include/asm/vdso/gettimeofday.h
+index c8e818688ec1..3099362d9f26 100644
+--- a/arch/riscv/include/asm/vdso/gettimeofday.h
++++ b/arch/riscv/include/asm/vdso/gettimeofday.h
+@@ -4,6 +4,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <asm/barrier.h>
+ #include <asm/unistd.h>
+ #include <asm/csr.h>
+ #include <uapi/linux/time.h>
 diff --git a/include/asm-generic/rwonce.h b/include/asm-generic/rwonce.h
-index f9dfa88fc04d..cc810f1f18ca 100644
+index cc810f1f18ca..cd0302746fb4 100644
 --- a/include/asm-generic/rwonce.h
 +++ b/include/asm-generic/rwonce.h
-@@ -30,24 +30,16 @@
+@@ -26,8 +26,6 @@
+ #include <linux/kasan-checks.h>
+ #include <linux/kcsan-checks.h>
  
+-#include <asm/barrier.h>
+-
  /*
   * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
-- * atomicity or dependency ordering guarantees. Note that this may result
-- * in tears!
-+ * atomicity. Note that this may result in tears!
-  */
- #ifndef __READ_ONCE
- #define __READ_ONCE(x)	(*(const volatile __unqual_scalar_typeof(x) *)&(x))
- #endif
+  * atomicity. Note that this may result in tears!
+diff --git a/include/linux/nospec.h b/include/linux/nospec.h
+index 0c5ef54fd416..c1e79f72cd89 100644
+--- a/include/linux/nospec.h
++++ b/include/linux/nospec.h
+@@ -5,6 +5,8 @@
  
--#define __READ_ONCE_SCALAR(x)						\
--({									\
--	__unqual_scalar_typeof(x) __x = __READ_ONCE(x);			\
--	smp_read_barrier_depends();					\
--	(typeof(x))__x;							\
--})
--
- #define READ_ONCE(x)							\
- ({									\
- 	compiletime_assert_rwonce_type(x);				\
--	__READ_ONCE_SCALAR(x);						\
-+	__READ_ONCE(x);							\
- })
+ #ifndef _LINUX_NOSPEC_H
+ #define _LINUX_NOSPEC_H
++
++#include <linux/compiler.h>
+ #include <asm/barrier.h>
  
- #define __WRITE_ONCE(x, val)						\
-@@ -74,12 +66,9 @@ unsigned long __read_once_word_nocheck(const void *addr)
-  */
- #define READ_ONCE_NOCHECK(x)						\
- ({									\
--	unsigned long __x;						\
--	compiletime_assert(sizeof(x) == sizeof(__x),			\
-+	compiletime_assert(sizeof(x) == sizeof(unsigned long),		\
- 		"Unsupported access size for READ_ONCE_NOCHECK().");	\
--	__x = __read_once_word_nocheck(&(x));				\
--	smp_read_barrier_depends();					\
--	(typeof(x))__x;							\
-+	(typeof(x))__read_once_word_nocheck(&(x));			\
- })
- 
- static __no_kasan_or_inline
+ struct task_struct;
 -- 
 2.27.0.383.g050319c2ae-goog
 
