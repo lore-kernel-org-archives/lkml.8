@@ -2,102 +2,78 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8198FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29186C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3B820772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2C5207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594387383;
+	bh=bhlHLCb1ySZyILLIEsxxf9GTIzuQnttE8Q6Ag4vALUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VGS/3I9nhupELB75c6dbaY3ifmt4flw+HBWMsGPEMYfjFXItGAjnK6Dd7rNeWx4/O
+	 e3KAzUZxro7EfDzejv4ggfKexxP2q9xHiVYp3AY6c/LfDsbM+def8wAaSN3ljertVI
+	 81SnhuTHVTSPeKslsKsyAKjo3ME+bcGygBxDPzfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGJNWs (ORCPT
+        id S1727969AbgGJNXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55932 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 09:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgGJNWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:22:48 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726774AbgGJNXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:23:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E9E20748;
-        Fri, 10 Jul 2020 13:22:45 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 09:22:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, hch@lst.de
-Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
-Message-ID: <20200710092243.076e9b44@oasis.local.home>
-In-Reply-To: <20200710221802.da2f4cf077ce1bb51c7e11ca@kernel.org>
-References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
-        <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
-        <20200710113238.GH4800@hirez.programming.kicks-ass.net>
-        <20200710221802.da2f4cf077ce1bb51c7e11ca@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 833DD207BB;
+        Fri, 10 Jul 2020 13:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594387381;
+        bh=bhlHLCb1ySZyILLIEsxxf9GTIzuQnttE8Q6Ag4vALUU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CHgLdpX4u5DuI8bCQ6snOUUnot74rgglQtIuJ90uAHzttg57o9FVJH/682aUhutAI
+         VgKW4FVIqQCrvco9XlYPCr64VY/Jj+HChSlMAc7rAFjvCEKMcTk04B8+kJHLYQCV3A
+         MZCP3faIijjFjHyufOZwGCChT8HATeoOlv41sz7E=
+Date:   Fri, 10 Jul 2020 15:23:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v3 0/3] driver core: Add device link related sysfs files
+Message-ID: <20200710132305.GA1920995@kroah.com>
+References: <20200521191800.136035-1-saravanak@google.com>
+ <CAGETcx8UGps6bz1YhYcbjCAAXenBuR6XDT0qv5WED5zbyfzNFw@mail.gmail.com>
+ <20200529123025.GA1710508@kroah.com>
+ <CAGETcx-QiAysfd7AVV2Y7_GWRd2sj4N=8KwQ_T4fUZ5gVaV8Jw@mail.gmail.com>
+ <CAGETcx94Os7o+xZPSs3vVOQAzGtESAGFXtUNdrEAK9iya05s1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx94Os7o+xZPSs3vVOQAzGtESAGFXtUNdrEAK9iya05s1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 22:18:02 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
+On Mon, Jul 06, 2020 at 03:45:02PM -0700, Saravana Kannan wrote:
+> On Tue, Jun 16, 2020 at 8:45 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Fri, May 29, 2020 at 5:30 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > Looks semi-sane, but it's too close to the merge window at the moment
+> > > for me to take this.  If there's no objections by the time 5.8-rc1 is
+> > > out, I'll queue it up in my tree for 5.9-rc1.
+> >
+> > Another friendly reminder :)
 > 
-> Agreed. As far as I know, ftrace and bpf also depends on module_alloc(),
-> so text_alloc() will help them too.
-> 
+> *nudge* *nudge*
 
-Yes please.
-
-arch/x86/kernel/ftrace.c:
-
-#ifdef CONFIG_MODULES
-#include <linux/moduleloader.h>
-/* Module allocation simplifies allocating memory for code */
-static inline void *alloc_tramp(unsigned long size)
-{
-	return module_alloc(size);
-}
-static inline void tramp_free(void *tramp)
-{
-	module_memfree(tramp);
-}
-#else
-/* Trampolines can only be created if modules are supported */
-static inline void *alloc_tramp(unsigned long size)
-{
-	return NULL;
-}
-static inline void tramp_free(void *tramp) { }
-#endif
-
--- Steve
+Looks sane, given no objections, let's see what linux-next thinks about
+it...
