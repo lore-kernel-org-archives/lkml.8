@@ -2,97 +2,91 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ABDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7694C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A02EA20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA8720720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyTfejrd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qHk3nOy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgGJEig (ORCPT
+        id S1726794AbgGJElk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:38:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgGJEif (ORCPT
+        Fri, 10 Jul 2020 00:41:40 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:34087 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725851AbgGJElj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:38:35 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801E2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:38:35 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id o5so4679335iow.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GPuF3Odhd0M6Xzie5Qwbk0S7FxZlhTnogIYmSKAEvRI=;
-        b=NyTfejrdEh520jNNkmxYw9np2vQVLwefZ3NzJbKcatI0R6q0p9O2vU+xnLAswuO5aT
-         8LrEuhdQYmZGUaEUAruLcUqAm8TDuhqXOG3FyHu7cSeMUwI+PKTUSVo4XuACsFxnlzfi
-         duotsQ3AtZBO1Q6Vo+x8XAWbExJhfE67QF/feTv/1KY7OEx7HO+2zAUPer3uknBeoGXz
-         RAjavVDa/uPEy/9sA284GmiF59arah2IK3JQWIc4Vfqv/L3EeTIR70dp5T4jZGJtaJSH
-         LYbbQx6uDrK3xKqbEEL6aFx/8zyDcqV00bf7Db97Ve+etXOVGV2iahdAfzL9kS/9eHJO
-         Pv3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GPuF3Odhd0M6Xzie5Qwbk0S7FxZlhTnogIYmSKAEvRI=;
-        b=EnvDhkfS9dZt3Oor8HJqjhsfQvp8IKgTckJGEmoOd4w9nbnpbrpx2qWHWryxLoP0Qe
-         OaI3oUaosDCYRstAI9thcFy52zCuUvsrOxWYS8A9hLMia9ldQlfAyuKBk/9L8TxVzhLB
-         J8U75mA5iYTw8JGNmDUmLClLxqCS1bUdJSuYrpyRtNzgiT/F8rjmXeiCEecMrXicvA6o
-         HFnnFEgROlMAOcyYghWDT2qXlaton+FXxpRxVJXg7uD6hH1oBOmgq2GGMy0qZoc9CM1W
-         AZiwBU4I+xtHPSfl6bHrZmhrdZ6k+n8INbwqhHvTA8ciXez0Qy2wB7T19MqSQX0bZ2uJ
-         FHRQ==
-X-Gm-Message-State: AOAM531txNey2/QEVjN2QqgVOZp9LmZi3DPCydFm7dhB1s0RwfO3o9qs
-        yYLqg6fpTNGJd6YzsCypK1eBqedOqCzVRaYxFQ==
-X-Google-Smtp-Source: ABdhPJzawpBciSchVGqlGgXF4tk6PCA+mmhUC23OE46RXfLaW9jH/kxant30VNujcuAnQ821fsq4izGV0ZsBTbugkTY=
-X-Received: by 2002:a02:840e:: with SMTP id k14mr12602675jah.133.1594355914964;
- Thu, 09 Jul 2020 21:38:34 -0700 (PDT)
+        Fri, 10 Jul 2020 00:41:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594356099; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=OVjdWKa1KuoweAYyp7yqaqBQuL2K9SPqsc9S8yXQW08=; b=qHk3nOy8fqYNkmRKDvY9alyunxSNRhpHZFWdxJwIJLq90nwe4mplY/uMdxQrWAGAZ86bo/5L
+ sxnIWNipb8HHFC1utLTiNbhFCIB+4jZCpDpudoJI/xirHZGiDCQNpRViMy8+4gsd+Pgc8IaT
+ 4QFr+6+295iFrx4tfymzMOrXD4w=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f07f17ed8ca07a5739d5751 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:41:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5BC7DC43387; Fri, 10 Jul 2020 04:41:34 +0000 (UTC)
+Received: from [192.168.0.7] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0925C433CA;
+        Fri, 10 Jul 2020 04:41:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0925C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH v2] spi: spi-geni-qcom: Set the clock properly at runtime
+ resume
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mkshah@codeaurora.org, georgi.djakov@linaro.org,
+        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        mka@chromium.org, ctheegal@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <35e1b2de-b3ee-95f4-c7ab-dfa8544b744c@codeaurora.org>
+Date:   Fri, 10 Jul 2020 10:11:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <20200530221127.459704-3-brgerst@gmail.com>
- <20200709103024.GO597537@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200709103024.GO597537@hirez.programming.kicks-ass.net>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 10 Jul 2020 00:38:23 -0400
-Message-ID: <CAMzpN2i3TPxpf5ktaQgb5EmB9wd84V+J5U6=_MuihtXx1-cp+A@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] x86/percpu: Clean up percpu_to_op()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 6:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Sat, May 30, 2020 at 06:11:19PM -0400, Brian Gerst wrote:
-> > +     if (0) {                                                        \
-> > +             typeof(_var) pto_tmp__;                                 \
-> > +             pto_tmp__ = (_val);                                     \
-> > +             (void)pto_tmp__;                                        \
-> > +     }                                                               \
->
-> This is repeated at least once more; and it looks very similar to
-> __typecheck() and typecheck() but is yet another variant afaict.
 
-The problem with typecheck() is that it will complain about a mismatch
-between unsigned long and u64 (defined as unsigned long long) even
-though both are 64-bits wide on x86-64.  Cleaning that mess up is
-beyond the scope of this series, so I kept the existing checks.
+On 7/9/2020 8:10 PM, Douglas Anderson wrote:
+> In the patch ("spi: spi-geni-qcom: Avoid clock setting if not needed")
+> we avoid a whole pile of clock code.  As part of that, we should have
+> restored the clock at runtime resume.  Do that.
+>
+> It turns out that, at least with today's configurations, this doesn't
+> actually matter.  That's because none of the current device trees have
+> an OPP table for geni SPI yet.  That makes dev_pm_opp_set_rate(dev, 0)
+> a no-op.  This is why it wasn't noticed in the testing of the original
+> patch.  It's still a good idea to fix, though.
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 
---
-Brian Gerst
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
