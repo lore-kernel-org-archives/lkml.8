@@ -2,164 +2,130 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5ACC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0EA20725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552EC20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QuZR81fN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CsSiPpre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgGJQPk (ORCPT
+        id S1727873AbgGJQUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbgGJQPa (ORCPT
+        Fri, 10 Jul 2020 12:20:05 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2162 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJQUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:15:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F398CC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o8so6727708wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A58ALUumjjt05j/+gyv9/npKtqLpw2CKDOBqng8A+3w=;
-        b=QuZR81fNhSUrP+8tEzSRhwiB/EBjSn8c4nKW3rzK26q91ROb63GYpHfCv8OIOr3Iye
-         vgJv3D5760cJMIigdjaZPmqlMqcEWrmpvDFWtGjmhgsmKUCLuUnOgc6mnQBc4614vIle
-         0MjYT4bo/cC8bN8n4xbG+0IiNjRpGrJzdY/tb4u4oIWLbLNkdLQco2HxIJOvW2r1ieAb
-         c6yjBsk4td8ScIrB85WUlivHVrN6yr64idhd8Kx/0YaG7zCpK8+Sskbszg9j5anS10VM
-         /IhcpCKxO+Hg8GFw1f+PXyjRHhr2Anum/aez6NC/F3zwYHCpfVt6vHTW3tefl3+T6KRU
-         c49Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A58ALUumjjt05j/+gyv9/npKtqLpw2CKDOBqng8A+3w=;
-        b=oAZU+bTTfcSb1S+jTiFQ/5p9EBi1Nlp9PxK31MSVIAD2Z2EGkV4iMcQE2GMa171ECN
-         9tgrKhX+GzoRLTC2aAXNEJU5F0vZaPtFX1uuSN4CEB51EA3aiOdJPVFUlb+IllM+8o1J
-         d/in16ameOep8AKAmWOgi1MWcoZmfphohaBRor49hYQB8EveP8uY9luBu0Sk9hJIMrBj
-         rHR+0R3OH/uwickWuM/kKC82dOR4oOiw9JVbB0JTMiAUYYifOqQkWfJCA7NK42l4zN2y
-         KwGv25UmGztxCXs5WrjxNP2SFmK86/vEmTR9V9s+6PuD6HGfVJ229wCoHF5BuhmO3Zf8
-         gPhw==
-X-Gm-Message-State: AOAM530F3teKJrvJ9PpnNthnK/1usEOsPsYoCfAIdESRT797AAKD5ItQ
-        zG2bV9fSpFsc/RGagXswbcfbAw==
-X-Google-Smtp-Source: ABdhPJwH+VJhu7xGq6cwXoneM1srOvV259fXHjx+PcqNcKEtcuecBaDo5y3b2FSMlJnpTTjKY51fbA==
-X-Received: by 2002:a7b:c14a:: with SMTP id z10mr5701020wmi.19.1594397727814;
-        Fri, 10 Jul 2020 09:15:27 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id e8sm11179359wrp.26.2020.07.10.09.15.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:15:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 3/3] iio: adc: xilinx-xadc: use devm_krealloc()
-Date:   Fri, 10 Jul 2020 18:15:16 +0200
-Message-Id: <20200710161516.11625-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200710161516.11625-1-brgl@bgdev.pl>
-References: <20200710161516.11625-1-brgl@bgdev.pl>
+        Fri, 10 Jul 2020 12:20:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0894c70000>; Fri, 10 Jul 2020 09:18:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 10 Jul 2020 09:20:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 10 Jul 2020 09:20:04 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
+ 2020 16:19:57 +0000
+Subject: Re: [PATCH 1/2] mm/migrate: optimize migrate_vma_setup() for holes
+To:     <bharata@linux.ibm.com>
+CC:     <linux-mm@kvack.org>, <kvm-ppc@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Christoph Hellwig" <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200709165711.26584-1-rcampbell@nvidia.com>
+ <20200709165711.26584-2-rcampbell@nvidia.com>
+ <20200710063509.GE7902@in.ibm.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <72557537-3d64-7082-11f7-d70b41f7d0e6@nvidia.com>
+Date:   Fri, 10 Jul 2020 09:19:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710063509.GE7902@in.ibm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594397895; bh=Ue/frzFxUQ5xNe2FlvXb4r/DHKPE3j0pZwT+2iMRx4s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CsSiPpre9qxK1jS02numnr4cfl7QmxJ0/oYmekUMhjtq34QymiInNuhlkiCDn0E7p
+         Bl+cgS3sGUonpda8dBJFP7ibbOFONADHdtgHtgcRKvXQArVDB0uEePCFyqO8B5UHlb
+         KR1pBKdSmVPdg062vI5u3K6IVK2DExOIGzrUf2dX5pQySstXbXRvhrXpWDd6xWF+c8
+         TMjfbHedmpP4pZt21f75Zm+hj4lVqe8Ny94gFMGjxbEqdutYx1QT/u3g8DBXsjb5a0
+         DtGKN67dVzTn8mziAEBNJI/0nEz200XIpALyu/RdCHrI+Df8RJivh9s4L720y+2BV3
+         M0oTYVkJHwS9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use the managed variant of krealloc() and shrink the code a bit.
+On 7/9/20 11:35 PM, Bharata B Rao wrote:
+> On Thu, Jul 09, 2020 at 09:57:10AM -0700, Ralph Campbell wrote:
+>> When migrating system memory to device private memory, if the source
+>> address range is a valid VMA range and there is no memory or a zero page,
+>> the source PFN array is marked as valid but with no PFN. This lets the
+>> device driver allocate private memory and clear it, then insert the new
+>> device private struct page into the CPU's page tables when
+>> migrate_vma_pages() is called. migrate_vma_pages() only inserts the
+>> new page if the VMA is an anonymous range. There is no point in telling
+>> the device driver to allocate device private memory and then not migrate
+>> the page. Instead, mark the source PFN array entries as not migrating to
+>> avoid this overhead.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> ---
+>>   mm/migrate.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index b0125c082549..8aa434691577 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -2204,9 +2204,13 @@ static int migrate_vma_collect_hole(unsigned long start,
+>>   {
+>>   	struct migrate_vma *migrate = walk->private;
+>>   	unsigned long addr;
+>> +	unsigned long flags;
+>> +
+>> +	/* Only allow populating anonymous memory. */
+>> +	flags = vma_is_anonymous(walk->vma) ? MIGRATE_PFN_MIGRATE : 0;
+>>   
+>>   	for (addr = start; addr < end; addr += PAGE_SIZE) {
+>> -		migrate->src[migrate->npages] = MIGRATE_PFN_MIGRATE;
+>> +		migrate->src[migrate->npages] = flags;
+> 
+> I see a few other such cases where we directly populate MIGRATE_PFN_MIGRATE
+> w/o a pfn in migrate_vma_collect_pmd() and wonder why the vma_is_anonymous()
+> check can't help there as well?
+> 
+> 1. pte_none() check in migrate_vma_collect_pmd()
+> 2. is_zero_pfn() check in migrate_vma_collect_pmd()
+> 
+> Regards,
+> Bharata.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+For case 1, this seems like a useful addition.
+For case 2, the zero page is only inserted if the VMA is marked read-only and
+anonymous so I don't think the check is needed.
+I'll post a v2 with the change.
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index d7fecab9252e..5bdbe502e983 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1094,6 +1094,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
- static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	unsigned int *conf)
- {
-+	struct device *dev = indio_dev->dev.parent;
- 	struct xadc *xadc = iio_priv(indio_dev);
- 	struct iio_chan_spec *channels, *chan;
- 	struct device_node *chan_node, *child;
-@@ -1138,7 +1139,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
- 	}
- 
--	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
-+	channels = devm_kmemdup(dev, xadc_channels,
-+				sizeof(xadc_channels), GFP_KERNEL);
- 	if (!channels)
- 		return -ENOMEM;
- 
-@@ -1174,8 +1176,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	of_node_put(chan_node);
- 
- 	indio_dev->num_channels = num_channels;
--	indio_dev->channels = krealloc(channels, sizeof(*channels) *
--					num_channels, GFP_KERNEL);
-+	indio_dev->channels = devm_krealloc(dev, channels,
-+					    sizeof(*channels) * num_channels,
-+					    GFP_KERNEL);
- 	/* If we can't resize the channels array, just use the original */
- 	if (!indio_dev->channels)
- 		indio_dev->channels = channels;
-@@ -1229,14 +1232,14 @@ static int xadc_probe(struct platform_device *pdev)
- 
- 	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
- 	if (ret)
--		goto err_device_free;
-+		return ret;
- 
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
- 		ret = iio_triggered_buffer_setup(indio_dev,
- 			&iio_pollfunc_store_time, &xadc_trigger_handler,
- 			&xadc_buffer_ops);
- 		if (ret)
--			goto err_device_free;
-+			return ret;
- 
- 		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
- 		if (IS_ERR(xadc->convst_trigger)) {
-@@ -1354,8 +1357,6 @@ static int xadc_probe(struct platform_device *pdev)
- err_triggered_buffer_cleanup:
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
- 		iio_triggered_buffer_cleanup(indio_dev);
--err_device_free:
--	kfree(indio_dev->channels);
- 
- 	return ret;
- }
-@@ -1375,7 +1376,6 @@ static int xadc_remove(struct platform_device *pdev)
- 	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	clk_disable_unprepare(xadc->clk);
- 	kfree(xadc->data);
--	kfree(indio_dev->channels);
- 
- 	return 0;
- }
--- 
-2.26.1
-
+Thanks for the suggestions!
