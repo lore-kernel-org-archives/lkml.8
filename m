@@ -2,148 +2,108 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C47C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3894C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC7722065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF03020657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nazar.ca header.i=@nazar.ca header.b="cIABLJRR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oi9BadDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGJXcO (ORCPT
+        id S1726991AbgGJXkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:32:14 -0400
-Received: from ny018.relay.arandomserver.com ([172.96.188.180]:60037 "EHLO
-        ny018.relay.arandomserver.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726328AbgGJXcN (ORCPT
+        Fri, 10 Jul 2020 19:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgGJXkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:32:13 -0400
-X-Greylist: delayed 2130 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jul 2020 19:32:12 EDT
-Received: from nyc006.hawkhost.com ([172.96.186.142])
-        by se004.arandomserver.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <nazard@nazar.ca>)
-        id 1ju1wc-0000xA-MN; Fri, 10 Jul 2020 17:56:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nazar.ca;
-         s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version
-        :Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=a8mXua/+pf0xwyAncboLdWQ9suD/hc8wf+xzJo2Jub0=; b=cIABLJRRMkWwES59M5tgDvsVWI
-        cyzeLcK5JhmzpW1y+T+YuOHuY/lqZ3rxuqMjY8OvlEP83ZneHoIEnyvG0xA5LM8KoifG50AoBqJcw
-        q1VfSm+IhJafIzTnBXfPC472uOPo1HLf2ohFJoIa6h41TM/b4XtFNbpZdgPMNURQt+da3wajAkt6s
-        kue4QmbgwkcLcl3dISofOzZJLY7nv56Th1VtFv2bgbdHUrEcLxKfPQOvUWbyVQIQ4wfCJQuKUii/0
-        tkgkZSWXITMI6NgW3IvsFmWjYNSRLXFc/gQFgcNlGX/aOP4K0u9JTHFbo94INgejWWAiQazPKi/HH
-        Lu1rAjjw==;
-Received: from [174.119.114.224] (port=51779 helo=[192.168.21.100])
-        by nyc006.hawkhost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <nazard@nazar.ca>)
-        id 1ju1wb-0001JF-5l; Fri, 10 Jul 2020 18:56:37 -0400
-Subject: Re: [PATCH] net/9p: validate fds in p9_fd_open
-To:     Christoph Hellwig <hch@lst.de>, ericvh@gmail.com, lucho@ionkov.net,
-        asmadeus@codewreck.org
-Cc:     v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-References: <20200710085722.435850-1-hch@lst.de>
-From:   Doug Nazar <nazard@nazar.ca>
-Message-ID: <5bee3e33-2400-2d85-080e-d10cd82b0d85@nazar.ca>
-Date:   Fri, 10 Jul 2020 18:56:35 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.0
+        Fri, 10 Jul 2020 19:40:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C25C08C5DC;
+        Fri, 10 Jul 2020 16:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=MwgubfgOnn4tw/Gmznvx9EZNqV15HqAt1D08KvU1Mbo=; b=Oi9BadDaKVCkPEKsvgxa02EBq9
+        uWUTkqeBuHzfd5JFKwP/3jAwR513+AqyRq2NQFWJ1qjsDEP7eTsfFYgIZweWrWFBu+MeKaFt4URFO
+        KSVbWTfstvDlGnnjaV+R6OIVTVs6DelpfjcVPY2esIHd+gyeNueAMsqmhOF9yE7o6bFtm/qAxmGOt
+        KzUYVry2wX0w0JNP8baACCbEjM+HIVTEXHpfbPzUXH4ibRQ8bkVrlpC7/EHhgqCkxFqu4djorbTu4
+        jpq8WQ3gDO8JRZoVIrWnWfRsuNbiSGQMK/ZL/A0VgvSEPIyzJUiDOmKOICvxx1ryvchCyW24/S8u5
+        8E7CNF6Q==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ju2ch-0003zF-PC; Fri, 10 Jul 2020 23:40:08 +0000
+Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
+ fix qcom build error
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>
+References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+ <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <215c3c59-e6f7-1721-76ca-993bbaf91356@infradead.org>
+Date:   Fri, 10 Jul 2020 16:40:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200710085722.435850-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Get-Message-Sender-Via: nyc006.hawkhost.com: authenticated_id: nazard@nazar.ca
-X-Authenticated-Sender: nyc006.hawkhost.com: nazard@nazar.ca
-X-Originating-IP: 172.96.186.142
-X-SpamExperts-Domain: nyc006.hawkhost.com
-X-SpamExperts-Username: 172.96.186.142
-Authentication-Results: arandomserver.com; auth=pass smtp.auth=172.96.186.142@nyc006.hawkhost.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0f6LF1GdvkEexklpcFpSF5apSDasLI4SayDByyq9LIhVMuypr3GMSFaE
- uvJRzf/1yUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3KT3YWyIaDV3adljNh4jqWUKSI
- QOeql20yiFNywEx1SjSqpHnwsZpH9mYdhK3M+qkbqiRLIcfmSdhJhNnOTpqRUUuf+eM3l5KPnbp/
- eQthjVNLgwTL2W1bPOGy+hBGRHuxJkHwcwZdqFJg2NUWc1YcXvxdBIPAoxSp6DmD3kr62KknbCKf
- FChxpHEycMbUVAzYcL5hlVgBODQauTp1/J67gUkXEz24JLM60oxXCmgGpGhwhmcuhmLiP1a/raCx
- FilUyJda7VCYQylwxTk+SG59pZAl8KjuuXzut5LRN3+1KzLohdJNqqo/lqC4rFTnLtWlJwFTBDk/
- FifQTS+EwSURDVprjQPFk8m4tSTfORUp3ykAEfCPURLBYQ96jXOCfPgM7yBxSvtE49xNPqsQk/m8
- 3UI6DP9LYFhbnb1vtJJips71hJElceuRZYSlzyjl2t8oot0CfeUAb1ubnnvth5TXPvMUVT6hEJ33
- Zqh8Rt9f2+Ja8tTmww6d3C2rMChg9I1GSNhjzOZsqooLTt7iuA19HxRvrBU56+Gq1CsKFi4HMGDm
- ZAzkNNfC/oYmrWISYEHgneZ90yZRP/mZ05FXSQ7oSP0ZoxlUh1E50DkFVrC5mmTa2K186OjbtWyZ
- ReXkOW7QTPiGI9WvBsdInDten/s6zPvdHOR1u+8QOyZnun5jEnQ6L4bbC3LjdxFJDyottvPAgpqJ
- lqCh0E7QP78UadwZo0RVGZM+1wcbqYXM3ytmvbBz/byN7FajYmOyHLF0nUatASJFC/49WOPBr5nl
- EUI4xMQDKwJmo3AY//ulQjQy8hxFYb+WEaaSiV3zBSrHnWVE6LADrDXM4RByixAOHpDL5xFqmHrp
- mKsRnlUf/9yRY2QfEfTJcXezne5mI3fuj/LNOOo6xspor93/x8GltFtgvskYoN/g2a11WysdYadd
- IKYaHAwskslMOiSjwnYcoQfxAIRoFYTV6bX0TFzZ8IQWIj08OU/MCBTp7Xql3SIUUR9wgSVYm38H
- wlCsmYlLW+GHMzjrEHSA2dmr6tzwahc1cl1C5Qu1fkKEWyoySmDifC3rjuU3A3io6xJmD59iFVkb
- gdBkiJncLAR/qaxElieMsQKA1qwQKXzO6EftozfP8HPuQhCcctpQ4l5OT/VYcw/11p3btshdqNde
- jy9cf5FpO8nnxaGW4j3UiT8Y7DP2CmsurJ77B3ZRwlMfr5yxE+Uuosi7SS2Yz+KKdUcngqDt1A==
-X-Report-Abuse-To: spam@se001.arandomserver.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-10 04:57, Christoph Hellwig wrote:
+On 7/10/20 8:28 AM, Rob Herring wrote:
+> On Mon, Jun 29, 2020 at 10:43 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
+>> by adding a stub for of_get_next_parent().
+>>
+>> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
+>> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+>>
+> 
+> Fixes tag?
 
-> diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-> index 13cd683a658ab6..1cd8ea0e493617 100644
-> --- a/net/9p/trans_fd.c
-> +++ b/net/9p/trans_fd.c
-> @@ -803,20 +803,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
->   		return -ENOMEM;
->   
->   	ts->rd = fget(rfd);
-> +	if (!ts->rd)
-> +		goto out_free_ts;
-> +	if (!(ts->rd->f_mode & FMODE_READ))
-> +		goto out_put_wr;
+Are linux-next hashes/tags stable?
 
-		goto out_put_rd;
+Fixes: 048eb908a1f2 ("soc: qcom-geni-se: Add interconnect support to fix earlycon crash")
 
-unless I'm mistaken.
-
->   	ts->wr = fget(wfd);
-> -	if (!ts->rd || !ts->wr) {
-> -		if (ts->rd)
-> -			fput(ts->rd);
-> -		if (ts->wr)
-> -			fput(ts->wr);
-> -		kfree(ts);
-> -		return -EIO;
-> -	}
-> +	if (!ts->wr)
-> +		goto out_put_rd;
-> +	if (!(ts->wr->f_mode & FMODE_WRITE))
-> +		goto out_put_wr;
->   
->   	client->trans = ts;
->   	client->status = Connected;
->   
->   	return 0;
-> +
-> +out_put_wr:
-> +	fput(ts->wr);
-> +out_put_rd:
-> +	fput(ts->rd);
-> +out_free_ts:
-> +	kfree(ts);
-> +	return -EIO;
->   }
->   
->   static int p9_socket_open(struct p9_client *client, struct socket *csocket)
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Andy Gross <agross@kernel.org>
+>> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Cc: linux-arm-msm@vger.kernel.org
+>> ---
+>>  include/linux/of.h |    5 +++++
+>>  1 file changed, 5 insertions(+)
+> 
+> I'm assuming this will be applied to the tree that introduced the problem.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 > 
 
-Doug
+Hi Akash,
+Can you add this patch to your tree, as Rob indicated above?
+
+thanks.
+-- 
+~Randy
+
