@@ -2,91 +2,104 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98375C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB8AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F80B2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA8B2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2AkEhpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGJJSJ (ORCPT
+        id S1726977AbgGJJUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:18:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:33802 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgGJJSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:18:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8DDC31B;
-        Fri, 10 Jul 2020 02:18:07 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E09B3F68F;
-        Fri, 10 Jul 2020 02:18:06 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 10:18:00 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200709150959.wq6zfkcy4m6hvvpl@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 10 Jul 2020 05:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgGJJUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 05:20:46 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6128C08C5CE;
+        Fri, 10 Jul 2020 02:20:46 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so4344618pjb.0;
+        Fri, 10 Jul 2020 02:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k3Fg5uwWi3YIL1ND93G+AfS7yVUtKWD1/rSB1uSDlrw=;
+        b=V2AkEhpMUH+KvSbxIjWFzekdSoByVCjiHrqM6j0Af5aT1HNGdfs/S13m1HgEk8L8uH
+         /N+ZRBJbte83Mbv+EqjVgM/73jc2jrMwIV8u//7tMQkcsk7L9YOWqF9En11idEEYHNUo
+         CoFyial+U9c+L8f3mh2CK0T76qzCiwTTrSwOqeJdmzbdvMlHPpCISev+77I/QmPj/KLk
+         vfMLTuVDyLw+HrB5h9VhB3i3+k7CHItB+1q4s9QvbMAma+BU/qBRnXzpfolepnmrB7tY
+         SLvZJGLljmjxie1ca/3PxOPcHsiBnIFdfWkfrd7fnmW3/SkvKfmwJcWpZrj77T5+5aAq
+         I7mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k3Fg5uwWi3YIL1ND93G+AfS7yVUtKWD1/rSB1uSDlrw=;
+        b=PyDxvRIQITpInFu2a5HprzWpFB+lbuN4KFYZIGDUD/SepqwL9EYDHWCi6I46uEJ1n1
+         YqPG7wvrP8eDW1sJDV8K6ys+0f9mtX4oBDi5T5/+RJj94cdzlIZPojukGeo/XMyBKYqe
+         Y9CEPuNN5abo9OrGxxHB7Gc9IaN2ngj86V8a2j07SRda8Mzy3bkgxQqn8snKCzxdWo+H
+         Cu9ybHeWUlvqeI3Ti52+FGNGXRuc0iF+eMqt+Nk1VqBHWKRRWpZT/24SdVf7R5Ai/7eT
+         pDphIztqAbBljebQO72U+73MIVHAvcqUkAxi8UEXnSwv0JM/A9eT6hP6nc+yYVuZQs8f
+         acxA==
+X-Gm-Message-State: AOAM5319VXECIGJxIupDPTiWebWkLCmCI98wDS0cP7u1Z2pCq0kHE/DN
+        a3xPSKxeHMkj/3uYUNAOLniDDqgygsxHzsj8
+X-Google-Smtp-Source: ABdhPJx0z3oN+10frWzUngzJ8rZr4E4WNMuJsBdU4vBk4Qe3hRr1WE3NechrtXApQrlpC1p3cSZsiQ==
+X-Received: by 2002:a17:90a:2a4d:: with SMTP id d13mr4505138pjg.195.1594372846367;
+        Fri, 10 Jul 2020 02:20:46 -0700 (PDT)
+Received: from ubuntu-18.04-x8664 ([119.28.181.184])
+        by smtp.gmail.com with ESMTPSA id i23sm5580924pfq.206.2020.07.10.02.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 02:20:46 -0700 (PDT)
+From:   Wenbo Zhang <ethercflow@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ethercflow@gmail.com
+Subject: [PATCH] bpf: fix fds_example SIGSEGV error
+Date:   Fri, 10 Jul 2020 05:20:35 -0400
+Message-Id: <20200710092035.28919-1-ethercflow@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
+The `BPF_LOG_BUF_SIZE`'s value is `UINT32_MAX >> 8`, so define an array
+with it on stack caused an overflow.
 
-[...]
+Signed-off-by: Wenbo Zhang <ethercflow@gmail.com>
+---
+ samples/bpf/fds_example.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > I understand that but the bridge bus resource can be trimmed to just
-> > contain the root bus because that's the only one where there is a
-> > chance you can enumerate a device.
-> 
-> It is possible to register only root bridge without endpoint?
+diff --git a/samples/bpf/fds_example.c b/samples/bpf/fds_example.c
+index d5992f787232..59f45fef5110 100644
+--- a/samples/bpf/fds_example.c
++++ b/samples/bpf/fds_example.c
+@@ -30,6 +30,8 @@
+ #define BPF_M_MAP	1
+ #define BPF_M_PROG	2
+ 
++char bpf_log_buf[BPF_LOG_BUF_SIZE];
++
+ static void usage(void)
+ {
+ 	printf("Usage: fds_example [...]\n");
+@@ -57,7 +59,6 @@ static int bpf_prog_create(const char *object)
+ 		BPF_EXIT_INSN(),
+ 	};
+ 	size_t insns_cnt = sizeof(insns) / sizeof(struct bpf_insn);
+-	char bpf_log_buf[BPF_LOG_BUF_SIZE];
+ 	struct bpf_object *obj;
+ 	int prog_fd;
+ 
+-- 
+2.17.1
 
-It is possible to register the root bridge with a trimmed IORESOURCE_BUS
-so that you don't enumerate anything other than the root port.
-
-> > I would like to get Bjorn's opinion on this, I don't like these "link is
-> > up" checks in config accessors (they are racy and honestly it is a
-> > run-time check that does not make much sense, either it is always
-> > true/false or it is inevitably racy)
-> 
-> It is runtime check, but does not have to be always true/false. I have
-> tested more Compex wifi cards and under certain conditions they
-> "disappear" from the bus during usage.
-
-I would be very grateful if you could describe what happens in HW
-when these conditions trigger - I would like to understand if this
-issue is aardvark specific or it isn't.
-
-> So I think it still make sense to do this "fast" check as it is only
-> optimization.
-
-I will merge this patch but I'd also like to understand the underlying
-issue better.
-
-Thanks,
-Lorenzo
