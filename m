@@ -2,139 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B746C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091E720836
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594390173;
-	bh=5fxYRNZaEf3WwSNJCGI+SYYktTeEynst8KjYwY2HCws=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NMYHjloNoGEdOvYAEbHhBIdjlmjLWBjXpPYOSVdtDYDFRIHOSJifcJ0wZBxkaCbId
-	 fLj0nldJhyLbDi065WRq/9ASmXBmKBCe8dQys6OtnY8cmuxLuBmLjxiflj3GhQgwsn
-	 A/RQ9fXMxSptDXeBGCWj4hYXbvqCbzBmWB0qBWOg=
+	by mail.kernel.org (Postfix) with ESMTP id 71A04207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fuJTfU5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgGJOJb (ORCPT
+        id S1728090AbgGJOJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGJOJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:09:30 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F09B20748;
-        Fri, 10 Jul 2020 14:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594390170;
-        bh=5fxYRNZaEf3WwSNJCGI+SYYktTeEynst8KjYwY2HCws=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ySwyUu3s7Op9GTBAs25t+cSBeExY6KM961X5qZHaNoswi+zL45hkTUktIDyprPRBK
-         mOH0YvQkDOJ8Z4MEdMenrOVsR7T5aJKTgqmOR06+cs+H6ufX4qaLg96EUH6+GCCdkF
-         dQjeYxkhT4RmHTy/OCSIhxnNn2rDnDytCK/IPF7I=
-Date:   Fri, 10 Jul 2020 23:09:21 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] kprobes: Do not expose probe addresses to
- non-CAP_SYSLOG
-Message-Id: <20200710230921.7199e51fa19a7dce53823835@kernel.org>
-In-Reply-To: <20200702232638.2946421-5-keescook@chromium.org>
-References: <20200702232638.2946421-1-keescook@chromium.org>
-        <20200702232638.2946421-5-keescook@chromium.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 10 Jul 2020 10:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727086AbgGJOJg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:09:36 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FD3C08E806
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:09:36 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d18so6174773ion.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GkJUhDwEWg19k+flxmmMGIck6ztbcEd5EG3ERyiHHYM=;
+        b=fuJTfU5frNftoB2nOBvhj+jH0w0v7UZBt3PnRDu7UtC8P7Sjj1DqVomTFixtOge9ng
+         pEAvE7Ed2zvkR8YDMoTElqae1xCMERl72kzobWs8n3Q08z3K1TqZfDI/df8oUG5w6ou1
+         FvwJ4Qt9KvhC8Suq6E9kP7Ffdr64WsPcUDDBnUVRgvxBs6HYsmpINdpOA652MjrafdJ0
+         //BgRQgnQ6kcjVnz5c0X2FZYU01+No7t4lPdlw6X5GFu5PHuecm10X3Xi7IjZlie1f8L
+         hYUamcPROy8+F7Grc28Rq5/qJsOhRSzAmkvgu9beFuD+suZDnIDHiuSXBFu0Dj78eLeo
+         t+WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GkJUhDwEWg19k+flxmmMGIck6ztbcEd5EG3ERyiHHYM=;
+        b=Ee9fJ4/uQVD+Ea8ivhVr1JgRks8BCbO0WnFuAzhB7GDFWl4lFie3R0s1SdjRcrwySC
+         8JIwytwy2mpt7w3MPDjpsQz2KLdGgFIOU9Ee9JTSTWeYMKWwKHE2NWPBFCCF4twdN9O+
+         GRz1r1Csna34ZHJUpjuOPoC7W4ZsWABzpXzCg5hNyojkgj9FkTlQRdEn0ChD9kRsEHmX
+         xtfuBF0n8a//1IrvLHXmJN9dTK2ZgDPpiV5a4+SC9JiCGUTU0PYQ/kIj1n5qFwRQnO2B
+         YdAz3k7oBYAM2pT8ujGWxRJXn2Tp32gqioNK+yHM8n/Ga9x5e2OyEAs5VnXRWQVbI9RE
+         eJ+w==
+X-Gm-Message-State: AOAM533h3fFtccLAHEdrUzImJztH6o8PQFePNLNcbnlmCGztraMYhzIk
+        9Sv5aQnuUlxiX4jc1Aeh9IJMvw==
+X-Google-Smtp-Source: ABdhPJzaZyEeMrMWgbopFxfHGDE7K7HRqxBSjebhSFB7gm/+G+oST+FYJgvn85vQMrSkFWFE9eWgyA==
+X-Received: by 2002:a02:70d4:: with SMTP id f203mr80267571jac.74.1594390175673;
+        Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id z9sm3564606ilz.45.2020.07.10.07.09.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Christoph Hellwig <hch@infradead.org>,
+        Kanchan Joshi <joshiiitr@gmail.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, Matias Bj??rling <mb@lightnvm.io>,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200709085501.GA64935@infradead.org>
+ <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
+ <20200709140053.GA7528@infradead.org>
+ <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
+ <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
+ <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk>
+ <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
+ <20200710131054.GB7491@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9e870249-01db-c68d-ea65-28edc3c1f071@kernel.dk>
+Date:   Fri, 10 Jul 2020 08:09:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200710131054.GB7491@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Jul 2020 16:26:37 -0700
-Kees Cook <keescook@chromium.org> wrote:
-
-> The kprobe show() functions were using "current"'s creds instead
-> of the file opener's creds for kallsyms visibility. Fix to use
-> seq_file->file->f_cred.
-
-This looks good to me.
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thanks!
-
+On 7/10/20 7:10 AM, Christoph Hellwig wrote:
+> On Fri, Jul 10, 2020 at 12:35:43AM +0530, Kanchan Joshi wrote:
+>> Append required special treatment (conversion for sector to bytes) for io_uring.
+>> And we were planning a user-space wrapper to abstract that.
+>>
+>> But good part (as it seems now) was: append result went along with cflags at
+>> virtually no additional cost. And uring code changes became super clean/minimal
+>> with further revisions.
+>> While indirect-offset requires doing allocation/mgmt in application,
+>> io-uring submission
+>> and in completion path (which seems trickier), and those CQE flags
+>> still get written
+>> user-space and serve no purpose for append-write.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 81365a947de4 ("kprobes: Show address of kprobes if kallsyms does")
-> Fixes: ffb9bd68ebdb ("kprobes: Show blacklist addresses as same as kallsyms does")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/kprobes.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index d4de217e4a91..2e97febeef77 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -2448,7 +2448,7 @@ static void report_probe(struct seq_file *pi, struct kprobe *p,
->  	else
->  		kprobe_type = "k";
->  
-> -	if (!kallsyms_show_value(current_cred()))
-> +	if (!kallsyms_show_value(pi->file->f_cred))
->  		addr = NULL;
->  
->  	if (sym)
-> @@ -2540,7 +2540,7 @@ static int kprobe_blacklist_seq_show(struct seq_file *m, void *v)
->  	 * If /proc/kallsyms is not showing kernel address, we won't
->  	 * show them here either.
->  	 */
-> -	if (!kallsyms_show_value(current_cred()))
-> +	if (!kallsyms_show_value(m->file->f_cred))
->  		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
->  			   (void *)ent->start_addr);
->  	else
-> -- 
-> 2.25.1
-> 
+> I have to say that storing the results in the CQE generally make
+> so much more sense.  I wonder if we need a per-fd "large CGE" flag
+> that adds two extra u64s to the CQE, and some ops just require this
+> version.
 
+I have been pondering the same thing, we could make certain ops consume
+two CQEs if it makes sense. It's a bit ugly on the app side with two
+different CQEs for a request, though. We can't just treat it as a large
+CQE, as they might not be sequential if we happen to wrap. But maybe
+it's not too bad.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jens Axboe
+
