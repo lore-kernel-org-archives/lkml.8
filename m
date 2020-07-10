@@ -2,129 +2,135 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A903CC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D961BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7863B206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E7D206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AuwiE49e"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q9QOI9/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgGJOYY (ORCPT
+        id S1728535AbgGJOYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:24:24 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55224 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbgGJOYI (ORCPT
+        Fri, 10 Jul 2020 10:24:05 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36983 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbgGJOX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:24:08 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142406euoutp01c6c28150a997532977adc05d509a9161~gajWfuw8k3221032210euoutp01c
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:24:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200710142406euoutp01c6c28150a997532977adc05d509a9161~gajWfuw8k3221032210euoutp01c
+        Fri, 10 Jul 2020 10:23:59 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142357euoutp0257a6a8067b374b8d28a6900dc1499849~gajOKp1aQ0877608776euoutp02I
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:23:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710142357euoutp0257a6a8067b374b8d28a6900dc1499849~gajOKp1aQ0877608776euoutp02I
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594391046;
-        bh=PJaw4qA6aoVbSe+NmWHswntCdkvYkMsimoVlG4G6jVg=;
+        s=mail20170921; t=1594391037;
+        bh=+Qvo0XwtXckoH/AUrFmMc7w7gy5RtXKGS7/7n/Ctqy8=;
         h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=AuwiE49ecbGMxnfmFmEauXqDbuaFLWSjFkACjlKuUQPB7uLFmOxX0wN+cM2Trl7Cr
-         qNb3mMIz3Fw87hDNvdv7uhB2RMZbWFLcjJCTrVz2uWPNJSkw5zQ9l+4koWW0sfG+CM
-         OutqCkgK3zp6J3LPzboQroN1TFkbEGoWF3TKh7nQ=
+        b=q9QOI9/xIZY3AZ3d1s8UDhZUOn1yDZJunSKkoK4dusx/D8NzLPTAwiI3k2w7u3vJF
+         3JRFflqueC1LkhARejrA1uTZytOPULgsWOpbbq76tQw5uZxlAg83M92zFDwavwuDKs
+         gLDTD9E4M3YIwIencTOpsnLhbv7D4ahBv/1vn6uo=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200710142406eucas1p2c2986735d9cb892535dbd1e04b2b0ea4~gajWO485K0956909569eucas1p2I;
-        Fri, 10 Jul 2020 14:24:06 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200710142357eucas1p1f51947db6ba1918ff5e55ed8f63493bf~gajN7olP_0594905949eucas1p1c;
+        Fri, 10 Jul 2020 14:23:57 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id EF.DE.06318.60A780F5; Fri, 10
-        Jul 2020 15:24:06 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0D.DE.06318.DF9780F5; Fri, 10
+        Jul 2020 15:23:57 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142406eucas1p16bb32654aa14bf6f6b6b2cb7bb64521c~gajWA9VJa0592905929eucas1p1j;
-        Fri, 10 Jul 2020 14:24:06 +0000 (GMT)
+        20200710142357eucas1p1908fe8cf542f43520d448a62bad52192~gajNjMH9Y0592905929eucas1p1c;
+        Fri, 10 Jul 2020 14:23:57 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200710142406eusmtrp182d50e203d03256a2d8f59c7c8210ce3~gajWAPcGB1135411354eusmtrp1u;
-        Fri, 10 Jul 2020 14:24:06 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-58-5f087a06baf9
+        20200710142357eusmtrp14ad7bd0285374a5f1465db4533739ced~gajNiiE8j1135411354eusmtrp1d;
+        Fri, 10 Jul 2020 14:23:57 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-47-5f0879fd93b4
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B4.E1.06314.60A780F5; Fri, 10
-        Jul 2020 15:24:06 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5E.D1.06314.CF9780F5; Fri, 10
+        Jul 2020 15:23:56 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142405eusmtip126ac62dd2a90a7172719131e8ae07076~gajVp85MC0341503415eusmtip1V;
-        Fri, 10 Jul 2020 14:24:05 +0000 (GMT)
+        20200710142356eusmtip11d7318b84521021556174f0b106a8445~gajNKh3d10397803978eusmtip1J;
+        Fri, 10 Jul 2020 14:23:56 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] fbdev: sm712fb: set error code in probe
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Message-ID: <6f500a1e-96d8-2238-ad26-99a39dca61ec@samsung.com>
-Date:   Fri, 10 Jul 2020 16:24:05 +0200
+Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-fbdev@vger.kernel.org, stable@vger.kernel.org,
+        Dave Airlie <airlied@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Rob Clark <robdclark@gmail.com>, linux-omap@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-ID: <e7bb19a5-774c-63c3-058f-1977d29cd94c@samsung.com>
+Date:   Fri, 10 Jul 2020 16:23:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200706155328.8396-1-novikov@ispras.ru>
+In-Reply-To: <20200630182636.439015-1-aford173@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe/Ze9jqavE7Ng0bBJKXIG0YME8sI25coP2WS6dIXtdwmm1r6
-        aUJemGnmvSF5S2e2vE5NSa1FLR1JWamUooSyWcqsKaE4yflO8tvvXP7P/5zDQ2GCLsKbSpVl
-        MAqZJE1I8vC+dxvjAWQOFR+sa3YXfVm3kiJtkRoXvS9ZJUSfB2tJUdOwiit6ZarARLonL9E5
-        rnhAM8sV12xXIvHMLzshnisycsTmuUVSbOs+coWM5YUnMWmpWYwiKCKBl1JhHEfpDdRdTUcZ
-        pkKTpBq5UECfgirLGKFGPEpAtyJ4UGx2BmsI/rY1OQMbAl3dV86epLtxFLEFLYKRgUYOG6wg
-        sG1tch1dJB0GDwvakIPd6XCYap7DHexB+4Eqb3SXMfo7gqFFPwfz6QjomqjCHIzTx0BX3Us4
-        2JOOgT/zbwi2xw1GHy3sal3o02D5WEOw73jBt4U6DstHoX+lFnMMBLSBC0VWs3PsCzCf14hY
-        doefRj2X5cNgKr+Ps4J2BPZCi1Pdj0Bbvu280xmYGd/cYWrH4jh0DAax6UhomGxFjjTQrjC9
-        4sYO4QplfdUYm+ZDYb6A7faDzpZOcs9WPfAUK0VCzb7VNPvW0exbR/Pftx7hbciLyVRKkxll
-        qIy5E6iUSJWZsuTARLm0G+18JNO2cf0FGt66aUA0hYQH+fUSKl5ASLKU2VIDAgoTevDPfzDd
-        EPCTJNk5jEIer8hMY5QG5EPhQi9+aONSnIBOlmQwtxkmnVHsVTmUi7cKBT5r9TDhg7/7YrT2
-        5xexzcjo6E5bm8yeqxsqM10eS054HdH+Vn8yv/fTyFV/7+XSgKUDqz9ibWfNes9rSf6bURZt
-        2PXZiUTfQ6uufqEFLYTvgn+xj1VumLo1HzW9cS9P3mGNU/Toaxq2mJURfkhwydLj9OVK81pP
-        lcHNNzP3khBXpkhCTmAKpeQfy74840QDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7psVRzxBpd3MFtc+fqezWJ5dxeL
-        xYm+D6wWl3fNYbNYvK+B3eLA6SnMFmuW7GF0YPfYOesuu8eMf1MZPe68/svqcb/7OJPH8/tP
-        2Tw+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3S
-        t0vQy5hy/BxjwUKOilnrJzE3MF5j62Lk5JAQMJHYtOgkYxcjF4eQwFJGiRsNu1i7GDmAEjIS
-        x9eXQdQIS/y51sUGUfOaUeLF0UeMIAk2ASuJie2rwGxhARuJ60vvs4DYIgJqEg2tJ1lAGpgF
-        bjNKtK56DbWhk1HizP1WdpAqXgE7iY2XpjGD2CwCqhJrpm9lBbFFBSIkDu+YxQhRIyhxcuYT
-        sKmcAmYSLy7MAKthFlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYw
-        sqxiFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjMBtx35u3sF4aWPwIUYBDkYlHt4FiRzxQqyJ
-        ZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGByyCuJNzQ1NLew
-        NDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwFiyP81zr8ZzDuvGlMbfqhv+Vj/f
-        tsY2OD3q1LoWXn2L1aarPdfVBEWXTOQrXFzmF821bP3C2Pk778nutTmxu3PxV+vTX0MPasZV
-        fdwy4cmB9gbbhrkJPEc+RcR9uvp95cQpV+rmRSyVObZTfvKMdqepPr9djETPXhDsTpTQ/LV4
-        poD0gnlvSiWUWIozEg21mIuKEwEFZxT+1gIAAA==
-X-CMS-MailID: 20200710142406eucas1p16bb32654aa14bf6f6b6b2cb7bb64521c
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djPc7p/KzniDVoWSVrcuX2a2eLE9UVM
+        Fle+vmezONH3gdXi8q45bBazl/SzWDxf+IPZYsHGR4wW6+ffYnPg9Ng56y67x/3u40wex29s
+        Z/L4vEkugCWKyyYlNSezLLVI3y6BK+Pa5jOMBd+5K87PeMrcwHiHs4uRk0NCwESi/XQ7axcj
+        F4eQwApGiaV7ZkE5Xxglrh9dwg7hfAZyPr5jhWlZ9vUbVGI5o8SjvesZIZy3jBJPfrSzg1Sx
+        CVhJTGxfxQhiCws4S9zu6AGzRQSUJO6e+QvWwCzQxCTxfV8D2FheATuJ43fvsYDYLAKqEveX
+        LARrEBWIkPj04DBUjaDEyZlPwGo4BSwl1q87wgRiMwuIS9x6Mh/KlpfY/nYOM8gCCYFd7BIL
+        fvUDXcQB5LhI9L+whXhBWOLV8S3sELaMxOnJPSwQ9esYJf52vIBq3s4osXzyPzaIKmuJO+d+
+        sYEMYhbQlFi/Sx8i7Chx7dRWZoj5fBI33gpC3MAnMWnbdKgwr0RHmxBEtZrEhmUb2GDWdu1c
+        yTyBUWkWks9mIflmFpJvZiHsXcDIsopRPLW0ODc9tdg4L7Vcrzgxt7g0L10vOT93EyMwIZ3+
+        d/zrDsZ9f5IOMQpwMCrx8C5I5IgXYk0sK67MPcQowcGsJMLrdPZ0nBBvSmJlVWpRfnxRaU5q
+        8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2M3qePLBBZXhlhtE4ra0Mbu6HzsyP/
+        K0WexItOOnD6i7jR3effZ23TN2jnztoXYX7uVP07jf6GXwIT/X4u0OCpuyqyo2Dx7aozvatj
+        7or4/LyW/ebgR7uPzxuZrwq5i5avvx03lfO2wYxlZesvzf4n/fPQZJZbCW7TOU8mtE1hmnjt
+        7I2vZmd+PVRiKc5INNRiLipOBABMxWzDRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xu7p/KzniDXaLWNy5fZrZ4sT1RUwW
+        V76+Z7M40feB1eLyrjlsFrOX9LNYPF/4g9liwcZHjBbr599ic+D02DnrLrvH/e7jTB7Hb2xn
+        8vi8SS6AJUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
+        LkEv49rmM4wF37krzs94ytzAeIezi5GTQ0LARGLZ12/sXYxcHEICSxklXh7tYeti5ABKyEgc
+        X18GUSMs8edaFxtEzWtGiR0rHzKBJNgErCQmtq9iBLGFBZwlbnf0gNkiAkoSd8/8ZQRpYBZo
+        YpLYsX8zVHcPo0RT/z6wKl4BO4njd++xgNgsAqoS95csBIuLCkRIHN4xC6pGUOLkzCdgNZwC
+        lhLr1x0B28wsoC7xZ94lZghbXOLWk/lQcXmJ7W/nME9gFJqFpH0WkpZZSFpmIWlZwMiyilEk
+        tbQ4Nz232FCvODG3uDQvXS85P3cTIzD+th37uXkH46WNwYcYBTgYlXh4FyRyxAuxJpYVV+Ye
+        YpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OBqSGvJN7Q1NDcwtLQ3Njc
+        2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOjhrRSax/bk6rWB4fP2Lm4S+6zzZ4cq/BC
+        K883LyGR21vea6OpkG3EfeMO3eenT1UtcX7/9+V/7cjvTwpmNiVUNfYv3xO/IVPjenT7+ai9
+        Mpr6wt8qOZTd3v/4ZFtiIe92QGr+E/8F098v4HD+FXd8zVueJIV8w+WPJ/RG+/xUCTS6PvOo
+        v6kSS3FGoqEWc1FxIgDDaxKK1QIAAA==
+X-CMS-MailID: 20200710142357eucas1p1908fe8cf542f43520d448a62bad52192
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200706155341eucas1p2081ccd8bd81c097272e13e7fe84244ee
+X-RootMTR: 20200630182652eucas1p1ce5e07b065127e32ab734f4447c2f735
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200706155341eucas1p2081ccd8bd81c097272e13e7fe84244ee
-References: <CGME20200706155341eucas1p2081ccd8bd81c097272e13e7fe84244ee@eucas1p2.samsung.com>
-        <20200706155328.8396-1-novikov@ispras.ru>
+X-CMS-RootMailID: 20200630182652eucas1p1ce5e07b065127e32ab734f4447c2f735
+References: <CGME20200630182652eucas1p1ce5e07b065127e32ab734f4447c2f735@eucas1p1.samsung.com>
+        <20200630182636.439015-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/6/20 5:53 PM, Evgeny Novikov wrote:
-> If smtcfb_pci_probe() does not detect a valid chip it cleans up
-> everything and returns 0. This can result in various bad things later.
-> The patch sets the error code on the corresponding path.
+On 6/30/20 8:26 PM, Adam Ford wrote:
+> The drm/omap driver was fixed to correct an issue where using a
+> divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+> number.  Through experimentation, it appears that 31 works, and
+> it is consistent with the value used by the drm/omap driver.
 > 
-> Found by Linux Driver Verification project (linuxtesting.org).
+> This patch fixes the divider for fbdev driver instead of the drm.
 > 
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> 
+> Cc: <stable@vger.kernel.org> #4.9+
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
 Applied to drm-misc-next tree, thanks.
+
+(I marked patch as applicable to stable 4.5+ while merging)
 
 Best regards,
 --
@@ -133,20 +139,23 @@ Samsung R&D Institute Poland
 Samsung Electronics
 
 > ---
->  drivers/video/fbdev/sm712fb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
 > 
-> diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-> index 6a1b4a853d9e..fbe97340b8e0 100644
-> --- a/drivers/video/fbdev/sm712fb.c
-> +++ b/drivers/video/fbdev/sm712fb.c
-> @@ -1614,7 +1614,7 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
->  	default:
->  		dev_err(&pdev->dev,
->  			"No valid Silicon Motion display chip was detected!\n");
-> -
-> +		err = -ENODEV;
->  		goto failed_fb;
->  	}
+> The DRM version of this same fix is:
+> e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
+> 
+> 
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> index 7252d22dd117..bfc5c4c5a26a 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
+>  };
 >  
+>  static const struct dss_features omap3630_dss_feats = {
+> -	.fck_div_max		=	32,
+> +	.fck_div_max		=	31,
+>  	.dss_fck_multiplier	=	1,
+>  	.parent_clk_name	=	"dpll4_ck",
+>  	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 > 
