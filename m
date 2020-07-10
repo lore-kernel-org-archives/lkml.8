@@ -2,448 +2,492 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B51452065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:40:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQRK8iZo"
+	by mail.kernel.org (Postfix) with ESMTP id D6FC82076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGJFkY (ORCPT
+        id S1727090AbgGJFlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:40:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27580 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726977AbgGJFkL (ORCPT
+        Fri, 10 Jul 2020 01:41:06 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:7765 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgGJFlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:40:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594359607;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hhOEC2tRp89fH1G6ExUzgv0xTUEDm3brL8ltbXrqFVw=;
-        b=BQRK8iZoXRiPs0gdRqhDwA9zbfRrxKUI9ynNN/8LST3/4a10u4dAfPYR5TgVP/lJISbitl
-        9Tgiee5ccFJnGZZJ8iwy5nHWUICfK1CK3nJk+lH7RDN0bMwrm93JWpFbHzUy5aR5ew3V5j
-        rgiaJDY1SBcEasZfXm0v56SIAYLNKgA=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-9wIV7rSdOuGnB-U8nPGoKQ-1; Fri, 10 Jul 2020 01:40:04 -0400
-X-MC-Unique: 9wIV7rSdOuGnB-U8nPGoKQ-1
-Received: by mail-qk1-f197.google.com with SMTP id q6so3598665qke.21
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 22:40:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hhOEC2tRp89fH1G6ExUzgv0xTUEDm3brL8ltbXrqFVw=;
-        b=CXr9xGTvTffyHyzRiqBbO+L9yQkdFp7zWGBc43e/m/0vfrJPWjsrH7LZ2G0MNI2um2
-         lIGROxmk/KmFP5eDGKamVahpDP5Si06Fr/qV6H9V//rW/IYnVNH6jgdpWc8Exlm1I+y2
-         rsW8rJDqB8hgAJXshNM3KXpNiELAljdW9W9p3glpy00n37p/utgega4KP97MGpKKWG3i
-         IpF2DffTof5b1lfPI37Q0SW2/1ew99ZHRiHtNJHyHADfi8NyH+9WJGOIWu6fM3I/A+B8
-         sIhj//A6+NadqxZZStwqFtK7pzVr4x+5pv0KDUE7SiOV1C/MDVKalQJeKP5cyhy8jPV5
-         hThA==
-X-Gm-Message-State: AOAM531nC1iAN7deMr8MEGObaHv5JZOwn4cWIhrXjOAsgt8iMLFCc3zF
-        0caFR/d/8MgGZ5ZNUjhslwvSh3IDgGsJ7qfkjd7XB/z5hKgb2tjmh1RTSZ+x/tzLpc0Yq8Eohir
-        7OQL1VxEjC935AHk7DS4pHTVWJLn/lSB6Oen2rMws
-X-Received: by 2002:aed:2a75:: with SMTP id k50mr67356219qtf.27.1594359603348;
-        Thu, 09 Jul 2020 22:40:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzuFK7RtO6FVj8vK6txR9qyU141Cs9M32EyhXqgF4hlbvLthFYXy0BOzkCAo1I2N365RH/19xdV8BAXnLW5hGo=
-X-Received: by 2002:aed:2a75:: with SMTP id k50mr67356200qtf.27.1594359602919;
- Thu, 09 Jul 2020 22:40:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org> <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
- <20200622122546-mutt-send-email-mst@kernel.org> <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
- <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com> <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com> <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org> <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
-In-Reply-To: <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Fri, 10 Jul 2020 07:39:26 +0200
-Message-ID: <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jul 2020 01:41:05 -0400
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36372990"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 10 Jul 2020 13:40:56 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(136568:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 10 Jul 2020 13:40:54 +0800 (CST)
+Received: from 101.12.61.182
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2483:0:AUTH_LOGIN)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 10 Jul 2020 13:40:52 +0800 (CST)
+From:   Jingle Wu <jingle.wu@emc.com.tw>
+To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw, josh.chen@emc.com.tw, dave.wang@emc.com.tw,
+        Jingle Wu <jingle.wu@emc.com.tw>
+Subject: [PATCH 1/2] Input: elan_i2c - Add ic type 0x11 0x13 0x14.
+Date:   Fri, 10 Jul 2020 01:40:47 -0400
+Message-Id: <20200710054047.5473-1-jingle.wu@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:56 AM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2020/7/10 =E4=B8=8A=E5=8D=881:37, Michael S. Tsirkin wrote:
-> > On Thu, Jul 09, 2020 at 06:46:13PM +0200, Eugenio Perez Martin wrote:
-> >> On Wed, Jul 1, 2020 at 4:10 PM Jason Wang <jasowang@redhat.com> wrote:
-> >>>
-> >>> On 2020/7/1 =E4=B8=8B=E5=8D=889:04, Eugenio Perez Martin wrote:
-> >>>> On Wed, Jul 1, 2020 at 2:40 PM Jason Wang <jasowang@redhat.com> wrot=
-e:
-> >>>>> On 2020/7/1 =E4=B8=8B=E5=8D=886:43, Eugenio Perez Martin wrote:
-> >>>>>> On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
-> >>>>>> <eperezma@redhat.com> wrote:
-> >>>>>>> On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.co=
-m> wrote:
-> >>>>>>>> On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin w=
-rote:
-> >>>>>>>>> On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.=
-com> wrote:
-> >>>>>>>>>> On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin=
- wrote:
-> >>>>>>>>>>> On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> >>>>>>>>>>> <eperezma@redhat.com> wrote:
-> >>>>>>>>>>>> On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
-> >>>>>>>>>>>> <konrad.wilk@oracle.com> wrote:
-> >>>>>>>>>>>>> On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirki=
-n wrote:
-> >>>>>>>>>>>>>> As testing shows no performance change, switch to that now=
-.
-> >>>>>>>>>>>>> What kind of testing? 100GiB? Low latency?
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>> Hi Konrad.
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> I tested this version of the patch:
-> >>>>>>>>>>>> https://lkml.org/lkml/2019/10/13/42
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> It was tested for throughput with DPDK's testpmd (as describ=
-ed in
-> >>>>>>>>>>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_=
-path.html)
-> >>>>>>>>>>>> and kernel pktgen. No latency tests were performed by me. Ma=
-ybe it is
-> >>>>>>>>>>>> interesting to perform a latency test or just a different se=
-t of tests
-> >>>>>>>>>>>> over a recent version.
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> Thanks!
-> >>>>>>>>>>> I have repeated the tests with v9, and results are a little b=
-it different:
-> >>>>>>>>>>> * If I test opening it with testpmd, I see no change between =
-versions
-> >>>>>>>>>> OK that is testpmd on guest, right? And vhost-net on the host?
-> >>>>>>>>>>
-> >>>>>>>>> Hi Michael.
-> >>>>>>>>>
-> >>>>>>>>> No, sorry, as described in
-> >>>>>>>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_pat=
-h.html.
-> >>>>>>>>> But I could add to test it in the guest too.
-> >>>>>>>>>
-> >>>>>>>>> These kinds of raw packets "bursts" do not show performance
-> >>>>>>>>> differences, but I could test deeper if you think it would be w=
-orth
-> >>>>>>>>> it.
-> >>>>>>>> Oh ok, so this is without guest, with virtio-user.
-> >>>>>>>> It might be worth checking dpdk within guest too just
-> >>>>>>>> as another data point.
-> >>>>>>>>
-> >>>>>>> Ok, I will do it!
-> >>>>>>>
-> >>>>>>>>>>> * If I forward packets between two vhost-net interfaces in th=
-e guest
-> >>>>>>>>>>> using a linux bridge in the host:
-> >>>>>>>>>> And here I guess you mean virtio-net in the guest kernel?
-> >>>>>>>>> Yes, sorry: Two virtio-net interfaces connected with a linux br=
-idge in
-> >>>>>>>>> the host. More precisely:
-> >>>>>>>>> * Adding one of the interfaces to another namespace, assigning =
-it an
-> >>>>>>>>> IP, and starting netserver there.
-> >>>>>>>>> * Assign another IP in the range manually to the other virtual =
-net
-> >>>>>>>>> interface, and start the desired test there.
-> >>>>>>>>>
-> >>>>>>>>> If you think it would be better to perform then differently ple=
-ase let me know.
-> >>>>>>>> Not sure why you bother with namespaces since you said you are
-> >>>>>>>> using L2 bridging. I guess it's unimportant.
-> >>>>>>>>
-> >>>>>>> Sorry, I think I should have provided more context about that.
-> >>>>>>>
-> >>>>>>> The only reason to use namespaces is to force the traffic of thes=
-e
-> >>>>>>> netperf tests to go through the external bridge. To test netperf
-> >>>>>>> different possibilities than the testpmd (or pktgen or others "bl=
-ast
-> >>>>>>> of frames unconditionally" tests).
-> >>>>>>>
-> >>>>>>> This way, I make sure that is the same version of everything in t=
-he
-> >>>>>>> guest, and is a little bit easier to manage cpu affinity, start a=
-nd
-> >>>>>>> stop testing...
-> >>>>>>>
-> >>>>>>> I could use a different VM for sending and receiving, but I find =
-this
-> >>>>>>> way a faster one and it should not introduce a lot of noise. I ca=
-n
-> >>>>>>> test with two VM if you think that this use of network namespace
-> >>>>>>> introduces too much noise.
-> >>>>>>>
-> >>>>>>> Thanks!
-> >>>>>>>
-> >>>>>>>>>>>      - netperf UDP_STREAM shows a performance increase of 1.8=
-, almost
-> >>>>>>>>>>> doubling performance. This gets lower as frame size increase.
-> >>>>>> Regarding UDP_STREAM:
-> >>>>>> * with event_idx=3Don: The performance difference is reduced a lot=
- if
-> >>>>>> applied affinity properly (manually assigning CPU on host/guest an=
-d
-> >>>>>> setting IRQs on guest), making them perform equally with and witho=
-ut
-> >>>>>> the patch again. Maybe the batching makes the scheduler perform
-> >>>>>> better.
-> >>>>> Note that for UDP_STREAM, the result is pretty trick to be analyzed=
-. E.g
-> >>>>> setting a sndbuf for TAP may help for the performance (reduce the d=
-rop).
-> >>>>>
-> >>>> Ok, will add that to the test. Thanks!
-> >>>
-> >>> Actually, it's better to skip the UDP_STREAM test since:
-> >>>
-> >>> - My understanding is very few application is using raw UDP stream
-> >>> - It's hard to analyze (usually you need to count the drop ratio etc)
-> >>>
-> >>>
-> >>>>>>>>>>>      - rests of the test goes noticeably worse: UDP_RR goes f=
-rom ~6347
-> >>>>>>>>>>> transactions/sec to 5830
-> >>>>>> * Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning mak=
-es
-> >>>>>> them perform similarly again, only a very small performance drop
-> >>>>>> observed. It could be just noise.
-> >>>>>> ** All of them perform better than vanilla if event_idx=3Doff, not=
- sure
-> >>>>>> why. I can try to repeat them if you suspect that can be a test
-> >>>>>> failure.
-> >>>>>>
-> >>>>>> * With testpmd and event_idx=3Doff, if I send from the VM to host,=
- I see
-> >>>>>> a performance increment especially in small packets. The buf api a=
-lso
-> >>>>>> increases performance compared with only batching: Sending the min=
-imum
-> >>>>>> packet size in testpmd makes pps go from 356kpps to 473 kpps.
-> >>>>> What's your setup for this. The number looks rather low. I'd expect=
-ed
-> >>>>> 1-2 Mpps at least.
-> >>>>>
-> >>>> Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, 2 NUMA nodes of 16G memor=
-y
-> >>>> each, and no device assigned to the NUMA node I'm testing in. Too lo=
-w
-> >>>> for testpmd AF_PACKET driver too?
-> >>>
-> >>> I don't test AF_PACKET, I guess it should use the V3 which mmap based
-> >>> zerocopy interface.
-> >>>
-> >>> And it might worth to check the cpu utilization of vhost thread. It's
-> >>> required to stress it as 100% otherwise there could be a bottleneck
-> >>> somewhere.
-> >>>
-> >>>
-> >>>>>> Sending
-> >>>>>> 1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
-> >>>>>>
-> >>>>>> Something strange I observe in these tests: I get more pps the big=
-ger
-> >>>>>> the transmitted buffer size is. Not sure why.
-> >>>>>>
-> >>>>>> ** Sending from the host to the VM does not make a big change with=
- the
-> >>>>>> patches in small packets scenario (minimum, 64 bytes, about 645
-> >>>>>> without the patch, ~625 with batch and batch+buf api). If the pack=
-ets
-> >>>>>> are bigger, I can see a performance increase: with 256 bits,
-> >>>>> I think you meant bytes?
-> >>>>>
-> >>>> Yes, sorry.
-> >>>>
-> >>>>>>     it goes
-> >>>>>> from 590kpps to about 600kpps, and in case of 1500 bytes payload i=
-t
-> >>>>>> gets from 348kpps to 528kpps, so it is clearly an improvement.
-> >>>>>>
-> >>>>>> * with testpmd and event_idx=3Don, batching+buf api perform simila=
-rly in
-> >>>>>> both directions.
-> >>>>>>
-> >>>>>> All of testpmd tests were performed with no linux bridge, just a
-> >>>>>> host's tap interface (<interface type=3D'ethernet'> in xml),
-> >>>>> What DPDK driver did you use in the test (AF_PACKET?).
-> >>>>>
-> >>>> Yes, both testpmd are using AF_PACKET driver.
-> >>>
-> >>> I see, using AF_PACKET means extra layers of issues need to be analyz=
-ed
-> >>> which is probably not good.
-> >>>
-> >>>
-> >>>>>> with a
-> >>>>>> testpmd txonly and another in rxonly forward mode, and using the
-> >>>>>> receiving side packets/bytes data. Guest's rps, xps and interrupts=
-,
-> >>>>>> and host's vhost threads affinity were also tuned in each test to
-> >>>>>> schedule both testpmd and vhost in different processors.
-> >>>>> My feeling is that if we start from simple setup, it would be more
-> >>>>> easier as a start. E.g start without an VM.
-> >>>>>
-> >>>>> 1) TX: testpmd(txonly) -> virtio-user -> vhost_net -> XDP_DROP on T=
-AP
-> >>>>> 2) RX: pkgetn -> TAP -> vhost_net -> testpmd(rxonly)
-> >>>>>
-> >>>> Got it. Is there a reason to prefer pktgen over testpmd?
-> >>>
-> >>> I think the reason is using testpmd you must use a userspace kernel
-> >>> interface (AF_PACKET), and it could not be as fast as pktgen since:
-> >>>
-> >>> - it talks directly to xmit of TAP
-> >>> - skb can be cloned
-> >>>
-> >> Hi!
-> >>
-> >> Here it is the result of the tests. Details on [1].
-> >>
-> >> Tx:
-> >> =3D=3D=3D
-> >>
-> >> For tx packets it seems that the batching patch makes things a little
-> >> bit worse, but the buf_api outperforms baseline by a 7%:
-> >>
-> >> * We start with a baseline of 4208772.571 pps and 269361444.6 bytes/s =
-[2].
-> >> * When we add the batching, I see a small performance decrease:
-> >> 4133292.308 and 264530707.7 bytes/s.
-> >> * However, the buf api it outperform the baseline: 4551319.631pps,
-> >> 291205178.1 bytes/s
-> >>
-> >> I don't have numbers on the receiver side since it is just a XDP_DROP.
-> >> I think it would be interesting to see them.
-> >>
-> >> Rx:
-> >> =3D=3D=3D
-> >>
-> >> Regarding Rx, the reverse is observed: a small performance increase is
-> >> observed with batching (~2%), but buf_api makes tests perform equally
-> >> to baseline.
-> >>
-> >> pktgen was called using pktgen_sample01_simple.sh, with the environmen=
-t:
-> >> DEV=3D"$tap_name" F_THREAD=3D1 DST_MAC=3D$MAC_ADDR COUNT=3D$((2500000*=
-25))
-> >> SKB_CLONE=3D$((2**31))
-> >>
-> >> And testpmd is the same as Tx but with forward-mode=3Drxonly.
-> >>
-> >> Pktgen reports:
-> >> Baseline: 1853025pps 622Mb/sec (622616400bps) errors: 7915231
-> >> Batch: 1891404pps 635Mb/sec (635511744bps) errors: 4926093
-> >> Buf_api: 1844008pps 619Mb/sec (619586688bps) errors: 47766692
-> >>
-> >> Testpmd reports:
-> >> Baseline: 1854448pps, 860464156 bps. [3]
-> >> Batch: 1892844.25pps, 878280070bps.
-> >> Buf_api: 1846139.75pps, 856609120bps.
-> >>
-> >> Any thoughts?
-> >>
-> >> Thanks!
-> >>
-> >> [1]
-> >> Testpmd options: -l 1,3
-> >> --vdev=3Dvirtio_user0,mac=3D01:02:03:04:05:06,path=3D/dev/vhost-net,qu=
-eue_size=3D1024
-> >> -- --auto-start --stats-period 5 --tx-offloads=3D"$TX_OFFLOADS"
-> >> --rx-offloads=3D"$RX_OFFLOADS" --txd=3D4096 --rxd=3D4096 --burst=3D512
-> >> --forward-mode=3Dtxonly
-> >>
-> >> Where offloads were obtained manually running with
-> >> --[tr]x-offloads=3D0x8fff and examining testpmd response:
-> >> declare -r RX_OFFLOADS=3D0x81d
-> >> declare -r TX_OFFLOADS=3D0x802d
-> >>
-> >> All of the tests results are an average of at least 3 samples of
-> >> testpmd, discarding the obvious deviations at start/end (like warming
-> >> up or waiting for pktgen to start). The result of pktgen is directly
-> >> c&p from its output.
-> >>
-> >> The numbers do not change very much from one stats printing to another
-> >> of testpmd.
-> >>
-> >> [2] Obtained subtracting each accumulated tx-packets from one stats
-> >> print to the previous one. If we attend testpmd output about Tx-pps,
-> >> it counts a little bit less performance, but it follows the same
-> >> pattern:
-> >>
-> >> Testpmd pps/bps stats:
-> >> Baseline: 3510826.25 pps, 1797887912bps =3D 224735989bytes/sec
-> >> Batch: 3448515.571pps, 1765640226bps =3D 220705028.3bytes/sec
-> >> Buf api: 3794115.333pps, 1942587286bps =3D 242823410.8bytes/sec
-> >>
-> >> [3] This is obtained using the rx-pps/rx-bps report of testpmd.
-> >>
-> >> Seems strange to me that the relation between pps/bps is ~336 this
-> >> time, and between accumulated pkts/accumulated bytes is ~58. Also, the
-> >> relation between them is not even close to 8.
-> >>
-> >> However, testpmd shows a lot of absolute packets received. If we see
-> >> the received packets in a period subtracting from the previous one,
-> >> testpmd tells that receive more pps than pktgen tx-pps:
-> >> Baseline: ~2222668.667pps 128914784.3bps.
-> >> Batch: 2269260.933pps, 131617134.9bps
-> >> Buf_api: 2213226.467pps, 128367135.9bp
-> > How about playing with the batch size? Make it a mod parameter instead
-> > of the hard coded 64, and measure for all values 1 to 64 ...
->
->
-> Right, according to the test result, 64 seems to be too aggressive in
-> the case of TX.
->
+Modify the iap method for all IC.
+Get the correct value of ic_type for old and new pattern of
+firmware.
 
-Got it, thanks both!
+Signed-off-by: Jingle Wu <jingle.wu@emc.com.tw>
+---
+ drivers/input/mouse/elan_i2c.h       |   6 +-
+ drivers/input/mouse/elan_i2c_core.c  |  52 ++++++++-----
+ drivers/input/mouse/elan_i2c_i2c.c   | 109 ++++++++++++++++++++++-----
+ drivers/input/mouse/elan_i2c_smbus.c |  10 +--
+ 4 files changed, 134 insertions(+), 43 deletions(-)
 
-> And it might also be worth to check:
->
-> 1) Whether vhost thread is stressed as 100% CPU utilization, if not,
-> there's bottleneck elsewhere
-
-I forgot to check this, sorry. Will check in the next test.
-
-> 2) For RX test, make sure pktgen kthread is running in the same NUMA
-> node with virtio-user
->
-
-It is allocated 1 thread in lcore 1 (F_THREAD=3D1) which belongs to the
-same NUMA as testpmd. Actually, it is the testpmd master core, so it
-should be a good idea to move it to another lcore of the same NUMA
-node.
-
-Is this enough for pktgen to allocate the memory in that numa node?
-Since the script only write parameters to /proc, I assume that it has
-no effect to run it under numactl/taskset, and pktgen will allocate
-memory based on the lcore is running. Am I right?
-
-Thanks!
-
-> Thanks
->
->
-> >
->
+diff --git a/drivers/input/mouse/elan_i2c.h b/drivers/input/mouse/elan_i2c.h
+index a9074ac9364f..f28b747978f5 100644
+--- a/drivers/input/mouse/elan_i2c.h
++++ b/drivers/input/mouse/elan_i2c.h
+@@ -33,6 +33,8 @@
+ #define ETP_FW_IAP_PAGE_ERR	(1 << 5)
+ #define ETP_FW_IAP_INTF_ERR	(1 << 4)
+ #define ETP_FW_PAGE_SIZE	64
++#define ETP_FW_PAGE_SIZE_128	128
++#define ETP_FW_PAGE_SIZE_512	512
+ #define ETP_FW_SIGNATURE_SIZE	6
+ 
+ struct i2c_client;
+@@ -72,8 +74,8 @@ struct elan_transport_ops {
+ 	int (*iap_get_mode)(struct i2c_client *client, enum tp_mode *mode);
+ 	int (*iap_reset)(struct i2c_client *client);
+ 
+-	int (*prepare_fw_update)(struct i2c_client *client);
+-	int (*write_fw_block)(struct i2c_client *client,
++	int (*prepare_fw_update)(struct i2c_client *client, u16 ic_type);
++	int (*write_fw_block)(struct i2c_client *client, u16 fw_page_size,
+ 			      const u8 *page, u16 checksum, int idx);
+ 	int (*finish_fw_update)(struct i2c_client *client,
+ 				struct completion *reset_done);
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 3f9354baac4b..0703f7d0d02d 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -89,7 +89,8 @@ struct elan_tp_data {
+ 	u8			mode;
+ 	u16			ic_type;
+ 	u16			fw_validpage_count;
+-	u16			fw_signature_address;
++	u16			fw_page_size;
++	u32			fw_signature_address;
+ 
+ 	bool			irq_wake;
+ 
+@@ -100,8 +101,10 @@ struct elan_tp_data {
+ 	bool			middle_button;
+ };
+ 
+-static int elan_get_fwinfo(u16 ic_type, u16 *validpage_count,
+-			   u16 *signature_address)
++static int elan_get_fwinfo(u16 ic_type, u8 iap_version, 
++                           u16 *validpage_count,
++			   u32 *signature_address,
++			   u16 *page_size)
+ {
+ 	switch (ic_type) {
+ 	case 0x00:
+@@ -124,18 +127,34 @@ static int elan_get_fwinfo(u16 ic_type, u16 *validpage_count,
+ 		*validpage_count = 640;
+ 		break;
+ 	case 0x10:
++	case 0x14:
+ 		*validpage_count = 1024;
+ 		break;
++	case 0x11:
++		*validpage_count = 1280;
++		break;
++	case 0x13:
++		*validpage_count = 2048;
++		break;
+ 	default:
+ 		/* unknown ic type clear value */
+ 		*validpage_count = 0;
+ 		*signature_address = 0;
++		*page_size = 0;
+ 		return -ENXIO;
+ 	}
+ 
+ 	*signature_address =
+ 		(*validpage_count * ETP_FW_PAGE_SIZE) - ETP_FW_SIGNATURE_SIZE;
+ 
++	if ((ic_type == 0x14) && (iap_version >= 2)) {
++		*validpage_count /= 8;
++		*page_size = ETP_FW_PAGE_SIZE_512;
++	} else if ((ic_type >= 0x0D) && (iap_version >= 1)) {
++		*validpage_count /= 2;
++		*page_size = ETP_FW_PAGE_SIZE_128;
++	} else
++		*page_size = ETP_FW_PAGE_SIZE;
+ 	return 0;
+ }
+ 
+@@ -312,7 +331,6 @@ static int elan_initialize(struct elan_tp_data *data)
+ static int elan_query_device_info(struct elan_tp_data *data)
+ {
+ 	int error;
+-	u16 ic_type;
+ 
+ 	error = data->ops->get_version(data->client, false, &data->fw_version);
+ 	if (error)
+@@ -336,13 +354,10 @@ static int elan_query_device_info(struct elan_tp_data *data)
+ 	if (error)
+ 		return error;
+ 
+-	if (data->pattern == 0x01)
+-		ic_type = data->ic_type;
+-	else
+-		ic_type = data->iap_version;
+-
+-	error = elan_get_fwinfo(ic_type, &data->fw_validpage_count,
+-				&data->fw_signature_address);
++	error = elan_get_fwinfo(data->ic_type, data->iap_version, 
++				&data->fw_validpage_count,
++				&data->fw_signature_address,
++				&data->fw_page_size);
+ 	if (error)
+ 		dev_warn(&data->client->dev,
+ 			 "unexpected iap version %#04x (ic type: %#04x), firmware update will not work\n",
+@@ -430,14 +445,14 @@ static int elan_query_device_parameters(struct elan_tp_data *data)
+  * IAP firmware updater related routines
+  **********************************************************
+  */
+-static int elan_write_fw_block(struct elan_tp_data *data,
++static int elan_write_fw_block(struct elan_tp_data *data, u16 page_size,
+ 			       const u8 *page, u16 checksum, int idx)
+ {
+ 	int retry = ETP_RETRY_COUNT;
+ 	int error;
+ 
+ 	do {
+-		error = data->ops->write_fw_block(data->client,
++		error = data->ops->write_fw_block(data->client, page_size,
+ 						  page, checksum, idx);
+ 		if (!error)
+ 			return 0;
+@@ -460,21 +475,22 @@ static int __elan_update_firmware(struct elan_tp_data *data,
+ 	u16 boot_page_count;
+ 	u16 sw_checksum = 0, fw_checksum = 0;
+ 
+-	error = data->ops->prepare_fw_update(client);
++	error = data->ops->prepare_fw_update(client, data->ic_type);
+ 	if (error)
+ 		return error;
+ 
+ 	iap_start_addr = get_unaligned_le16(&fw->data[ETP_IAP_START_ADDR * 2]);
+ 
+-	boot_page_count = (iap_start_addr * 2) / ETP_FW_PAGE_SIZE;
++	boot_page_count = (iap_start_addr * 2) / data->fw_page_size;
+ 	for (i = boot_page_count; i < data->fw_validpage_count; i++) {
+ 		u16 checksum = 0;
+-		const u8 *page = &fw->data[i * ETP_FW_PAGE_SIZE];
++		const u8 *page = &fw->data[i * data->fw_page_size];
+ 
+-		for (j = 0; j < ETP_FW_PAGE_SIZE; j += 2)
++		for (j = 0; j < data->fw_page_size; j += 2)
+ 			checksum += ((page[j + 1] << 8) | page[j]);
+ 
+-		error = elan_write_fw_block(data, page, checksum, i);
++		error = elan_write_fw_block(data, data->fw_page_size,
++						page, checksum, i);
+ 		if (error) {
+ 			dev_err(dev, "write page %d fail: %d\n", i, error);
+ 			return error;
+diff --git a/drivers/input/mouse/elan_i2c_i2c.c b/drivers/input/mouse/elan_i2c_i2c.c
+index 058b35b1f9a9..91ef0c7bda43 100644
+--- a/drivers/input/mouse/elan_i2c_i2c.c
++++ b/drivers/input/mouse/elan_i2c_i2c.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
++#include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <asm/unaligned.h>
+ 
+@@ -43,6 +44,7 @@
+ #define ETP_I2C_RESOLUTION_CMD		0x0108
+ #define ETP_I2C_PRESSURE_CMD		0x010A
+ #define ETP_I2C_IAP_VERSION_CMD		0x0110
++#define ETP_I2C_IAP_VERSION_CMD_OLD		0x0111
+ #define ETP_I2C_SET_CMD			0x0300
+ #define ETP_I2C_POWER_CMD		0x0307
+ #define ETP_I2C_FW_CHECKSUM_CMD		0x030F
+@@ -53,6 +55,8 @@
+ #define ETP_I2C_CALIBRATE_CMD		0x0316
+ #define ETP_I2C_MAX_BASELINE_CMD	0x0317
+ #define ETP_I2C_MIN_BASELINE_CMD	0x0318
++#define ETP_I2C_IAP_TYPE_REG	0x0040
++#define ETP_I2C_IAP_TYPE_CMD	0x0304
+ 
+ #define ETP_I2C_REPORT_LEN		34
+ #define ETP_I2C_DESC_LENGTH		30
+@@ -249,7 +253,11 @@ static int elan_i2c_get_pattern(struct i2c_client *client, u8 *pattern)
+ 		dev_err(&client->dev, "failed to get pattern: %d\n", error);
+ 		return error;
+ 	}
+-	*pattern = val[1];
++
++	if ((val[0] == 0xFF) && (val[1] == 0xFF))
++		*pattern = 0;
++	else
++		*pattern = val[1];
+ 
+ 	return 0;
+ }
+@@ -259,6 +267,7 @@ static int elan_i2c_get_version(struct i2c_client *client,
+ {
+ 	int error;
+ 	u8 pattern_ver;
++	u16 iap_cmd;
+ 	u8 val[3];
+ 
+ 	error = elan_i2c_get_pattern(client, &pattern_ver);
+@@ -266,9 +275,14 @@ static int elan_i2c_get_version(struct i2c_client *client,
+ 		dev_err(&client->dev, "failed to get pattern version\n");
+ 		return error;
+ 	}
++	
++	if (pattern_ver >= 0x01)
++		iap_cmd = ETP_I2C_IAP_VERSION_CMD;
++	else
++		iap_cmd = ETP_I2C_IAP_VERSION_CMD_OLD;
+ 
+ 	error = elan_i2c_read_cmd(client,
+-				  iap ? ETP_I2C_IAP_VERSION_CMD :
++				  iap ? iap_cmd :
+ 					ETP_I2C_FW_VERSION_CMD,
+ 				  val);
+ 	if (error) {
+@@ -277,7 +291,7 @@ static int elan_i2c_get_version(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
+-	if (pattern_ver == 0x01)
++	if (pattern_ver >= 0x01)
+ 		*version = iap ? val[1] : val[0];
+ 	else
+ 		*version = val[0];
+@@ -298,7 +312,7 @@ static int elan_i2c_get_sm_version(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
+-	if (pattern_ver == 0x01) {
++	if (pattern_ver >= 0x01) {
+ 		error = elan_i2c_read_cmd(client, ETP_I2C_IC_TYPE_CMD, val);
+ 		if (error) {
+ 			dev_err(&client->dev, "failed to get ic type: %d\n",
+@@ -324,7 +338,14 @@ static int elan_i2c_get_sm_version(struct i2c_client *client,
+ 			return error;
+ 		}
+ 		*version = val[0];
+-		*ic_type = val[1];
++
++		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_VERSION_CMD, val);
++		if (error) {
++			dev_err(&client->dev, "failed to get ic type: %d\n",
++				error);
++			return error;
++		}
++		*ic_type = val[0];
+ 
+ 		error = elan_i2c_read_cmd(client, ETP_I2C_NSM_VERSION_CMD,
+ 					  val);
+@@ -507,13 +528,53 @@ static int elan_i2c_set_flash_key(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int elan_i2c_prepare_fw_update(struct i2c_client *client)
++static int elan_read_write_iap_type(struct i2c_client *client)
++{
++	int error;
++	u16 constant;
++	u8 val[3];
++	int retry = 3;
++
++	do {
++		error = elan_i2c_write_cmd(client, ETP_I2C_IAP_TYPE_CMD,
++				ETP_I2C_IAP_TYPE_REG);
++		if (error) {
++			dev_err(&client->dev,
++					"cannot write iap type: %d\n", error);
++			return error;
++		}
++
++		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_TYPE_CMD, val);
++		if (error) {
++			dev_err(&client->dev,
++				"failed to read iap type register: %d\n",
++				error);
++			return error;
++		}
++		constant = le16_to_cpup((__le16 *)val);
++		dev_dbg(&client->dev, "iap type reg: 0x%04x.\n", constant);
++
++		if (constant == ETP_I2C_IAP_TYPE_REG)
++			return 0;
++
++	} while (--retry > 0);
++
++	dev_err(&client->dev, "cannot set iap type.\n");
++	return -EIO;
++}
++
++static int elan_i2c_prepare_fw_update(struct i2c_client *client, u16 ic_type)
+ {
+ 	struct device *dev = &client->dev;
+ 	int error;
+ 	enum tp_mode mode;
+ 	u8 val[3];
+ 	u16 password;
++	u8 iap_version;
++	
++	error = elan_i2c_get_version(client, true, &iap_version);
++	if (error)
++		return error;
+ 
+ 	/* Get FW in which mode	(IAP_MODE/MAIN_MODE)  */
+ 	error = elan_i2c_iap_get_mode(client, &mode);
+@@ -546,6 +607,12 @@ static int elan_i2c_prepare_fw_update(struct i2c_client *client)
+ 		dev_err(dev, "wrong mode: %d\n", mode);
+ 		return -EIO;
+ 	}
++	
++	if ((ic_type >= 0x0D) && (iap_version >= 1)) {
++		error = elan_read_write_iap_type(client);
++		if (error)
++			return error;
++	}
+ 
+ 	/* Set flash key again */
+ 	error = elan_i2c_set_flash_key(client);
+@@ -572,45 +639,51 @@ static int elan_i2c_prepare_fw_update(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int elan_i2c_write_fw_block(struct i2c_client *client,
++static int elan_i2c_write_fw_block(struct i2c_client *client, u16 fw_page_size,
+ 				   const u8 *page, u16 checksum, int idx)
+ {
+ 	struct device *dev = &client->dev;
+-	u8 page_store[ETP_FW_PAGE_SIZE + 4];
++	u8 *page_store = kcalloc(1, fw_page_size + 4, GFP_KERNEL);
+ 	u8 val[3];
+ 	u16 result;
+-	int ret, error;
++	int ret, error = 0;
+ 
+ 	page_store[0] = ETP_I2C_IAP_REG_L;
+ 	page_store[1] = ETP_I2C_IAP_REG_H;
+-	memcpy(&page_store[2], page, ETP_FW_PAGE_SIZE);
++	memcpy(&page_store[2], page, fw_page_size);
+ 	/* recode checksum at last two bytes */
+-	put_unaligned_le16(checksum, &page_store[ETP_FW_PAGE_SIZE + 2]);
++	put_unaligned_le16(checksum, &page_store[fw_page_size + 2]);
+ 
+-	ret = i2c_master_send(client, page_store, sizeof(page_store));
+-	if (ret != sizeof(page_store)) {
++	ret = i2c_master_send(client, page_store, fw_page_size + 4);
++	if (ret != fw_page_size + 4) {
+ 		error = ret < 0 ? ret : -EIO;
+ 		dev_err(dev, "Failed to write page %d: %d\n", idx, error);
+-		return error;
++		goto exit;
+ 	}
+ 
+ 	/* Wait for F/W to update one page ROM data. */
+-	msleep(35);
++	if (fw_page_size == ETP_FW_PAGE_SIZE_512)
++		msleep(50);
++	else
++		msleep(35);
+ 
+ 	error = elan_i2c_read_cmd(client, ETP_I2C_IAP_CTRL_CMD, val);
+ 	if (error) {
+ 		dev_err(dev, "Failed to read IAP write result: %d\n", error);
+-		return error;
++		goto exit;
+ 	}
+ 
+ 	result = le16_to_cpup((__le16 *)val);
+ 	if (result & (ETP_FW_IAP_PAGE_ERR | ETP_FW_IAP_INTF_ERR)) {
+ 		dev_err(dev, "IAP reports failed write: %04hx\n",
+ 			result);
+-		return -EIO;
++		error = -EIO;
++		goto exit;
+ 	}
+ 
+-	return 0;
++exit:
++	kfree(page_store);
++	return error;
+ }
+ 
+ static int elan_i2c_finish_fw_update(struct i2c_client *client,
+diff --git a/drivers/input/mouse/elan_i2c_smbus.c b/drivers/input/mouse/elan_i2c_smbus.c
+index 8c3185d54c73..1e762c90c894 100644
+--- a/drivers/input/mouse/elan_i2c_smbus.c
++++ b/drivers/input/mouse/elan_i2c_smbus.c
+@@ -340,7 +340,7 @@ static int elan_smbus_set_flash_key(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int elan_smbus_prepare_fw_update(struct i2c_client *client)
++static int elan_smbus_prepare_fw_update(struct i2c_client *client, u16 ic_type)
+ {
+ 	struct device *dev = &client->dev;
+ 	int len;
+@@ -414,7 +414,7 @@ static int elan_smbus_prepare_fw_update(struct i2c_client *client)
+ }
+ 
+ 
+-static int elan_smbus_write_fw_block(struct i2c_client *client,
++static int elan_smbus_write_fw_block(struct i2c_client *client, u16 fw_page_size,
+ 				     const u8 *page, u16 checksum, int idx)
+ {
+ 	struct device *dev = &client->dev;
+@@ -429,7 +429,7 @@ static int elan_smbus_write_fw_block(struct i2c_client *client,
+ 	 */
+ 	error = i2c_smbus_write_block_data(client,
+ 					   ETP_SMBUS_WRITE_FW_BLOCK,
+-					   ETP_FW_PAGE_SIZE / 2,
++					   fw_page_size / 2,
+ 					   page);
+ 	if (error) {
+ 		dev_err(dev, "Failed to write page %d (part %d): %d\n",
+@@ -439,8 +439,8 @@ static int elan_smbus_write_fw_block(struct i2c_client *client,
+ 
+ 	error = i2c_smbus_write_block_data(client,
+ 					   ETP_SMBUS_WRITE_FW_BLOCK,
+-					   ETP_FW_PAGE_SIZE / 2,
+-					   page + ETP_FW_PAGE_SIZE / 2);
++					   fw_page_size / 2,
++					   page + fw_page_size / 2);
+ 	if (error) {
+ 		dev_err(dev, "Failed to write page %d (part %d): %d\n",
+ 			idx, 2, error);
+-- 
+2.17.1
 
