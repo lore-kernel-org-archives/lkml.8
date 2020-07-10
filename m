@@ -2,94 +2,120 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1538AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC2CC207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0F8207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fk0BU7ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGJOKa (ORCPT
+        id S1728005AbgGJOLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:10:30 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:37785 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbgGJOK1 (ORCPT
+        Fri, 10 Jul 2020 10:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgGJOLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:10:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2IjCvH_1594390221;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2IjCvH_1594390221)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 Jul 2020 22:10:22 +0800
-Subject: Re: [PATCH v14 07/20] mm/thp: narrow lru locking
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
- <1593752873-4493-8-git-send-email-alex.shi@linux.alibaba.com>
- <124eeef1-ff2b-609e-3bf6-a118100c3f2a@linux.alibaba.com>
- <20200706113513.GY25523@casper.infradead.org>
- <alpine.LSU.2.11.2007062059420.2793@eggly.anvils>
- <20200709154816.wieg5thfejyv2h2l@box>
- <e87f7dd1-41c4-3392-f1df-982dd28c0617@linux.alibaba.com>
- <20200710112831.jrv4hzjzjqtxtc7u@box>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <d4d8bbba-12af-45c2-a35d-58f962ca5f9a@linux.alibaba.com>
-Date:   Fri, 10 Jul 2020 22:09:42 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 10 Jul 2020 10:11:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048F7C08C5CE;
+        Fri, 10 Jul 2020 07:11:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o8so6312650wmh.4;
+        Fri, 10 Jul 2020 07:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VGeeR8+VbNtB7URPLqfeyF8R/0u0wMAauszGUX1N1UI=;
+        b=fk0BU7iaq6X8TwybCHTvJwUCTakRRnB6bs6MI80jO2k/15kDhIIIoHZt5ZVGA7a6nv
+         hV6Yh9e81iPov/qajATCsYe/c6NeRIcS20LNg52siwqUX6u3VxeNYDkHCaYpXDz3sesR
+         3Ulry/Xu+YcNYFGogM36GHBVr/nLyKWwB8yN+B4JOfNdNDvsgl6Xyx9sHtC8js15nxNc
+         nklaZ6IT1IayDupdAOiUuueQIAip22AQGlYBr81JJttcMam+vf9cCdSbd7Dr0GbPPo8S
+         WuCA8IGNqtAVATytmAJ1Fk+OlPI//tMI5/RRQlUAb47OVCI6/1nGJ7E0n7Scdyv45XhO
+         GJUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VGeeR8+VbNtB7URPLqfeyF8R/0u0wMAauszGUX1N1UI=;
+        b=abY8ydoh2znbR3wVQPv5/cy10JYdkWgKdo+75Z2CEXQ12HV6M6tB22Zc5gNoGoG6cc
+         i2KArNk9Y2xlAb8HNcpFZe6ZyKCWeDfw8WacJpVx5C+P5chbY1TXRx6DAGXdvJDl7mpp
+         8ZYnUdhv8ZNpM6f7e5sizuMZeuCaMYLS/aZa4obbEl5oqWoErlRRupzFs24+3uUJbooO
+         3G8YwshUZ6GfdFvzCJr9egWuzBxX57S8dQUUN+ZgAhegksfUHoPo7DpWvGldqFoiAVUn
+         dOxqsscScMDmG9apCoPtAVP13Dda8giMUiONEYgl7ovpma4lcqbqhlmPpeH160EFXMIr
+         qkiQ==
+X-Gm-Message-State: AOAM533kd7eKPkaZRLA2DrS+Eqq/y+pkNlMAgPqDZ0YcWsKQK3CRgS/T
+        F0SSyQVIxsMI9zoANrcL+MGLBC7lox5CBwCZoeM=
+X-Google-Smtp-Source: ABdhPJysoJRlQ8UFaxjIgEOwBzA5N40n6EBPhXu9a+0n6/TXYajVrD/1a1tH7ji3ATsg3D0/tZUikVlkV5IOILYSjyk=
+X-Received: by 2002:a1c:9e45:: with SMTP id h66mr5276012wme.15.1594390305664;
+ Fri, 10 Jul 2020 07:11:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200710112831.jrv4hzjzjqtxtc7u@box>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200709085501.GA64935@infradead.org> <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
+ <20200709140053.GA7528@infradead.org> <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
+ <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
+ <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk> <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
+ <20200710131054.GB7491@infradead.org> <20200710134824.GK12769@casper.infradead.org>
+ <20200710134932.GA16257@infradead.org> <20200710135119.GL12769@casper.infradead.org>
+In-Reply-To: <20200710135119.GL12769@casper.infradead.org>
+From:   Kanchan Joshi <joshiiitr@gmail.com>
+Date:   Fri, 10 Jul 2020 19:41:19 +0530
+Message-ID: <CA+1E3rKOZUz7oZ_DGW6xZPQaDu+T5iEKXctd+gsJw05VwpGQSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, "Matias Bj??rling" <mb@lightnvm.io>,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 7:21 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Fri, Jul 10, 2020 at 02:49:32PM +0100, Christoph Hellwig wrote:
+> > On Fri, Jul 10, 2020 at 02:48:24PM +0100, Matthew Wilcox wrote:
+> > > If we're going to go the route of changing the CQE, how about:
+> > >
+> > >  struct io_uring_cqe {
+> > >          __u64   user_data;      /* sqe->data submission passed back */
+> > > -        __s32   res;            /* result code for this event */
+> > > -        __u32   flags;
+> > > +   union {
+> > > +           struct {
+> > > +                   __s32   res;            /* result code for this event */
+> > > +                   __u32   flags;
+> > > +           };
+> > > +           __s64   res64;
+> > > +   };
+> > >  };
+> > >
+> > > then we don't need to change the CQE size and it just depends on the SQE
+> > > whether the CQE for it uses res+flags or res64.
+> >
+> > How do you return a status code or short write when you just have
+> > a u64 that is needed for the offset?
+>
+> it's an s64 not a u64 so you can return a negative errno.  i didn't
+> think we allowed short writes for objects-which-have-a-pos.
 
+If we are doing this for zone-append (and not general cases), "__s64
+res64" should work -.
+64 bits = 1 (sign) + 23 (bytes-copied: cqe->res) + 40
+(written-location: chunk_sector bytes limit)
 
-在 2020/7/10 下午7:28, Kirill A. Shutemov 写道:
->>   *           hugetlb_fault_mutex (hugetlbfs specific page fault mutex)
->>   *           anon_vma->rwsem
->>   *             mm->page_table_lock or pte_lock
->> - *               pgdat->lru_lock (in mark_page_accessed, isolate_lru_page)
->>   *               swap_lock (in swap_duplicate, swap_info_get)
->>   *                 mmlist_lock (in mmput, drain_mmlist and others)
->>   *                 mapping->private_lock (in __set_page_dirty_buffers)
->> - *                   mem_cgroup_{begin,end}_page_stat (memcg->move_lock)
->> + *                   lock_page_memcg move_lock (in __set_page_dirty_buffers)
->>   *                     i_pages lock (widely used)
->> + *                       lock_page_lruvec_irq lruvec->lru_lock
-> I think it has to be
-> 			    lruvec->lru_lock (in lock_page_lruvec_irq)
-
-Good catch! I will update it in next version.
-Thanks!
-
-> 
-> No?
-
-> 
->>   *                 inode->i_lock (in set_page_dirty's __mark_inode_dirty)
->>   *                 bdi.wb->list_lock (in set_page_dirty's __mark_inode_dirty)
->>   *                   sb_lock (within inode_lock in fs/fs-writeback.c)
->>
->>> local_irq_disable() also deserves a comment.
->>>
->> yes, I will add a comment for this. Do you mind give reviewed-by for this patch?
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
-Thanks a lot! :)
-
+-- 
+Joshi
