@@ -2,212 +2,97 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB99720720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594358756;
-	bh=/p5nY3KZsF8LvT2pjGl9BSRNbNB55NkPgm3I0g3m3fM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Wsk6aw0ATw9fP5ebn48tRj4SCP6QtH1xs7RxAfPZ6f05+VGbdKGfwzz9rwVeav05q
-	 NpSoo4Li0JoyEO3E9ZxaiOne9I4IxdoJT8Gret/1nhctsHetxWUC+UadFOj0gyabgh
-	 0PqSdcClJJOK42C23dlHX821falxGmMUykQbJv7A=
+	by mail.kernel.org (Postfix) with ESMTP id 07F3C2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGJFZ3 (ORCPT
+        id S1726757AbgGJF2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgGJFWl (ORCPT
+        Fri, 10 Jul 2020 01:28:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48134 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726933AbgGJFWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:22:41 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B3CC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 22:22:41 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id d21so2486831lfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 22:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nxOx3elG9/c5GA8S+Etec1D6qLcN4yJxKYND0gsSGKA=;
-        b=D6crEs+HKaT9Uq4/qL9HJVUv8iB612zNzspsqrt/RJishuEnyOE/8Zv3gnDLMYL4rs
-         Q+0dTi5rDIzIg9WQ/zJMrN9fBwRwMuXqwAiyku1TJ5VfzG3LIrw+xPrEo4L2loRTUTTX
-         ACGnpK+uiVLnxcFrMT7F6sIL7X4KMEB33Yf1I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nxOx3elG9/c5GA8S+Etec1D6qLcN4yJxKYND0gsSGKA=;
-        b=tws591t4HnpGlHEb3sIByN0g2SqLPhRcX7rD4+s2dMLyabB7AUCp7GPdpp/hdou+Hg
-         +8OXWv6eT8wHTlGbxU4Y9BAkLIthy8SMwzzRU1dX0zwAohX8AJxZmYuO8/Rbhyt/RUhF
-         Tc9KWFLIaRQB5w5oR8bbuOpWLWS5tzdQjQ5jKH75YH0DEfpQZ70uBjpxT0YJzak5NE4k
-         vZb8fAf8cTdLan1QDhSKDikY5LIq5BVVDXjvq/HLnmmnCXWL6zDPD4iuNdTcR5FNas2I
-         pqolSkC/CwACOFsYEXtB+lLJNhZkgN0fhzOn8NIZbfF6fVGCAzb1+e9DI2CJKvw+hcgk
-         Bj6Q==
-X-Gm-Message-State: AOAM533+rJ0G7JBcOVtlUypzF6jzzGBxRLpkcXodBjS5ekPTzpMWcEB3
-        QA5A3YDvGgX+TpSv3K1bRPloUX0qBKo=
-X-Google-Smtp-Source: ABdhPJyLbaxp5pvkNOamdfpUKj2aJtETq0mf3rvZ5qttYHL2D5+38A6ctXbx+zTp/ZGXQ0LrEkvqaA==
-X-Received: by 2002:a19:ccc5:: with SMTP id c188mr42285100lfg.163.1594358559664;
-        Thu, 09 Jul 2020 22:22:39 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id z84sm2516600lfa.54.2020.07.09.22.22.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 22:22:38 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id u25so2497014lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 22:22:38 -0700 (PDT)
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr42576925lfn.30.1594358557529;
- Thu, 09 Jul 2020 22:22:37 -0700 (PDT)
+        Fri, 10 Jul 2020 01:22:52 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A51dKX019342;
+        Fri, 10 Jul 2020 01:22:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 326bpb09jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 01:22:15 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06A51glN019703;
+        Fri, 10 Jul 2020 01:22:15 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 326bpb09ja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 01:22:14 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06A5FAnB016688;
+        Fri, 10 Jul 2020 05:22:13 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 326bcj84x0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 05:22:12 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06A5MATY65601896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 05:22:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F179FA405B;
+        Fri, 10 Jul 2020 05:22:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A5B0A4054;
+        Fri, 10 Jul 2020 05:22:08 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.105.207])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 Jul 2020 05:22:07 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mikey@neuling.org, ravi.bangoria@linux.ibm.com,
+        ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        psampat@linux.ibm.com, pratik.r.sampat@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Power10 basic energy management
+Date:   Fri, 10 Jul 2020 10:52:04 +0530
+Message-Id: <20200710052207.12003-1-psampat@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com> <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
-In-Reply-To: <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jul 2020 22:22:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
-Message-ID: <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000777e4805aa0f87f7"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_01:2020-07-09,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=661 phishscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007100029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000777e4805aa0f87f7
-Content-Type: text/plain; charset="UTF-8"
+Changelog v1 --> v2:
+1. Save-restore DAWR and DAWRX unconditionally as they are lost in
+shallow idle states too
+2. Rename pnv_first_spr_loss_level to pnv_first_fullstate_loss_level to
+correct naming terminology
 
-On Thu, Jul 9, 2020 at 9:29 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Your patch applied and re-tested.
-> warning triggered 10 times.
->
-> old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
+Pratik Rajesh Sampat (3):
+  powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on P9 and above
+  powerpc/powernv/idle: save-restore DAWR0,DAWRX0 for P10
+  powerpc/powernv/idle: Rename pnv_first_spr_loss_level variable
 
-Hmm.. It's not even the overlapping case, it's literally just "move
-exactly 2MB of page tables exactly one pmd down". Which should be the
-nice efficient case where we can do it without modifying the lower
-page tables at all, we just move the PMD entry.
+ arch/powerpc/platforms/powernv/idle.c | 34 +++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-There shouldn't be anything in the new address space from bfa00000-bfdfffff.
+-- 
+2.25.4
 
-That PMD value obviously says differently, but it looks like a nice
-normal PMD value, nothing bad there.
-
-I'm starting to think that the issue might be that this is because the
-stack segment is special. Not only does it have the growsdown flag,
-but that whole thing has the magic guard page logic.
-
-So I wonder if we have installed a guard page _just_ below the old
-stack, so that we have populated that pmd because of that.
-
-We used to have an _actual_ guard page and then play nasty games with
-vm_start logic. We've gotten rid of that, though, and now we have that
-"stack_guard_gap" logic that _should_ mean that vm_start is always
-exact and proper (and that pgtbales_free() should have emptied it, but
-maybe we have some case we forgot about.
-
-> [  741.511684] WARNING: CPU: 1 PID: 15173 at mm/mremap.c:211 move_page_tables.cold+0x0/0x2b
-> [  741.598159] Call Trace:
-> [  741.600694]  setup_arg_pages+0x22b/0x310
-> [  741.621687]  load_elf_binary+0x31e/0x10f0
-> [  741.633839]  __do_execve_file+0x5a8/0xbf0
-> [  741.637893]  __ia32_sys_execve+0x2a/0x40
-> [  741.641875]  do_syscall_32_irqs_on+0x3d/0x2c0
-> [  741.657660]  do_fast_syscall_32+0x60/0xf0
-> [  741.661691]  do_SYSENTER_32+0x15/0x20
-> [  741.665373]  entry_SYSENTER_32+0x9f/0xf2
-> [  741.734151]  old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
-
-Nothing looks bad, and the ELF loading phase memory map should be
-really quite simple.
-
-The only half-way unusual thing is that you have basically exactly 2MB
-of stack at execve time (easy enough to tune by just setting argv/env
-right), and it's moved down by exactly 2MB.
-
-And that latter thing is just due to randomization, see
-arch_align_stack() in arch/x86/kernel/process.c.
-
-So that would explain why it doesn't happen every time.
-
-What happens if you apply the attached patch to *always* force the 2MB
-shift (rather than moving the stack by a random amount), and then run
-the other program (t.c -> compiled to "a.out").
-
-The comment should be obvious. But it's untested, I might have gotten
-the math wrong. I don't run in a 32-bit environment.
-
-                Linus
-
---000000000000777e4805aa0f87f7
-Content-Type: application/octet-stream; name=patch
-Content-Disposition: attachment; filename=patch
-Content-Transfer-Encoding: base64
-Content-ID: <f_kcfrw33u0>
-X-Attachment-Id: f_kcfrw33u0
-
-IGFyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmMgfCAzICstLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9w
-cm9jZXNzLmMgYi9hcmNoL3g4Ni9rZXJuZWwvcHJvY2Vzcy5jCmluZGV4IGYzNjJjZTBkNWFjMC4u
-OWIwMjdlYzYzMWExIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvcHJvY2Vzcy5jCisrKyBi
-L2FyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmMKQEAgLTkxMSw4ICs5MTEsNyBAQCBlYXJseV9wYXJh
-bSgiaWRsZSIsIGlkbGVfc2V0dXApOwogCiB1bnNpZ25lZCBsb25nIGFyY2hfYWxpZ25fc3RhY2so
-dW5zaWduZWQgbG9uZyBzcCkKIHsKLQlpZiAoIShjdXJyZW50LT5wZXJzb25hbGl0eSAmIEFERFJf
-Tk9fUkFORE9NSVpFKSAmJiByYW5kb21pemVfdmFfc3BhY2UpCi0JCXNwIC09IGdldF9yYW5kb21f
-aW50KCkgJSA4MTkyOworCXNwIC09IDIqMTAyNCoxMDI0OwogCXJldHVybiBzcCAmIH4weGY7CiB9
-CiAK
---000000000000777e4805aa0f87f7
-Content-Type: text/x-csrc; charset="US-ASCII"; name="t.c"
-Content-Disposition: attachment; filename="t.c"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kcfrw6vm1>
-X-Attachment-Id: f_kcfrw6vm1
-
-I2RlZmluZSBfR05VX1NPVVJDRQojaW5jbHVkZSA8dW5pc3RkLmg+CgpzdGF0aWMgY2hhciBvbmVf
-a2JbMTAyNF0gPSB7CglbMCAuLi4gMTAyMl0gPSAnYScsCgkwCn07CgovKgogKiBFYWNoIHN0cmlu
-ZyBpcyAxa0IsIHNvIHdlIHdvdWxkIG5lZWQgMjA0OCBzdHJpbmdzIHRvIGZpbGwgYSAyTUIgc3Rh
-Y2suCiAqCiAqIEJ1dCB3ZSBoYXZlIHRoZSBzdHJpbmcgcG9pbnRlcnMgdGhlbXNlbHZlczogNCBi
-eXRlcyBwZXIgc3RyaW5nLCBzbwogKiB0aGF0IHdvdWxkIGJlIGFuIGFkZGl0aW9uYWwgOGtCIG9u
-IHRvcCBvZiB0aGUgMk1CIG9mIHN0cmluZ3MuIFBsdXMKICogd2UgaGF2ZSB0aGUgdHdvIE5VTEwg
-dGVybWluYXRvcnMgKDggYnl0ZXMpIGZvciBhcmd2L2VudnAuCiAqCiAqIEFuZCB0aGVuIHdlIGhh
-dmUgdGhlIEVMRiBBVVggZmllbGRzLCB3aGljaCBpcyBhIGZldyBodW5kcmVkIGJ5dGVzIHRvby4K
-ICoKICogQW5kIHRoZW4gd2UgbmVlZCB0aGUgY2FsbCBzdGFjayBmcmFtZSBldGMsIGFuZCBvbmx5
-IG5lZWQgdG8gY29tZSB3aXRoaW4KICogNGtCIG9mIHRoZSAyTUIgc3RhY2sgdGFyZ2V0LgogKgog
-KiBTbyBpbnN0ZWFkIG9mIHVzaW5nIDIwNDggc3RyaW5ncyB0byBmaWxsIHVwIDJNQiBleGFjdGx5
-LCB3ZSB3YW50IHRvIGZpbGwgdXAKICogYmFzaWNhbGx5IDJNQi0xMmtCLCBhbmQgbGV0IHRoZSBB
-VVggaW5mbyBldGMgZ28gaW50byB0aGUgbGFzdCBwYWdlLgogKgogKiBTbyAyMDM2IDFrQiBzdHJp
-bmdzLCBwbHVzIG5vaXNlLgogKi8KCnN0YXRpYyBjaGFyICphcmd2W10gPSB7CglbMF0gPSAiL2Jp
-bi9lY2hvIiwKCVsxIC4uLiAyMDM2XSA9IG9uZV9rYiwKCU5VTEwKfTsKCnN0YXRpYyBjaGFyICpl
-bnZwW10gPSB7CglOVUxMCn07CgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmVudnApCnsKCS8q
-CgkgKiBEb24ndCBkbyB0aGlzIHJlY3Vyc2l2ZWx5LCBhbmQgc2xlZXAgc28gcGVvcGxlIGNhbiBs
-b29rIGF0IC9wcm9jLzxwaWQ+L21hcHMKCSAqLwoJaWYgKGFyZ2MgPiAxMDAwKSB7CgkJc2xlZXAo
-MTAwKTsKCQlyZXR1cm4gMDsKCX0KCXJldHVybiBleGVjdnBlKCIuL2Eub3V0IiwgYXJndiwgZW52
-cCk7Cn0K
---000000000000777e4805aa0f87f7--
