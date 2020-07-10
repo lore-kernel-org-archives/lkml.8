@@ -2,78 +2,110 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C859C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6018E20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BEC2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594381649;
+	bh=aUbwxnhzldFAyuc22ri8g/HTDk1iwKiwpZ+hqPfkEHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uooziv2dBWl8ngJJTnq+M6wsrQMrOdwFfL2KX2FiAwsZjYJTz4R3RliFaNnwO9RzH
+	 vlgus8yq4JFNqJok0NpmfnNUNMDLF/kMSk42OuZo5edfhV99qsC7LFkvP2I81SITCQ
+	 cnkJhmiJWkqa8Ye6gpoPZf2+EXUWywaPelwOY/+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgGJLqY (ORCPT
+        id S1727971AbgGJLr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:46:24 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19721 "EHLO mga09.intel.com"
+        Fri, 10 Jul 2020 07:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgGJLqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:46:23 -0400
-IronPort-SDR: FSIaHJk/SSQs14a67gHdGc5VCA1suTwuA0jmcYv3QNz0t5xgSXLoU1dlBcIgjayGlTO9mkXkl2
- 1J+mebwCxMHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149652834"
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="149652834"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 04:46:23 -0700
-IronPort-SDR: 3kkvFIOEyUAJ/q83noeOkqKBJYC2Nk8LtP/UQ/ZtIRuC3T+zYZv9xMeRI7hETnswjFAJaeOqMQ
- 69/iJ2uH4m6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="358814673"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 10 Jul 2020 04:46:21 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtrTy-0012uw-Uv; Fri, 10 Jul 2020 14:46:22 +0300
-Date:   Fri, 10 Jul 2020 14:46:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v1] regmap: Switch to use fwnode instead of OF one
-Message-ID: <20200710114622.GJ3703480@smile.fi.intel.com>
-References: <20200708161232.17914-1-andriy.shevchenko@linux.intel.com>
- <20200708162117.GV4655@sirena.org.uk>
- <20200710100558.GI3703480@smile.fi.intel.com>
- <20200710110132.GA5653@sirena.org.uk>
+        id S1727822AbgGJLrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:47:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6754220748;
+        Fri, 10 Jul 2020 11:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594381645;
+        bh=aUbwxnhzldFAyuc22ri8g/HTDk1iwKiwpZ+hqPfkEHs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VibZTirQJPPjJ3rrQpdxKJ4MYdLx87y9kuzMC9NGruczENB+5AOjZpIgjhY3PS+/R
+         Ag6paHYL9nM46UmUV26gCErmpI70+/pMalhu6hVRd0P+yrLK7U5BrpqRXxVzvjOdUD
+         MVc0jTZFSJEK60uBjeFWGCrnv6HC77WEcYE0hg64=
+Date:   Fri, 10 Jul 2020 13:47:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     driverdevel <devel@driverdev.osuosl.org>, nd <nd@arm.com>,
+        Todd Kjos <tkjos@android.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Anders Pedersen <anders.pedersen@arm.com>,
+        Laura Abbott <laura@labbott.name>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        =?iso-8859-1?Q?=D8rjan?= Eide <orjan.eide@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Martijn Coenen <maco@android.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
+Message-ID: <20200710114730.GA1349359@kroah.com>
+References: <20200414134629.54567-1-orjan.eide@arm.com>
+ <20200414141849.55654-1-orjan.eide@arm.com>
+ <20200414142810.GA958163@kroah.com>
+ <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
+ <20200416102508.GA820251@kroah.com>
+ <20200420082207.ui7iyg7dsnred2vv@wittgenstein>
+ <CALAqxLW-txNEqW=P_9VTxvOVu_fgpjzHHDbR5BhtpYwhg1SXgw@mail.gmail.com>
+ <20200421080544.GA611314@kroah.com>
+ <20200703070403.GB2221524@kroah.com>
+ <CALAqxLUHT=CGNxffz+3G-bUNc2FM_TawDrymFN+S=ZiPcM9pkg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710110132.GA5653@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CALAqxLUHT=CGNxffz+3G-bUNc2FM_TawDrymFN+S=ZiPcM9pkg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:01:32PM +0100, Mark Brown wrote:
-> On Fri, Jul 10, 2020 at 01:05:58PM +0300, Andy Shevchenko wrote:
+On Tue, Jul 07, 2020 at 08:43:30PM -0700, John Stultz wrote:
+> On Fri, Jul 3, 2020 at 12:03 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Tue, Apr 21, 2020 at 10:05:44AM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Apr 20, 2020 at 01:03:39PM -0700, John Stultz wrote:
+> > > > The dmabuf heaps have been in an official kernel now for all of three
+> > > > weeks. So yea, we can "delete [ION] and see who even notices", but I
+> > > > worry that may seem a bit like contempt for the folks doing the work
+> > > > on transitioning over, which doesn't help getting them to participate
+> > > > within the community.
+> > >
+> > > But they aren't participating in the community today as no one is
+> > > touching the ion code.  So I fail to see how keeping a dead-end-version
+> > > of ion in the kernel tree really affects anyone these days.
+> >
+> > So, any thoughts here?  What's the timeline for ion being able to be
+> > removed that you are comfortable with?
 > 
-> > Hmm... Can you point out to where is it? I have rebased my branches on top of
-> > Linux Next daily and my patch still valid.
-> 
-> It's in the regmap tree, -next only gets built once per day so you might
-> not see something in there for two days.
+> Sorry for the slow reply.  So my earlier plan was to drop it after the next LTS?
 
-You mean it's being synchronised with git.kernel.org, but not yet contains that
-patch? Okay, I will monitor the regmap tree (as of now I didn't see any update).
+Ok, fair enough, we can wait until January.
 
--- 
-With Best Regards,
-Andy Shevchenko
+thanks,
 
-
+greg k-h
