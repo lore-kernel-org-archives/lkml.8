@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E3D20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29E12072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGJDQt (ORCPT
+        id S1727085AbgGJDQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:16:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:44142 "EHLO foss.arm.com"
+        Thu, 9 Jul 2020 23:16:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:44194 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgGJDQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:16:48 -0400
+        id S1726495AbgGJDQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:16:58 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7E54D6E;
-        Thu,  9 Jul 2020 20:16:47 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C604D113E;
+        Thu,  9 Jul 2020 20:16:57 -0700 (PDT)
 Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 73EF73F9AB;
-        Thu,  9 Jul 2020 20:16:38 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 43D383F9AB;
+        Thu,  9 Jul 2020 20:16:48 -0700 (PDT)
 From:   Jia He <justin.he@arm.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
@@ -52,10 +52,11 @@ Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
-Subject: [PATCH 1/2] mm/memory_hotplug: introduce default dummy memory_add_physaddr_to_nid()
-Date:   Fri, 10 Jul 2020 11:16:18 +0800
-Message-Id: <20200710031619.18762-2-justin.he@arm.com>
+        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 2/2] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
+Date:   Fri, 10 Jul 2020 11:16:19 +0800
+Message-Id: <20200710031619.18762-3-justin.he@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200710031619.18762-1-justin.he@arm.com>
 References: <20200710031619.18762-1-justin.he@arm.com>
@@ -64,105 +65,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is to introduce a general dummy helper. memory_add_physaddr_to_nid()
-is a fallback option to get the nid in case NUMA_NO_NID is detected.
+When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
+online at that time), mem_hotplug_begin/done is unpaired in such case.
 
-After this patch, arm64/sh/s390 can simply use the general dummy version.
-PowerPC/x86/ia64 will still use their specific version.
+Therefore a warning:
+ Call Trace:
+  percpu_up_write+0x33/0x40
+  try_remove_memory+0x66/0x120
+  ? _cond_resched+0x19/0x30
+  remove_memory+0x2b/0x40
+  dev_dax_kmem_remove+0x36/0x72 [kmem]
+  device_release_driver_internal+0xf0/0x1c0
+  device_release_driver+0x12/0x20
+  bus_remove_device+0xe1/0x150
+  device_del+0x17b/0x3e0
+  unregister_dev_dax+0x29/0x60
+  devm_action_release+0x15/0x20
+  release_nodes+0x19a/0x1e0
+  devres_release_all+0x3f/0x50
+  device_release_driver_internal+0x100/0x1c0
+  driver_detach+0x4c/0x8f
+  bus_remove_driver+0x5c/0xd0
+  driver_unregister+0x31/0x50
+  dax_pmem_exit+0x10/0xfe0 [dax_pmem]
 
-This is the preparation to set a fallback value for dev_dax->target_node.
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
+Cc: stable@vger.kernel.org # v5.6+
 Signed-off-by: Jia He <justin.he@arm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 ---
- arch/arm64/mm/numa.c | 10 ----------
- arch/ia64/mm/numa.c  |  2 --
- arch/sh/mm/init.c    |  9 ---------
- arch/x86/mm/numa.c   |  1 -
- mm/memory_hotplug.c  | 10 ++++++++++
- 5 files changed, 10 insertions(+), 22 deletions(-)
+ mm/memory_hotplug.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index aafcee3e3f7e..73f8b49d485c 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -461,13 +461,3 @@ void __init arm64_numa_init(void)
- 
- 	numa_init(dummy_numa_init);
- }
--
--/*
-- * We hope that we will be hotplugging memory on nodes we already know about,
-- * such that acpi_get_node() succeeds and we never fall back to this...
-- */
--int memory_add_physaddr_to_nid(u64 addr)
--{
--	pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
--	return 0;
--}
-diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
-index 5e1015eb6d0d..f34964271101 100644
---- a/arch/ia64/mm/numa.c
-+++ b/arch/ia64/mm/numa.c
-@@ -106,7 +106,5 @@ int memory_add_physaddr_to_nid(u64 addr)
- 		return 0;
- 	return nid;
- }
--
--EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
- #endif
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index a70ba0fdd0b3..f75932ba87a6 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -430,15 +430,6 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	return ret;
- }
- 
--#ifdef CONFIG_NUMA
--int memory_add_physaddr_to_nid(u64 addr)
--{
--	/* Node 0 for now.. */
--	return 0;
--}
--EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
--#endif
--
- void arch_remove_memory(int nid, u64 start, u64 size,
- 			struct vmem_altmap *altmap)
- {
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 8ee952038c80..2a6e62af4636 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -929,5 +929,4 @@ int memory_add_physaddr_to_nid(u64 start)
- 		nid = numa_meminfo.blk[0].nid;
- 	return nid;
- }
--EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index da374cd3d45b..b49ab743d914 100644
+index b49ab743d914..3e0645387daf 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -350,6 +350,16 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
- 	return err;
+@@ -1752,7 +1752,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 	 */
+ 	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
+ 	if (rc)
+-		goto done;
++		return rc;
+ 
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+@@ -1776,9 +1776,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 
+ 	try_offline_node(nid);
+ 
+-done:
+ 	mem_hotplug_done();
+-	return rc;
++	return 0;
  }
  
-+#ifdef CONFIG_NUMA
-+int __weak memory_add_physaddr_to_nid(u64 start)
-+{
-+	pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
-+			start);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
-+#endif
-+
- /* find the smallest valid pfn in the range [start_pfn, end_pfn) */
- static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
- 				     unsigned long start_pfn,
+ /**
 -- 
 2.17.1
 
