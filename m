@@ -2,64 +2,123 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F35C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A12C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B750F206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D58B206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgGJJov (ORCPT
+        id S1727837AbgGJJpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:44:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35990 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgGJJov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:44:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 24BD5AC7A;
-        Fri, 10 Jul 2020 09:44:50 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
-Subject: [PATCH] MAINTAIERS: Add John Ogness as printk reviewer
-Date:   Fri, 10 Jul 2020 11:44:32 +0200
-Message-Id: <20200710094432.19655-1-pmladek@suse.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 10 Jul 2020 05:45:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49924 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgGJJpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 05:45:14 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C83A8803202B;
+        Fri, 10 Jul 2020 09:45:11 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id H6tr9SV-mKxq; Fri, 10 Jul 2020 12:45:11 +0300 (MSK)
+Date:   Fri, 10 Jul 2020 12:45:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
+Message-ID: <20200710094510.j6ugxygkadxex53c@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
+ <20200710085123.GF3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200710085123.GF3703480@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John Ogness has started major rework of the printk code. Add him
-as reviewer so that he is aware of all other coming changes and
-could influence their integration.
+On Fri, Jul 10, 2020 at 11:51:23AM +0300, Andy Shevchenko wrote:
+> On Fri, Jul 10, 2020 at 01:45:47AM +0300, Serge Semin wrote:
+> > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+> > have non-uniform DMA capabilities per device channels, let's add
+> > the DW DMA specific device_caps callback to expose that specifics up to
+> > the DMA consumer. It's a dummy function for now. We'll fill it in with
+> > capabilities overrides in the next commits.
+> 
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Just a reminder (mainly to Vinod) of my view to this.
+> Unneeded churn, should be folded to patch 9.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..8e82d9db2a21 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13770,6 +13770,7 @@ PRINTK
- M:	Petr Mladek <pmladek@suse.com>
- M:	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
- R:	Steven Rostedt <rostedt@goodmis.org>
-+R:	John Ogness <john.ogness@linutronix.de>
- S:	Maintained
- F:	include/linux/printk.h
- F:	kernel/printk/
--- 
-2.26.2
+Just to remind (mainly to Vinod). That's Andy's bikeshedding.
+This isn't a churn, since it's totally normal to design the patchset in this way:
+introduce a callback, then fill it in with functionality.
 
+-Sergey
+
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the discussion with Vinud and
+> >   Andy in the framework of DW DMA burst and LLP capabilities.
+> > ---
+> >  drivers/dma/dw/core.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> > index fb95920c429e..ceded21537e2 100644
+> > --- a/drivers/dma/dw/core.c
+> > +++ b/drivers/dma/dw/core.c
+> > @@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+> >  	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+> >  }
+> >  
+> > +static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> > +{
+> > +
+> > +}
+> > +
+> >  int do_dma_probe(struct dw_dma_chip *chip)
+> >  {
+> >  	struct dw_dma *dw = chip->dw;
+> > @@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+> >  	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
+> >  	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
+> >  
+> > +	dw->dma.device_caps = dwc_caps;
+> >  	dw->dma.device_config = dwc_config;
+> >  	dw->dma.device_pause = dwc_pause;
+> >  	dw->dma.device_resume = dwc_resume;
+> > -- 
+> > 2.26.2
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
