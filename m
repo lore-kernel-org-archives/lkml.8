@@ -2,191 +2,110 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084E4C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3547AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4727206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bKZKGxxT"
+	by mail.kernel.org (Postfix) with ESMTP id 101CD206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594398247;
+	bh=qOOeXw1edgl/NWaYTl4Y7QMI6SA0CXe/YOZVmUFL0xU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IJLp3e2yQ5grZmooLR/Pd2GZqmyPhC/9gyBZZxAYgp4qejbRgxWHfSA/1JxCV6Zry
+	 sKQr6sFiv7TDQ4aFmGQB9/flBO6xpPO0OP4oWhNtwmC66QMXU4htCvzp48oAu/YxLN
+	 5+1uvbzMiUHJ4QZaDVBNcIgRvVKe0kKd5xcJERy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgGJQYO (ORCPT
+        id S1728173AbgGJQYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:24:14 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4267 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727078AbgGJQYN (ORCPT
+        Fri, 10 Jul 2020 12:24:05 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38850 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJQYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:24:13 -0400
-X-UUID: a9537f6736c443e38ae549aef5a5598b-20200711
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=lz5bM/DGUrKvyb0iA7Fk88tu9GouKoqnG5Xv/sMmmGU=;
-        b=bKZKGxxTHuZ5Itt2f5K3eMHGM6WkSR5pf47Npq84cHCE7R5wHLEae9iVB85T8DfEuSMbqOoKoHqg+HkkIlU3EE3LcXoHiTZpkQ2IBeOLw+hk7H5P1oFMqq/3ER6BKVMcXbQB/My2yVHG8sxeVenXO+BK+9Iz4js+t5EyLFq28II=;
-X-UUID: a9537f6736c443e38ae549aef5a5598b-20200711
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 605348079; Sat, 11 Jul 2020 00:24:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 11 Jul 2020 00:24:02 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 11 Jul 2020 00:24:03 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH v8 1/4] rcu: kasan: record and print call_rcu() call stack
-Date:   Sat, 11 Jul 2020 00:24:01 +0800
-Message-ID: <20200710162401.23816-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 10 Jul 2020 12:24:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id l1so6641522ioh.5;
+        Fri, 10 Jul 2020 09:24:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qtcWcMeM3SiH3Wm5yxY34abrLuE5rPecmhQcVfTZvk0=;
+        b=e8ySMckPnPPzNn4KiC4TSBnjL3iiWH9qI0UfPujOAhWk1BP5PpgHZczicFOrlrKGqo
+         phTdQEWRjTndzSAAejDqg4GAr3bBtkEaLl+xMiuBZdyq1UEY/cvrYKi9vz5dlpnfe5pg
+         G3cwNYQ1/ObWIBYsGljk1bU8nHFtR2+x3bob6kFkho7jvCer2as23/lg+JMcBNgXZB6+
+         NIo+BA+RMSFCtxZqQp9nE+HMsbydFDx7hLtlbZuySmhrALDephC2jCMRIMZf62PeZdXT
+         ikx2qXgcc4+j7HioXctAQptjzkf0XxK36PbnVOEolcnEkQoJJ2e4NaLaHM1G21kD9Mbu
+         LGhw==
+X-Gm-Message-State: AOAM533/8RpaNSPmlEge5SL7EPSQ6iWU8oD0vd+ADI26H89Bcn09alEs
+        sfwSz7ENvcgl8ahI8/DMKw==
+X-Google-Smtp-Source: ABdhPJxA38bjQ5v1CA4oSC4dgCQvGPFvwg+J+igA5QjNPtmzKtiqtnHpWudXiBOuqXT51iztx9Hlsg==
+X-Received: by 2002:a05:6602:2e05:: with SMTP id o5mr48578200iow.28.1594398243116;
+        Fri, 10 Jul 2020 09:24:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id h11sm3590660ilh.69.2020.07.10.09.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:24:02 -0700 (PDT)
+Received: (nullmailer pid 2744770 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:24:01 -0000
+Date:   Fri, 10 Jul 2020 10:24:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/6] dt-bindings: thermal: tsens: document ipq8064
+ bindings
+Message-ID: <20200710162401.GA2743639@bogus>
+References: <20200709215136.28044-1-ansuelsmth@gmail.com>
+ <20200709215136.28044-4-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6E9BA3A2DA6E0C0B9514B97C67FF9D9D1AA47C1C91B5E3D4CA23464A593A44492000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709215136.28044-4-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBmZWF0dXJlIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3Rh
-Y2tzIGFuZA0KcHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiBy
-ZXBvcnQuDQoNCldoZW4gY2FsbF9yY3UoKSBpcyBjYWxsZWQsIHdlIHN0b3JlIHRoZSBjYWxsX3Jj
-dSgpIGNhbGwgc3RhY2sgaW50bw0Kc2x1YiBhbGxvYyBtZXRhLWRhdGEsIHNvIHRoYXQgdGhlIEtB
-U0FOIHJlcG9ydCBjYW4gcHJpbnQgcmN1IHN0YWNrLg0KDQpbMV1odHRwczovL2J1Z3ppbGxhLmtl
-cm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KWzJdaHR0cHM6Ly9ncm91cHMuZ29vZ2xl
-LmNvbS9mb3J1bS8jIXNlYXJjaGluL2thc2FuLWRldi9iZXR0ZXIkMjBzdGFjayQyMHRyYWNlcyQy
-MGZvciQyMHJjdSU3Q3NvcnQ6ZGF0ZS9rYXNhbi1kZXYvS1FzalRfODhoREUvN3JOVVpwclJCZ0FK
-DQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4N
-ClN1Z2dlc3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQWNrZWQt
-Ynk6IFBhdWwgRS4gTWNLZW5uZXkgPHBhdWxtY2tAa2VybmVsLm9yZz4NClJldmlld2VkLWFuZC10
-ZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NClJldmlld2VkLWJ5
-OiBBbmRyZXkgS29ub3ZhbG92IDxhbmRyZXlrbnZsQGdvb2dsZS5jb20+DQpDYzogQW5kcmV5IFJ5
-YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBBbGV4YW5kZXIgUG90YXBlbmtv
-IDxnbGlkZXJAZ29vZ2xlLmNvbT4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5k
-YXRpb24ub3JnPg0KQ2M6IEpvc2ggVHJpcGxldHQgPGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4NCkNj
-OiBNYXRoaWV1IERlc25veWVycyA8bWF0aGlldS5kZXNub3llcnNAZWZmaWNpb3MuY29tPg0KQ2M6
-IExhaSBKaWFuZ3NoYW4gPGppYW5nc2hhbmxhaUBnbWFpbC5jb20+DQpDYzogSm9lbCBGZXJuYW5k
-ZXMgPGpvZWxAam9lbGZlcm5hbmRlcy5vcmc+DQotLS0NCg0KQ2hhbmdlcyBzaW5jZSB2NzoNCi0g
-Zml4IHRoaXMgY29tbWl0IGRlcGVuZGVuY2UgaW4gdGhlIHNlcmllcw0KDQpDaGFuZ2VzIHNpbmNl
-IHY2Og0KLSBmaXggdHlwbw0KDQotLS0NCiBpbmNsdWRlL2xpbnV4L2thc2FuLmggfCAgMiArKw0K
-IGtlcm5lbC9yY3UvdHJlZS5jICAgICB8ICAyICsrDQogbW0va2FzYW4vY29tbW9uLmMgICAgIHwg
-IDQgKystLQ0KIG1tL2thc2FuL2dlbmVyaWMuYyAgICB8IDIxICsrKysrKysrKysrKysrKysrKysr
-Kw0KIG1tL2thc2FuL2thc2FuLmggICAgICB8ICA5ICsrKysrKysrKw0KIG1tL2thc2FuL3JlcG9y
-dC5jICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCiA2IGZpbGVzIGNoYW5n
-ZWQsIDU5IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9pbmNs
-dWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCmluZGV4IDMxMzE0Y2E3
-YzYzNS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9rYXNhbi5oDQor
-KysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCkBAIC0xNzQsMTEgKzE3NCwxMyBAQCBzdGF0aWMg
-aW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9zaXplKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNo
-ZSkgeyByZXR1cm4gMDsgfQ0KIA0KIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5rKHN0cnVjdCBrbWVt
-X2NhY2hlICpjYWNoZSk7DQogdm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihzdHJ1Y3Qga21lbV9j
-YWNoZSAqY2FjaGUpOw0KK3ZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2b2lkICpwdHIpOw0K
-IA0KICNlbHNlIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQogc3RhdGljIGlubGluZSB2
-b2lkIGthc2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpIHt9DQogc3Rh
-dGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpj
-YWNoZSkge30NCitzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2b2lk
-ICpwdHIpIHt9DQogDQogI2VuZGlmIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQpkaWZm
-IC0tZ2l0IGEva2VybmVsL3JjdS90cmVlLmMgYi9rZXJuZWwvcmN1L3RyZWUuYw0KaW5kZXggMDY1
-NDhlMmViYjcyLi4zNmE0ZmY3ZjMyMGIgMTAwNjQ0DQotLS0gYS9rZXJuZWwvcmN1L3RyZWUuYw0K
-KysrIGIva2VybmVsL3JjdS90cmVlLmMNCkBAIC01Nyw2ICs1Nyw3IEBADQogI2luY2x1ZGUgPGxp
-bnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvaXNvbGF0aW9uLmg+DQogI2luY2x1
-ZGUgPGxpbnV4L3NjaGVkL2Nsb2NrLmg+DQorI2luY2x1ZGUgPGxpbnV4L2thc2FuLmg+DQogI2lu
-Y2x1ZGUgIi4uL3RpbWUvdGljay1pbnRlcm5hbC5oIg0KIA0KICNpbmNsdWRlICJ0cmVlLmgiDQpA
-QCAtMjY2OCw2ICsyNjY5LDcgQEAgX19jYWxsX3JjdShzdHJ1Y3QgcmN1X2hlYWQgKmhlYWQsIHJj
-dV9jYWxsYmFja190IGZ1bmMpDQogCWhlYWQtPmZ1bmMgPSBmdW5jOw0KIAloZWFkLT5uZXh0ID0g
-TlVMTDsNCiAJbG9jYWxfaXJxX3NhdmUoZmxhZ3MpOw0KKwlrYXNhbl9yZWNvcmRfYXV4X3N0YWNr
-KGhlYWQpOw0KIAlyZHAgPSB0aGlzX2NwdV9wdHIoJnJjdV9kYXRhKTsNCiANCiAJLyogQWRkIHRo
-ZSBjYWxsYmFjayB0byBvdXIgbGlzdC4gKi8NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24u
-YyBiL21tL2thc2FuL2NvbW1vbi5jDQppbmRleCAyOTA2MzU4ZTQyZjAuLjhiYzYxODI4OWJiMSAx
-MDA2NDQNCi0tLSBhL21tL2thc2FuL2NvbW1vbi5jDQorKysgYi9tbS9rYXNhbi9jb21tb24uYw0K
-QEAgLTQxLDcgKzQxLDcgQEANCiAjaW5jbHVkZSAia2FzYW4uaCINCiAjaW5jbHVkZSAiLi4vc2xh
-Yi5oIg0KIA0KLXN0YXRpYyBpbmxpbmUgZGVwb3Rfc3RhY2tfaGFuZGxlX3Qgc2F2ZV9zdGFjayhn
-ZnBfdCBmbGFncykNCitkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90
-IGZsYWdzKQ0KIHsNCiAJdW5zaWduZWQgbG9uZyBlbnRyaWVzW0tBU0FOX1NUQUNLX0RFUFRIXTsN
-CiAJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQpAQCAtNTQsNyArNTQsNyBAQCBzdGF0aWMgaW5s
-aW5lIGRlcG90X3N0YWNrX2hhbmRsZV90IHNhdmVfc3RhY2soZ2ZwX3QgZmxhZ3MpDQogc3RhdGlj
-IGlubGluZSB2b2lkIHNldF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBm
-bGFncykNCiB7DQogCXRyYWNrLT5waWQgPSBjdXJyZW50LT5waWQ7DQotCXRyYWNrLT5zdGFjayA9
-IHNhdmVfc3RhY2soZmxhZ3MpOw0KKwl0cmFjay0+c3RhY2sgPSBrYXNhbl9zYXZlX3N0YWNrKGZs
-YWdzKTsNCiB9DQogDQogdm9pZCBrYXNhbl9lbmFibGVfY3VycmVudCh2b2lkKQ0KZGlmZiAtLWdp
-dCBhL21tL2thc2FuL2dlbmVyaWMuYyBiL21tL2thc2FuL2dlbmVyaWMuYw0KaW5kZXggNTZmZjg4
-ODVmZTJlLi44YWNmNDg4ODJiYTIgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9nZW5lcmljLmMNCisr
-KyBiL21tL2thc2FuL2dlbmVyaWMuYw0KQEAgLTMyNSwzICszMjUsMjQgQEAgREVGSU5FX0FTQU5f
-U0VUX1NIQURPVyhmMik7DQogREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmMyk7DQogREVGSU5FX0FT
-QU5fU0VUX1NIQURPVyhmNSk7DQogREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmOCk7DQorDQordm9p
-ZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKmFkZHIpDQorew0KKwlzdHJ1Y3QgcGFnZSAq
-cGFnZSA9IGthc2FuX2FkZHJfdG9fcGFnZShhZGRyKTsNCisJc3RydWN0IGttZW1fY2FjaGUgKmNh
-Y2hlOw0KKwlzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSAqYWxsb2NfaW5mbzsNCisJdm9pZCAqb2Jq
-ZWN0Ow0KKw0KKwlpZiAoIShwYWdlICYmIFBhZ2VTbGFiKHBhZ2UpKSkNCisJCXJldHVybjsNCisN
-CisJY2FjaGUgPSBwYWdlLT5zbGFiX2NhY2hlOw0KKwlvYmplY3QgPSBuZWFyZXN0X29iaihjYWNo
-ZSwgcGFnZSwgYWRkcik7DQorCWFsbG9jX2luZm8gPSBnZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2Jq
-ZWN0KTsNCisNCisJLyoNCisJICogcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwg
-c3RhY2tzLg0KKwkgKi8NCisJYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdID0gYWxsb2NfaW5mby0+
-YXV4X3N0YWNrWzBdOw0KKwlhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0
-YWNrKEdGUF9OT1dBSVQpOw0KK30NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0v
-a2FzYW4va2FzYW4uaA0KaW5kZXggZThmMzcxOTlkODg1Li5iMWE4OGM3NTQxNmEgMTAwNjQ0DQot
-LS0gYS9tbS9rYXNhbi9rYXNhbi5oDQorKysgYi9tbS9rYXNhbi9rYXNhbi5oDQpAQCAtMTA0LDYg
-KzEwNCwxMyBAQCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KIA0KIHN0cnVjdCBrYXNhbl9hbGxvY19t
-ZXRhIHsNCiAJc3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3RyYWNrOw0KKyNpZmRlZiBDT05GSUdf
-S0FTQU5fR0VORVJJQw0KKwkvKg0KKwkgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgaXMgc3RvcmVk
-IGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEuDQorCSAqIFRoZSBmcmVlIHN0YWNrIGlzIHN0
-b3JlZCBpbnRvIHN0cnVjdCBrYXNhbl9mcmVlX21ldGEuDQorCSAqLw0KKwlkZXBvdF9zdGFja19o
-YW5kbGVfdCBhdXhfc3RhY2tbMl07DQorI2VuZGlmDQogCXN0cnVjdCBrYXNhbl90cmFjayBmcmVl
-X3RyYWNrW0tBU0FOX05SX0ZSRUVfU1RBQ0tTXTsNCiAjaWZkZWYgQ09ORklHX0tBU0FOX1NXX1RB
-R1NfSURFTlRJRlkNCiAJdTggZnJlZV9wb2ludGVyX3RhZ1tLQVNBTl9OUl9GUkVFX1NUQUNLU107
-DQpAQCAtMTU5LDYgKzE2Niw4IEBAIHZvaWQga2FzYW5fcmVwb3J0X2ludmFsaWRfZnJlZSh2b2lk
-ICpvYmplY3QsIHVuc2lnbmVkIGxvbmcgaXApOw0KIA0KIHN0cnVjdCBwYWdlICprYXNhbl9hZGRy
-X3RvX3BhZ2UoY29uc3Qgdm9pZCAqYWRkcik7DQogDQorZGVwb3Rfc3RhY2tfaGFuZGxlX3Qga2Fz
-YW5fc2F2ZV9zdGFjayhnZnBfdCBmbGFncyk7DQorDQogI2lmIGRlZmluZWQoQ09ORklHX0tBU0FO
-X0dFTkVSSUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NMQUIpIHx8IGRlZmluZWQoQ09ORklH
-X1NMVUIpKQ0KIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0IGthc2FuX2ZyZWVfbWV0YSAqaW5m
-bywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9yZXBv
-cnQuYyBiL21tL2thc2FuL3JlcG9ydC5jDQppbmRleCA4MGYyM2M5ZGE2YjAuLjI0MjFhNGJkOTIy
-NyAxMDA2NDQNCi0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQorKysgYi9tbS9rYXNhbi9yZXBvcnQu
-Yw0KQEAgLTEwNSwxNSArMTA1LDIwIEBAIHN0YXRpYyB2b2lkIGVuZF9yZXBvcnQodW5zaWduZWQg
-bG9uZyAqZmxhZ3MpDQogCWthc2FuX2VuYWJsZV9jdXJyZW50KCk7DQogfQ0KIA0KK3N0YXRpYyB2
-b2lkIHByaW50X3N0YWNrKGRlcG90X3N0YWNrX2hhbmRsZV90IHN0YWNrKQ0KK3sNCisJdW5zaWdu
-ZWQgbG9uZyAqZW50cmllczsNCisJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQorDQorCW5yX2Vu
-dHJpZXMgPSBzdGFja19kZXBvdF9mZXRjaChzdGFjaywgJmVudHJpZXMpOw0KKwlzdGFja190cmFj
-ZV9wcmludChlbnRyaWVzLCBucl9lbnRyaWVzLCAwKTsNCit9DQorDQogc3RhdGljIHZvaWQgcHJp
-bnRfdHJhY2soc3RydWN0IGthc2FuX3RyYWNrICp0cmFjaywgY29uc3QgY2hhciAqcHJlZml4KQ0K
-IHsNCiAJcHJfZXJyKCIlcyBieSB0YXNrICV1OlxuIiwgcHJlZml4LCB0cmFjay0+cGlkKTsNCiAJ
-aWYgKHRyYWNrLT5zdGFjaykgew0KLQkJdW5zaWduZWQgbG9uZyAqZW50cmllczsNCi0JCXVuc2ln
-bmVkIGludCBucl9lbnRyaWVzOw0KLQ0KLQkJbnJfZW50cmllcyA9IHN0YWNrX2RlcG90X2ZldGNo
-KHRyYWNrLT5zdGFjaywgJmVudHJpZXMpOw0KLQkJc3RhY2tfdHJhY2VfcHJpbnQoZW50cmllcywg
-bnJfZW50cmllcywgMCk7DQorCQlwcmludF9zdGFjayh0cmFjay0+c3RhY2spOw0KIAl9IGVsc2Ug
-ew0KIAkJcHJfZXJyKCIoc3RhY2sgaXMgbm90IGF2YWlsYWJsZSlcbiIpOw0KIAl9DQpAQCAtMTky
-LDYgKzE5NywxOSBAQCBzdGF0aWMgdm9pZCBkZXNjcmliZV9vYmplY3Qoc3RydWN0IGttZW1fY2Fj
-aGUgKmNhY2hlLCB2b2lkICpvYmplY3QsDQogCQlmcmVlX3RyYWNrID0ga2FzYW5fZ2V0X2ZyZWVf
-dHJhY2soY2FjaGUsIG9iamVjdCwgdGFnKTsNCiAJCXByaW50X3RyYWNrKGZyZWVfdHJhY2ssICJG
-cmVlZCIpOw0KIAkJcHJfZXJyKCJcbiIpOw0KKw0KKyNpZmRlZiBDT05GSUdfS0FTQU5fR0VORVJJ
-Qw0KKwkJaWYgKGFsbG9jX2luZm8tPmF1eF9zdGFja1swXSkgew0KKwkJCXByX2VycigiTGFzdCBj
-YWxsX3JjdSgpOlxuIik7DQorCQkJcHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzBd
-KTsNCisJCQlwcl9lcnIoIlxuIik7DQorCQl9DQorCQlpZiAoYWxsb2NfaW5mby0+YXV4X3N0YWNr
-WzFdKSB7DQorCQkJcHJfZXJyKCJTZWNvbmQgdG8gbGFzdCBjYWxsX3JjdSgpOlxuIik7DQorCQkJ
-cHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdKTsNCisJCQlwcl9lcnIoIlxuIik7
-DQorCQl9DQorI2VuZGlmDQogCX0NCiANCiAJZGVzY3JpYmVfb2JqZWN0X2FkZHIoY2FjaGUsIG9i
-amVjdCwgYWRkcik7DQotLSANCjIuMTguMA0K
+On Thu, 09 Jul 2020 23:51:33 +0200, Ansuel Smith wrote:
+> Document the use of regmap phandle for ipq8064 SoCs
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/thermal/qcom-tsens.yaml          | 51 ++++++++++++++++---
+>  1 file changed, 44 insertions(+), 7 deletions(-)
+> 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/thermal/qcom-tsens.example.dts:21.38-31.11: Warning (unit_address_vs_reg): /example-0/thermal-sensor@900000: node has a unit name, but no reg or ranges property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: interrupts: [[0, 178, 4]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: '#qcom,sensors' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: 'interrupt-names' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: compatible: ['qcom,ipq8064-tsens'] is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: compatible: ['qcom,ipq8064-tsens'] is too short
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: compatible:0: 'qcom,ipq8064-tsens' is not one of ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: compatible:0: 'qcom,ipq8064-tsens' is not one of ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sc7180-tsens', 'qcom,sdm845-tsens']
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml: thermal-sensor@900000: nvmem-cell-names:1: 'calib_sel' was expected
+
+
+See https://patchwork.ozlabs.org/patch/1326228
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
