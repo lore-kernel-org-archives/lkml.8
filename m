@@ -2,165 +2,168 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5808520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B4820720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VJffGKFC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GETUc2u3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgGJCn4 (ORCPT
+        id S1726832AbgGJDAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 22:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48008 "EHLO
+        Thu, 9 Jul 2020 23:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJCnz (ORCPT
+        with ESMTP id S1726509AbgGJDAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 22:43:55 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259CDC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 19:43:55 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id c25so3168150otf.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 19:43:55 -0700 (PDT)
+        Thu, 9 Jul 2020 23:00:36 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 257B6C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:00:36 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id p1so1654945pls.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:00:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2dy4AVqCcP7kztGsFeA5Fvb3GAiUWtChvdkBa1QUZbw=;
-        b=VJffGKFCkiCfIhl//sN2TFR4d7nLOgxwKcao79heBIkTO6Ld6tufLnLyu/FoWWwYLP
-         IARF1L4e2re0mmDqsUzYo9R0GgCiNjOBnSeVCkjQgOdxfxpmxt5pg7Oi9bos4oxMR3wi
-         6xACx79JJkTqymJCNptZEVkRnBt7sRsUrErdSkBE2DLAv/rRMuJlZWWp+iF1aO3gC751
-         99d6CjUBXeORsfUbyEbLYv7/Biw7XQYW5iPEFpAckftmv48DZlzbp7GtVjdP6W07PbFY
-         mmOtmGIQgAiv6mxic1OoV1ezpp4EkpaKQeOGbfnSA9nUiOg2yHJXyEkp796PqHCKvIsV
-         fpsg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x2Q65EzY9A+4WJ3/3xgyKC2pLQLOauk7fOikDEnLLU4=;
+        b=GETUc2u39p7zUsL72Oq0XwZQlEW4m73isgdfB6vVv1Ss0Y1ukG1UVuZuCfEU2GjUjf
+         iDhzCNv+q8CYc3fum11i2xf1arEQIpeaxepR5LKM9HT2hqaeNWhYGHxXnm+wh/fODrhx
+         d9MpgNGBhu+C78hGnOu/oOn4aJ5j8YQywSglNskU5la3PTJg2E7DVpQcQ938EgjOIxGx
+         7z++Zzk3H/qgdsNdOJGgja44weWdUbethNcvkBhQnxDV9zKEwHq05O2Ovy0YPno0sJPH
+         ATYqPf+4jPueD+Z4NNE1FXoR4CCkfL5XWXkYj/FdWKIrC50uzI3a4z2+4wGDaBVZfdyI
+         Ttpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2dy4AVqCcP7kztGsFeA5Fvb3GAiUWtChvdkBa1QUZbw=;
-        b=GTAHipO5Frtb4Op/sddqJmB6SIdYmwqHyxUdZ5TWV9kyBBoB17Fcs7d4EV3dp//lli
-         J1b187yFZf8o5opnXno6ydMt3WyMjRI7y3k9OB1BOsSLsTNvnGl0yVgi83uZydPndxcc
-         f+zPlbGnHLSJCup8Yah6wQ3373gtjdMInwK/O/hEhI9h21yGSlH2gQhJlDn8I8TGaSKh
-         rqXzuA1veY8rFLqdn1LBRWJQro6DzppxSfmqXAIVoK/ZLPDGNrsc1btG5KhFPgLsqK8B
-         UF4drfCNYQmP02ju54SoGhCQQKxfxI1/bUYQbyJlONmNz8eSVgjtfU5vd6s4sQBZZHbS
-         2gRg==
-X-Gm-Message-State: AOAM531H52HMke4MsNZ+u/dxcUyfgaDxi0uPoTd+TnvNnGoDbCBNKily
-        NLKioJPNTKMGR5/MLJwv9Rfb9haUaUk0qr5LjV7EKw==
-X-Google-Smtp-Source: ABdhPJwZaTrq+TyA81izHDBuSWWhfbuw/hLqSKJNZWb3zwst8fKOn5vdHPuCZ1CGPPBJ+gbL7BlSNgImIn+EmGN7oZU=
-X-Received: by 2002:a9d:222:: with SMTP id 31mr34143429otb.127.1594349034129;
- Thu, 09 Jul 2020 19:43:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x2Q65EzY9A+4WJ3/3xgyKC2pLQLOauk7fOikDEnLLU4=;
+        b=Ep4N5tkr6aaYquSZKLWtNK2IZjpeZ4eCogeBR0dNaGnnLvVks42/QNbyA3ey3wW/6Y
+         DbqZCPxQeBSLbSSKAahS7jAYIrC27NSM2DIrTbF2O03tsRYhX8FTmLamNZLZhlWqaFLW
+         fVESGRnCNSsRC5Sso2p9V9cb3+HKSdgoQeIkeNMg702sZwYdDCQo4Nrj/RZ78PkikFlZ
+         tDmrIn+YwL8/tssFP7czuDMQb2yxwN1Y5E41FOCmij5H1e8+ppmmw7cJ5rhO09wKhYVK
+         AcoDUKvj5uWFlha0PppyaAhVXMsSbOv4igrsglDsZ/KxUElfQh2l95plsZPKbuHG/K4I
+         VInw==
+X-Gm-Message-State: AOAM530hLSJHI4/rF+aw7MP6dNYCUL6pucL1kBUGtSoGI8jVHPfhVPYy
+        nJ1PcCdOwD9QCYbYzDX+YnfCuujQQM8=
+X-Google-Smtp-Source: ABdhPJzJbs8HynvxExYfLaLpk6jM+CJiUTM1pLP8kT49ZfV7ziWx8HZYwK+knJKvvfM5wbheEJB6SA==
+X-Received: by 2002:a17:902:aa0c:: with SMTP id be12mr58339011plb.45.1594350035374;
+        Thu, 09 Jul 2020 20:00:35 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id y17sm4141720pfe.30.2020.07.09.20.00.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jul 2020 20:00:34 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 08:30:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Puhov <peter.puhov@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
+Message-ID: <20200710030032.3yq3lqqybhy5m744@vireshk-i7>
+References: <cover.1594289009.git.viresh.kumar@linaro.org>
+ <20200709124349.GA15342@arm.com>
 MIME-Version: 1.0
-References: <7faa60aa4a606b5c5c1ae374d82a7eee6c764b38.1592292685.git.zong.li@sifive.com>
- <mhng-d4637494-2072-41f6-9a8a-1b222d89d6c4@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-d4637494-2072-41f6-9a8a-1b222d89d6c4@palmerdabbelt-glaptop1>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Fri, 10 Jul 2020 10:43:42 +0800
-Message-ID: <CANXhq0rOMFgr4j-oG_6G12XP2dKqWcXOKaCwOpg+FM7E+Qxx+A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv: Support CONFIG_STRICT_DEVMEM
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709124349.GA15342@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 4:08 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Tue, 16 Jun 2020 00:45:47 PDT (-0700), zong.li@sifive.com wrote:
-> > Implement the 'devmem_is_allowed()' interface for RISC-V, like some of
-> > other architectures have done. It will be called from range_is_allowed()
-> > when userpsace attempts to access /dev/mem.
->
-> In fact, it's exactly the same (down to a few words of the comment) to the
-> others that I checked.  I'm going to put a generic version in lib/ instead,
-> I've sent out the patches.
->
+Thanks for the quick reply Ionela.
 
-OK, no problem, thanks for improving it.
+On 09-07-20, 13:43, Ionela Voinescu wrote:
+> I'll put all my comments here for now, as they refer more to the design
+> of the solution.
+> 
+> I hope it won't be too repetitive compared to what we previously discussed
+> offline.
 
-> > Access to exclusive IOMEM and kernel RAM is denied unless
-> > CONFIG_STRICT_DEVMEM is set to 'n'.
-> >
-> > Test it by devmem, the result as follows:
-> >
-> >  - CONFIG_STRICT_DEVMEM=y
-> >       $ devmem 0x10010000
-> >       0x00000000
-> >       $ devmem 0x80200000
-> >       0x0000106F
-> >
-> >  - CONFIG_STRICT_DEVMEM is not set
-> >       $ devmem 0x10010000
-> >       devmem: mmap: Operation not permitted
-> >       $ devmem 0x80200000
-> >       devmem: mmap: Operation not permitted
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/Kconfig          |  1 +
-> >  arch/riscv/include/asm/io.h |  2 ++
-> >  arch/riscv/mm/init.c        | 19 +++++++++++++++++++
-> >  3 files changed, 22 insertions(+)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 128192e14ff2..ffd7841ede4c 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -16,6 +16,7 @@ config RISCV
-> >       select ARCH_HAS_BINFMT_FLAT
-> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> >       select ARCH_HAS_DEBUG_WX
-> > +     select ARCH_HAS_DEVMEM_IS_ALLOWED
-> >       select ARCH_HAS_GCOV_PROFILE_ALL
-> >       select ARCH_HAS_GIGANTIC_PAGE
-> >       select ARCH_HAS_MMIOWB
-> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-> > index 3835c3295dc5..04ac65ab93ce 100644
-> > --- a/arch/riscv/include/asm/io.h
-> > +++ b/arch/riscv/include/asm/io.h
-> > @@ -147,4 +147,6 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io_paw())
-> >
-> >  #include <asm-generic/io.h>
-> >
-> > +extern int devmem_is_allowed(unsigned long pfn);
-> > +
-> >  #endif /* _ASM_RISCV_IO_H */
-> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > index bbe816e03b2f..5e7e61519acc 100644
-> > --- a/arch/riscv/mm/init.c
-> > +++ b/arch/riscv/mm/init.c
-> > @@ -517,6 +517,25 @@ void mark_rodata_ro(void)
-> >  }
-> >  #endif
-> >
-> > +#ifdef CONFIG_STRICT_DEVMEM
-> > +#include <linux/ioport.h>
-> > +/*
-> > + * devmem_is_allowed() checks to see if /dev/mem access to a certain address
-> > + * is valid. The argument is a physical page number.
-> > + *
-> > + * Disallow access to system RAM as well as device-exclusive MMIO regions.
-> > + * This effectively disable read()/write() on /dev/mem.
-> > + */
-> > +int devmem_is_allowed(unsigned long pfn)
-> > +{
-> > +     if (iomem_is_exclusive(pfn << PAGE_SHIFT))
-> > +             return 0;
-> > +     if (!page_is_ram(pfn))
-> > +             return 1;
-> > +     return 0;
-> > +}
-> > +#endif
-> > +
-> >  void __init resource_init(void)
-> >  {
-> >       struct memblock_region *region;
+> I understand you want to get additional points of view.
+
+Not necessarily, I knew you would be one of the major reviewers here
+:)
+
+I posted so you don't need to review in private anymore and then the
+code is somewhat updated since the previous time.
+
+> On Thursday 09 Jul 2020 at 15:43:32 (+0530), Viresh Kumar wrote:
+> I believe the code is unnecessarily invasive for the functionality it
+> tries to introduce and it does break existing functionality.
+> 
+> 
+>  - (1) From code readability and design point of view, this switching
+>        between an architectural method and a driver method complicates
+>        an already complicated situation. We already have code that
+>        chooses between a cpufreq-based method and a counter based method
+>        for frequency invariance. This would basically introduce a choice
+>        between a cpufreq-based method through arch_set_freq_scale(), an
+>        architectural counter-based method through arch_set_freq_tick(),
+>        and another cpufreq-based method that piggy-backs on the
+>        architectural arch_set_freq_tick().
+
+I agree.
+
+>        As discussed offline, before I even try to begin accepting the
+>        possibility of this complicated mix, I would like to know why
+>        methods of obtaining the same thing by using the cpufreq
+>        arch_set_freq_scale()
+
+The problem is same as that was in case of x86, we don't know the real
+frequency the CPU may be running at and we need something that fires
+up periodically in a guaranteed way to capture the freq-scale.
+
+Though I am thinking now if we can trust the target_index() helper and
+keep updating the freq-scale based on the delta between last call to
+it and the latest call. I am not sure if it will be sufficient.
+
+>        or even the more invasive wrapping of the
+>        counter read functions is not working.
+
+I am not sure I understood this one.
+
+>  - (2) For 1/3, the presence of AMU counters does not guarantee their
+>        usability for frequency invariance. I know you wanted to avoid
+>        the complications of AMUs being marked as supporting invariance
+>        after the cpufreq driver init function, but this breaks the
+>        scenario in which the maximum frequency is invalid.
+
+Is that really a scenario ? i.e. Invalid maximum frequency ? Why would
+that ever happen ?
+
+And I am not sure if this breaks anything which already exists,
+because all we are doing in this case now is not registering cppc for
+FI, which should be fine.
+
+>  - (3) For 2/3, currently we support platforms that have partial support
+>        for AMUs, while this would not be supported here. The suggestions
+>        at (1) would give us this for free.
+
+As both were counter based mechanisms, I thought it would be better
+and more consistent if only one of them is picked. Though partial
+support of AMUs would still work without the CPPC driver.
+
+-- 
+viresh
