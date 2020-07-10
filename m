@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10585C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AC4C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB15A20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEC920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgGJMJS (ORCPT
+        id S1728065AbgGJMJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
+        Fri, 10 Jul 2020 08:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgGJMJF (ORCPT
+        with ESMTP id S1727840AbgGJMJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:09:05 -0400
+        Fri, 10 Jul 2020 08:09:07 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E197DC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:09:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C792C08E85B
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:09:06 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jtrpu-00080d-8F; Fri, 10 Jul 2020 14:09:02 +0200
+        id 1jtrpu-00080b-8F; Fri, 10 Jul 2020 14:09:02 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jtrpq-0007Z7-P4; Fri, 10 Jul 2020 14:08:58 +0200
+        id 1jtrpq-0007Yn-N7; Fri, 10 Jul 2020 14:08:58 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH net-next v1 4/5] net: phy: micrel: ksz8081 add MDI-X support
-Date:   Fri, 10 Jul 2020 14:08:50 +0200
-Message-Id: <20200710120851.28984-5-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 2/5] net: phy: micrel: apply resume errata workaround for ksz8873 and ksz8863
+Date:   Fri, 10 Jul 2020 14:08:48 +0200
+Message-Id: <20200710120851.28984-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200710120851.28984-1-o.rempel@pengutronix.de>
 References: <20200710120851.28984-1-o.rempel@pengutronix.de>
@@ -57,132 +57,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for MDI-X status and configuration
+The ksz8873 and ksz8863 switches are affected by following errata:
+
+| "Receiver error in 100BASE-TX mode following Soft Power Down"
+|
+| Some KSZ8873 devices may exhibit receiver errors after transitioning
+| from Soft Power Down mode to Normal mode, as controlled by register 195
+| (0xC3) bits [1:0]. When exiting Soft Power Down mode, the receiver
+| blocks may not start up properly, causing the PHY to miss data and
+| exhibit erratic behavior. The problem may appear on either port 1 or
+| port 2, or both ports. The problem occurs only for 100BASE-TX, not
+| 10BASE-T.
+|
+| END USER IMPLICATIONS
+| When the failure occurs, the following symptoms are seen on the affected
+| port(s):
+| - The port is able to link
+| - LED0 blinks, even when there is no traffic
+| - The MIB counters indicate receive errors (Rx Fragments, Rx Symbol
+|   Errors, Rx CRC Errors, Rx Alignment Errors)
+| - Only a small fraction of packets is correctly received and forwarded
+|   through the switch. Most packets are dropped due to receive errors.
+|
+| The failing condition cannot be corrected by the following:
+| - Removing and reconnecting the cable
+| - Hardware reset
+| - Software Reset and PCS Reset bits in register 67 (0x43)
+|
+| Work around:
+| The problem can be corrected by setting and then clearing the Port Power
+| Down bits (registers 29 (0x1D) and 45 (0x2D), bit 3). This must be done
+| separately for each affected port after returning from Soft Power Down
+| Mode to Normal Mode. The following procedure will ensure no further
+| issues due to this erratum. To enter Soft Power Down Mode, set register
+| 195 (0xC3), bits [1:0] = 10.
+|
+| To exit Soft Power Down Mode, follow these steps:
+| 1. Set register 195 (0xC3), bits [1:0] = 00 // Exit soft power down mode
+| 2. Wait 1ms minimum
+| 3. Set register 29 (0x1D), bit [3] = 1 // Enter PHY port 1 power down mode
+| 4. Set register 29 (0x1D), bit [3] = 0 // Exit PHY port 1 power down mode
+| 5. Set register 45 (0x2D), bit [3] = 1 // Enter PHY port 2 power down mode
+| 6. Set register 45 (0x2D), bit [3] = 0 // Exit PHY port 2 power down mode
+
+This patch implements steps 2...6 of the suggested workaround. The first
+step needs to be implemented in the switch driver.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/phy/micrel.c | 89 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+ drivers/net/phy/micrel.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index ec409b2cb984..221ba661645f 100644
+index caf56b9b51db..12106fbea565 100644
 --- a/drivers/net/phy/micrel.c
 +++ b/drivers/net/phy/micrel.c
-@@ -64,11 +64,17 @@
- 
- /* PHY Control 1 */
- #define MII_KSZPHY_CTRL_1			0x1e
-+#define KSZ8081_CTRL1_MDIX_STAT			BIT(4)
- 
- /* PHY Control 2 / PHY Control (if no PHY Control 1) */
- #define MII_KSZPHY_CTRL_2			0x1f
- #define MII_KSZPHY_CTRL				MII_KSZPHY_CTRL_2
- /* bitmap of PHY register to set interrupt mode */
-+#define KSZ8081_CTRL2_HP_MDIX			BIT(15)
-+#define KSZ8081_CTRL2_MDI_MDI_X_SELECT		BIT(14)
-+#define KSZ8081_CTRL2_DISABLE_AUTO_MDIX		BIT(13)
-+#define KSZ8081_CTRL2_FORCE_LINK		BIT(11)
-+#define KSZ8081_CTRL2_POWER_SAVING		BIT(10)
- #define KSZPHY_CTRL_INT_ACTIVE_HIGH		BIT(9)
- #define KSZPHY_RMII_REF_CLK_SEL			BIT(7)
- #define KSZ886X_CTRL_MDIX_STAT			BIT(4)
-@@ -398,6 +404,87 @@ static int ksz8081_config_init(struct phy_device *phydev)
- 	return kszphy_config_init(phydev);
+@@ -1010,6 +1010,26 @@ static int ksz8873mll_config_aneg(struct phy_device *phydev)
+ 	return 0;
  }
  
-+static int ksz8081_config_mdix(struct phy_device *phydev, u8 ctrl)
-+{
-+	u16 val;
-+
-+	switch (ctrl) {
-+	case ETH_TP_MDI:
-+		val = KSZ8081_CTRL2_DISABLE_AUTO_MDIX;
-+		break;
-+	case ETH_TP_MDI_X:
-+		val = KSZ8081_CTRL2_DISABLE_AUTO_MDIX |
-+			KSZ8081_CTRL2_MDI_MDI_X_SELECT;
-+		break;
-+	case ETH_TP_MDI_AUTO:
-+		val = 0;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	return phy_modify(phydev, MII_KSZPHY_CTRL_2,
-+			  KSZ8081_CTRL2_HP_MDIX |
-+			  KSZ8081_CTRL2_MDI_MDI_X_SELECT |
-+			  KSZ8081_CTRL2_DISABLE_AUTO_MDIX,
-+			  KSZ8081_CTRL2_HP_MDIX | val);
-+}
-+
-+static int ksz8081_config_aneg(struct phy_device *phydev)
++static int ksz886x_resume(struct phy_device *phydev)
 +{
 +	int ret;
 +
-+	ret = genphy_config_aneg(phydev);
++	/* Apply errata workaround for KSZ8863 and KSZ8873:
++	 * Receiver error in 100BASE-TX mode following Soft Power Down
++	 *
++	 * When exiting Soft Power Down mode, the receiver blocks may not start
++	 * up properly, causing the PHY to miss data and exhibit erratic
++	 * behavior.
++	 */
++	usleep_range(1000, 2000);
++
++	ret = phy_set_bits(phydev, MII_BMCR, BMCR_PDOWN);
 +	if (ret)
 +		return ret;
 +
-+	/* The MDI-X configuration is automatically changed by the PHY after
-+	 * switching from autoneg off to on. So, take MDI-X configuration under
-+	 * own control and set it after autoneg configuration was done.
-+	 */
-+	return ksz8081_config_mdix(phydev, phydev->mdix_ctrl);
++	return phy_clear_bits(phydev, MII_BMCR, BMCR_PDOWN);
 +}
 +
-+static int ksz8081_mdix_update(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_read(phydev, MII_KSZPHY_CTRL_2);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret & KSZ8081_CTRL2_DISABLE_AUTO_MDIX) {
-+		if (ret & KSZ8081_CTRL2_MDI_MDI_X_SELECT)
-+			phydev->mdix_ctrl = ETH_TP_MDI_X;
-+		else
-+			phydev->mdix_ctrl = ETH_TP_MDI;
-+	} else {
-+		phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
-+	}
-+
-+	ret = phy_read(phydev, MII_KSZPHY_CTRL_1);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret & KSZ8081_CTRL1_MDIX_STAT)
-+		phydev->mdix = ETH_TP_MDI;
-+	else
-+		phydev->mdix = ETH_TP_MDI_X;
-+
-+	return 0;
-+}
-+
-+static int ksz8081_read_status(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = ksz8081_mdix_update(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return genphy_read_status(phydev);
-+}
-+
- static int ksz8061_config_init(struct phy_device *phydev)
+ static int kszphy_get_sset_count(struct phy_device *phydev)
  {
- 	int ret;
-@@ -1381,6 +1468,8 @@ static struct phy_driver ksphy_driver[] = {
- 	.driver_data	= &ksz8081_type,
- 	.probe		= kszphy_probe,
- 	.config_init	= ksz8081_config_init,
-+	.config_aneg	= ksz8081_config_aneg,
-+	.read_status	= ksz8081_read_status,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
- 	.get_sset_count = kszphy_get_sset_count,
+ 	return ARRAY_SIZE(kszphy_hw_stats);
+@@ -1347,7 +1367,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	/* PHY_BASIC_FEATURES */
+ 	.config_init	= kszphy_config_init,
+ 	.suspend	= genphy_suspend,
+-	.resume		= genphy_resume,
++	.resume		= ksz886x_resume,
+ }, {
+ 	.name		= "Micrel KSZ87XX Switch",
+ 	/* PHY_BASIC_FEATURES */
 -- 
 2.27.0
 
