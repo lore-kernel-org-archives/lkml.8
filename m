@@ -2,89 +2,87 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF74DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BEFC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26882078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8932078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f7y6Ff8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgGJSCa (ORCPT
+        id S1728193AbgGJSC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:02:30 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:52326 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgGJSCa (ORCPT
+        Fri, 10 Jul 2020 14:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbgGJSC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:02:30 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AC45520037;
-        Fri, 10 Jul 2020 20:02:27 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 20:02:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 4/4] drm: fb-helper: Convert logging to drm_* functions.
-Message-ID: <20200710180226.GH17565@ravnborg.org>
-References: <cover.1594136880.git.usuraj35@gmail.com>
- <0d37c7a614eb0885f0f0bed18e48a4d26b345a8e.1594136880.git.usuraj35@gmail.com>
+        Fri, 10 Jul 2020 14:02:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A69C08C5DC;
+        Fri, 10 Jul 2020 11:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=DGJlzFFDge1qMvtsN1Pa3grJiZ2vQ1dk0udm/740NIY=; b=f7y6Ff8OYEXsz02C0opjEvjErS
+        cCtaP6cHfmHVeihCqhY3pQ1DsbthbT6dHm9hi8ODQzwlxoXhDsmmqIPo3Z3UtegBrquFJZd0sZ/Hl
+        g20vHOmES9MT1SEx8e6AwwOOnckHLkvoDxXf+LsPvk8JgBRj8UcEVcP9BTvKUEVVjKgNsUuOlEKVp
+        Y9veJC6flRBqKhQ4chWIDqGczNPryLPLfp7x9fe6NZN7+UtkzFe4SZaiO7MW8bcYfQYnOWY7B7V0r
+        ulxCsJblN0jKRuG8lbA7PkSu40XCWOKlECFwiKoNoOoVIT4qDq7eqeO3Zb2PAN+ia5n/HPogcg49z
+        2z4Grghw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtxMF-0007qE-4O; Fri, 10 Jul 2020 18:02:47 +0000
+Subject: Re: linux-next: Tree for Jul 10 (drivers/net/phy/mdio-thunder &
+ mdio-mvusb)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tobias Waldekranz <tobias@waldekranz.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+References: <20200710183318.7b808092@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ce86d8cc-95e8-cb8e-f06e-fcf0975f56e0@infradead.org>
+Date:   Fri, 10 Jul 2020 11:02:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d37c7a614eb0885f0f0bed18e48a4d26b345a8e.1594136880.git.usuraj35@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=Nz12hAh02xfRVi4BVOwA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200710183318.7b808092@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:07:21PM +0530, Suraj Upadhyay wrote:
-> Change logging information from dev_info() to drm_info().
+On 7/10/20 1:33 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-
-Thanks. Applied to drm-misc-next.
-
-Also, because there was no more logging functions that needed an update.
-
-	Sam
-
-> ---
->  drivers/gpu/drm/drm_fb_helper.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-> index 5609e164805f..88146f7245c5 100644
-> --- a/drivers/gpu/drm/drm_fb_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_helper.c
-> @@ -1819,7 +1819,7 @@ __drm_fb_helper_initial_config_and_unlock(struct drm_fb_helper *fb_helper,
->  	if (ret < 0)
->  		return ret;
->  
-> -	dev_info(dev->dev, "fb%d: %s frame buffer device\n",
-> +	drm_info(dev, "fb%d: %s frame buffer device\n",
->  		 info->node, info->fix.id);
->  
->  	mutex_lock(&kernel_fb_helper_lock);
-> -- 
-> 2.17.1
+> Changes since 20200709:
 > 
 
 
+on x86_64:
 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+ld: drivers/net/phy/mdio-thunder.o: in function `thunder_mdiobus_pci_probe':
+mdio-thunder.c:(.text+0x218): undefined reference to `devm_mdiobus_alloc_size'
 
+
+on i386:
+
+ERROR: modpost: "devm_mdiobus_alloc_size" [drivers/net/phy/mdio-mvusb.ko] undefined!
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
