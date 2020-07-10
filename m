@@ -2,118 +2,132 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E33DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58CF9206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhgWT9dX"
+	by mail.kernel.org (Postfix) with ESMTP id 5A5FC2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594367281;
+	bh=Czp+iUVSYddYrsMk7jxb00FNGqS6qkilhOBeFNdRf9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NgnjlpIU8h81qKSgID6H4b9qRvAQZrd+WxMN6VrOp/+3H999Z27rgARNgmVWolJxD
+	 4dKd6gqj1589rK31LB3ZBuBfSuLA2QubmtLrKIaHMaCa1FIWD65YuVyagVQLgmLHJC
+	 G8hEg5J+NOEc4PkfMLmU8KJVoHsijKKN+FmR4Rw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGJHrB (ORCPT
+        id S1726896AbgGJHsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:47:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55439 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726288AbgGJHrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:47:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594367219;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JdHl2OiH4p6Iz0SiMtzkS/pKFwgmTmJSXShGkd+cqo8=;
-        b=bhgWT9dXfOZunyjk5wJhq03ORQEslxL9haxb4mZUhteutC0KUUk7RkC42+LZ1PdFLmuLrO
-        EZQnBFp1uBolqokSCfYDQSFX186EPkGvMVDyvH10QLc3qEc/YCBJMV+G11LPTWvohuuHCZ
-        9ylikX4OoZAfJa/qX4acD8MVESgsyK4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-mxe7WY_uN1m_Oc_5D13rrA-1; Fri, 10 Jul 2020 03:46:57 -0400
-X-MC-Unique: mxe7WY_uN1m_Oc_5D13rrA-1
-Received: by mail-wr1-f69.google.com with SMTP id w4so5053651wrm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 00:46:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JdHl2OiH4p6Iz0SiMtzkS/pKFwgmTmJSXShGkd+cqo8=;
-        b=i8us0676LoLkeuBno3kA5GX3pQ0J4t9e54jdmxwfERoJgYgk7oslnZb2iNcIZbKgdO
-         z09dqfem/AnQgn2EHJfPIBujBoWT88hPSSqZpOhBYQ2hbAwqBxlVJIxIhaQByzjIZa2I
-         JmsYAubBmcx3qBqqhbGOQURRoBPn5Quoolj4aEalSjwW1f3gVL0jg9dMyV/mGp/VdZXT
-         i5jCPiRCvL4W4L13RbNY31n284C6DdLnQT37gNPq7rWZPPl8KKI0r7nr1ovCzFXlpycp
-         xdtSgXTmNXjHiXlOTdX1Meqeq9s2VwhXg21ZSTwWMhsofIqS0yuIBz3HfDwO1mvVgw+T
-         YFtA==
-X-Gm-Message-State: AOAM530kMkn2tZMLsXC2KE5j7blaaZfjBbhYVQb3PXEO+2qDehPpQpoz
-        21oP2FeZiWPRWVGEqkkYlqOW/iWrV+zML44Lgaiy7IjSRKg21BWyFAl2UBwx3yZoUUd5KhVJoBk
-        rQ1kHm9icade7W+o7tKL/T3kY
-X-Received: by 2002:a1c:b686:: with SMTP id g128mr3986796wmf.145.1594367215831;
-        Fri, 10 Jul 2020 00:46:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyuGy1axXIP4NvsxIBSy6jkXMCqPU4GtMCNiYKIfYo8qhu5JkSK8NP7Ezs/ydWQoVmvN6gUlw==
-X-Received: by 2002:a1c:b686:: with SMTP id g128mr3986767wmf.145.1594367215569;
-        Fri, 10 Jul 2020 00:46:55 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id k18sm8954712wrx.34.2020.07.10.00.46.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 00:46:55 -0700 (PDT)
-Subject: Re: [PATCH] scsi: virtio_scsi: Remove unnecessary condition checks
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Xianting Tian <xianting_tian@126.com>,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <a197f532-7020-0d8e-21bf-42bb66e8daec@web.de>
- <e87746e6-813e-7c0e-e21e-5921e759da5d@redhat.com>
- <8eb9a827-45f1-e71c-0cbf-1c29acd8e310@web.de>
- <58e3feb8-1ffb-f77f-cf3a-75222b3cd524@redhat.com>
- <9815ef2d-d0da-d197-49d7-83559d750ff1@web.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d052b441-cc4d-4b2b-1442-b1a30bed2fdb@redhat.com>
-Date:   Fri, 10 Jul 2020 09:46:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 03:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726288AbgGJHr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 03:47:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8133D206A5;
+        Fri, 10 Jul 2020 07:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594367279;
+        bh=Czp+iUVSYddYrsMk7jxb00FNGqS6qkilhOBeFNdRf9o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XjXzhynPX8+zn/6APk/ebUGfFppkLn7g19XzESmYHZA9vZmb0ul4lybT1w7Oh1Lto
+         P6o9P5qvh2vaKwxSMVIDcSPsEQYWwbxLH1zkm1Q1Fm/KgDbSmpnlueVgr7dzPosnA2
+         6ADH8bCs+3EDwoN7JF0c3goV9GLOuma1Dachihww=
+Date:   Fri, 10 Jul 2020 09:48:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     trix@redhat.com
+Cc:     stuyoder@gmail.com, laurentiu.tudor@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] bus: fsl-mc: fix invalid free in fsl_mc_device_add
+Message-ID: <20200710074804.GE1179998@kroah.com>
+References: <20200709153119.5051-1-trix@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <9815ef2d-d0da-d197-49d7-83559d750ff1@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709153119.5051-1-trix@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/20 09:40, Markus Elfring wrote:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/virtio_scsi.c?id=42f82040ee66db13525dc6f14b8559890b2f4c1c#n980
->>>
->>>  	if (!virtscsi_cmd_cache) {
->>>  		pr_err("kmem_cache_create() for virtscsi_cmd_cache failed\n");
->>> -		goto error;
->>> +		return -ENOMEM;
->>>  	}
->>
->> Could be doable, but I don't see a particular benefit.
+On Thu, Jul 09, 2020 at 08:31:19AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
 > 
-> Can a bit more “compliance” (with the Linux coding style) matter here?
-
-No.
-
->> Having a single error loop is an advantage by itself.
+> clang static analysis flags this error
 > 
-> I do not see that a loop is involved in the implementation of the function “init”.
+> fsl-mc-bus.c:695:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(mc_dev);
+>         ^~~~~~~~~~~~~
+> 
+> The problem block of code is
+> 
+> 		mc_bus = kzalloc(sizeof(*mc_bus), GFP_KERNEL);
+> 		if (!mc_bus)
+> 			return -ENOMEM;
+> 
+> 		mc_dev = &mc_bus->mc_dev;
+> 
+> mc_bus's structure contains a mc_dev element,
+> freeing it later is not appropriate.
+> 
+> So check if mc_bus was allocated before freeing mc_dev
+> 
+> This is a case where checkpatch
+> 
+> WARNING: kfree(NULL) is safe and this check is probably not required
+> +	if (mc_bus)
+> +		kfree(mc_bus);
+> 
+> is wrong.
+> 
+> Fixes: a042fbed0290 ("staging: fsl-mc: simplify couple of deallocations")
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  v1: add a comment to explain freeing uniqueness
+>  v2: add gregkh's suggestion to comment.
+>  
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index 40526da5c6a6..839d96d03f0d 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -691,8 +691,16 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  
+>  error_cleanup_dev:
+>  	kfree(mc_dev->regions);
+> -	kfree(mc_bus);
+> -	kfree(mc_dev);
+> +	/*
+> +	 * mc_bus allocates a private version of mc_dev
+> +	 * it is not appropriate to free the private version.
+> +	 * Which means we have to check the pointer before freeing it.
+> +	 * Do not remove this check.
+> +	 */
+> +	if (mc_bus)
+> +		kfree(mc_bus);
+> +	else
+> +		kfree(mc_dev);
+>  
+>  	return error;
+>  }
+> -- 
+> 2.18.1
+> 
 
-s/loop/label/ sorry.
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Paolo
+Also add a cc: stable to this please when it is applied to a tree, in
+the proper place, as it fixes a bug.
 
+thanks,
+
+greg k-h
