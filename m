@@ -2,176 +2,292 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85381C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF0C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623942082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8004E207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpK0zbKW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GzHgYSuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGJNpO (ORCPT
+        id S1728212AbgGJNoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
+        Fri, 10 Jul 2020 09:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728256AbgGJNpD (ORCPT
+        with ESMTP id S1728133AbgGJNoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:45:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 978C8C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:45:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id md7so2639726pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=grZiNUXxO5Gku/+KU2rnghwGFFTqDfKaKvmZrXKFOAs=;
-        b=OpK0zbKWOchlQ09TIm+jEOEfIfAQFNQHiYpb5IqLlh/6R9eDLBlMYKw/5GnbLAHPXV
-         staFiCH3C0u7qokJfBvYK8BhP4lh/j6wJBw8mFIHRDzYgU1CpQOihSXOvQLElXoOxzhC
-         NfEOPAMMOruIdrMtdGldTFpwY3Fx/+ZF/c6gybepz8pzYt0KN6rVAoTE6yYQkpXhNtgO
-         OGuCyrAERKp8bqqk5SANNsbyUgwtvNrHzULqKDOfcmgvE5DDG8x+ITdSzQ6hD2KmQdds
-         SET6tmYZ8OfhFcQWd2+uvKHMVtPGDzgA50j0EekVM2eySfXaiMvpJzgi6x11vIjfVi3h
-         pQoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=grZiNUXxO5Gku/+KU2rnghwGFFTqDfKaKvmZrXKFOAs=;
-        b=WJBX4W+MOUFL0D7jDsXjXKqYSlV1d6XoTU3XyBJUD+WnvM6mwjbBi6mmj9IjKGH45G
-         C5CW0jvmliZTy7MX4z8eIz3IbA8DurKWeNZh3hs6K8D6PPZWUBjH1ICXFovXa3V80CX1
-         Aqj5tIVrUZeoJf7GIyuBJqLxlXeqSk7JXoIfqDshrp9bloixM8yJRfIYgz7EXCJEFc0q
-         7E16jZwrAlPL+gEdAUYfdUgZb+Cwp7+NaIBxmd9fGUu4YOXZBVXS7nzZp6gNeyq58fv5
-         p7AQXvHAvRFGuK+/6qOM8I62vvyogXcV31lxrOkvgq0DmcsMNY93JvIxkPiLeZl2vtS7
-         OK5Q==
-X-Gm-Message-State: AOAM533Oi1xxzk+ggYBmefAySjdS1Ds2k6+FsQVlXS7xohEbHKVFRYyI
-        fiQa6lXP1/6gh1AYRmUkT3Y=
-X-Google-Smtp-Source: ABdhPJzFKxVVOC1yLaR7x3E1xNoueHJeWuHMu2K5soPd7pBdLR9WWWTH+nsPma+uDtdNFftey6lmUw==
-X-Received: by 2002:a17:90a:ea86:: with SMTP id h6mr5540146pjz.167.1594388703150;
-        Fri, 10 Jul 2020 06:45:03 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.44.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:45:01 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 11/17] perf ftrace: add support for trace option funcgraph-irqs
-Date:   Fri, 10 Jul 2020 21:43:16 +0800
-Message-Id: <20200710134322.15400-12-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
-References: <20200710134322.15400-1-changbin.du@gmail.com>
+        Fri, 10 Jul 2020 09:44:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27184C08E89D
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=haOeI1eZxDJ6jZ+MJAOIZT1VjJU5YRsLJ7XmkFeRNws=; b=GzHgYSuHZYzvSdPOgGagpH8i+W
+        PRYwreakQARCqevNvrCDpStTWOtqR9ERCcx3eDH9l6G2OHywCQFcA/0rJ3RZ1Ife7A3NKfHaFKPfp
+        Z6zlsELihTRO/yTmC42HlkVWGKR7TblI3dQAiJayCr+R3qc1Oh+XbUvch0BwUB18/B1NlDdAGafus
+        9njRvlfxHgTgK7W9khZKe1YdCJu0WeoNElaUR5cCr9Nji4sSs8gOJ8+qW/SvknfcDCXEzgKezL41Q
+        094+rzK2A2jpDanZJkgAzc8cLLgXuAzCQJvnrHCCm+O7e5ttKXU9Ve1zBmJFeytiGiJeG7Mlgsf0e
+        R5MiIqsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jttK2-0003tC-2m; Fri, 10 Jul 2020 13:44:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DEBDC30799B;
+        Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 1AFF52B7A7340; Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
+Message-ID: <20200710134337.036717190@infradead.org>
+User-Agent: quilt/0.66
+Date:   Fri, 10 Jul 2020 15:38:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
+Subject: [PATCH v6 15/17] static_call: Allow early init
+References: <20200710133831.943894387@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds an option '--graph-opts noirqs' to filter out functions executed
-in irq context.
+In order to use static_call() to wire up x86_pmu, we need to
+initialize earlier; copy some of the tricks from jump_label to enable
+this.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Primarily we overload key->next to store a sites pointer when there
+are no modules, this avoids having to use kmalloc() to initialize the
+sites and allows us to run much earlier.
 
+(arguably, this is much much earlier than needed for perf, but it
+might allow other uses.)
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
-v2: option name '--nofuncgraph-irqs' -> '--graph-noirqs'.
----
- tools/perf/Documentation/perf-ftrace.txt |  1 +
- tools/perf/builtin-ftrace.c              | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ arch/x86/kernel/setup.c       |    2 +
+ arch/x86/kernel/static_call.c |    8 +++++-
+ include/linux/static_call.h   |   15 +++++++++--
+ kernel/static_call.c          |   55 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 74 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 760c2b78c305..2e16e1e588d9 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -105,6 +105,7 @@ OPTIONS
- --graph-opts::
- 	List of options allowed to set:
- 	  nosleep-time - Measure on-CPU time only for function_graph tracer.
-+	  noirqs       - Ignore functions that happen inside interrupt.
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -19,6 +19,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+ #include <linux/usb/xhci-dbgp.h>
++#include <linux/static_call.h>
  
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index b4eda459ba78..179c5da678e3 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -43,6 +43,7 @@ struct perf_ftrace {
- 	bool			inherit;
- 	int			func_stack_trace;
- 	int			graph_nosleep_time;
-+	int			graph_noirqs;
+ #include <uapi/linux/mount.h>
+ 
+@@ -848,6 +849,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_cpu_init();
+ 	arch_init_ideal_nops();
+ 	jump_label_init();
++	static_call_init();
+ 	early_ioremap_init();
+ 
+ 	setup_olpc_ofw_pgd();
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -11,7 +11,7 @@ enum insn_type {
+ 	RET = 3,  /* tramp / site cond-tail-call */
  };
  
- struct filter_entry {
-@@ -202,6 +203,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
- 	write_tracing_option_file("function-fork", "0");
- 	write_tracing_option_file("func_stack_trace", "0");
- 	write_tracing_option_file("sleep-time", "1");
-+	write_tracing_option_file("funcgraph-irqs", "1");
- }
- 
- static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-@@ -394,6 +396,17 @@ static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
- 	return 0;
- }
- 
-+static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
-+{
-+	if (!ftrace->graph_noirqs)
-+		return 0;
-+
-+	if (write_tracing_option_file("funcgraph-irqs", "0") < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+-static void __static_call_transform(void *insn, enum insn_type type, void *func)
++static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
  {
- 	char *trace_file;
-@@ -478,6 +491,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
+ 	int size = CALL_INSN_SIZE;
+ 	const void *code;
+@@ -33,11 +33,17 @@ static void __static_call_transform(void
+ 		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
+ 		size = RET_INSN_SIZE;
+ 		break;
++
++	default: /* GCC is a moron -- it figures @code can be uninitialized below */
++		BUG();
  	}
  
-+	if (set_tracing_funcgraph_irqs(ftrace) < 0) {
-+		pr_err("failed to set tracing option funcgraph-irqs\n");
-+		goto out_reset;
-+	}
-+
- 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
- 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
- 		goto out_reset;
-@@ -658,6 +676,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
- 	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
- 	struct sublevel_option graph_tracer_opts[] = {
- 		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
-+		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
- 		{ .name = NULL, }
- 	};
+ 	if (memcmp(insn, code, size) == 0)
+ 		return;
  
-@@ -714,7 +733,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
- 		    "Max depth for function graph tracer"),
- 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
--		     "graph tracer options, available options: nosleep-time",
-+		     "graph tracer options, available options: nosleep-time,noirqs",
- 		     parse_graph_tracer_opts),
- 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
- 		     "size of per cpu buffer", parse_buffer_size),
--- 
-2.25.1
++	if (unlikely(system_state == SYSTEM_BOOTING))
++		return text_poke_early(insn, code, size);
++
+ 	text_poke_bp(insn, code, size, NULL);
+ }
+ 
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -99,6 +99,8 @@ extern void arch_static_call_transform(v
+ 
+ #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+ 
++extern void __init static_call_init(void);
++
+ struct static_call_mod {
+ 	struct static_call_mod *next;
+ 	struct module *mod; /* for vmlinux, mod == NULL */
+@@ -107,7 +109,12 @@ struct static_call_mod {
+ 
+ struct static_call_key {
+ 	void *func;
+-	struct static_call_mod *mods;
++	union {
++		/* bit 0: 0 = mods, 1 = sites */
++		unsigned long type;
++		struct static_call_mod *mods;
++		struct static_call_site *sites;
++	};
+ };
+ 
+ extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
+@@ -118,7 +125,7 @@ extern int static_call_text_reserved(voi
+ 	DECLARE_STATIC_CALL(name, _func);				\
+ 	struct static_call_key STATIC_CALL_KEY(name) = {		\
+ 		.func = _func,						\
+-		.mods = NULL,						\
++		.type = 1,						\
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+@@ -143,6 +150,8 @@ extern int static_call_text_reserved(voi
+ 
+ #elif defined(CONFIG_HAVE_STATIC_CALL)
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+@@ -188,6 +197,8 @@ static inline int static_call_text_reser
+ 
+ #else /* Generic implementation */
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -94,10 +94,31 @@ static inline void static_call_sort_entr
+ 	     static_call_site_cmp, static_call_site_swap);
+ }
+ 
++static inline bool static_call_key_has_mods(struct static_call_key *key)
++{
++	return !(key->type & 1);
++}
++
++static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
++{
++	if (!static_call_key_has_mods(key))
++		return NULL;
++
++	return key->mods;
++}
++
++static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
++{
++	if (static_call_key_has_mods(key))
++		return NULL;
++
++	return (struct static_call_site *)(key->type & ~1);
++}
++
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
+ 	struct static_call_site *site, *stop;
+-	struct static_call_mod *site_mod;
++	struct static_call_mod *site_mod, first;
+ 
+ 	cpus_read_lock();
+ 	static_call_lock();
+@@ -116,13 +137,22 @@ void __static_call_update(struct static_
+ 	if (WARN_ON_ONCE(!static_call_initialized))
+ 		goto done;
+ 
+-	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
++	first = (struct static_call_mod){
++		.next = static_call_key_next(key),
++		.mod = NULL,
++		.sites = static_call_key_sites(key),
++	};
++
++	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
+ 		struct module *mod = site_mod->mod;
+ 
+ 		if (!site_mod->sites) {
+ 			/*
+ 			 * This can happen if the static call key is defined in
+ 			 * a module which doesn't use it.
++			 *
++			 * It also happens in the has_mods case, where the
++			 * 'first' entry has no sites associated with it.
+ 			 */
+ 			continue;
+ 		}
+@@ -192,16 +222,35 @@ static int __static_call_init(struct mod
+ 		if (key != prev_key) {
+ 			prev_key = key;
+ 
++			if (!mod) {
++				key->sites = site;
++				key->type |= 1;
++				goto do_transform;
++			}
++
+ 			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+ 			if (!site_mod)
+ 				return -ENOMEM;
+ 
++			if (!static_call_key_has_mods(key)) {
++				site_mod->mod = NULL;
++				site_mod->next = NULL;
++				site_mod->sites = static_call_key_sites(key);
++
++				key->mods = site_mod;
++
++				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
++				if (!site_mod)
++					return -ENOMEM;
++			}
++
+ 			site_mod->mod = mod;
+ 			site_mod->sites = site;
+ 			site_mod->next = key->mods;
+ 			key->mods = site_mod;
+ 		}
+ 
++do_transform:
+ 		arch_static_call_transform(site_addr, NULL, key->func,
+ 				static_call_is_tail(site));
+ 	}
+@@ -344,7 +393,7 @@ int static_call_text_reserved(void *star
+ 	return ret;
+ }
+ 
+-static void __init static_call_init(void)
++void __init static_call_init(void)
+ {
+ 	int ret;
+ 
+
 
