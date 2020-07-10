@@ -2,235 +2,96 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1394AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A61C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD57720720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B8D20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCNnBzGl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XxwiBGAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGJGPy (ORCPT
+        id S1727840AbgGJGRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52246 "EHLO
+        Fri, 10 Jul 2020 02:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgGJGPt (ORCPT
+        with ESMTP id S1725966AbgGJGRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:15:49 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFD5C08C5CE;
-        Thu,  9 Jul 2020 23:15:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u18so2073364pfk.10;
-        Thu, 09 Jul 2020 23:15:49 -0700 (PDT)
+        Fri, 10 Jul 2020 02:17:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B5FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:17:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x8so1820212plm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
-        b=CCNnBzGlzx2kwlJE26zUeWzUawQ+jCzFseRnJJDqF/W9ziK8E58GyapnxXQnmKOmnG
-         lpeljdj6FVx0JZKwIm2KDmLULADPCUJXz4DdB0K88wMCWV0CqQ6TiQ18FzmOtKPF9pPh
-         Ofkj9xNfQ56eJF4Hk8/TWYwmPbn1EFRlLDYpXRjRBatdth70hPEBrhjgu5wgJ87XDIKF
-         mNzLsb88HZaL5aMDK0V80Ar6QJhG7Y5M8w3AHFZGE2ccazhL6rMFx6viXQEDCQhZ8C29
-         S2P9fN9upJ1Ok7MR/7Wll0Ix/7SXeAKOg8QxQy47ujRyW3vOEsGDfBDD+VRCgSHvZjcZ
-         Mp8w==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Dm+DnuSu65AAz7ad3kKqpwMvvV9c9j5Xmv9xtyqJu+8=;
+        b=XxwiBGAN+c26EFwmdNtyCR5546KEhOr6l15A/2WA1cMLP8pN66LrG3+GuOSJsd6Hp1
+         P3RLqUYcFx0leBYljcKfft2ychVjMOysL/rNcIN+uHyImok3/nIrLFNcnANED1dCbRYj
+         AS5NtypFHnNy0fI3n6QTErnWlMhhZ+KYQiiF8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
-        b=WO/yZXmvHyp/UzBgJdRnAJFSP8ydorh/lELGts+wEB9VnKhoTWo8nEL5a69rI/o+ej
-         7rh5NAlxynyGJl6o+I8JDcfyu1HJ/dQwsi5FsSfPY4KkJBKAGa2mOfg3P+VYv1G2EScU
-         8AnW0lMPusmEGvwAGk4/Cyr91yJduOcZTmoOeg2eEEUsu+cHmfZb1hDmd2jAqXmDh6hF
-         COpg/u1YlZvHNX9PBt4tRXtK0EJGBk3pInzJA8sWbjPnJJWR1IjxVtJWKmQv6A7iW6Tz
-         Vyp++A4l1YFBT8bWuUu8EID4gaYu6jjW87mi4xN2ymfd7oMXKeapSIs5Sai8EUWMV7Ua
-         XuCQ==
-X-Gm-Message-State: AOAM532o019p8TZGCxALVHOeYKCsXFVUB8yT4Dhzah+t5MmTisaXz7kN
-        //VwYwQQpjLc8bKJjHs/WYs=
-X-Google-Smtp-Source: ABdhPJwVmqZUAAKfhO3/uTq/APmG/M/vVevTvaXd5iCq2GNOukYygaFFeyJ1gQdq7JJEVW4TbnRU2w==
-X-Received: by 2002:a65:43c1:: with SMTP id n1mr17832268pgp.67.1594361747517;
-        Thu, 09 Jul 2020 23:15:47 -0700 (PDT)
-Received: from mi-OptiPlex-7050.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id j13sm4372525pjz.8.2020.07.09.23.15.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 23:15:47 -0700 (PDT)
-From:   yang che <chey84736@gmail.com>
-To:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        yang che <chey84736@gmail.com>
-Subject: [PATCH v3] hung_task:add detecting task in D state milliseconds timeout
-Date:   Fri, 10 Jul 2020 14:15:15 +0800
-Message-Id: <1594361715-25325-1-git-send-email-chey84736@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Dm+DnuSu65AAz7ad3kKqpwMvvV9c9j5Xmv9xtyqJu+8=;
+        b=ei0KYjCXfGZytYelziDVtFNzZB1GBzbxno/ZEA0uCenFdHA3qeHpCjxKsJateqg6hI
+         nB6Fg6n89V8MTFTVsNB/k7n4JBKzBV29r4yTZcrXfgT7zd983ePF9BA2AfipL23KHyb9
+         ck30zK/lKS+MFja0R2xJRDMuHEbcc6YpdqVe+hUhDAFxUxxZvpz7m6NnaI5Df9g63ErQ
+         e0B6hhnNsZ1r09beXzIE91DvqmS4qIYtYj7yA1gP+o+r/9llMov8cid3FO+DaE72davA
+         QDG8Zd0yxQ2DGjR/Xqo35/1+67YzGCKlAzAfq8fduNf5Z0tOn+/u2rAv/eBK+WEpR0fd
+         QHdA==
+X-Gm-Message-State: AOAM5300nemlEI+xcPrFISB+JBQZG8ySEfMK6pm80CUwRfj6mEXCpzJQ
+        oHYBixO0yPJ6YrTrcG8ZpC0eIg==
+X-Google-Smtp-Source: ABdhPJxeORysV4VYKgc1U20BRm3mRz4m6pPLeqkD6XUKkuZx9wgWwg2gIJCbKPZnAH4/WMJhJFYXPw==
+X-Received: by 2002:a17:90a:30ea:: with SMTP id h97mr4037122pjb.32.1594361821473;
+        Thu, 09 Jul 2020 23:17:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id v197sm4888519pfc.35.2020.07.09.23.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 23:17:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594235417-23066-4-git-send-email-sanm@codeaurora.org>
+References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org> <1594235417-23066-4-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: sc7180: Use pdc interrupts for USB instead of GIC interrupts
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Thu, 09 Jul 2020 23:17:00 -0700
+Message-ID: <159436182019.1987609.12377232042152594056@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-current hung_task_check_interval_secs and hung_task_timeout_secs
-only supports seconds. In some cases,the TASK_UNINTERRUPTIBLE state
-takes less than 1 second,may need to hung task trigger panic
-get ramdump or print all cpu task.
+Quoting Sandeep Maheswaram (2020-07-08 12:10:17)
+> Using pdc interrupts for USB instead of GIC interrupts to
+> support wake up in case xo shutdown.
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
 
-modify hung_task_check_interval_secs to hung_task_check_interval_msecs,
-check interval use milliseconds. Add hung_task_timeout_msecs file to
-set milliseconds.
-task timeout = hung_task_timeout_secs * 1000 + hung_task_timeout_msecs.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Signed-off-by: yang che <chey84736@gmail.com>
----
-
-v2->v3:
- Fix some format issues.
- add use msecs_to_jiffies,jiffies_to_msec.
- because use timeout = secs * 1000  + msecs,so sysctl_hung_task_timeout_msec
- = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT * MSEC_PER_SEC; will cause timeout is
- CONFIG_DEFAULT_HUNG_TASK_TIMEOUT double.
-
-v1->v2:
- add hung_task_check_interval_millisecs,hung_task_timeout_millisecs.
- fix writing to the millisecond file silently overrides the setting in
- the seconds file.
-
- [1]https://lore.kernel.org/lkml/CAN_w4MWMfoDGfpON-bYHrU=KuJG2vpFj01ZbN4r-iwM4AyyuGw@mail.gmail.com
- [2]https://lore.kernel.org/lkml/20200705171633.GU25523@casper.infradead.org/
-
- include/linux/sched/sysctl.h |  3 ++-
- kernel/hung_task.c           | 31 ++++++++++++++++++++++---------
- kernel/sysctl.c              | 12 ++++++++++--
- 3 files changed, 34 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index 660ac49..41b426e 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -16,8 +16,9 @@ extern unsigned int sysctl_hung_task_all_cpu_backtrace;
- 
- extern int	     sysctl_hung_task_check_count;
- extern unsigned int  sysctl_hung_task_panic;
-+extern unsigned long sysctl_hung_task_timeout_msecs;
- extern unsigned long sysctl_hung_task_timeout_secs;
--extern unsigned long sysctl_hung_task_check_interval_secs;
-+extern unsigned long sysctl_hung_task_check_interval_msecs;
- extern int sysctl_hung_task_warnings;
- int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos);
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index ce76f49..bac6f33 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -37,16 +37,23 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
-  * the RCU grace period. So it needs to be upper-bound.
-  */
- #define HUNG_TASK_LOCK_BREAK (HZ / 10)
-+#define MSEC_PER_SEC 1000L
- 
- /*
-- * Zero means infinite timeout - no checking done:
-+ * Zero and sysctl_hung_task_timeout_msecs zero means infinite timeout - no checking done:
-  */
- unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
- 
- /*
-- * Zero (default value) means use sysctl_hung_task_timeout_secs:
-+ * Zero (default value) means only use sysctl_hung_task_timeout_secs
-  */
--unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
-+unsigned long  __read_mostly sysctl_hung_task_timeout_msecs;
-+
-+/*
-+ * Zero (default value) means use
-+ * sysctl_hung_task_timeout_secs * MSEC_PER_SEC + sysctl_hung_task_timeout_msecs
-+ */
-+unsigned long __read_mostly sysctl_hung_task_check_interval_msecs;
- 
- int __read_mostly sysctl_hung_task_warnings = 10;
- 
-@@ -108,7 +115,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		t->last_switch_time = jiffies;
- 		return;
- 	}
--	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
-+
-+	if (time_is_after_jiffies(t->last_switch_time + msecs_to_jiffies(timeout)))
- 		return;
- 
- 	trace_sched_process_hang(t);
-@@ -126,13 +134,17 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 	if (sysctl_hung_task_warnings) {
- 		if (sysctl_hung_task_warnings > 0)
- 			sysctl_hung_task_warnings--;
--		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
--		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
-+
-+		pr_err("INFO: task %s:%d blocked for more than %ld.%03ld seconds.\n",
-+			t->comm, t->pid,
-+			jiffies_to_msecs(jiffies - t->last_switch_time) / MSEC_PER_SEC,
-+			jiffies_to_msecs(jiffies - t->last_switch_time) % MSEC_PER_SEC);
- 		pr_err("      %s %s %.*s\n",
- 			print_tainted(), init_utsname()->release,
- 			(int)strcspn(init_utsname()->version, " "),
- 			init_utsname()->version);
- 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
-+			"\"echo 0 > /proc/sys/kernel/hung_task_timeout_msecs\""
- 			" disables this message.\n");
- 		sched_show_task(t);
- 		hung_task_show_lock = true;
-@@ -217,7 +229,7 @@ static long hung_timeout_jiffies(unsigned long last_checked,
- 				 unsigned long timeout)
- {
- 	/* timeout of 0 will disable the watchdog */
--	return timeout ? last_checked - jiffies + timeout * HZ :
-+	return timeout ? last_checked - jiffies + msecs_to_jiffies(timeout) :
- 		MAX_SCHEDULE_TIMEOUT;
- }
- 
-@@ -281,8 +293,9 @@ static int watchdog(void *dummy)
- 	set_user_nice(current, 0);
- 
- 	for ( ; ; ) {
--		unsigned long timeout = sysctl_hung_task_timeout_secs;
--		unsigned long interval = sysctl_hung_task_check_interval_secs;
-+		unsigned long timeout = sysctl_hung_task_timeout_secs * MSEC_PER_SEC +
-+					sysctl_hung_task_timeout_msecs;
-+		unsigned long interval = sysctl_hung_task_check_interval_msecs;
- 		long t;
- 
- 		if (interval == 0)
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index db1ce7a..5c52759 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2476,6 +2476,14 @@ static struct ctl_table kern_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 	},
- 	{
-+		.procname       = "hung_task_timeout_msecs",
-+		.data           = &sysctl_hung_task_timeout_msecs,
-+		.maxlen         = sizeof(unsigned long),
-+		.mode           = 0644,
-+		.proc_handler   = proc_dohung_task_timeout_secs,
-+		.extra2         = &hung_task_timeout_max,
-+	},
-+	{
- 		.procname	= "hung_task_timeout_secs",
- 		.data		= &sysctl_hung_task_timeout_secs,
- 		.maxlen		= sizeof(unsigned long),
-@@ -2484,8 +2492,8 @@ static struct ctl_table kern_table[] = {
- 		.extra2		= &hung_task_timeout_max,
- 	},
- 	{
--		.procname	= "hung_task_check_interval_secs",
--		.data		= &sysctl_hung_task_check_interval_secs,
-+		.procname	= "hung_task_check_interval_msecs",
-+		.data		= &sysctl_hung_task_check_interval_msecs,
- 		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dohung_task_timeout_secs,
--- 
-2.7.4
-
+I suppose wakeup-source should be added in the board files.
