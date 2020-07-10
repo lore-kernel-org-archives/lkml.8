@@ -2,123 +2,109 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8CC433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A61C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856672078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE45B2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:02:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Yoy2AF0H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C016bLjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgGJQBZ (ORCPT
+        id S1727819AbgGJQCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58182 "EHLO
+        Fri, 10 Jul 2020 12:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbgGJQBX (ORCPT
+        with ESMTP id S1726820AbgGJQCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:01:23 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC46C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:01:22 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id e64so6526606iof.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:01:22 -0700 (PDT)
+        Fri, 10 Jul 2020 12:02:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FA8C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:02:40 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j11so7044805ljo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=CT8GfIgnhQopWm8iDNrvhIrzFdMDsa9H0pNwgHwkLh4=;
-        b=Yoy2AF0Hlb25wfR80l47A00iDMoRp5YDNhyRFuXfbtPhZPrppiweVtxfl0EA63y95e
-         NqLjp0CSKEfkKEDplqCeo/BSn0HO1ugY+1wyWMZRg1Kv3VyoQhP5YIBuifgY/xLpee/D
-         WCzRcYAiDkwxZF7p4r4dopZtrouc5G85QR28xgEntuRFohB9lZZI/GOLpglmG0j4m/QA
-         qTWOHJtYArbfV1mBwWusCP3+60N1r75M8zjM9pqM05XLbDjcFyqkklv2TBkXoH2KgqNs
-         JODXbfw9qIP3aY1L/FQJ3FL/xqP8SaLRBMwwxIERQAt5vP5Sqp/dlmmvJUPTOi3Pfdtl
-         CYCQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dP/Cwrj374IdB7UlLTFuDEBsi+Cb3XJB3iKosVI1sUk=;
+        b=C016bLjS1iSmlTj0cYHyYgpPqWoY/JAMQZDnD7WVqXT+pAak4ctDI2JY5PrUCGEqjQ
+         kK1fGu7t89n/K2qg2s0gtOMBRkEH4Gux1s7dsDRhKk8lkH3i0vAs+rdiFO6xBSDOqp72
+         MiuNlhIBNiLc6XYJgQY1TRcEIm6QIoZsFQtuImstn9NX9d/xjTVXRbm5A+W66VrnUjNA
+         oTskdRfKYWp5HN6JqO0FzrYzjTURpSMwqj4S2IntcSUJ8C+j2dRGORfVgAod0hF5t8oY
+         U5JvZb1Zx66ljOmk9sECCvq3zuZ+EyViOSvG1wYgBRDMgwDb888R3tqYosDQzX4f3vAk
+         D3Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=CT8GfIgnhQopWm8iDNrvhIrzFdMDsa9H0pNwgHwkLh4=;
-        b=HegGz5PEaDjX0nWlsuWbKJ3iSamrzfsBF2Ky7bI3pMJ4bOC1uVDYkW3q1n6oauddct
-         6DKf6eemPQHTMUviIf6qLdHyBWkUtcSc85f3k9ekq5Ye0MjQe+wdQU3V5BccnrMWAGOR
-         EIIuwR2i+IwMGuJ6sNUmNCv5YnEWPgP3VmChN44jna7GDRgnFb7TLfWHl/vKcxCcIX4r
-         FptWILB5p3CID4v9Ql9Hw7wNYmRlrRrM+ieNGCkPv9RnxMC3Ijlt8k3WKT7+cbgAa/VO
-         E2/aqvilpkhHZIJ4pAqpv+qB7ZZ++7+0ZZfa+rfTTzcxHMjAMcwp+KNFe7nZC8zcC4wp
-         GhFQ==
-X-Gm-Message-State: AOAM533Fb17FPidRWmr9vscs9jfEwBAp7RGwpQyNSoOHctp6M+MzcDlP
-        5sGbuhUQ2+fVaa7X/HfWbnTxz+nwZq1T3A==
-X-Google-Smtp-Source: ABdhPJxuXGAJ6xxmDfDRjdZr/xZDFyFSQ8yhw/xlqTPSYGv4M4BL2OyRyl45qSWxa6wvuKUegWVcKg==
-X-Received: by 2002:a6b:6b18:: with SMTP id g24mr45766867ioc.8.1594396881588;
-        Fri, 10 Jul 2020 09:01:21 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id a10sm3590388iln.20.2020.07.10.09.01.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 09:01:21 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.8-rc5
-Message-ID: <2a7f5f56-a1be-46fc-7b5f-4cc35ca4b33d@kernel.dk>
-Date:   Fri, 10 Jul 2020 10:01:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dP/Cwrj374IdB7UlLTFuDEBsi+Cb3XJB3iKosVI1sUk=;
+        b=qGVKJPqO9d9P7qN0B0VGwhFOuDiwDS+5VZ0a5Ehika5E9uZ1QBszpsqySIkY0PqHUh
+         lGQAmaZSeQJ5FTEn+2oPTqC49HCmKNkTDpbrSG2VZjUbHnoyjEk0BZAbH+xTYers7O9L
+         KpX5SYmpW3BdA6Hx+Yz/WTBSBoNRYO+swUEw5Qn4DiOe1x8wn3538kkoPsVVvsHYtsDP
+         UK22mc+PE/Vuwo4LV3G6Hdj/g1yQIxRTNuWwaENEJYzStlxsGUKngJBq+LqhLbiVY2xX
+         Cv/giS3rTmLKSukX0YWFoJgQvhzBTAneWmkhFpsszA7msK3vCjB3jrjBl+nwLnYiFwLF
+         7dMw==
+X-Gm-Message-State: AOAM532+jFDLLkPKJ/v/e927yNxjesTNgE00yRaJtH7VpZC5npArFK28
+        12mhiuqDVVSqeP5FYNIH20FrXmEImjbuF/qQE64o1A==
+X-Google-Smtp-Source: ABdhPJxrjkl/SqLB51dbIteb5teAD4c/1Mys6FI12CCbyigPoK1IQmofSn+hyrV2N/0Fs+ibrYIikoRo5cMZoGwR1cY=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr26850311ljg.100.1594396959423;
+ Fri, 10 Jul 2020 09:02:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Jul 2020 18:02:28 +0200
+Message-ID: <CACRpkdax9wSFtYxyCu18bWwc5T1GqNx7EDVA6JN+Qu42hOCh_A@mail.gmail.com>
+Subject: Re: [PATCH v2] CodingStyle: Inclusive Terminology
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.clm>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        tech-board-discuss@lists.linuxfoundation.org,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Jul 8, 2020 at 9:40 AM Dan Williams <dan.j.williams@intel.com> wrote:
 
-- Fix memleak for error path in registered files (Yang)
-- Export CQ overflow state in flags, necessary to fix a case where
-  liburing doesn't know if it needs to enter the kernel (Xiaoguang)
-- Fix for a regression in when user memory is accounted freed, causing
-  issues with back-to-back ring exit + init if the ulimit -l setting is
-  very tight.
+> Linux maintains a coding-style and its own idiomatic set of terminology.
+> Update the style guidelines to recommend replacements for the terms
+> master/slave and blacklist/whitelist.
+>
+> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Acked-by: Dave Airlie <airlied@redhat.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Acked-by: SeongJae Park <sjpark@amazon.de>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> Signed-off-by: Chris Mason <clm@fb.clm>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Please pull!
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
+An interesting piece on the topic is Douglas R. Hofstadter's
+satirical "A Person paper On Purity in Language" from 1985,
+which is funny, witty, Jonathan Swift-like and at one point
+convinced me on the importance of proper language in
+my professional work.
+http://www.cs.virginia.edu/~evans/cs655/readings/purity.html
 
-The following changes since commit b7db41c9e03b5189bc94993bd50e4506ac9e34c1:
-
-  io_uring: fix regression with always ignoring signals in io_cqring_wait() (2020-07-04 13:44:45 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-10
-
-for you to fetch changes up to 309fc03a3284af62eb6082fb60327045a1dabf57:
-
-  io_uring: account user memory freed when exit has been queued (2020-07-10 09:18:35 -0600)
-
-----------------------------------------------------------------
-io_uring-5.8-2020-07-10
-
-----------------------------------------------------------------
-Jens Axboe (1):
-      io_uring: account user memory freed when exit has been queued
-
-Xiaoguang Wang (1):
-      io_uring: export cq overflow status to userspace
-
-Yang Yingliang (2):
-      io_uring: fix memleak in __io_sqe_files_update()
-      io_uring: fix memleak in io_sqe_files_register()
-
- fs/io_uring.c                 | 29 +++++++++++++++++++++++------
- include/uapi/linux/io_uring.h |  1 +
- 2 files changed, 24 insertions(+), 6 deletions(-)
-
--- 
-Jens Axboe
-
+Thanks,
+Linus Walleij
