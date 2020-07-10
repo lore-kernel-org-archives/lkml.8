@@ -2,172 +2,357 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7231C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7420AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A512075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FY0ruNi4"
+	by mail.kernel.org (Postfix) with ESMTP id 4330B2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594416536;
+	bh=PAKmNzXjrkhk998EGmSvTK8k6GRZgrSYFDtAKnn37jw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=AbtcltX7qZPdzKt9z4JntTO7Ldw4d900MdQatYyHoumMnbDMTZCVo/KVTwK/GxQyr
+	 yPRAxojkKFpwbgtX3ejjaTxZBYEBAydw711FLoiCjMRfZoQ3A7C1gHxkxa2LNgH4ek
+	 t1LyBaE4Gd1rjoLj3r1PkvP6qXaK+QQRWk+hv5ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgGJVT7 (ORCPT
+        id S1726305AbgGJV2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:19:59 -0400
-Received: from npdgs.com ([192.185.145.12]:47166 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726223AbgGJVT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:19:58 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id B441235E19
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:19:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id u0R1j9Jp3SxZVu0R1j0TcJ; Fri, 10 Jul 2020 16:19:55 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=s9e8j/XbEhGXPoz+/d0HZQwrpnEXHLKsoBFKj8A0bLE=; b=FY0ruNi4cBX8KJPYDNFKxM8kBw
-        zrCVRcepO90cwWvBr74Ng9vx0hWbANi9zvWeIz0EHpguDy/6CEZsIicLi6w+58VI+jk1CdgYr5EQS
-        nnJzKyuxGiIuvN3ugDpwuOmM9CTfVRCT1GcnvdRurq3emUVO/V9SIiW6zvxc2eu1kzoH4ueBDhag+
-        ybYi2gSkA+Vx84r7Aj8abv+XMXYpEHENC/H/ZaWYQJqoGS4jQZHAi7TWoTHA3YM3C5PDCJcErxVmO
-        uoh8nWhC/diY0ciNj49WdWBT8TJzyxv/Gr6iPTNnbKxIe8Lgtju1wsNZPzeRKjjUY+3abX9a0+HDO
-        roxnKcEg==;
-Received: from [200.39.25.189] (port=16052 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ju0R1-003M5d-5n; Fri, 10 Jul 2020 16:19:55 -0500
-Subject: Re: [PATCH][next] reiserfs: bitmap: Assign array_size() to a variable
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200616184118.GA1917@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <c62de6b5-a70d-4cfb-90ee-dbd7ad54c440@embeddedor.com>
-Date:   Fri, 10 Jul 2020 16:25:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 17:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgGJV2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 17:28:35 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1D72068F;
+        Fri, 10 Jul 2020 21:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594416514;
+        bh=PAKmNzXjrkhk998EGmSvTK8k6GRZgrSYFDtAKnn37jw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=NKZCo/QN5HAmnzzgMUlzDtMZ4kN+9qcUq/lLtV9OnfhG2L4VVnAOs89BTD6izzWq+
+         KrGAgyoTm67rykw9fuz1kWRZTCtuL9SNwdVNjz6rr99HUx1yRavI++xEQ268Q8Qf4Z
+         DIyvOpRk90pBYeXEbWCRpVRqNEvPwm0gjIxYUgR0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5AF00352262E; Fri, 10 Jul 2020 14:28:34 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 14:28:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        bigeasy@linutronix.de, frederic@kernel.org
+Subject: Re: [PATCH smp 2/2] kernel/smp: Provide CSD lock timeout diagnostics
+Message-ID: <20200710212834.GL9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200709235436.GA20922@paulmck-ThinkPad-P72>
+ <20200709235557.21080-2-paulmck@kernel.org>
+ <20200710103227.GD4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200616184118.GA1917@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.25.189
-X-Source-L: No
-X-Exim-ID: 1ju0R1-003M5d-5n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [200.39.25.189]:16052
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710103227.GD4800@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, Jul 10, 2020 at 12:32:27PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 09, 2020 at 04:55:57PM -0700, paulmck@kernel.org wrote:
+> 
+> So the biggest problem I have with this patch is that while it adds a
+> Kconfig debug knob, it doesn't seem to actually use it.
 
-Friendly ping: who can take this?
+It certainly does not use it as much as it could.  I have make
+changes based on your suggestions.
 
-Thanks
---
-Gustavo
+And thank you for looking this over!
 
-On 6/16/20 13:41, Gustavo A. R. Silva wrote:
-> Assign array_size() to variable _size_ and use it in both vmalloc()
-> and memset(). These sorts of multiplication factors need to be wrapped
-> in array_size().
+> Stuff like:
 > 
-> This issue was found with the help of Coccinelle and, audited and fixed
-> manually.
+> > +/* Record current CSD work for current CPU, NULL to erase. */
+> > +static void csd_lock_record(call_single_data_t *csd)
+> > +{
+> > +	if (!csd) {
+> > +		smp_mb(); // NULL cur_csd after unlock.
+> > +		__this_cpu_write(cur_csd, NULL);
+> > +		return;
+> > +	}
+> > +	__this_cpu_write(cur_csd, csd);
+> > +	__this_cpu_write(cur_csd_func, csd->func);
+> > +	__this_cpu_write(cur_csd_info, csd->info);
+> > +	smp_mb(); // Update cur_csd before function call.
+> > +		  // Or before unlock, as the case may be.
+> > +}
+> > +
+> > +static __always_inline int csd_lock_wait_getcpu(call_single_data_t *csd)
+> > +{
+> > +	unsigned int csd_type;
+> > +
+> > +	csd_type = CSD_TYPE(csd);
+> > +#ifdef CONFIG_64BIT
+> > +	if (csd_type == CSD_TYPE_ASYNC || csd_type == CSD_TYPE_SYNC)
+> > +		return csd->dst; // Other CSD_TYPE_ values might not have ->dst.
+> > +#endif
+> > +	return -1;
+> > +}
 > 
-> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/reiserfs/bitmap.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> is unconditional, and thus adds unconditional fulll barriers :-(
+
+I now #ifdef them out, as you suggest below.
+
+> > +/*
+> > + * Complain if too much time spent waiting.  Note that only
+> > + * the CSD_TYPE_SYNC/ASYNC types provide the destination CPU,
+> > + * so waiting on other types gets much less information.
+> > + */
+> > +static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, int *bug_id)
+> > +{
+> > +	int cpu = -1;
+> > +	call_single_data_t *cpu_cur_csd;
+> > +	bool firsttime;
+> > +	unsigned int flags = READ_ONCE(csd->flags);
+> > +	u64 quo;
+> > +	u32 rem;
+> > +	u64 ts2, ts_delta;
+> > +
+> > +	if (!(flags & CSD_FLAG_LOCK)) {
+> > +		if (!unlikely(*bug_id))
+> > +			return true;
+> > +		cpu = csd_lock_wait_getcpu(csd);
+> > +		if (cpu >= 0)
+> > +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock after all. Phew!\n", *bug_id, raw_smp_processor_id(), cpu);
+> > +		else
+> > +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, the lock was released after all. Phew!\n", *bug_id, raw_smp_processor_id());
+> > +		return true;
+> > +	}
+> > +
+> > +	ts2 = div_u64_rem(sched_clock(), 1000 * 1000, &rem);
+> > +	ts_delta = ts2 - *ts1;
+> > +	if (likely(ts_delta <= CSD_LOCK_TIMEOUT)) {
+> > +		cpu_relax();
+> > +		return false;
+> > +	}
+> > +
+> > +	firsttime = !*bug_id;
+> > +	if (firsttime)
+> > +		*bug_id = atomic_inc_return(&csd_bug_count);
+> > +	cpu = csd_lock_wait_getcpu(csd);
+> > +	smp_mb(); // No stale cur_csd values!
+> > +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
+> > +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, 0));
+> > +	else
+> > +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, cpu));
+> > +	smp_mb(); // No refetching cur_csd values!
+> > +	quo = div_u64_rem(ts2 - ts0, 1000, &rem);
+> > +#define CSD_FORMAT_PREFIX "csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu.%03u secs for CPU#%02d %pS(%ps), currently"
+> > +#define CSD_ARGS_PREFIX firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), \
+> > +	quo, rem, cpu, csd->func, csd->info
+> > +	if (cpu_cur_csd && csd != cpu_cur_csd)
+> > +		pr_alert(CSD_FORMAT_PREFIX " handling prior %pS(%ps) request.\n",
+> > +			 CSD_ARGS_PREFIX, cpu_cur_csd->func, cpu_cur_csd->info);
+> > +	else
+> > +		pr_alert(CSD_FORMAT_PREFIX " %s.\n", CSD_ARGS_PREFIX,
+> > +			 !cpu_cur_csd ? "unresponsive" : "handling this request");
+> > +#undef CSD_FORMAT_PREFIX
+> > +#undef CSD_ARGS_PREFIX
+> > +	if (cpu >= 0) {
+> > +		if (!trigger_single_cpu_backtrace(cpu))
+> > +			dump_cpu_task(cpu);
+> > +		if (!cpu_cur_csd) {
+> > +			pr_alert("csd: Re-sending CSD lock (#%d) IPI from CPU#%02d to CPU#%02d\n", *bug_id, raw_smp_processor_id(), cpu);
+> > +			arch_send_call_function_single_ipi(cpu);
+> > +		}
+> > +	}
+> > +	dump_stack();
+> > +	*ts1 = ts2;
+> > +	cpu_relax();
+> > +
+> > +	return false;
+> > +}
 > 
-> diff --git a/fs/reiserfs/bitmap.c b/fs/reiserfs/bitmap.c
-> index bf708ac287b4..3ca601893d2e 100644
-> --- a/fs/reiserfs/bitmap.c
-> +++ b/fs/reiserfs/bitmap.c
-> @@ -1455,12 +1455,13 @@ int reiserfs_init_bitmap_cache(struct super_block *sb)
->  {
->  	struct reiserfs_bitmap_info *bitmap;
->  	unsigned int bmap_nr = reiserfs_bmap_count(sb);
-> +	size_t size = array_size(bmap_nr, sizeof(*bitmap));
->  
-> -	bitmap = vmalloc(array_size(bmap_nr, sizeof(*bitmap)));
-> +	bitmap = vmalloc(size);
->  	if (bitmap == NULL)
->  		return -ENOMEM;
->  
-> -	memset(bitmap, 0xff, sizeof(*bitmap) * bmap_nr);
-> +	memset(bitmap, 0xff, size);
->  
->  	SB_AP_BITMAP(sb) = bitmap;
->  
 > 
+> This thing is just unreadable. Did it want to be something like:
+> 	
+> 	bool warn = false;
+> 
+> 	for (;;) {
+> 		while (sched_clock() - t1 < NSEC_PER_MSEC * CSD_TIMO) {
+> 			if (!(READ_ONCE(csd->flags) & CSD_FLAG_LOCK))
+> 				goto out;
+> 		}
+> 
+> 		t1 += NSEC_PER_MSEC * CSD_TIMO;
+> 
+> 		pr_alert("csd: stuck on %d, waiting on %d\n", csd->src, csd->dst);
+
+I agree that this code is more compact, but the additional information
+in the original is useful:
+
+o	->func and ->info: If the destination CPU is unresponsive to
+	NMIs, which happens sometimes, these help locate where the
+	problem might be.
+
+o	It is useful to know whether the destination CPU is stuck in
+	the currently waited-on request, some other request, or is not
+	seeing requests at all.
+
+o	There can be multiple reports for a given incident, and sometimes
+	there are overlapping incidents in production, so the bug_id is
+	necessary to work out which reports go together.
+
+Instead of the macros, I could sprintf() the varying stuff into a buffer
+and then print the buffer out.  My concern with that approach was the
+very long function names that are present in some parts of the kernel.
+
+Another approach is to use pr_cont(), but that produced very ugly results
+when torture testing.  But in real life, these things normally occur in
+isolation, so pr_cont() might be OK for non-torture use.
+
+Yet another approach would be to just do multiple pr_alert() calls,
+repeating the bug_id in each pr_alert() so that the output can be
+correlated.  Left to myself, I would take this approach.
+
+Thoughts?
+
+> 		if (!warn) {
+> 			warn = true;
+> 			WARN_ON(1);
+> 		}
+> 
+> 		arch_send_call_function_single_ipi(csd->dst);
+> 	}
+> out:
+> 	smp_acquire__after_ctrl_dep();
+> 
+> 	if (warn)
+> 		pr_alert("csd: got unstuck..\n");
+> 
+> 
+> > +
+> >  /*
+> >   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
+> >   *
+> > @@ -105,7 +212,19 @@ void __init call_function_init(void)
+> >   */
+> >  static __always_inline void csd_lock_wait(call_single_data_t *csd)
+> >  {
+> > -	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
+> > +	int bug_id = 0;
+> > +	u32 rem;
+> > +	u64 ts0, ts1;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_CSD_LOCK_WAIT_DEBUG)) {
+> > +		smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
+> > +		return;
+> > +	}
+> > +	ts1 = ts0 = div_u64_rem(sched_clock(), 1000 * 1000, &rem);
+> > +	for (;;)
+> > +		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
+> > +			break;
+> > +	smp_acquire__after_ctrl_dep();
+> >  }
+> 
+> This makes a trainwreck from what was a very simple small function.
+> 
+> I'm thinking you can get rid of that division and simply multiply things
+> by a 1e6 to get a timeout in ns, that'll be _waaaaay_ faster on
+> everything that doesn't have an oversized divider.
+
+Easy enough to compare and print in nanoseconds, done.
+
+> Anyway, what's wrong with the age old way of:
+> 
+> #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+> 
+> static inline void csd_lock_record(call_single_data_t *csd)
+> {
+> 	/* extra barriers go here */
+> }
+> 
+> static void csd_lock_wait(call_single_data *csd)
+> {
+> 	/* giant monster goes here */
+> }
+> 
+> #else
+> 
+> static __always_inline void csd_lock_record(call_single_data_t *csd)
+> {
+> }
+> 
+> static __always_inline void csd_lock_wait(call_single_data_t *csd)
+> {
+> 	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
+> }
+> 
+> #endif /* CONFIG_CSD_LOCK_WAIT_DEBUG */
+
+Fair enough!
+
+I took this approach, also applied #ifdef to the data and definitions.
+
+> > @@ -375,7 +500,10 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
+> >  
+> >  	csd->func = func;
+> >  	csd->info = info;
+> > +#ifdef CONFIG_64BIT
+> > +	csd->src = smp_processor_id();
+> >  	csd->dst = cpu;
+> > +#endif
+> >  
+> >  	err = generic_exec_single(cpu, csd);
+> >  
+> > @@ -541,7 +669,10 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+> >  			csd->flags |= CSD_TYPE_SYNC;
+> >  		csd->func = func;
+> >  		csd->info = info;
+> > +#ifdef CONFIG_64BIT
+> > +		csd->src = smp_processor_id();
+> >  		csd->dst = cpu;
+> > +#endif
+> >  		if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
+> >  			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
+> >  	}
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 669f4d3..22443fa3 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1332,6 +1332,16 @@ config SCF_TORTURE_TEST
+> >  	  module may be built after the fact on the running kernel to
+> >  	  be tested, if desired.
+> >  
+> > +config CSD_LOCK_WAIT_DEBUG
+> > +	bool "Debugging for csd_lock_wait(), called from smp_call_function*()"
+> > +	depends on DEBUG_KERNEL
+> 
+> Would it make sense to put the src,dst members under this config
+> variable too and make this whole thing
+> 
+> 	depends on CONFIG_64BIT
+> 
+> ?
+
+I believe so.  Making that change as well.
+
+							Thanx, Paul
+
+> > +	default n
+> > +	help
+> > +	  This option enables debug prints when CPUs are slow to respond
+> > +	  to the smp_call_function*() IPI wrappers.  These debug prints
+> > +	  include the IPI handler function currently executing (if any)
+> > +	  and relevant stack traces.
+> > +
+> >  endmenu # lock debugging
+> >  
+> >  config TRACE_IRQFLAGS
+> > -- 
+> > 2.9.5
+> > 
