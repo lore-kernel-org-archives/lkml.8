@@ -2,113 +2,74 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D682068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IOKxiaGo"
+	by mail.kernel.org (Postfix) with ESMTP id C6330206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594414727;
+	bh=DkEEYZd7x1DcGSpdD+Xf3QuaQibE3kKCCy2A4ydlWow=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jehbSW5vGKWASDOG9+8ZfomBV4u8cBWwdX252uXuZli2EErr1pPsQgFpO+issNyul
+	 HfuJ9+Wt+Ca+VDuVFCgcGcDxJFAOwAm0kOdIqve5cv4/OMnk9vl7RQ6MYnEfi4HA9C
+	 H+5fssu94jaaSRvguz7grNftWww4zJP5SLJepvxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgGJU4A (ORCPT
+        id S1728037AbgGJU6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgGJUzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:55:53 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1990C08C5DC;
-        Fri, 10 Jul 2020 13:55:53 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e11so6655850qkm.3;
-        Fri, 10 Jul 2020 13:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=umxzZ9l+zQBonEiIpx0tLenM6i//HJK3uk8ryAmYO6Y=;
-        b=IOKxiaGo3+r6vUQQY+pFq+PCP3gGqfYI8u28d8jT68pc7ASmi9ypo/72ZBbwbZEy7z
-         j/cqyqzx2h3OpdDCnDhvNe1jmVeNN+atM/KLzvK+swqIOD0/HSQw2qE00khhWaCBX/JN
-         OKQEMlACX2AcFIeIvbmgX42Y1OaiTy2RQvEGXM1WRkd6nJV3XAg+VTFPlSgKEKYzf/wD
-         0carPgvw1UTFCG6vIJWrXabmSBomeu+F1jM1jDTnvEi7XW9tFZAvnktZ3bHsAFlgextV
-         Li1E3HzNGLnDI78D5n3LgSHW/Z79RphQhm0hB9oIYbU7BIVdImsbae9Y93xXFUzR4yBw
-         b7oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=umxzZ9l+zQBonEiIpx0tLenM6i//HJK3uk8ryAmYO6Y=;
-        b=fGEr8+uLJb0QFBGcQfXZhXc/sMVEcgjhQq2eMwbc2alxi86pjt34uqg9tSIWCS47+N
-         QOC062u2II1T58m7AC+pjLe42WmtSx038zDtmAgl1Sv0kE/PW+wb0RQ4+BX8bAuG1BqX
-         lkbm/X910E7286pWTpoj/ztK9WieKPz9Fn9HizATgiTOG/KeFWwI4VR+7wUJA1wUKNR6
-         pLe/qAJiyO3w25OyfMxt9+jMMO++g/NzCOSVWzp64wCrRGmyOAlsmBvA9m4jknV+zUQw
-         jgMeWl5fMo56+/VlyPE4OO4AZa6xU0GfzMxeYRyAlkwsqdpgWPqkhRAiayGgxDK8SPA4
-         Rzaw==
-X-Gm-Message-State: AOAM532m0bNpOA3PaPQSRrcoLxVKuGGz6hsxruTOqJPMBonYB3PzqjJt
-        2vMJmSdeLPM5b+mm0I8jkFihuVTl13omrJUPUzijfoJA
-X-Google-Smtp-Source: ABdhPJzjNRIbTmxWF6b67i0FEABG0rtnFThtdCrOIHhzY52R63JviI5RQ7RYTS+b/7LuBpE6xn99Nux9ryyTRI57MWY=
-X-Received: by 2002:a37:7683:: with SMTP id r125mr67674733qkc.39.1594414552906;
- Fri, 10 Jul 2020 13:55:52 -0700 (PDT)
+        Fri, 10 Jul 2020 16:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgGJU6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:58:46 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9EE72068F;
+        Fri, 10 Jul 2020 20:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594414726;
+        bh=DkEEYZd7x1DcGSpdD+Xf3QuaQibE3kKCCy2A4ydlWow=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rejKsv4Nvwk9+NBkBAPS+Y6AIrBecUvHBSMnBroAzP4DsG8vL6RuAC1tnK62W86/A
+         0lSaFllPnc9Fc0HqGiib4V8Qji4KC/r+VSXyfuM6JmG8TgD5aKiFxEYTpAzFxuIm1t
+         uW9Q94WE1iquh5xkk5g4lZs4aZs1gpnxJNNJ7qXE=
+Date:   Fri, 10 Jul 2020 13:58:44 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     <min.li.xe@renesas.com>
+Cc:     <richardcochran@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] ptp: add debugfs support for IDT family of
+ timing devices
+Message-ID: <20200710135844.58d76d44@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
+References: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
 MIME-Version: 1.0
-References: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com> <1594390953-31757-2-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1594390953-31757-2-git-send-email-alan.maguire@oracle.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 10 Jul 2020 13:55:41 -0700
-Message-ID: <CAEf4BzbYk_kmqMEDS6BZR-jYbPNHpSCQFxaG5uSwzkKmMO8UbA@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 1/2] bpf: use dedicated bpf_trace_printk event
- instead of trace_printk()
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 7:25 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> The bpf helper bpf_trace_printk() uses trace_printk() under the hood.
-> This leads to an alarming warning message originating from trace
-> buffer allocation which occurs the first time a program using
-> bpf_trace_printk() is loaded.
->
-> We can instead create a trace event for bpf_trace_printk() and enable
-> it in-kernel when/if we encounter a program using the
-> bpf_trace_printk() helper.  With this approach, trace_printk()
-> is not used directly and no warning message appears.
->
-> This work was started by Steven (see Link) and finished by Alan; added
-> Steven's Signed-off-by with his permission.
->
-> Link: https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
+On Fri, 10 Jul 2020 11:41:25 -0400 min.li.xe@renesas.com wrote:
+> From: Min Li <min.li.xe@renesas.com>
+> 
+> This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
+> It will create a debugfs directory called idtptp{x} and x is the ptp index.
+> Three inerfaces are present, which are cmd, help and regs. help is read
+> only and will display a brief help message. regs is read only amd will show
+> all register values. cmd is write only and will accept certain commands.
+> Currently, the accepted commands are combomode to set comobo mode and write
+> to write up to 4 registers.
+> 
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
 
-LGTM.
+No private configuration interfaces in debugfs, please.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
->  kernel/trace/Makefile    |  2 ++
->  kernel/trace/bpf_trace.c | 41 ++++++++++++++++++++++++++++++++++++-----
->  kernel/trace/bpf_trace.h | 34 ++++++++++++++++++++++++++++++++++
->  3 files changed, 72 insertions(+), 5 deletions(-)
->  create mode 100644 kernel/trace/bpf_trace.h
->
-
-[...]
+If what you're exposing is a useful feature it deserves a proper 
+uAPI interface.
