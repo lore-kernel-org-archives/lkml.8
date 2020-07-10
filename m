@@ -2,62 +2,63 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC90AC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A48BC433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7802075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC1720657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="D3z2EgQ3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="HPME4aFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgGJQPW (ORCPT
+        id S1728396AbgGJQP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
+        Fri, 10 Jul 2020 12:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbgGJQPV (ORCPT
+        with ESMTP id S1728239AbgGJQPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:15:21 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46E0C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j4so6524773wrp.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:21 -0700 (PDT)
+        Fri, 10 Jul 2020 12:15:25 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18078C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:25 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s10so6503082wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/vPUXxzXeGlnq1ZiHx0yDQxVggNKEEBwatkvINr5b3U=;
-        b=D3z2EgQ3LfL5O6tfLeHTEAqFU/QuxHc6dLUveKrSeu8pCTk+DWU6wwowhGSwcqSp17
-         dlID+mPfggDJRpNSdp8sc5scypx9H/ZEBg4tJDxgqU/1DTnIWG0KQdiD+Uimo2y5oCQh
-         sK5aK2/Trj4yQ1DII0Xfwvg4xdV8wry9DUVHbkMecPKDM7DUR+fPj/un/E0yHCOcXs5y
-         Tywdj2iQNcP+DFk2boREchX3VQUrdtI/5tVGRKhu7tH/xsT6TBHOsght5Swb4n+cVGvr
-         5ST8ht05dAa+6WYeqYhg4KXYy2nLPKeQlY9jGKH22SYQGq0ORluCE6oy4DMRpk2baJU/
-         irPw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6VeY2q2ARwtwhxTnriPNqujWGB2wBtqSPVx5GyBvhlc=;
+        b=HPME4aFfN5DAGO/hNKu8shxMBOKpjiUHJbJOGhTo99xKJ62hrdqOCo/1gYMqtetwLI
+         joIHG5DbBNPLurDw77w69rKt2TzzTHMFPef7Ae9YSPcdFckr7QDEwgkiZSeS4B4mZiG4
+         Aye0brfxunFa1P3lI0bGf7BUjcvDs5NNH95uxOXPNNQ5uWE6yXFQW35oy5RmGrkaXj3W
+         XT6uOuXIJnTF8VBQGfzVTwbqDOAC6IeVDifSeblH7eo4eSXXeg9RYJ36eMPX14bSLbpY
+         28NWQ+9Wf7ij9n9AdZsXnM7MJLn6IUHpsq1r7gEoEGKjKZwAfhB5p5uKOWdGmEep1g3A
+         epRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/vPUXxzXeGlnq1ZiHx0yDQxVggNKEEBwatkvINr5b3U=;
-        b=j2nE2eKh4AhyxUDPUm5Xuuxwh6PAJn3KagQDlUS76NCeLSH7X/NExbBSMy8QOwqlLL
-         nJ7cDlIY116yKCzrrBVMrJFvn55oKSBW22QmWIY6RJXSEjVoUf3FI3JkDAAy4ctM/YEP
-         sYsVyPJBMVMq53WOcmTb44KmGJDUXzUn+b6mCYHP/fjN8DWFEPA6Mlv0KoJ7vBXIACL2
-         IRFYad2V89zsybqWbxc+1/ABs9yNuCGPzXIAkv056VHlaZm9L6TuL7O41ieifRC13D2G
-         wgiKyvWEMKx0E7NC75pN5RAYkwujkuvWTqPmQ9bls+POMCykYsaCL49xgx+CcnBxyNzo
-         Yv+w==
-X-Gm-Message-State: AOAM532m2hwbY+Z4XKcVGCfXB1aGgs8f1MfZBxTnrHbEli7ZZVCsACox
-        +rZ30+SPzQ5pJ+9GLpHxec31xw==
-X-Google-Smtp-Source: ABdhPJzyp5bJ8ltFB6zHj7EKTwCY5Eopz4BIDAohnS82UPKO8R6qn1ZyOecy2+fAN4nrQX5rouwPAw==
-X-Received: by 2002:adf:ce8d:: with SMTP id r13mr73581485wrn.392.1594397720362;
-        Fri, 10 Jul 2020 09:15:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6VeY2q2ARwtwhxTnriPNqujWGB2wBtqSPVx5GyBvhlc=;
+        b=PMsIAB6rW9fLHT+tIBF5oPhPWgpqAthhvyDmFztKYLBiXljyHdxHpYMOl1MCpBc1nE
+         wowiUgu1GEoAKz9HygkTA1V0E+gvXS+2TaMwPNe8a2KD0ff30IKPr05lD7Xyrn53FmVw
+         0L+K4Cdi01YAwj0Ee+Az84uyGRl70/aDzIDubYTgAjsS3HGHyvmDAHogV9LIYtrDYAvd
+         yZc3OCoK2BcVo8g+rEUz7haG5aX4y34IMSpDEb0dP7hZPaOdEwgjHjIczRBVZja24Meg
+         OHjUZfmi1Iljk0d59sWnX7Y+c//GYB5ckCxozidG4k62jFsXYu9ci1em1hBKPo7iXsnj
+         z2KQ==
+X-Gm-Message-State: AOAM531OdDg5iP3k32SldK/b5EkZOwxYz7Dl8kgHhIYNZIrOQ1vsDboR
+        8kiXFIL2ZzCHST+DeORO6kosQA==
+X-Google-Smtp-Source: ABdhPJwOtOzdkUiP2GCCTb1YJ3mjOhhSDr/YjLUB5Z33mCbFNZoBuRBbEqo72XYreuJPsOb9S088+A==
+X-Received: by 2002:a5d:4d0b:: with SMTP id z11mr38646926wrt.24.1594397723839;
+        Fri, 10 Jul 2020 09:15:23 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id e8sm11179359wrp.26.2020.07.10.09.15.18
+        by smtp.gmail.com with ESMTPSA id e8sm11179359wrp.26.2020.07.10.09.15.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:15:19 -0700 (PDT)
+        Fri, 10 Jul 2020 09:15:23 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -69,10 +70,12 @@ To:     Jonathan Cameron <jic23@kernel.org>,
 Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 0/3] devres: provide and use devm_krealloc()
-Date:   Fri, 10 Jul 2020 18:15:13 +0200
-Message-Id: <20200710161516.11625-1-brgl@bgdev.pl>
+Subject: [PATCH v3 1/3] devres: provide devm_krealloc()
+Date:   Fri, 10 Jul 2020 18:15:14 +0200
+Message-Id: <20200710161516.11625-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200710161516.11625-1-brgl@bgdev.pl>
+References: <20200710161516.11625-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,45 +85,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Greg,
+Implement the managed variant of krealloc(). This function works with
+all memory allocated by devm_kmalloc() (or devres functions using it
+implicitly like devm_kmemdup(), devm_kstrdup() etc.).
 
-As discussed, resending the remaining devm_krealloc() patches.
+Managed realloc'ed chunks can be manually released with devm_kfree().
 
-===
-
-Regular krealloc() obviously can't work with managed memory. This series
-implements devm_krealloc() and adds the first users with hope that this
-helper will be adopted by other drivers currently using non-managed
-krealloc().
-
-Some additional changes to the code modified by main patches are included.
-
-v1 -> v2:
-- remove leftover call to hwmon_device_unregister() from pmbus_core.c
-- add a patch extending devm_kmalloc() to handle zero size case
-- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
-  a pointer to non-managed memory
-- correctly handle the case when devm_krealloc() is passed a pointer to
-  memory in .rodata (potentially returned by devm_kstrdup_const())
-- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
-
-v2 -> v3:
-- drop already applied patches
-- collect Acks
-- add an additional user in iio
-
-Bartosz Golaszewski (3):
-  devres: provide devm_krealloc()
-  hwmon: pmbus: use more devres helpers
-  iio: adc: xilinx-xadc: use devm_krealloc()
-
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
  .../driver-api/driver-model/devres.rst        |  1 +
  drivers/base/devres.c                         | 50 +++++++++++++++++++
- drivers/hwmon/pmbus/pmbus_core.c              | 28 ++++-------
- drivers/iio/adc/xilinx-xadc-core.c            | 16 +++---
  include/linux/device.h                        |  2 +
- 5 files changed, 70 insertions(+), 27 deletions(-)
+ 3 files changed, 53 insertions(+)
 
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index eaaaafc21134..aa08f5162524 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -353,6 +353,7 @@ MEM
+   devm_kfree()
+   devm_kmalloc()
+   devm_kmalloc_array()
++  devm_krealloc()
+   devm_kmemdup()
+   devm_kstrdup()
+   devm_kvasprintf()
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index ed615d3b9cf1..4b8870ef6a3f 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -837,6 +837,56 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+ }
+ EXPORT_SYMBOL_GPL(devm_kmalloc);
+ 
++void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
++{
++	struct devres *old_dr, *new_dr;
++	struct list_head old_head;
++	unsigned long flags;
++	void *ret = NULL;
++	size_t tot_size;
++
++	if (unlikely(!new_size)) {
++		devm_kfree(dev, ptr);
++		return ZERO_SIZE_PTR;
++	}
++
++	if (unlikely(ZERO_OR_NULL_PTR(ptr)))
++		return devm_kmalloc(dev, new_size, gfp);
++
++	if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
++		/*
++		 * We cannot reliably realloc a const string returned by
++		 * devm_kstrdup_const().
++		 */
++		return NULL;
++
++	if (!check_dr_size(new_size, &tot_size))
++		return NULL;
++
++	spin_lock_irqsave(&dev->devres_lock, flags);
++
++	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
++	if (WARN_ON(!old_dr))
++		/* Memory chunk not managed or managed by a different device. */
++		goto out;
++
++	old_head = old_dr->node.entry;
++
++	new_dr = krealloc(old_dr, tot_size, gfp);
++	if (!new_dr)
++		goto out;
++
++	if (new_dr != old_dr)
++		list_replace(&old_head, &new_dr->node.entry);
++
++	ret = new_dr->data;
++
++out:
++	spin_unlock_irqrestore(&dev->devres_lock, flags);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_krealloc);
++
+ /**
+  * devm_kstrdup - Allocate resource managed space and
+  *                copy an existing string into that.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 7322c51e9c0c..f64f40843159 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -206,6 +206,8 @@ int devres_release_group(struct device *dev, void *id);
+ 
+ /* managed devm_k.alloc/kfree for device drivers */
+ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
++void *devm_krealloc(struct device *dev, void *ptr, size_t size,
++		    gfp_t gfp) __must_check;
+ __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+ 				     const char *fmt, va_list ap) __malloc;
+ __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
 -- 
 2.26.1
 
