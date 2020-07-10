@@ -6,95 +6,82 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2562920772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B43120767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="br/6N3S/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nL1GgAFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGJJsN (ORCPT
+        id S1726912AbgGJJvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
+        Fri, 10 Jul 2020 05:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgGJJsN (ORCPT
+        with ESMTP id S1726560AbgGJJvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:48:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EEEC08C5CE;
-        Fri, 10 Jul 2020 02:48:13 -0700 (PDT)
+        Fri, 10 Jul 2020 05:51:53 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D878C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w3kp1+jdf3bXyU6T7tLgS3NnoV3a3u51ChfZ8zM0K6Y=; b=br/6N3S/jhoP3JJtrayUvCy7E2
-        /oRU43tMNdc0fhNyVDv7fH8+PstYkTFr08/wfrTrxhGC49B2ucWOnnRIlRuLDLPqDItmT26eTHVVT
-        rKad4E6DtLTLe7r82xihXktEnX6M01WB8CtpTMKx0JkiRXLtOdgDsB46LJ2Um4Kwx0VPp7Sn4uFnj
-        9peCcN+glsBEtOBgkQNs5SlFneyn96pQGzqF1XgyfYmbBC6yaqpGsgv4jn5/X3BVoAhe1YjIuxGN7
-        +Ih7bvd7BtJLcLS+PaTsRy3yVa67fyYc9A2jpYSkiYQJx+S2batZv+RGXRz90Vxfyba40R2zVSQm8
-        SQgM/Jpw==;
+        bh=G4BQT5YZ6inbLMuZQGrLBTNmes4SMbEIAYTL3fFnjd8=; b=nL1GgAFk6IYwBe46ttmYv8O7nG
+        rvYyF+J4PaTz0D//ecTD3ylx6iQsEMH40ZQVIQnOT5shMx9mlu4Qkp1+y41jDZTy3TSugnuWrQWwa
+        VaYPREM9p8qY0Yeva7s5Q3XifD25hLBngkCeixWsKCX0ulLyBJw2KFPJTEXanblmaKvPeNce4GBFb
+        rnqejhBoZgr62cr7KiT7SSERVKhauR6NGMdmMgeqwZP5m0LfXSBDxd/z4joIO8E/DDVf8sS5UFo3c
+        AyxwnW8EMLFYScEGknbWt5edrDAoKvodIM9MDrgtsaeFOHG2PdeQddBALrD50EBwKcm/iYx7P1zHw
+        tpJduwNw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtpdR-0001ld-Ea; Fri, 10 Jul 2020 09:48:01 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtph3-0007iQ-Tm; Fri, 10 Jul 2020 09:51:46 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAD99304E03;
-        Fri, 10 Jul 2020 11:48:00 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 793083003E5;
+        Fri, 10 Jul 2020 11:51:44 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D7BCF2B5130F2; Fri, 10 Jul 2020 11:48:00 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 11:48:00 +0200
+        id 0C3802B515301; Fri, 10 Jul 2020 11:51:44 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 11:51:44 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-arch@vger.kernel.org, x86@kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        Anton Blanchard <anton@ozlabs.org>
-Subject: Re: [RFC PATCH 5/7] lazy tlb: introduce lazy mm refcount helper
- functions
-Message-ID: <20200710094800.GA4800@hirez.programming.kicks-ass.net>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
- <20200710015646.2020871-6-npiggin@gmail.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>, x86 <x86@kernel.org>
+Subject: Re: [tip: perf/core] x86/cpufeatures: Add Architectural LBRs feature
+ bit
+Message-ID: <20200710095144.GC4800@hirez.programming.kicks-ass.net>
+References: <1593780569-62993-2-git-send-email-kan.liang@linux.intel.com>
+ <159420191583.4006.10876391642907607745.tip-bot2@tip-bot2>
+ <e231263a-76f8-326a-ae47-0ae785137c9a@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710015646.2020871-6-npiggin@gmail.com>
+In-Reply-To: <e231263a-76f8-326a-ae47-0ae785137c9a@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:56:44AM +1000, Nicholas Piggin wrote:
+On Thu, Jul 09, 2020 at 04:00:48PM -0700, Dave Hansen wrote:
+> On 7/8/20 2:51 AM, tip-bot2 for Kan Liang wrote:
+> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > index 02dabc9..72ba4c5 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -366,6 +366,7 @@
+> >  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+> >  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+> >  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+> > +#define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
+> >  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+> >  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+> >  #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+> 
+> Are architectural LBRs useful *without* XSAVE?  If not, should we add an
+> entry in arch/x86/kernel/cpu/cpuid-deps.c::cpuid_deps[] for this?
 
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 73199470c265..ad95812d2a3f 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -1253,7 +1253,7 @@ void start_secondary(void *unused)
->  	unsigned int cpu = smp_processor_id();
->  	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
->  
-> -	mmgrab(&init_mm);
-> +	mmgrab(&init_mm); /* XXX: where is the mmput for this? */
->  	current->active_mm = &init_mm;
->  
->  	smp_store_cpu_info(cpu);
-
-Right; so IIRC it should be this one:
-
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 134688d79589..ff9fcbc4e76b 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -578,7 +578,7 @@ static int finish_cpu(unsigned int cpu)
->  	 */
->  	if (mm != &init_mm)
->  		idle->active_mm = &init_mm;
-> -	mmdrop(mm);
-> +	mmdrop_lazy_tlb(mm);
->  	return 0;
->  }
-
+Yes, look at patch 22, without the XSAVE thing it'll fall back to poking
+at MSRs lots.
