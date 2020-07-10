@@ -2,191 +2,207 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB6DC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F84206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE3D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QhyCt3lN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IGqdsQd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgGJVD7 (ORCPT
+        id S1726407AbgGJVFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:03:59 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20246 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726162AbgGJVD6 (ORCPT
+        Fri, 10 Jul 2020 17:05:47 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58204 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgGJVFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:03:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594415037; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/Y+F2VRKOW+F7AotxxwUsOTyOLysK88Rj1ETIuOMgCU=; b=QhyCt3lNSV5jYBLL9KC6M2jTz6K4bIaJn6t7o3FPfGXX/vYdhgg2CmWaKVrjBLtnQq6v8Osn
- H4COpZlv9+Zz35GGQ8WpZW9VjcMA8ScsIuv8C/NNPe2dztB8a3G5aTDwIlq667g4JlsBpUgo
- M8FtNwpyV2V5fpZqwvi8aatIgNI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5f08d7b503c8596cdb04592e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 21:03:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0D63C433A0; Fri, 10 Jul 2020 21:03:47 +0000 (UTC)
-Received: from [192.168.1.9] (unknown [117.210.185.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 599D8C433C6;
-        Fri, 10 Jul 2020 21:03:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 599D8C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [Freedreno] [PATCH v4 4/7] drm: msm: a6xx: use dev_pm_opp_set_bw
- to scale DDR
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        saravanak@google.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        dri-devel@freedesktop.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
- <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-Message-ID: <17afba8b-dae5-d724-4c8c-8b4c79fcfb84@codeaurora.org>
-Date:   Sat, 11 Jul 2020 02:33:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 17:05:46 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AL4go3110049;
+        Fri, 10 Jul 2020 16:04:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594415082;
+        bh=YN94F55WhKkuP89j9A3mDlZdwphR/xlr7fYpfgmUT9U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IGqdsQd8Kl4kHd53/f9MZdbRcD0OCoDajtwIWgsoUIaFbV2gts0+uWO3l2fp1c0Pz
+         B4ZO3rBKMXp8Lcn7wcZKyqWEbAUCGk0Ks3vKcVIqWGHcJBC1rlCzqZByJx9swRTqi0
+         c+EEtheJyKv5iJvcoBEmDEZ0mQN6iLiFMT4VXp+I=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AL4g9P022931
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 16:04:42 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 16:04:41 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 16:04:41 -0500
+Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AL4fnr089140;
+        Fri, 10 Jul 2020 16:04:41 -0500
+Subject: Re: [PATCHv3 4/6] irqchip/irq-pruss-intc: Implement
+ irq_{get,set}_irqchip_state ops
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
+        "Mills, William" <wmills@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-5-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <658e3a8d3374eca91387932a9a246add@kernel.org>
+ <CAMxfBF5oB9=qkA8G4jD=KPht+OmZdOaTpsoqvRE881da51S2AA@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <8189e095-6531-8e68-844c-22dd3a38a28d@ti.com>
+Date:   Fri, 10 Jul 2020 16:04:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAMxfBF5oB9=qkA8G4jD=KPht+OmZdOaTpsoqvRE881da51S2AA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/3/20 12:04 PM, Grzegorz Jaszczyk wrote:
+> On Thu, 2 Jul 2020 at 19:54, Marc Zyngier <maz@kernel.org> wrote:
+>>
+>> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+>>> From: David Lechner <david@lechnology.com>
+>>>
+>>> This implements the irq_get_irqchip_state and irq_set_irqchip_state
+>>> callbacks for the TI PRUSS INTC driver. The set callback can be used
+>>> by drivers to "kick" a PRU by enabling a PRU system event.
+>>
+>> "enabling"? That'd be unmasking an interrupt, which isn't what this
+>> does. "injecting", maybe?
+> 
+> Yes "injecting" is much better.
+> 
+>>
+>>>
+>>> Example:
+>>>       irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
+>>
+>> Nice example.
+>>
+>> What this example does explain is how you are actually going to kick
+>> a PRU via this interface. For that to happen, you'd have to have on
+>> the Linux side an interrupt that is actually routed to a PRU.
+> 
+> Correct.
+> 
+>> And from what I have understood of the previous patches, this can't
+>> be the case. What didi I miss?
+> 
+> The hwirq's handled by this driver are so called system events in
+> PRUSS nomenclature. This driver is responsible for the entire mapping
+> of those system events to PRUSS specific channels which are next
+> mapped to host_irq (patch #6 https://lkml.org/lkml/2020/7/2/612).
+> There are 8 host_irqs that are routed to the main cpu (running Linux)
+> and they are called host_intr0..host_intr7 (were seen in previous
+> patches of this series). But there are other "host_interrupts" that
+> are routed not to the main CPU but to PRU cores and this driver is
+> responsible for creating proper mapping (system
+> event/channel/host_irq) for them, and allowing to kick PRU via the
+> introduced interface.
+> 
+> It is worth noting that the PRUSS is quite flexible and allows various
+> things e.g.:
+> - map any of 160/64 internal system events to any of the 20/10 channels
+> - map any of the 20/10 channels to any of the 20/10 host interrupts.
+> 
+> So e.g. it is possible to map e.g. system event 17 to the main CPU
+> (through e.g. channel 1 which is the next map to e.g. host_intr0). Or
+> (exclusively) map the same system event 17 to PRU core (through e.g.
+> channel 1 which is the next map to PRU0).
 
-On 7/11/2020 1:11 AM, Rob Clark wrote:
-> On Thu, Jul 9, 2020 at 1:01 PM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
->> From: Sharat Masetty <smasetty@codeaurora.org>
->>
->> This patches replaces the previously used static DDR vote and uses
->> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
->> GPU frequency. Also since the icc path voting is handled completely
->> in the opp driver, remove the icc_path handle and its usage in the
->> drm driver.
->>
->> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 25 +++++++++++++++++--------
->>   1 file changed, 17 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> index b547339..6fbfd7d 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> @@ -123,7 +123,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->>
->>          if (!gmu->legacy) {
->>                  a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->> -               icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +               dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> What is the status of the patch to add dev_pm_opp_set_bw()?  If it is
-> ready to go, and I get an ack-by from the OPP maintainer, I suppose I
-> could merge it via drm/msm.
->
-> Otherwise should we consider pulling in a private copy of it into
-> drm/msm (and then drop it to use the helper in, hopefully, the next
-> cycle)?
->
-> I'm pulling the patches preceding this one into msm-next-staging to do
-> some testing.  And the dt patches following this one would normally
-> get merged via Bjorn.  At the moment, I'm not sure what to do with
-> this one.
->
-> BR,
-> -R
-I see Sibi's patch is already picked in opp/linux-next branch.
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+/b466542f331e221a3628c1cfe5ccff307d7d787f 
+Grzegorz has explained in detail, the short summary is we trigger a 
+system event, and the mapping for that event ensures the interrupt is 
+routed at the desired processor.
 
+regards
+Suman
 
-Thanks,
--Akhil
+> 
+>>
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+>>> Reviewed-by: Lee Jones <lee.jones@linaro.org>
+>>> ---
+>>> v2->v3:
+>>> - Get rid of unnecessary pruss_intc_check_write() and use
+>>>    pruss_intc_write_reg directly.
+>>> v1->v2:
+>>> - https://patchwork.kernel.org/patch/11069769/
+>>> ---
+>>>   drivers/irqchip/irq-pruss-intc.c | 43
+>>> ++++++++++++++++++++++++++++++++++++++--
+>>>   1 file changed, 41 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-pruss-intc.c
+>>> b/drivers/irqchip/irq-pruss-intc.c
+>>> index 49c936f..19b3d38 100644
+>>> --- a/drivers/irqchip/irq-pruss-intc.c
+>>> +++ b/drivers/irqchip/irq-pruss-intc.c
+>>> @@ -7,6 +7,7 @@
+>>>    *   Suman Anna <s-anna@ti.com>
+>>>    */
+>>>
+>>> +#include <linux/interrupt.h>
+>>>   #include <linux/irq.h>
+>>>   #include <linux/irqchip/chained_irq.h>
+>>>   #include <linux/irqdomain.h>
+>>> @@ -39,8 +40,7 @@
+>>>   #define PRU_INTC_HIEISR              0x0034
+>>>   #define PRU_INTC_HIDISR              0x0038
+>>>   #define PRU_INTC_GPIR                0x0080
+>>> -#define PRU_INTC_SRSR0               0x0200
+>>> -#define PRU_INTC_SRSR1               0x0204
+>>> +#define PRU_INTC_SRSR(x)     (0x0200 + (x) * 4)
+>>>   #define PRU_INTC_SECR0               0x0280
+>>>   #define PRU_INTC_SECR1               0x0284
+>>>   #define PRU_INTC_ESR0                0x0300
+>>> @@ -145,6 +145,43 @@ static void pruss_intc_irq_relres(struct irq_data
+>>> *data)
+>>>        module_put(THIS_MODULE);
+>>>   }
+>>>
+>>> +static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
+>>> +                                         enum irqchip_irq_state which,
+>>> +                                         bool *state)
+>>> +{
+>>> +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+>>> +     u32 reg, mask, srsr;
+>>> +
+>>> +     if (which != IRQCHIP_STATE_PENDING)
+>>> +             return -EINVAL;
+>>> +
+>>> +     reg = PRU_INTC_SRSR(data->hwirq / 32);
+>>
+>> I assume the register file scales as more interrupts are added in the
+>> subsequent patch?
+>>
+> Yes, after I will move part of the next patch to patch #2 as you
+> suggested it will stop being confusing.
+> 
+> Thank you,
+> Grzegorz
+> 
 
->>                  return;
->>          }
->>
->> @@ -149,11 +149,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->>          if (ret)
->>                  dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
->>
->> -       /*
->> -        * Eventually we will want to scale the path vote with the frequency but
->> -        * for now leave it at max so that the performance is nominal.
->> -        */
->> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
->>   }
->>
->>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
->> @@ -840,6 +836,19 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
->>          dev_pm_opp_put(gpu_opp);
->>   }
->>
->> +static void a6xx_gmu_set_initial_bw(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
->> +{
->> +       struct dev_pm_opp *gpu_opp;
->> +       unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
->> +
->> +       gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
->> +       if (IS_ERR_OR_NULL(gpu_opp))
->> +               return;
->> +
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, gpu_opp);
->> +       dev_pm_opp_put(gpu_opp);
->> +}
->> +
->>   int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>   {
->>          struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
->> @@ -864,7 +873,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>          }
->>
->>          /* Set the bus quota to a reasonable value for boot */
->> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
->> +       a6xx_gmu_set_initial_bw(gpu, gmu);
->>
->>          /* Enable the GMU interrupt */
->>          gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
->> @@ -1040,7 +1049,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->>                  a6xx_gmu_shutdown(gmu);
->>
->>          /* Remove the bus vote */
->> -       icc_set_bw(gpu->icc_path, 0, 0);
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, NULL);
->>
->>          /*
->>           * Make sure the GX domain is off before turning off the GMU (CX)
->> --
->> 2.7.4
->>
->> _______________________________________________
->> Freedreno mailing list
->> Freedreno@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/freedreno
