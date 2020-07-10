@@ -2,518 +2,218 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE8C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8528C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B616207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909AA20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mpabDmKO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPkW7mFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgGJNon (ORCPT
+        id S1728321AbgGJNpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36920 "EHLO
+        Fri, 10 Jul 2020 09:45:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgGJNoi (ORCPT
+        with ESMTP id S1728205AbgGJNow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:44:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02143C08E886
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=Px38+jFfSrwvD0KuvtMP6njhncydmioiCzoysC+ZtzA=; b=mpabDmKOURcBfUbdFx1RLj/rGb
-        DUQvmCSsN4LF9bSaBoLbVLUCBGfsWD834AIldZ9HevCNBPb/mBzwAYDankxSiscdDdkVEv0habWWD
-        Y68TgVPqgnafvFQYMUJb52fDSQjtvHt/guRhOt1A+D+apm6EUOJhYxJoI3pVC5Ipav1GxqQI27Mg6
-        yaDzQlvT2Ud9D2VmKLxiReggTy8iPTNHfIZ9V5i0/C9kIcHE8gnJbK9V/5UUt3evO4aMXIhALnzun
-        DDfYWizCVKgjWZSvUcBMa0kPXD+l1k/Wjs9QJe05k253GaC3jPeUIvCnR8dMjew5nLVRs7n0K5M/V
-        j58eaA6A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jttK1-0003t6-4W; Fri, 10 Jul 2020 13:44:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D51CF307975;
-        Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0CDF62B7A733A; Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
-Message-ID: <20200710134336.739394269@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 10 Jul 2020 15:38:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
-        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: [PATCH v6 10/17] x86/static_call: Add inline static call implementation for x86-64
-References: <20200710133831.943894387@infradead.org>
+        Fri, 10 Jul 2020 09:44:52 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A802C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:50 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mn17so2640259pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qI2UxEq65Bm2hy2Ar9pHiCmTMt1XFcVBUAcKn4PHYsg=;
+        b=WPkW7mFbgB0DGPHTp073QS/49tUR6KsQcZ7Qkt3bMpddHokGpAV6TLEaKW4naGpTTP
+         N3G8kAMkhUWGS26jER934EbUWehFySsEderwaLaJTBdVc298vaWRaKwGtX1z2qUGrBgr
+         ERMRERQ2gDkQPT82AJZtB9H14Rr+1wtZLw1has1ALzJrHNfKuUFzWe+4S3gNYEsxKpC2
+         6YJCRf8rZRWIzzj0/1ymLpiNzldDJWLz5f7ocgewXydOgdImcEB7P/a2cgszzHT7YFQH
+         jk6aWA1jr75JFEUa9Fa0sIFy+VET5bwvSKh10POUiJgmkkekCUf0R6we7a8k75V9aymo
+         1z2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qI2UxEq65Bm2hy2Ar9pHiCmTMt1XFcVBUAcKn4PHYsg=;
+        b=Tjx2QFHFOgzcZ0x0dudW+/EgCxdQh4CHIuEhKV2+zosjU9VG8Im0QnOInCUL8Bv0Wh
+         G1mNtFTO8DbxyxyznIhlwa+GvOofA1CaGU6J8L+Eeu4PVeD7xBJXIqqx6TbXViPEFIHs
+         nEIpmfCXMpqruJCM8V6I4cpHqFjmQKHmO8WOo6/NmmGRrRMnrLtTqO1TIyxducItSfzw
+         GY0iEH+cC8YaxqHVDHxS7b3z83Ba7uhCDbankNDjpFoVfhPNYfAjl6SoNPpc/uga6LWR
+         L5PZZPlxEoULpg7tdZ/v/ZZ5NkwpQfIaOKZkZFFAx+83HIrMXrEe0LOsXY8XEQcKSmFC
+         NhZw==
+X-Gm-Message-State: AOAM532k1+IikY1/WFwcIwq8rQcmBE/V78FfOsZAoGYTt/Bkkb4VGD8g
+        cxqar9eiykF7dtSifMFZQUc=
+X-Google-Smtp-Source: ABdhPJxUvzcfFvUDy2iKWHH2eW9UXO8t+66AWhaSBe0t1c5sKwYU1du2ywQCLkYJXA4ukwle2GptCw==
+X-Received: by 2002:a17:90b:811:: with SMTP id bk17mr5607421pjb.183.1594388689891;
+        Fri, 10 Jul 2020 06:44:49 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 06:44:49 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v4 09/17] perf ftrace: add support for tracing option 'func_stack_trace'
+Date:   Fri, 10 Jul 2020 21:43:14 +0800
+Message-Id: <20200710134322.15400-10-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+This adds support to display call trace for function tracer. To do this,
+just specify a '--func-opts call-graph' option.
 
-Add the inline static call implementation for x86-64. The generated code
-is identical to the out-of-line case, except we move the trampoline into
-it's own section.
+$ sudo perf ftrace -T vfs_read --func-opts call-graph
+ iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+ iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+ => vfs_read
+ => ksys_read
+ => __x64_sys_read
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
+ ...
 
-Objtool uses the trampoline naming convention to detect all the call
-sites. It then annotates those call sites in the .static_call_sites
-section.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-During boot (and module init), the call sites are patched to call
-directly into the destination function.  The temporary trampoline is
-then no longer used.
-
-[peterz: merged trampolines, put trampoline in section]
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/Kconfig                        |    3 
- arch/x86/include/asm/static_call.h      |   13 +++
- arch/x86/kernel/static_call.c           |    5 +
- arch/x86/kernel/vmlinux.lds.S           |    1 
- include/asm-generic/vmlinux.lds.h       |    6 +
- tools/include/linux/static_call_types.h |   28 +++++++
- tools/objtool/check.c                   |  126 ++++++++++++++++++++++++++++++++
- tools/objtool/check.h                   |    1 
- tools/objtool/elf.c                     |    8 +-
- tools/objtool/elf.h                     |    3 
- tools/objtool/objtool.h                 |    1 
- tools/objtool/orc_gen.c                 |    4 -
- tools/objtool/sync-check.sh             |    1 
- 13 files changed, 190 insertions(+), 10 deletions(-)
- create mode 100644 tools/objtool/include/linux/static_call_types.h
+v3: switch to uniform option --func-opts.
+v2: option name '-s' -> '--func-call-graph'
+---
+ tools/perf/Documentation/perf-ftrace.txt |  4 +++
+ tools/perf/builtin-ftrace.c              | 42 ++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -214,6 +214,7 @@ config X86
- 	select HAVE_STACKPROTECTOR		if CC_HAS_SANE_STACKPROTECTOR
- 	select HAVE_STACK_VALIDATION		if X86_64
- 	select HAVE_STATIC_CALL
-+	select HAVE_STATIC_CALL_INLINE		if HAVE_STACK_VALIDATION
- 	select HAVE_RSEQ
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_UNSTABLE_SCHED_CLOCK
-@@ -229,6 +230,7 @@ config X86
- 	select RTC_MC146818_LIB
- 	select SPARSE_IRQ
- 	select SRCU
-+	select STACK_VALIDATION			if HAVE_STACK_VALIDATION && (HAVE_STATIC_CALL_INLINE || RETPOLINE)
- 	select SYSCTL_EXCEPTION_TRACE
- 	select THREAD_INFO_IN_TASK
- 	select USER_STACKTRACE_SUPPORT
-@@ -450,7 +452,6 @@ config GOLDFISH
- config RETPOLINE
- 	bool "Avoid speculative indirect branches in kernel"
- 	default y
--	select STACK_VALIDATION if HAVE_STACK_VALIDATION
- 	help
- 	  Compile kernel with the retpoline compiler options to guard against
- 	  kernel-to-user data leaks by avoiding speculative indirect
---- a/arch/x86/include/asm/static_call.h
-+++ b/arch/x86/include/asm/static_call.h
-@@ -5,12 +5,23 @@
- #include <asm/text-patching.h>
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index fd632bd9b2c1..676a30cb9b5a 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -78,6 +78,10 @@ OPTIONS
+ 	(or glob patterns).  It will be passed to 'set_ftrace_notrace'
+ 	in tracefs.
  
- /*
-+ * For CONFIG_HAVE_STATIC_CALL_INLINE, this is a temporary trampoline which
-+ * uses the current value of the key->func pointer to do an indirect jump to
-+ * the function.  This trampoline is only used during boot, before the call
-+ * sites get patched by static_call_update().  The name of this trampoline has
-+ * a magical aspect: objtool uses it to find static call sites so it can create
-+ * the .static_call_sites section.
-+ *
-  * For CONFIG_HAVE_STATIC_CALL, this is a permanent trampoline which
-  * does a direct jump to the function.  The direct jump gets patched by
-  * static_call_update().
-+ *
-+ * Having the trampoline in a special section forces GCC to emit a JMP.d32 when
-+ * it does tail-call optimization on the call; since you cannot compute the
-+ * relative displacement across sections.
-  */
- #define ARCH_DEFINE_STATIC_CALL_TRAMP(name, func)			\
--	asm(".pushsection .text, \"ax\"				\n"	\
-+	asm(".pushsection .static_call.text, \"ax\"		\n"	\
- 	    ".align 4						\n"	\
- 	    ".globl " STATIC_CALL_TRAMP_STR(name) "		\n"	\
- 	    STATIC_CALL_TRAMP_STR(name) ":			\n"	\
---- a/arch/x86/kernel/static_call.c
-+++ b/arch/x86/kernel/static_call.c
-@@ -6,7 +6,7 @@
++--func-opts::
++	List of options allowed to set:
++	  call-graph - Display kernel stack trace for function tracer.
++
+ -G::
+ --graph-funcs=::
+ 	Set graph filter on the given function (or a glob pattern).
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 4efaa7b6a906..91611eef5deb 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -27,6 +27,7 @@
+ #include "util/cap.h"
+ #include "util/config.h"
+ #include "util/units.h"
++#include "util/parse-sublevel-options.h"
  
- static void __static_call_transform(void *insn, u8 opcode, void *func)
+ struct perf_ftrace {
+ 	struct evlist		*evlist;
+@@ -40,6 +41,7 @@ struct perf_ftrace {
+ 	int			graph_depth;
+ 	unsigned long		percpu_buffer_size;
+ 	bool			inherit;
++	int			func_stack_trace;
+ };
+ 
+ struct filter_entry {
+@@ -197,6 +199,7 @@ static void reset_tracing_filters(void);
+ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
  {
--	const void *code = text_gen_insn(opcode, (long)insn, (long)func);
-+	const void *code = text_gen_insn(opcode, insn, func);
- 
- 	if (WARN_ONCE(*(u8 *)insn != opcode,
- 		      "unexpected static call insn opcode 0x%x at %pS\n",
-@@ -26,6 +26,9 @@ void arch_static_call_transform(void *si
- 	if (tramp)
- 		__static_call_transform(tramp, JMP32_INSN_OPCODE, func);
- 
-+	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
-+		__static_call_transform(site, CALL_INSN_OPCODE, func);
-+
- 	mutex_unlock(&text_mutex);
- }
- EXPORT_SYMBOL_GPL(arch_static_call_transform);
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -136,6 +136,7 @@ SECTIONS
- 		ENTRY_TEXT
- 		ALIGN_ENTRY_TEXT_END
- 		SOFTIRQENTRY_TEXT
-+		STATIC_CALL_TEXT
- 		*(.fixup)
- 		*(.gnu.warning)
- 
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -620,6 +620,12 @@
- 		*(.softirqentry.text)					\
- 		__softirqentry_text_end = .;
- 
-+#define STATIC_CALL_TEXT						\
-+		ALIGN_FUNCTION();					\
-+		__static_call_text_start = .;				\
-+		*(.static_call.text)					\
-+		__static_call_text_end = .;
-+
- /* Section used for early init (in .S files) */
- #define HEAD_TEXT  KEEP(*(.head.text))
- 
---- /dev/null
-+++ b/tools/include/linux/static_call_types.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _STATIC_CALL_TYPES_H
-+#define _STATIC_CALL_TYPES_H
-+
-+#include <linux/types.h>
-+#include <linux/stringify.h>
-+
-+#define STATIC_CALL_KEY_PREFIX		__SCK__
-+#define STATIC_CALL_KEY_PREFIX_STR	__stringify(STATIC_CALL_KEY_PREFIX)
-+#define STATIC_CALL_KEY_PREFIX_LEN	(sizeof(STATIC_CALL_KEY_PREFIX_STR) - 1)
-+#define STATIC_CALL_KEY(name)		__PASTE(STATIC_CALL_KEY_PREFIX, name)
-+
-+#define STATIC_CALL_TRAMP_PREFIX	__SCT__
-+#define STATIC_CALL_TRAMP_PREFIX_STR	__stringify(STATIC_CALL_TRAMP_PREFIX)
-+#define STATIC_CALL_TRAMP_PREFIX_LEN	(sizeof(STATIC_CALL_TRAMP_PREFIX_STR) - 1)
-+#define STATIC_CALL_TRAMP(name)		__PASTE(STATIC_CALL_TRAMP_PREFIX, name)
-+#define STATIC_CALL_TRAMP_STR(name)	__stringify(STATIC_CALL_TRAMP(name))
-+
-+/*
-+ * The static call site table needs to be created by external tooling (objtool
-+ * or a compiler plugin).
-+ */
-+struct static_call_site {
-+	s32 addr;
-+	s32 key;
-+};
-+
-+#endif /* _STATIC_CALL_TYPES_H */
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -16,6 +16,7 @@
- 
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
-+#include <linux/static_call_types.h>
- 
- #define FAKE_JUMP_OFFSET -1
- 
-@@ -433,6 +434,99 @@ static int add_dead_ends(struct objtool_
- 	return 0;
+ 	write_tracing_option_file("function-fork", "0");
++	write_tracing_option_file("func_stack_trace", "0");
  }
  
-+static int create_static_call_sections(struct objtool_file *file)
+ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+@@ -273,6 +276,17 @@ static int set_tracing_cpu(struct perf_ftrace *ftrace)
+ 	return set_tracing_cpumask(cpumap);
+ }
+ 
++static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
 +{
-+	struct section *sec, *reloc_sec;
-+	struct reloc *reloc;
-+	struct static_call_site *site;
-+	struct instruction *insn;
-+	struct symbol *key_sym;
-+	char *key_name, *tmp;
-+	int idx;
-+
-+	sec = find_section_by_name(file->elf, ".static_call_sites");
-+	if (sec) {
-+		INIT_LIST_HEAD(&file->static_call_list);
-+		WARN("file already has .static_call_sites section, skipping");
-+		return 0;
-+	}
-+
-+	if (list_empty(&file->static_call_list))
++	if (!ftrace->func_stack_trace)
 +		return 0;
 +
-+	idx = 0;
-+	list_for_each_entry(insn, &file->static_call_list, static_call_node)
-+		idx++;
-+
-+	sec = elf_create_section(file->elf, ".static_call_sites", SHF_WRITE,
-+				 sizeof(struct static_call_site), idx);
-+	if (!sec)
-+		return -1;
-+
-+	reloc_sec = elf_create_reloc_section(file->elf, sec, SHT_RELA);
-+	if (!reloc_sec)
-+		return -1;
-+
-+	idx = 0;
-+	list_for_each_entry(insn, &file->static_call_list, static_call_node) {
-+
-+		site = (struct static_call_site *)sec->data->d_buf + idx;
-+		memset(site, 0, sizeof(struct static_call_site));
-+
-+		/* populate reloc for 'addr' */
-+		reloc = malloc(sizeof(*reloc));
-+		if (!reloc) {
-+			perror("malloc");
-+			return -1;
-+		}
-+		memset(reloc, 0, sizeof(*reloc));
-+		reloc->sym = insn->sec->sym;
-+		reloc->addend = insn->offset;
-+		reloc->type = R_X86_64_PC32;
-+		reloc->offset = idx * sizeof(struct static_call_site);
-+		reloc->sec = reloc_sec;
-+		elf_add_reloc(file->elf, reloc);
-+
-+		/* find key symbol */
-+		key_name = strdup(insn->call_dest->name);
-+		if (strncmp(key_name, STATIC_CALL_TRAMP_PREFIX_STR,
-+			    strlen(STATIC_CALL_TRAMP_PREFIX_STR))) {
-+			WARN("static_call: trampoline name malformed: %s", key_name);
-+			return -1;
-+		}
-+		tmp = key_name + STATIC_CALL_TRAMP_PREFIX_LEN - STATIC_CALL_KEY_PREFIX_LEN;
-+		memcpy(tmp, STATIC_CALL_KEY_PREFIX_STR, STATIC_CALL_KEY_PREFIX_LEN);
-+
-+		key_sym = find_symbol_by_name(file->elf, tmp);
-+		if (!key_sym) {
-+			WARN("static_call: can't find static_call_key symbol: %s", tmp);
-+			return -1;
-+		}
-+		free(key_name);
-+
-+		/* populate reloc for 'key' */
-+		reloc = malloc(sizeof(*reloc));
-+		if (!reloc) {
-+			perror("malloc");
-+			return -1;
-+		}
-+		memset(reloc, 0, sizeof(*reloc));
-+		reloc->sym = key_sym;
-+		reloc->addend = 0;
-+		reloc->type = R_X86_64_PC32;
-+		reloc->offset = idx * sizeof(struct static_call_site) + 4;
-+		reloc->sec = reloc_sec;
-+		elf_add_reloc(file->elf, reloc);
-+
-+		idx++;
-+	}
-+
-+	if (elf_rebuild_reloc_section(file->elf, reloc_sec))
++	if (write_tracing_option_file("func_stack_trace", "1") < 0)
 +		return -1;
 +
 +	return 0;
 +}
 +
- /*
-  * Warnings shouldn't be reported for ignored functions.
-  */
-@@ -1522,6 +1616,23 @@ static int read_intra_function_calls(str
- 	return 0;
- }
+ static int reset_tracing_cpu(void)
+ {
+ 	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
+@@ -421,6 +435,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 		goto out_reset;
+ 	}
  
-+static int read_static_call_tramps(struct objtool_file *file)
-+{
-+	struct section *sec;
-+	struct symbol *func;
-+
-+	for_each_sec(file, sec) {
-+		list_for_each_entry(func, &sec->symbol_list, list) {
-+			if (func->bind == STB_GLOBAL &&
-+			    !strncmp(func->name, STATIC_CALL_TRAMP_PREFIX_STR,
-+				     strlen(STATIC_CALL_TRAMP_PREFIX_STR)))
-+				func->static_call_tramp = true;
-+		}
++	if (set_tracing_func_stack_trace(ftrace) < 0) {
++		pr_err("failed to set tracing option func_stack_trace\n");
++		goto out_reset;
 +	}
 +
-+	return 0;
-+}
-+
- static void mark_rodata(struct objtool_file *file)
- {
- 	struct section *sec;
-@@ -1601,6 +1712,10 @@ static int decode_sections(struct objtoo
- 	if (ret)
- 		return ret;
+ 	if (set_tracing_filters(ftrace) < 0) {
+ 		pr_err("failed to set tracing filters\n");
+ 		goto out_reset;
+@@ -594,6 +613,26 @@ static int parse_buffer_size(const struct option *opt,
+ 	return -1;
+ }
  
-+	ret = read_static_call_tramps(file);
++static int parse_func_tracer_opts(const struct option *opt,
++				  const char *str, int unset)
++{
++	int ret;
++	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
++	struct sublevel_option func_tracer_opts[] = {
++		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
++		{ .name = NULL, }
++	};
++
++	if (unset)
++		return 0;
++
++	ret = perf_parse_sublevel_options(str, func_tracer_opts);
 +	if (ret)
 +		return ret;
 +
- 	return 0;
- }
- 
-@@ -2432,6 +2547,11 @@ static int validate_branch(struct objtoo
- 			if (dead_end_function(file, insn->call_dest))
- 				return 0;
- 
-+			if (insn->type == INSN_CALL && insn->call_dest->static_call_tramp) {
-+				list_add_tail(&insn->static_call_node,
-+					      &file->static_call_list);
-+			}
++	return 0;
++}
 +
- 			break;
- 
- 		case INSN_JUMP_CONDITIONAL:
-@@ -2791,6 +2911,7 @@ int check(const char *_objname, bool orc
- 
- 	INIT_LIST_HEAD(&file.insn_list);
- 	hash_init(file.insn_hash);
-+	INIT_LIST_HEAD(&file.static_call_list);
- 	file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
- 	file.ignore_unreachables = no_unreachable;
- 	file.hints = false;
-@@ -2838,6 +2959,11 @@ int check(const char *_objname, bool orc
- 		warnings += ret;
- 	}
- 
-+	ret = create_static_call_sections(&file);
-+	if (ret < 0)
-+		goto out;
-+	warnings += ret;
-+
- 	if (orc) {
- 		ret = create_orc(&file);
- 		if (ret < 0)
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -22,6 +22,7 @@ struct insn_state {
- struct instruction {
- 	struct list_head list;
- 	struct hlist_node hash;
-+	struct list_head static_call_node;
- 	struct section *sec;
- 	unsigned long offset;
- 	unsigned int len;
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -652,7 +652,7 @@ struct elf *elf_open_read(const char *na
- }
- 
- struct section *elf_create_section(struct elf *elf, const char *name,
--				   size_t entsize, int nr)
-+				   unsigned int sh_flags, size_t entsize, int nr)
+ int cmd_ftrace(int argc, const char **argv)
  {
- 	struct section *sec, *shstrtab;
- 	size_t size = entsize * nr;
-@@ -712,7 +712,7 @@ struct section *elf_create_section(struc
- 	sec->sh.sh_entsize = entsize;
- 	sec->sh.sh_type = SHT_PROGBITS;
- 	sec->sh.sh_addralign = 1;
--	sec->sh.sh_flags = SHF_ALLOC;
-+	sec->sh.sh_flags = SHF_ALLOC | sh_flags;
- 
- 
- 	/* Add section name to .shstrtab (or .strtab for Clang) */
-@@ -767,7 +767,7 @@ static struct section *elf_create_rel_re
- 	strcpy(relocname, ".rel");
- 	strcat(relocname, base->name);
- 
--	sec = elf_create_section(elf, relocname, sizeof(GElf_Rel), 0);
-+	sec = elf_create_section(elf, relocname, 0, sizeof(GElf_Rel), 0);
- 	free(relocname);
- 	if (!sec)
- 		return NULL;
-@@ -797,7 +797,7 @@ static struct section *elf_create_rela_r
- 	strcpy(relocname, ".rela");
- 	strcat(relocname, base->name);
- 
--	sec = elf_create_section(elf, relocname, sizeof(GElf_Rela), 0);
-+	sec = elf_create_section(elf, relocname, 0, sizeof(GElf_Rela), 0);
- 	free(relocname);
- 	if (!sec)
- 		return NULL;
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -56,6 +56,7 @@ struct symbol {
- 	unsigned int len;
- 	struct symbol *pfunc, *cfunc, *alias;
- 	bool uaccess_safe;
-+	bool static_call_tramp;
- };
- 
- struct reloc {
-@@ -120,7 +121,7 @@ static inline u32 reloc_hash(struct relo
- }
- 
- struct elf *elf_open_read(const char *name, int flags);
--struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
-+struct section *elf_create_section(struct elf *elf, const char *name, unsigned int sh_flags, size_t entsize, int nr);
- struct section *elf_create_reloc_section(struct elf *elf, struct section *base, int reltype);
- void elf_add_reloc(struct elf *elf, struct reloc *reloc);
- int elf_write_insn(struct elf *elf, struct section *sec,
---- a/tools/objtool/objtool.h
-+++ b/tools/objtool/objtool.h
-@@ -16,6 +16,7 @@ struct objtool_file {
- 	struct elf *elf;
- 	struct list_head insn_list;
- 	DECLARE_HASHTABLE(insn_hash, 20);
-+	struct list_head static_call_list;
- 	bool ignore_unreachables, c_file, hints, rodata;
- };
- 
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -177,7 +177,7 @@ int create_orc_sections(struct objtool_f
- 
- 
- 	/* create .orc_unwind_ip and .rela.orc_unwind_ip sections */
--	sec = elf_create_section(file->elf, ".orc_unwind_ip", sizeof(int), idx);
-+	sec = elf_create_section(file->elf, ".orc_unwind_ip", 0, sizeof(int), idx);
- 	if (!sec)
- 		return -1;
- 
-@@ -186,7 +186,7 @@ int create_orc_sections(struct objtool_f
- 		return -1;
- 
- 	/* create .orc_unwind section */
--	u_sec = elf_create_section(file->elf, ".orc_unwind",
-+	u_sec = elf_create_section(file->elf, ".orc_unwind", 0,
- 				   sizeof(struct orc_entry), idx);
- 
- 	/* populate sections */
---- a/tools/objtool/sync-check.sh
-+++ b/tools/objtool/sync-check.sh
-@@ -7,6 +7,7 @@ arch/x86/include/asm/orc_types.h
- arch/x86/include/asm/emulate_prefix.h
- arch/x86/lib/x86-opcode-map.txt
- arch/x86/tools/gen-insn-attr-x86.awk
-+include/linux/static_call_types.h
- '
- 
- check_2 () {
-
+ 	int ret;
+@@ -626,6 +665,9 @@ int cmd_ftrace(int argc, const char **argv)
+ 		     parse_filter_func),
+ 	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+ 		     "do not trace given functions", parse_filter_func),
++	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
++		     "function tracer options, available options: call-graph",
++		     parse_func_tracer_opts),
+ 	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+ 		     "trace given functions using function_graph tracer",
+ 		     parse_filter_func),
+-- 
+2.25.1
 
