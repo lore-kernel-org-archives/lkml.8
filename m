@@ -2,254 +2,110 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A244C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8775FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B7C2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFC42072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ODGTiXiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGJFhB (ORCPT
+        id S1726925AbgGJFjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:37:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:11897 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgGJFg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:36:56 -0400
-IronPort-SDR: TPtxezKunFKRMv6y99AUMwmhK7cXltkVRoOfEGBZ+RQx9I8OgnjfzQLgvxptpd5HUReobjiDAr
- LXqtuvYLcXXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="128220408"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="128220408"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:36:55 -0700
-IronPort-SDR: K+wowf0uMUswNseS39PCMQD0pPB1bMIhI6y921hmx2APHY2qqY9u4ObAeFisHr/2u4sUoxRjuU
- Vf56zqPvmTeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="298315557"
-Received: from xzhou33-mobl1.ccr.corp.intel.com (HELO [10.255.31.159]) ([10.255.31.159])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2020 22:36:53 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] iommu/vt-d: Add page response ops support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <20200709070537.18473-1-baolu.lu@linux.intel.com>
- <20200709070537.18473-5-baolu.lu@linux.intel.com>
- <MWHPR11MB164546581C5F6B6B77AE28C88C650@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <cbf470fe-933a-54d5-e215-afb32d40165f@linux.intel.com>
-Date:   Fri, 10 Jul 2020 13:36:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 01:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbgGJFjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:39:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D29C08C5CE;
+        Thu,  9 Jul 2020 22:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=r8XAt9mvgsXI1HPZ95IOzogzdV+W6uZ7vWhIwgo9PM8=; b=ODGTiXiSnX6UuOzsheQ9KWKhON
+        Lv6biMNVFXU5Cm2xqfDIjVinsSurMlb2w8kMD1JvdVTsea/lPxMxd6awgEAwpTUSvUoj+MX2rr7c0
+        YdIYC4Te0yCxbXu4bw2AaN/kbthRMvP8Aq4+l14lBnUVnpcS87tOTm2wgSK+fuzW3uNPWwT9+VOiL
+        oLENoEMF0XoyxfE1aSOOiqnsfkNd5ND5OmUzfl0dmdSXs6w5pr112LsQcqW/Ev1742bUn61zi+yHR
+        YhME47LV9DIBs7cTlPapnfctfHlcg2Co3xgEoyXoRRzXDvYo91geeGB7iU+OMYOb7YZg3pdGXxHH0
+        SsN0FNgg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtlkI-0007Co-Tn; Fri, 10 Jul 2020 05:38:50 +0000
+Date:   Fri, 10 Jul 2020 06:38:50 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>, mark.rutland@arm.com,
+        steve@sk2.org, davidgow@google.com, catalin.marinas@arm.com,
+        linus.walleij@linaro.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>, elver@google.com,
+        glider@google.com, willy@infradead.org, zong.li@sifive.com,
+        mchehab+samsung@kernel.org, linux-riscv@lists.infradead.org,
+        alex.shi@linux.alibaba.com, will@kernel.org,
+        dan.j.williams@intel.com, linux-arch@vger.kernel.org,
+        uwe@kleine-koenig.org, alex@ghiti.fr, takahiro.akashi@linaro.org,
+        paulmck@kernel.org, masahiroy@kernel.org, linux@armlinux.org.uk,
+        krzk@kernel.org, ardb@kernel.org, bgolaszewski@baylibre.com,
+        kernel-team@android.com, pmladek@suse.com, zaslonko@linux.ibm.com,
+        aou@eecs.berkeley.edu, keescook@chromium.org,
+        Arnd Bergmann <arnd@arndb.de>, rostedt@goodmis.org,
+        broonie@kernel.org, matti.vaittinen@fi.rohmeurope.com,
+        gregory.0xf0@gmail.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        tglx@linutronix.de, andriy.shevchenko@linux.intel.com,
+        gxt@pku.edu.cn, linux-arm-kernel@lists.infradead.org,
+        rdunlap@infradead.org, Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, mcgrof@kernel.org,
+        james.morse@arm.com, mhiramat@kernel.org,
+        akpm@linux-foundation.org, davem@davemloft.net
+Subject: Re: [PATCH 1/5] lib: Add a generic version of devmem_is_allowed()
+Message-ID: <20200710053850.GA27019@infradead.org>
+References: <20200709200552.1910298-1-palmer@dabbelt.com>
+ <20200709200552.1910298-2-palmer@dabbelt.com>
+ <20200709204921.GJ781326@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB164546581C5F6B6B77AE28C88C650@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709204921.GJ781326@linux.ibm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+On Thu, Jul 09, 2020 at 11:49:21PM +0300, Mike Rapoport wrote:
+> > +#ifndef CONFIG_GENERIC_DEVMEM_IS_ALLOWED
+> > +extern int devmem_is_allowed(unsigned long pfn);
+> > +#endif
 
-On 2020/7/10 10:42, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Thursday, July 9, 2020 3:06 PM
->>
->> After page requests are handled, software must respond to the device
->> which raised the page request with the result. This is done through
->> the iommu ops.page_response if the request was reported to outside of
->> vendor iommu driver through iommu_report_device_fault(). This adds the
->> VT-d implementation of page_response ops.
->>
->> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c |   1 +
->>   drivers/iommu/intel/svm.c   | 100
->> ++++++++++++++++++++++++++++++++++++
->>   include/linux/intel-iommu.h |   3 ++
->>   3 files changed, 104 insertions(+)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 4a6b6960fc32..98390a6d8113 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -6057,6 +6057,7 @@ const struct iommu_ops intel_iommu_ops = {
->>   	.sva_bind		= intel_svm_bind,
->>   	.sva_unbind		= intel_svm_unbind,
->>   	.sva_get_pasid		= intel_svm_get_pasid,
->> +	.page_response		= intel_svm_page_response,
->>   #endif
->>   };
->>
->> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
->> index d24e71bac8db..839d2af377b6 100644
->> --- a/drivers/iommu/intel/svm.c
->> +++ b/drivers/iommu/intel/svm.c
->> @@ -1082,3 +1082,103 @@ int intel_svm_get_pasid(struct iommu_sva *sva)
->>
->>   	return pasid;
->>   }
->> +
->> +int intel_svm_page_response(struct device *dev,
->> +			    struct iommu_fault_event *evt,
->> +			    struct iommu_page_response *msg)
->> +{
->> +	struct iommu_fault_page_request *prm;
->> +	struct intel_svm_dev *sdev = NULL;
->> +	struct intel_svm *svm = NULL;
->> +	struct intel_iommu *iommu;
->> +	bool private_present;
->> +	bool pasid_present;
->> +	bool last_page;
->> +	u8 bus, devfn;
->> +	int ret = 0;
->> +	u16 sid;
->> +
->> +	if (!dev || !dev_is_pci(dev))
->> +		return -ENODEV;
->> +
->> +	iommu = device_to_iommu(dev, &bus, &devfn);
->> +	if (!iommu)
->> +		return -ENODEV;
->> +
->> +	if (!msg || !evt)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&pasid_mutex);
->> +
->> +	prm = &evt->fault.prm;
->> +	sid = PCI_DEVID(bus, devfn);
->> +	pasid_present = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
->> +	private_present = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
->> +	last_page = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
->> +
->> +	if (pasid_present) {
->> +		if (prm->pasid == 0 || prm->pasid >= PASID_MAX) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +
->> +		ret = pasid_to_svm_sdev(dev, prm->pasid, &svm, &sdev);
->> +		if (ret || !sdev) {
->> +			ret = -ENODEV;
->> +			goto out;
->> +		}
->> +
->> +		/*
->> +		 * For responses from userspace, need to make sure that the
->> +		 * pasid has been bound to its mm.
->> +		*/
->> +		if (svm->flags & SVM_FLAG_GUEST_MODE) {
->> +			struct mm_struct *mm;
->> +
->> +			mm = get_task_mm(current);
->> +			if (!mm) {
->> +				ret = -EINVAL;
->> +				goto out;
->> +			}
->> +
->> +			if (mm != svm->mm) {
->> +				ret = -ENODEV;
->> +				mmput(mm);
->> +				goto out;
->> +			}
->> +
->> +			mmput(mm);
->> +		}
->> +	} else {
->> +		pr_err_ratelimited("Invalid page response: no pasid\n");
->> +		ret = -EINVAL;
->> +		goto out;
-> 
-> check pasid=0 first, then no need to indent so many lines above.
+Nit: no need for the extern here.
 
-Yes.
+> > +config GENERIC_LIB_DEVMEM_IS_ALLOWED
+> > +	bool
+> > +	select ARCH_HAS_DEVMEM_IS_ALLOWED
+> 
+> This seems to work the other way around from the usual Kconfig chains.
+> In the most cases ARCH_HAS_SOMETHING selects GENERIC_SOMETHING.
+> 
+> I believe nicer way would be to make 
+> 
+> config STRICT_DEVMEM
+> 	bool "Filter access to /dev/mem"
+> 	depends on MMU && DEVMEM
+> 	depends on ARCH_HAS_DEVMEM_IS_ALLOWED || GENERIC_LIB_DEVMEM_IS_ALLOWED
+> 
+> config GENERIC_LIB_DEVMEM_IS_ALLOWED
+> 	bool
+> 
+> and then s/select ARCH_HAS_DEVMEM_IS_ALLOWED/select GENERIC_LIB_DEVMEM_IS_ALLOWED/
+> in the arch Kconfigs and drop ARCH_HAS_DEVMEM_IS_ALLOWED in the end.
 
-> 
->> +	}
->> +
->> +	/*
->> +	 * Per VT-d spec. v3.0 ch7.7, system software must respond
->> +	 * with page group response if private data is present (PDP)
->> +	 * or last page in group (LPIG) bit is set. This is an
->> +	 * additional VT-d requirement beyond PCI ATS spec.
->> +	 */
-> 
-> What is the behavior if system software doesn't follow the requirement?
-> en... maybe the question is really about whether the information in prm
-> comes from userspace or from internally-recorded info in iommu core.
-> The former cannot be trusted. The latter one is OK.
-
-We require a page response when reporting such event. The upper layer
-(IOMMU core or VFIO) will be implemented with a timer, if userspace
-doesn't respond in time, the timer will get expired and a FAILURE
-response will be sent to device.
-
-Best regards,
-baolu
-
-> 
-> Thanks
-> Kevin
-> 
->> +	if (last_page || private_present) {
->> +		struct qi_desc desc;
->> +
->> +		desc.qw0 = QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid)
->> |
->> +				QI_PGRP_PASID_P(pasid_present) |
->> +				QI_PGRP_PDP(private_present) |
->> +				QI_PGRP_RESP_CODE(msg->code) |
->> +				QI_PGRP_RESP_TYPE;
->> +		desc.qw1 = QI_PGRP_IDX(prm->grpid) |
->> QI_PGRP_LPIG(last_page);
->> +		desc.qw2 = 0;
->> +		desc.qw3 = 0;
->> +		if (private_present)
->> +			memcpy(&desc.qw2, prm->private_data,
->> +			       sizeof(prm->private_data));
->> +
->> +		qi_submit_sync(iommu, &desc, 1, 0);
->> +	}
->> +out:
->> +	mutex_unlock(&pasid_mutex);
->> +	return ret;
->> +}
->> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
->> index fc2cfc3db6e1..bf6009a344f5 100644
->> --- a/include/linux/intel-iommu.h
->> +++ b/include/linux/intel-iommu.h
->> @@ -741,6 +741,9 @@ struct iommu_sva *intel_svm_bind(struct device
->> *dev, struct mm_struct *mm,
->>   				 void *drvdata);
->>   void intel_svm_unbind(struct iommu_sva *handle);
->>   int intel_svm_get_pasid(struct iommu_sva *handle);
->> +int intel_svm_page_response(struct device *dev, struct iommu_fault_event
->> *evt,
->> +			    struct iommu_page_response *msg);
->> +
->>   struct svm_dev_ops;
->>
->>   struct intel_svm_dev {
->> --
->> 2.17.1
-> 
+To take a step back:  Is there any reason to not just always
+STRICT_DEVMEM? Maybe for a few architectures that don't currently
+support a strict /dev/mem the generic version isn't quite correct, but
+someone selecting the option and finding the issue is the best way to
+figure that out..
