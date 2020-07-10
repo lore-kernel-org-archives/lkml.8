@@ -4,160 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C73C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2061207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D5220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXwkuipp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m0AuyraL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgGJS53 (ORCPT
+        id S1728166AbgGJTCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:57:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46592 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726872AbgGJS52 (ORCPT
+        Fri, 10 Jul 2020 15:02:43 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50010 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgGJTC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:57:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594407447;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g3vr4p3HOtOZH3FqPih/GiIpdmOKnnPMCPNV6jgpCAc=;
-        b=iXwkuippkShqaB3qGR83m1zOiJGwrUNv8E3/VrrioEGK7B/WXw3U5GPLc7fiE89WLcSNZ2
-        Q1RfzBSt61Afs+jc3vbhyAB/rDR6LGnY4GFAsqmqVQKZV3bv6Emk1Kf9zFtoosz0HCKrMC
-        +YcvqpoqPElQaQgDaAI8+F9ozCJJV88=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-456-I-m6CWLHNZKm9-SDKbQUPQ-1; Fri, 10 Jul 2020 14:57:25 -0400
-X-MC-Unique: I-m6CWLHNZKm9-SDKbQUPQ-1
-Received: by mail-pj1-f71.google.com with SMTP id bf1so4582210pjb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 11:57:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=g3vr4p3HOtOZH3FqPih/GiIpdmOKnnPMCPNV6jgpCAc=;
-        b=p1KlPi7QO6uX2zVAdomJzucWPqLMN30g9wbL5IQkv0Gzys1VBrT7niyP5aNbgln2Y8
-         UXBZafLEWWnOLYXEkwE603mE/t++FQX5beUwr+li3XWAh93Da5nUX9UDVTolkBmTH7sk
-         +LZdC3WWi94GQG5FHzUoDqw8WdUxO4IkbJCn6d+xGpfziGD0idZO5GAQegxs55qEyD0L
-         o8XX1C7+634lj4+i7Ya/W/9x2rhV5Eu/zogEvdXrml7SEGgbBjA+/p+EypsEMcjSfO4S
-         3CM4MCyTcmu8VAcbi4aXJ49NineIcQFuMMW8ZJwii/vAurmcqthA2GoecHGUjYfV3W4l
-         9yOQ==
-X-Gm-Message-State: AOAM532bBhbUeajB0z9rmLtee8zYjJ/h4LvgFPcugJK0VcDGM4Z2kKqd
-        Z/xhcRudAZwAOGAJMFBxcWknMgkGQWKWsvvAQTj0PYFBZoSOOqafMwtwTGYD4svNyQpvYQqY1Dy
-        3sGHrhG3n3sal5BfexUefX/rt
-X-Received: by 2002:a17:902:9f96:: with SMTP id g22mr15845522plq.306.1594407444710;
-        Fri, 10 Jul 2020 11:57:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx/tVx6cQ9PiRSX4L09kZ6HuM+5mJq1HjYk1MsqxC65kL5z0rrT8cvGQ00NqVS3PFpZ66gdNg==
-X-Received: by 2002:a17:902:9f96:: with SMTP id g22mr15845508plq.306.1594407444386;
-        Fri, 10 Jul 2020 11:57:24 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id y7sm6084764pgk.93.2020.07.10.11.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 11:57:23 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BA49D1808CD; Fri, 10 Jul 2020 20:57:17 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Joe Perches <joe@perches.com>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Daniel Borkmann <daniel@iogearbox.net>, ast@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
-        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
-In-Reply-To: <a91354960fc97437bd872fa22a2ce1c60bda3e25.camel@perches.com>
-References: <20200709194257.26904-1-grandmaster@al2klimov.de> <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net> <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de> <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net> <a2f48c734bdc6b865a41ad684e921ac04b221821.camel@perches.com> <875zavjqnj.fsf@toke.dk> <458f6e74-b547-299a-4255-4c1e20cdba1b@al2klimov.de> <a91354960fc97437bd872fa22a2ce1c60bda3e25.camel@perches.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 10 Jul 2020 20:57:17 +0200
-Message-ID: <87tuyfi4fm.fsf@toke.dk>
+        Fri, 10 Jul 2020 15:02:27 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AJ2Kua024765;
+        Fri, 10 Jul 2020 14:02:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594407740;
+        bh=D4QxQuOkakaxXUIUnv8OhviwRU9ZU44y/TIOg18mJ6w=;
+        h=From:To:CC:Subject:Date;
+        b=m0AuyraLeI5Nmn3vbzBD3BofIcvSzFSc6zT6TE0Om9if7SYyZYDMKi50CdtV0Z7/l
+         TnoMSGUg31aJdOl/cJQO7zvuCvQJxuGlXtAYcdOo/f9L8O4Q0AM1L1f9EkJTWGutbD
+         v9rgNGYXSPNUHOdvp5rKbunAY2o3xShgkCrB+yYY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AJ2KWZ002750
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 14:02:20 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 14:02:19 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 14:02:19 -0500
+Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AJ2Gm3043446;
+        Fri, 10 Jul 2020 14:02:16 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <t-kristo@ti.com>,
+        <faiz_abbas@ti.com>
+Subject: [PATCH 0/2] Add support for SD card on on AM65x-evm
+Date:   Sat, 11 Jul 2020 00:32:13 +0530
+Message-ID: <20200710190215.30938-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> writes:
+The following patches add support for SD card node in am654x-evm
 
-> On Fri, 2020-07-10 at 20:18 +0200, Alexander A. Klimov wrote:
->>=20
->> Am 10.07.20 um 18:12 schrieb Toke H=C3=B8iland-J=C3=B8rgensen:
->> > Joe Perches <joe@perches.com> writes:
->> >=20
->> > > On Fri, 2020-07-10 at 17:14 +0200, Daniel Borkmann wrote:
->> > > > On 7/10/20 8:17 AM, Alexander A. Klimov wrote:
->> > > > > Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
->> > > > > > On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
->> > > > > > > Rationale:
->> > > > > > > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp=
-465"
->> > > > > > > which has nothing to do with XDP.
->> > > []
->> > > > > > > diff --git a/MAINTAINERS b/MAINTAINERS
->> > > []
->> > > > > > > @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
->> > > > > > >    F:    kernel/bpf/cpumap.c
->> > > > > > >    F:    kernel/bpf/devmap.c
->> > > > > > >    F:    net/core/xdp.c
->> > > > > > > -N:    xdp
->> > > > > > > -K:    xdp
->> > > > > > > +N:    (?:\b|_)xdp(?:\b|_)
->> > > > > > > +K:    (?:\b|_)xdp(?:\b|_)
->> > > > > >=20
->> > > > > > Please also include \W to generally match on non-alphanumeric =
-char given you
->> > > > > > explicitly want to avoid [a-z0-9] around the term xdp.
->> > > > > Aren't \W, ^ and $ already covered by \b?
->> > > >=20
->> > > > Ah, true; it says '\b really means (?:(?<=3D\w)(?!\w)|(?<!\w)(?=3D=
-\w))', so all good.
->> > > > In case this goes via net or net-next tree:
->> > >=20
->> > > This N: pattern does not match files like:
->> > >=20
->> > > 	samples/bpf/xdp1_kern.c
->> > >=20
->> > > and does match files like:
->> > >=20
->> > > 	drivers/net/ethernet/broadcom/bnxt/bnxt_xdp.c
->> > >=20
->> > > Should it?
->> >=20
->> > I think the idea is that it should match both?
->> In *your* opinion: Which of these shall it (not) match?
->
-> Dunno, but it doesn't match these files.
-> The first 5 are good, the rest probably should.
+Because of fundamental interface issues (see patch 2 for details),
+SD card was never enabled for silicon revision 1.0
 
-Yup, I agree, all but the first 5 should be matched...
+These issues have been fixed with SR2.0 but boards with SR1.0 are
+recommended to disable this node
 
--Toke
+These patches depend on kernel patches for supporting silicon revision
+2.0 posted here:
+https://patchwork.kernel.org/project/linux-mmc/list/?series=305565
 
-> $ git ls-files | grep xdp | grep -v -P '(?:\b|_)xdp(?:\b|_)'
-> Documentation/hwmon/xdpe12284.rst
-> arch/arm/mach-ixp4xx/ixdp425-pci.c
-> arch/arm/mach-ixp4xx/ixdp425-setup.c
-> arch/arm/mach-ixp4xx/ixdpg425-pci.c
-> drivers/hwmon/pmbus/xdpe12284.c
-> samples/bpf/xdp1_kern.c
-> samples/bpf/xdp1_user.c
-> samples/bpf/xdp2_kern.c
-> samples/bpf/xdp2skb_meta.sh
-> samples/bpf/xdp2skb_meta_kern.c
-> samples/bpf/xdpsock.h
-> samples/bpf/xdpsock_kern.c
-> samples/bpf/xdpsock_user.c
-> tools/testing/selftests/bpf/progs/xdping_kern.c
-> tools/testing/selftests/bpf/test_xdping.sh
-> tools/testing/selftests/bpf/xdping.c
-> tools/testing/selftests/bpf/xdping.h
+The dependencies have been picked up and are in linux-next
+
+Faiz Abbas (2):
+  arm64: dts: ti: k3-am65-main: Add support for sdhci1
+  arm64: dts: ti: k3-am654-base-board: Add support for SD card
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 24 +++++++++++++++++++
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 24 +++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+-- 
+2.17.1
 
