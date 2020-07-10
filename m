@@ -2,131 +2,154 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87751C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FEBC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 614B5206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCA62075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AON+ubUW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NEduGS65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgGJQLH (ORCPT
+        id S1728099AbgGJQLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:11:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60835 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727078AbgGJQLF (ORCPT
+        Fri, 10 Jul 2020 12:11:11 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1586 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbgGJQLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:11:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594397464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4WRdRX06OBfTzPGHNG+U6NKjLgvHWpzwYgjehUMy8e0=;
-        b=AON+ubUW9s7QcASXBhJh2E0NLtcdgz2R/ZFK756Bs1AqEVJ9Mcs2VYzr4VvnGFXXmaXIs6
-        QE3f3GNb1LUy9TMKZTlvPzz1rfvZlEhaFXyp/HRcsoUERsBI4LtO3Oh/nu2Fu3lWlXHUPA
-        CNUPDNqoLEWYNRNm8icqnKh1EFrdReM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-hD_JHk6iMOeXnTRYh98IeQ-1; Fri, 10 Jul 2020 12:10:40 -0400
-X-MC-Unique: hD_JHk6iMOeXnTRYh98IeQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DB9919057A7;
-        Fri, 10 Jul 2020 16:10:39 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFC1171676;
-        Fri, 10 Jul 2020 16:10:34 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 10:10:34 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
-        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200710101034.5a8c1be5@x1.home>
-In-Reply-To: <20200710154433.GA62583@bjorn-Precision-5520>
-References: <20200710153742.GA61966@bjorn-Precision-5520>
-        <20200710154433.GA62583@bjorn-Precision-5520>
-Organization: Red Hat
+        Fri, 10 Jul 2020 12:11:07 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0892ae0000>; Fri, 10 Jul 2020 09:09:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 Jul 2020 09:11:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 Jul 2020 09:11:07 -0700
+Received: from [10.26.72.135] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
+ 2020 16:11:05 +0000
+Subject: Re: [PATCH v2 4/6] devres: handle zero size in devm_kmalloc()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629065008.27620-1-brgl@bgdev.pl>
+ <20200629065008.27620-5-brgl@bgdev.pl>
+ <5c2e7514-b6d0-1331-37b0-d17a0cdb9693@nvidia.com>
+ <CAMRc=Mf1Laqa65hEOG3iLSQu6J-u5yHmrMNh8NMJmt3amw2A6Q@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9cd4521b-aba0-616b-8957-8f21b9ba3068@nvidia.com>
+Date:   Fri, 10 Jul 2020 17:11:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <CAMRc=Mf1Laqa65hEOG3iLSQu6J-u5yHmrMNh8NMJmt3amw2A6Q@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594397358; bh=37GibReic1eAmzIGr99yNGskjoHn0RX7lIZ5PnIec+I=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NEduGS65Web3MkJIb7aFBdcebALGdw9f8SNbQn89SQwXxg6rFVvt1dtEIopjfhNp1
+         R2EFGBmWotyKN+LYeWUHdJRp08cl8wcGz10W3MxIEjAJIMJ19chpkmhUnBADvJWH9I
+         XCcH4rOx1K5tdDD4LKCvmgwqNeaM3HytP40kcyUOEBd/R3bbL3/G/jfyHr4sWUCFPU
+         DKH1LjHNGWI/qGSnpLfK8NHoYUw2tg9zLxVwxQbPKu8PlVwi/0M79b0EV5GUGIaDPu
+         3j0RtWi8Q1oEUyijwNFyck25EVpQY/Zbjki5OKcETIK/Yjxb+u/t8DAYqAkFLAOsK6
+         so8qAfbpa6vQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 10:44:33 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> On Fri, Jul 10, 2020 at 10:37:45AM -0500, Bjorn Helgaas wrote:
-> > On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote: =20
-> > > On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote: =20
-> > > > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote: =
-=20
-> > > > > The current generation of Intel=C2=AE QuickAssist Technology devi=
-ces
-> > > > > are not designed to run in an untrusted environment because of the
-> > > > > following issues reported in the release notes in
-> > > > > https://01.org/intel-quickassist-technology: =20
-> > > >=20
-> > > > It would be nice if this link were directly clickable, e.g., if the=
-re
-> > > > were no trailing ":" or something.
-> > > >=20
-> > > > And it would be even better if it went to a specific doc that
-> > > > described these issues.  I assume these are errata, and it's not ea=
-sy
-> > > > to figure out which doc mentions them. =20
-> > > Sure. I will fix the commit message in the next revision and point to=
- the
-> > > actual document:
-> > > https://01.org/sites/default/files/downloads/336211-015-qatsoftwarefo=
-rlinux-rn-hwv1.7-final.pdf =20
-> >=20
-> > Since URLs tend to go stale, please also include the Intel document
-> > number and title. =20
->=20
-> Oh, and is "01.org" really the right place for that?  It looks like an
-> Intel document, so I'd expect it to be somewhere on intel.com.
->=20
-> I'm still a little confused.  That doc seems to be about *software*
-> and Linux software in particular.  But when you said these "devices
-> are not designed to run in an untrusted environment", I thought you
-> meant there was some *hardware* design issue that caused a problem.
+On 10/07/2020 17:03, Bartosz Golaszewski wrote:
+> On Fri, Jul 10, 2020 at 3:46 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>> Hi Bartosz,
+>>
+>> On 29/06/2020 07:50, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> Make devm_kmalloc() behave similarly to non-managed kmalloc(): return
+>>> ZERO_SIZE_PTR when requested size is 0. Update devm_kfree() to handle
+>>> this case.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> ---
+>>>  drivers/base/devres.c | 9 ++++++---
+>>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+>>> index 1df1fb10b2d9..ed615d3b9cf1 100644
+>>> --- a/drivers/base/devres.c
+>>> +++ b/drivers/base/devres.c
+>>> @@ -819,6 +819,9 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+>>>  {
+>>>       struct devres *dr;
+>>>
+>>> +     if (unlikely(!size))
+>>> +             return ZERO_SIZE_PTR;
+>>> +
+>>>       /* use raw alloc_dr for kmalloc caller tracing */
+>>>       dr = alloc_dr(devm_kmalloc_release, size, gfp, dev_to_node(dev));
+>>>       if (unlikely(!dr))
+>>> @@ -950,10 +953,10 @@ void devm_kfree(struct device *dev, const void *p)
+>>>       int rc;
+>>>
+>>>       /*
+>>> -      * Special case: pointer to a string in .rodata returned by
+>>> -      * devm_kstrdup_const().
+>>> +      * Special cases: pointer to a string in .rodata returned by
+>>> +      * devm_kstrdup_const() or NULL/ZERO ptr.
+>>>        */
+>>> -     if (unlikely(is_kernel_rodata((unsigned long)p)))
+>>> +     if (unlikely(is_kernel_rodata((unsigned long)p) || ZERO_OR_NULL_PTR(p)))
+>>>               return;
+>>>
+>>>       rc = devres_destroy(dev, devm_kmalloc_release,
+>>
+>>
+>> This change caught a bug in one of our Tegra drivers, which I am in the
+>> process of fixing. Once I bisected to this commit it was easy to track
+>> down, but I am wondering if there is any reason why we don't add a
+>> WARN_ON() if size is 0 in devm_kmalloc? It was essentially what I ended
+>> up doing to find the bug.
+>>
+>> Jon
+>>
+>> --
+>> nvpublic
+> 
+> Hi Jon,
+> 
+> this is in line with what the regular kmalloc() does. If size is zero,
+> it returns ZERO_SIZE_PTR. It's not an error condition. Actually in
+> user-space malloc() does a similar thing: for size == 0 it allocates
+> one-byte and returns a pointer to it (at least in glibc).
 
-There seems to be a fair bit of hardware errata in the doc too, see:
 
-3.1.2 QATE-7495 - GEN - An incorrectly formatted request to Intel=C2=AE QAT=
- can
-hang the entire Intel=C2=AE QAT Endpoint
+Yes that's fine, I was just wondering if there is any reason not to WARN
+as well?
 
-3.1.9 QATE-39220 - GEN - QAT API submissions with bad addresses that
-trigger DMA to invalid or unmapped addresses can cause a platform
-hang
+Cheers
+Jon
 
-3.1.17 QATE-52389 - SR-IOV -Huge pages may not be compatible with QAT
-VF usage
-
-3.1.19 QATE-60953 - GEN =E2=80=93 Intel=C2=AE QAT API submissions with bad =
-addresses
-that trigger DMA to invalid or unmapped addresses can impact QAT
-service availability
-
-Thanks,
-Alex
-
+-- 
+nvpublic
