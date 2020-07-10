@@ -2,291 +2,246 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB61C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7473C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913752064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9782064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="Ey0W1+RD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgGJDm2 (ORCPT
+        id S1726908AbgGJDnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:42:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:45470 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgGJDm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:42:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2111E31B;
-        Thu,  9 Jul 2020 20:42:26 -0700 (PDT)
-Received: from [10.163.87.77] (unknown [10.163.87.77])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 000F73F9AB;
-        Thu,  9 Jul 2020 20:42:21 -0700 (PDT)
-Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
-To:     Zi Yan <ziy@nvidia.com>, Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
- <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
- <27CD781D-48F0-4019-934F-78994BAEC656@nvidia.com>
- <97219d3b-96e1-4371-59ea-d038f37a672a@infradead.org>
- <C5E3C65C-8253-4638-9D3C-71A61858BB8B@nvidia.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <e0d519c1-2e00-d1a4-a3e8-d283b9e0330f@arm.com>
-Date:   Fri, 10 Jul 2020 09:11:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 9 Jul 2020 23:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgGJDnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:43:21 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD06C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:43:21 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id c4so745455oou.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kali.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ZsCfMVxhN8HqerkbJcQvxK/1uivZN3EoSEMu1iIXARQ=;
+        b=Ey0W1+RDhGppDWcHFH35tEFeA+9ks88FzZBKadS7rgMdwQbURTM4tfCtqCR3q7KNzm
+         yMun9yCkNnqoXSoSm1Ry6qKwxkfNdxATWogHZbvMjVkPo1CmuWAztsP19vtDp04ziYMj
+         wlueEUjEylFMjikXmwEoeYMEqdHMGYmZdBxUynvpYNwfC3AjLBavQctnboJxSs95y53a
+         O1kPZlXnnNEtB6WNFtVTGLGcC4AGUXU+2LUU8svFFdHThn1w7EOjefvHTPlOPHmBbCJa
+         rxKqnaJDzJYQSZmMqvf4+UgLiG9MNCbnU9DAtDZMX64it9BYownJAtMSEZYANo09xnEt
+         HBBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ZsCfMVxhN8HqerkbJcQvxK/1uivZN3EoSEMu1iIXARQ=;
+        b=Rglx2mmBtH4jVXyjJ8BemWIWLUmvepF03E2mEQsk3Z8lzGzhBZWsfLqQjjYLIwZoKt
+         ElE8KbPVHxfROarycVbDjYGpuGizkCvLW0HRlfyHtmYUGCc6W5FeIjChMAknk8VEYOz/
+         5yftSa/sWsdjwrRk63vxnRamtA1+PkZwg71DmXARhyXO0Xjx04svzo2yCi7CliU8wt7L
+         pHY9/KJC4GZJk6c6PjYnLuFE1Mrs64bIa+p7cCTbMByiziuU73LTiHazY1sXEtPmDlm7
+         jTkPyMNz7xNdnXx+JHuHX6dOC5UqRKIg8OuSXExKk2+SqxVgxMiXJi+eNd19Xq6iz/Fm
+         vrBw==
+X-Gm-Message-State: AOAM531q32LNt4DP8VUas6AIfajYq5VaipG56y6gE2z7yKgle/MCt90D
+        wVYCfB+p2bC8bCcW4G+KwN/CNw==
+X-Google-Smtp-Source: ABdhPJzSlVXV5zlNbmP4afJXRay77l0cMloQpZFUfuylC+x6qiPytQzYPNe7rYdiL7Uh0v5uPvs3pw==
+X-Received: by 2002:a4a:ea03:: with SMTP id x3mr58938173ood.16.1594352600386;
+        Thu, 09 Jul 2020 20:43:20 -0700 (PDT)
+Received: from [192.168.11.9] (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
+        by smtp.gmail.com with ESMTPSA id i20sm872800ota.55.2020.07.09.20.43.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 20:43:19 -0700 (PDT)
+Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+From:   Steev Klimaszewski <steev@kali.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Steev Klimaszewski <steev@gentoo.org>
+References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
+ <20200710011935.GA7056@gentoo.org>
+ <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
+ <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
+ <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
+ <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
+Message-ID: <bc795659-7dd6-c667-1c93-4331510ecfbc@kali.org>
+Date:   Thu, 9 Jul 2020 22:43:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <C5E3C65C-8253-4638-9D3C-71A61858BB8B@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 07/09/2020 11:12 PM, Zi Yan wrote:
-> On 9 Jul 2020, at 12:39, Randy Dunlap wrote:
-> 
->> On 7/9/20 9:34 AM, Zi Yan wrote:
->>> On 9 Jul 2020, at 11:34, Randy Dunlap wrote:
+On 7/9/20 10:17 PM, Steev Klimaszewski wrote:
+>
+> On 7/9/20 10:12 PM, Steev Klimaszewski wrote:
+>>
+>> On 7/9/20 9:14 PM, Doug Anderson wrote:
+>>> Hi,
 >>>
+>>> On Thu, Jul 9, 2020 at 6:38 PM Doug Anderson <dianders@chromium.org> 
+>>> wrote:
 >>>> Hi,
 >>>>
->>>> I have a few comments on this.
+>>>> On Thu, Jul 9, 2020 at 6:19 PM Steev Klimaszewski 
+>>>> <steev@gentoo.org> wrote:
+>>>>> Hi Doug,
+>>>>>
+>>>>> I've been testing 5.8 and linux-next on the Lenovo Yoga C630, and 
+>>>>> with this patch applied, there is really bad banding on the display.
+>>>>>
+>>>>> I'm really bad at explaining it, but you can see the differences 
+>>>>> in the following:
+>>>>>
+>>>>> 24bit (pre-5.8) - https://dev.gentoo.org/~steev/files/image0.jpg
+>>>>>
+>>>>> 18bit (5.8/linux-next) - 
+>>>>> https://dev.gentoo.org/~steev/files/image1.jpg
+>>>> Presumably this means that your panel is defined improperly? If the
+>>>> panel reports that it's a 6 bits per pixel panel but it's actually an
+>>>> 8 bits per pixel panel then you'll run into this problem.
 >>>>
->>>> a. I reported it very early and should have been Cc-ed.
->>>>
->>>> b. A patch that applies to mmotm or linux-next would have been better
->>>> than a full replacement patch.
->>>>
->>>> c. I tried replacing what I believe is the correct/same patch file in mmotm
->>>> and still have build errors.
->>>>
->>>> (more below)
->>>>
->>>> On 7/9/20 2:39 AM, Anshuman Khandual wrote:
->>>>
->>>>> ---
->>>>> Applies on 5.8-rc4.
->>>>>
->>>>> Changes in V4:
->>>>>
->>>>> - Changed THP_MIGRATION_FAILURE as THP_MIGRATION_FAIL per John
->>>>> - Dropped all conditional 'if' blocks in migrate_pages() per Andrew and John
->>>>> - Updated migration events documentation per John
->>>>> - Updated thp_nr_pages variable as nr_subpages for an expected merge conflict
->>>>> - Moved all new THP vmstat events into CONFIG_MIGRATION
->>>>> - Updated Cc list with Documentation/ and tracing related addresses
->>>>>
->>>>> Changes in V3: (https://patchwork.kernel.org/patch/11647237/)
->>>>>
->>>>> - Formatted new events documentation with 'fmt' tool per Matthew
->>>>> - Made events universally available i.e dropped ARCH_ENABLE_THP_MIGRATION
->>>>> - Added THP_MIGRATION_SPLIT
->>>>> - Updated trace_mm_migrate_pages() with THP events
->>>>> - Made THP events update normal page migration events as well
->>>>>
->>>>> Changes in V2: (https://patchwork.kernel.org/patch/11586893/)
->>>>>
->>>>> - Dropped PMD reference both from code and commit message per Matthew
->>>>> - Added documentation and updated the commit message per Daniel
->>>>>
->>>>> Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
->>>>>
->>>>> - Changed function name as thp_pmd_migration_success() per John
->>>>> - Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from Hugh
->>>>>
->>>>> Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
->>>>>
->>>>> - Decopupled and renamed VM events from their implementation per Zi and John
->>>>> - Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and split
->>>>>
->>>>> Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
->>>>>
->>>>>  Documentation/vm/page_migration.rst | 27 +++++++++++++++
->>>>>  include/linux/vm_event_item.h       |  3 ++
->>>>>  include/trace/events/migrate.h      | 17 ++++++++--
->>>>>  mm/migrate.c                        | 52 ++++++++++++++++++++++++-----
->>>>>  mm/vmstat.c                         |  3 ++
->>>>>  5 files changed, 91 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
->>>>> index 24fc7c3ae7d6..2e6ca53b9bbd 100644
->>>>> --- a/include/linux/vm_event_item.h
->>>>> +++ b/include/linux/vm_event_item.h
->>>>> @@ -56,6 +56,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->>>>>  #endif
->>>>>  #ifdef CONFIG_MIGRATION
->>>>>  		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
->>>>> +		THP_MIGRATION_SUCCESS,
->>>>> +		THP_MIGRATION_FAIL,
->>>>> +		THP_MIGRATION_SPLIT,
->>>> These 3 new symbols are still only present if CONFIG_MIGRATION=y, but the build errors
->>>> are using these symbols even when CONFIG_MIGRATION is not set.
->>>>
->>>>>  #endif
->>>>>  #ifdef CONFIG_COMPACTION
->>>>>  		COMPACTMIGRATE_SCANNED, COMPACTFREE_SCANNED,
->>>>> diff --git a/mm/migrate.c b/mm/migrate.c
->>>>> index f37729673558..c706e3576cfc 100644
->>>>> --- a/mm/migrate.c
->>>>> +++ b/mm/migrate.c
->>>>> @@ -1429,22 +1429,35 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->>>>>  		enum migrate_mode mode, int reason)
->>>>>  {
->>>>>  	int retry = 1;
->>>>> +	int thp_retry = 1;
->>>>>  	int nr_failed = 0;
->>>>>  	int nr_succeeded = 0;
->>>>> +	int nr_thp_succeeded = 0;
->>>>> +	int nr_thp_failed = 0;
->>>>> +	int nr_thp_split = 0;
->>>>>  	int pass = 0;
->>>>> +	bool is_thp = false;
->>>>>  	struct page *page;
->>>>>  	struct page *page2;
->>>>>  	int swapwrite = current->flags & PF_SWAPWRITE;
->>>>> -	int rc;
->>>>> +	int rc, nr_subpages;
->>>>>
->>>>>  	if (!swapwrite)
->>>>>  		current->flags |= PF_SWAPWRITE;
->>>>>
->>>>> -	for(pass = 0; pass < 10 && retry; pass++) {
->>>>> +	for (pass = 0; pass < 10 && (retry || thp_retry); pass++) {
->>>>>  		retry = 0;
->>>>> +		thp_retry = 0;
->>>>>
->>>>>  		list_for_each_entry_safe(page, page2, from, lru) {
->>>>>  retry:
->>>>> +			/*
->>>>> +			 * THP statistics is based on the source huge page.
->>>>> +			 * Capture required information that might get lost
->>>>> +			 * during migration.
->>>>> +			 */
->>>>> +			is_thp = PageTransHuge(page);
->>>>> +			nr_subpages = hpage_nr_pages(page);
->>>>>  			cond_resched();
->>>>>
->>>>>  			if (PageHuge(page))
->>>>> @@ -1475,15 +1488,30 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->>>>>  					unlock_page(page);
->>>>>  					if (!rc) {
->>>>>  						list_safe_reset_next(page, page2, lru);
->>>>> +						nr_thp_split++;
->>>>>  						goto retry;
->>>>>  					}
->>>>>  				}
->>>>> +				if (is_thp) {
->>>>> +					nr_thp_failed++;
->>>>> +					nr_failed += nr_subpages;
->>>>> +					goto out;
->>>>> +				}
->>>>>  				nr_failed++;
->>>>>  				goto out;
->>>>>  			case -EAGAIN:
->>>>> +				if (is_thp) {
->>>>> +					thp_retry++;
->>>>> +					break;
->>>>> +				}
->>>>>  				retry++;
->>>>>  				break;
->>>>>  			case MIGRATEPAGE_SUCCESS:
->>>>> +				if (is_thp) {
->>>>> +					nr_thp_succeeded++;
->>>>> +					nr_succeeded += nr_subpages;
->>>>> +					break;
->>>>> +				}
->>>>>  				nr_succeeded++;
->>>>>  				break;
->>>>>  			default:
->>>>> @@ -1493,19 +1521,27 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->>>>>  				 * removed from migration page list and not
->>>>>  				 * retried in the next outer loop.
->>>>>  				 */
->>>>> +				if (is_thp) {
->>>>> +					nr_thp_failed++;
->>>>> +					nr_failed += nr_subpages;
->>>>> +					break;
->>>>> +				}
->>>>>  				nr_failed++;
->>>>>  				break;
->>>>>  			}
->>>>>  		}
->>>>>  	}
->>>>> -	nr_failed += retry;
->>>>> +	nr_failed += retry + thp_retry;
->>>>> +	nr_thp_failed += thp_retry;
->>>>>  	rc = nr_failed;
->>>>>  out:
->>>>> -	if (nr_succeeded)
->>>>> -		count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
->>>>> -	if (nr_failed)
->>>>> -		count_vm_events(PGMIGRATE_FAIL, nr_failed);
->>>>> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
->>>>> +	count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
->>>>> +	count_vm_events(PGMIGRATE_FAIL, nr_failed);
->>>>> +	count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
->>>>> +	count_vm_events(THP_MIGRATION_FAIL, nr_thp_failed);
->>>>> +	count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
->>>> These references still cause build errors.
->>>>
->>>>> +	trace_mm_migrate_pages(nr_succeeded, nr_failed, nr_thp_succeeded,
->>>>> +			       nr_thp_failed, nr_thp_split, mode, reason);
->>>>>
->>>>>  	if (!swapwrite)
->>>>>  		current->flags &= ~PF_SWAPWRITE;
->>>>> diff --git a/mm/vmstat.c b/mm/vmstat.c
->>>>> index 3fb23a21f6dd..09914a4bfee4 100644
->>>>> --- a/mm/vmstat.c
->>>>> +++ b/mm/vmstat.c
->>>>> @@ -1234,6 +1234,9 @@ const char * const vmstat_text[] = {
->>>>>  #ifdef CONFIG_MIGRATION
->>>>>  	"pgmigrate_success",
->>>>>  	"pgmigrate_fail",
->>>>> +	"thp_migration_success",
->>>>> +	"thp_migration_fail",
->>>>> +	"thp_migration_split",
->>>>>  #endif
->>>>>  #ifdef CONFIG_COMPACTION
->>>>>  	"compact_migrate_scanned",
->>>>>
->>> Which arch are you building? I did not see any error
->>> after applying this patch on mmotm (reverting the existing ones)
->>> and compiling them on x86_64. I used make x86_64_defconfig and
->>> unselected COMPACTION and MIGRATION.
->> Hi,
+>>>> I would have to assume you have a bunch of out of tree patches to
+>>>> support your hardware since I don't see any device trees in linuxnext
+>>>> (other than cheza) that use this bridge chip.  Otherwise I could try
+>>>> to check and confirm that was the problem.
+>>> Ah, interesting.  Maybe you have the panel:
+>>>
+>>> boe,nv133fhm-n61
+>>>
+>>> As far as I can tell from the datasheet (I have the similar
+>>> boe,nv133fhm-n62) this is a 6bpp panel.  ...but if you feed it 8bpp
+>>> the banding goes away!  Maybe the panel itself knows how to dither???
+>>> ...or maybe the datasheet / edid are wrong and this is actually an
+>>> 8bpp panel.  Seems unlikely...
+>>>
+>>> In any case, one fix is to pick
+>>> <https://lore.kernel.org/dri-devel/1593087419-903-1-git-send-email-kalyan_t@codeaurora.org/>, 
+>>>
+>>> though right now that patch is only enabled for sc7180.  Maybe you
+>>> could figure out how to apply it to your hardware?
+>>>
+>>> ...another fix would be to pretend that your panel is 8bpp even though
+>>> it's actually 6bpp.  Ironically if anyone ever tried to configure BPP
+>>> from the EDID they'd go back to 6bpp.  You can read the EDID of your
+>>> panel with this:
+>>>
+>>> bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
+>>> i2cdump ${bus} 0x50 i
+>>>
+>>> When I do that and then decode it on the "boe,nv133fhm-n62" panel, I 
+>>> find:
+>>>
+>>> 6 bits per primary color channel
+>>>
+>>> -Doug
 >>
->> I am trying to build x86_64.
->> Maybe I am just having trouble replacing the patch file.
->> Like I tried to say, I would prefer to see an incremental patch
->> to fix mmotm or linux-next.
-> I agree. The patch does not apply to mmotm. Can you try the incremental
-> patch below? It should apply to mmotm.
-> 
-> 
-> Hi Andrew and Anshuman,
-> 
-> Should Anshuman resend the incremental patch or Andrew can fold it along
-> with the two patches in mmotm into one?
+>>
+>> Hi Doug,
+>>
+>> Decoding it does show be to boe,nv133fhm-n61 - and yeah it does say 
+>> it's 6-bit according to panelook's specs for it.
 
-V3 patch and fixes on it were reverted from linux-next yesterday. The change
-for V4 patch was not small, hence just went with a fresh one instead. Please
-do let me know if this is still not settled and needs further action.
 
-https://lore.kernel.org/linux-next/20200709182150.7b49e5e8@canb.auug.org.au/T/#u
+I derped again...
+
+root@c630:~# bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
+root@c630:~# i2cdump ${bus} 0x50 i > edid
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-16, address 0x50, mode i2c block
+Continue? [Y/n]
+root@c630:~# edid-decode edid
+edid-decode (hex):
+
+00 ff ff ff ff ff ff 00 09 e5 d1 07 00 00 00 00
+01 1c 01 04 a5 1d 11 78 0a 1d b0 a6 58 54 9e 26
+0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+01 01 01 01 01 01 c0 39 80 18 71 38 28 40 30 20
+36 00 26 a5 10 00 00 1a 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 1a 00 00 00 fe 00 42
+4f 45 20 43 51 0a 20 20 20 20 20 20 00 00 00 fe
+00 4e 56 31 33 33 46 48 4d 2d 4e 36 31 0a 00 9a
+
+03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb
+fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73
+44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61
+92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2
+66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70
+43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc
+45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3
+30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29
+
+----------------
+
+EDID version: 1.4
+Manufacturer: BOE Model 2001 Serial Number 0
+Made in week 1 of 2018
+Digital display
+8 bits per primary color channel
+DisplayPort interface
+Maximum image size: 29 cm x 17 cm
+Gamma: 2.20
+Supported color formats: RGB 4:4:4, YCrCb 4:4:4
+First detailed timing includes the native pixel format and preferred 
+refresh rate
+Color Characteristics
+   Red:   0.6484, 0.3447
+   Green: 0.3310, 0.6181
+   Blue:  0.1503, 0.0615
+   White: 0.3125, 0.3281
+Established Timings I & II: none
+Standard Timings: none
+Detailed mode: Clock 147.840 MHz, 294 mm x 165 mm
+                1920 1968 2000 2200 ( 48  32 200)
+                1080 1083 1089 1120 (  3   6  31)
+                +hsync -vsync
+                VertFreq: 60.000 Hz, HorFreq: 67.200 kHz
+Manufacturer-Specified Display Descriptor (0x00): 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 1a  ................
+Alphanumeric Data String: BOE CQ
+Alphanumeric Data String: NV133FHM-N61
+Checksum: 0x9a
+
+----------------
+
+Unknown EDID Extension Block 0x03
+   03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb .&.w...qo...C.j.
+   fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73  ... 9."nehwp..4s
+   44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61 D!...m.b.*|...ja
+   92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2 ...SL9...#.H.9..
+   66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70 f.p..w.J..Lrn]Gp
+   43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc C......x..A..j(.
+   45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3 E....*..5.4.>.^.
+   30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29 0^.).H.....1..;)
+Checksum: 0x29 (should be 0x82)
+
+
+- My edid does in fact say it's 8bit
+
