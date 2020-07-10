@@ -2,144 +2,75 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F40C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C86C620772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB64320772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SSt1IyNu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R+thKef1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgGJL1f (ORCPT
+        id S1727919AbgGJL21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:27:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37778 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726820AbgGJL1c (ORCPT
+        Fri, 10 Jul 2020 07:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGJL2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:27:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594380450;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=yc5vqhzpJ+70eeIGSfn7JoYdazGpgs5t+Z09cMQr35Y=;
-        b=SSt1IyNum0MWXis+jp7RNB68HCyHvTFSGYn31n7+XCc8vvmzunUy73ZRRInlwm50hIe04Q
-        M3gbozBQsVlMpmqtsUvNXa1yQfNSrFL/v62RkEFPrU5FGiKeAeA+PPOU5RB4Ph/fa5Y617
-        e+JImvQTqJ+EM2nxEsO0IiZpG+bUGyM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-MQgtAhxxNWOP4FUD1P9qtg-1; Fri, 10 Jul 2020 07:27:28 -0400
-X-MC-Unique: MQgtAhxxNWOP4FUD1P9qtg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0BBD107ACCA;
-        Fri, 10 Jul 2020 11:27:25 +0000 (UTC)
-Received: from [10.36.114.41] (ovpn-114-41.ams2.redhat.com [10.36.114.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DA6A19D9E;
-        Fri, 10 Jul 2020 11:27:22 +0000 (UTC)
-Subject: Re: [PATCH] virtio_balloon: fix sparse warning
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-References: <20200710104837.405966-1-mst@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <a292ea69-9bc4-4703-2593-e701bc6ad2b1@redhat.com>
-Date:   Fri, 10 Jul 2020 13:27:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 07:28:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CE6C08C5CE;
+        Fri, 10 Jul 2020 04:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3D7HcbVvasTwDLZD4YAaihs84eO23KPCl16ZChSDu2M=; b=R+thKef1a76pE65/41vHX+3lv3
+        8rKgvdJkIb+n1O571lv2KUon0j/BUoUWCdRGZPxW7CeOtjVXoqp0bnXVreGM6reSeE3fLmkaILdkX
+        g/X09WiEsiacoldznMOBN8qu7deTd7tWYPGj0PBsD2TjtLae5TOBfR+WG2WVLfShipAU2zfEeRkku
+        9OREHHOza/y6f/p/Wy/AYo5sVBRXv7FS86PNDt/l7g3U3wbWLM/CZdtQTGMCvezJVZ2onIQ7H2AfD
+        8QOthqDQ3vmQbXubYLzXvB1L79kj6oZ3mYAsLg8sekkCCzA8PwvZOFvU4t0tc9MRyfmh3yOgvg3G7
+        V3oHT3nw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtrCF-0006JB-S9; Fri, 10 Jul 2020 11:28:04 +0000
+Date:   Fri, 10 Jul 2020 12:28:03 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Changming Liu <charley.ashbringer@gmail.com>,
+        keescook@chromium.org, mcgrof@kernel.org, yzaikin@google.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: add bound to panic_timeout to prevent overflow
+Message-ID: <20200710112803.GI12769@casper.infradead.org>
+References: <1594351343-11811-1-git-send-email-charley.ashbringer@gmail.com>
+ <b50e8198-ca2e-eb44-ed71-e4ca27f48232@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200710104837.405966-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b50e8198-ca2e-eb44-ed71-e4ca27f48232@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.07.20 12:48, Michael S. Tsirkin wrote:
-> balloon uses virtio32_to_cpu instead of cpu_to_virtio32
-> to convert a native endian number to virtio.
-> No practical difference but makes sparse warn.
-> Fix it up.
+On Thu, Jul 09, 2020 at 08:31:39PM -0700, Randy Dunlap wrote:
+> > +/* this is needed for setting boundery for panic_timeout to prevent it from overflow*/
 > 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/virtio/virtio_balloon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>                                  boundary (or max value)                       overflow */
 > 
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index fc7301406540..5d4b891bf84f 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -596,7 +596,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb)
->  	while (virtqueue_get_buf(vq, &unused))
->  		;
->  
-> -	vb->cmd_id_active = virtio32_to_cpu(vb->vdev,
-> +	vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
->  					virtio_balloon_cmd_id_received(vb));
->  	sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
->  	err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
-> 
+> > +static int panic_time_max = INT_MAX / 1000;
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Or just simplify the comment.
 
--- 
-Thanks,
+/* Prevent overflow in panic() */
 
-David / dhildenb
+Or perhaps better, fix panic() to not overflow.
 
+-		for (i = 0; i < panic_timeout * 1000; i += PANIC_TIMER_STEP) {
++		for (i = 0; i / 1000 < panic_timeout; i += PANIC_TIMER_STEP) {
+
+you probably also want to change i to be a long long or the loop may never
+terminate.
