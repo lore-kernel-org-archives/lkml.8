@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DA7C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA46C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B12D2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E02207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSjdprKU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jptl7hy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgGJNoJ (ORCPT
+        id S1728069AbgGJNoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36808 "EHLO
+        Fri, 10 Jul 2020 09:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgGJNoH (ORCPT
+        with ESMTP id S1727948AbgGJNoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:44:07 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE84C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:07 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m22so2545253pgv.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:07 -0700 (PDT)
+        Fri, 10 Jul 2020 09:44:12 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D221FC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:12 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m16so1070355pls.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oR1iCdyjqdW0rpMyzFcXJYpdaFj2hk3nZIS6lcn/OyQ=;
-        b=lSjdprKUHFRT8IktlGd4X04AGtxXKmyE36+sFI8tYWGn10Fy8tCa1ihP5ukwX70t22
-         D2XPYZscGKVw0qu4dB97WU2LTfOuAU1l9GlAaP/39htpdbuJLCE2X1/501Di93vvykaG
-         txSL59dcCPdLWGovy43A+lXFYt4sSdsX6YYOj/0J47naNQ2H5vTBwKVjvRUBcJjMrZet
-         ZjILVYCpV5shiJuu8sa3gfOqEcjoElTJBf0/oUldoQeCDs5H7pVqH5bRUGyO33CKYSQr
-         aJNZrXaZy4/GZY8uLeXsbDzcOy+Bb8ajqt/VHdCUbLZYhZjP5m3IykMfoCMkBUxdRZ27
-         PwEw==
+        bh=ul89J2LxR5qyab2DeLgx+D64gpkzNDa9NrxPE9OXSOk=;
+        b=Jptl7hy7y5ej44PfFrjfAD324OFj/lqogo7RzDj2gj8bpq6r9aKlZxUF6RUE98gtal
+         PF/HXZvA8NtfPixOMwmVoy0wAduqPOwnx4vO8B10qDn20vLlOksp4HBq1kVcozc4WV+x
+         rHrc74zjSdeIP4edB7ZyWewy1G1AFR5FSWmTBtLOTj3GTchiwf02olkJO+sOjUTbIXpP
+         Mw6cvJM0pTIF9qJMj3oPFJCDU9lrYjTZStQbigZpl9apkQ0cVCjAdh71VBf/NCvDZfCq
+         C+TobJxEcKfOi4cRfmKQYiYRG+PJshOGuQJCNfSMOC3dNSrdmk7jsrn5QEnUIOKKDy/0
+         f/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oR1iCdyjqdW0rpMyzFcXJYpdaFj2hk3nZIS6lcn/OyQ=;
-        b=UVoRRyoBNheqK0LYn65L8rHRSlzVSfaxXpMo/qQFUaE7cKwrxKgdo2tZG/4kXe/1yx
-         TWZZXG7LJz7Fa/ZD61vFaIvmVlssVCO5BiQD5KHBa/nu4h8Cz+QeiBP8/C0vN8O5MyzH
-         fy9p/x4wcgIzmAa1IewmEGzVKDTg/fXs2C/9k6LahiRFyHazuM4BU7Is8Pg9CaZ1ZrpL
-         YdMffhOBAF2sPd3Hl6vTIHGD0enZHHpmoYAEpSJ3fbWtls/jL3RRZbL5UCfjYhGrMP6Z
-         u1vbwTwCvI2Ymxjuk+8ubsSPcUO2dWPsWVjD1hzQLFhrkm8T63UTUikEk5rEEuvDTYgu
-         KSAg==
-X-Gm-Message-State: AOAM531RizBi5DzF2MnbgJfiKR5Bs8YfYfu/F4ouTeWphOm2+crvgzMf
-        ZMyBbSN3a4lqWWBcQ3Cit7M=
-X-Google-Smtp-Source: ABdhPJy4F0g6MzMSxyTZdoQ+npDJX6AQ862XRP8E1vQKCS/cCwHKsKsBBgAeckZd+OZzBRSByA760g==
-X-Received: by 2002:aa7:810c:: with SMTP id b12mr20521313pfi.69.1594388647062;
-        Fri, 10 Jul 2020 06:44:07 -0700 (PDT)
+        bh=ul89J2LxR5qyab2DeLgx+D64gpkzNDa9NrxPE9OXSOk=;
+        b=Hgki6eGp8DxQInbMJc0QF2R1t4Wc00UfVa1e+DhBPcGCB8bIY4rqy/VIqE0p6lK77O
+         Ajpb+LZo3MXTuM1q1hnw/j78LbMK13nQ1vZaqVBB0gMTO8JQwMGaOT5MUBWr9DnZc1G7
+         OU89T/kiCdhgthU3UPn6vzFcJj3gXJgb/UqGYRon59iLmOItLR3ZHPTQWY2AcHX07nYA
+         rNUEb+A4mQCO4IH7X6tqNN5PC0ucWCpgi443hMRJbWVTOwrjTpyv528GURjQqODx2B2Z
+         igdPbFKbDB1Q+9r+vEPPyO6GK9Y3lh9AKMcuV8dZQnOzYE/zBGuh1tx643n5Z10mjW1j
+         VcaA==
+X-Gm-Message-State: AOAM532v8BH4uW6Fdszx4mEkEWhAt7Lm6Q6OR62cQYO4RMn4haykkjzO
+        /IzkdsDNU9l7P6s4bfzx8/I=
+X-Google-Smtp-Source: ABdhPJx0MmUV3wOhleaJfvRW39HHT0dZl2kvv0Svhslq0lxe2IkySUnugMqkHm+4Zn7tFZRl5uhVpw==
+X-Received: by 2002:a17:90a:f014:: with SMTP id bt20mr5910798pjb.135.1594388652305;
+        Fri, 10 Jul 2020 06:44:12 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.44.01
+        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.44.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:44:06 -0700 (PDT)
+        Fri, 10 Jul 2020 06:44:11 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 03/17] perf ftrace: add option -t/--tid to filter by thread id
-Date:   Fri, 10 Jul 2020 21:43:08 +0800
-Message-Id: <20200710134322.15400-4-changbin.du@gmail.com>
+Subject: [PATCH v4 04/17] perf ftrace: factor out function write_tracing_file_int()
+Date:   Fri, 10 Jul 2020 21:43:09 +0800
+Message-Id: <20200710134322.15400-5-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
 References: <20200710134322.15400-1-changbin.du@gmail.com>
@@ -81,42 +81,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows us to trace single thread instead of the whole process.
+We will reuse this function later.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/Documentation/perf-ftrace.txt | 4 ++++
- tools/perf/builtin-ftrace.c              | 2 ++
- 2 files changed, 6 insertions(+)
+ tools/perf/builtin-ftrace.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index d79560dea19f..e204bf6d50d8 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -38,6 +38,10 @@ OPTIONS
- --pid=::
- 	Trace on existing process id (comma separated list).
- 
-+-t::
-+--tid=::
-+	Trace on existing thread id (comma separated list).
-+
- -a::
- --all-cpus::
- 	Force system-wide collection.  Scripts run without a <command>
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 244cc8e6bd60..1188b82c6541 100644
+index 1188b82c6541..342861a1d152 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -515,6 +515,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		    "Show available functions to filter"),
- 	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
- 		   "trace on existing process id"),
-+	OPT_STRING('t', "tid", &ftrace.target.tid, "tid",
-+		   "trace on existing thread id (exclusive to --pid)"),
- 	OPT_INCR('v', "verbose", &verbose,
- 		 "be more verbose"),
- 	OPT_BOOLEAN('a', "all-cpus", &ftrace.target.system_wide,
+@@ -165,6 +165,17 @@ static int read_tracing_file_to_stdout(const char *name)
+ 	return ret;
+ }
+ 
++static int write_tracing_file_int(const char *name, int value)
++{
++	char buf[16];
++
++	snprintf(buf, sizeof(buf), "%d", value);
++	if (write_tracing_file(name, buf) < 0)
++		return -1;
++
++	return 0;
++}
++
+ static int reset_tracing_cpu(void);
+ static void reset_tracing_filters(void);
+ 
+@@ -295,8 +306,6 @@ static void reset_tracing_filters(void)
+ 
+ static int set_tracing_depth(struct perf_ftrace *ftrace)
+ {
+-	char buf[16];
+-
+ 	if (ftrace->graph_depth == 0)
+ 		return 0;
+ 
+@@ -305,9 +314,7 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
+ 		return -1;
+ 	}
+ 
+-	snprintf(buf, sizeof(buf), "%d", ftrace->graph_depth);
+-
+-	if (write_tracing_file("max_graph_depth", buf) < 0)
++	if (write_tracing_file_int("max_graph_depth", ftrace->graph_depth) < 0)
+ 		return -1;
+ 
+ 	return 0;
 -- 
 2.25.1
 
