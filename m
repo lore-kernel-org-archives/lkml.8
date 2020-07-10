@@ -2,112 +2,108 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7756C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E577C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B338F207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3302720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdeyBHoP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsYMmc5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgGJOEo (ORCPT
+        id S1727978AbgGJOEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40092 "EHLO
+        Fri, 10 Jul 2020 10:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgGJOEo (ORCPT
+        with ESMTP id S1727851AbgGJOEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 10:04:44 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEB7C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:04:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so6579085ljp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:04:43 -0700 (PDT)
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746E6C08C5CE;
+        Fri, 10 Jul 2020 07:04:44 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t18so5163530ilh.2;
+        Fri, 10 Jul 2020 07:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FohwNfXrZ64dI/A6dzP4B8r132U3m58v5WNQmAc787c=;
-        b=FdeyBHoPZ/YazdNbuptBYqPxCsSqUwT3eKPkBfbE2ygIjlnl7YKFCbnvAxJ/+HQWn8
-         MJNJ3lz8nHH1iOkADufts1pqX5u+DmzlF96mXCPwmr3x1qC0WclhB2qmRHZJjXddhDHX
-         FqMANUwWLDw8iFQ1qXODdXI+xnmxp6Eb0sNojyP0tToYPCjJAuYF1yyp6FYKVWVLpDFO
-         dpQwssxsdswmxdqWVv2G3c3382AFAwoN5jcM4bUzEphLfgYzgszyGQ0oPZP2btBdnCje
-         8jKg8pDxpixH206ZyW/v1AHMN8bY69CZwJYpiFBjELqqReUDUIKAiRHS7KCrymk3LipT
-         fnGg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PTBjDKX9QGpcuX3s/VdchDQqYEiz3TYMGZbErPooqCM=;
+        b=dsYMmc5ESfc26TsVEcETFHP1dEWIp0DgWNJMHhBXPlqWIAeycwi8nTlj+G/mo+GFsb
+         ZQqtGQdXNxSN0PMwAIkFz4sEqVRnXT99p+X3a6xyip7Q44v6pZL3ueWkfrKzShVHokEy
+         UoBXTzwI93Yr5wYPyJhj2wzM74CiJaUvO9uiiBotmaqyZYUrO1X6BoDhZ0re5ltGSWWs
+         MyTi3GXg5NQni9wjIxStPPp8imUmXM1B6xtErm4x1kwhDmD9rTeqgG1v1nDjWgXdjxvq
+         evlFkM2afcPt96UGdNYN0aVDvNKT1III5YcFkqVDCuomtAcuZQngauZMnABFNi4Va08i
+         X5ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FohwNfXrZ64dI/A6dzP4B8r132U3m58v5WNQmAc787c=;
-        b=BgqXFkNG3f3CgaDOrze9wO1/kJCf2FjLSbtY3TLvTNl7MtvJSDHjsvDUhdAqX2++pD
-         BfSQBGgvYKjAAr1L64s9SScnryqHS2M4Wrfd6i+ivUyQozxafuWaUaQcfTB/ccfalNb9
-         J7opRumlA7E00RoAUpk4qErIKbnpCyXzj86WcIfmF6c2uedw4b4s412utbjoEZapR9PH
-         SQ4snAUc9QhNwrC1qpyoVUlOXjjiQmv454g3AH4cl5dXJefYmivE0bIUTab2ExECfshD
-         MWitiifqFXfBL3+j7v6y+GSqnIRqm9A7yFBsxXRoTqcZixt/T2ZLmnGwRByGHdNvloHw
-         I2kg==
-X-Gm-Message-State: AOAM531VyMsH/wBInqPJozh/3a870SxTCLZWxlz5gVmJjLbEEJkABQYK
-        1OkM9Ps7g2aARaUS6EyhV+U=
-X-Google-Smtp-Source: ABdhPJx9Xj8F3jJ+3vIeNuvenAc1On3KXSkIWPuNL3idV6WigPnS/KTN7FKGqctRoNTjzb/hMSlPhw==
-X-Received: by 2002:a2e:870b:: with SMTP id m11mr26798970lji.269.1594389882122;
-        Fri, 10 Jul 2020 07:04:42 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id j25sm2194769lfh.95.2020.07.10.07.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 07:04:41 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Fri, 10 Jul 2020 16:04:39 +0200
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Tian Tao <tiantao6@hisilicon.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH v3] vmalloc: Add the right hint when vmalloc failed
-Message-ID: <20200710140439.GA14846@pc636>
-References: <1594383472-52983-1-git-send-email-tiantao6@hisilicon.com>
- <20200710124323.GJ12769@casper.infradead.org>
- <20200710134956.GA14549@pc636>
- <20200710135301.GM12769@casper.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PTBjDKX9QGpcuX3s/VdchDQqYEiz3TYMGZbErPooqCM=;
+        b=SU2ejiUBWTt0RbWYOy0jVxAouxoqifTRiFkYkhDybNtWWGZW0Xk+PM8JYqRHVTs8Zu
+         GP0fXVKc0VUnQ+bwgecqFLQq/UuLOlbP7T1RAIbOXCfENBSM28Yw8aBTqU1v15dKIb1f
+         aOIt3W9f/nqFK5ma01Zj6G7fIs+51VLe/WwmMYgBIfMuiwa5mS56eb0upTjOUzrPC+ww
+         EB0pZXpVLE6v7AcqKYSFY2dFkm8vUALpTzzhSWKbqY1Y08pvKYQA+z3VY9wvbXQLQAwJ
+         +4z+ZJeSypRgmedvMkHMnfohD6q4NSMavGuIjwuDYDC7oDogjheUvdjRxkmy09xQD2Er
+         hOGg==
+X-Gm-Message-State: AOAM531KcE+oDbwYslccGTJJ/EEzDb9+o0XY78Z3ZU6ZEoeqLxI83JBI
+        e6nCQnO7bnfWdRcsGZReORaY1WUwOpuFz5SVTn0=
+X-Google-Smtp-Source: ABdhPJxIbAyUa3bPZYLNXzNpF2ldPD5y93hhQQAnFQkwKXGvH95xcg2wRO+ogn/HrcfKmzgZlFFYG/HC7DwGTggSVUM=
+X-Received: by 2002:a92:404e:: with SMTP id n75mr11630820ila.203.1594389883807;
+ Fri, 10 Jul 2020 07:04:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710135301.GM12769@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594309987-9919-1-git-send-email-laoar.shao@gmail.com>
+ <20200710124253.GA1125@lca.pw> <20200710125852.GC3022@dhcp22.suse.cz> <20200710130724.GD3022@dhcp22.suse.cz>
+In-Reply-To: <20200710130724.GD3022@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 10 Jul 2020 22:04:07 +0800
+Message-ID: <CALOAHbDW88hbAv8iPa=PqnXZ_k2phYFDys28QRAfbERLWBzi+Q@mail.gmail.com>
+Subject: Re: [PATCH v2] mm, oom: make the calculation of oom badness more accurate
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>, sfr@canb.auug.org.au,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:53:01PM +0100, Matthew Wilcox wrote:
-> On Fri, Jul 10, 2020 at 03:49:56PM +0200, Uladzislau Rezki wrote:
-> > > On Fri, Jul 10, 2020 at 08:17:52PM +0800, Tian Tao wrote:
-> > > > In fact "vmalloc=<size>" cmdline option is not available on many
-> > > > platforms.When the user encounters this error, add the correct
-> > > > hint to prevent misleading.
-> > > 
-> > > i don't think this is an improvement.
-> > >
-> > Matthew, maybe it should not be considered as improvements?
-> 
-> Every patch should be an improvement along some dimension.  This doesn't
-> feel like an improvement in any way.
-> 
-> > It is rather an extra information that indicates that your
-> > ARCH may not support "vmalloc" early parameter.
-> 
-> If anything needs to be improved, it's the documentation, not this
-> error message.
+On Fri, Jul 10, 2020 at 9:07 PM Michal Hocko <mhocko@kernel.org> wrote:
 >
-As i mentioned before, i do not have a strong opinion about this
-patch. From the other hand improving that message looks normal
-to me. Especially in a context that it took a time to understand
-that ARM64 does not support it, so we have had a precedent. I am
-talking about author of this patch.
+> On Fri 10-07-20 14:58:54, Michal Hocko wrote:
+> [...]
+> > I will have a closer look. Is the full dmesg available somewhere?
+>
+> Ups, I have missed this:
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index 2dd5a90f2f81..7f01835862f4 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -306,7 +306,7 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
+>  static int oom_evaluate_task(struct task_struct *task, void *arg)
+>  {
+>         struct oom_control *oc = arg;
+> -       unsigned long points;
+> +       long points;
+>
+>         if (oom_unkillable_task(task))
+>                 goto next;
+>
+> Does it help?
+> --
 
---
-Vlad Rezki
+Thanks Michal. This should be the fix.
+I did it in our in-house kernel, but when I posted it to upstream I
+missed it. That's my fault.
+
+
+-- 
+Thanks
+Yafang
