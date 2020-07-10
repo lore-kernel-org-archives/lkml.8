@@ -2,189 +2,141 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7841A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA92207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLn2L3Yu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNOZWK7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGJIvM (ORCPT
+        id S1727099AbgGJIvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
+        Fri, 10 Jul 2020 04:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726644AbgGJIvL (ORCPT
+        with ESMTP id S1726615AbgGJIvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 04:51:11 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247B9C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:51:11 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id a17so2578537vsq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:51:11 -0700 (PDT)
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00211C08C5CE;
+        Fri, 10 Jul 2020 01:51:10 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j20so2260657pfe.5;
+        Fri, 10 Jul 2020 01:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IqIVvQ2zr6ElD+RZxcXvNwfajcIvHD5hM0pq+5dyaCU=;
-        b=FLn2L3Yu3a71IwsJbkyQMnv/2osNAG/OpLYe8aVWnpHC68jeftI7JiS5xkEur8kxr8
-         5NHTmxbaEsLcIUnxVR6rii4rGIYH6RKZ59lfFL8So3UnrtKvIw6lxdU7uLFYBeJUNnIm
-         tfEpSMgM2TOUjQEI4tpG8lTUAfHJ/RH85mI05YDwSzSztlH5AYXDWGNrnei6VmYZahKC
-         AI5y3oT6Ch+wl6ujyswxkMQJKfF2kRbnx51NAIofofKcmxWWI9uyI9welkfj6IDQ34rg
-         vKIlPJiXCdkk9Dk/riLmjG7zTZxG8comE2fgeJsZ7tDyRlfXSW3bnr82QgFyZWPwBDFC
-         ugfw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MeCDns59/k2bXtkn8SMRmiwgQqN/hMhz05uwtyfKKUM=;
+        b=HNOZWK7SwXsnFaNyNyvu27IJMIt5XSrf6bLCyYlf0APu1rWlDf36KRnbzVfABE7QtA
+         XschrBNM1eshFsR99uVvaEk9MGaaobQtxPq8Y483DbJ9nMpwoD8/z+MAweL+jpf/fl2L
+         0Nue25QBtrPTZSb42CK0v+fkcYenKIamVjeTpG9wKWjsClcESBH8gWGvaNHMTN5I5+b8
+         TQEbzuJIeBRx9e5B4CSVPq2dixBFhfiFe4WV2nmD8Up5Lxeeq0Q7h2Ua2iZBzWTmbTjq
+         csmzpnJiLpRmbYCw21MYLOWv6o9V2e1Y1Bq5kPWhlp8Vac11gvz6sudUbZbqQjGL2BM/
+         XDQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IqIVvQ2zr6ElD+RZxcXvNwfajcIvHD5hM0pq+5dyaCU=;
-        b=GXXziLLN3rrchFwCvqVPVt2LXNcQpPnhNzhapcyEf67CQnaJzLZAYORKTU0uTfA5+e
-         WPpJGtr4G5grDcUprV4bMWVovQwrBX7qVLVCt7g5s/QQ8wik/3E+y33bcfBbNbVtZ7uR
-         4kdptnx+k5HvJTBrgWm5UZqugik7YWEG9Ild0Drp0f17RhxKQBS15e4g9L1B9Ce2YPRE
-         K8JodDktASdyKhahaF12sKff6IOWNjJB+0j3TT7uL9XdJMxxL42E33ut66g6hmOfjfTr
-         RG9QbFahOGYCaV0Bga6vy+RY+NHt4uJ8fget9v5GDEbwCODMrq6zkhDqOjwI+O3mwLA6
-         gqog==
-X-Gm-Message-State: AOAM532RqWUypm5p06AsJ6gdc5FUfMp+Qzc5ru72yVYU1GkEY89DJFQP
-        OjJY0x86tQMbzwMrIR0pPtFnKQ/imT4mSM/kBq/9Fn4IE5g=
-X-Google-Smtp-Source: ABdhPJxOxsAazACc1kbzqT6xDB5kyDVlMOltsczaiTYVbWwwDKSYWKhNV616GOdXFWDb1WiHKNt7EMLwcaMLICyoP3s=
-X-Received: by 2002:a67:c90c:: with SMTP id w12mr41263992vsk.86.1594371070342;
- Fri, 10 Jul 2020 01:51:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MeCDns59/k2bXtkn8SMRmiwgQqN/hMhz05uwtyfKKUM=;
+        b=YKnpB0qYA83UPViRQUvcWXGXwUv5CTG0cSLYpCWlZIC9jFyIupjLaEtUqXExCSG2PK
+         ygKoSetKe5KKTYeHsQYqIb+0VvNdmEIq/DYHVJafAbChoF4v7ZoYHoN0KKL9kGOu4FuI
+         2UmJeifRKG+roHuhl/MUbW1IZTFtCp5he0s4hL2iBpfjQbRuL5MLEx/WOshA7JPxNjov
+         sq4MKKGmaEsOk3OaxXHnOB0gTQTidcj3St/8+K4Glnv9i2Lhx2DAW7H3BGLvmq5Zdag6
+         0QiXtg+CsK0tFWwiR/A93d35b21wMcAtzPHhk1g6gZRE7mEcDocWI378D7LUkKk8YxUK
+         x/3A==
+X-Gm-Message-State: AOAM531W9l8PW26aqmNP9dMUE487ejgAaLMjO8yKXTiZ+gzG0UfrK90O
+        ZbKLEeQO7aDjM/u84Yyacho=
+X-Google-Smtp-Source: ABdhPJxjSoOvDBzyXkU35F4bRtBqORPXDAxYRHxJp6IIZ2XkTf5pKjqKLzWOJmUdmoW302Fgy6YTIg==
+X-Received: by 2002:aa7:98c6:: with SMTP id e6mr63130832pfm.17.1594371070449;
+        Fri, 10 Jul 2020 01:51:10 -0700 (PDT)
+Received: from xiaomi.mioffice.cn ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id e8sm4734273pff.185.2020.07.10.01.51.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 01:51:09 -0700 (PDT)
+From:   Qiwu Huang <yanziily@gmail.com>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: [PATCH 2/5] power: supply: core: add wireless charger adapter type property
+Date:   Fri, 10 Jul 2020 16:48:38 +0800
+Message-Id: <20200710084841.1933254-2-yanziily@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200710084841.1933254-1-yanziily@gmail.com>
+References: <20200710084841.1933254-1-yanziily@gmail.com>
 MIME-Version: 1.0
-References: <20200710074143.306787-1-christian.gmeiner@gmail.com>
- <20200710074143.306787-3-christian.gmeiner@gmail.com> <6098f2549eb96348af0ba062d87a716f20d1af1c.camel@pengutronix.de>
-In-Reply-To: <6098f2549eb96348af0ba062d87a716f20d1af1c.camel@pengutronix.de>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 10 Jul 2020 10:50:59 +0200
-Message-ID: <CAH9NwWex+9LvaBhzPkYDaYOHnvxFeK4sAMgFZi2i5b+TOSVPmA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] drm/etnaviv: add loadavg accounting
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hoi Lucas,
+From: Qiwu Huang <huangqiwu@xiaomi.com>
 
-Am Fr., 10. Juli 2020 um 10:19 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
->
-> Hi Christian,
->
-> Am Freitag, den 10.07.2020, 09:41 +0200 schrieb Christian Gmeiner:
-> > The GPU has an idle state register where each bit represents the idle
-> > state of a sub-GPU component like FE or TX. Sample this register
-> > every 10ms and calculate a simple moving average over the sub-GPU
-> > component idle states with a total observation time frame of 1s.
-> >
-> > This provides us with a percentage based load of each sub-GPU
-> > component.
-> >
-> > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > ---
-> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 14 ++++++++++++
-> >  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 32 +++++++++++++++++++++++++++
-> >  drivers/gpu/drm/etnaviv/etnaviv_gpu.h | 29 ++++++++++++++++++++++++
-> >  3 files changed, 75 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > index f9afe11c50f0..b31920241c86 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > @@ -46,6 +46,19 @@ static void load_gpu(struct drm_device *dev)
-> >       }
-> >  }
-> >
-> > +static void unload_gpu(struct drm_device *dev)
-> > +{
-> > +     struct etnaviv_drm_private *priv = dev->dev_private;
-> > +     unsigned int i;
-> > +
-> > +     for (i = 0; i < ETNA_MAX_PIPES; i++) {
-> > +             struct etnaviv_gpu *g = priv->gpu[i];
-> > +
-> > +             if (g)
-> > +                     etnaviv_gpu_shutdown(g);
-> > +     }
-> > +}
-> > +
-> >  static int etnaviv_open(struct drm_device *dev, struct drm_file *file)
-> >  {
-> >       struct etnaviv_drm_private *priv = dev->dev_private;
-> > @@ -581,6 +594,7 @@ static void etnaviv_unbind(struct device *dev)
-> >       struct drm_device *drm = dev_get_drvdata(dev);
-> >       struct etnaviv_drm_private *priv = drm->dev_private;
-> >
-> > +     unload_gpu(drm);
-> >       drm_dev_unregister(drm);
-> >
-> >       component_unbind_all(dev, drm);
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> > index a31eeff2b297..1f0eb7e00657 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> > @@ -714,6 +714,28 @@ static void etnaviv_gpu_hw_init(struct etnaviv_gpu *gpu)
-> >       gpu_write(gpu, VIVS_HI_INTR_ENBL, ~0U);
-> >  }
-> >
-> > +static void etnaviv_loadavg_function(struct timer_list *t)
-> > +{
-> > +     struct etnaviv_gpu *gpu = from_timer(gpu, t, loadavg_timer);
-> > +     const u32 idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
->
-> This isn't guaranteed to work on a clock/power gated GPU. Also we
-> surely don't want to wake a idle system every 10ms just to sample a "no
-> load" value, so this needs some integration with runtime PM, to disable
-> the sampling when the GPU is powered down and enable when powered up.
-> The loadavg must be able to adapt to jumps in the sampling interval
-> while idle.
->
+Reports what type of wireless adapter connection is
+currently active forthe supply.
+for example it can show if ADAPTER_PD capable source is attached.
 
-Oh yea.. runtime PM.. I thought I was missing something. Will tackle this in the
-next version.
+Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+---
+ Documentation/ABI/testing/sysfs-class-power | 13 +++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   |  1 +
+ include/linux/power_supply.h                |  1 +
+ 3 files changed, 15 insertions(+)
 
->
-> > +     int i;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(etna_idle_module_names); i++)
-> > +             if ((idle & etna_idle_module_names[i].bit))
-> > +                     sma_loadavg_add(&gpu->loadavg_value[i], 0);
-> > +             else
-> > +                     sma_loadavg_add(&gpu->loadavg_value[i], 100);
-> > +
-> > +     spin_lock_bh(&gpu->loadavg_spinlock);
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(etna_idle_module_names); i++)
-> > +             gpu->loadavg_percentage[i] = sma_loadavg_read(&gpu->loadavg_value[i]);
-> > +
-> > +     spin_unlock_bh(&gpu->loadavg_spinlock);
-> > +
-> > +     mod_timer(t, jiffies + msecs_to_jiffies(10));
->
-> A jiffies based timer is much too coarse for a regular 10ms sampling.
-> On a typical 100Hz system 10ms is a single jiffy, so your timer will
-> fire anywhere in the range of ~0ms...~20ms. This won't get us a usable
-> measurement.
->
-
-Makes sense.. will switch to hrtimers.
-
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index 0d9d6b46e239..2099cf194a89 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -718,3 +718,16 @@ Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+ 		Access: Read-Only
+ 		Valid values: "QUICK_CHARGE_NORMAL", "QUICK_CHARGE_FAST", "QUICK_CHARGE_FLASH",
+ 		"QUICK_CHARGE_TURBE", "QUICK_CHARGE_SUPER".
++
++===== Wireless Charger Properties =====
++What:		/sys/class/power_supply/<supply_name>/tx_adapter
++Date:		Jul 2020
++Contact:	Fei Jiang <jiangfei1@xiaomi.com>
++Description:
++		Reports what type of wireless adapter connection is currently active for
++		the supply, for example it can show if ADAPTER_PD capable source
++		is attached.
++
++		Access: Read-Only
++		Valid values: "ADAPTER_NONE", "ADAPTER_SDP", "ADAPTER_DCP", "ADAPTER_CDP",
++		"ADAPTER_QC2", "ADAPTER_QC3", "ADAPTER_PD" or other private adapter.
+\ No newline at end of file
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f95574c41898..c864a14829ec 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -207,6 +207,7 @@ static struct power_supply_attr power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(MANUFACTURER),
+ 	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
+ 	POWER_SUPPLY_ATTR(quick_charge_type),
++	POWER_SUPPLY_ATTR(tx_adapter),
+ };
+ 
+ static struct attribute *
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 3fe7e9ef2f0f..2de9a4c93723 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -168,6 +168,7 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+ 	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
++	POWER_SUPPLY_PROP_TX_ADAPTER,
+ };
+ 
+ enum power_supply_type {
 -- 
-greets
---
-Christian Gmeiner, MSc
+2.26.0
 
-https://christian-gmeiner.info/privacypolicy
