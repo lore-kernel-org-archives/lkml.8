@@ -2,62 +2,92 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35833C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5C320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919B72078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGJP7k (ORCPT
+        id S1728065AbgGJQAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:59:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:43840 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgGJP7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:59:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8BDA968B05; Fri, 10 Jul 2020 17:59:33 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 17:59:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH V6 4/5] iommu/dma-iommu: Use the dev->coherent_dma_mask
-Message-ID: <20200710155933.GA20886@lst.de>
-References: <20190908165642.22253-1-murphyt7@tcd.ie> <20190908165642.22253-5-murphyt7@tcd.ie>
+        Fri, 10 Jul 2020 12:00:52 -0400
+Received: from smtprelay0092.hostedemail.com ([216.40.44.92]:35094 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726925AbgGJQAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:00:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 79AB018224D66;
+        Fri, 10 Jul 2020 16:00:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: swim81_190e06826ecf
+X-Filterd-Recvd-Size: 2357
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 10 Jul 2020 16:00:48 +0000 (UTC)
+Message-ID: <a2f48c734bdc6b865a41ad684e921ac04b221821.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
+From:   Joe Perches <joe@perches.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Date:   Fri, 10 Jul 2020 09:00:46 -0700
+In-Reply-To: <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net>
+References: <20200709194257.26904-1-grandmaster@al2klimov.de>
+         <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
+         <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de>
+         <7d4427cc-a57c-ca99-1119-1674d509ba9d@iogearbox.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908165642.22253-5-murphyt7@tcd.ie>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Btw, what is the current state of converting intel-iommu to the dma-iommu
-code?
+On Fri, 2020-07-10 at 17:14 +0200, Daniel Borkmann wrote:
+> On 7/10/20 8:17 AM, Alexander A. Klimov wrote:
+> > Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
+> > > On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
+> > > > Rationale:
+> > > > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
+> > > > which has nothing to do with XDP.
+[]
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> > > > @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
+> > > >   F:    kernel/bpf/cpumap.c
+> > > >   F:    kernel/bpf/devmap.c
+> > > >   F:    net/core/xdp.c
+> > > > -N:    xdp
+> > > > -K:    xdp
+> > > > +N:    (?:\b|_)xdp(?:\b|_)
+> > > > +K:    (?:\b|_)xdp(?:\b|_)
+> > > 
+> > > Please also include \W to generally match on non-alphanumeric char given you
+> > > explicitly want to avoid [a-z0-9] around the term xdp.
+> > Aren't \W, ^ and $ already covered by \b?
+> 
+> Ah, true; it says '\b really means (?:(?<=\w)(?!\w)|(?<!\w)(?=\w))', so all good.
+> In case this goes via net or net-next tree:
+
+This N: pattern does not match files like:
+
+	samples/bpf/xdp1_kern.c
+
+and does match files like:
+
+	drivers/net/ethernet/broadcom/bnxt/bnxt_xdp.c
+
+Should it?
+
+
