@@ -2,220 +2,117 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A477EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 631DE2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DA0206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kxMyTpnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGJB3C (ORCPT
+        id S1726725AbgGJBis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:29:02 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:35488 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgGJB3B (ORCPT
+        Thu, 9 Jul 2020 21:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgGJBis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:29:01 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id 9B5221581;
-        Fri, 10 Jul 2020 09:28:50 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P3129T139655160764160S1594344529928776_;
-        Fri, 10 Jul 2020 09:28:50 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <47b3627cf396951821d8efe055bec5fc>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: robin.murphy@arm.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH] clk: rockchip: mark pclk_uart2 as critical on rk3328
-To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20200708144528.20465-1-jbx6244@gmail.com>
- <2f58b9df-9bcd-5639-65cc-306a6d36b310@rock-chips.com>
- <68073138-1f94-9d5b-ad48-e82bc538c915@gmail.com>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <02cf9650-eef2-f3d1-4630-38e2d8381847@rock-chips.com>
-Date:   Fri, 10 Jul 2020 09:28:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 21:38:48 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A409EC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 18:38:47 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id x205so2136554vsc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 18:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rwZ3DYshMM6TxgS7HlmiJMG3O0eqLFDjVA0qiqONL9c=;
+        b=kxMyTpnOoVqLAx06Eq/BG8dsTt2HetQM+osslhZwLZLc6qwsmlW+bGHiIJ4xrH96dS
+         b8Z4AmXJ6eAlGURzDiRvOaW6caIuXF3dnOU9Me9Ji2G9SrPTWdoTpsd8DSYGzmMWDoCP
+         9QKK+ffBMstJ7DjkzVsc4yRl/QNqfbFX9q+ZY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rwZ3DYshMM6TxgS7HlmiJMG3O0eqLFDjVA0qiqONL9c=;
+        b=hAgtGDC1MI+iyZYJ3BUBviJPMHWj1JHpCtJJZTOHa7KLI+5V9cRATuLksKWY1BFFI+
+         7NQw65J7SFk4aqjv+6JlWX23XoEPG6UOHN904yE2WvnXC7vEvWxN1GXvxqtOlKjbSCqw
+         wUbM1WN46UXcjlC7RvqpWTocUHFCAZQDneXG/VwjZ2z5kpXKJG3BTR2UlO9KaKRyY6C2
+         iEgOw+36gpb38TSgRPkSRNAtmATAU0a9iablVtf7PmsJxOJb6qycHN4tv5DcaZmpYHdX
+         U0cRp0Y9QbZjhsth4RCZ2MSRxVbvKjr5sg+3KYCu+AKiAVW5nA4L9/sV3Ub8essL62dM
+         s/1w==
+X-Gm-Message-State: AOAM530+olIjt6p7E+gpGQ87wLdkIUIouQSxHFhRuK5iLWtMj0PGPXG2
+        2g4ngJ+GQEvLl5vlxN6D0KYznLd+9GA=
+X-Google-Smtp-Source: ABdhPJzqYJy4hEqyZ94R9HFmrrt1Qc0JlflY8S9xPwAkNsJhBVJNEM15BmnEstgHpJjC+xINf4hsag==
+X-Received: by 2002:a67:1105:: with SMTP id 5mr36484452vsr.174.1594345126195;
+        Thu, 09 Jul 2020 18:38:46 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id t2sm667811vka.28.2020.07.09.18.38.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 18:38:44 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id b77so2145496vsd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 18:38:43 -0700 (PDT)
+X-Received: by 2002:a67:e046:: with SMTP id n6mr20302730vsl.6.1594345122863;
+ Thu, 09 Jul 2020 18:38:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <68073138-1f94-9d5b-ad48-e82bc538c915@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
+ <20200710011935.GA7056@gentoo.org>
+In-Reply-To: <20200710011935.GA7056@gentoo.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 9 Jul 2020 18:38:31 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
+Message-ID: <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+To:     steev@kali.org
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Steev Klimaszewski <steev@gentoo.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-在 2020/7/9 下午8:04, Johan Jonker 写道:
-> Hi Elaine, Robin,
+On Thu, Jul 9, 2020 at 6:19 PM Steev Klimaszewski <steev@gentoo.org> wrote:
 >
-> Thank you for your help!
-> This patch can go in the garbage bin.
-> It turns out that with SERIAL_8250 also SERIAL_8250_DW must be
-> selected... ;)
+> Hi Doug,
 >
-> It's not in the Kconfig help description.
-> Shouldn't that be automatically be included for Rockchip?
-> Example:
+> I've been testing 5.8 and linux-next on the Lenovo Yoga C630, and with this patch applied, there is really bad banding on the display.
 >
-> config SERIAL_8250
-> 	tristate "8250/16550 and compatible serial support"
-> 	depends on !S390
-> 	select SERIAL_CORE
-> 	select SERIAL_MCTRL_GPIO if GPIOLIB
-> 	select SERIAL_8250_DW if ARCH_ROCKCHIP
+> I'm really bad at explaining it, but you can see the differences in the following:
+>
+> 24bit (pre-5.8) - https://dev.gentoo.org/~steev/files/image0.jpg
+>
+> 18bit (5.8/linux-next) - https://dev.gentoo.org/~steev/files/image1.jpg
 
-Our  Konfig:
+Presumably this means that your panel is defined improperly?  If the
+panel reports that it's a 6 bits per pixel panel but it's actually an
+8 bits per pixel panel then you'll run into this problem.
 
-config SERIAL_8250
-	tristate "8250/16550 and compatible serial support"
-	depends on !S390
-	select SERIAL_CORE
+I would have to assume you have a bunch of out of tree patches to
+support your hardware since I don't see any device trees in linuxnext
+(other than cheza) that use this bridge chip.  Otherwise I could try
+to check and confirm that was the problem.
 
-config SERIAL_8250_DW
-         tristate "Support for Synopsys DesignWare 8250 quirks"
-         depends on SERIAL_8250
-
-So SERIAL_8250 and SERIAL_8250_DW must be selected.
-
-If you use select SERIAL_8250_DW if ARCH_ROCKCHIP, check the CONIF_ARCH_ROCKCHIP=y.
-In our rockchip_defconfig the CONIF_ARCH_ROCKCHIP=y by default.
-
-> Thank Robin for the introduction to FTRACE!
->
-> mount -t tracefs tracefs /sys/kernel/tracing
->
-> cd /sys/kernel/tracing
->
-> # Without SERIAL_8250_DW
->
-> /sys/kernel/tracing # cat trace | grep uart2
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_div
->         swapper/0-1     [002] d..1     1.916746: clk_disable: pclk_uart2
->
->
-> /sys/kernel/tracing # cat trace | grep uart
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart1_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart1_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart1_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart1_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart0_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart0_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart0_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart0_div
->         swapper/0-1     [002] d..1     1.916746: clk_disable: pclk_uart2
->         swapper/0-1     [002] d..1     1.923959: clk_disable: pclk_uart1
->         swapper/0-1     [002] d..1     1.930741: clk_disable: pclk_uart0
->
-> # With SERIAL_8250_DW
->
-> /sys/kernel/tracing # cat trace | grep uart2
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_div
->         swapper/0-1     [002] d..1     0.923180: clk_enable: sclk_uart2
->         swapper/0-1     [002] d..1     0.923224: clk_enable: pclk_uart2
->         swapper/0-1     [002] d..1     0.925259: clk_disable: sclk_uart2
->         swapper/0-1     [002] d..1     0.925295: clk_enable: sclk_uart2
->         swapper/0-1     [003] d..1     2.208605: clk_disable: sclk_uart2
->         swapper/0-1     [003] d..1     2.208646: clk_enable: sclk_uart2
->
-> /sys/kernel/tracing # cat trace | grep uart
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart2_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart1_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart1_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart1_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart1_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart0_div
->            <idle>-0     [000] d..2     0.000000: clk_enable: clk_uart0_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart0_frac
->            <idle>-0     [000] d..2     0.000000: clk_disable: clk_uart0_div
->         swapper/0-1     [002] d..1     0.920034: clk_enable: sclk_uart0
->         swapper/0-1     [002] d..1     0.920085: clk_enable: pclk_uart0
->       kworker/2:1-32    [002] d..1     0.922596: clk_disable: sclk_uart0
->       kworker/2:1-32    [002] d..1     0.922613: clk_disable: pclk_uart0
->         swapper/0-1     [002] d..1     0.923180: clk_enable: sclk_uart2
->         swapper/0-1     [002] d..1     0.923224: clk_enable: pclk_uart2
->         swapper/0-1     [002] d..1     0.925259: clk_disable: sclk_uart2
->         swapper/0-1     [002] d..1     0.925295: clk_enable: sclk_uart2
->         swapper/0-1     [003] d..1     1.914158: clk_disable: pclk_uart1
->         swapper/0-1     [003] d..1     2.208605: clk_disable: sclk_uart2
->         swapper/0-1     [003] d..1     2.208646: clk_enable: sclk_uart2
->
->
->
-> On 7/9/20 3:32 AM, elaine.zhang wrote:
->> 在 2020/7/8 下午10:45, Johan Jonker 写道:
->>> The rk3328 uart2 port is used as boot console and to debug.
->>> During the boot pclk_uart2 is disabled by a clk_disable_unused
->>> initcall. Fix the uart2 function by marking pclk_uart2
->>> as critical on rk3328. Also add sclk_uart2 as that is needed
->>> for the same DT node.
->>>
->>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->>> ---
->>>    drivers/clk/rockchip/clk-rk3328.c | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/clk/rockchip/clk-rk3328.c
->>> b/drivers/clk/rockchip/clk-rk3328.c
->>> index c186a1985..cb7749cb7 100644
->>> --- a/drivers/clk/rockchip/clk-rk3328.c
->>> +++ b/drivers/clk/rockchip/clk-rk3328.c
->>> @@ -875,6 +875,8 @@ static const char *const rk3328_critical_clocks[]
->>> __initconst = {
->>>        "aclk_gmac_niu",
->>>        "pclk_gmac_niu",
->>>        "pclk_phy_niu",
->>> +    "pclk_uart2",
->>> +    "sclk_uart2",
->>>    };
->>>    
->> Not need to mark the uart2 as critical clocks, the uart clk will enabled
->> by uart driver probe(dw8250_probe()).
->>
->> For your question,  Please check the uart2 dts node "status = okay".
->>
->> Or You can send me the complete log, I check the status of uart2.
->>
->>>    static void __init rk3328_clk_init(struct device_node *np)
->>
->
->
->
-
-
+-Doug
