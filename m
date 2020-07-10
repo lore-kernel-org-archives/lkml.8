@@ -2,205 +2,210 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C1C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6AC620725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345B320725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="Y6ZmMgex";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="htq72VoQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VpaEh54E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGJRXJ (ORCPT
+        id S1728013AbgGJR3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:23:09 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42951 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726950AbgGJRXJ (ORCPT
+        Fri, 10 Jul 2020 13:29:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31658 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726962AbgGJR3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:23:09 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id BDBB35C0113;
-        Fri, 10 Jul 2020 13:23:07 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 10 Jul 2020 13:23:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=+ZdKq3K92m9jP
-        7fMZ/mVWx2x2cAzn2r7U746oA8iIl8=; b=Y6ZmMgexIkH6sOLN6h/d5OIw44JiT
-        h6glUHiazDruIpfSRQgDSmsFvgeNk3idgvDbMZt6yeJoEKlOcrbC3JR9A5aZqCiO
-        RQ9hYdpZGx98kp8m6KmD4Mscl8KhB8Jebe7XyWdP42MdXmCGWpYW4vNjIvZKqxWV
-        DAvBBv6tTHzDx0cv9DILPYH0UjF2rux0wqcmXK79D8Oa4sZ9GnMDx3ntZkwvYmIB
-        zMUz/rjwPuJ+36pm92fV0SeVoHoXfO8eMbK69Yupgb5Ufm2SLC6cyIi7HszTWlv2
-        5wdWxWk754igoJw7A7QMpSy7IK6hGdnz6zOPqdw/NaNJ9aTUQ+SlswuRw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=+ZdKq3K92m9jP7fMZ/mVWx2x2cAzn2r7U746oA8iIl8=; b=htq72VoQ
-        HdC2l3UQS/fw7CJm8+yGBQrSMqLnVh7oblGfpKHOL3cn46psU5Y5lSnRKAEPS1UJ
-        VZCfRsgzBBlKmudD+wGezxb0bHxzsVfKUR/DRfnhHlLAVInf7az04jXtE9aJaRby
-        I7Sy9ioIS9C7N40qrqESjZEEqsOhDFjbrIMWGCTNVFnu2A6jXr8OhLqEXMM9W1SJ
-        yAc5OsPj2UHAcd/18vedSWfTGH9alM1yp/2A0vhV/JXsTAI7txJrvqK39U0l/qB1
-        hN8xbOMpAOLuaTXYohyvVO9rcZUB7Sz0nkB7S5y0Qj8YtvuzW2udJ6xQHf/RJzb/
-        QmPm4TGmHdjN8g==
-X-ME-Sender: <xms:-6MIXzZ8lK32toiLP40MsjguGePx18iACP9Ywyoq-QtV3AfzxFqmMw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdduudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhs
-    uceuuhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepie
-    euffeuvdeiueejhfehiefgkeevudejjeejffevvdehtddufeeihfekgeeuheelnecukfhp
-    peduieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghorhhishessghurhdrihho
-X-ME-Proxy: <xmx:-6MIXyaDj-10oQ8hu1_RAX20lhlIv6wdv0JGkZT_DWqpVatG7o_dag>
-    <xmx:-6MIX19TV-i9xIdmgMRvvHVH5XRKwd8-jq6gx2_9qAkkUm2TieDfiQ>
-    <xmx:-6MIX5pFjeRjwqmrHm2ZOPGo_IOxwtCfjNp92-q8rjXoOaAfHVqQdw>
-    <xmx:-6MIX12D7xkXUXq_7X3oVI2mI45RObC2EdHIsQP5YsQe8uKMCO18yg>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B01F43280067;
-        Fri, 10 Jul 2020 13:23:06 -0400 (EDT)
-From:   Boris Burkov <boris@bur.io>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH v2] btrfs: fix mount failure caused by race with umount
-Date:   Fri, 10 Jul 2020 10:23:04 -0700
-Message-Id: <20200710172304.139763-1-boris@bur.io>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
-References: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
+        Fri, 10 Jul 2020 13:29:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594402176; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=z7xyehWwvZAwmwo9L22CYZ3U7u55HWB00cITqfpNM9o=; b=VpaEh54EB4h181eNR/x9545vIoZaszuBsPvR17l32R6fz6Ok9QQrrA4NgIAlIO+a22nIJ5E1
+ baxyxInf4CjFwkkNn4FWO0SVAl6AC1GtsRksRLpo7lQmbGMXbyNVjcOTBBntVqF8327hhedg
+ L1EuCRDiQoB8kxZV5sVdk2h/SQQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5f08a55cc9bd2efa2e767b8f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 17:29:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A2253C433A1; Fri, 10 Jul 2020 17:28:59 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FE1AC433C6;
+        Fri, 10 Jul 2020 17:28:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FE1AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Fri, 10 Jul 2020 11:28:54 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm/a6xx: fix crashstate capture for A650
+Message-ID: <20200710172854.GD21059@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200630001010.15194-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630001010.15194-1-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to cause a btrfs mount to fail by racing it with a slow
-umount. The crux of the sequence is generic_shutdown_super not yet
-calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
-If that occurs, btrfs_open_devices will decide the opened counter is
-non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
-0. From here, mount will call sget which will result in grab_super
-trying to take the super block umount semaphore. That semaphore will be
-held by the slow umount, so mount will block. Before up-ing the
-semaphore, umount will delete the super block, resulting in mount's sget
-reliably allocating a new one, which causes the mount path to dutifully
-fill it out, and increment total_rw_bytes a second time, which causes
-the mount to fail, as we see double the expected bytes.
+On Mon, Jun 29, 2020 at 08:10:06PM -0400, Jonathan Marek wrote:
+> A650 has a separate RSCC region, so dump RSCC registers separately, reading
+> them from the RSCC base. Without this change a GPU hang will cause a system
+> reset if CONFIG_DEV_COREDUMP is enabled.
 
-Here is the sequence laid out in greater detail:
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-CPU0                                                    CPU1
-down_write sb->s_umount
-btrfs_kill_super
-  kill_anon_super(sb)
-    generic_shutdown_super(sb);
-      shrink_dcache_for_umount(sb);
-      sync_filesystem(sb);
-      evict_inodes(sb); // SLOW
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h       |  5 +++++
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c | 25 +++++++++++++++------
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h | 12 ++++++----
+>  3 files changed, 31 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> index 47df4745db50..c6d2bced8e5d 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> @@ -127,6 +127,11 @@ static inline u64 gmu_read64(struct a6xx_gmu *gmu, u32 lo, u32 hi)
+>  	readl_poll_timeout((gmu)->mmio + ((addr) << 2), val, cond, \
+>  		interval, timeout)
+>  
+> +static inline u32 gmu_read_rscc(struct a6xx_gmu *gmu, u32 offset)
+> +{
+> +	return msm_readl(gmu->rscc + (offset << 2));
+> +}
+> +
+>  static inline void gmu_write_rscc(struct a6xx_gmu *gmu, u32 offset, u32 value)
+>  {
+>  	return msm_writel(value, gmu->rscc + (offset << 2));
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> index d6023ba8033c..959656ad6987 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> @@ -736,7 +736,8 @@ static void a6xx_get_ahb_gpu_registers(struct msm_gpu *gpu,
+>  static void _a6xx_get_gmu_registers(struct msm_gpu *gpu,
+>  		struct a6xx_gpu_state *a6xx_state,
+>  		const struct a6xx_registers *regs,
+> -		struct a6xx_gpu_state_obj *obj)
+> +		struct a6xx_gpu_state_obj *obj,
+> +		bool rscc)
+>  {
+>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>  	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+> @@ -755,9 +756,17 @@ static void _a6xx_get_gmu_registers(struct msm_gpu *gpu,
+>  		u32 count = RANGE(regs->registers, i);
+>  		int j;
+>  
+> -		for (j = 0; j < count; j++)
+> -			obj->data[index++] = gmu_read(gmu,
+> -				regs->registers[i] + j);
+> +		for (j = 0; j < count; j++) {
+> +			u32 offset = regs->registers[i] + j;
+> +			u32 val;
+> +
+> +			if (rscc)
+> +				val = gmu_read_rscc(gmu, offset);
+> +			else
+> +				val = gmu_read(gmu, offset);
+> +
+> +			obj->data[index++] = val;
+> +		}
+>  	}
+>  }
+>  
+> @@ -777,7 +786,9 @@ static void a6xx_get_gmu_registers(struct msm_gpu *gpu,
+>  
+>  	/* Get the CX GMU registers from AHB */
+>  	_a6xx_get_gmu_registers(gpu, a6xx_state, &a6xx_gmu_reglist[0],
+> -		&a6xx_state->gmu_registers[0]);
+> +		&a6xx_state->gmu_registers[0], false);
+> +	_a6xx_get_gmu_registers(gpu, a6xx_state, &a6xx_gmu_reglist[1],
+> +		&a6xx_state->gmu_registers[1], true);
+>  
+>  	if (!a6xx_gmu_gx_is_on(&a6xx_gpu->gmu))
+>  		return;
+> @@ -785,8 +796,8 @@ static void a6xx_get_gmu_registers(struct msm_gpu *gpu,
+>  	/* Set the fence to ALLOW mode so we can access the registers */
+>  	gpu_write(gpu, REG_A6XX_GMU_AO_AHB_FENCE_CTRL, 0);
+>  
+> -	_a6xx_get_gmu_registers(gpu, a6xx_state, &a6xx_gmu_reglist[1],
+> -		&a6xx_state->gmu_registers[1]);
+> +	_a6xx_get_gmu_registers(gpu, a6xx_state, &a6xx_gmu_reglist[2],
+> +		&a6xx_state->gmu_registers[2], false);
+>  }
+>  
+>  #define A6XX_GBIF_REGLIST_SIZE   1
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> index 24c974c293e5..846fd5b54c23 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> @@ -341,10 +341,6 @@ static const u32 a6xx_gmu_cx_registers[] = {
+>  	0x5157, 0x5158, 0x515d, 0x515d, 0x5162, 0x5162, 0x5164, 0x5165,
+>  	0x5180, 0x5186, 0x5190, 0x519e, 0x51c0, 0x51c0, 0x51c5, 0x51cc,
+>  	0x51e0, 0x51e2, 0x51f0, 0x51f0, 0x5200, 0x5201,
+> -	/* GPU RSCC */
+> -	0x8c8c, 0x8c8c, 0x8d01, 0x8d02, 0x8f40, 0x8f42, 0x8f44, 0x8f47,
+> -	0x8f4c, 0x8f87, 0x8fec, 0x8fef, 0x8ff4, 0x902f, 0x9094, 0x9097,
+> -	0x909c, 0x90d7, 0x913c, 0x913f, 0x9144, 0x917f,
+>  	/* GMU AO */
+>  	0x9300, 0x9316, 0x9400, 0x9400,
+>  	/* GPU CC */
+> @@ -357,8 +353,16 @@ static const u32 a6xx_gmu_cx_registers[] = {
+>  	0xbc00, 0xbc16, 0xbc20, 0xbc27,
+>  };
+>  
+> +static const u32 a6xx_gmu_cx_rscc_registers[] = {
+> +	/* GPU RSCC */
+> +	0x008c, 0x008c, 0x0101, 0x0102, 0x0340, 0x0342, 0x0344, 0x0347,
+> +	0x034c, 0x0387, 0x03ec, 0x03ef, 0x03f4, 0x042f, 0x0494, 0x0497,
+> +	0x049c, 0x04d7, 0x053c, 0x053f, 0x0544, 0x057f,
+> +};
+> +
+>  static const struct a6xx_registers a6xx_gmu_reglist[] = {
+>  	REGS(a6xx_gmu_cx_registers, 0, 0),
+> +	REGS(a6xx_gmu_cx_rscc_registers, 0, 0),
+>  	REGS(a6xx_gmu_gx_registers, 0, 0),
+>  };
+>  
+> -- 
+> 2.26.1
+> 
 
-                                              btrfs_mount_root
-                                                btrfs_scan_one_device
-                                                fs_devices = device->fs_devices
-                                                fs_info->fs_devices = fs_devices
-                                                // fs_devices-opened makes this a no-op
-                                                btrfs_open_devices(fs_devices, mode, fs_type)
-                                                s = sget(fs_type, test, set, flags, fs_info);
-                                                  find sb in s_instances
-                                                  grab_super(sb);
-                                                    down_write(&s->s_umount); // blocks
-
-      sop->put_super(sb)
-        // sb->fs_devices->opened == 2; no-op
-      spin_lock(&sb_lock);
-      hlist_del_init(&sb->s_instances);
-      spin_unlock(&sb_lock);
-      up_write(&sb->s_umount);
-                                                    return 0;
-                                                  retry lookup
-                                                  don't find sb in s_instances (deleted by CPU0)
-                                                  s = alloc_super
-                                                  return s;
-                                                btrfs_fill_super(s, fs_devices, data)
-                                                  open_ctree // fs_devices total_rw_bytes improperly set!
-                                                    btrfs_read_chunk_tree
-                                                      read_one_dev // increment total_rw_bytes again!!
-                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
-
-To fix this, we observe that if we have already filled the device, the
-state bit BTRFS_DEV_STATE_IN_FS_METADATA will be set on it, and we can
-use that to avoid filling it a second time for no reason and,
-critically, avoid double counting in total_rw_bytes. One gotcha is that
-read_one_chunk also sets this bit, which happens before read_one_dev (in
-read_sys_array), so we must remove that setting of the bit as well, for
-the state bit to truly correspond to the device struct being filled from
-disk.
-
-To reproduce, it is sufficient to dirty a decent number of inodes, then
-quickly umount and mount.
-
-for i in $(seq 0 500)
-do
-  dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
-done
-umount /mnt/foo&
-mount /mnt/foo
-
-does the trick for me.
-
-A final note is that this fix actually breaks the fstest btrfs/163, but
-having investigated it, I believe that is due to a subtle flaw in how
-btrfs replace works when used on a seed device. The replace target device
-never gets a correct dev_item with the sprout fsid written out. This
-causes several problems, but for the sake of btrfs/163, read_one_chunk
-marking the device with IN_FS_METADATA was wallpapering over it, which
-this patch breaks. I will be sending a subsequent fix for the seed replace
-issue which will also fix btrfs/163.
-
-Signed-off-by: Boris Burkov <boris@bur.io>
----
- fs/btrfs/volumes.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index c7a3d4d730a3..865fab39ef43 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6633,9 +6633,6 @@ static int read_one_chunk(struct btrfs_key *key, struct extent_buffer *leaf,
- 			}
- 			btrfs_report_missing_device(fs_info, devid, uuid, false);
- 		}
--		set_bit(BTRFS_DEV_STATE_IN_FS_METADATA,
--				&(map->stripes[i].dev->dev_state));
--
- 	}
- 
- 	write_lock(&map_tree->lock);
-@@ -6815,8 +6812,15 @@ static int read_one_dev(struct extent_buffer *leaf,
- 			return -EINVAL;
- 	}
- 
-+	/*
-+	 * It is possible for mount and umount to race in such a way that
-+	 * we execute this code path, but the device is still in metadata.
-+	 * If so, we don't need to call fill_device_from_item again and we
-+	 * especially don't want to spuriously increment total_rw_bytes.
-+	 */
-+	if (test_and_set_bit(BTRFS_DEV_STATE_IN_FS_METADATA, &device->dev_state))
-+		return 0;
- 	fill_device_from_item(leaf, dev_item, device);
--	set_bit(BTRFS_DEV_STATE_IN_FS_METADATA, &device->dev_state);
- 	if (test_bit(BTRFS_DEV_STATE_WRITEABLE, &device->dev_state) &&
- 	   !test_bit(BTRFS_DEV_STATE_REPLACE_TGT, &device->dev_state)) {
- 		device->fs_devices->total_rw_bytes += device->total_bytes;
 -- 
-2.24.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
