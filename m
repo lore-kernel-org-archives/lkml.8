@@ -2,249 +2,178 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B21C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED3D2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C497E2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ra31CPzU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJ6DbLIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgGJE1q (ORCPT
+        id S1726818AbgGJE3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:27:46 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10577 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726461AbgGJE1p (ORCPT
+        Fri, 10 Jul 2020 00:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJE3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:27:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594355264; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Wo79ogPKXRyrrdLfPbUvGaueappb89mVN3N+SG+jZaE=; b=Ra31CPzUAwy3SmuyaoLYZgRtqKjsK/5Mvn0dqaS6bVrxZM+rDbD6uRqt53o2tCkuaPk+PPc0
- ajafbVXnkdU4ws7LuCj9ULOZnNqs3bX2ptYhNj6CobCn5vE0p+najH0Rc6+q3m4EWhlN6DGC
- 0tp4FZuqTTeGX0F0EtQv5eqoKfY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f07ee2aa33b1a3dd4926108 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:27:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 00F6DC433C6; Fri, 10 Jul 2020 04:27:21 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [117.247.20.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6B4EC433C8;
-        Fri, 10 Jul 2020 04:27:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6B4EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
-To:     Douglas Anderson <dianders@chromium.org>, linus.walleij@linaro.org
-Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        cychiang@chromium.org, ilina@codeaurora.org, agross@kernel.org,
-        mkshah@codeaurora.org, bjorn.andersson@linaro.org,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <b7736f60-ba4f-8bc3-c749-7e0b4746b09e@codeaurora.org>
-Date:   Fri, 10 Jul 2020 09:57:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 00:29:09 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E4BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:29:09 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id k15so2432328lfc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mjMEHo8189HJa7MEyvNdBopJi1aBYqswf36F3ZzUmHE=;
+        b=zJ6DbLIMI9RS1PmJSJo6xFsTDH6O8QB//0z7B26kKdSld9NfBya8Rtu3IZ074XA+CR
+         PguXCBuyQSrp48FDSdtpHC7sXpIeoytzCn4yZJuMc4a+HhVuBhkF65tWkHci0v9jDyUp
+         3fl2+D4AVaXwcR1us0SK9O6PhX8yo08LWb6Mxp+3I4gmL5zBBb3qeS/YuWiuhbm4s8Xs
+         7ksKitvvtr6ndfV5SLJDDI7VIU+LC2QXgmVFC8XA8RoGWoMj9/yHZ4lepjWHA0Xo6Nft
+         SUxflY6EifOYbS7WQHtSt2iGPYeDGj2yyPGJyFWP7+NMTKzk4hkjYkEiZMyAFMVSkByI
+         D5Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mjMEHo8189HJa7MEyvNdBopJi1aBYqswf36F3ZzUmHE=;
+        b=iqXI1NE1DIRlHVmcnvRzCQk3/TEJlR5rFbbEP6e++7emfM0PoQQtfk/QUX5iPwyfH7
+         BWodxYEXonT2qxCGAd2js7fOuhqL1Fi7DCCNU9PvNl8ma18Yz36pi5yvFlo3UWoDW+Xi
+         kRCIRxnnyhcAhQW/MApZVCnuV65KGut8QsPU6dZm1EaXTKabvahoBHn5OVd0p4zx/iKH
+         c5OXFPG8a1lspdS8QIjk2WTIU0THWMLd/bOIm3Ze6meF3Oijki3nzffMdaKT+sAXGlMn
+         rD1ezrEQb9czx3VKgXazJLS8P0f49IryxmklfOAmVc5BFtyMtejF2l6WldnzGR4axeSd
+         8Kew==
+X-Gm-Message-State: AOAM533ZQkH+/8c2VC1c3YG4SgmH9b8WjChf2m6mieosR9lVHYr5Ty2o
+        IxlHHigsSPZ8NkPEWmS+SnUvkMiA91ZrgXws/YYBZg==
+X-Google-Smtp-Source: ABdhPJybWciRrhe576e0XFkP5ZOq4e0ax7CtRCdKFW0nOqW2ctV9r+kQAZVIQT05SbrSdysuc/SYrSucY8LQCyzy0w0=
+X-Received: by 2002:ac2:5226:: with SMTP id i6mr42252318lfl.55.1594355347306;
+ Thu, 09 Jul 2020 21:29:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 10 Jul 2020 09:58:55 +0530
+Message-ID: <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 10 Jul 2020 at 00:42, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Jul 8, 2020 at 10:28 PM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > While running LTP mm test suite on i386 or qemu_i386 this kernel warning
+> > has been noticed from stable 5.4 to stable 5.7 branches and mainline 5.8.0-rc4
+> > and linux next.
+>
+> Hmm
+>
+> If this is repeatable, would you mind making the warning also print
+> out the old range and new addresses and pmd value?
 
-On 7/9/2020 2:46 AM, Douglas Anderson wrote:
-> As per Qualcomm, there is a PDC hardware issue (with the specific IP
-> rev that exists on sc7180) that causes the PDC not to work properly
-> when configured to handle dual edges.
-> 
-> Let's work around this by emulating only ever letting our parent see
-> requests for single edge interrupts on affected hardware.
-> 
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Your patch applied and re-tested.
+warning triggered 10 times.
 
-Thanks Doug, this looks like a much better solution than what I was
-proposing :)
+old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+Here is the crash output log,
+thp01.c:98: PASS: system didn't crash.
+[  741.507000] ------------[ cut here ]------------
+[  741.511684] WARNING: CPU: 1 PID: 15173 at mm/mremap.c:211
+move_page_tables.cold+0x0/0x2b
+[  741.519812] Modules linked in: x86_pkg_temp_thermal fuse
+[  741.525163] CPU: 1 PID: 15173 Comm: true Not tainted 5.8.0-rc4 #1
+[  741.531313] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  741.538760] EIP: move_page_tables.cold+0x0/0x2b
+[  741.543337] Code: b1 a0 03 00 00 81 c1 cc 04 00 00 bb ea ff ff ff
+51 68 e0 bc 68 d8 c6 05 dc 29 97 d8 01 e8 13 26 e9 ff 83 c4 0c e9 70
+ea ff ff <0f> 0b 52 50 ff 75 08 ff 75 b4 ff 75 d4 68 3c bd 68 d8 e8 f4
+25 e9
+[  741.562140] EAX: 7d530067 EBX: e9c90ff8 ECX: 00000000 EDX: 00000000
+[  741.568456] ESI: 00000000 EDI: 7d5ba007 EBP: cef67dd0 ESP: cef67d28
+[  741.574776] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010202
+[  741.581623] CR0: 80050033 CR2: b7d53f50 CR3: 107da000 CR4: 003406f0
+[  741.587941] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  741.594259] DR6: fffe0ff0 DR7: 00000400
+[  741.598159] Call Trace:
+[  741.600694]  setup_arg_pages+0x22b/0x310
+[  741.604654]  ? _raw_spin_unlock_irqrestore+0x45/0x50
+[  741.609677]  ? trace_hardirqs_on+0x4b/0x110
+[  741.613930]  ? get_random_u32+0x4e/0x80
+[  741.617809]  ? get_random_u32+0x4e/0x80
+[  741.621687]  load_elf_binary+0x31e/0x10f0
+[  741.625714]  ? __do_execve_file+0x5b4/0xbf0
+[  741.629917]  ? find_held_lock+0x24/0x80
+[  741.633839]  __do_execve_file+0x5a8/0xbf0
+[  741.637893]  __ia32_sys_execve+0x2a/0x40
+[  741.641875]  do_syscall_32_irqs_on+0x3d/0x2c0
+[  741.646246]  ? find_held_lock+0x24/0x80
+[  741.650105]  ? lock_release+0x8a/0x260
+[  741.653890]  ? __might_fault+0x41/0x80
+[  741.657660]  do_fast_syscall_32+0x60/0xf0
+[  741.661691]  do_SYSENTER_32+0x15/0x20
+[  741.665373]  entry_SYSENTER_32+0x9f/0xf2
+[  741.669328] EIP: 0xb7f38549
+[  741.672140] Code: Bad RIP value.
+[  741.675430] EAX: ffffffda EBX: bfe19bf0 ECX: 08067420 EDX: bfe19e24
+[  741.681708] ESI: 08058a14 EDI: bfe19bf9 EBP: bfe19c98 ESP: bfe19bc8
+[  741.687991] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
+[  741.694804] irq event stamp: 23911
+[  741.698253] hardirqs last  enabled at (23929): [<d756f075>]
+console_unlock+0x4a5/0x610
+[  741.706181] hardirqs last disabled at (23946): [<d756ec5a>]
+console_unlock+0x8a/0x610
+[  741.714041] softirqs last  enabled at (23962): [<d82b975c>]
+__do_softirq+0x2dc/0x3da
+[  741.721849] softirqs last disabled at (23973): [<d74a8275>]
+call_on_stack+0x45/0x50
+[  741.729513] ---[ end trace 170f646c1b6225e0 ]---
+[  741.734151]  old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
 
-> ---
-> As far as I can tell everything here should work and the limited
-> testing I'm able to give it shows that, in fact, I can detect both
-> edges.
-> 
-> Please give this an extra thorough review since it's trying to find
-> the exact right place to insert this code and I'm not massively
-> familiar with all the frameworks.
-> 
-> If someone has hardware where it's easy to stress test this that'd be
-> wonderful too.  The board I happen to have in front of me doesn't have
-> any easy-to-toggle GPIOs where I can just poke a button or a switch to
-> generate edges.  My testing was done by hacking the "write protect"
-> GPIO on my board into gpio-keys as a dual-edge interrupt and then
-> sending commands to our security chip to toggle it--not exactly great
-> for testing to make sure there are no race conditions if the interrupt
-> bounces a lot.
-> 
->   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
->   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
->   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
->   3 files changed, 85 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 83b7d64bc4c1..45ca09ebb7b3 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
->   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->   }
->   
-> +/**
-> + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
-> + * @d: The irq dta.
-> + *
-> + * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
-> + * normally handled by the parent irqchip.  The logic here is slightly
-> + * different due to what's easy to do with our parent, but in principle it's
-> + * the same.
-> + */
-> +static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
-> +	unsigned long flags;
-> +	int loop_limit = 100;
-> +	unsigned int val;
-> +	unsigned int type;
-> +
-> +	/* Read the value and make a guess about what edge we need to catch */
-> +	val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> +	type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-> +
-> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +	do {
-> +		/* Set the parent to catch the next edge */
-> +		irq_chip_set_type_parent(d, type);
-> +
-> +		/*
-> +		 * Possibly the line changed between when we last read "val"
-> +		 * (and decided what edge we needed) and when set the edge.
-> +		 * If the value didn't change (or changed and then changed
-> +		 * back) then we're done.
-> +		 */
-> +		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> +		if (type == IRQ_TYPE_EDGE_RISING) {
-> +			if (!val)
-> +				break;
-> +			type = IRQ_TYPE_EDGE_FALLING;
-> +		} else if (type == IRQ_TYPE_EDGE_FALLING) {
-> +			if (val)
-> +				break;
-> +			type = IRQ_TYPE_EDGE_RISING;
-> +		}
-> +	} while (loop_limit-- > 0);
-> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +	if (!loop_limit)
-> +		dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
-> +}
-> +
-> +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
-> +{
-> +	struct irq_data	*d = &desc->irq_data;
-> +
-> +	/* Make sure we're primed for the next edge */
-> +	msm_gpio_update_dual_edge_parent(d);
-> +
-> +	/* Pass on to the normal interrupt handler */
-> +	handle_fasteoi_irq(desc);
-> +}
-> +
-> +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
-> +						       unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +
-> +	return type == IRQ_TYPE_EDGE_BOTH &&
-> +	       pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
-> +	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
-> +}
-> +
->   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->   {
->   	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->   	unsigned long flags;
->   	u32 val;
->   
-> +	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-> +		irq_set_handler_locked(d, msm_gpio_handle_dual_edge_parent_irq);
-> +		msm_gpio_update_dual_edge_parent(d);
-> +
-> +		return 0;
-> +	}
-> +
->   	if (d->parent_data)
->   		irq_chip_set_type_parent(d, type);
->   
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 9452da18a78b..7486fe08eb9b 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
->    * @pull_no_keeper: The SoC does not support keeper bias.
->    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
->    * @nwakeirq_map:   The number of entries in @wakeirq_map
-> + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
-> + *                            to be aware that their parent can't handle dual
-> + *                            edge interrupts.
->    */
->   struct msm_pinctrl_soc_data {
->   	const struct pinctrl_pin_desc *pins;
-> @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
->   	const int *reserved_gpios;
->   	const struct msm_gpio_wakeirq_map *wakeirq_map;
->   	unsigned int nwakeirq_map;
-> +	bool wakeirq_dual_edge_errata;
->   };
->   
->   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> index 1b6465a882f2..1d9acad3c1ce 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> @@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
->   	.ntiles = ARRAY_SIZE(sc7180_tiles),
->   	.wakeirq_map = sc7180_pdc_map,
->   	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
-> +	.wakeirq_dual_edge_errata = true,
->   };
->   
->   static int sc7180_pinctrl_probe(struct platform_device *pdev)
-> 
+Build link: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/
+vmlinux: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/vmlinux.xz
+system.map: https://builds.tuxbuild.com/1cwiUvFIB4M0hPyB1eA3cA/System.map
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+full test log,
+https://lkft.validation.linaro.org/scheduler/job/1554181#L10557
+
+- Naresh
+
+>
+> Something like the attached (UNTESTED!) patch.
+>
+>          Linus
