@@ -2,106 +2,203 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B04CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24D352078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:56:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="orobF3YI"
+	by mail.kernel.org (Postfix) with ESMTP id C5C932078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594399933;
+	bh=KcvQZrHB38KDnUP8nxJc19jdFdt8oGFue3inzmz/Efc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c9lewh7vnYBoWnBg09qa29ZEKqT9oG2ekS5alFH2KMO7cqJO58oBFussJxHRZpHDX
+	 t6l9siedTq4CBR16dwOoUbyox8tzRwWjATQQBwriVTQ4qznUDvxNOLzLM195WRXNcM
+	 D5W1jnpKiu3gNBwx6ewCEVdM2fsDd7YZpo2g3M0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgGJQ4c (ORCPT
+        id S1727901AbgGJQwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgGJQ4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:56:31 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B19C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:56:30 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u5so2784768pfn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2X5QFPcvgrAboSg6Ax5Zdcay4B6bTN36cXi/Syr5yY=;
-        b=orobF3YIzCp0gPmGredIbnPemO/2BXqQA8D51eMgBqgC4wU1bZoLntj/vqLw706pGR
-         A5EKYR5icv15YbAs6VYST8prgmXsSchbLc4Ibm2kOV9Nydh+LtrB7lamIjRV4Dv3wODJ
-         7dGiCGy6dNFL+tRalZmSFSTYNiKVFwmPE9yGCLe8vVyT28/HFz0miIVnvpNg1Nkw6vXw
-         egIudBZMyQHk7bFULT7t73v2QzK4gTbrHB7OM6M4bZuhlULhcnGQzLBWCUDN+tMextEw
-         Y8ekfp+DfGZV3YWey9k1NBAYm1bgBrk1PbaWV/bSQ0K5iKffznm+AbdELiZajAD3q7li
-         l4rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2X5QFPcvgrAboSg6Ax5Zdcay4B6bTN36cXi/Syr5yY=;
-        b=JhQnbDDKAm+H2cQjbCJptaTSeFjlXcBgkhY2mUMQY05AuBzhruRaDHc7VZvoHU3sr5
-         gHM6kpQ4B5pasz8R+VUHcITbD1ze+mF9sgYwKD+/aV5T35c7WWXa5GUSggV9bhcuUsRg
-         as3qZbYJ/IekUXl5U5RETZURyOVt3pQu4VgjDrep+/PbwgtaHyXj4ER0K+N1+Sejk4L6
-         tbIhbZHuMSEluXNat5S35mdR0VOtqjwuY8FZBHqRb0Jjkx8CavMIhjmHsWZfrlpXk5q6
-         JhYSzhU8c8Wh7HxXl1OpgSq7m6lPRLIvYQqhiCk8Ylx/7sAX0wwBBgoH6IV9lZh+S9nQ
-         uBWQ==
-X-Gm-Message-State: AOAM532cQ++7uB54MZ/owiWxLzmYf5Xwz9fWCYL2hWWL0xpF5LTGWLi7
-        coE5nSpSAnEOiJnmy37OJjQH5eHjeGv2uk2d+GrYUFR1tnA=
-X-Google-Smtp-Source: ABdhPJw2rLethbQ+9SPY9ZJb2r5ZLWLuVxGIZ3sa/C8ITw8MldYPGx0iArmeHYqjvhP+sGcWlSXBkyqrtdRcx79w9o0=
-X-Received: by 2002:a63:7e55:: with SMTP id o21mr60676922pgn.263.1594400189668;
- Fri, 10 Jul 2020 09:56:29 -0700 (PDT)
+        Fri, 10 Jul 2020 12:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726977AbgGJQwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:52:12 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C5FB206F4;
+        Fri, 10 Jul 2020 16:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594399931;
+        bh=KcvQZrHB38KDnUP8nxJc19jdFdt8oGFue3inzmz/Efc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gpIwsoJ/xXbQSIbhAwidVUNkopiZBRtRJr6jm8fYtOsJO0sGFBU4VrzLmpjt8J0+h
+         bM3ZPwoxoAqbROw+x/9XrPnXHGuUR8yujViPTR/a4kKu7ko3AQlaCr7An51UhICwox
+         /CYhjCD7gHFg3nRhEECbjLxD55E4l8YFtDGAk0TY=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kernel-team@android.com
+Subject: [PATCH 00/18] Allow architectures to override __READ_ONCE()
+Date:   Fri, 10 Jul 2020 17:51:44 +0100
+Message-Id: <20200710165203.31284-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <20200530221127.459704-3-brgerst@gmail.com>
- <20200709103024.GO597537@hirez.programming.kicks-ass.net> <CAMzpN2i3TPxpf5ktaQgb5EmB9wd84V+J5U6=_MuihtXx1-cp+A@mail.gmail.com>
- <20200710085327.GW4800@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200710085327.GW4800@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 10 Jul 2020 09:56:16 -0700
-Message-ID: <CAKwvOdkccfLX59iCH0tFrwbG2Qd0XeOtKuupih+iosE5xwP0BQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] x86/percpu: Clean up percpu_to_op()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Brian Gerst <brgerst@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 1:53 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Jul 10, 2020 at 12:38:23AM -0400, Brian Gerst wrote:
-> > On Thu, Jul 9, 2020 at 6:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Sat, May 30, 2020 at 06:11:19PM -0400, Brian Gerst wrote:
-> > > > +     if (0) {                                                        \
-> > > > +             typeof(_var) pto_tmp__;                                 \
-> > > > +             pto_tmp__ = (_val);                                     \
-> > > > +             (void)pto_tmp__;                                        \
-> > > > +     }                                                               \
-> > >
-> > > This is repeated at least once more; and it looks very similar to
-> > > __typecheck() and typecheck() but is yet another variant afaict.
-> >
-> > The problem with typecheck() is that it will complain about a mismatch
-> > between unsigned long and u64 (defined as unsigned long long) even
-> > though both are 64-bits wide on x86-64.  Cleaning that mess up is
-> > beyond the scope of this series, so I kept the existing checks.
->
-> Fair enough; thanks for explaining.
+Hi all,
 
-I brought up the same point in v1, for more context:
-https://lore.kernel.org/lkml/CAKwvOdnCcpS_9A2y9tMqeiAg2NfcVx=gNeA2V=+zHknit7wGkg@mail.gmail.com/
+This is version three of the patches I previously posted here:
+
+  v1: https://lore.kernel.org/lkml/20191108170120.22331-1-will@kernel.org/
+  v2: https://lore.kernel.org/r/20200630173734.14057-1-will@kernel.org
+
+Changes since v2 include:
+
+  * Actually add the barrier in READ_ONCE() for Alpha!
+  * Implement Alpha's smp_load_acquire() using __READ_ONCE(), rather than
+    the other way around.
+  * Further untangling of header files
+  * Use CONFIG_LTO instead of CONFIG_CLANG_LTO
+
+I have booted this on arm64, and build-tested as follows:
+
+  - arm64	allnoconfig, defconfig (also bisected) and allmodconfig
+  - arm32	allnoconfig, defconfig and allmodconfig
+  - x86_64	allnoconfig, defconfig and allmodcofig
+  - alpha	defconfig, defconfig+CONFIG_SMP=y
+  - riscv64	defconfig
+  - powerpc64	defconfig
+  - s390	defconfig
+  - sparc32	defconfig, defconfig+CONFIG_SMP=y
+  - sparc64	defconfig
+
+Cheers,
+
+Will
+
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Marco Elver <elver@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org>
+Cc: linux-alpha@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: kernel-team@android.com
+
+--->8
+
+SeongJae Park (1):
+  Documentation/barriers/kokr: Remove references to
+    [smp_]read_barrier_depends()
+
+Will Deacon (18):
+  tools: bpf: Use local copy of headers including uapi/linux/filter.h
+  compiler.h: Split {READ,WRITE}_ONCE definitions out into rwonce.h
+  asm/rwonce: Allow __READ_ONCE to be overridden by the architecture
+  alpha: Override READ_ONCE() with barriered implementation
+  asm/rwonce: Remove smp_read_barrier_depends() invocation
+  asm/rwonce: Don't pull <asm/barrier.h> into 'asm-generic/rwonce.h'
+  vhost: Remove redundant use of read_barrier_depends() barrier
+  alpha: Replace smp_read_barrier_depends() usage with smp_[r]mb()
+  locking/barriers: Remove definitions for [smp_]read_barrier_depends()
+  Documentation/barriers: Remove references to
+    [smp_]read_barrier_depends()
+  tools/memory-model: Remove smp_read_barrier_depends() from informal
+    doc
+  include/linux: Remove smp_read_barrier_depends() from comments
+  checkpatch: Remove checks relating to [smp_]read_barrier_depends()
+  arm64: Reduce the number of header files pulled into vmlinux.lds.S
+  arm64: alternatives: Split up alternative.h
+  arm64: cpufeatures: Add capability for LDAPR instruction
+  arm64: alternatives: Remove READ_ONCE() usage during patch operation
+  arm64: lto: Strengthen READ_ONCE() to acquire when CONFIG_LTO=y
+
+ .../RCU/Design/Requirements/Requirements.rst  |   2 +-
+ Documentation/memory-barriers.txt             | 156 +---------
+ .../translations/ko_KR/memory-barriers.txt    | 146 +--------
+ arch/alpha/include/asm/atomic.h               |  16 +-
+ arch/alpha/include/asm/barrier.h              |  59 +---
+ arch/alpha/include/asm/pgtable.h              |  10 +-
+ arch/alpha/include/asm/rwonce.h               |  35 +++
+ arch/arm/include/asm/vdso/gettimeofday.h      |   1 +
+ arch/arm64/Kconfig                            |   3 +
+ arch/arm64/include/asm/alternative-macros.h   | 276 ++++++++++++++++++
+ arch/arm64/include/asm/alternative.h          | 267 +----------------
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/insn.h                 |   3 +-
+ arch/arm64/include/asm/kernel-pgtable.h       |   2 +-
+ arch/arm64/include/asm/memory.h               |  11 +-
+ arch/arm64/include/asm/rwonce.h               |  63 ++++
+ arch/arm64/include/asm/uaccess.h              |   1 +
+ .../include/asm/vdso/compat_gettimeofday.h    |   1 +
+ arch/arm64/include/asm/vdso/gettimeofday.h    |   1 +
+ arch/arm64/kernel/alternative.c               |   7 +-
+ arch/arm64/kernel/cpufeature.c                |  10 +
+ arch/arm64/kernel/entry.S                     |   1 +
+ arch/arm64/kernel/vdso/Makefile               |   2 +-
+ arch/arm64/kernel/vdso32/Makefile             |   2 +-
+ arch/arm64/kernel/vmlinux.lds.S               |   1 -
+ arch/arm64/kvm/hyp-init.S                     |   1 +
+ arch/riscv/include/asm/vdso/gettimeofday.h    |   1 +
+ drivers/vhost/vhost.c                         |   5 -
+ include/asm-generic/Kbuild                    |   1 +
+ include/asm-generic/barrier.h                 |  19 +-
+ include/asm-generic/rwonce.h                  |  80 +++++
+ include/linux/compiler.h                      |  83 +-----
+ include/linux/nospec.h                        |   2 +
+ include/linux/percpu-refcount.h               |   2 +-
+ include/linux/ptr_ring.h                      |   2 +-
+ mm/memory.c                                   |   2 +-
+ scripts/checkpatch.pl                         |   9 +-
+ tools/bpf/Makefile                            |   3 +-
+ tools/include/uapi/linux/filter.h             |  90 ++++++
+ .../Documentation/explanation.txt             |  26 +-
+ 40 files changed, 636 insertions(+), 769 deletions(-)
+ create mode 100644 arch/alpha/include/asm/rwonce.h
+ create mode 100644 arch/arm64/include/asm/alternative-macros.h
+ create mode 100644 arch/arm64/include/asm/rwonce.h
+ create mode 100644 include/asm-generic/rwonce.h
+ create mode 100644 tools/include/uapi/linux/filter.h
+
 -- 
-Thanks,
-~Nick Desaulniers
+2.27.0.383.g050319c2ae-goog
+
