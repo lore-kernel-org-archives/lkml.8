@@ -2,147 +2,183 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1344BC433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A422C20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E2E207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vuH+P3Lx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rhd52J9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGJOMj (ORCPT
+        id S1728293AbgGJOM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgGJOMg (ORCPT
+        Fri, 10 Jul 2020 10:12:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22634 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728252AbgGJOMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:12:36 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC9FC08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:12:36 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id j11so6609006ljo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PKCWrTfr3M3VE4zZraZncAFHMeh1ED72eMf914LZfYE=;
-        b=vuH+P3LxQOhQzesxYlIlfiMh1qXv9/xVVXJv14axnvi9nFSaX0pINMUMb3BuL/K29E
-         8xjQ+MPMBLBSys5Npfb+b9A9SWsdvjMFZ7AbFQD1KRDWUkNX308eSDqg0AAz9UaLwj6J
-         qpQMQZ9PxlFmIuGPQ4NI9buSv9aP9P3EfCInUHeaVaVTIT3Tfr6qDd57DUnSvOHMkzJQ
-         JGMdTceGMmn1A5xPQfaZQjJGeajN0FPeNvmAmWY0OTp8XsOxyg/waavYXcu30KyNqXdC
-         p8TkcQvqHrlLWeHu8EJeBhkqH72QPFopaz4sIjtAXuicSSLd4hYpCIa9O7Ct/DKWR8Wt
-         9/Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PKCWrTfr3M3VE4zZraZncAFHMeh1ED72eMf914LZfYE=;
-        b=aFjptTj/KZpxyTPf5ULS82eSygJCuOI16JMWOJHmxyi/rCe4QTpypKUzJYUQdIDtXl
-         Y8CSucxFRwCMT/xWKi1qMhQyn3yoRq7r5rAbUEaMi9agh1S57jhe8S6dxzXBN3NV4H9l
-         9Fgv5YnHJ7IexgrqiKtOJ6eNtvH5/w8GrrZHVRo25J2qfvLFbjf9gezBk352JhLYjxVM
-         AKzfj9ayUelYtPdcDyC/sKbUGT9NwTOXDpZHDUwu100KQJorEuCLWj3VXcYLCDDozCHR
-         /tsgcs45RQNrXHFjN4Ao9q/X39fJCsSaxAcioiWhQZDQT2O32ujZYv+KnGr3GD/C8Fzw
-         QaXQ==
-X-Gm-Message-State: AOAM530K0ZH9NLvqtdrNyWVEeUHi5ak/AoEqIgMu6MHznWyIRITGZ1+f
-        xr3INFBl8a6cqfqIV8qL0iwMbIQJE8OjgnhygeYTMQ==
-X-Google-Smtp-Source: ABdhPJzlre8tOErvRW+mpIkqnqyceO+sOQTbl0pF6vq8FjFLcm4k96A3c2vvmcqnvoMOopZqXZ7b09p1tN16Pya7kWQ=
-X-Received: by 2002:a05:651c:10f:: with SMTP id a15mr38227429ljb.192.1594390354195;
- Fri, 10 Jul 2020 07:12:34 -0700 (PDT)
+        Fri, 10 Jul 2020 10:12:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594390342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3HxPZNflIjOanh3umlNWu4ZNeWzdk02qhGTFsksEXGU=;
+        b=Rhd52J9z2fbSHya77U+vUyop8hcfyFuWDZVws18oS7BSDBmE5QQq7Vc3SluLJwtVFpPr3M
+        lpOZH+3Vj2gPiY3W162Sn1C7K5AIpXUNjrfk40Oc1tP7rKO8xCmPq2JIqCPZxk8OssSY9e
+        QBKqdBEKJ1qIRrljPdRz6XkwDtg7mmQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-TxYRBx6VMAK4YQM2gURO3w-1; Fri, 10 Jul 2020 10:12:20 -0400
+X-MC-Unique: TxYRBx6VMAK4YQM2gURO3w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 789AB102C7EC;
+        Fri, 10 Jul 2020 14:12:19 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 00D481CA;
+        Fri, 10 Jul 2020 14:12:16 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 7/9] KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest switch
+Date:   Fri, 10 Jul 2020 16:11:55 +0200
+Message-Id: <20200710141157.1640173-8-vkuznets@redhat.com>
+In-Reply-To: <20200710141157.1640173-1-vkuznets@redhat.com>
+References: <20200710141157.1640173-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <20200709194718.189231-1-guro@fb.com> <20200710122917.GB3022@dhcp22.suse.cz>
-In-Reply-To: <20200710122917.GB3022@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 10 Jul 2020 07:12:22 -0700
-Message-ID: <CALvZod6Yk8QoZjbNkGE8-qeOD187Nu-+VwasoROGZs_UsMgbEQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: avoid workload stalls when lowering memory.high
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Domas Mituzas <domas@fb.com>, Tejun Heo <tj@kernel.org>,
-        Chris Down <chris@chrisdown.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:29 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 09-07-20 12:47:18, Roman Gushchin wrote:
-> > Memory.high limit is implemented in a way such that the kernel
-> > penalizes all threads which are allocating a memory over the limit.
-> > Forcing all threads into the synchronous reclaim and adding some
-> > artificial delays allows to slow down the memory consumption and
-> > potentially give some time for userspace oom handlers/resource control
-> > agents to react.
-> >
-> > It works nicely if the memory usage is hitting the limit from below,
-> > however it works sub-optimal if a user adjusts memory.high to a value
-> > way below the current memory usage. It basically forces all workload
-> > threads (doing any memory allocations) into the synchronous reclaim
-> > and sleep. This makes the workload completely unresponsive for
-> > a long period of time and can also lead to a system-wide contention on
-> > lru locks. It can happen even if the workload is not actually tight on
-> > memory and has, for example, a ton of cold pagecache.
-> >
-> > In the current implementation writing to memory.high causes an atomic
-> > update of page counter's high value followed by an attempt to reclaim
-> > enough memory to fit into the new limit. To fix the problem described
-> > above, all we need is to change the order of execution: try to push
-> > the memory usage under the limit first, and only then set the new
-> > high limit.
->
-> Shakeel would this help with your pro-active reclaim usecase? It would
-> require to reset the high limit right after the reclaim returns which is
-> quite ugly but it would at least not require a completely new interface.
-> You would simply do
->         high = current - to_reclaim
->         echo $high > memory.high
->         echo infinity > memory.high # To prevent direct reclaim
->                                     # allocation stalls
->
+Undesired triple fault gets injected to L1 guest on SVM when L2 is
+launched with certain CR3 values. #TF is raised by mmu_check_root()
+check in fast_pgd_switch() and the root cause is that when
+kvm_set_cr3() is called from nested_prepare_vmcb_save() with NPT
+enabled CR3 points to a nGPA so we can't check it with
+kvm_is_visible_gfn().
 
-This will reduce the chance of stalls but the interface is still
-non-delegatable i.e. applications can not change their own memory.high
-for the use-cases like application controlled proactive reclaim and
-uswapd.
+Using generic kvm_set_cr3() when switching to nested guest is not
+a great idea as we'll have to distinguish between 'real' CR3s and
+'nested' CR3s to e.g. not call kvm_mmu_new_pgd() with nGPA. Following
+nVMX implement nested-specific nested_svm_load_cr3() doing the job.
 
-One more ugly fix would be to add one more layer of cgroup and the
-application use memory.high of that layer to fulfill such use-cases.
+To support the change, nested_svm_load_cr3() needs to be re-ordered
+with nested_svm_init_mmu_context().
 
-I think providing a new interface would allow us to have a much
-cleaner solution than to settle on a bunch of ugly hacks.
+Note: the current implementation is sub-optimal as we always do TLB
+flush/MMU sync but this is still an improvement as we at least stop doing
+kvm_mmu_reset_context().
 
-> The primary reason to set the high limit in advance was to catch
-> potential runaways more effectively because they would just get
-> throttled while memory_high_write is reclaiming. With this change
-> the reclaim here might be just playing never ending catch up. On the
-> plus side a break out from the reclaim loop would just enforce the limit
-> so if the operation takes too long then the reclaim burden will move
-> over to consumers eventually. So I do not see any real danger.
->
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Reported-by: Domas Mituzas <domas@fb.com>
-> > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Cc: Tejun Heo <tj@kernel.org>
-> > Cc: Shakeel Butt <shakeelb@google.com>
-> > Cc: Chris Down <chris@chrisdown.name>
->
-> Acked-by: Michal Hocko <mhocko@suse.com>
->
+Fixes: 7c390d350f8b ("kvm: x86: Add fast CR3 switch code path")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c    |  2 ++
+ arch/x86/kvm/svm/nested.c | 38 +++++++++++++++++++++++++++++---------
+ 2 files changed, 31 insertions(+), 9 deletions(-)
 
-This patch seems reasonable on its own.
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 3a306ab1a9c9..13ec3c30eda2 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4986,6 +4986,8 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+ 
++	__kvm_mmu_new_pgd(vcpu, nested_cr3, new_role.base, false, false);
++
+ 	if (new_role.as_u64 != context->mmu_role.as_u64)
+ 		shadow_mmu_init_context(vcpu, context, cr0, cr4, efer, new_role);
+ }
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 2c308dfa5468..219871752dc5 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -323,7 +323,28 @@ static inline bool nested_npt_enabled(struct vcpu_svm *svm)
+ static int nested_svm_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3,
+ 			       bool nested_npt)
+ {
+-	return kvm_set_cr3(vcpu, cr3);
++	if (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63))
++		return -EINVAL;
++
++	if (!nested_npt && is_pae_paging(vcpu) &&
++	    (cr3 != kvm_read_cr3(vcpu) || pdptrs_changed(vcpu))) {
++		if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
++			return -EINVAL;
++	}
++
++	/*
++	 * TODO: optimize unconditional TLB flush/MMU sync here and in
++	 * kvm_init_shadow_npt_mmu().
++	 */
++	if (!nested_npt)
++		kvm_mmu_new_pgd(vcpu, cr3, false, false);
++
++	vcpu->arch.cr3 = cr3;
++	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
++
++	kvm_init_mmu(vcpu, false);
++
++	return 0;
+ }
+ 
+ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
+@@ -339,9 +360,6 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
+ 	svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
+ 	svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
+ 	svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
+-	(void)nested_svm_load_cr3(&svm->vcpu, nested_vmcb->save.cr3,
+-				  nested_npt_enabled(svm));
+-
+ 	svm->vmcb->save.cr2 = svm->vcpu.arch.cr2 = nested_vmcb->save.cr2;
+ 	kvm_rax_write(&svm->vcpu, nested_vmcb->save.rax);
+ 	kvm_rsp_write(&svm->vcpu, nested_vmcb->save.rsp);
+@@ -363,11 +381,6 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+ 	if (nested_npt_enabled(svm))
+ 		nested_svm_init_mmu_context(&svm->vcpu);
+ 
+-	/* Guest paging mode is active - reset mmu */
+-	kvm_mmu_reset_context(&svm->vcpu);
+-
+-	svm_flush_tlb(&svm->vcpu);
+-
+ 	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
+ 		svm->vcpu.arch.l1_tsc_offset + svm->nested.ctl.tsc_offset;
+ 
+@@ -399,11 +412,18 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 			  struct vmcb *nested_vmcb)
+ {
++	int ret;
++
+ 	svm->nested.vmcb = vmcb_gpa;
+ 	load_nested_vmcb_control(svm, &nested_vmcb->control);
+ 	nested_prepare_vmcb_save(svm, nested_vmcb);
+ 	nested_prepare_vmcb_control(svm);
+ 
++	ret = nested_svm_load_cr3(&svm->vcpu, nested_vmcb->save.cr3,
++				  nested_npt_enabled(svm));
++	if (ret)
++		return ret;
++
+ 	svm_set_gif(svm, true);
+ 
+ 	return 0;
+-- 
+2.25.4
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
