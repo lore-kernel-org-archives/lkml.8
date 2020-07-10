@@ -2,122 +2,166 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEA4C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26380C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A64B206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjp2xMlL"
+	by mail.kernel.org (Postfix) with ESMTP id 0112A20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594398030;
+	bh=ERGigc8QaW07BGajQpKa6kuFdOuBQHa4YxZRxHxyvG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jggYKq4uavyiwBLiirjVcsMTHSeCk6zbUPZB1vqJCBbFgfNPLM1nY4wCRLRK0IyVW
+	 jRMjXTJP/5N1uxAIzkKedot/l4rs3x1nI1ccwJ52jrcCwEUbd8AuF5m4gBi8lHqvcW
+	 fJNLecSUNm9pDOH+dvL2F4JhoQmRIx5lPoYO/Ouw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgGJQUa (ORCPT
+        id S1728067AbgGJQU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:20:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54486 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727916AbgGJQU1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:20:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594398025;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=q9OBXiOBnT1mGmZ2eGcWLsQs9qpaRL+ZvL1+d8k1S8o=;
-        b=gjp2xMlL82kham00+fOQkIMod7p8PBnHK0dIXP36vxyx2N+jYVuesM1mjX0XgTvxUIVYJv
-        j54Q6p0aqCtl0hzNp1ufhV9dOIo+9lFvFJhsybVZwkb/63E5o0RmEbD5hpOxZzxufNn8QB
-        NamVTrLHbt96WQYWB5LJwNrRUboK0vY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-gD70DAuDMf2a5hi_mlHx4A-1; Fri, 10 Jul 2020 12:20:24 -0400
-X-MC-Unique: gD70DAuDMf2a5hi_mlHx4A-1
-Received: by mail-wr1-f71.google.com with SMTP id e11so6537105wrs.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:20:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q9OBXiOBnT1mGmZ2eGcWLsQs9qpaRL+ZvL1+d8k1S8o=;
-        b=CotTY/DBldwepIRYs2wn7zhDEZA9FbQr5Z9dPKXoUeMePMSvrcV5RBLkcqwa2antL0
-         SLg/WcSAUD5m/MR86ti1seNh5DRIafrTfuGXedgKSPaZwaPETfEtv7vnuSav7AmP/9KS
-         SrCk8OkZawFS6yQXOjzLr9gYXE7WwARB5m/QhR90kDsEqlK8ax/Bkm34esjIvO64sGtr
-         2+HZh9bYwUSOS09bWPQIEmBLdu5+kyIpO9UdQ7ZityYsEvbV13hwp68GSCM9EUmKq2O0
-         AQ5IntwLKk9BYbGRHuFaESpNT9fqd4WPSpwHCj9Cgj0YSCf7xtu3Ps7i5i0IbLMm0+EE
-         kZVA==
-X-Gm-Message-State: AOAM5322PjUcAs88sPUABpH8OY2DPWKHK7WXK0wztApw8y7RprDKcI+4
-        fY7bsiYhtWdT8/duQDjf1VcdWlKSD+uxry/GdRPoOQiSkqWkH/m/WmQ0ENMe7q+MgDsSQ8MIHpb
-        pdKjOQ2NST89q9JVxM+5xhxrA
-X-Received: by 2002:a5d:630c:: with SMTP id i12mr75515899wru.158.1594398022819;
-        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNg29SHEj/1kCIq20X+QBQi6Vi8ell7jTihmuv4S0/ilMJ558e1BkioaTjMsJllIACTM1T8A==
-X-Received: by 2002:a5d:630c:: with SMTP id i12mr75515878wru.158.1594398022605;
-        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
-Received: from steredhat ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id 129sm10475853wmd.48.2020.07.10.09.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 18:20:17 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200710162017.qdu34ermtxh3rfgl@steredhat>
-References: <20200710141945.129329-1-sgarzare@redhat.com>
- <20200710153309.GA4699@char.us.oracle.com>
+        Fri, 10 Jul 2020 12:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgGJQU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:20:26 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 320D420657;
+        Fri, 10 Jul 2020 16:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594398025;
+        bh=ERGigc8QaW07BGajQpKa6kuFdOuBQHa4YxZRxHxyvG4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P4/zkk+OTc+xvnY6KxP1vHRODZoVLxJJn16uHU7qWli0vWQntfnTEIqIzqPCR2KIm
+         QYTPjJt0sRKFVlTA+hOrmHFUDBcjDujpl8rekHxeXG7nIkAsM4sTSMLqSTvjihJXrs
+         pvZu1XPk4TCvLB4LlpctImEuS5FEGfvJ9IH+aw4M=
+From:   guoren@kernel.org
+To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
+        keescook@chromium.org, bjorn.topel@gmail.com, atish.patra@wdc.com,
+        cooper.qu@linux.alibaba.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, guoren@kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v3 1/2] riscv: Add STACKPROTECTOR supported
+Date:   Fri, 10 Jul 2020 16:19:57 +0000
+Message-Id: <1594397998-10221-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710153309.GA4699@char.us.oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Konrad,
+From: Guo Ren <guoren@linux.alibaba.com>
 
-On Fri, Jul 10, 2020 at 11:33:09AM -0400, Konrad Rzeszutek Wilk wrote:
-> .snip..
-> > Just to recap the proposal, the idea is to add some restrictions to the
-> > operations (sqe, register, fixed file) to safely allow untrusted applications
-> > or guests to use io_uring queues.
-> 
-> Hi!
-> 
-> This is neat and quite cool - but one thing that keeps nagging me is
-> what how much overhead does this cut from the existing setup when you use
-> virtio (with guests obviously)?
+The -fstack-protector & -fstack-protector-strong features are from
+gcc. The patch only add basic kernel support to stack-protector
+feature and some arch could have its own solution such as
+ARM64_PTR_AUTH.
 
-I need to do more tests, but the preliminary results that I reported on
-the original proposal [1] show an overhead of ~ 4.17 uS (with iodepth=1)
-when I'm using virtio ring processed in a dedicated iothread:
+After enabling STACKPROTECTOR and STACKPROTECTOR_STRONG, the .text
+size is expanded from  0x7de066 to 0x81fb32 (only 5%) to add canary
+checking code.
 
-  - 73 kIOPS using virtio-blk + QEMU iothread + io_uring backend
-  - 104 kIOPS using io_uring passthrough
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmerdabbelt@google.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Björn Töpel <bjorn.topel@gmail.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+---
+Change v2:
+ - Fixup rsicv32 compile warning
 
->                                 That is from a high level view the
-> beaty of io_uring being passed in the guest is you don't have the
-> virtio ring -> io_uring processing, right?
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/riscv/Kconfig                      |  1 +
+ arch/riscv/include/asm/stackprotector.h | 33 +++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/process.c             |  6 ++++++
+ 3 files changed, 40 insertions(+)
+ create mode 100644 arch/riscv/include/asm/stackprotector.h
 
-Right, and potentially we can share the io_uring queues directly to the
-guest userspace applications, cutting down the cost of Linux block
-layer in the guest.
-
-Thanks for your feedback,
-Stefano
-
-[1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredhat/
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index f927a91..4b0e308 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -63,6 +63,7 @@ config RISCV
+ 	select HAVE_PERF_EVENTS
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
++	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select IRQ_DOMAIN
+ 	select MODULES_USE_ELF_RELA if MODULES
+diff --git a/arch/riscv/include/asm/stackprotector.h b/arch/riscv/include/asm/stackprotector.h
+new file mode 100644
+index 00000000..d95f7b2
+--- /dev/null
++++ b/arch/riscv/include/asm/stackprotector.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _ASM_RISCV_STACKPROTECTOR_H
++#define _ASM_RISCV_STACKPROTECTOR_H
++
++#include <linux/random.h>
++#include <linux/version.h>
++#include <asm/timex.h>
++
++extern unsigned long __stack_chk_guard;
++
++/*
++ * Initialize the stackprotector canary value.
++ *
++ * NOTE: this must only be called from functions that never return,
++ * and it must always be inlined.
++ */
++static __always_inline void boot_init_stack_canary(void)
++{
++	unsigned long canary;
++	unsigned long tsc;
++
++	/* Try to get a semi random initial value. */
++	get_random_bytes(&canary, sizeof(canary));
++	tsc = get_cycles();
++	canary += tsc + (tsc << BITS_PER_LONG/2);
++	canary ^= LINUX_VERSION_CODE;
++	canary &= CANARY_MASK;
++
++	current->stack_canary = canary;
++	__stack_chk_guard = current->stack_canary;
++}
++#endif /* _ASM_RISCV_STACKPROTECTOR_H */
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 824d117..6548929 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -24,6 +24,12 @@
+ 
+ register unsigned long gp_in_global __asm__("gp");
+ 
++#ifdef CONFIG_STACKPROTECTOR
++#include <linux/stackprotector.h>
++unsigned long __stack_chk_guard __read_mostly;
++EXPORT_SYMBOL(__stack_chk_guard);
++#endif
++
+ extern asmlinkage void ret_from_fork(void);
+ extern asmlinkage void ret_from_kernel_thread(void);
+ 
+-- 
+2.7.4
 
