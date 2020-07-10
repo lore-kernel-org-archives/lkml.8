@@ -2,358 +2,243 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2623C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76B220725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSsk67ke"
+	by mail.kernel.org (Postfix) with ESMTP id D58C920725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGJJ0o (ORCPT
+        id S1728032AbgGJJ1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgGJJZ6 (ORCPT
+        Fri, 10 Jul 2020 05:27:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49876 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgGJJ1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:25:58 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81903C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:25:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so5364151wmj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jfMXVpKl6vspqUzfRtk9RGf4ooITbe25ARObyR1MQUM=;
-        b=lSsk67ke2Kl1vIf5ERlY7TmmPYQTQq2qrJGd8Q/k8kzYygx4SOrakuBuBa3mNxGZAZ
-         gDrGXb3yttzOHSIMVhjjxjbi4cETm+LNN/kNxIKzpu6u3zT9Fey/LNC7CGDOsn28VAA+
-         cdt+g+hnhzN68Gbzy1P1KyMlDBUnNuwVqXy0RygWHGly9GtPZiqzYqfvDmGnEF6TFOb/
-         5xfGot3zt+Cm99VQ3Gjf+vJitrySkhV+bG9QVCYzdLcg7vaHr8T7tYJvATgWWva9Viwn
-         DVi1YSR05NY/f9eZjRYkOyLA+1yT7LBqTyZ3+aiyCPhBbTe8CYYtxA77LfRp5AE8iOlN
-         pw4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jfMXVpKl6vspqUzfRtk9RGf4ooITbe25ARObyR1MQUM=;
-        b=noOicshbiLYuhGpgc1XF1BlHhEd8gufO2CIlwfxe82fC7ZMTantDmdkt+36/gawHds
-         i1y7Hh3H8g/NN0Da0tCoyXlzc460sSOfpRTO/9wDo7RIUj7xe1hu9IoDd4U8orS1Ad0a
-         JCsiLb02nnpigwtndcbWtiuA6USR9bO73pTnRYzB7TF1EleAT83/vVFpXPKS6cBFnI4r
-         yfgQMnok56jfeAwiKPPywq7vJEYcclPi3vnsau4jfebsNxz8GpuqMsP33BC6ozvZSUzB
-         XvXMCYaRqU1IlI8IbfPZDRbzy4L8mZ+OaW9mxJR8oKAPZaoZ7EEupJ0EYBZBd8aJanZx
-         cbiA==
-X-Gm-Message-State: AOAM532jzyB7wmZtTlmGM241GcgeDXVwmTpvOyQuyk66I7G1Yt5d8WSG
-        gJGdc+yWMZFYhGvLDOm5JQc=
-X-Google-Smtp-Source: ABdhPJzbyMlo+MM5KpJLW7iQg9q/fMCIJiRmsZRZEDEGMNVkQA+kCO4fOXXhelpPhnPUUcryZUcBjw==
-X-Received: by 2002:a1c:2982:: with SMTP id p124mr4500985wmp.26.1594373157054;
-        Fri, 10 Jul 2020 02:25:57 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id h23sm8179559wmb.3.2020.07.10.02.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 02:25:56 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 04/14] drm/panfrost: introduce panfrost_devfreq struct
-Date:   Fri, 10 Jul 2020 11:25:38 +0200
-Message-Id: <20200710092548.316054-5-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200710092548.316054-1-peron.clem@gmail.com>
-References: <20200710092548.316054-1-peron.clem@gmail.com>
+        Fri, 10 Jul 2020 05:27:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3115F8040A6A;
+        Fri, 10 Jul 2020 09:27:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qrqlMbEsGWHK; Fri, 10 Jul 2020 12:27:39 +0300 (MSK)
+Date:   Fri, 10 Jul 2020 12:27:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a proper panfrost_devfreq to deal with devfreq variables.
+Hello Peter
 
-Reviewed-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 76 ++++++++++++---------
- drivers/gpu/drm/panfrost/panfrost_devfreq.h | 20 +++++-
- drivers/gpu/drm/panfrost/panfrost_device.h  | 11 +--
- drivers/gpu/drm/panfrost/panfrost_job.c     |  4 +-
- 4 files changed, 65 insertions(+), 46 deletions(-)
+On Fri, Jul 10, 2020 at 11:31:47AM +0300, Peter Ujfalusi wrote:
+> 
+> 
+> On 10/07/2020 1.45, Serge Semin wrote:
+> > Some devices may lack the support of the hardware accelerated SG list
+> > entries automatic walking through and execution. In this case a burden of
+> > the SG list traversal and DMA engine re-initialization lies on the
+> > DMA engine driver (normally implemented by using a DMA transfer completion
+> > IRQ to recharge the DMA device with a next SG list entry). But such
+> > solution may not be suitable for some DMA consumers. In particular SPI
+> > devices need both Tx and Rx DMA channels work synchronously in order
+> > to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+> > some time while the Tx DMA channel works implicitly pulling data into the
+> > Rx FIFO, the later will be eventually overflown, which will cause the data
+> > loss. So if SG list entries aren't automatically fetched by the DMA
+> > engine, but are one-by-one manually selected for execution in the
+> > ISRs/deferred work/etc., such problem will eventually happen due to the
+> > non-deterministic latencies of the service execution.
+> 
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index df7b71da9a84..962550363391 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -10,23 +10,23 @@
- #include "panfrost_device.h"
- #include "panfrost_devfreq.h"
- 
--static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev)
-+static void panfrost_devfreq_update_utilization(struct panfrost_devfreq *pfdevfreq)
- {
- 	ktime_t now;
- 	ktime_t last;
- 
--	if (!pfdev->devfreq.devfreq)
-+	if (!pfdevfreq->devfreq)
- 		return;
- 
- 	now = ktime_get();
--	last = pfdev->devfreq.time_last_update;
-+	last = pfdevfreq->time_last_update;
- 
--	if (atomic_read(&pfdev->devfreq.busy_count) > 0)
--		pfdev->devfreq.busy_time += ktime_sub(now, last);
-+	if (atomic_read(&pfdevfreq->busy_count) > 0)
-+		pfdevfreq->busy_time += ktime_sub(now, last);
- 	else
--		pfdev->devfreq.idle_time += ktime_sub(now, last);
-+		pfdevfreq->idle_time += ktime_sub(now, last);
- 
--	pfdev->devfreq.time_last_update = now;
-+	pfdevfreq->time_last_update = now;
- }
- 
- static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
-@@ -47,30 +47,31 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
- 	return 0;
- }
- 
--static void panfrost_devfreq_reset(struct panfrost_device *pfdev)
-+static void panfrost_devfreq_reset(struct panfrost_devfreq *pfdevfreq)
- {
--	pfdev->devfreq.busy_time = 0;
--	pfdev->devfreq.idle_time = 0;
--	pfdev->devfreq.time_last_update = ktime_get();
-+	pfdevfreq->busy_time = 0;
-+	pfdevfreq->idle_time = 0;
-+	pfdevfreq->time_last_update = ktime_get();
- }
- 
- static int panfrost_devfreq_get_dev_status(struct device *dev,
- 					   struct devfreq_dev_status *status)
- {
- 	struct panfrost_device *pfdev = dev_get_drvdata(dev);
-+	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
- 
--	panfrost_devfreq_update_utilization(pfdev);
-+	panfrost_devfreq_update_utilization(pfdevfreq);
- 
- 	status->current_frequency = clk_get_rate(pfdev->clock);
--	status->total_time = ktime_to_ns(ktime_add(pfdev->devfreq.busy_time,
--						   pfdev->devfreq.idle_time));
-+	status->total_time = ktime_to_ns(ktime_add(pfdevfreq->busy_time,
-+						   pfdevfreq->idle_time));
- 
--	status->busy_time = ktime_to_ns(pfdev->devfreq.busy_time);
-+	status->busy_time = ktime_to_ns(pfdevfreq->busy_time);
- 
--	panfrost_devfreq_reset(pfdev);
-+	panfrost_devfreq_reset(pfdevfreq);
- 
--	dev_dbg(pfdev->dev, "busy %lu total %lu %lu %% freq %lu MHz\n", status->busy_time,
--		status->total_time,
-+	dev_dbg(pfdev->dev, "busy %lu total %lu %lu %% freq %lu MHz\n",
-+		status->busy_time, status->total_time,
- 		status->busy_time / (status->total_time / 100),
- 		status->current_frequency / 1000 / 1000);
- 
-@@ -91,6 +92,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	struct device *dev = &pfdev->pdev->dev;
- 	struct devfreq *devfreq;
- 	struct thermal_cooling_device *cooling;
-+	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
- 
- 	ret = dev_pm_opp_of_add_table(dev);
- 	if (ret == -ENODEV) /* Optional, continue without devfreq */
-@@ -98,7 +100,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	else if (ret)
- 		return ret;
- 
--	panfrost_devfreq_reset(pfdev);
-+	panfrost_devfreq_reset(pfdevfreq);
- 
- 	cur_freq = clk_get_rate(pfdev->clock);
- 
-@@ -116,53 +118,59 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 		dev_pm_opp_of_remove_table(dev);
- 		return PTR_ERR(devfreq);
- 	}
--	pfdev->devfreq.devfreq = devfreq;
-+	pfdevfreq->devfreq = devfreq;
- 
- 	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
- 	if (IS_ERR(cooling))
- 		DRM_DEV_INFO(dev, "Failed to register cooling device\n");
- 	else
--		pfdev->devfreq.cooling = cooling;
-+		pfdevfreq->cooling = cooling;
- 
- 	return 0;
- }
- 
- void panfrost_devfreq_fini(struct panfrost_device *pfdev)
- {
--	if (pfdev->devfreq.cooling)
--		devfreq_cooling_unregister(pfdev->devfreq.cooling);
-+	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
-+
-+	if (pfdevfreq->cooling)
-+		devfreq_cooling_unregister(pfdevfreq->cooling);
- 	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
- }
- 
- void panfrost_devfreq_resume(struct panfrost_device *pfdev)
- {
--	if (!pfdev->devfreq.devfreq)
-+	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
-+
-+	if (!pfdevfreq->devfreq)
- 		return;
- 
--	panfrost_devfreq_reset(pfdev);
-+	panfrost_devfreq_reset(pfdevfreq);
- 
--	devfreq_resume_device(pfdev->devfreq.devfreq);
-+	devfreq_resume_device(pfdevfreq->devfreq);
- }
- 
- void panfrost_devfreq_suspend(struct panfrost_device *pfdev)
- {
--	if (!pfdev->devfreq.devfreq)
-+	struct panfrost_devfreq *pfdevfreq = &pfdev->pfdevfreq;
-+
-+	if (!pfdevfreq->devfreq)
- 		return;
- 
--	devfreq_suspend_device(pfdev->devfreq.devfreq);
-+	devfreq_suspend_device(pfdevfreq->devfreq);
- }
- 
--void panfrost_devfreq_record_busy(struct panfrost_device *pfdev)
-+void panfrost_devfreq_record_busy(struct panfrost_devfreq *pfdevfreq)
- {
--	panfrost_devfreq_update_utilization(pfdev);
--	atomic_inc(&pfdev->devfreq.busy_count);
-+	panfrost_devfreq_update_utilization(pfdevfreq);
-+	atomic_inc(&pfdevfreq->busy_count);
- }
- 
--void panfrost_devfreq_record_idle(struct panfrost_device *pfdev)
-+void panfrost_devfreq_record_idle(struct panfrost_devfreq *pfdevfreq)
- {
- 	int count;
- 
--	panfrost_devfreq_update_utilization(pfdev);
--	count = atomic_dec_if_positive(&pfdev->devfreq.busy_count);
-+	panfrost_devfreq_update_utilization(pfdevfreq);
-+	count = atomic_dec_if_positive(&pfdevfreq->busy_count);
- 	WARN_ON(count < 0);
- }
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-index 0611beffc8d0..0697f8d5aa34 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-@@ -4,13 +4,29 @@
- #ifndef __PANFROST_DEVFREQ_H__
- #define __PANFROST_DEVFREQ_H__
- 
-+#include <linux/ktime.h>
-+
-+struct devfreq;
-+struct thermal_cooling_device;
-+
-+struct panfrost_device;
-+
-+struct panfrost_devfreq {
-+	struct devfreq *devfreq;
-+	struct thermal_cooling_device *cooling;
-+	ktime_t busy_time;
-+	ktime_t idle_time;
-+	ktime_t time_last_update;
-+	atomic_t busy_count;
-+};
-+
- int panfrost_devfreq_init(struct panfrost_device *pfdev);
- void panfrost_devfreq_fini(struct panfrost_device *pfdev);
- 
- void panfrost_devfreq_resume(struct panfrost_device *pfdev);
- void panfrost_devfreq_suspend(struct panfrost_device *pfdev);
- 
--void panfrost_devfreq_record_busy(struct panfrost_device *pfdev);
--void panfrost_devfreq_record_idle(struct panfrost_device *pfdev);
-+void panfrost_devfreq_record_busy(struct panfrost_devfreq *devfreq);
-+void panfrost_devfreq_record_idle(struct panfrost_devfreq *devfreq);
- 
- #endif /* __PANFROST_DEVFREQ_H__ */
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index c30c719a8059..2efa59c9d1c5 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -13,6 +13,8 @@
- #include <drm/drm_mm.h>
- #include <drm/gpu_scheduler.h>
- 
-+#include "panfrost_devfreq.h"
-+
- struct panfrost_device;
- struct panfrost_mmu;
- struct panfrost_job_slot;
-@@ -107,14 +109,7 @@ struct panfrost_device {
- 	struct list_head shrinker_list;
- 	struct shrinker shrinker;
- 
--	struct {
--		struct devfreq *devfreq;
--		struct thermal_cooling_device *cooling;
--		ktime_t busy_time;
--		ktime_t idle_time;
--		ktime_t time_last_update;
--		atomic_t busy_count;
--	} devfreq;
-+	struct panfrost_devfreq pfdevfreq;
- };
- 
- struct panfrost_mmu {
-diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
-index 4c13dbae68fb..49b2157d8549 100644
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -145,7 +145,7 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
- 	u64 jc_head = job->jc;
- 	int ret;
- 
--	panfrost_devfreq_record_busy(pfdev);
-+	panfrost_devfreq_record_busy(&pfdev->pfdevfreq);
- 
- 	ret = pm_runtime_get_sync(pfdev->dev);
- 	if (ret < 0)
-@@ -478,7 +478,7 @@ static irqreturn_t panfrost_job_irq_handler(int irq, void *data)
- 				pfdev->jobs[j] = NULL;
- 
- 				panfrost_mmu_as_put(pfdev, &job->file_priv->mmu);
--				panfrost_devfreq_record_idle(pfdev);
-+				panfrost_devfreq_record_idle(&pfdev->pfdevfreq);
- 
- 				dma_fence_signal_locked(job->done_fence);
- 				pm_runtime_put_autosuspend(pfdev->dev);
--- 
-2.25.1
+> It is not really the number of sg nents which is the problem, but the
+> combination of total number of bytes _and_ the number of nents used to
+> map them.
 
+No, in the case described above the latency only matters. The length of the SG
+entries doesn't (at most of extents). The same is with the nents. If there are
+more than one SG entries in the Rx SG-list handled with the non-deterministic
+latency, the problem may happen at the moment of any Rx SG entry reload.
+
+(In fact the DW DMAC driver is working with so called Linked-List entries,
+which are used to map the SG-list entries into the list of items with length
+less than or equal to the max block size the engine supports. But for
+simplicity I call them the SG-list entries, since if dma_set_max_seg_size()
+is specified the mapping will be uniform.)
+
+> Obviously the TX and RX number of bytes must match in duplex case and at
+> the same time neither nents should be over the number of SGs the DMA
+> device can handle without interruption (linking, chaining, or whatever
+> means).
+
+Right.
+
+> 
+> The EDMA from TI have similar limitation (we set the limit to 20 nents).
+> Longer lists will be broken up to maximum of 20 segment transfers.
+> This setup has bigger impact on audio (cyclic) as we need to limit the
+> number of periods to not exceed this limit of 20.
+
+As I said the problem described above isn't about the number of entries, but
+about how they are handled. If there is a latency, then the problem may and most
+like will eventually happen.
+
+The complexity of the situation is that the DW DMAC driver may split a SG-list
+entry up if its length exceeds max block size the engine supports. That's
+why in order to fix the problem described in the patch log the DMA client driver
+developed needs to take into account the next two points:
+1) Detect the maximum number of SG entries the DMA engine can handle without the
+non-deterministic latency (you called it max_sg_nents_burst). So the client
+drivers would know, that the DMA-channels responsible for Tx and Rx transfers
+may be executed with latencies.
+2) Make sure the length of each SG-list entry doesn't exceed the max block size
+the DW DMAC supports. If some of them does, then the DW DMAC code will break
+these SG-entries up into the smaller DMA Linked-list entries, which will get us
+back to the re-submission latency problem described in the patch log. This
+peculiarity is covered by calling dma_set_max_seg_size() method in the DW DMAC
+driver (at least for SPI subsystem it works out-of-box).
+
+> 
+> The sDMA on the other hand has different limits. Earlier versions
+> without linking support can execute one SG chunk at the time and needs
+> to reconfigure for the next one -> max_sg_nents is 1 for the older sDMAs...
+
+Yes, this is our case.
+
+> 
+> > In order to let the DMA consumer know about the DMA device capabilities
+> > regarding the hardware accelerated SG list traversal we introduce the
+> > max_sg_list capability. It is supposed to be initialized by the DMA engine
+> > driver with 0 if there is no limitation for the number of SG entries
+> > atomically executed and with non-zero value if there is such constraints,
+> > so the upper limit is determined by the number set to the property.
+> > 
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the discussion with Vinud and
+> >   Andy in the framework of DW DMA burst and LLP capabilities.
+> > 
+> > Changelog v4:
+> > - Fix of->if typo. It should be definitely of.
+> > ---
+> >  drivers/dma/dmaengine.c   | 1 +
+> >  include/linux/dmaengine.h | 8 ++++++++
+> >  2 files changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> > index b332ffe52780..ad56ad58932c 100644
+> > --- a/drivers/dma/dmaengine.c
+> > +++ b/drivers/dma/dmaengine.c
+> > @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> >  	caps->directions = device->directions;
+> >  	caps->min_burst = device->min_burst;
+> >  	caps->max_burst = device->max_burst;
+> > +	caps->max_sg_nents = device->max_sg_nents;
+> >  	caps->residue_granularity = device->residue_granularity;
+> >  	caps->descriptor_reuse = device->descriptor_reuse;
+> >  	caps->cmd_pause = !!device->device_pause;
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index 0c7403b27133..a7e4d8dfdd19 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+> >   *	should be checked by controller as well
+> >   * @min_burst: min burst capability per-transfer
+> >   * @max_burst: max burst capability per-transfer
+> > + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> > + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> > + *	value means unlimited number of entries.
+> 
+
+> Without looking at the comment the name max_sg_nents implies that the
+> DMA can not handle longer lists, but it is not really true.
+> max_sg_nents_burst might be a bit cleaner for the first look?
+
+Seems reasonable. I also thought of a better naming so there wouldn't be need to
+read a comment in order get a notion what exactly the parameter is responsible
+for. Although at the moment of the patchset preparation nothing better got in my
+mind.
+
+I like what you suggest, but I'd better make it "max_sg_burst" or "max_sg_chain".
+What do you think?
+
+Vinod?
+Andy (since you've already acked the patch)?
+
+-Sergey
+
+> 
+> >   * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+> >   *	       for resume later)
+> >   * @cmd_resume: true, if resume is supported
+> > @@ -481,6 +484,7 @@ struct dma_slave_caps {
+> >  	u32 directions;
+> >  	u32 min_burst;
+> >  	u32 max_burst;
+> > +	u32 max_sg_nents;
+> >  	bool cmd_pause;
+> >  	bool cmd_resume;
+> >  	bool cmd_terminate;
+> > @@ -773,6 +777,9 @@ struct dma_filter {
+> >   *	should be checked by controller as well
+> >   * @min_burst: min burst capability per-transfer
+> >   * @max_burst: max burst capability per-transfer
+> > + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> > + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> > + *	value means unlimited number of entries.
+> >   * @residue_granularity: granularity of the transfer residue reported
+> >   *	by tx_status
+> >   * @device_alloc_chan_resources: allocate resources and return the
+> > @@ -844,6 +851,7 @@ struct dma_device {
+> >  	u32 directions;
+> >  	u32 min_burst;
+> >  	u32 max_burst;
+> > +	u32 max_sg_nents;
+> >  	bool descriptor_reuse;
+> >  	enum dma_residue_granularity residue_granularity;
+> >  
+> > 
+> 
+> - P�ter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
