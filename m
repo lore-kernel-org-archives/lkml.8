@@ -2,139 +2,106 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93C0C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAD22078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38832078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzf2CJUi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYICjG7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgGJTqA (ORCPT
+        id S1728531AbgGJTqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36342 "EHLO
+        Fri, 10 Jul 2020 15:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgGJTqA (ORCPT
+        with ESMTP id S1726942AbgGJTqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:46:00 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9E9C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 12:45:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q7so7787643ljm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 12:45:59 -0700 (PDT)
+        Fri, 10 Jul 2020 15:46:06 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB027C08C5DC;
+        Fri, 10 Jul 2020 12:46:05 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l12so7288836ejn.10;
+        Fri, 10 Jul 2020 12:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YsEdL4Wd97W3DlnP1Te2AUyy9smqbbkh6KPYk2RXB3c=;
-        b=Gzf2CJUim5sG7TrQY85OnHYWWs6amw4TNWPXbUbP0IrPdpmJQ/aqlclLyKqPvsP2mc
-         plnD10WrvlJEBsh0J8PFRAtiSUW949sWLEMyMbHq4DvM9mV2StAMKBWM/KzMUy+VGpYH
-         IN/lbJ2B9HZ+dNUS/qgSLnmYXC1C9+G99bGvqfnFyGBP3A+HTRo7j1xmbJIfbcJEKvTb
-         suz+ZESyv5MNiuiAzJYqFbHfSBPReQXftZoMidbrhHFzqJmKyUVVJKzVNbyyVjr0Vo1Q
-         lgHOSpbkij9T+464Cfle3ClqzYUmij30IY5XRjXwQL32+T/8TgEtOBPC2fLiZejWVVel
-         pCcQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hKe9fcnHaLqYW+TZA6wyu181qJwcaEwZM0FzB6O+GhE=;
+        b=pYICjG7JvGOVBOlg0uttBzals1oO3VBvvIUa+CX81xcMwmHVB+h5vkKTM+k4u/kZDZ
+         cZCYGu9fXjdAMaT5iAgW2XQtr9zeQOhZEWIeaHcMUNb7YE5iaVqD1J7I8qTq+yTscdzX
+         CACrZuWBHqmCdX7OniaHB/WxQ3N6swU+XiYkCHhgiruSz1aKxrMeuHTaVJ0IxmZZqTTB
+         anu+5+VlToRu9ltD8b0POmEnzo/+RbkSRjEOZKJ3MvcPZ1eUqzkqSf68FJy/HdCygxTY
+         /w5KtRo8kvxohWbTMCakSkYDM9e97/zmME7XRRXSS1OWJBJPwNpSVqIzhdt0cn7iCUoX
+         AJxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YsEdL4Wd97W3DlnP1Te2AUyy9smqbbkh6KPYk2RXB3c=;
-        b=FJseyWjBQ88BRBf3U8g/EzRjYD291AbZMAtc6cUaQ7mEPbGj1K6/TcBh2g0eNoFGr6
-         pqJcKJ6wbGUMRf9QKw0Cp/bqT9GfoqRYjZ63JxfeWZ6nOg4AqAuA3VJkldWnDMtXBDFv
-         12mkQtCA/VP6Z6tFzRQWomCqy9ebdnUOJjPaLoQb+IyFHE9Xf+K18/Gmgxhn03BzQLLk
-         ZtPAvLvDI+BXyqFnB8T9mGzHwQTaPfeVa2s2Kx172YHQcDT0oLYB8UskfIQ5G7y60DzN
-         gnLDooZei5Pr6yPMDL2eIkGf7/t+e2BrpFCIm2ME03bWDtQ200gGM4gja1/+48FcqvEp
-         /RNA==
-X-Gm-Message-State: AOAM530AFtS3Gc0+L9fKHaZAJt2yILLAhvF6Yo4xyx8eo/5l3b7HdT+Z
-        hS2whf6e/mfblow1BWSpUz0=
-X-Google-Smtp-Source: ABdhPJyT1p7T8M2Y/pSLh9354KzgmUTn3XrOx7NSbqfWHs0mRgfdJcZdj8CQzpEpTUcNufU0UuoNxQ==
-X-Received: by 2002:a2e:780e:: with SMTP id t14mr38311610ljc.444.1594410358462;
-        Fri, 10 Jul 2020 12:45:58 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id j2sm2212234lji.115.2020.07.10.12.45.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hKe9fcnHaLqYW+TZA6wyu181qJwcaEwZM0FzB6O+GhE=;
+        b=VdDabsHDjTXrUOOyt51aH9Igc51rDEuQ7UWsU2lry1n/b0VH6OtzKxNAv3qqzPBPJm
+         EyKm9tp791czywOPz54PTyfJz6NwB1pv8NfkiwdygfuTjzvcvE8IqYSz4B6rCweautiJ
+         C828jL2xZMaAYM0wO15zoP8KGzzxyPee3B2s+jsaaRT3nn0mHLXSyueMDjugPxl9uPZC
+         WZztE7LsSINsX9OkmCP7UleN+qnm/A/tWQDotyHrZ1jxf8yz8DjSOxgt/ftrCRs2Yl3z
+         DSZaPbUnePg2wa7xbTpizOog+mAuujMha+t7VrGRIaVGqBS4RbzdnrIoVzbKHl8tCKN/
+         uuBQ==
+X-Gm-Message-State: AOAM532xCUSImMMNGsqjAEqiwpIX1wWJMowq6XocmdoP3UEL7TUn1MPp
+        O6QLwv0+Jt+WWBOGLdVooHM7Sgxuw3M=
+X-Google-Smtp-Source: ABdhPJy6ba0T34AvK2myKn7iidpLBeh0YnFLWZ69NBa87t2C923SaQUojouWXFrP1r4GsepbVv97xA==
+X-Received: by 2002:a17:906:700f:: with SMTP id n15mr52833073ejj.390.1594410364509;
+        Fri, 10 Jul 2020 12:46:04 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
+        by smtp.googlemail.com with ESMTPSA id kt4sm4155768ejb.48.2020.07.10.12.46.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 12:45:57 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Fri, 10 Jul 2020 21:45:55 +0200
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1] mm/vmalloc.c: Add an error message if two areas
- overlap
-Message-ID: <20200710194555.GA19487@pc636>
-References: <20200710194042.2510-1-urezki@gmail.com>
- <20200710194406.GP12769@casper.infradead.org>
+        Fri, 10 Jul 2020 12:46:03 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Add support for ipq8064 tsens
+Date:   Fri, 10 Jul 2020 21:45:51 +0200
+Message-Id: <20200710194558.26487-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710194406.GP12769@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 08:44:06PM +0100, Matthew Wilcox wrote:
-> On Fri, Jul 10, 2020 at 09:40:42PM +0200, Uladzislau Rezki (Sony) wrote:
-> > Before triggering a BUG() it would be useful to understand
-> > how two areas overlap between each other. Print information
-> > about start/end addresses of both VAs and their addresses.
-> > 
-> > For example if both are identical it could mean double free.
-> > 
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > ---
-> >  mm/vmalloc.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index 5a2b55c8dd9a..1679b01febcd 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -549,8 +549,13 @@ find_va_links(struct vmap_area *va,
-> >  		else if (va->va_end > tmp_va->va_start &&
-> >  				va->va_start >= tmp_va->va_end)
-> >  			link = &(*link)->rb_right;
-> > -		else
-> > +		else {
-> > +			pr_err("Overlaps: 0x%px(0x%lx-0x%lx), 0x%px(0x%lx-0x%lx)\n",
-> > +				va, va->va_start, va->va_end, tmp_va,
-> > +				tmp_va->va_start, tmp_va->va_end);
-> 
-> It might be helpful to have a "vmalloc:" prefix to that string to indicate
-> where to start searching.  And I don't think we're supposed to use %px
-> without a really good justification these days.
-> 
-> Can we do without the BUG()?  Maybe just break out and decline to insert
-> the conflicting range?
-> 
-> >  			BUG();
-> > +		}
-> >  	} while (*link);
-> >  
-> >  	*parent = &tmp_va->rb_node;
-> > @@ -1993,6 +1998,9 @@ static void vmap_init_free_space(void)
-> >  			insert_vmap_area_augment(free, NULL,
-> >  				&free_vmap_area_root,
-> >  					&free_vmap_area_list);
-> > +			insert_vmap_area_augment(free, NULL,
-> > +				&free_vmap_area_root,
-> > +					&free_vmap_area_list);
-> 
-> This is surely testing code that you forgot to delete?
-Matthew, you are super fast!!! :)
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset expand
+the 8960 unused driver with interrupt support and set_trip point.
+Ipq8064 needs to registed with a syscon phandle as the tsens regs on
+this platform are shared with the gcc controller.
 
---
-Vlad Rezki
+v2:
+* Fix dt-bindings problems
+
+Ansuel Smith (6):
+  drivers: thermal: tsens: load regmap from phandle for 8960
+  drivers: thermal: tsens: add ipq8064 support
+  dt-bindings: thermal: tsens: document ipq8064 bindings
+  drivers: thermal: tsens: add interrupt support for 9860 driver
+  drivers: thermal: tsens: add support for custom set_trip function
+  drivers: thermal: tsens: add set_trip support for 8960
+
+ .../bindings/thermal/qcom-tsens.yaml          |  53 +++-
+ drivers/thermal/qcom/tsens-8960.c             | 283 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.c                  |   7 +
+ drivers/thermal/qcom/tsens.h                  |   3 +
+ 4 files changed, 323 insertions(+), 23 deletions(-)
+
+-- 
+2.27.0
+
