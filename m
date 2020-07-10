@@ -2,63 +2,78 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58714C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3587C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368E120708
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9E420708
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dv+wirBR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdbXxslE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGJB5d (ORCPT
+        id S1727795AbgGJB5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 9 Jul 2020 21:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgGJB5d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jul 2020 21:57:33 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22398 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgGJB5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:57:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594346250; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=FwOsBUwW6ySFHOCeZdm5uzF0UBLnzcbxYV4r9s7dT0E=; b=Dv+wirBRNbziXrccBrX+bjgO6n+SEyVfUBj+LA7buSq/OMQnT+idR0Ul90HqGxp/+o2StqF9
- 6LTPkUl2V6Tphh8hDQC3dpGVflMXJemo23wSF4X7JgtgmwvwdtTUejtLGJNFyY20xZ67otFY
- OHKikkbnqkEMIp+ztPk3RUJMRQ4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5f07caf471d7ca1d3adeab5d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F2B1FC43395; Fri, 10 Jul 2020 01:57:07 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B28AC433C6;
-        Fri, 10 Jul 2020 01:57:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B28AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH v2 5/6] interconnect: qcom: Add support for per-BCM scaling factors
-Date:   Thu,  9 Jul 2020 18:56:51 -0700
-Message-Id: <20200710015652.19206-6-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200710015652.19206-1-mdtipton@codeaurora.org>
-References: <20200710015652.19206-1-mdtipton@codeaurora.org>
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC215C08C5CE;
+        Thu,  9 Jul 2020 18:57:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f2so1593132plr.8;
+        Thu, 09 Jul 2020 18:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=r3T2qDIJBRF7db837UpeGXiEJ21sH+EdceuIiNA/ntY=;
+        b=VdbXxslEKwgSTBFhB0flLEIm8JG6qFiJq08UUQI+IEUIR6XakM5E7x329H8nKpzRIS
+         k2l/8T1Y2gnFL4xryZLuuDoAVEDnQ0RiFduaS8KpQ0+vKFIEmXcjy30kyZtHC9ZZFL6U
+         zl3ULuN8r/SqvAV1RGq1Ur1gk/GWMxQM4ciFhZRwcyJlxOdsJ1sMVQK31bykWIc8ENQA
+         4u0+Q2mOD1Lq2yDEzXzkbnrn0odk6FKAFEBIySAD/3Wz3SJZ3OhFBnVPBfM5BvZ8Lmd0
+         McV0TehMM0Hld7pUfN7AnRHutVDtv6BLSKPr7sVrsbh5OAZysL1vUPFohrXLXRGbqCNq
+         AMRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r3T2qDIJBRF7db837UpeGXiEJ21sH+EdceuIiNA/ntY=;
+        b=CoqiUm+KG0NUsr3yT9EjvotTv2xMa2DF6IADRx+6rJC+3kHas2zAGjLwh7PZCDQ5ZV
+         vm743Zi5DSgctGejGk5gwqZDKWvVprBM3P2ak4w1KjshlRI55LCYkTnymdd4LmBZgezW
+         r1W4kJJe71p5ej/Exr82J+rXMb/+bHmWJ/grXKwj4GRYniE6ie3pgP07L0UicMcYUrvE
+         nrIVeUdz6roFnn4T4+hT8c4ohlYlRDrMb6sJiuFGng2Mqhf4Ao8R7t6MTVg7dez+6q7Y
+         VViraxB/ojo81JELqFV76cSSkHl3ACmqiY8ipmo/W2keQiankcK2lnWWZ7pWbeerOveu
+         3aEw==
+X-Gm-Message-State: AOAM533fT205LDxHzlCFdXGCh44sey+DxRuhW9i0h0cFa8k7i9F3VPKy
+        HtTgjKBRyTeTtyWbTfKuYaP8Kyrm
+X-Google-Smtp-Source: ABdhPJyJnvcOSj8f0eErnh4Nc7C/8jUSd3vab/TG0F2X973u875kSeE0uCqdm6s+HyFNPPn5Ydm8Fw==
+X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr46750453pll.258.1594346251490;
+        Thu, 09 Jul 2020 18:57:31 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (220-245-19-62.static.tpgi.com.au. [220.245.19.62])
+        by smtp.gmail.com with ESMTPSA id 7sm3912834pgw.85.2020.07.09.18.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 18:57:31 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, x86@kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, Anton Blanchard <anton@ozlabs.org>
+Subject: [RFC PATCH 5/7] lazy tlb: introduce lazy mm refcount helper functions
+Date:   Fri, 10 Jul 2020 11:56:44 +1000
+Message-Id: <20200710015646.2020871-6-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200710015646.2020871-1-npiggin@gmail.com>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,71 +81,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, bcm-voter always assumes requests are made in KBps and that
-BCM HW always wants them in Bps, so it always scales the requests by
-1000. However, certain use cases and BCMs may use different units.
-Thus, add support for BCM-specific scaling factors.
+Add explicit _lazy_tlb annotated functions for lazy mm refcounting.
+This makes things a bit more explicit, and allows explicit refcounting
+to be removed if it is not used.
 
-Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/interconnect/qcom/bcm-voter.c | 4 ++--
- drivers/interconnect/qcom/icc-rpmh.c  | 3 +++
- drivers/interconnect/qcom/icc-rpmh.h  | 2 ++
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/smp.c            |  2 +-
+ arch/powerpc/mm/book3s64/radix_tlb.c |  4 ++--
+ fs/exec.c                            |  2 +-
+ include/linux/sched/mm.h             | 17 +++++++++++++++++
+ kernel/cpu.c                         |  2 +-
+ kernel/exit.c                        |  2 +-
+ kernel/kthread.c                     | 11 +++++++----
+ kernel/sched/core.c                  | 13 +++++++------
+ 8 files changed, 37 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-index d95725b9208c..be7660b95ccc 100644
---- a/drivers/interconnect/qcom/bcm-voter.c
-+++ b/drivers/interconnect/qcom/bcm-voter.c
-@@ -72,11 +72,11 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
- 			agg_peak[bucket] = max(agg_peak[bucket], temp);
- 		}
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 73199470c265..ad95812d2a3f 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1253,7 +1253,7 @@ void start_secondary(void *unused)
+ 	unsigned int cpu = smp_processor_id();
+ 	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
  
--		temp = agg_avg[bucket] * 1000ULL;
-+		temp = agg_avg[bucket] * bcm->vote_scale;
- 		do_div(temp, bcm->aux_data.unit);
- 		bcm->vote_x[bucket] = temp;
+-	mmgrab(&init_mm);
++	mmgrab(&init_mm); /* XXX: where is the mmput for this? */
+ 	current->active_mm = &init_mm;
  
--		temp = agg_peak[bucket] * 1000ULL;
-+		temp = agg_peak[bucket] * bcm->vote_scale;
- 		do_div(temp, bcm->aux_data.unit);
- 		bcm->vote_y[bucket] = temp;
+ 	smp_store_cpu_info(cpu);
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+index b5cc9b23cf02..52730629b3eb 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+@@ -652,10 +652,10 @@ static void do_exit_flush_lazy_tlb(void *arg)
+ 		 * Must be a kernel thread because sender is single-threaded.
+ 		 */
+ 		BUG_ON(current->mm);
+-		mmgrab(&init_mm);
++		mmgrab_lazy_tlb(&init_mm);
+ 		switch_mm(mm, &init_mm, current);
+ 		current->active_mm = &init_mm;
+-		mmdrop(mm);
++		mmdrop_lazy_tlb(mm);
  	}
-diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
-index 3ac5182c9ab2..008846c17bec 100644
---- a/drivers/interconnect/qcom/icc-rpmh.c
-+++ b/drivers/interconnect/qcom/icc-rpmh.c
-@@ -136,6 +136,9 @@ int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
- 	INIT_LIST_HEAD(&bcm->list);
- 	INIT_LIST_HEAD(&bcm->ws_list);
+ 	_tlbiel_pid(pid, RIC_FLUSH_ALL);
+ }
+diff --git a/fs/exec.c b/fs/exec.c
+index e2ab71e88293..3a01b2751ea9 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1119,7 +1119,7 @@ static int exec_mmap(struct mm_struct *mm)
+ 		mmput(old_mm);
+ 	} else {
+ 		exit_lazy_tlb(active_mm, tsk);
+-		mmdrop(active_mm);
++		mmdrop_lazy_tlb(active_mm);
+ 	}
+ 	return 0;
+ }
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 9b026264b445..110d4ad21de6 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -50,6 +50,23 @@ static inline void mmdrop(struct mm_struct *mm)
  
-+	if (!bcm->vote_scale)
-+		bcm->vote_scale = 1000;
+ void mmdrop(struct mm_struct *mm);
+ 
++/* Helpers for lazy TLB mm refcounting */
++static inline void mmgrab_lazy_tlb(struct mm_struct *mm)
++{
++	mmgrab(mm);
++}
 +
- 	/* Link Qnodes to their respective BCMs */
- 	for (i = 0; i < bcm->num_nodes; i++) {
- 		qn = bcm->nodes[i];
-diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-index cb736b745e1a..10b1890345b1 100644
---- a/drivers/interconnect/qcom/icc-rpmh.h
-+++ b/drivers/interconnect/qcom/icc-rpmh.h
-@@ -80,6 +80,7 @@ struct qcom_icc_node {
-  * @addr: address offsets used when voting to RPMH
-  * @vote_x: aggregated threshold values, represents sum_bw when @type is bw bcm
-  * @vote_y: aggregated threshold values, represents peak_bw when @type is bw bcm
-+ * @vote_scale: scaling factor for vote_x and vote_y
-  * @dirty: flag used to indicate whether the bcm needs to be committed
-  * @keepalive: flag used to indicate whether a keepalive is required
-  * @aux_data: auxiliary data used when calculating threshold values and
-@@ -95,6 +96,7 @@ struct qcom_icc_bcm {
- 	u32 addr;
- 	u64 vote_x[QCOM_ICC_NUM_BUCKETS];
- 	u64 vote_y[QCOM_ICC_NUM_BUCKETS];
-+	u64 vote_scale;
- 	bool dirty;
- 	bool keepalive;
- 	struct bcm_db aux_data;
++static inline void mmdrop_lazy_tlb(struct mm_struct *mm)
++{
++	mmdrop(mm);
++}
++
++static inline void mmdrop_lazy_tlb_smp_mb(struct mm_struct *mm)
++{
++	/* This depends on mmdrop providing a full smp_mb() */
++	mmdrop(mm);
++}
++
+ /*
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_lock for writing before modifying the
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 134688d79589..ff9fcbc4e76b 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -578,7 +578,7 @@ static int finish_cpu(unsigned int cpu)
+ 	 */
+ 	if (mm != &init_mm)
+ 		idle->active_mm = &init_mm;
+-	mmdrop(mm);
++	mmdrop_lazy_tlb(mm);
+ 	return 0;
+ }
+ 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f28103..d535da9fd2f8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -470,7 +470,7 @@ static void exit_mm(void)
+ 		__set_current_state(TASK_RUNNING);
+ 		mmap_read_lock(mm);
+ 	}
+-	mmgrab(mm);
++	mmgrab_lazy_tlb(mm);
+ 	BUG_ON(mm != current->active_mm);
+ 	/* more a memory barrier than a real lock */
+ 	task_lock(current);
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 6f93c649aa97..a7133cc2ddaf 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -1238,12 +1238,12 @@ void kthread_use_mm(struct mm_struct *mm)
+ 	WARN_ON_ONCE(!(tsk->flags & PF_KTHREAD));
+ 	WARN_ON_ONCE(tsk->mm);
+ 
++	mmgrab(mm);
++
+ 	task_lock(tsk);
+ 	active_mm = tsk->active_mm;
+-	if (active_mm != mm) {
+-		mmgrab(mm);
++	if (active_mm != mm)
+ 		tsk->active_mm = mm;
+-	}
+ 	tsk->mm = mm;
+ 	switch_mm(active_mm, mm, tsk);
+ 	task_unlock(tsk);
+@@ -1253,7 +1253,7 @@ void kthread_use_mm(struct mm_struct *mm)
+ 
+ 	exit_lazy_tlb(active_mm, tsk);
+ 	if (active_mm != mm)
+-		mmdrop(active_mm);
++		mmdrop_lazy_tlb(active_mm);
+ 
+ 	to_kthread(tsk)->oldfs = get_fs();
+ 	set_fs(USER_DS);
+@@ -1276,9 +1276,12 @@ void kthread_unuse_mm(struct mm_struct *mm)
+ 	task_lock(tsk);
+ 	sync_mm_rss(mm);
+ 	tsk->mm = NULL;
++	mmgrab_lazy_tlb(mm);
+ 	/* active_mm is still 'mm' */
+ 	enter_lazy_tlb(mm, tsk);
+ 	task_unlock(tsk);
++
++	mmdrop(mm);
+ }
+ EXPORT_SYMBOL_GPL(kthread_unuse_mm);
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 31e22c79826c..d19f2f517f6c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3302,10 +3302,11 @@ static struct rq *finish_task_switch(struct task_struct *prev)
+ 	 * schedule between user->kernel->user threads without passing though
+ 	 * switch_mm(). Membarrier requires a full barrier after storing to
+ 	 * rq->curr, before returning to userspace, for
+-	 * {PRIVATE,GLOBAL}_EXPEDITED. This is implicitly provided by mmdrop().
++	 * {PRIVATE,GLOBAL}_EXPEDITED. This is implicitly provided by
++	 * mmdrop_lazy_tlb_smp_mb().
+ 	 */
+ 	if (mm)
+-		mmdrop(mm);
++		mmdrop_lazy_tlb_smp_mb(mm);
+ 
+ 	if (unlikely(prev_state == TASK_DEAD)) {
+ 		if (prev->sched_class->task_dead)
+@@ -3410,9 +3411,9 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 
+ 	/*
+ 	 * kernel -> kernel   lazy + transfer active
+-	 *   user -> kernel   lazy + mmgrab() active
++	 *   user -> kernel   lazy + mmgrab_lazy_tlb() active
+ 	 *
+-	 * kernel ->   user   switch + mmdrop() active
++	 * kernel ->   user   switch + mmdrop_lazy_tlb() active
+ 	 *   user ->   user   switch
+ 	 */
+ 	if (!next->mm) {                                // to kernel
+@@ -3420,7 +3421,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 
+ 		next->active_mm = prev->active_mm;
+ 		if (prev->mm)                           // from user
+-			mmgrab(prev->active_mm);
++			mmgrab_lazy_tlb(prev->active_mm);
+ 		else
+ 			prev->active_mm = NULL;
+ 	} else {                                        // to user
+@@ -3438,7 +3439,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 		if (!prev->mm) {                        // from kernel
+ 			exit_lazy_tlb(prev->active_mm, next);
+ 
+-			/* will mmdrop() in finish_task_switch(). */
++			/* will mmdrop_lazy_tlb() in finish_task_switch(). */
+ 			rq->prev_mm = prev->active_mm;
+ 			prev->active_mm = NULL;
+ 		}
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.23.0
 
