@@ -2,137 +2,112 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0840C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BC920720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A52065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3NWQcCD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eFBgkYUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgGJAYg (ORCPT
+        id S1726920AbgGJAnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:24:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50310 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgGJAYf (ORCPT
+        Thu, 9 Jul 2020 20:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgGJAnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:24:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06A07Hx0102872;
-        Fri, 10 Jul 2020 00:24:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=zJ71shxFuZz9AsflxxmVD772uEc/naqgyywzJ2rhY8Y=;
- b=i3NWQcCD7FVFTUCxEnPW5BJhh4Z0gMQNizCDIwI/AuoiTVY1YrzjNY9BCtUa0DVEbpLA
- LCXlwkA78abHW3rpFPtiLdVzDx9xk9FD6WiW+nVPITvPLB8Pxf6CmMLUbrfkEPTDjLHG
- aeRmaBU6sptGpB3cOJM/ydyPbExNkTqCPsUdrpaoFDAXPIYzZpvsvhw1b9IDoj4M0LAd
- 7P8CcR6izOu6uKzv5lKbALPcm+giHyqYuo5Vqk97y2SaWPUPnkBXytABYUbDppPBk7hG
- OpZj5GRRLGPFTjD99UHePu+eEcwFJnSrBjcErdEjIw0Q3WS3ZmR+e/WDrVX02wKRv9Zp 7w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 325y0ampp6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 00:24:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06A09cGn188665;
-        Fri, 10 Jul 2020 00:24:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 325k3hv3r8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 00:24:18 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06A0OG3P007144;
-        Fri, 10 Jul 2020 00:24:16 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jul 2020 17:24:16 -0700
-Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma is
- enable
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
- <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
- <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
- <20200708184615.GA251665@carbon.dhcp.thefacebook.com>
- <B926444035E5E2439431908E3842AFD2560E41@DGGEMI525-MBS.china.huawei.com>
- <b2a98ab7-0a36-ad3d-f40d-1cc9216c7961@oracle.com>
- <B926444035E5E2439431908E3842AFD256460F@DGGEMI525-MBS.china.huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <99dd3c24-a864-c0e2-4f02-33a7fbc97bc7@oracle.com>
-Date:   Thu, 9 Jul 2020 17:24:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <B926444035E5E2439431908E3842AFD256460F@DGGEMI525-MBS.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 phishscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090156
+        Thu, 9 Jul 2020 20:43:08 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FC7BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:43:08 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j187so5068026ybj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=PChTsD7+lOfYquQN6+h5WG1wyZRkuvc0gJ7VnIMPpcI=;
+        b=eFBgkYUpUC19TYrSClaWnACSWhKB0k5jcDpo+PTCgNBUkAiDzm+ORJ7p+M7sjb66Ka
+         lWtCn0H5by6dCE82W0iKV6mmx6kRgCqc+3AxVy8yWqUYQu43g026sorjNlQ0d1PDuQAZ
+         29onMDkcy7/BpVBNOy1dwqDwjF+o8P8j+QhxUaXtj8tXYMCoJM0ZhcydfKpz4AB/eBDZ
+         zWFSbDcHte5W/BvRP/taIxaEwuwcJY6eLjxsQH1s4riNeWuJGxvmV1zSQZqbBX2rVib5
+         frgB94mh32Q9xz6rqcnyjrvx5EBbgbfZ2rBqxlsZnkuaxUTQnvF0rXIuSr1J4FI/Ark1
+         2ZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=PChTsD7+lOfYquQN6+h5WG1wyZRkuvc0gJ7VnIMPpcI=;
+        b=WZU2u84R6JQGc/EV83ULFCz/NGkmDG295G2jVB4MxA30VL7jUyKSQ6hXTXrmp5bGKa
+         wNSCR+ILOzeD+iKgKmmdqFXTle+kZJiZ8Xta5xIKa6A6EOcZjd589xU6dLJsYEzCw8sV
+         TRUgdjK36hQnqm3AGyv9CmM19mjm601NoSTc7KMgoMHpbiZTF2tp5CBnnbOy0S8Z4sCm
+         9wxlV3ZtlVJmNfn0wRMSNBk4IlA45dcaU3GPXuWyatOryDQqy3yC6GRqyCT5w81tvbWj
+         e9b7cm9OrFWQT3OcGwOJfz1oKJc7U6cjohZwm5yPzmDb+0p6QLIygdmBHH44v21adyFn
+         t5rw==
+X-Gm-Message-State: AOAM530r+iBjsiedirwQgVv+26GlaRmYUJ/HvI1LYcboOyMJ52GRTiGm
+        yullkw0eVWmMr55w8DhuT6v8As3/UYyC9ehG
+X-Google-Smtp-Source: ABdhPJw3ovj5xIgTKeUgsA84rILy0QjfSh1DlsEiwU5RWnjTdC3QlkA8ODLexpuSzMstbWzOEt5EKdjDztKvbJhN
+X-Received: by 2002:a25:c547:: with SMTP id v68mr1490103ybe.508.1594341787646;
+ Thu, 09 Jul 2020 17:43:07 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 00:42:58 +0000
+Message-Id: <20200710004258.296017-1-linchuyuan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH] dt-bindings: hwmon: adm1272: add adm1272-adm1275-temp1-en binding
+From:   Chu Lin <linchuyuan@google.com>
+To:     linux@roeck-us.net
+Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
+        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhongqil@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 4:45 PM, Song Bao Hua (Barry Song) wrote:
-> 
-> 
->> -----Original Message-----
->> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
->> Sent: Friday, July 10, 2020 6:58 AM
->> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; Roman
->> Gushchin <guro@fb.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>; linux-mm@kvack.org;
->> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Jonathan
->> Cameron <jonathan.cameron@huawei.com>
->> Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma
->> is enable
->>
->> Looks like this produced a warning in linux-next.  I suspect it is due to the
->> combination CONFIG_HUGETLB_PAGE && !CONFIG_CMA.
->>
->> Instead of adding the routine hugetlb_cma_enabled() to scan the hugetlb_cma
->> array, could we just use a boolean as follows?  It can simply be set in
->> hugetlb_cma_reserve when we reserve CMA.
-> 
-> Maybe just use hugetlb_cma_size? If hugetlb_cma_size is not 0, someone is trying to use
-> cma, then bootmem for gigantic pages will be totally ignored according to discussion here:
-> https://lkml.org/lkml/2020/7/8/1288
-> 
-> if somebody sets a wrong hugetlb_cma_size which causes that cma is not reserved. 
-> It is the fault of users? We just need to document hugetlb_cma will overwrite bootmem
-> reservations?
-> 
+Problem:
+	adm1272 and adm1278 supports temperature sampling. The
+current way of enabling it requires the user manually unbind the device
+from the driver, flip the temperature sampling control bit and then bind
+the device back to the driver. It would be nice if we can control this in a
+better way by reading the dt.
 
-Yes, I think using hugetlb_cma_size would be sufficient.  If someone
-specifies hugetlb_cma=<N> and hugepagesz=<gigantic_page_size> hugepages=<X>
-that is wrong.  I don't think we need to worry about 'falling back' to
-preallocating X gigantic pages if N is a bad value.  Or, even if the arch
-does not support cma allocation.
+Solution:
+	Introducing device tree binding adm1272-adm1278-temp1-en. If the
+flag is set, flip the temp1_en control bit on probing.
 
-I am working on a patch to check this earlier in command processing.  That
-will make this check unnecessary.  However, that patch is based on new
-command line processing code only in 5.8.  So, I think we still need to do
-this so that it can be backported to stable.
+Testing:
+make dt_binding_check
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+---
+ Documentation/devicetree/bindings/hwmon/adm1275.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+index 1ecd03f3da4d..4403fe30f005 100644
+--- a/Documentation/devicetree/bindings/hwmon/adm1275.txt
++++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+@@ -15,6 +15,8 @@ Optional properties:
+ 
+ - shunt-resistor-micro-ohms
+ 	Shunt resistor value in micro-Ohm
++- adm1272-adm1278-temp1-en
++	Enable temperature sampling. This is supported on adm1272 and adm1278
+ 
+ Example:
+ 
+@@ -22,4 +24,5 @@ adm1272@10 {
+ 	compatible = "adi,adm1272";
+ 	reg = <0x10>;
+ 	shunt-resistor-micro-ohms = <500>;
++	adm1272-adm1278-temp1-en;
+ };
 -- 
-Mike Kravetz
+2.27.0.383.g050319c2ae-goog
+
