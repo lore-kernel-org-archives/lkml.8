@@ -2,292 +2,198 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A41C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8A420767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BA6207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mfC/5xqy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzXN36AE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgGJNpB (ORCPT
+        id S1728228AbgGJNo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
+        Fri, 10 Jul 2020 09:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgGJNoi (ORCPT
+        with ESMTP id S1728138AbgGJNoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:44:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE7DC08E81E
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=gVyCi1lXuB4F5L/S3fWjRoI3iRwFdz1EbQU2W3J3qMc=; b=mfC/5xqyb5xEaKBkaEh7SvCe5l
-        wMNmsY1jIoJfZb8/pt1uLzfk7RZ0GBUo5SgGabprt7cFVmaMgZBWyNjvP0qJE4JkIp7U0z7vX40Zi
-        +vYcgmBTxL0RwW2Qqex1M39C9CJs6MhIbOAqVYd6pSOG/gi20qfxZOB19K/vXiqQOwCfPnxHEoDD3
-        YS/oSgPZMMoUJGgDe4U8viNsyLdzWhBuUycGRo14lpH1xkQCVzwQBvvZ4+Cdf166W13kjhcakDcXJ
-        TzqiMcjkyVexbR2j2HYInfKX7Wsmqup4nqANE7HXRjSAIM69ECA0LKLjB8+uKLmgubRH1H+SvrPMY
-        g85Fy7xg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jttK0-0003t3-I1; Fri, 10 Jul 2020 13:44:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D11A4307890;
-        Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E8FD42B7A7336; Fri, 10 Jul 2020 15:44:09 +0200 (CEST)
-Message-ID: <20200710134336.500117453@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 10 Jul 2020 15:38:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
-        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: [PATCH v6 06/17] static_call: Add basic static call infrastructure
-References: <20200710133831.943894387@infradead.org>
+        Fri, 10 Jul 2020 09:44:39 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AC1C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:39 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so2641949pje.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=85gdqRJ1tv0iPiK7NOOgK9DC6wwUEJtcQT/qx3IlKWw=;
+        b=nzXN36AE4MVWR7VQCtxzoxzDB8x/4U81lbAqL2g7NyMFgnKAdVxs2cxuLHjeukcS8V
+         W/CvX8HCB4fvpGIYZHrLr0D51mQ6RKU4XC42AQzlbRFL8HFs34MuKnZVpNo2hel6J/6P
+         SofA2cAxUZTqGe8kHsJHGH8CtV/v0WRlzxOuqFrxFG8oez8BjW21c/UiZt2fuLvWQYWS
+         1G/G3UXIgFR57sI9ULrXZdl2VmWxDwdhqEul90mOyV5q4UmNpvDYH1t6DsUb1SJm21JK
+         4gyk/O1lm32C2VWUCEhXcKhi/mFJIxitg3Lp9hgwmWoB22hbeFEEz7+lbnvGlAoQJf3x
+         ekMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=85gdqRJ1tv0iPiK7NOOgK9DC6wwUEJtcQT/qx3IlKWw=;
+        b=UzYMK/Xb0S1RWWjOLYzB+2IFOR3Uzm+Xv4O7wy7SYhIVZvdVtBWae2kVX/2JMy4Xrm
+         HbdQLrXoMt3fkzaz7fsTfbgHq+qqATTEkMscQ6gwwKemk23EPYPMYnFaFxfdt6KSSw9b
+         ky0WSXsgQzfd0Cgp9HlC3MlIrZqG8zfY5DzUdQS49XNJxXCF9uf3YDER8y6E9azxBgZP
+         HWKKoPttocC8XhLHdgWAW2M3l/xIxtyc5vYO1T8yW3GX5dVjC3o4i79FiYtecl8ie4eC
+         M6afhOuGX9K+u1meHF9iGft0d+OHta4c6g9trRdJYijMIaazFuaMDTCP4DHB3jU6NiMz
+         PO9g==
+X-Gm-Message-State: AOAM533YgcrdL/YNpGYDmO2B0LYxZ27Fsv7wTcxsynR4rZTt17UxLuAP
+        fJPadaIybllFAx6fd/gRExw=
+X-Google-Smtp-Source: ABdhPJyEBgA1mBLLiT783qyysK6o6siEIM/7KCLTdbs49c5ohOPglYrMK5fCbMtmjrvu6Yo4WKkV0A==
+X-Received: by 2002:a17:90b:30c4:: with SMTP id hi4mr5534101pjb.166.1594388678740;
+        Fri, 10 Jul 2020 06:44:38 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.44.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 06:44:38 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v4 07/17] perf ftrace: add option '--inherit' to trace children processes
+Date:   Fri, 10 Jul 2020 21:43:12 +0800
+Message-Id: <20200710134322.15400-8-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+This adds an option '--inherit' to allow us trace children
+processes spawned by our target.
 
-Static calls are a replacement for global function pointers.  They use
-code patching to allow direct calls to be used instead of indirect
-calls.  They give the flexibility of function pointers, but with
-improved performance.  This is especially important for cases where
-retpolines would otherwise be used, as retpolines can significantly
-impact performance.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-The concept and code are an extension of previous work done by Ard
-Biesheuvel and Steven Rostedt:
-
-  https://lkml.kernel.org/r/20181005081333.15018-1-ard.biesheuvel@linaro.org
-  https://lkml.kernel.org/r/20181006015110.653946300@goodmis.org
-
-There are two implementations, depending on arch support:
-
- 1) out-of-line: patched trampolines (CONFIG_HAVE_STATIC_CALL)
- 2) basic function pointers
-
-For more details, see the comments in include/linux/static_call.h.
-
-[peterz: simplified interface]
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/Kconfig                      |    3 
- include/linux/static_call.h       |  156 ++++++++++++++++++++++++++++++++++++++
- include/linux/static_call_types.h |   15 +++
- 3 files changed, 174 insertions(+)
- create mode 100644 include/linux/static_call.h
- create mode 100644 include/linux/static_call_types.h
+v2: option name '--trace-children' -> '--inherit'.
+---
+ tools/perf/Documentation/perf-ftrace.txt |  3 ++
+ tools/perf/builtin-ftrace.c              | 38 ++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -960,6 +960,9 @@ config HAVE_SPARSE_SYSCALL_NR
- 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
- 	  related optimizations for a given architecture.
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index 98fe01d354d1..fd632bd9b2c1 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -61,6 +61,9 @@ OPTIONS
+ 	Set the size of per-cpu tracing buffer, <size> is expected to
+ 	be a number with appended unit character - B/K/M/G.
  
-+config HAVE_STATIC_CALL
-+	bool
++--inherit::
++	Trace children processes spawned by our target.
 +
- source "kernel/gcov/Kconfig"
+ -T::
+ --trace-funcs=::
+ 	Only trace functions given by the argument.  Multiple functions
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 887e78b23a82..4efaa7b6a906 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -39,6 +39,7 @@ struct perf_ftrace {
+ 	struct list_head	nograph_funcs;
+ 	int			graph_depth;
+ 	unsigned long		percpu_buffer_size;
++	bool			inherit;
+ };
  
- source "scripts/gcc-plugins/Kconfig"
---- /dev/null
-+++ b/include/linux/static_call.h
-@@ -0,0 +1,156 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_STATIC_CALL_H
-+#define _LINUX_STATIC_CALL_H
-+
-+/*
-+ * Static call support
-+ *
-+ * Static calls use code patching to hard-code function pointers into direct
-+ * branch instructions. They give the flexibility of function pointers, but
-+ * with improved performance. This is especially important for cases where
-+ * retpolines would otherwise be used, as retpolines can significantly impact
-+ * performance.
-+ *
-+ *
-+ * API overview:
-+ *
-+ *   DECLARE_STATIC_CALL(name, func);
-+ *   DEFINE_STATIC_CALL(name, func);
-+ *   static_call(name)(args...);
-+ *   static_call_update(name, func);
-+ *
-+ * Usage example:
-+ *
-+ *   # Start with the following functions (with identical prototypes):
-+ *   int func_a(int arg1, int arg2);
-+ *   int func_b(int arg1, int arg2);
-+ *
-+ *   # Define a 'my_name' reference, associated with func_a() by default
-+ *   DEFINE_STATIC_CALL(my_name, func_a);
-+ *
-+ *   # Call func_a()
-+ *   static_call(my_name)(arg1, arg2);
-+ *
-+ *   # Update 'my_name' to point to func_b()
-+ *   static_call_update(my_name, &func_b);
-+ *
-+ *   # Call func_b()
-+ *   static_call(my_name)(arg1, arg2);
-+ *
-+ *
-+ * Implementation details:
-+ *
-+ *   This requires some arch-specific code (CONFIG_HAVE_STATIC_CALL).
-+ *   Otherwise basic indirect calls are used (with function pointers).
-+ *
-+ *   Each static_call() site calls into a trampoline associated with the name.
-+ *   The trampoline has a direct branch to the default function.  Updates to a
-+ *   name will modify the trampoline's branch destination.
-+ *
-+ *   If the arch has CONFIG_HAVE_STATIC_CALL_INLINE, then the call sites
-+ *   themselves will be patched at runtime to call the functions directly,
-+ *   rather than calling through the trampoline.  This requires objtool or a
-+ *   compiler plugin to detect all the static_call() sites and annotate them
-+ *   in the .static_call_sites section.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/cpu.h>
-+#include <linux/static_call_types.h>
-+
-+#ifdef CONFIG_HAVE_STATIC_CALL
-+#include <asm/static_call.h>
-+
-+/*
-+ * Either @site or @tramp can be NULL.
-+ */
-+extern void arch_static_call_transform(void *site, void *tramp, void *func);
-+
-+#define STATIC_CALL_TRAMP_ADDR(name) &STATIC_CALL_TRAMP(name)
-+
-+/*
-+ * __ADDRESSABLE() is used to ensure the key symbol doesn't get stripped from
-+ * the symbol table so that objtool can reference it when it generates the
-+ * .static_call_sites section.
-+ */
-+#define __static_call(name)						\
-+({									\
-+	__ADDRESSABLE(STATIC_CALL_KEY(name));				\
-+	&STATIC_CALL_TRAMP(name);					\
-+})
-+
-+#else
-+#define STATIC_CALL_TRAMP_ADDR(name) NULL
-+#endif
-+
-+
-+#define DECLARE_STATIC_CALL(name, func)					\
-+	extern struct static_call_key STATIC_CALL_KEY(name);		\
-+	extern typeof(func) STATIC_CALL_TRAMP(name);
-+
-+#define static_call_update(name, func)					\
-+({									\
-+	BUILD_BUG_ON(!__same_type(*(func), STATIC_CALL_TRAMP(name)));	\
-+	__static_call_update(&STATIC_CALL_KEY(name),			\
-+			     STATIC_CALL_TRAMP_ADDR(name), func);	\
-+})
-+
-+#if defined(CONFIG_HAVE_STATIC_CALL)
-+
-+struct static_call_key {
-+	void *func;
-+};
-+
-+#define DEFINE_STATIC_CALL(name, _func)					\
-+	DECLARE_STATIC_CALL(name, _func);				\
-+	struct static_call_key STATIC_CALL_KEY(name) = {		\
-+		.func = _func,						\
-+	};								\
-+	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
-+
-+#define static_call(name)	__static_call(name)
-+
-+static inline
-+void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ struct filter_entry {
+@@ -177,9 +178,27 @@ static int write_tracing_file_int(const char *name, int value)
+ 	return 0;
+ }
+ 
++static int write_tracing_option_file(const char *name, const char *val)
 +{
-+	cpus_read_lock();
-+	WRITE_ONCE(key->func, func);
-+	arch_static_call_transform(NULL, tramp, func);
-+	cpus_read_unlock();
++	char *file;
++	int ret;
++
++	if (asprintf(&file, "options/%s", name) < 0)
++		return -1;
++
++	ret = __write_tracing_file(file, val, false);
++	free(file);
++	return ret;
 +}
 +
-+#define EXPORT_STATIC_CALL(name)					\
-+	EXPORT_SYMBOL(STATIC_CALL_KEY(name));				\
-+	EXPORT_SYMBOL(STATIC_CALL_TRAMP(name))
+ static int reset_tracing_cpu(void);
+ static void reset_tracing_filters(void);
+ 
++static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
++{
++	write_tracing_option_file("function-fork", "0");
++}
 +
-+#define EXPORT_STATIC_CALL_GPL(name)					\
-+	EXPORT_SYMBOL_GPL(STATIC_CALL_KEY(name));			\
-+	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(name))
+ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+ {
+ 	if (write_tracing_file("tracing_on", "0") < 0)
+@@ -198,6 +217,7 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+ 		return -1;
+ 
+ 	reset_tracing_filters();
++	reset_tracing_options(ftrace);
+ 	return 0;
+ }
+ 
+@@ -336,6 +356,17 @@ static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
+ 	return 0;
+ }
+ 
++static int set_tracing_trace_inherit(struct perf_ftrace *ftrace)
++{
++	if (!ftrace->inherit)
++		return 0;
 +
-+#else /* Generic implementation */
++	if (write_tracing_option_file("function-fork", "1") < 0)
++		return -1;
 +
-+struct static_call_key {
-+	void *func;
-+};
++	return 0;
++}
 +
-+#define DEFINE_STATIC_CALL(name, _func)					\
-+	DECLARE_STATIC_CALL(name, _func);				\
-+	struct static_call_key STATIC_CALL_KEY(name) = {		\
-+		.func = _func,						\
+ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ {
+ 	char *trace_file;
+@@ -405,6 +436,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 		goto out_reset;
+ 	}
+ 
++	if (set_tracing_trace_inherit(ftrace) < 0) {
++		pr_err("failed to set tracing option function-fork\n");
++		goto out_reset;
 +	}
 +
-+#define static_call(name)						\
-+	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_KEY(name).func))
-+
-+static inline
-+void __static_call_update(struct static_call_key *key, void *tramp, void *func)
-+{
-+	WRITE_ONCE(key->func, func);
-+}
-+
-+#define EXPORT_STATIC_CALL(name)	EXPORT_SYMBOL(STATIC_CALL_KEY(name))
-+#define EXPORT_STATIC_CALL_GPL(name)	EXPORT_SYMBOL_GPL(STATIC_CALL_KEY(name))
-+
-+#endif /* CONFIG_HAVE_STATIC_CALL */
-+
-+#endif /* _LINUX_STATIC_CALL_H */
---- /dev/null
-+++ b/include/linux/static_call_types.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _STATIC_CALL_TYPES_H
-+#define _STATIC_CALL_TYPES_H
-+
-+#include <linux/stringify.h>
-+
-+#define STATIC_CALL_KEY_PREFIX		__SCK__
-+#define STATIC_CALL_KEY(name)		__PASTE(STATIC_CALL_KEY_PREFIX, name)
-+
-+#define STATIC_CALL_TRAMP_PREFIX	__SCT__
-+#define STATIC_CALL_TRAMP_PREFIX_STR	__stringify(STATIC_CALL_TRAMP_PREFIX)
-+#define STATIC_CALL_TRAMP(name)		__PASTE(STATIC_CALL_TRAMP_PREFIX, name)
-+#define STATIC_CALL_TRAMP_STR(name)	__stringify(STATIC_CALL_TRAMP(name))
-+
-+#endif /* _STATIC_CALL_TYPES_H */
-
+ 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+ 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+ 		goto out_reset;
+@@ -599,6 +635,8 @@ int cmd_ftrace(int argc, const char **argv)
+ 		    "Max depth for function graph tracer"),
+ 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+ 		     "size of per cpu buffer", parse_buffer_size),
++	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
++		    "trace children processes"),
+ 	OPT_END()
+ 	};
+ 
+-- 
+2.25.1
 
