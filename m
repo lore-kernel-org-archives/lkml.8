@@ -2,171 +2,183 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE56C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A7220748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="J1TuL69J"
+	by mail.kernel.org (Postfix) with ESMTP id 786E920578
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGJNdS (ORCPT
+        id S1727886AbgGJNdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:33:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgGJNdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:33:17 -0400
-X-Greylist: delayed 595 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Jul 2020 06:33:17 PDT
-Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78511C08C5CE;
-        Fri, 10 Jul 2020 06:33:17 -0700 (PDT)
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id 3E94A7C1278;
-        Fri, 10 Jul 2020 15:23:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1594387397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T0a47GLKOaTiWzGq8XsdXklDdSZ4NNZ9YA/m4rMqQRc=;
-        b=J1TuL69JeYwZWoKtV+F+2RVX5EevU5myizrh5IdpnW0CZBoYkIc+cRqFm9tfHZQIMvyc8i
-        RVVUJLIXbz6tZI6C8PVx9hQamgWTx4PVGtGauA6p1syNbUYu8PiNQYtRhCuQlSuAwJeJTb
-        hVde8USor0K+SSvZ3ACV4y31kMERGpY=
-MIME-Version: 1.0
-Date:   Fri, 10 Jul 2020 15:23:17 +0200
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, krisman@collabora.com, kernel@collabora.com,
-        dvhart@infradead.org, mingo@redhat.com,
-        pgriffais@valvesoftware.com, fweimer@redhat.com,
-        libc-alpha@sourceware.org, malteskarupke@web.de,
-        linux-api@vger.kernel.org, arnd@arndb.de
-Subject: Re: [RFC v2 0/4] futex2: Add new futex interface
-In-Reply-To: <20200709175921.211387-1-andrealmeid@collabora.com>
-References: <20200709175921.211387-1-andrealmeid@collabora.com>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <4d9163924224d4265c280fc2ca6481c3@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+        Fri, 10 Jul 2020 09:33:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55878 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726840AbgGJNdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:33:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AFCA4AC9F;
+        Fri, 10 Jul 2020 13:33:51 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 15:33:51 +0200
+Message-ID: <s5hv9iv4hq8.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+Cc:     syzbot <syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "anarsoul@gmail.com" <anarsoul@gmail.com>,
+        "pavel@denx.de" <pavel@denx.de>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: =?UTF-8?B?5Zue5aSNOg==?= WARNING in
+ submit_audio_out_urb/usb_submit_urb
+In-Reply-To: <s5h8sfr69yw.wl-tiwai@suse.de>
+References: <0000000000001ad77805aa024889@google.com>
+        <BYAPR11MB263211A6842402F1EE47F6F8FF650@BYAPR11MB2632.namprd11.prod.outlook.com>
+        <s5h8sfr69yw.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+On Fri, 10 Jul 2020 10:38:31 +0200,
+Takashi Iwai wrote:
+> 
+> On Fri, 10 Jul 2020 10:12:43 +0200,
+> Zhang, Qiang wrote:
+> > 
+> > 
+> > 
+> > ________________________________________
+> > 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 syzbot <syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com>
+> > 发送时间: 2020年7月9日 21:34
+> > 收件人: andreyknvl@google.com; gregkh@linuxfoundation.org; ingrassia@epigenesys.com; linux-kernel@vger.kernel.org; linux-usb@vger.kernel.org; syzkaller-bugs@googlegroups.com
+> > 主题: WARNING in submit_audio_out_urb/usb_submit_urb
+> > 
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    768a0741 usb: dwc2: gadget: Remove assigned but never used..
+> > git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1568d11f100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=999be4eb2478ffa5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=c190f6858a04ea7fbc52
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123aa2fb100000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
+> > 
+> > usb 1-1: send failed (error -32)
+> > snd_usb_toneport 1-1:0.0: Line 6 TonePort GX now attached
+> > ------------[ cut here ]------------
+> > usb 1-1: BOGUS urb xfer, pipe 0 != type 3
+> > WARNING: CPU: 0 PID: 12 at drivers/usb/core/urb.c:478 usb_submit_urb+0xa17/0x13e0 drivers/usb/core/urb.c:478
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc3-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Workqueue: events line6_startup_work
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0xf6/0x16e lib/dump_stack.c:118
+> >  panic+0x2aa/0x6e1 kernel/panic.c:231
+> >  __warn.cold+0x20/0x50 kernel/panic.c:600
+> >  report_bug+0x1bd/0x210 lib/bug.c:198
+> >  handle_bug+0x41/0x80 arch/x86/kernel/traps.c:235
+> >  exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
+> >  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+> > RIP: 0010:usb_submit_urb+0xa17/0x13e0 drivers/usb/core/urb.c:478
+> > Code: 84 e7 04 00 00 e8 a9 10 ca fd 4c 89 ef e8 41 79 12 ff 41 89 d8 44 89 e1 4c 89 f2 48 89 c6 48 c7 c7 80 a0 5d 86 e8 db 77 9e fd <0f> 0b e8 82 10 ca fd 0f b6 6c 24 08 48 c7 c6 e0 a1 5d 86 48 89 ef
+> > RSP: 0018:ffff8881da227b10 EFLAGS: 00010086
+> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> > RDX: ffff8881da211900 RSI: ffffffff8129b4e3 RDI: ffffed103b444f54
+> > RBP: 0000000000000030 R08: 0000000000000001 R09: ffff8881db21fe8b
+> > R10: 0000000000000000 R11: 0000000000000004 R12: 0000000000000000
+> > R13: ffff8881d6ecd0a0 R14: ffff8881d3d8c690 R15: ffff8881d54c4000
+> >  submit_audio_out_urb+0x6d6/0x1a00 sound/usb/line6/playback.c:271
+> >  line6_submit_audio_out_all_urbs+0xc9/0x120 sound/usb/line6/playback.c:291
+> >  line6_stream_start+0x187/0x230 sound/usb/line6/pcm.c:195
+> >  line6_pcm_acquire+0x137/0x210 sound/usb/line6/pcm.c:318
+> >  line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:734
+> >  process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+> >  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+> >  kthread+0x392/0x470 kernel/kthread.c:291
+> >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> > 
+> >  It's like Alan Stern's reply to the email titled "KASAN: use-after-free Read in line6_submit_audio_in_all_urbs."   It's also like a problem with asynchronous operations. can replace "cancel_delayed_work" with" cancel_delayed_work_sync"
+> > in "line6_disconnect" func？
+> 
+> No, this looks a different problem.  It's just a matter of the missing
+> URB type check that leads to a USB warning.  A typical issue with the
+> USB fuzzing.
+> 
+> I'll check it later.
 
-On 09.07.2020 19:59, André Almeida wrote:
-> This RFC is a followup to the previous discussion initiated from my 
-> last
-> patch "futex: Implement mechanism to wait on any of several 
-> futexes"[1].
-> As stated in the thread, the correct approach to move forward with the
-> wait multiple operation would be to create a new syscall that would 
-> have
-> all new cool features.
-> 
-> The first patch adds the new interface and just translate the call for
-> the old interface, without implementing new features. The goal here is
-> to establish the interface and to check if everyone is happy with this
-> API. The rest of patches are selftests to show the interface in action.
-> I have the following questions:
-> 
-> - What suggestions do you have to implement this? Start from scratch or
->   reuse the most code possible?
-> 
-> - The interface seems correct and implements the requirements asked by 
-> you?
-> 
-> Those are the cool new features that this syscall should address some
-> day:
-> 
-> - Operate with variable bit size futexes, not restricted to 32:
->   8, 16 and 64
-> 
-> - Wait on multiple futexes, using the following semantics:
-> 
->   struct futex_wait {
-> 	void *uaddr;
-> 	unsigned long val;
-> 	unsigned long flags;
->   };
-> 
->   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> 		  unsigned long flags, struct __kernel_timespec *timo);
-> 
-> - Have NUMA optimizations: if FUTEX_NUMA_FLAG is set, the `void *uaddr`
->   argument won't be a value of type u{8, 16, 32, 64} anymore, but a 
-> struct
->   containing a NUMA node hint:
-> 
->   struct futex32_numa {
-> 	  u32 value __attribute__ ((aligned (8)));
-> 	  u32 hint;
->   };
-> 
->   struct futex64_numa {
-> 	  u64 value __attribute__ ((aligned (16)));
-> 	  u64 hint;
->   };
-> 
-> Thanks,
-> 	André
-> 
-> Changes since v1:
->  - The timeout argument now uses __kernel_timespec as type
->  - time32 interface was removed
->  v1: https://lore.kernel.org/patchwork/cover/1255437/
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1194339/
-> 
-> André Almeida (4):
->   futex2: Add new futex interface
->   selftests: futex: Add futex2 wake/wait test
->   selftests: futex: Add futex2 timeout test
->   selftests: futex: Add futex2 wouldblock test
-> 
->  MAINTAINERS                                   |   2 +-
->  arch/x86/entry/syscalls/syscall_32.tbl        |   2 +
->  arch/x86/entry/syscalls/syscall_64.tbl        |   2 +
->  include/linux/syscalls.h                      |   7 ++
->  include/uapi/asm-generic/unistd.h             |   8 +-
->  include/uapi/linux/futex.h                    |  10 ++
->  init/Kconfig                                  |   7 ++
->  kernel/Makefile                               |   1 +
->  kernel/futex2.c                               |  73 ++++++++++++
->  kernel/sys_ni.c                               |   4 +
->  tools/include/uapi/asm-generic/unistd.h       |   7 +-
->  .../selftests/futex/functional/.gitignore     |   1 +
->  .../selftests/futex/functional/Makefile       |   4 +-
->  .../selftests/futex/functional/futex2_wait.c  | 111 ++++++++++++++++++
->  .../futex/functional/futex_wait_timeout.c     |  38 ++++--
->  .../futex/functional/futex_wait_wouldblock.c  |  33 +++++-
->  .../testing/selftests/futex/functional/run.sh |   3 +
->  .../selftests/futex/include/futex2test.h      |  77 ++++++++++++
->  18 files changed, 373 insertions(+), 17 deletions(-)
->  create mode 100644 kernel/futex2.c
->  create mode 100644 
-> tools/testing/selftests/futex/functional/futex2_wait.c
->  create mode 100644 tools/testing/selftests/futex/include/futex2test.h
+... and below is the fix patch.
 
-What branch/tag this submission is based on please? It seems it is not a 
-5.8 but rather 5.7 since the second patch misses faccessat2() syscall 
-and fails to be applied cleanly.
 
-Thanks.
+Takashi
 
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] ALSA: line6: Perform sanity check for each URB creation
+
+LINE6 drivers create stream URBs with a fixed pipe without checking
+its validity, and this may lead to a kernel WARNING at the submission
+when a malformed USB descriptor is passed.
+
+For avoiding the kernel warning, perform the similar sanity checks for
+each pipe type at creating a URB.
+
+Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/usb/line6/capture.c  | 2 ++
+ sound/usb/line6/playback.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/sound/usb/line6/capture.c b/sound/usb/line6/capture.c
+index 663d608c4287..970c9bdce0b2 100644
+--- a/sound/usb/line6/capture.c
++++ b/sound/usb/line6/capture.c
+@@ -286,6 +286,8 @@ int line6_create_audio_in_urbs(struct snd_line6_pcm *line6pcm)
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_in_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
+diff --git a/sound/usb/line6/playback.c b/sound/usb/line6/playback.c
+index 01930ce7bd75..8233c61e23f1 100644
+--- a/sound/usb/line6/playback.c
++++ b/sound/usb/line6/playback.c
+@@ -431,6 +431,8 @@ int line6_create_audio_out_urbs(struct snd_line6_pcm *line6pcm)
+ 		urb->interval = LINE6_ISO_INTERVAL;
+ 		urb->error_count = 0;
+ 		urb->complete = audio_out_callback;
++		if (usb_urb_ep_type_check(urb))
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
 -- 
-   Oleksandr Natalenko (post-factum)
+2.16.4
+
