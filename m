@@ -6,51 +6,56 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0D6C433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A86C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80FF20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263B22083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594389766;
-	bh=VvptTRaDt7ndl05+l3JBeHa0G2eudUrK0ICgg1ZxOig=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=ywR2jO9+XxEXy7e3bsgT4CHpsX7uu1tPhBqc8GU+IRK7we8RNqEjUnz5d2Z0Z+Kwd
-	 HMwjGThjVjPN9xfFRJy2ABMYaDa1fOSkk0Q5/5UbVHueljGhVxL7g0k5iCQEWvDjdL
-	 W74Rq9HpHvKW+WOwfVozAvkl9kofhrH0ycuYYQHk=
+	s=default; t=1594389771;
+	bh=5Yj0QMEn6lHcJlQSk4cJzs3huqev+UWwsh2+PwNLyWk=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=xtpkQSlYDCjJDxoWLWz8VGBm+rmEIb18zPJ+r9gAcylQicsMol8EtPxq7XTpa5uuB
+	 STwAp+ZeCu6+Bn4DmTIfH6p7B3un5rVWdv2ADc+bSd5X2M5L7zQ6umlIMs+S2EJdQh
+	 ozEZB40f2pOZ0UO6lZC9ZXHZCq/7qJX5LaoQ/j4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgGJOCp (ORCPT
+        id S1728376AbgGJOCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 10:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgGJOCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:02:43 -0400
+        id S1727097AbgGJOCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:02:46 -0400
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CC3F2082E;
-        Fri, 10 Jul 2020 14:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71AA62082E;
+        Fri, 10 Jul 2020 14:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594389763;
-        bh=VvptTRaDt7ndl05+l3JBeHa0G2eudUrK0ICgg1ZxOig=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=yiyfUPJIh0Rg2TkRM8SsoCFe/9D4eqQ5/nV7YwEVTaH6Ua03nCww8a9drYe1r2Jxt
-         NiiwNOa0L93b0ACk+i+W4CJofmatBlKEBF2DXvpvtpFymdsoUOLge35xAgxrX+jjiz
-         /p6ubifU2GbDGHowIxvcGtFdB0q/j4p8NvaUQCus=
-Date:   Fri, 10 Jul 2020 14:02:42 +0000
+        s=default; t=1594389765;
+        bh=5Yj0QMEn6lHcJlQSk4cJzs3huqev+UWwsh2+PwNLyWk=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=0/Fjy2jnR1FAu5TAmWsD7F21cJ+Z8MyiI1bUL4NCaKan+KtmJr/oERySt9oJdz2ns
+         X4sHBFFYN1oZFm6gnYdFiEBoit83aoHMcNnktjKy3uMJiOWb7tml/Xs1cfzCOGON+w
+         ywzmQcDf8DuybFD5pJ4ecbSnA9PE2PqVWuuM03DQ=
+Date:   Fri, 10 Jul 2020 14:02:44 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     <stable@vger.kernel.org>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     Boris Brezillon <boris.brezillon@free-electrons.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 02/10] mfd: mfd-core: Complete kerneldoc header for devm_mfd_add_devices()
-In-Reply-To: <20200625064619.2775707-3-lee.jones@linaro.org>
-References: <20200625064619.2775707-3-lee.jones@linaro.org>
-Message-Id: <20200710140243.3CC3F2082E@mail.kernel.org>
+Subject: Re: [PATCH 09/10] mfd: atmel-smc: Add missing colon(s) for 'conf' arguments
+In-Reply-To: <20200625064619.2775707-10-lee.jones@linaro.org>
+References: <20200625064619.2775707-10-lee.jones@linaro.org>
+Message-Id: <20200710140245.71AA62082E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,9 +74,33 @@ v5.7.6: Build OK!
 v5.4.49: Build OK!
 v4.19.130: Build OK!
 v4.14.186: Build OK!
-v4.9.228: Build OK!
+v4.9.228: Failed to apply! Possible dependencies:
+    87108dc78eb89 ("memory: atmel-ebi: Enable the SMC clock if specified")
+    8eb8c7d844b9d ("memory: atmel-ebi: Simplify SMC config code")
+    b0f3ab20e7649 ("mfd: syscon: atmel-smc: Add helper to retrieve register layout")
+    b5169d35ed585 ("mtd: nand: atmel: return error code of nand_scan_ident/tail() on error")
+    f88fc122cc34c ("mtd: nand: Cleanup/rework the atmel_nand driver")
+    f9ce2eddf1769 ("mtd: nand: atmel: Add ->setup_data_interface() hooks")
+    fe9d7cb22ef3a ("mfd: syscon: atmel-smc: Add new helpers to ease SMC regs manipulation")
+
 v4.4.228: Failed to apply! Possible dependencies:
-    a8f447be8056d ("mfd: Add resource managed APIs for mfd_add_devices")
+    1d8d8b5c852b6 ("mtd: nand: fix drivers abusing mtd->priv")
+    4bd4ebcc540c3 ("mtd: nand: make use of mtd_to_nand() in NAND drivers")
+    5575075612cad ("mtd: atmel_nand: Support PMECC on SAMA5D2")
+    5ddc7bd43ccc7 ("mtd: atmel_nand: Support variable RB_EDGE interrupts")
+    66e8e47eae658 ("mtd: pxa3xx_nand: Fix initial controller configuration")
+    6a4ec4cd08888 ("memory: add Atmel EBI (External Bus Interface) driver")
+    72eaec21b0cf1 ("mtd: nand: atmel_nand: constify atmel_nand_caps structures")
+    87108dc78eb89 ("memory: atmel-ebi: Enable the SMC clock if specified")
+    8eb8c7d844b9d ("memory: atmel-ebi: Simplify SMC config code")
+    b0f3ab20e7649 ("mfd: syscon: atmel-smc: Add helper to retrieve register layout")
+    c7f00c29aa846 ("mtd: pxa3xx_nand: Increase the initial chunk size")
+    cc00383722db7 ("mtd: nand: atmel: switch to mtd_ooblayout_ops")
+    d699ed250c073 ("mtd: nand: make use of nand_set/get_controller_data() helpers")
+    ee194289502a6 ("memory/atmel-ebi: Fix ns <-> cycles conversions")
+    ee4fec5f44a2c ("memory: atmel-ebi: use PTR_ERR_OR_ZERO() to simplify the code")
+    f88fc122cc34c ("mtd: nand: Cleanup/rework the atmel_nand driver")
+    fe9d7cb22ef3a ("mfd: syscon: atmel-smc: Add new helpers to ease SMC regs manipulation")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
