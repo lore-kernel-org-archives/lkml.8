@@ -2,111 +2,96 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D13AC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71CD9207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcwrI94e"
+	by mail.kernel.org (Postfix) with ESMTP id D1044207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594387900;
+	bh=roVKF9WachsmsskcJZjXabT8G0JYpFRwtH55QGG8Ys8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EGVn3ElNLXeEbrokCZMbyXZz6p7s1r3glEHlP/05tpO8U80mhSAoB+arZ+3ztnNnV
+	 UiHjXWN251mtjc5ztEkgi/qonDS2mnSWk/itp4lCqA76wLTRWLTf9rPD+hpyhjW1tE
+	 ZoLQEdxx7bmxNPvtR4ZtawjO6RyPfgARi/ENO2ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgGJNaO (ORCPT
+        id S1727046AbgGJNbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgGJNaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:30:13 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0E1C08C5CE;
-        Fri, 10 Jul 2020 06:30:13 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so5929094wml.3;
-        Fri, 10 Jul 2020 06:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lae28X5NqcxG2FkZllIwJ7rLXNOqpJ0hcVAbxGcaJfo=;
-        b=KcwrI94ePdRwkKKuRogJd8GJW5bDThOJjUI7BVmH6y23YIeZAxnzrTIJ8aYRPDmkc1
-         +FIzAob5CZY0gvuCboQ/YlM0icsgy6oaztKFcopRxRuXuXpBxAPVfc/Jykb2trIlyV65
-         EQM2Zxb967Z+HD7G5XpF0GzM4TvfcqiCEwYE1EeuSMdfeyUVtEBhxqU+toyhzmFCnbf2
-         S3o1k7vViI85Rxsq6y9HQDzuWrqXfHwVjPxumG8I3jZZg0oceB02T4e0O7eUGLuvcdLa
-         9bO9qwRoot5hjvxXmk3y1awkmnn0kg4QeJDkzVLchkWVtGf0nux2hmglYpva45PAFfR6
-         876g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lae28X5NqcxG2FkZllIwJ7rLXNOqpJ0hcVAbxGcaJfo=;
-        b=nnN7lFH1HYsY46JT/Spb5+oThT7GJN3oB8mCY4FwvPvJkQdpwwssBxbd5O2kTBM1ex
-         i4ISQISo7zHfdJ95Nzmra2HYJLxoPpegO9X7l4qn68Yn5YrRfy2LjYfa2YOlM3WlW9Zm
-         /fTe0c6PhccleszEeNFMuRSqsDyzWKBRyf4eH4QBvlo4ZRgjc5TKniWl+mGohuwnj5L3
-         QTnha61SOqPQnWRPA70CblcmDP1ipkJlZY2cW9h6oJwpee2XFvgqMDc2pdzak3uF8OfD
-         OpCDJrHyDbkKWZeMrhzbbEfnX9H36wdRW5SkF5mcs2BJ1sjOByB3nXMoWQZ6a7eYcv4g
-         hJnA==
-X-Gm-Message-State: AOAM531rYXUuBN8xusyef0pBj2FEpq3dEs6I9x8JNzNPPeZ3mMxMbrra
-        eu6OCEJDEgHxwzpbHfoA5V/ckMWu6ImXpT9+6Dc=
-X-Google-Smtp-Source: ABdhPJxV6sZDd/duo2t8dOTY3pdMfPW0OzsDpz5mQA4e2iT3L9zXWuR/crJcD3LQi6MzOrxc+eK7xqhsbYwEDDNTizk=
-X-Received: by 2002:a7b:cc92:: with SMTP id p18mr5455500wma.4.1594387811885;
- Fri, 10 Jul 2020 06:30:11 -0700 (PDT)
+        Fri, 10 Jul 2020 09:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgGJNbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:31:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EE8620578;
+        Fri, 10 Jul 2020 13:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594387898;
+        bh=roVKF9WachsmsskcJZjXabT8G0JYpFRwtH55QGG8Ys8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0ovFL5uznNZwgSUCQqQuc49b3L2yB3zwOqRg1TS2fda5WJPfTXSySKVdluS6kFtKN
+         07MFLtqfnOmOQ5Uawwt/84sGSEpq6JEHsJ+njKN+vIMFwxKzYUMtBJKb38CwLzT4hj
+         ZpK+Zy7lAui02JYNYC8edVnp2a50pKcidY4K1t6M=
+Date:   Fri, 10 Jul 2020 15:31:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v8 2/5] driver core: add deferring probe reason to
+ devices_deferred property
+Message-ID: <20200710133143.GA2085030@kroah.com>
+References: <CAHp75VegHLG5tgVFjwmpmDfSqELqNXcb9dFSM4jLRx+anW7Lsw@mail.gmail.com>
+ <CGME20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297@eucas1p2.samsung.com>
+ <20200702134421.6412-1-a.hajda@samsung.com>
 MIME-Version: 1.0
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com> <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200709085501.GA64935@infradead.org> <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
- <20200709140053.GA7528@infradead.org> <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
- <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
- <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk> <20200710130912.GA7491@infradead.org>
-In-Reply-To: <20200710130912.GA7491@infradead.org>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Fri, 10 Jul 2020 18:59:45 +0530
-Message-ID: <CA+1E3rJSiS58TE=hHv5wVv-umJ19_7zKv-JqZTNzD=xi3MoX1g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Kanchan Joshi <joshi.k@samsung.com>,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        "Matias Bj??rling" <mb@lightnvm.io>, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702134421.6412-1-a.hajda@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 6:39 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Jul 09, 2020 at 12:50:27PM -0600, Jens Axboe wrote:
-> > It might, if you have IRQ context for the completion. task_work isn't
-> > expensive, however. It's not like a thread offload.
-> >
-> > > Using flags have not been liked here, but given the upheaval involved so
-> > > far I have begun to feel - it was keeping things simple. Should it be
-> > > reconsidered?
-> >
-> > It's definitely worth considering, especially since we can use cflags
-> > like Pavel suggested upfront and not need any extra storage. But it
-> > brings us back to the 32-bit vs 64-bit discussion, and then using blocks
-> > instead of bytes. Which isn't exactly super pretty.
->
-> block doesn't work for the case of writes to files that don't have
-> to be aligned in any way.  And that I think is the more broadly
-> applicable use case than zone append on block devices.
+On Thu, Jul 02, 2020 at 03:44:21PM +0200, Andrzej Hajda wrote:
+> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
+> This list does not contain reason why the driver deferred probe, the patch
+> improves it.
+> The natural place to set the reason is dev_err_probe function introduced
+> recently, ie. if dev_err_probe will be called with -EPROBE_DEFER instead of
+> printk the message will be attached to a deferred device and printed when user
+> reads devices_deferred property.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+> ---
+> v8:
+> - improved commit message
 
-But when can it happen that we do zone-append on a file (zonefs I
-asssume), and device returns a location (write-pointer essentially)
-which is not in multiple of 512b?
+I'm totally confused by this series.  Can you resend the whole thing,
+as a full series, not just random individual patches in the series
+incremented?  It's a pain to try to fish them all out as to which is the
+"latest" with all of the needed reviewed by lines :(
 
+thanks,
 
--- 
-Joshi
+greg k-h
