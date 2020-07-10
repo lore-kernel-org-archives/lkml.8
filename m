@@ -2,128 +2,173 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB40DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636FDC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70BD2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409AD207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="SfU8iUlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgGJRtf (ORCPT
+        id S1728069AbgGJRvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:49:35 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:51016 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgGJRtf (ORCPT
+        Fri, 10 Jul 2020 13:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgGJRvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:49:35 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CDED720021;
-        Fri, 10 Jul 2020 19:49:30 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 19:49:29 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: DRM DRIVERS FOR
- BRIDGE CHIPS
-Message-ID: <20200710174929.GE17565@ravnborg.org>
-References: <20200708121604.14292-1-grandmaster@al2klimov.de>
+        Fri, 10 Jul 2020 13:51:52 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4953C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:51:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q198so6117782qka.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PLeSLC5lF48ou/SHzymPiDHug7S8wFv0/C/FOo/KCjU=;
+        b=SfU8iUlWXM6P+1F55HmutdEgPRmk2ZXZcMQqQPqB/joI0jgdxRKmGWLDC83LCHDa17
+         ClYSmj2LRKq8qqp9Q7ajS+wiYg/LCHDNjUpKjf9IyykW46lidhIdJ3tJEH6E5OkcyUvA
+         23985wn0PhlP+tLXDlS6gM4Hu8OxDn/uYb7GTQGTq2wnjLwONvhBsZ05RLAbPegDN2QB
+         asAKRhXefE0MgDqy2GIVCu/CTip0LjupWBIFSYJTQhgo3QTyWaDHTUc55Vu4X6//X255
+         AbTzW6RT5H0klLa0kZslxKDIEECczFR2JqqNXvrZFv/5LZFpDlz7Q3i9J0yVDLHlBpMW
+         diDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PLeSLC5lF48ou/SHzymPiDHug7S8wFv0/C/FOo/KCjU=;
+        b=MXgPtQVIqpa4BhTOArkIZxt/F+WS12Wm0jOVnd9Ly/d5eZvojfcd2LH6eZXfUup/1o
+         O5iVxIsQ1kVGaT373/Nd0i7tCtTpVgQu9BXXF0DY8ItnNdMKVjo3SGSdOhlkKcaX0Ca0
+         uNmB8tuW7zG2h09MsBt/KEsxAlT68q35smPm6KBp6KaifcA4/oQuDXprMoJd5kbGbtwC
+         tAJLg+R2zhf3RR9rTWo27B3LDA/5jZLQNMNnK+SoQSnsdFLVge6HlOiFvTbfwDYOfaVu
+         OD3YR+cBCQI8NAJ6y5gdBKtoymEkdR/m0CFT14XHiu+00HhFsUakX7tm8rGzZb6hrzLm
+         gz/w==
+X-Gm-Message-State: AOAM53053ep6rDGZbdkDxqWPQ0aY810ZzuhlJgiATkU4Oztm+uwC3L7A
+        C1xq3LzZH/lDwN+g+quNPzbQww==
+X-Google-Smtp-Source: ABdhPJwbP9ICaqvfJzzrUSNJ47aH8yFkf1QUs4XTfN5nSutTm2hVsWy3hjkGLUz2X2kBBGaXe3JwBg==
+X-Received: by 2002:a05:620a:1519:: with SMTP id i25mr61700767qkk.91.1594403510890;
+        Fri, 10 Jul 2020 10:51:50 -0700 (PDT)
+Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id m7sm8544941qti.6.2020.07.10.10.51.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 10:51:49 -0700 (PDT)
+Subject: Re: [PATCH v2] btrfs: fix mount failure caused by race with umount
+To:     Boris Burkov <boris@bur.io>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+References: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
+ <20200710172304.139763-1-boris@bur.io>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <39efafd7-3acf-1ffb-8421-438a95de2a41@toxicpanda.com>
+Date:   Fri, 10 Jul 2020 13:51:48 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708121604.14292-1-grandmaster@al2klimov.de>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=sozttTNsAAAA:8 a=e5mUnYsNAAAA:8
-        a=KDW8W4m8GVoiedxZWeEA:9 a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22
-        a=aeg5Gbbo78KNqacMgKqU:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200710172304.139763-1-boris@bur.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 02:16:04PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On 7/10/20 1:23 PM, Boris Burkov wrote:
+> It is possible to cause a btrfs mount to fail by racing it with a slow
+> umount. The crux of the sequence is generic_shutdown_super not yet
+> calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
+> If that occurs, btrfs_open_devices will decide the opened counter is
+> non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
+> 0. From here, mount will call sget which will result in grab_super
+> trying to take the super block umount semaphore. That semaphore will be
+> held by the slow umount, so mount will block. Before up-ing the
+> semaphore, umount will delete the super block, resulting in mount's sget
+> reliably allocating a new one, which causes the mount path to dutifully
+> fill it out, and increment total_rw_bytes a second time, which causes
+> the mount to fail, as we see double the expected bytes.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> Here is the sequence laid out in greater detail:
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> CPU0                                                    CPU1
+> down_write sb->s_umount
+> btrfs_kill_super
+>    kill_anon_super(sb)
+>      generic_shutdown_super(sb);
+>        shrink_dcache_for_umount(sb);
+>        sync_filesystem(sb);
+>        evict_inodes(sb); // SLOW
+> 
+>                                                btrfs_mount_root
+>                                                  btrfs_scan_one_device
+>                                                  fs_devices = device->fs_devices
+>                                                  fs_info->fs_devices = fs_devices
+>                                                  // fs_devices-opened makes this a no-op
+>                                                  btrfs_open_devices(fs_devices, mode, fs_type)
+>                                                  s = sget(fs_type, test, set, flags, fs_info);
+>                                                    find sb in s_instances
+>                                                    grab_super(sb);
+>                                                      down_write(&s->s_umount); // blocks
+> 
+>        sop->put_super(sb)
+>          // sb->fs_devices->opened == 2; no-op
+>        spin_lock(&sb_lock);
+>        hlist_del_init(&sb->s_instances);
+>        spin_unlock(&sb_lock);
+>        up_write(&sb->s_umount);
+>                                                      return 0;
+>                                                    retry lookup
+>                                                    don't find sb in s_instances (deleted by CPU0)
+>                                                    s = alloc_super
+>                                                    return s;
+>                                                  btrfs_fill_super(s, fs_devices, data)
+>                                                    open_ctree // fs_devices total_rw_bytes improperly set!
+>                                                      btrfs_read_chunk_tree
+>                                                        read_one_dev // increment total_rw_bytes again!!
+>                                                        super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+> 
+> To fix this, we observe that if we have already filled the device, the
+> state bit BTRFS_DEV_STATE_IN_FS_METADATA will be set on it, and we can
+> use that to avoid filling it a second time for no reason and,
+> critically, avoid double counting in total_rw_bytes. One gotcha is that
+> read_one_chunk also sets this bit, which happens before read_one_dev (in
+> read_sys_array), so we must remove that setting of the bit as well, for
+> the state bit to truly correspond to the device struct being filled from
+> disk.
+> 
+> To reproduce, it is sufficient to dirty a decent number of inodes, then
+> quickly umount and mount.
+> 
+> for i in $(seq 0 500)
+> do
+>    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
+> done
+> umount /mnt/foo&
+> mount /mnt/foo
+> 
+> does the trick for me.
+> 
+> A final note is that this fix actually breaks the fstest btrfs/163, but
+> having investigated it, I believe that is due to a subtle flaw in how
+> btrfs replace works when used on a seed device. The replace target device
+> never gets a correct dev_item with the sprout fsid written out. This
+> causes several problems, but for the sake of btrfs/163, read_one_chunk
+> marking the device with IN_FS_METADATA was wallpapering over it, which
+> this patch breaks. I will be sending a subsequent fix for the seed replace
+> issue which will also fix btrfs/163.
+> 
+> Signed-off-by: Boris Burkov <boris@bur.io>
 
-Adjusted subject and applied to drm-misc-next.
-Please be more careful with subjects in the future.
-They cannot be generated by a script - you need to look at
-previous commits to the same file(s) and adjust.
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-	Sam
+Thanks,
 
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
-> 
->  drivers/gpu/drm/bridge/tc358768.c     | 2 +-
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
-> index 6650fe4cfc20..ac3757ecade6 100644
-> --- a/drivers/gpu/drm/bridge/tc358768.c
-> +++ b/drivers/gpu/drm/bridge/tc358768.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - *  Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-> + *  Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com
->   *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
->   */
->  
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 6ad688b320ae..a17f3e3a4157 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> - * datasheet: http://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
-> + * datasheet: https://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
->   */
->  
->  #include <linux/clk.h>
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Josef
