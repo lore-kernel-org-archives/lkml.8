@@ -2,81 +2,314 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31245C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B061C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D02C20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594391881;
-	bh=8g8m8VJ9l5CJBIHP80qLd7TYwA04RcxWEXDKAmSDJFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B8rms06wfZc4mrOYao8o5sY0jNUCy3mhkmEzLDmgtd+ACRUm+UosOHtOhnagebC0m
-	 GroHpDS73W7KckWj75dvvW6Id3plyWDppIdc8KFp4zEtYeW/wCWmLdVzEBySY77C/w
-	 W6yGzXRV03UVEB68T/oEeZf8wr8oZUY2Ol9CIRIk=
+	by mail.kernel.org (Postfix) with ESMTP id 289EC2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P2JwmLAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgGJOh7 (ORCPT
+        id S1728304AbgGJOhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgGJOh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:37:56 -0400
-Received: from willie-the-truck (unknown [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990B4206E2;
-        Fri, 10 Jul 2020 14:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594391876;
-        bh=8g8m8VJ9l5CJBIHP80qLd7TYwA04RcxWEXDKAmSDJFo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0e88udVe84K619h0RTRjVu0LwV3LPmZL1UbJ1n+j+/htQmPtaMjGUJNWydl/Q76/5
-         2MFf+dTdXQ3YPR3lvtdODNoxv0f/PMX3K3q4CtBJhqfn/hzAC3eno8eSVvZgP72lKd
-         oHDAHX9pxFCVDbNJPyeM95zUrrxFahH8+LpRgrNQ=
-Date:   Fri, 10 Jul 2020 15:37:40 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Robin Murphy <robin.murphy@arm.com>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH] iommu: Remove unused IOMMU_SYS_CACHE_ONLY flag
-Message-ID: <20200710143740.GA31036@willie-the-truck>
-References: <20200703162548.19953-1-will@kernel.org>
- <20200710125831.GI27672@8bytes.org>
- <20200710130526.GA30578@willie-the-truck>
- <20200710141532.GK27672@8bytes.org>
+        Fri, 10 Jul 2020 10:37:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34560 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgGJOhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:37:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbjOb033359;
+        Fri, 10 Jul 2020 09:37:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594391865;
+        bh=lp+64EuogP85x4TheVhqiulF12tNqqBbMyXR3SEe11Y=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=P2JwmLAk7TiZJswSitgv839cyEbPXSCde9fGhxMK6syAHTv3VLoNeEZLuNKw0u+9E
+         ivMOCT+8LvPlC6nFUoq5ikOcxXR65HqiNFMdB/a7hAz15JAFqEG1kYpbwN0WWKR7bz
+         LDJKfA+abvvnxqSbYhkjVVevHbPE6Eo9BkxeRh5A=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AEbjoU118829
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 09:37:45 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 09:37:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 09:37:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbjHE025235;
+        Fri, 10 Jul 2020 09:37:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v2 2/2] net: phy: DP83822: Add ability to advertise Fiber connection
+Date:   Fri, 10 Jul 2020 09:37:33 -0500
+Message-ID: <20200710143733.30751-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200710143733.30751-1-dmurphy@ti.com>
+References: <20200710143733.30751-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710141532.GK27672@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 04:15:32PM +0200, Joerg Roedel wrote:
-> On Fri, Jul 10, 2020 at 02:05:27PM +0100, Will Deacon wrote:
-> > Ah, I'd already got this queued for 5.9:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
-> > 
-> > and I've queued a small number of patches on top of it now.
-> > 
-> > Are you planning to send it for 5.8? If so, I suspect I'll have to rebase.
-> 
-> No problem, nothing got pushed yet. I removed it from my branch and wait
-> for your pull-request.
+The DP83822 can be configured to use a Fiber connection.  The strap
+register is read to determine if the device has been configured to use
+a fiber connection.  With the fiber connection the PHY can be configured
+to detect whether the fiber connection is active by either a high signal
+or a low signal.
 
-Great, thanks Joerg.
+Fiber mode is only applicable to the DP83822 so rework the PHY match
+table so that non-fiber PHYs can still use the same driver but not call
+or use any of the fiber features.
 
-Will
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83822.c | 161 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)
+
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index 37643c468e19..b797e3d2a4e5 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -23,16 +23,29 @@
+ 
+ #define DP83822_DEVADDR		0x1f
+ 
++#define MII_DP83822_CTRL_2	0x0a
++#define MII_DP83822_PHYSTS	0x10
+ #define MII_DP83822_PHYSCR	0x11
+ #define MII_DP83822_MISR1	0x12
+ #define MII_DP83822_MISR2	0x13
+ #define MII_DP83822_RCSR	0x17
+ #define MII_DP83822_RESET_CTRL	0x1f
+ #define MII_DP83822_GENCFG	0x465
++#define MII_DP83822_SOR1	0x467
++
++/* GENCFG */
++#define DP83822_SIG_DET_LOW	BIT(0)
++
++/* Control Register 2 bits */
++#define DP83822_FX_ENABLE	BIT(14)
+ 
+ #define DP83822_HW_RESET	BIT(15)
+ #define DP83822_SW_RESET	BIT(14)
+ 
++/* PHY STS bits */
++#define DP83822_PHYSTS_DUPLEX			BIT(2)
++#define DP83822_PHYSTS_10			BIT(1)
++
+ /* PHYSCR Register Fields */
+ #define DP83822_PHYSCR_INT_OE		BIT(0) /* Interrupt Output Enable */
+ #define DP83822_PHYSCR_INTEN		BIT(1) /* Interrupt Enable */
+@@ -83,6 +96,21 @@
+ #define DP83822_RX_CLK_SHIFT	BIT(12)
+ #define DP83822_TX_CLK_SHIFT	BIT(11)
+ 
++/* SOR1 bits */
++#define DP83822_FX_EN_STRAP	BIT(11)
++#define DP83822_FX_SD_EN_STRAP	BIT(8)
++
++#define MII_DP83822_FIBER_ADVERTISE	(SUPPORTED_AUI | SUPPORTED_FIBRE | \
++					 SUPPORTED_BNC | SUPPORTED_Pause | \
++					 SUPPORTED_Asym_Pause | \
++					 SUPPORTED_100baseT_Full)
++
++struct dp83822_private {
++	bool fx_signal_det_low;
++	int fx_enabled;
++	u16 fx_sd_enable;
++};
++
+ static int dp83822_ack_interrupt(struct phy_device *phydev)
+ {
+ 	int err;
+@@ -270,13 +298,40 @@ static int dp8382x_disable_wol(struct phy_device *phydev)
+ 				  MII_DP83822_WOL_CFG, value);
+ }
+ 
++static int dp83822_read_status(struct phy_device *phydev)
++{
++	int status = phy_read(phydev, MII_DP83822_PHYSTS);
++	int ret;
++
++	ret = genphy_read_status(phydev);
++	if (ret)
++		return ret;
++
++	if (status < 0)
++		return status;
++
++	if (status & DP83822_PHYSTS_DUPLEX)
++		phydev->duplex = DUPLEX_FULL;
++	else
++		phydev->duplex = DUPLEX_HALF;
++
++	if (status & DP83822_PHYSTS_10)
++		phydev->speed = SPEED_10;
++	else
++		phydev->speed = SPEED_100;
++
++	return 0;
++}
++
+ static int dp83822_config_init(struct phy_device *phydev)
+ {
++	struct dp83822_private *dp83822 = phydev->priv;
+ 	struct device *dev = &phydev->mdio.dev;
+ 	int rgmii_delay;
+ 	s32 rx_int_delay;
+ 	s32 tx_int_delay;
+ 	int err = 0;
++	int bmcr;
+ 
+ 	if (phy_interface_is_rgmii(phydev)) {
+ 		rx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
+@@ -302,6 +357,48 @@ static int dp83822_config_init(struct phy_device *phydev)
+ 		}
+ 	}
+ 
++	if (dp83822->fx_enabled) {
++		err = phy_modify(phydev, MII_DP83822_CTRL_2,
++				 DP83822_FX_ENABLE, 1);
++		if (err < 0)
++			return err;
++
++		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
++				 phydev->supported);
++		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
++				 phydev->advertising);
++
++		/* Auto neg is not supported in fiber mode */
++		bmcr = phy_read(phydev, MII_BMCR);
++		if (bmcr < 0)
++			return bmcr;
++
++		if (bmcr & BMCR_ANENABLE) {
++			err =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
++			if (err < 0)
++				return err;
++		}
++		phydev->autoneg = AUTONEG_DISABLE;
++
++		/* Setup fiber advertisement */
++		err = phy_modify_changed(phydev, MII_ADVERTISE,
++					 ADVERTISE_1000XFULL |
++					 ADVERTISE_1000XPAUSE |
++					 ADVERTISE_1000XPSE_ASYM,
++					 MII_DP83822_FIBER_ADVERTISE);
++
++		if (err < 0)
++			return err;
++
++		if (dp83822->fx_signal_det_low) {
++			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
++					       MII_DP83822_GENCFG,
++					       DP83822_SIG_DET_LOW);
++			if (err)
++				return err;
++		}
++	}
++
+ 	return dp8382x_disable_wol(phydev);
+ }
+ 
+@@ -321,6 +418,68 @@ static int dp83822_phy_reset(struct phy_device *phydev)
+ 	return phydev->drv->config_init(phydev);
+ }
+ 
++#ifdef CONFIG_OF_MDIO
++static int dp83822_of_init(struct phy_device *phydev)
++{
++	struct dp83822_private *dp83822 = phydev->priv;
++	struct device *dev = &phydev->mdio.dev;
++
++	/* Signal detection for the PHY is only enabled if the FX_EN and the
++	 * SD_EN pins are strapped. Signal detection can only enabled if FX_EN
++	 * is strapped otherwise signal detection is disabled for the PHY.
++	 */
++	if (dp83822->fx_enabled && dp83822->fx_sd_enable)
++		dp83822->fx_signal_det_low = device_property_present(dev,
++								     "ti,link-loss-low");
++	if (!dp83822->fx_enabled)
++		dp83822->fx_enabled = device_property_present(dev,
++							      "ti,fiber-mode");
++
++	return 0;
++}
++#else
++static int dp83822_of_init(struct phy_device *phydev)
++{
++	return 0;
++}
++#endif /* CONFIG_OF_MDIO */
++
++static int dp83822_read_straps(struct phy_device *phydev)
++{
++	struct dp83822_private *dp83822 = phydev->priv;
++	int val;
++
++	val = phy_read_mmd(phydev, DP83822_DEVADDR, MII_DP83822_SOR1);
++	if (val < 0)
++		return val;
++
++	dp83822->fx_enabled = val & DP83822_FX_EN_STRAP;
++	dp83822->fx_sd_enable = val & DP83822_FX_SD_EN_STRAP;
++
++	return 0;
++}
++
++static int dp83822_probe(struct phy_device *phydev)
++{
++	struct dp83822_private *dp83822;
++	int ret;
++
++	dp83822 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83822),
++			       GFP_KERNEL);
++	if (!dp83822)
++		return -ENOMEM;
++
++	phydev->priv = dp83822;
++
++	ret = dp83822_read_straps(phydev);
++	if (ret)
++		return ret;
++
++	dp83822_of_init(phydev);
++
++	return 0;
++}
++
+ static int dp83822_suspend(struct phy_device *phydev)
+ {
+ 	int value;
+@@ -352,8 +511,10 @@ static int dp83822_resume(struct phy_device *phydev)
+ 		PHY_ID_MATCH_MODEL(_id),			\
+ 		.name		= (_name),			\
+ 		/* PHY_BASIC_FEATURES */			\
++		.probe          = dp83822_probe,		\
+ 		.soft_reset	= dp83822_phy_reset,		\
+ 		.config_init	= dp83822_config_init,		\
++		.read_status	= dp83822_read_status,		\
+ 		.get_wol = dp83822_get_wol,			\
+ 		.set_wol = dp83822_set_wol,			\
+ 		.ack_interrupt = dp83822_ack_interrupt,		\
+-- 
+2.27.0
+
