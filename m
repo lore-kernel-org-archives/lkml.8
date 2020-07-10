@@ -2,110 +2,205 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053F520725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AC620725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pYEPfjqt"
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="Y6ZmMgex";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="htq72VoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgGJR0x (ORCPT
+        id S1728056AbgGJRXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgGJR0w (ORCPT
+        Fri, 10 Jul 2020 13:23:09 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42951 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbgGJRXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:26:52 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A805C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:26:52 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r12so5736200ilh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CqJnoWCCHedrq/sE7xptu8e2ktVbhXZt758ObhyN/DU=;
-        b=pYEPfjqtWC03FcbjU/vEyI2Jvj2Cb+4dFJ/rm83f9F0tVa8/blrrwdEUgp3cbYB8N5
-         HWfrtZkVga6TgVkLCIw+THtL6JYGn1jt/kUPIAYT8ss/SXt4NkopRFDH0i2RChiRHvJ9
-         R55Mw9NYvpS0DVGIKhSE7hIXLRGpMZT5FEFLxgGuan+vg6TAFuh1SFHgQeWOzSg3qyXl
-         o77Pwecu6eTEdXbw5VU1gszypRoJDiZBitxlUPSqgD+qtLaCP17oThyYNor1oT9OyeYD
-         7TEMmClSqhcUpmLEgFI/wQe3v/OsJG1Yeinb7tz399sGHmP/Gg3ZvPHhOAT5SJpEZw+H
-         OAmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CqJnoWCCHedrq/sE7xptu8e2ktVbhXZt758ObhyN/DU=;
-        b=qG3gIM3zW7r8Xu09oTpv08jhPccmSlsi13x3+45MolBwf1ULEm+sXu1S/0U6e0HDqg
-         vu7eDywwL87f5yBbbraBXWg4a2xGiud6UV6Cg4CKnu2KV2Nrw5fqPn8atrozHvn2dbvQ
-         fJjxezJJm7zTXJfElfYqdCoxgSLSgXWM2QBzJ5U7oQlspqKapw5m3s2DpjqDExmmZ27G
-         guYA81/dnTeVPr9cxEH1O+2QncSAAoE6hc1+PL9mHNHEswM7tsfQ3yadjdnGHkMBr2jK
-         soS+2kVLC2fGLjoC4EG/SxR1MiSB11R5LFO8ipxyOWQBcbt9ClpWlhcp7g5z8/cePGIS
-         Dcyg==
-X-Gm-Message-State: AOAM532s4WJvGjw/BWyfuDsIunDtGbCCQesxEpOkFemUXmEMy5OoW2gz
-        UOTwvdYgTreJoJoj5HwzPjzQ5I3RN1kjRCB+MPvzqA==
-X-Google-Smtp-Source: ABdhPJzVe0a9jszJB19e1xo/iSDPtoEHSBeXIWF2pykmj4cfJKn+W3IarW3EmlujvPOweLPlaRRs1dxg51l/elCSVLw=
-X-Received: by 2002:a92:b685:: with SMTP id m5mr53354561ill.118.1594402011252;
- Fri, 10 Jul 2020 10:26:51 -0700 (PDT)
+        Fri, 10 Jul 2020 13:23:09 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id BDBB35C0113;
+        Fri, 10 Jul 2020 13:23:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 10 Jul 2020 13:23:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=+ZdKq3K92m9jP
+        7fMZ/mVWx2x2cAzn2r7U746oA8iIl8=; b=Y6ZmMgexIkH6sOLN6h/d5OIw44JiT
+        h6glUHiazDruIpfSRQgDSmsFvgeNk3idgvDbMZt6yeJoEKlOcrbC3JR9A5aZqCiO
+        RQ9hYdpZGx98kp8m6KmD4Mscl8KhB8Jebe7XyWdP42MdXmCGWpYW4vNjIvZKqxWV
+        DAvBBv6tTHzDx0cv9DILPYH0UjF2rux0wqcmXK79D8Oa4sZ9GnMDx3ntZkwvYmIB
+        zMUz/rjwPuJ+36pm92fV0SeVoHoXfO8eMbK69Yupgb5Ufm2SLC6cyIi7HszTWlv2
+        5wdWxWk754igoJw7A7QMpSy7IK6hGdnz6zOPqdw/NaNJ9aTUQ+SlswuRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=+ZdKq3K92m9jP7fMZ/mVWx2x2cAzn2r7U746oA8iIl8=; b=htq72VoQ
+        HdC2l3UQS/fw7CJm8+yGBQrSMqLnVh7oblGfpKHOL3cn46psU5Y5lSnRKAEPS1UJ
+        VZCfRsgzBBlKmudD+wGezxb0bHxzsVfKUR/DRfnhHlLAVInf7az04jXtE9aJaRby
+        I7Sy9ioIS9C7N40qrqESjZEEqsOhDFjbrIMWGCTNVFnu2A6jXr8OhLqEXMM9W1SJ
+        yAc5OsPj2UHAcd/18vedSWfTGH9alM1yp/2A0vhV/JXsTAI7txJrvqK39U0l/qB1
+        hN8xbOMpAOLuaTXYohyvVO9rcZUB7Sz0nkB7S5y0Qj8YtvuzW2udJ6xQHf/RJzb/
+        QmPm4TGmHdjN8g==
+X-ME-Sender: <xms:-6MIXzZ8lK32toiLP40MsjguGePx18iACP9Ywyoq-QtV3AfzxFqmMw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdduudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhs
+    uceuuhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepie
+    euffeuvdeiueejhfehiefgkeevudejjeejffevvdehtddufeeihfekgeeuheelnecukfhp
+    peduieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghorhhishessghurhdrihho
+X-ME-Proxy: <xmx:-6MIXyaDj-10oQ8hu1_RAX20lhlIv6wdv0JGkZT_DWqpVatG7o_dag>
+    <xmx:-6MIX19TV-i9xIdmgMRvvHVH5XRKwd8-jq6gx2_9qAkkUm2TieDfiQ>
+    <xmx:-6MIX5pFjeRjwqmrHm2ZOPGo_IOxwtCfjNp92-q8rjXoOaAfHVqQdw>
+    <xmx:-6MIX12D7xkXUXq_7X3oVI2mI45RObC2EdHIsQP5YsQe8uKMCO18yg>
+Received: from localhost (unknown [163.114.132.3])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B01F43280067;
+        Fri, 10 Jul 2020 13:23:06 -0400 (EDT)
+From:   Boris Burkov <boris@bur.io>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH v2] btrfs: fix mount failure caused by race with umount
+Date:   Fri, 10 Jul 2020 10:23:04 -0700
+Message-Id: <20200710172304.139763-1-boris@bur.io>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
+References: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
 MIME-Version: 1.0
-References: <20200710154811.418214-1-mgamal@redhat.com> <CALMp9eRfZ50iyrED0-LU75VWhHu_kVoB2Qw55VzEFzZ=0QCGow@mail.gmail.com>
- <0c892b1e-6fe6-2aa7-602e-f5fadc54c257@redhat.com> <CALMp9eQXHGnXo4ACX2-qYww4XdRODMn-O6CAvhupib67Li9S2w@mail.gmail.com>
- <9e784c62-15ee-63b7-4942-474493bac536@redhat.com>
-In-Reply-To: <9e784c62-15ee-63b7-4942-474493bac536@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 10 Jul 2020 10:26:40 -0700
-Message-ID: <CALMp9eRGTedw-wNL4HcrJOpAQBa_Qsqcir0BtJ-dEO6EhvWGqA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:16 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 10/07/20 19:13, Jim Mattson wrote:
-> > On Fri, Jul 10, 2020 at 10:06 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >>
-> >> On 10/07/20 18:30, Jim Mattson wrote:
-> >>>>
-> >>>> This can be problem when having a mixed setup of machines with 5-level page
-> >>>> tables and machines with 4-level page tables, as live migration can change
-> >>>> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
-> >>>
-> >>> Huh? Changing MAXPHYADDR while the guest runs should be illegal. Or
-> >>> have I missed some peculiarity of LA57 that makes MAXPHYADDR a dynamic
-> >>> CPUID information field?
-> >>
-> >> Changing _host_ MAXPHYADDR while the guest runs, such as if you migrate
-> >> from a host-maxphyaddr==46 to a host-maxphyaddr==52 machine (while
-> >> keeping guest-maxphyaddr==46).
-> >
-> > Ah, but what does that have to do with LA57?
->
-> Intel only has MAXPHYADDR > 46 on LA57 machines (because in general OSes
-> like to have a physical 1:1 map into the kernel part of the virtual
-> address space, so having a higher MAXPHYADDR would be of limited use
-> with 48-bit linear addresses).
+It is possible to cause a btrfs mount to fail by racing it with a slow
+umount. The crux of the sequence is generic_shutdown_super not yet
+calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
+If that occurs, btrfs_open_devices will decide the opened counter is
+non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
+0. From here, mount will call sget which will result in grab_super
+trying to take the super block umount semaphore. That semaphore will be
+held by the slow umount, so mount will block. Before up-ing the
+semaphore, umount will delete the super block, resulting in mount's sget
+reliably allocating a new one, which causes the mount path to dutifully
+fill it out, and increment total_rw_bytes a second time, which causes
+the mount to fail, as we see double the expected bytes.
 
-We all know that the direct map is evil. :-)
+Here is the sequence laid out in greater detail:
 
-Sorry it took me so long to get there. I didn't realize that Linux was
-incapable of using more physical memory than it could map into the
-kernel's virtual address space. (Wasn't that the whole point of PAE
-originally?)
+CPU0                                                    CPU1
+down_write sb->s_umount
+btrfs_kill_super
+  kill_anon_super(sb)
+    generic_shutdown_super(sb);
+      shrink_dcache_for_umount(sb);
+      sync_filesystem(sb);
+      evict_inodes(sb); // SLOW
+
+                                              btrfs_mount_root
+                                                btrfs_scan_one_device
+                                                fs_devices = device->fs_devices
+                                                fs_info->fs_devices = fs_devices
+                                                // fs_devices-opened makes this a no-op
+                                                btrfs_open_devices(fs_devices, mode, fs_type)
+                                                s = sget(fs_type, test, set, flags, fs_info);
+                                                  find sb in s_instances
+                                                  grab_super(sb);
+                                                    down_write(&s->s_umount); // blocks
+
+      sop->put_super(sb)
+        // sb->fs_devices->opened == 2; no-op
+      spin_lock(&sb_lock);
+      hlist_del_init(&sb->s_instances);
+      spin_unlock(&sb_lock);
+      up_write(&sb->s_umount);
+                                                    return 0;
+                                                  retry lookup
+                                                  don't find sb in s_instances (deleted by CPU0)
+                                                  s = alloc_super
+                                                  return s;
+                                                btrfs_fill_super(s, fs_devices, data)
+                                                  open_ctree // fs_devices total_rw_bytes improperly set!
+                                                    btrfs_read_chunk_tree
+                                                      read_one_dev // increment total_rw_bytes again!!
+                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+
+To fix this, we observe that if we have already filled the device, the
+state bit BTRFS_DEV_STATE_IN_FS_METADATA will be set on it, and we can
+use that to avoid filling it a second time for no reason and,
+critically, avoid double counting in total_rw_bytes. One gotcha is that
+read_one_chunk also sets this bit, which happens before read_one_dev (in
+read_sys_array), so we must remove that setting of the bit as well, for
+the state bit to truly correspond to the device struct being filled from
+disk.
+
+To reproduce, it is sufficient to dirty a decent number of inodes, then
+quickly umount and mount.
+
+for i in $(seq 0 500)
+do
+  dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
+done
+umount /mnt/foo&
+mount /mnt/foo
+
+does the trick for me.
+
+A final note is that this fix actually breaks the fstest btrfs/163, but
+having investigated it, I believe that is due to a subtle flaw in how
+btrfs replace works when used on a seed device. The replace target device
+never gets a correct dev_item with the sprout fsid written out. This
+causes several problems, but for the sake of btrfs/163, read_one_chunk
+marking the device with IN_FS_METADATA was wallpapering over it, which
+this patch breaks. I will be sending a subsequent fix for the seed replace
+issue which will also fix btrfs/163.
+
+Signed-off-by: Boris Burkov <boris@bur.io>
+---
+ fs/btrfs/volumes.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index c7a3d4d730a3..865fab39ef43 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6633,9 +6633,6 @@ static int read_one_chunk(struct btrfs_key *key, struct extent_buffer *leaf,
+ 			}
+ 			btrfs_report_missing_device(fs_info, devid, uuid, false);
+ 		}
+-		set_bit(BTRFS_DEV_STATE_IN_FS_METADATA,
+-				&(map->stripes[i].dev->dev_state));
+-
+ 	}
+ 
+ 	write_lock(&map_tree->lock);
+@@ -6815,8 +6812,15 @@ static int read_one_dev(struct extent_buffer *leaf,
+ 			return -EINVAL;
+ 	}
+ 
++	/*
++	 * It is possible for mount and umount to race in such a way that
++	 * we execute this code path, but the device is still in metadata.
++	 * If so, we don't need to call fill_device_from_item again and we
++	 * especially don't want to spuriously increment total_rw_bytes.
++	 */
++	if (test_and_set_bit(BTRFS_DEV_STATE_IN_FS_METADATA, &device->dev_state))
++		return 0;
+ 	fill_device_from_item(leaf, dev_item, device);
+-	set_bit(BTRFS_DEV_STATE_IN_FS_METADATA, &device->dev_state);
+ 	if (test_bit(BTRFS_DEV_STATE_WRITEABLE, &device->dev_state) &&
+ 	   !test_bit(BTRFS_DEV_STATE_REPLACE_TGT, &device->dev_state)) {
+ 		device->fs_devices->total_rw_bytes += device->total_bytes;
+-- 
+2.24.1
+
