@@ -2,335 +2,311 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F61C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D448920720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DB520772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cT4XZXtK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ATkfZQic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgGJMzU (ORCPT
+        id S1727834AbgGJMzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:55:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56412 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726725AbgGJMzT (ORCPT
+        Fri, 10 Jul 2020 08:55:37 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8709 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgGJMzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:55:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594385716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jzg2wtxzp+eHBwgl8GzKA1QrNROln2TAWisTWE/iRDY=;
-        b=cT4XZXtKEFVWdBnY39NjbS3vVHJRVatJp/s90tDYmwk23QuY8s3LrpFC3hl2CrMuHRDZLj
-        1glXmV5AWFvOS8uBLQdriRhnk4JPZnX14mzJAOBzXSK4z/RLlJT+eQRk2hzyo3X8uigO5d
-        JjbjG3b8olXslS6U5WtXtEnbZEpqIt4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-rwP4P9u6PGSUaPMO1hmaRw-1; Fri, 10 Jul 2020 08:55:13 -0400
-X-MC-Unique: rwP4P9u6PGSUaPMO1hmaRw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46A548027E4;
-        Fri, 10 Jul 2020 12:55:09 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA58619C4;
-        Fri, 10 Jul 2020 12:55:00 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 06:55:00 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Message-ID: <20200710065500.2478db37@x1.home>
-In-Reply-To: <DM5PR11MB1435AA0A724D4A59B56E8CA8C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-        <20200702151832.048b44d1@x1.home>
-        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
-        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <20200708135444.4eac48a4@x1.home>
-        <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-        <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-        <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <DM5PR11MB143584D5A0AAE13E0D2D04B7C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <20200709082751.320742ab@x1.home>
-        <DM5PR11MB1435AA0A724D4A59B56E8CA8C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
-Organization: Red Hat
+        Fri, 10 Jul 2020 08:55:35 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0864d90001>; Fri, 10 Jul 2020 05:53:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 10 Jul 2020 05:55:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 10 Jul 2020 05:55:34 -0700
+Received: from [10.26.72.135] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
+ 2020 12:55:31 +0000
+Subject: Re: [PATCH 15/23] seq_file: switch over direct seq_read method calls
+ to seq_read_iter
+To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200707174801.4162712-1-hch@lst.de>
+ <20200707174801.4162712-16-hch@lst.de>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <5a2a97f1-58b5-8068-3c69-bb06130ffb35@nvidia.com>
+Date:   Fri, 10 Jul 2020 13:55:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200707174801.4162712-16-hch@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594385625; bh=C4GxGW1G5j8Ut0O2ehF6reybso8pc5pk5cu1tGn0Be4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ATkfZQicklTV1QczhYRU3SCAmY8Ak2/JhmTOuZJf4R73wvf0ZoICBiVNytYIBNstF
+         L5vOTt5irIAR/9hCM04whBMYTuzr5Cqu3WFPARH4u0V95aJkyO+WV1sArHsCAece2Y
+         botiigRJ4Q/uGc0wkMPa1gumTO80e/oPJLkXWLiqP8Qd73lYZvsAgrJTEuBcnpULVF
+         WAcbg4Nxdjl/PDZ1MC8iv+vw5LsH5UbAGK6iD9y5R2DimoABXewVI57TOPMNQWf4+1
+         Udwc82TQxiAXI/wavlvplL3Pi6MHzFEK3yzBti7Sdn6FCmqcihYs6VWkVwsNEyXE15
+         ZaPhrZeGeD9kw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 05:39:57 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+Hi Christoph,
 
-> Hi Alex, 
+On 07/07/2020 18:47, Christoph Hellwig wrote:
+> Switch over all instances used directly as methods using these sed
+> expressions:
 > 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Thursday, July 9, 2020 10:28 PM
-> > 
-> > On Thu, 9 Jul 2020 07:16:31 +0000
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > Hi Alex,
-> > >
-> > > After more thinking, looks like adding a r-b tree is still not enough to
-> > > solve the potential problem for free a range of PASID in one ioctl. If
-> > > caller gives [0, MAX_UNIT] in the free request, kernel anyhow should
-> > > loop all the PASIDs and search in the r-b tree. Even VFIO can track the
-> > > smallest/largest allocated PASID, and limit the free range to an accurate
-> > > range, it is still no efficient. For example, user has allocated two PASIDs
-> > > ( 1 and 999), and user gives the [0, MAX_UNIT] range in free request. VFIO
-> > > will limit the free range to be [1, 999], but still needs to loop PASID 1 -
-> > > 999, and search in r-b tree.  
-> > 
-> > That sounds like a poor tree implementation.  Look at vfio_find_dma()
-> > for instance, it returns a node within the specified range.  If the
-> > tree has two nodes within the specified range we should never need to
-> > call a search function like vfio_find_dma() more than three times.  We
-> > call it once, get the first node, remove it.  Call it again, get the
-> > other node, remove it.  Call a third time, find no matches, we're done.
-> > So such an implementation limits searches to N+1 where N is the number
-> > of nodes within the range.  
+> sed -i -e 's/\.read\(\s*=\s*\)seq_read/\.read_iter\1seq_read_iter/g'
 > 
-> I see. When getting a free range from user. Use the range to find suited
-> PASIDs in the r-b tree. For the example I mentioned, if giving [0, MAX_UNIT],
-> will find two nodes. If giving [0, 100] range, then only one node will be
-> found. But even though, it still take some time if the user holds a bunch
-> of PASIDs and user gives a big free range.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  Documentation/filesystems/seq_file.rst        |  2 +-
+>  Documentation/process/clang-format.rst        |  4 +-
+>  .../it_IT/process/clang-format.rst            |  4 +-
+>  arch/arm/mm/ptdump_debugfs.c                  |  2 +-
+>  arch/arm64/kvm/vgic/vgic-debug.c              |  2 +-
+>  arch/c6x/platforms/pll.c                      |  2 +-
+>  arch/mips/cavium-octeon/oct_ilm.c             |  2 +-
+>  arch/mips/kernel/segment.c                    |  2 +-
+>  arch/mips/ralink/bootrom.c                    |  2 +-
+>  arch/powerpc/kvm/book3s_xive_native.c         |  2 +-
+>  arch/powerpc/kvm/timing.c                     |  2 +-
+>  arch/powerpc/mm/ptdump/bats.c                 |  2 +-
+>  arch/powerpc/mm/ptdump/hashpagetable.c        |  2 +-
+>  arch/powerpc/mm/ptdump/ptdump.c               |  2 +-
+>  arch/powerpc/mm/ptdump/segment_regs.c         |  2 +-
+>  arch/powerpc/platforms/cell/spufs/file.c      |  8 ++--
+>  arch/powerpc/platforms/pseries/hvCall_inst.c  |  2 +-
+>  arch/s390/kernel/diag.c                       |  2 +-
+>  arch/s390/mm/dump_pagetables.c                |  2 +-
+>  arch/s390/pci/pci_debug.c                     |  2 +-
+>  arch/sh/mm/asids-debugfs.c                    |  2 +-
+>  arch/sh/mm/cache-debugfs.c                    |  2 +-
+>  arch/sh/mm/pmb.c                              |  2 +-
+>  arch/sh/mm/tlb-debugfs.c                      |  2 +-
+>  arch/x86/kernel/cpu/mce/severity.c            |  2 +-
+>  arch/x86/mm/pat/memtype.c                     |  2 +-
+>  arch/x86/mm/pat/set_memory.c                  |  2 +-
+>  arch/x86/xen/p2m.c                            |  2 +-
+>  block/blk-mq-debugfs.c                        |  2 +-
+>  drivers/base/power/wakeup.c                   |  2 +-
+>  drivers/block/aoe/aoeblk.c                    |  2 +-
+>  drivers/block/drbd/drbd_debugfs.c             | 10 ++---
+>  drivers/block/nbd.c                           |  4 +-
+>  drivers/block/pktcdvd.c                       |  2 +-
+>  drivers/block/rsxx/core.c                     |  4 +-
+>  drivers/bus/mvebu-mbus.c                      |  4 +-
+>  drivers/char/tpm/eventlog/common.c            |  2 +-
+>  .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c |  2 +-
+>  .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c |  2 +-
+>  drivers/crypto/amlogic/amlogic-gxl-core.c     |  2 +-
+>  drivers/crypto/caam/dpseci-debugfs.c          |  2 +-
+>  drivers/crypto/cavium/zip/zip_main.c          |  6 +--
+>  drivers/crypto/hisilicon/qm.c                 |  2 +-
+>  drivers/crypto/qat/qat_common/adf_cfg.c       |  2 +-
+>  .../qat/qat_common/adf_transport_debug.c      |  4 +-
+>  drivers/firmware/tegra/bpmp-debugfs.c         |  2 +-
+>  drivers/gpio/gpiolib.c                        |  2 +-
+>  drivers/gpu/drm/amd/amdkfd/kfd_debugfs.c      |  4 +-
+>  .../gpu/drm/arm/display/komeda/komeda_dev.c   |  2 +-
+>  drivers/gpu/drm/arm/malidp_drv.c              |  2 +-
+>  drivers/gpu/drm/armada/armada_debugfs.c       |  2 +-
+>  drivers/gpu/drm/drm_debugfs.c                 |  6 +--
+>  drivers/gpu/drm/drm_debugfs_crc.c             |  2 +-
+>  drivers/gpu/drm/drm_mipi_dbi.c                |  2 +-
+>  .../drm/i915/display/intel_display_debugfs.c  | 16 ++++----
+>  drivers/gpu/drm/i915/gt/debugfs_gt.h          |  2 +-
+>  drivers/gpu/drm/i915/i915_debugfs_params.c    | 12 +++---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c  |  2 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  4 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |  2 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  4 +-
+>  drivers/gpu/drm/msm/msm_debugfs.c             |  2 +-
+>  drivers/gpu/drm/nouveau/nouveau_debugfs.c     |  2 +-
+>  drivers/gpu/drm/omapdrm/dss/dss.c             |  2 +-
+>  drivers/gpu/host1x/debug.c                    |  4 +-
+>  drivers/gpu/vga/vga_switcheroo.c              |  2 +-
+>  drivers/hid/hid-picolcd_debugfs.c             |  2 +-
+>  drivers/hid/hid-wiimote-debug.c               |  2 +-
+>  drivers/ide/ide-proc.c                        |  2 +-
+>  drivers/infiniband/hw/cxgb4/device.c          |  4 +-
+>  drivers/infiniband/hw/qib/qib_debugfs.c       |  2 +-
+>  drivers/infiniband/ulp/ipoib/ipoib_fs.c       |  4 +-
+>  drivers/md/bcache/closure.c                   |  2 +-
+>  drivers/media/cec/core/cec-core.c             |  2 +-
+>  drivers/media/pci/saa7164/saa7164-core.c      |  2 +-
+>  drivers/memory/emif.c                         |  4 +-
+>  drivers/memory/tegra/tegra124-emc.c           |  2 +-
+>  drivers/memory/tegra/tegra186-emc.c           |  2 +-
+>  drivers/memory/tegra/tegra20-emc.c            |  2 +-
+>  drivers/memory/tegra/tegra30-emc.c            |  2 +-
+>  drivers/mfd/ab3100-core.c                     |  2 +-
+>  drivers/mfd/ab3100-otp.c                      |  2 +-
+>  drivers/mfd/ab8500-debugfs.c                  | 14 +++----
+>  drivers/mfd/tps65010.c                        |  2 +-
+>  drivers/misc/habanalabs/debugfs.c             |  2 +-
+>  drivers/mmc/core/mmc_test.c                   |  2 +-
+>  drivers/mtd/mtdcore.c                         |  4 +-
+>  drivers/mtd/ubi/debug.c                       |  2 +-
+>  .../ethernet/chelsio/cxgb4/cxgb4_debugfs.c    | 38 +++++++++----------
+>  drivers/net/ethernet/chelsio/cxgb4/l2t.c      |  2 +-
+>  .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  8 ++--
+>  .../freescale/dpaa2/dpaa2-eth-debugfs.c       |  6 +--
+>  .../net/ethernet/intel/fm10k/fm10k_debugfs.c  |  2 +-
+>  .../marvell/octeontx2/af/rvu_debugfs.c        |  2 +-
+>  drivers/net/wireless/ath/ath5k/debug.c        |  2 +-
+>  drivers/net/wireless/ath/wil6210/debugfs.c    | 14 +++----
+>  .../broadcom/brcm80211/brcmsmac/debug.c       |  2 +-
+>  .../net/wireless/intel/iwlwifi/fw/debugfs.c   |  2 +-
+>  .../net/wireless/intel/iwlwifi/pcie/trans.c   |  2 +-
+>  .../wireless/mediatek/mt76/mt7603/debugfs.c   |  2 +-
+>  .../wireless/mediatek/mt76/mt7615/debugfs.c   |  2 +-
+>  .../wireless/mediatek/mt76/mt76x02_debugfs.c  |  4 +-
+>  .../wireless/mediatek/mt76/mt7915/debugfs.c   |  4 +-
+>  .../net/wireless/mediatek/mt7601u/debugfs.c   |  4 +-
+>  drivers/net/wireless/realtek/rtlwifi/debug.c  |  2 +-
+>  drivers/net/wireless/realtek/rtw88/debug.c    |  4 +-
+>  drivers/net/wireless/rsi/rsi_91x_debugfs.c    |  4 +-
+>  drivers/net/xen-netback/xenbus.c              |  2 +-
+>  drivers/nvme/host/fabrics.c                   |  2 +-
+>  drivers/pci/controller/pci-tegra.c            |  2 +-
+>  drivers/platform/x86/asus-wmi.c               |  2 +-
+>  drivers/platform/x86/intel_pmc_core.c         |  2 +-
+>  .../platform/x86/intel_telemetry_debugfs.c    |  4 +-
+>  drivers/power/supply/da9030_battery.c         |  2 +-
+>  drivers/pwm/core.c                            |  2 +-
+>  drivers/ras/cec.c                             |  2 +-
+>  drivers/ras/debugfs.c                         |  2 +-
+>  drivers/s390/block/dasd.c                     |  2 +-
+>  drivers/s390/cio/qdio_debug.c                 |  2 +-
+>  drivers/scsi/hisi_sas/hisi_sas_main.c         | 32 ++++++++--------
+>  drivers/scsi/qedf/qedf_dbg.h                  |  2 +-
+>  drivers/scsi/qedi/qedi_dbg.h                  |  2 +-
+>  drivers/scsi/qla2xxx/qla_dfs.c                | 12 +++---
+>  drivers/scsi/snic/snic_debugfs.c              |  4 +-
+>  drivers/sh/intc/virq-debugfs.c                |  2 +-
+>  drivers/soc/qcom/cmd-db.c                     |  2 +-
+>  drivers/soc/qcom/socinfo.c                    |  4 +-
+>  drivers/soc/ti/knav_dma.c                     |  2 +-
+>  drivers/soc/ti/knav_qmss_queue.c              |  2 +-
+>  .../interface/vchiq_arm/vchiq_debugfs.c       |  4 +-
+>  drivers/usb/chipidea/debug.c                  |  4 +-
+>  drivers/usb/dwc2/debugfs.c                    |  2 +-
+>  drivers/usb/dwc3/debugfs.c                    |  8 ++--
+>  drivers/usb/gadget/udc/lpc32xx_udc.c          |  2 +-
+>  drivers/usb/gadget/udc/renesas_usb3.c         |  2 +-
+>  drivers/usb/host/xhci-debugfs.c               |  6 +--
+>  drivers/usb/mtu3/mtu3_debugfs.c               |  8 ++--
+>  drivers/usb/musb/musb_debugfs.c               |  4 +-
+>  drivers/visorbus/visorbus_main.c              |  2 +-
+>  drivers/xen/xenfs/xensyms.c                   |  2 +-
+>  fs/debugfs/file.c                             |  4 +-
+>  fs/dlm/debug_fs.c                             |  8 ++--
+>  fs/gfs2/glock.c                               |  6 +--
+>  fs/nfsd/nfs4state.c                           |  4 +-
+>  fs/nfsd/nfsctl.c                              | 10 ++---
+>  fs/ocfs2/cluster/netdebug.c                   |  6 +--
+>  fs/ocfs2/dlm/dlmdebug.c                       |  2 +-
+>  fs/ocfs2/dlmglue.c                            |  2 +-
+>  fs/openpromfs/inode.c                         |  2 +-
+>  fs/orangefs/orangefs-debugfs.c                |  2 +-
+>  fs/proc/array.c                               |  2 +-
+>  fs/proc/base.c                                | 24 ++++++------
+>  fs/proc/fd.c                                  |  2 +-
+>  fs/proc/task_mmu.c                            |  8 ++--
+>  fs/proc/task_nommu.c                          |  2 +-
+>  fs/proc_namespace.c                           |  6 +--
+>  include/linux/seq_file.h                      |  4 +-
+>  kernel/bpf/inode.c                            |  2 +-
+>  kernel/fail_function.c                        |  2 +-
+>  kernel/gcov/fs.c                              |  2 +-
+>  kernel/irq/debugfs.c                          |  2 +-
+>  kernel/kcsan/debugfs.c                        |  2 +-
+>  kernel/sched/debug.c                          |  2 +-
+>  kernel/time/test_udelay.c                     |  2 +-
+>  kernel/trace/ftrace.c                         | 16 ++++----
+>  kernel/trace/trace.c                          | 20 +++++-----
+>  kernel/trace/trace_dynevent.c                 |  2 +-
+>  kernel/trace/trace_events.c                   | 10 ++---
+>  kernel/trace/trace_events_hist.c              |  4 +-
+>  kernel/trace/trace_events_synth.c             |  2 +-
+>  kernel/trace/trace_events_trigger.c           |  2 +-
+>  kernel/trace/trace_kprobe.c                   |  4 +-
+>  kernel/trace/trace_printk.c                   |  2 +-
+>  kernel/trace/trace_stack.c                    |  4 +-
+>  kernel/trace/trace_stat.c                     |  2 +-
+>  kernel/trace/trace_uprobe.c                   |  4 +-
+>  lib/debugobjects.c                            |  2 +-
+>  lib/dynamic_debug.c                           |  2 +-
+>  lib/error-inject.c                            |  2 +-
+>  lib/kunit/debugfs.c                           |  2 +-
+>  mm/kmemleak.c                                 |  2 +-
+>  net/6lowpan/debugfs.c                         |  2 +-
+>  net/batman-adv/debugfs.c                      |  4 +-
+>  net/bluetooth/6lowpan.c                       |  2 +-
+>  net/hsr/hsr_debugfs.c                         |  2 +-
+>  net/l2tp/l2tp_debugfs.c                       |  2 +-
+>  net/sunrpc/cache.c                            |  2 +-
+>  net/sunrpc/debugfs.c                          |  4 +-
+>  net/sunrpc/rpc_pipe.c                         |  2 +-
+>  security/apparmor/apparmorfs.c                | 10 ++---
+>  security/integrity/ima/ima_fs.c               |  6 +--
+>  security/selinux/selinuxfs.c                  |  2 +-
+>  security/smack/smackfs.c                      | 20 +++++-----
+>  193 files changed, 375 insertions(+), 375 deletions(-)
 
 
-But that time is bounded.  The complexity of the tree and maximum
-number of operations on the tree are bounded by the number of nodes,
-which is bound by the user's pasid quota.  Thanks,
+Following this change, I have noticed that several debugfs entries can
+no longer be read on some Tegra platforms. For example ...
 
-Alex
- 
-> > > So I'm wondering can we fall back to prior proposal which only free one
-> > > PASID for a free request. how about your opinion?  
-> > 
-> > Doesn't it still seem like it would be a useful user interface to have
-> > a mechanism to free all pasids, by calling with exactly [0, MAX_UINT]?
-> > I'm not sure if there's another use case for this given than the user
-> > doesn't have strict control of the pasid values they get.  Thanks,  
-> 
-> I don't have such use case neither. perhaps we may allow it in future by
-> adding flag. but if it's still useful, I may try with your suggestion. :-)
-> 
-> Regards,
-> Yi Liu
-> 
-> > Alex
-> >   
-> > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Sent: Thursday, July 9, 2020 10:26 AM
-> > > >
-> > > > Hi Kevin,
-> > > >  
-> > > > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > > > Sent: Thursday, July 9, 2020 10:18 AM
-> > > > >  
-> > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > Sent: Thursday, July 9, 2020 10:08 AM
-> > > > > >
-> > > > > > Hi Kevin,
-> > > > > >  
-> > > > > > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > > > > > Sent: Thursday, July 9, 2020 9:57 AM
-> > > > > > >  
-> > > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > > > Sent: Thursday, July 9, 2020 8:32 AM
-> > > > > > > >
-> > > > > > > > Hi Alex,
-> > > > > > > >  
-> > > > > > > > > Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > > > Sent: Thursday, July 9, 2020 3:55 AM
-> > > > > > > > >
-> > > > > > > > > On Wed, 8 Jul 2020 08:16:16 +0000 "Liu, Yi L"
-> > > > > > > > > <yi.l.liu@intel.com> wrote:
-> > > > > > > > >  
-> > > > > > > > > > Hi Alex,
-> > > > > > > > > >  
-> > > > > > > > > > > From: Liu, Yi L < yi.l.liu@intel.com>
-> > > > > > > > > > > Sent: Friday, July 3, 2020 2:28 PM
-> > > > > > > > > > >
-> > > > > > > > > > > Hi Alex,
-> > > > > > > > > > >  
-> > > > > > > > > > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > > > > > > Sent: Friday, July 3, 2020 5:19 AM
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Wed, 24 Jun 2020 01:55:19 -0700 Liu Yi L
-> > > > > > > > > > > > <yi.l.liu@intel.com> wrote:
-> > > > > > > > > > > >  
-> > > > > > > > > > > > > This patch allows user space to request PASID
-> > > > > > > > > > > > > allocation/free,  
-> > > > > > e.g.  
-> > > > > > > > > > > > > when serving the request from the guest.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > PASIDs that are not freed by userspace are
-> > > > > > > > > > > > > automatically freed  
-> > > > > > > > when  
-> > > > > > > > > > > > > the IOASID set is destroyed when process exits.  
-> > > > > > > > > > [...]  
-> > > > > > > > > > > > > +static int vfio_iommu_type1_pasid_request(struct
-> > > > > > > > > > > > > +vfio_iommu  
-> > > > > > > > *iommu,  
-> > > > > > > > > > > > > +					  unsigned long arg) {
-> > > > > > > > > > > > > +	struct vfio_iommu_type1_pasid_request req;
-> > > > > > > > > > > > > +	unsigned long minsz;
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +	minsz = offsetofend(struct  
-> > > > > vfio_iommu_type1_pasid_request,  
-> > > > > > > > > range);  
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> > > > > > > > > > > > > +		return -EFAULT;
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +	if (req.argsz < minsz || (req.flags &  
-> > > > > > > > > ~VFIO_PASID_REQUEST_MASK))  
-> > > > > > > > > > > > > +		return -EINVAL;
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +	if (req.range.min > req.range.max)  
-> > > > > > > > > > > >
-> > > > > > > > > > > > Is it exploitable that a user can spin the kernel for a
-> > > > > > > > > > > > long time in the case of a free by calling this with [0,
-> > > > > > > > > > > > MAX_UINT] regardless of their  
-> > > > > > > > > actual  
-> > > > > > > > > > > allocations?
-> > > > > > > > > > >
-> > > > > > > > > > > IOASID can ensure that user can only free the PASIDs
-> > > > > > > > > > > allocated to the  
-> > > > > > > > user.  
-> > > > > > > > > but  
-> > > > > > > > > > > it's true, kernel needs to loop all the PASIDs within the
-> > > > > > > > > > > range provided by user.  
-> > > > > > > > > it  
-> > > > > > > > > > > may take a long time. is there anything we can do? one
-> > > > > > > > > > > thing may limit  
-> > > > > > > > the  
-> > > > > > > > > range  
-> > > > > > > > > > > provided by user?  
-> > > > > > > > > >
-> > > > > > > > > > thought about it more, we have per-VM pasid quota (say
-> > > > > > > > > > 1000), so even if user passed down [0, MAX_UNIT], kernel
-> > > > > > > > > > will only loop the
-> > > > > > > > > > 1000 pasids at most. do you think we still need to do something on  
-> > it?  
-> > > > > > > > >
-> > > > > > > > > How do you figure that?  vfio_iommu_type1_pasid_request()
-> > > > > > > > > accepts the user's min/max so long as (max > min) and passes
-> > > > > > > > > that to vfio_iommu_type1_pasid_free(), then to
-> > > > > > > > > vfio_pasid_free_range() which loops as:
-> > > > > > > > >
-> > > > > > > > > 	ioasid_t pasid = min;
-> > > > > > > > > 	for (; pasid <= max; pasid++)
-> > > > > > > > > 		ioasid_free(pasid);
-> > > > > > > > >
-> > > > > > > > > A user might only be able to allocate 1000 pasids, but
-> > > > > > > > > apparently they can ask to free all they want.
-> > > > > > > > >
-> > > > > > > > > It's also not obvious to me that calling ioasid_free() is only
-> > > > > > > > > allowing the user to free their own passid.  Does it?  It
-> > > > > > > > > would be a pretty  
-> > > > > > >
-> > > > > > > Agree. I thought ioasid_free should at least carry a token since
-> > > > > > > the user  
-> > > > > > space is  
-> > > > > > > only allowed to manage PASIDs in its own set...
-> > > > > > >  
-> > > > > > > > > gaping hole if a user could free arbitrary pasids.  A r-b tree
-> > > > > > > > > of passids might help both for security and to bound spinning in a  
-> > loop.  
-> > > > > > > >
-> > > > > > > > oh, yes. BTW. instead of r-b tree in VFIO, maybe we can add an
-> > > > > > > > ioasid_set parameter for ioasid_free(), thus to prevent the user
-> > > > > > > > from freeing PASIDs that doesn't belong to it. I remember Jacob
-> > > > > > > > mentioned it  
-> > > > > > before.  
-> > > > > > > >  
-> > > > > > >
-> > > > > > > check current ioasid_free:
-> > > > > > >
-> > > > > > >         spin_lock(&ioasid_allocator_lock);
-> > > > > > >         ioasid_data = xa_load(&active_allocator->xa, ioasid);
-> > > > > > >         if (!ioasid_data) {
-> > > > > > >                 pr_err("Trying to free unknown IOASID %u\n", ioasid);
-> > > > > > >                 goto exit_unlock;
-> > > > > > >         }
-> > > > > > >
-> > > > > > > Allow an user to trigger above lock paths with MAX_UINT times
-> > > > > > > might still  
-> > > > > > be bad.
-> > > > > >
-> > > > > > yeah, how about the below two options:
-> > > > > >
-> > > > > > - comparing the max - min with the quota before calling ioasid_free().
-> > > > > >   If max - min > current quota of the user, then should fail it. If
-> > > > > >   max - min < quota, then call ioasid_free() one by one. still trigger
-> > > > > >   the above lock path with quota times.  
-> > > > >
-> > > > > This is definitely wrong. [min, max] is about the range of the PASID
-> > > > > value, while quota is about the number of allocated PASIDs. It's a bit
-> > > > > weird to mix two together.  
-> > > >
-> > > > got it.
-> > > >  
-> > > > > btw what is the main purpose of allowing batch PASID free requests?
-> > > > > Can we just simplify to allow one PASID in each free just like how is
-> > > > > it done in allocation path?  
-> > > >
-> > > > it's an intention to reuse the [min, max] range as allocation path. currently,  
-> > we  
-> > > > don't have such request as far as I can see.
-> > > >  
-> > > > > >
-> > > > > > - pass the max and min to ioasid_free(), let ioasid_free() decide. should
-> > > > > >   be able to avoid trigger the lock multiple times, and ioasid has have a
-> > > > > >   track on how may PASIDs have been allocated, if max - min is larger than
-> > > > > >   the allocated number, should fail anyway.  
-> > > > >
-> > > > > What about Alex's r-b tree suggestion? Is there any downside in you mind?  
-> > > >
-> > > > no downside, I was just wanting to reuse the tracks in ioasid_set. I can add a  
-> > r-b  
-> > > > for allocated PASIDs and find the PASIDs in the r-b tree only do free for the
-> > > > PASIDs found in r-b tree, others in the range would be ignored.
-> > > > does it look good?
-> > > >
-> > > > Regards,
-> > > > Yi Liu
-> > > >  
-> > > > > Thanks,
-> > > > > Kevin  
-> > >  
-> 
+$ sudo cat /sys/kernel/debug/usb/xhci/3530000.usb/event-ring/cycle
+cat: /sys/kernel/debug/usb/xhci/3530000.usb/event-ring/cycle: Invalid
+argument
 
+$ sudo cat /sys/kernel/debug/emc/available_rates
+
+
+cat: /sys/kernel/debug/emc/available_rates: Invalid argument
+
+$ sudo cat /sys/kernel/debug/bpmp/debug/proc/testint
+cat: /sys/kernel/debug/bpmp/debug/proc/testint: Invalid argument
+
+$ sudo cat /sys/kernel/debug/pcie/ports
+
+
+cat: /sys/kernel/debug/pcie/ports: Invalid argument
+
+I have reverted the above drivers to use seq_read() instead of
+seq_read_iter() and they work again. Have you seen any problems with this?
+
+Cheers
+Jon
+
+-- 
+nvpublic
