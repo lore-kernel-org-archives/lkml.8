@@ -2,110 +2,243 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C372076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594361310;
-	bh=blnFmOCbcj7GlYVM5qLLg3maWpJyP/hMJGZDDez7ibI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X121S2Y3uvX41jVRgbjHd/cZ0nP/rz6Uwso2dIcXSfvJ58sloj5wBQ6gp8zRiGHAt
-	 ooICiAPTiKJO2LnucpAsHpZFce9fNk/ijsjuNIHjU4G4BEWNNwivL0FhcYezTT1bNr
-	 mZnDahtr1r7znVS85wbJ+blNNGuXgOIkYAoFzB2I=
+	by mail.kernel.org (Postfix) with ESMTP id 39DF220720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YQN3wyrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgGJGI2 convert rfc822-to-8bit (ORCPT
+        id S1726977AbgGJGMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:08:28 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:42725 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJGI1 (ORCPT
+        Fri, 10 Jul 2020 02:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJGMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:08:27 -0400
-Received: by mail-ej1-f68.google.com with SMTP id f12so4762562eja.9;
-        Thu, 09 Jul 2020 23:08:25 -0700 (PDT)
+        Fri, 10 Jul 2020 02:12:30 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31CC5C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:12:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mn17so2164040pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
+        b=YQN3wyrUqnoKyW6LkEnOAXbo1yEYXD4zeVsZah3jneZODo1vRwD80P1/DO3vAgKpo4
+         4q8jvKxSP8roPZPEXCfRBPzFVAixIeBB1c06dFtSgvQWiC4i1sfPaCzF76ziNbXao2h1
+         AXjyXvLz3UKJ8luQEI2qPMVB2HLJzTpYO79yA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sZWbg5n4QuCPXZ3uCh/ygFqQbxWrFH3XWXvFripTxS8=;
-        b=KWmu6k0Ex4bXaHzUlouaUdzaRdqW9yI9AW3cUjQeNuRGsM2LLE0MBdXQOYzpDlS6YC
-         50MkrG+EWjW9RZgYlUa2SIMsnMm5alq2Mob3beWEpMlUZ2SiZxH9SuI+8iEdajKmF/pa
-         HA5GHpC6UN6s0rLla+og9aDHE731g0jA000PYcksHvVrUHhibKzDL/r9PwiIzOxSZ7AF
-         QaGnQWAktrzFfGgbMlATsT5RTsbqSdulk1wwu6dT64LpUz3woRPKENijBZFJkg3M89FO
-         rR5xabhLq4AAx0m5qlzP5odNCvJJT3XoiWGJNo8QSC+XqG+T/lnaIMEYih2I7LR1pZbd
-         lc6g==
-X-Gm-Message-State: AOAM531ZlKxnbFDfxwhAkiAJ9ulXxyPC2wyNCrto/Lw0lmGRihM+XThf
-        NFd/OrNbaRWaZG/MUlmYyZOlQocyTikt0Uf6FCI=
-X-Google-Smtp-Source: ABdhPJxdUrgp68rxovcdZIrJ5SI2MVqjC9OM5no2eX8hPvILncnfI9RiixNPMhVNOwVR+yxcWDbMzdf9vSFJ56vaUJU=
-X-Received: by 2002:a17:906:284e:: with SMTP id s14mr58791027ejc.498.1594361305183;
- Thu, 09 Jul 2020 23:08:25 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
+        b=kZ/+vDyywZdpmovIDGT8sJEf5UDv4XXM+2w4I27bf7P7na6HGdGheEyZ5YC1GHswwU
+         OiX0ta9R8MlSDRgzxXih/Y1BIWtV3Byj2N1eRC79tTPrxn1c350qEz7LIkY+3TlNBkfC
+         Djd5KceRH+CK2U7g7MPDC2O0o6M4lhgZ8GDANn2Bovf3WtVerjuPPf/QKgYJ8Omc5AKv
+         vGQ88PzsdGzUdu3yezqXHusvSKz1Nn3qB3MFFGaHMHV13be8/Ol7x73uzaE6SCtgMOyX
+         1ulkyMTCeJGhRhwpBWrN9e+sBWC8kIp1ia+EtXdhAXDArhdD3Vj9kMRWb0ndcYGzkvEv
+         Fwaw==
+X-Gm-Message-State: AOAM532YSIt/QwxkoRicJsnmw86YMYy/gxKWZksW1GZY9K2l2RNJ8BKu
+        VhF3vOpgbcC7UXg/0HKKzxg8kA==
+X-Google-Smtp-Source: ABdhPJwPvKjchWKFqAIbyd/TdHITo1hj1fnDIECweruqTh33U9CzcEdR1JMeCauMakY0xW7tmhE7Hg==
+X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr3871837pjq.1.1594361549533;
+        Thu, 09 Jul 2020 23:12:29 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id z26sm4709566pfr.187.2020.07.09.23.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 23:12:28 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <250d35cb489c3c4c066f7ce256d27f36712a1979.1591618255.git.baolin.wang7@gmail.com>
-In-Reply-To: <250d35cb489c3c4c066f7ce256d27f36712a1979.1591618255.git.baolin.wang7@gmail.com>
-From:   Barry Song <baohua@kernel.org>
-Date:   Fri, 10 Jul 2020 18:08:14 +1200
-Message-ID: <CAGsJ_4y25psj9vAyjstFQiGwAd_TfTdyeNt41YbXfphOXoFVig@mail.gmail.com>
-Subject: Re: [PATCH] hwspinlock: sirf: Remove the redundant 'of_match_ptr'
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, bjorn.andersson@linaro.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
+References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org> <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] usb: dwc3: qcom: Configure wakeup interrupts and set genpd active wakeup flag
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Thu, 09 Jul 2020 23:12:27 -0700
+Message-ID: <159436154779.1987609.882978770178758503@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baolin Wang <baolin.wang7@gmail.com> 于2020年6月9日周二 上午12:22写道：
->
-> Remove the the redundant 'of_match_ptr' macro to fix below warning
-> when the CONFIG_OF is not selected.
->
-> All warnings:
-> drivers/hwspinlock/sirf_hwspinlock.c:87:34: warning: unused variable
-> 'sirf_hwpinlock_ids' [-Wunused-const-variable]
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Quoting Sandeep Maheswaram (2020-07-08 12:10:16)
+> configure interrupts based on hs_phy_flag. Set genpd active wakeup flag
+
+Please capitalize the start of a sentence. What is 'hs_phy_flag'?
+
+> for usb gdsc if wakeup capable devices are connected.
+
+This tells us what is happening in the code but doesn't tell us the
+important part, i.e. _why_ this patch is important. Why do we need to
+set the genpd active wakeup flag? Why configure interrupt based on
+hs_phy_flag, whatever that is.
+
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  drivers/hwspinlock/sirf_hwspinlock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
-> index 823d3c4f621e..a3f77120bad7 100644
-> --- a/drivers/hwspinlock/sirf_hwspinlock.c
-> +++ b/drivers/hwspinlock/sirf_hwspinlock.c
-> @@ -94,7 +94,7 @@ static struct platform_driver sirf_hwspinlock_driver = {
->         .probe = sirf_hwspinlock_probe,
->         .driver = {
->                 .name = "atlas7_hwspinlock",
-> -               .of_match_table = of_match_ptr(sirf_hwpinlock_ids),
-> +               .of_match_table = sirf_hwpinlock_ids,
+>  drivers/usb/dwc3/dwc3-qcom.c | 73 ++++++++++++++++++++++++++++++++++----=
+------
+>  1 file changed, 57 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..8902670 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -192,21 +194,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
+om *qcom)
+> =20
+>  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 disable_irq_wake(qcom->hs_phy_irq);
+>                 disable_irq_nosync(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dp_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dm_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
 
-is it better to do?
+I liked the newline. Please keep it.
 
-#ifdef CONFIG_OF
-static const struct of_device_id sirf_hwpinlock_ids[] = {
-        { .compatible = "sirf,hwspinlock", },
-        {},
-};
-MODULE_DEVICE_TABLE(of, sirf_hwpinlock_ids);
-#endif
+>         if (qcom->ss_phy_irq) {
+>                 disable_irq_wake(qcom->ss_phy_irq);
+>                 disable_irq_nosync(qcom->ss_phy_irq);
+> @@ -215,21 +230,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
+3_qcom *qcom)
+> =20
+>  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 enable_irq(qcom->hs_phy_irq);
+>                 enable_irq_wake(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               enable_irq(qcom->dp_hs_phy_irq);
+> -               enable_irq_wake(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               enable_irq(qcom->dm_hs_phy_irq);
+> -               enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 enable_irq(qcom->ss_phy_irq);
+>                 enable_irq_wake(qcom->ss_phy_irq);
 
->         },
->  };
->
-> --
-> 2.17.1
+Can we use the wakeup irq support code in the kernel here? That would be
+preferred to having the driver enable and disable irq wake at various
+times when the irq is enabled and disabled (which is also odd by the
+way). Why can't we request the irqs and leave them enabled all the time?
+Also it seems like the binding should have 'wakeup-source' in it (see
+Documentation/devicetree/bindings/power/wakeup-source.txt for more
+info).
 
-Thanks
-barry
+> @@ -240,6 +268,14 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>         u32 val;
+>         int i;
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> +       struct generic_pm_domain *genpd;
+> +
+> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
+> +
+> +       if (genpd && usb_wakeup_enabled_descendants(hcd->self.root_hub))
+
+Feels like a comment would be good to explain why wakeup enabled
+descendants matters here.
+
+> +               genpd->flags |=3D GENPD_FLAG_ACTIVE_WAKEUP;
+> =20
+>         if (qcom->is_suspended)
+>                 return 0;
+> @@ -261,6 +297,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>  {
+>         int ret;
+>         int i;
+> +       struct generic_pm_domain *genpd;
+> +
+> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
+
+This does container_of() so it can't return NULL.
+
+> +       if (genpd)
+
+So this check is wrong?
+
+> +               genpd->flags &=3D !GENPD_FLAG_ACTIVE_WAKEUP;
