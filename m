@@ -2,110 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ED9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4620C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDC72078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594405698;
-	bh=znLxL7QxKrQnwkFsgsEFQvbCS0/u/STlDOmErC2vb38=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=GbtpI4JL0fJx/26rcGWYz70nVM0K1NqaFwmuoPpUECrWj14r2YmBRfXmovIjghtj0
-	 oHFUxLXdEXL/cwLYMwZITRACKpSO79ZPWOYADH2HVSozp/+kyuTh98mZ3MRm3GiXZc
-	 MLyr795TZbrUou5SpBX8CrbHOw8BraRdFIwZfMt0=
+	by mail.kernel.org (Postfix) with ESMTP id BA9C32075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGJS2R (ORCPT
+        id S1727986AbgGJSa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:28:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgGJS2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:28:16 -0400
-Received: from embeddedor (unknown [200.39.25.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D42D2075D;
-        Fri, 10 Jul 2020 18:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594405696;
-        bh=znLxL7QxKrQnwkFsgsEFQvbCS0/u/STlDOmErC2vb38=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RrL4eFoQQU5pUrPGbbtbsYS48NPO24Wmkdm9W+LOygckMHyzZ2xx84sGlIc7t7ktP
-         27miComXyAVgz2Dqt3gKhBOgMM9VoPrZdfnhac6dEeI2aES04WsYJBkkzBL469GyMr
-         egg+AZ+92tD/5eRLJOP4URgfPIRyf8c+GH643QZk=
-Date:   Fri, 10 Jul 2020 13:33:50 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] staging: rts5208: Assign array_size() to a variable
-Message-ID: <20200710183350.GA8376@embeddedor>
+        Fri, 10 Jul 2020 14:30:58 -0400
+Received: from outboundhk.mxmail.xiaomi.com ([207.226.244.123]:53391 "EHLO
+        xiaomi.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726872AbgGJSa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:30:58 -0400
+Received: from CNBOX13.mioffice.cn (10.237.8.153) by hkbox2.mioffice.cn
+ (10.56.8.142) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
+ 2020 19:28:14 +0800
+Received: from CNBOX07.mioffice.cn (10.237.8.127) by cnbox13.mioffice.cn
+ (10.237.8.153) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
+ 2020 19:28:13 +0800
+Received: from CNBOX07.mioffice.cn ([10.237.8.127]) by CNBOX07.mioffice.cn
+ ([10.237.8.127]) with mapi id 15.00.1497.006; Fri, 10 Jul 2020 19:28:13 +0800
+From:   =?gb2312?B?RmVpMSBKaWFuZyC9r7fJ?= <jiangfei1@xiaomi.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Qiwu Huang <yanziily@gmail.com>
+CC:     "sre@kernel.org" <sre@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?gb2312?B?u8bG5M7k?= <huangqiwu@xiaomi.com>
+Subject: =?gb2312?B?tPC4tDogW0V4dGVybmFsIE1haWxdUmU6IFtQQVRDSCAyLzVdIHBvd2VyOiBz?=
+ =?gb2312?B?dXBwbHk6IGNvcmU6IGFkZCB3aXJlbGVzcyBjaGFyZ2VyIGFkYXB0ZXIgdHlw?=
+ =?gb2312?Q?e_property?=
+Thread-Topic: [External Mail]Re: [PATCH 2/5] power: supply: core: add wireless
+ charger adapter type property
+Thread-Index: AQHWVqD0zsJp6UOKY0iRxmhQr3LJaKkAq+mt
+Date:   Fri, 10 Jul 2020 11:28:13 +0000
+Message-ID: <1594380492771.51916@xiaomi.com>
+References: <20200710084841.1933254-1-yanziily@gmail.com>
+ <20200710084841.1933254-2-yanziily@gmail.com>,<20200710100037.GB1197607@kroah.com>
+In-Reply-To: <20200710100037.GB1197607@kroah.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.237.8.11]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assign array_size() to variable _size_ and use it in multiple places.
-
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
-
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/staging/rts5208/rtsx_chip.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/staging/rts5208/rtsx_chip.c b/drivers/staging/rts5208/rtsx_chip.c
-index c6f9375468eb..ee9ddc4eb94d 100644
---- a/drivers/staging/rts5208/rtsx_chip.c
-+++ b/drivers/staging/rts5208/rtsx_chip.c
-@@ -1440,6 +1440,7 @@ int rtsx_write_cfg_seq(struct rtsx_chip *chip, u8 func, u16 addr, u8 *buf,
- 	u16 aligned_addr = addr - offset;
- 	int dw_len, i, j;
- 	int retval;
-+	size_t size;
- 
- 	if (!buf)
- 		return STATUS_NOMEM;
-@@ -1451,11 +1452,12 @@ int rtsx_write_cfg_seq(struct rtsx_chip *chip, u8 func, u16 addr, u8 *buf,
- 
- 	dev_dbg(rtsx_dev(chip), "dw_len = %d\n", dw_len);
- 
--	data = vzalloc(array_size(dw_len, 4));
-+	size = array_size(dw_len, 4);
-+	data = vzalloc(size);
- 	if (!data)
- 		return STATUS_NOMEM;
- 
--	mask = vzalloc(array_size(dw_len, 4));
-+	mask = vzalloc(size);
- 	if (!mask) {
- 		vfree(data);
- 		return STATUS_NOMEM;
-@@ -1471,10 +1473,8 @@ int rtsx_write_cfg_seq(struct rtsx_chip *chip, u8 func, u16 addr, u8 *buf,
- 		}
- 	}
- 
--	print_hex_dump_bytes(KBUILD_MODNAME ": ", DUMP_PREFIX_NONE, mask,
--			     dw_len * 4);
--	print_hex_dump_bytes(KBUILD_MODNAME ": ", DUMP_PREFIX_NONE, data,
--			     dw_len * 4);
-+	print_hex_dump_bytes(KBUILD_MODNAME ": ", DUMP_PREFIX_NONE, mask, size);
-+	print_hex_dump_bytes(KBUILD_MODNAME ": ", DUMP_PREFIX_NONE, data, size);
- 
- 	for (i = 0; i < dw_len; i++) {
- 		retval = rtsx_write_cfg_dw(chip, func, aligned_addr + i * 4,
--- 
-2.27.0
-
+SGkgR3JlZywNCg0KT3VyIG5ldyBzaXggcG93ZXIgc3VwcGx5IHByb3BlcnRpZXMgIHJldHVybiB2
+YWx1ZXMgYXJlIGFsbCBpbnRlZ2VyLCBzbyBwbGVhc2UNCg0KYWRkIHRoZW0gYWJvdmUgIlByb3Bl
+cnRpZXMgb2YgdHlwZSBgY29uc3QgY2hhciIgY29tbWVudA0KeHh4DQouLi4NCi8qIFByb3BlcnRp
+ZXMgb2YgdHlwZSBgY29uc3QgY2hhciAqJyAqLw0KDQoNClRoYW5rcyENCg0KQiZSDQpGZWkgSmlh
+bmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogR3Jl
+ZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQq3osvNyrG85DogMjAyMMTqN9TCMTDI
+1SAxODowMA0KytW8/sjLOiBRaXd1IEh1YW5nDQqzrcvNOiBzcmVAa2VybmVsLm9yZzsgbGludXgt
+cG1Admdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBGZWkxIEpp
+YW5nIL2vt8k7ILvGxuTO5A0K1vfM4jogW0V4dGVybmFsIE1haWxdUmU6IFtQQVRDSCAyLzVdIHBv
+d2VyOiBzdXBwbHk6IGNvcmU6IGFkZCB3aXJlbGVzcyBjaGFyZ2VyIGFkYXB0ZXIgdHlwZSBwcm9w
+ZXJ0eQ0KDQpPbiBGcmksIEp1bCAxMCwgMjAyMCBhdCAwNDo0ODozOFBNICswODAwLCBRaXd1IEh1
+YW5nIHdyb3RlOg0KPiBGcm9tOiBRaXd1IEh1YW5nIDxodWFuZ3Fpd3VAeGlhb21pLmNvbT4NCj4N
+Cj4gUmVwb3J0cyB3aGF0IHR5cGUgb2Ygd2lyZWxlc3MgYWRhcHRlciBjb25uZWN0aW9uIGlzDQo+
+IGN1cnJlbnRseSBhY3RpdmUgZm9ydGhlIHN1cHBseS4NCj4gZm9yIGV4YW1wbGUgaXQgY2FuIHNo
+b3cgaWYgQURBUFRFUl9QRCBjYXBhYmxlIHNvdXJjZSBpcyBhdHRhY2hlZC4NCj4NCj4gU2lnbmVk
+LW9mZi1ieTogUWl3dSBIdWFuZyA8aHVhbmdxaXd1QHhpYW9taS5jb20+DQo+IC0tLQ0KPiAgRG9j
+dW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1wb3dlciB8IDEzICsrKysrKysrKysr
+KysNCj4gIGRyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9zeXNmcy5jICAgfCAgMSAr
+DQo+ICBpbmNsdWRlL2xpbnV4L3Bvd2VyX3N1cHBseS5oICAgICAgICAgICAgICAgIHwgIDEgKw0K
+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspDQo+DQo+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNsYXNzLXBvd2VyIGIvRG9jdW1lbnRhdGlv
+bi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1wb3dlcg0KPiBpbmRleCAwZDlkNmI0NmUyMzkuLjIw
+OTljZjE5NGE4OSAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNm
+cy1jbGFzcy1wb3dlcg0KPiArKysgYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNs
+YXNzLXBvd2VyDQo+IEBAIC03MTgsMyArNzE4LDE2IEBAIENvbnRhY3Q6IEZlaSBKaWFuZyA8amlh
+bmdmZWkxQHhpYW9taS5jb20+DQo+ICAgICAgICAgICAgICAgQWNjZXNzOiBSZWFkLU9ubHkNCj4g
+ICAgICAgICAgICAgICBWYWxpZCB2YWx1ZXM6ICJRVUlDS19DSEFSR0VfTk9STUFMIiwgIlFVSUNL
+X0NIQVJHRV9GQVNUIiwgIlFVSUNLX0NIQVJHRV9GTEFTSCIsDQo+ICAgICAgICAgICAgICAgIlFV
+SUNLX0NIQVJHRV9UVVJCRSIsICJRVUlDS19DSEFSR0VfU1VQRVIiLg0KPiArDQo+ICs9PT09PSBX
+aXJlbGVzcyBDaGFyZ2VyIFByb3BlcnRpZXMgPT09PT0NCj4gK1doYXQ6ICAgICAgICAgICAgICAg
+IC9zeXMvY2xhc3MvcG93ZXJfc3VwcGx5LzxzdXBwbHlfbmFtZT4vdHhfYWRhcHRlcg0KPiArRGF0
+ZTogICAgICAgICAgICAgICAgSnVsIDIwMjANCj4gK0NvbnRhY3Q6ICAgICBGZWkgSmlhbmcgPGpp
+YW5nZmVpMUB4aWFvbWkuY29tPg0KPiArRGVzY3JpcHRpb246DQo+ICsgICAgICAgICAgICAgUmVw
+b3J0cyB3aGF0IHR5cGUgb2Ygd2lyZWxlc3MgYWRhcHRlciBjb25uZWN0aW9uIGlzIGN1cnJlbnRs
+eSBhY3RpdmUgZm9yDQo+ICsgICAgICAgICAgICAgdGhlIHN1cHBseSwgZm9yIGV4YW1wbGUgaXQg
+Y2FuIHNob3cgaWYgQURBUFRFUl9QRCBjYXBhYmxlIHNvdXJjZQ0KPiArICAgICAgICAgICAgIGlz
+IGF0dGFjaGVkLg0KPiArDQo+ICsgICAgICAgICAgICAgQWNjZXNzOiBSZWFkLU9ubHkNCj4gKyAg
+ICAgICAgICAgICBWYWxpZCB2YWx1ZXM6ICJBREFQVEVSX05PTkUiLCAiQURBUFRFUl9TRFAiLCAi
+QURBUFRFUl9EQ1AiLCAiQURBUFRFUl9DRFAiLA0KPiArICAgICAgICAgICAgICJBREFQVEVSX1FD
+MiIsICJBREFQVEVSX1FDMyIsICJBREFQVEVSX1BEIiBvciBvdGhlciBwcml2YXRlIGFkYXB0ZXIu
+DQoNCldoeSBhcmUgdGhlc2Ugc3RyaW5ncyBub3QgaW4gdGhlIHBhdGNoIGFzIHdlbGw/DQoNCj4g
+XCBObyBuZXdsaW5lIGF0IGVuZCBvZiBmaWxlDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2Vy
+L3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYyBiL2RyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2Vy
+X3N1cHBseV9zeXNmcy5jDQo+IGluZGV4IGY5NTU3NGM0MTg5OC4uYzg2NGExNDgyOWVjIDEwMDY0
+NA0KPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYw0KPiAr
+KysgYi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYw0KPiBAQCAtMjA3
+LDYgKzIwNyw3IEBAIHN0YXRpYyBzdHJ1Y3QgcG93ZXJfc3VwcGx5X2F0dHIgcG93ZXJfc3VwcGx5
+X2F0dHJzW10gPSB7DQo+ICAgICAgIFBPV0VSX1NVUFBMWV9BVFRSKE1BTlVGQUNUVVJFUiksDQo+
+ICAgICAgIFBPV0VSX1NVUFBMWV9BVFRSKFNFUklBTF9OVU1CRVIpLA0KPiAgICAgICBQT1dFUl9T
+VVBQTFlfQVRUUihxdWlja19jaGFyZ2VfdHlwZSksDQo+ICsgICAgIFBPV0VSX1NVUFBMWV9BVFRS
+KHR4X2FkYXB0ZXIpLA0KDQp1cHBlciBjYXNlPw0KDQp0aGFua3MsDQoNCmdyZWcgay1oDQojLyoq
+KioqKrG+08q8/rywxuS4vbz+uqzT0NChw9e5q8u+tcSxo8Pc0MXPoqOsvfbP3tPat6LLzbj4yc/D
+5rXY1rfW0MHQs/a1xLj2yMu78si61+mho7371rnIzrrOxuTL+8jL0tTIzrrO0M7Kvcq508OjqLD8
+wKi1q7K7z97T2sirsr+78rK/t9a12NC5wrahori01sahorvyyaK3oqOpsb7Tyrz+1tC1xNDFz6Kh
+o8jnufvE+rTtytXBy7G+08q8/qOsx+vE+sGivLS157uwu/LTyrz+zajWqreivP7Iy7Kiyb6z/bG+
+08q8/qOhIFRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29udGFpbiBjb25maWRlbnRp
+YWwgaW5mb3JtYXRpb24gZnJvbSBYSUFPTUksIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRo
+ZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNl
+IG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3YXkgKGluY2x1ZGlu
+ZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1cmUsIHJlcHJv
+ZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRl
+bmRlZCByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1h
+aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBwaG9uZSBvciBlbWFpbCBp
+bW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0ISoqKioqKi8jDQo=
