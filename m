@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50593C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99095C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1A82068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E9D2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594419007;
-	bh=DXUdo8CRGnVX/RDYtjZ/JAgmkzNGabAQlQmalQpqyNk=;
+	s=default; t=1594419011;
+	bh=YLKBsl+YyIPqB0lKX+8U9O4T9ChNs+b3L9bmtEuPbr8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mAgVjABgGAHK50yjvlR8lvjsHV1m4TRt0ffPkIXdLPHFvBKwzycfJd1rH/rHxG/u5
-	 FGyCpM0Q55Se9tXN/AB4DytyNVATaxx/hddlX3BmtxCldb7VN1PSTvYzgXOyFnp5D9
-	 GEiZp8DtydExevw3kj1z+Q8O9ySGP+e8lCARJ6dk=
+	b=AbbRASmiIDLYyBbHN0ggb8mcmQvhsJRH+b078aTS8jIDaE+araz+8nsRWUS6eeZUz
+	 vv0f2k0QLNd+Zpm3B9DREFqUdkRVEkKuDkJOPcaGqWMrEDJ1ASqGwUkrNzpYov2UPe
+	 WlYWSQqHfZIT/JFqg80G8xWx4sa/4mFvE0mmlmJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGJWKE (ORCPT
+        id S1726545AbgGJWKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 18:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgGJWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726319AbgGJWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 18:10:04 -0400
-Subject: Re: [GIT PULL] Kselftest fixes update for Linux 5.8-rc5
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594419003;
-        bh=DXUdo8CRGnVX/RDYtjZ/JAgmkzNGabAQlQmalQpqyNk=;
+        s=default; t=1594419004;
+        bh=YLKBsl+YyIPqB0lKX+8U9O4T9ChNs+b3L9bmtEuPbr8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=zZ3nm5aaezj567WZkMx5SQOOXIiXemRkTy0Eb/KwR6wlUsJTQ26wjmZaKJgyss3tR
-         Ze7/aIg8z2r9Eb51mM+VRS1q69Agqc03sSq76p2FsqnczKQIIJTBzaPd5SlDwIqkwS
-         htAyL05zBkBq39ObbIxdAWptj3kNOMg2BHS3jZLg=
+        b=mCmjPb0JPm3Jx9nCeHsv+QW2YWiNMy0PuXEGFM8iClDtO9DKZLXgouUFldVASux89
+         mQTqrTSVSOrG7MQjr2FHSGAlXAidTYbqtiefcPsB1O1mIbpA8TMobtY5nmXKFqvRqW
+         WxyBa6GANK89yFRBku9eE0uXwDHm/q3ZOhBuK5FY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
-References: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
+In-Reply-To: <20200710175806.GA2067493@nvidia.com>
+References: <20200710175806.GA2067493@nvidia.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
- tags/linux-kselftest-fixes-5.8-rc5
-X-PR-Tracked-Commit-Id: 3c01655ac82eb6d1cc2cfe9507031f1b5e0a6df1
+X-PR-Tracked-Message-Id: <20200710175806.GA2067493@nvidia.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+X-PR-Tracked-Commit-Id: 0a03715068794e4b524f66ebbf412ab1f2933f3f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0f318cba1e08a2e18494eec847f6caf94f13129b
-Message-Id: <159441900372.20268.2729613587724365084.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Jul 2020 22:10:03 +0000
-To:     Shuah Khan <skhan@linuxfoundation.org>
+X-PR-Merge-Commit-Id: aa0c9086b40c17a7ad94425b3b70dd1fdd7497bf
+Message-Id: <159441900404.20268.10288707904594934995.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Jul 2020 22:10:04 +0000
+To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jul 2020 10:39:36 -0600:
+The pull request you sent on Fri, 10 Jul 2020 14:58:06 -0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-fixes-5.8-rc5
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0f318cba1e08a2e18494eec847f6caf94f13129b
+https://git.kernel.org/torvalds/c/aa0c9086b40c17a7ad94425b3b70dd1fdd7497bf
 
 Thank you!
 
