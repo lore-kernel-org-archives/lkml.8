@@ -2,118 +2,165 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E76C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF46C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F422077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A456A2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="plnuMrsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgGJKQB (ORCPT
+        id S1727074AbgGJKRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:16:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:37054 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgGJKQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:16:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1304A31B;
-        Fri, 10 Jul 2020 03:16:00 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.212.212])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E9F513F9AB;
-        Fri, 10 Jul 2020 03:15:56 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org,
-        v9fs-developer@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
-        Kaly.Xin@arm.com, justin.he@arm.com, jianyong.wu@arm.com,
-        wei.chen@arm.com
-Subject: [PATCH v4] 9p: retrieve fid from file when file instance exist.
-Date:   Fri, 10 Jul 2020 18:15:48 +0800
-Message-Id: <20200710101548.10108-1-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Jul 2020 06:17:03 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55837 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgGJKRC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 06:17:02 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200710101701euoutp01c2245a6cc3efa06ea129266204dfe727~gXLnQ4Q182213322133euoutp01N
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:17:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200710101701euoutp01c2245a6cc3efa06ea129266204dfe727~gXLnQ4Q182213322133euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594376221;
+        bh=zuImCTUG8KB0maKe8qkWKgOT1mxGOgJZkICKt5oGbeI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=plnuMrsuGMEkycrAG8jAYl+NYTqyivgLb9gVuse4XXicaMM9PDEyMfw5nB5QoSfJm
+         P1aQT6TW0KjabHQlpjLuvOfJMNx0eAQjIwyi7eBAgZXTdBaZyXsq6PVX9p622yLKya
+         6tgQ+p2keFGMAmWTZwwfp05CEFWjmdO4ZfAR6TnY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200710101701eucas1p2b25fdf4c5eb5debe392ff1ff0530324e~gXLnD4l0R0954409544eucas1p2H;
+        Fri, 10 Jul 2020 10:17:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id B5.6D.06318.C10480F5; Fri, 10
+        Jul 2020 11:17:00 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710101700eucas1p27a9b4f0c67d6b5af361ad3085c830d39~gXLmrr0ra0940409404eucas1p23;
+        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200710101700eusmtrp20bdf7cf974e4798332791a5c06de0237~gXLmq972P2032920329eusmtrp2m;
+        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-fc-5f08401c4f46
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F2.C0.06314.C10480F5; Fri, 10
+        Jul 2020 11:17:00 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710101700eusmtip20235ca730843f772b9729ddb9037521d~gXLmM2BMQ2026820268eusmtip2O;
+        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
+Subject: Re: [PATCH] efi: avoid error message when booting under Xen
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
+Date:   Fri, 10 Jul 2020 12:16:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUYRjG+XZmx3Fx5XM1fHGlYjEhI80UGUzESmrznyL6I+3QNSePPHe8
+        KzDMI8uwJMxVWNsgS0HNPNI8QMuzNPNITUjzlszFEyMtZ0fJ/57vfd4f3/PASxOyCrEVHRwe
+        zarDVaEKSkJWtax3Hbb2oH2PNPa4MuvLC4jpW1mgmPyho0zq2DBi2h7qxUxvbT7FZDwbNGLW
+        KrJFHrSyvOgepfx+v1WkbNb3kcqFhn5KWVrRTyqXyveeo3wkbgFsaHAsq3Zw95METXWsiiPL
+        TOP1uTlUEnpgkoGMacDOMPttgMxAElqGXyJY0BSTvCHDywjG33sLxhKC1cWP1A7RkdlBCEYh
+        glJtOxIe8whKJuoNuDn2hNXiJBGvLbALzC1lGvFLBP6BoLhx3LBEYVd4lFa0RdO0FLtDn/YC
+        PybxAShImSN4vQdfhMXRZjGvpdgM2nMnDKgxdoPxJ3WI1wS2hOEJrUjQ+yC5Ms+QDnCLETTO
+        lm3H9oSprDEjQZvDXGvFtraGvzU8zAMlCDbSZ7bpagSF2Zvb9DEY6fpN8UkJfBBKax2E8XH4
+        UJ1sKADYFAbnzYQQpvC4KocQxlJIT5UJ27ZQ9mInjjVk1LwispBCs6uaZlcdza46mv//FiCy
+        CFmyMVxYIMs5hbNx9pwqjIsJD7S/FhFWjrZuqXOzdeUtavjj34QwjRQmUr8NylcmVsVyCWFN
+        CGhCYSE98anzqkwaoEpIZNURvuqYUJZrQnKaVFhKnXSzV2Q4UBXN3mDZSFa944poY6sk9LUu
+        1Gf1zc8v85cHCup69mfapMTrrp91jopZ0TGFcSaH9FG3ck9falv08u093xCy0p3f6lhf7yS/
+        wznOhLSfqdv4dXugyNiuPOBUopP3kLQwOE3u9U5fEhdyT+v//GSSfHptWj5qox3pUz59nSUp
+        q/zsZ4vEkzqXie6beXfdHNcnFSQXpHK0I9Sc6h+lhHiIRwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7oyDhzxBru/yFr8/PKe0eLK1/ds
+        FnNuGlm0PbzFaHGi7wOrxeVdc9gsuhbeYLf4vmUykwOHx6ZVnWwe97uPM3kc/nCFxeP9vqts
+        Huu3XGXx+LxJLoAtSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
+        syy1SN8uQS/j2alvrAUb+Co+zJzO1sDYw9PFyMkhIWAicar3FHMXIxeHkMBSRokZK5sYuxg5
+        gBIyEsfXl0HUCEv8udbFBlHzmlHi3KpLjCAJYQEXiW+rG5hAbBEBM4lXn3vZQYqYBR4xSnT9
+        XcYE0fEGaGrbYRaQKjYBK4mJ7avANvAK2ElcmR8CEmYRUJVY0PqKGcQWFYiQOLxjFtgCXgFB
+        iZMzn4C1cgrYSDyeugcsziygLvFn3iVmCFtc4taT+UwQtrxE89bZzBMYhWYhaZ+FpGUWkpZZ
+        SFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzDbcd+bt7BeGlj8CFGAQ5GJR7eHf/Z
+        4oVYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAFJFXEm9o
+        amhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRb92WuV5/fNYZH7OQEeEs
+        1LlrHL9SQy3SLE5/7zqVJ3U7H7R+CBFw2V8k+vr8M7WoDfpMocp+seJ/ulZHKGX1RXi+6mxK
+        zPFR5rM/eOm+c0dOIEc8s5DCc4N9Vx5tjO+d5SjyKl4j/cnF36cMtp2Kazo3hV89ec6JO1/9
+        r2/4L9h6P5nBuU+JpTgj0VCLuag4EQDuYox+2QIAAA==
+X-CMS-MailID: 20200710101700eucas1p27a9b4f0c67d6b5af361ad3085c830d39
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200709091750eucas1p18003b0c8127600369485c62c1e587c22
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200709091750eucas1p18003b0c8127600369485c62c1e587c22
+References: <20200610141052.13258-1-jgross@suse.com>
+        <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
+        <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
+        <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current setattr implementation in 9p, fid is always retrieved
-from dentry no matter file instance exists or not. If so, there may be
-some info related to opened file instance dropped. So it's better
-to retrieve fid from file instance when it is passed to setattr.
 
-for example:
-fd=open("tmp", O_RDWR);
-ftruncate(fd, 10);
+[ added EFI Maintainer & ML to Cc: ]
 
-The file context related with the fd will be lost as fid is always
-retrieved from dentry, then the backend can't get the info of
-file context. It is against the original intention of user and
-may lead to bug.
+Hi,
 
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- fs/9p/vfs_inode.c      | 9 +++++++--
- fs/9p/vfs_inode_dotl.c | 9 +++++++--
- 2 files changed, 14 insertions(+), 4 deletions(-)
+On 7/9/20 11:17 AM, Jürgen Groß wrote:
+> On 28.06.20 10:50, Jürgen Groß wrote:
+>> Ping?
+>>
+>> On 10.06.20 16:10, Juergen Gross wrote:
+>>> efifb_probe() will issue an error message in case the kernel is booted
+>>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+>>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
+>>> isn't set.
+>>>
+>>> Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+>>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>>> ---
+>>>   drivers/video/fbdev/efifb.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+>>> index 65491ae74808..f5eccd1373e9 100644
+>>> --- a/drivers/video/fbdev/efifb.c
+>>> +++ b/drivers/video/fbdev/efifb.c
+>>> @@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
+>>>       info->apertures->ranges[0].base = efifb_fix.smem_start;
+>>>       info->apertures->ranges[0].size = size_remap;
+>>> -    if (efi_enabled(EFI_BOOT) &&
+>>> +    if (efi_enabled(EFI_BOOT) && !efi_enabled(EFI_PARAVIRT) &&
+>>>           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+>>>           if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+>>>               (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+>>>
+>>
+> 
+> In case I see no reaction from the maintainer for another week I'll take
+> this patch through the Xen tree.
 
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index c9255d399917..cd004dee2214 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -1090,7 +1090,7 @@ static int v9fs_vfs_setattr(struct dentry *dentry, struct iattr *iattr)
- {
- 	int retval;
- 	struct v9fs_session_info *v9ses;
--	struct p9_fid *fid;
-+	struct p9_fid *fid = NULL;
- 	struct p9_wstat wstat;
- 
- 	p9_debug(P9_DEBUG_VFS, "\n");
-@@ -1100,7 +1100,12 @@ static int v9fs_vfs_setattr(struct dentry *dentry, struct iattr *iattr)
- 
- 	retval = -EPERM;
- 	v9ses = v9fs_dentry2v9ses(dentry);
--	fid = v9fs_fid_lookup(dentry);
-+	if (iattr->ia_valid & ATTR_FILE) {
-+		fid = iattr->ia_file->private_data;
-+		WARN_ON(!fid);
-+	}
-+	if (!fid)
-+		fid = v9fs_fid_lookup(dentry);
- 	if(IS_ERR(fid))
- 		return PTR_ERR(fid);
- 
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index 60328b21c5fb..0028eccb665a 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -540,7 +540,7 @@ static int v9fs_mapped_iattr_valid(int iattr_valid)
- int v9fs_vfs_setattr_dotl(struct dentry *dentry, struct iattr *iattr)
- {
- 	int retval;
--	struct p9_fid *fid;
-+	struct p9_fid *fid = NULL;
- 	struct p9_iattr_dotl p9attr;
- 	struct inode *inode = d_inode(dentry);
- 
-@@ -560,7 +560,12 @@ int v9fs_vfs_setattr_dotl(struct dentry *dentry, struct iattr *iattr)
- 	p9attr.mtime_sec = iattr->ia_mtime.tv_sec;
- 	p9attr.mtime_nsec = iattr->ia_mtime.tv_nsec;
- 
--	fid = v9fs_fid_lookup(dentry);
-+	if (iattr->ia_valid & ATTR_FILE) {
-+		fid = iattr->ia_file->private_data;
-+		WARN_ON(!fid);
-+	}
-+	if (!fid)
-+		fid = v9fs_fid_lookup(dentry);
- 	if (IS_ERR(fid))
- 		return PTR_ERR(fid);
- 
--- 
-2.17.1
+From fbdev POV this change looks fine to me and I'm OK with merging it
+through Xen or EFI tree:
 
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
