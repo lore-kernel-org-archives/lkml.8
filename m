@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4BEC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D18C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C62207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A0120853
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399977;
-	bh=qdtadx6ii6a4WOsbc7MrOzK7bRoTO0yZjJxBv6OfeUk=;
+	s=default; t=1594399992;
+	bh=VrO79BAPTvsqAJryzs9s1s3QDGGNJm8F0l70wqqFpU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNNpw/NtbrWUWjFAM2vf8j9r9gAOBY9Zk3eJg0zwOAvQ57UxGfLgZRkMlMHxZrkrv
-	 E69ZmVbu+CU4CXhWjWzlKnaz6ZxhFAu0orymQoTXbGfqu9wNIlWy0YFq+fjtPb7Qa5
-	 AJmvtpuy/ZkwU1S7wlN7VLkG56QW7JwdxpMa4M5w=
+	b=c7m4cGDauhU+gFtORyr1cZt6b0sxlL4VNkrNxSOEUqhURCBkIKwqGXhIRIKz4BKww
+	 n7aniMxoNFZp/UBmupPGLMu+PaH1rA7C3AAB1zsSEwojtezktBkUfCLxocfQUXHRqV
+	 c+TlBPV8KqpOXSIiQTnSkTJxwyM/inG74Ofgff74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgGJQw4 (ORCPT
+        id S1728565AbgGJQxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59962 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728461AbgGJQwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:52:54 -0400
+        id S1728521AbgGJQxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:53:05 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12D82084C;
-        Fri, 10 Jul 2020 16:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44D94207D0;
+        Fri, 10 Jul 2020 16:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594399972;
-        bh=qdtadx6ii6a4WOsbc7MrOzK7bRoTO0yZjJxBv6OfeUk=;
+        s=default; t=1594399984;
+        bh=VrO79BAPTvsqAJryzs9s1s3QDGGNJm8F0l70wqqFpU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzKGz8bbAze1CQJzY0pVc51xySQvFhqH81SvMrHwAbG0jwG27UW3BmRDrO5CeN84u
-         F3UUd+EMKOgCpjrnZ/8q4U5xGlebKNtz2JZcE0QDWibz+MaBkVr8uUEWoUoO1bWy7k
-         5ysn/NdmF3iHpep4yFqhSBVqFKR014yDJ6jUNvRs=
+        b=jam5ZhL7YFw3WEWoDK4X/DgucvuEh9nG7hSocGIPPVCsksf00rD+mmRcYz24AMjrM
+         Jh25rSdnNLlJzDLK65c+dx9KNEB6UiQdh6XhxypYADF/2yRjCxPIZm8BJyB1GWrygl
+         4satdWCb0CSVj6Lcv08gKW1K7H6n/gtqeUd7cY8M=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
@@ -60,9 +60,9 @@ Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH v3 10/19] Documentation/barriers: Remove references to [smp_]read_barrier_depends()
-Date:   Fri, 10 Jul 2020 17:51:54 +0100
-Message-Id: <20200710165203.31284-11-will@kernel.org>
+Subject: [PATCH v3 13/19] include/linux: Remove smp_read_barrier_depends() from comments
+Date:   Fri, 10 Jul 2020 17:51:57 +0100
+Message-Id: <20200710165203.31284-14-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 References: <20200710165203.31284-1-will@kernel.org>
@@ -73,215 +73,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The [smp_]read_barrier_depends() barrier macros no longer exist as
-part of the Linux memory model, so remove all references to them from
-the Documentation/ directory.
-
-Although this is fairly mechanical on the whole, we drop the "CACHE
-COHERENCY" section entirely from 'memory-barriers.txt' as it doesn't
-make any sense now that the dependency barriers have been removed.
+smp_read_barrier_depends() doesn't exist any more, so reword the two
+comments that mention it to refer to "dependency ordering" instead.
 
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- .../RCU/Design/Requirements/Requirements.rst  |   2 +-
- Documentation/memory-barriers.txt             | 156 +-----------------
- 2 files changed, 9 insertions(+), 149 deletions(-)
+ include/linux/percpu-refcount.h | 2 +-
+ include/linux/ptr_ring.h        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
-index 75b8ca007a11..50d5c43c48b0 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.rst
-+++ b/Documentation/RCU/Design/Requirements/Requirements.rst
-@@ -463,7 +463,7 @@ again without disrupting RCU readers.
- This guarantee was only partially premeditated. DYNIX/ptx used an
- explicit memory barrier for publication, but had nothing resembling
- ``rcu_dereference()`` for subscription, nor did it have anything
--resembling the ``smp_read_barrier_depends()`` that was later subsumed
-+resembling the dependency-ordering barrier that was later subsumed
- into ``rcu_dereference()`` and later still into ``READ_ONCE()``. The
- need for these operations made itself known quite suddenly at a
- late-1990s meeting with the DEC Alpha architects, back in the days when
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index eaabc3134294..4e55aba3eb4a 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -553,12 +553,12 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
- DATA DEPENDENCY BARRIERS (HISTORICAL)
- -------------------------------------
+diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
+index 22d9d183950d..87d8a38bdea1 100644
+--- a/include/linux/percpu-refcount.h
++++ b/include/linux/percpu-refcount.h
+@@ -155,7 +155,7 @@ static inline bool __ref_is_percpu(struct percpu_ref *ref,
+ 	 * between contaminating the pointer value, meaning that
+ 	 * READ_ONCE() is required when fetching it.
+ 	 *
+-	 * The smp_read_barrier_depends() implied by READ_ONCE() pairs
++	 * The dependency ordering from the READ_ONCE() pairs
+ 	 * with smp_store_release() in __percpu_ref_switch_to_percpu().
+ 	 */
+ 	percpu_ptr = READ_ONCE(ref->percpu_count_ptr);
+diff --git a/include/linux/ptr_ring.h b/include/linux/ptr_ring.h
+index 417db0a79a62..808f9d3ee546 100644
+--- a/include/linux/ptr_ring.h
++++ b/include/linux/ptr_ring.h
+@@ -107,7 +107,7 @@ static inline int __ptr_ring_produce(struct ptr_ring *r, void *ptr)
+ 		return -ENOSPC;
  
--As of v4.15 of the Linux kernel, an smp_read_barrier_depends() was
--added to READ_ONCE(), which means that about the only people who
--need to pay attention to this section are those working on DEC Alpha
--architecture-specific code and those working on READ_ONCE() itself.
--For those who need it, and for those who are interested in the history,
--here is the story of data-dependency barriers.
-+As of v4.15 of the Linux kernel, an smp_mb() was added to READ_ONCE() for
-+DEC Alpha, which means that about the only people who need to pay attention
-+to this section are those working on DEC Alpha architecture-specific code
-+and those working on READ_ONCE() itself.  For those who need it, and for
-+those who are interested in the history, here is the story of
-+data-dependency barriers.
+ 	/* Make sure the pointer we are storing points to a valid data. */
+-	/* Pairs with smp_read_barrier_depends in __ptr_ring_consume. */
++	/* Pairs with the dependency ordering in __ptr_ring_consume. */
+ 	smp_wmb();
  
- The usage requirements of data dependency barriers are a little subtle, and
- it's not always obvious that they're needed.  To illustrate, consider the
-@@ -2708,144 +2708,6 @@ the properties of the memory window through which devices are accessed and/or
- the use of any special device communication instructions the CPU may have.
- 
- 
--CACHE COHERENCY
-----------------
--
--Life isn't quite as simple as it may appear above, however: for while the
--caches are expected to be coherent, there's no guarantee that that coherency
--will be ordered.  This means that while changes made on one CPU will
--eventually become visible on all CPUs, there's no guarantee that they will
--become apparent in the same order on those other CPUs.
--
--
--Consider dealing with a system that has a pair of CPUs (1 & 2), each of which
--has a pair of parallel data caches (CPU 1 has A/B, and CPU 2 has C/D):
--
--	            :
--	            :                          +--------+
--	            :      +---------+         |        |
--	+--------+  : +--->| Cache A |<------->|        |
--	|        |  : |    +---------+         |        |
--	|  CPU 1 |<---+                        |        |
--	|        |  : |    +---------+         |        |
--	+--------+  : +--->| Cache B |<------->|        |
--	            :      +---------+         |        |
--	            :                          | Memory |
--	            :      +---------+         | System |
--	+--------+  : +--->| Cache C |<------->|        |
--	|        |  : |    +---------+         |        |
--	|  CPU 2 |<---+                        |        |
--	|        |  : |    +---------+         |        |
--	+--------+  : +--->| Cache D |<------->|        |
--	            :      +---------+         |        |
--	            :                          +--------+
--	            :
--
--Imagine the system has the following properties:
--
-- (*) an odd-numbered cache line may be in cache A, cache C or it may still be
--     resident in memory;
--
-- (*) an even-numbered cache line may be in cache B, cache D or it may still be
--     resident in memory;
--
-- (*) while the CPU core is interrogating one cache, the other cache may be
--     making use of the bus to access the rest of the system - perhaps to
--     displace a dirty cacheline or to do a speculative load;
--
-- (*) each cache has a queue of operations that need to be applied to that cache
--     to maintain coherency with the rest of the system;
--
-- (*) the coherency queue is not flushed by normal loads to lines already
--     present in the cache, even though the contents of the queue may
--     potentially affect those loads.
--
--Imagine, then, that two writes are made on the first CPU, with a write barrier
--between them to guarantee that they will appear to reach that CPU's caches in
--the requisite order:
--
--	CPU 1		CPU 2		COMMENT
--	===============	===============	=======================================
--					u == 0, v == 1 and p == &u, q == &u
--	v = 2;
--	smp_wmb();			Make sure change to v is visible before
--					 change to p
--	<A:modify v=2>			v is now in cache A exclusively
--	p = &v;
--	<B:modify p=&v>			p is now in cache B exclusively
--
--The write memory barrier forces the other CPUs in the system to perceive that
--the local CPU's caches have apparently been updated in the correct order.  But
--now imagine that the second CPU wants to read those values:
--
--	CPU 1		CPU 2		COMMENT
--	===============	===============	=======================================
--	...
--			q = p;
--			x = *q;
--
--The above pair of reads may then fail to happen in the expected order, as the
--cacheline holding p may get updated in one of the second CPU's caches while
--the update to the cacheline holding v is delayed in the other of the second
--CPU's caches by some other cache event:
--
--	CPU 1		CPU 2		COMMENT
--	===============	===============	=======================================
--					u == 0, v == 1 and p == &u, q == &u
--	v = 2;
--	smp_wmb();
--	<A:modify v=2>	<C:busy>
--			<C:queue v=2>
--	p = &v;		q = p;
--			<D:request p>
--	<B:modify p=&v>	<D:commit p=&v>
--			<D:read p>
--			x = *q;
--			<C:read *q>	Reads from v before v updated in cache
--			<C:unbusy>
--			<C:commit v=2>
--
--Basically, while both cachelines will be updated on CPU 2 eventually, there's
--no guarantee that, without intervention, the order of update will be the same
--as that committed on CPU 1.
--
--
--To intervene, we need to interpolate a data dependency barrier or a read
--barrier between the loads (which as of v4.15 is supplied unconditionally
--by the READ_ONCE() macro).  This will force the cache to commit its
--coherency queue before processing any further requests:
--
--	CPU 1		CPU 2		COMMENT
--	===============	===============	=======================================
--					u == 0, v == 1 and p == &u, q == &u
--	v = 2;
--	smp_wmb();
--	<A:modify v=2>	<C:busy>
--			<C:queue v=2>
--	p = &v;		q = p;
--			<D:request p>
--	<B:modify p=&v>	<D:commit p=&v>
--			<D:read p>
--			smp_read_barrier_depends()
--			<C:unbusy>
--			<C:commit v=2>
--			x = *q;
--			<C:read *q>	Reads from v after v updated in cache
--
--
--This sort of problem can be encountered on DEC Alpha processors as they have a
--split cache that improves performance by making better use of the data bus.
--While most CPUs do imply a data dependency barrier on the read when a memory
--access depends on a read, not all do, so it may not be relied on.
--
--Other CPUs may also have split caches, but must coordinate between the various
--cachelets for normal memory accesses.  The semantics of the Alpha removes the
--need for hardware coordination in the absence of memory barriers, which
--permitted Alpha to sport higher CPU clock rates back in the day.  However,
--please note that (again, as of v4.15) smp_read_barrier_depends() should not
--be used except in Alpha arch-specific code and within the READ_ONCE() macro.
--
--
- CACHE COHERENCY VS DMA
- ----------------------
- 
-@@ -3009,10 +2871,8 @@ caches with the memory coherence system, thus making it seem like pointer
- changes vs new data occur in the right order.
- 
- The Alpha defines the Linux kernel's memory model, although as of v4.15
--the Linux kernel's addition of smp_read_barrier_depends() to READ_ONCE()
--greatly reduced Alpha's impact on the memory model.
--
--See the subsection on "Cache Coherency" above.
-+the Linux kernel's addition of smp_mb() to READ_ONCE() on Alpha greatly
-+reduced its impact on the memory model.
- 
- 
- VIRTUAL MACHINE GUESTS
+ 	WRITE_ONCE(r->queue[r->producer++], ptr);
 -- 
 2.27.0.383.g050319c2ae-goog
 
