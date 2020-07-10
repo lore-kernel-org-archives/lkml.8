@@ -2,167 +2,96 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98669C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62378C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7752E2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E3C2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hrYkdm7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGJGbM (ORCPT
+        id S1726832AbgGJGcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:31:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7287 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbgGJGbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:31:11 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 65F1A16FA19CD90A6785;
-        Fri, 10 Jul 2020 14:31:07 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 10 Jul
- 2020 14:31:05 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in
- F2FS_IOC_SEC_TRIM_FILE
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Daeho Jeong <daeho43@gmail.com>,
-        Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200710021505.2405872-1-daeho43@gmail.com>
- <20200710030246.GA545837@google.com>
- <62c9dd7a-5d18-8bb6-8e43-c055fcff51cc@huawei.com>
- <20200710033100.GE545837@google.com>
- <ede6620c-6fc9-797d-e3ea-e630eb76b309@huawei.com>
- <20200710035215.GI545837@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <34cad197-75eb-d7c2-4465-261d5debfd3b@huawei.com>
-Date:   Fri, 10 Jul 2020 14:31:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 10 Jul 2020 02:32:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:57529 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbgGJGcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:32:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B339d4SSLz9sRK;
+        Fri, 10 Jul 2020 16:32:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594362725;
+        bh=Xtnu2Js4JHqvlHJCaEmgieQBI4zzBqVR5vdHQT9r/lE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hrYkdm7tzYV7vTaNpLPqV2pIh2eXHvcFdgWnMk857fpgIT2wfzlxkCqGRyv5S+kpD
+         0UfUMMBA7/cWG24TJym+Hv+qWu/NJwv90elvdS6wxzXR4u+hBO2NXKPPIoweZXw4/D
+         EB0CE2mAP4xAbwn2V2VWGIzzvtzTyrdXbuN832fh8NeKyex0rcxlhZtE0y/pAxnIaY
+         UiASSIODSUelZY1ypJEdByf38njPJPZfjOmoIYCidtVpC4dQer6V2r2nGjI53mu1SS
+         CX0/LRqf2KPrixIY6R4iONiJEirmJGGsNeLaN3RnRHzzeqhEccZOQ6zlkFCK+Fhyzn
+         NoHQQChDPfV4A==
+Date:   Fri, 10 Jul 2020 16:32:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the pidfd tree
+Message-ID: <20200710163204.651bb496@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200710035215.GI545837@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/v=rd2xsHZ1ty3PHH4Xfvi1g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/10 11:52, Jaegeuk Kim wrote:
-> On 07/10, Chao Yu wrote:
->> On 2020/7/10 11:31, Jaegeuk Kim wrote:
->>> On 07/10, Chao Yu wrote:
->>>> On 2020/7/10 11:02, Jaegeuk Kim wrote:
->>>>> On 07/10, Daeho Jeong wrote:
->>>>>> From: Daeho Jeong <daehojeong@google.com>
->>>>>>
->>>>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
->>>>>>  1. Added -1 value support for range.len to signify the end of file.
->>>>>>  2. If the end of the range passes over the end of file, it means until
->>>>>>     the end of file.
->>>>>>  3. ignored the case of that range.len is zero to prevent the function
->>>>>>     from making end_addr zero and triggering different behaviour of
->>>>>>     the function.
->>>>>>
->>>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>>>>> ---
->>>>>>  fs/f2fs/file.c | 16 +++++++---------
->>>>>>  1 file changed, 7 insertions(+), 9 deletions(-)
->>>>>>
->>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>> index 368c80f8e2a1..1c4601f99326 100644
->>>>>> --- a/fs/f2fs/file.c
->>>>>> +++ b/fs/f2fs/file.c
->>>>>> @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->>>>>>  	file_start_write(filp);
->>>>>>  	inode_lock(inode);
->>>>>>  
->>>>>> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
->>>>>> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
->>>>>> +			range.start >= inode->i_size) {
->>>>>>  		ret = -EINVAL;
->>>>>>  		goto err;
->>>>>>  	}
->>>>>>  
->>>>>> -	if (range.start >= inode->i_size) {
->>>>>> -		ret = -EINVAL;
->>>>>> +	if (range.len == 0)
->>>>>>  		goto err;
->>>>>> -	}
->>>>>>  
->>>>>> -	if (inode->i_size - range.start < range.len) {
->>>>>> -		ret = -E2BIG;
->>>>>> -		goto err;
->>>>>> -	}
->>>>>> -	end_addr = range.start + range.len;
->>>>>> +	if (range.len == (u64)-1 || inode->i_size - range.start < range.len)
->>>>>> +		end_addr = inode->i_size;
->>>>
->>>> We can remove 'range.len == (u64)-1' condition since later condition can cover
->>>> this?
->>>>
->>>>>
->>>>> Hmm, what if there are blocks beyond i_size? Do we need to check i_blocks for
->>>>
->>>> The blocks beyond i_size will never be written, there won't be any valid message
->>>> there, so we don't need to worry about that.
->>>
->>> I don't think we have a way to guarantee the order of i_size and block
->>> allocation in f2fs. See f2fs_write_begin and f2fs_write_end.
->>
->> However, write_begin & write_end are covered by inode_lock, it could not be
->> racy with inode size check in f2fs_sec_trim_file() as it hold inode_lock as
->> well?
-> 
-> Like Daeho said, write_begin -> checkpoint -> power-cut can give bigger i_blocks
-> than i_size.
+--Sig_/v=rd2xsHZ1ty3PHH4Xfvi1g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The path won't, cp only persists reserved block in dnode rather than written
-data block in segment, because data will be copied to page cache after write_begin.
+Hi all,
 
-I think truncation path could as Daeho said:
+After merging the pidfd tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-1. truncate -> i_size update however blocks wasn't truncated yet -> checkpoint -> recovery
-2. truncate failed -> i_size update however partial blocks was truncated -> fsync
+fs/nsfs.c: In function 'ns_ioctl':
+fs/nsfs.c:195:14: warning: unused variable 'pid_struct' [-Wunused-variable]
+  195 |  struct pid *pid_struct;
+      |              ^~~~~~~~~~
+fs/nsfs.c:194:22: warning: unused variable 'child_reaper' [-Wunused-variabl=
+e]
+  194 |  struct task_struct *child_reaper;
+      |                      ^~~~~~~~~~~~
 
-> 
->>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>> ending criteria?
->>>>>
->>>>>> +	else
->>>>>> +		end_addr = range.start + range.len;
->>>>>>  
->>>>>>  	to_end = (end_addr == inode->i_size);
->>>>>>  	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
->>>>>> -- 
->>>>>> 2.27.0.383.g050319c2ae-goog
->>>>>>
->>>>>>
->>>>>>
->>>>>> _______________________________________________
->>>>>> Linux-f2fs-devel mailing list
->>>>>> Linux-f2fs-devel@lists.sourceforge.net
->>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> Linux-f2fs-devel mailing list
->>>>> Linux-f2fs-devel@lists.sourceforge.net
->>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>>>> .
->>>>>
->>> .
->>>
-> .
-> 
+Introduced by commit
+
+  a57927d2dce2 ("nsfs: add NS_GET_INIT_PID ioctl")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/v=rd2xsHZ1ty3PHH4Xfvi1g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8IC2QACgkQAVBC80lX
+0GxZnQf6AxL+KWKouB/4mt0LkvB63J79TwZoYp7ue69pIKjzlyzmSHI8mmpaLzSf
+2NtYQpURLU/P3H4nHg5udqYAQHwkX8EeHSsMPFHDrMXSCdReAiQMu1dkAxjuTk0S
+np6gBR0A+BbUmOaKgcke8KJkJqP5v3eQ51y42pF5XIce7Haa67gcC3fVEUo20dgv
+P9bIJPQJFy+5aI6fQ+iDlQvgfzbdqyZOR0RJBoyBFKniVflw35nuo8kAQ/BvfszM
+u+I+0VdC8fwEdcqLe1Pr4hmwcRiiAZjl46XXyzKzRkYQOyUQKaAsmDxk0MLoY5SX
+nYnXihs3hEb0FJIt9h5OkgpT1+lRmA==
+=2T7r
+-----END PGP SIGNATURE-----
+
+--Sig_/v=rd2xsHZ1ty3PHH4Xfvi1g--
