@@ -2,101 +2,123 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE9C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8CC433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728762078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856672078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FO54VgP8"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Yoy2AF0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGJQBE (ORCPT
+        id S1728108AbgGJQBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        Fri, 10 Jul 2020 12:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgGJQBC (ORCPT
+        with ESMTP id S1728030AbgGJQBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:01:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD43C08C5CE;
-        Fri, 10 Jul 2020 09:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=sRWyr6JRHvOQ9KVgvohiV8oPDS3eCjS2RJi+7dgDmCw=; b=FO54VgP8V48D2nAylnRW29xZ5z
-        IBjgWi9n1EMwL32Lpj1iBr9VRfrEvLoxJSQzHzfkDn11Aw6ML+hsF8Z9K6P4PkAdnh5t0s7+yI/eW
-        Ut3kToS5064jDoJ3J5EFBSNb2u76tSSE+LIy+McLpjz2+LdseDQYE4r3O0Eu1GvzYY2QZuZNHO+ZJ
-        AhwNz4q/dh7v8/ABOA3/eNpEPR2bxMA9fKRp2NFZ5JleTTEX6cOT/qWTIe0UsGYhzQzhBcMoghv5Y
-        ZpL34lYVrTzF42gr5F4AqSkKJRNyCt/HyB53FdP8y7OjAmXYOmXVjT8mooeNGitYlp4kxKkOGRBGn
-        vIVeS98w==;
-Received: from [2001:4bb8:188:5f50:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtvSN-0002da-H3; Fri, 10 Jul 2020 16:01:00 +0000
-Date:   Fri, 10 Jul 2020 18:00:58 +0200
-From:   Christoph Hellwig <hch@infradead.org>
+        Fri, 10 Jul 2020 12:01:23 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC46C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:01:22 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id e64so6526606iof.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=CT8GfIgnhQopWm8iDNrvhIrzFdMDsa9H0pNwgHwkLh4=;
+        b=Yoy2AF0Hlb25wfR80l47A00iDMoRp5YDNhyRFuXfbtPhZPrppiweVtxfl0EA63y95e
+         NqLjp0CSKEfkKEDplqCeo/BSn0HO1ugY+1wyWMZRg1Kv3VyoQhP5YIBuifgY/xLpee/D
+         WCzRcYAiDkwxZF7p4r4dopZtrouc5G85QR28xgEntuRFohB9lZZI/GOLpglmG0j4m/QA
+         qTWOHJtYArbfV1mBwWusCP3+60N1r75M8zjM9pqM05XLbDjcFyqkklv2TBkXoH2KgqNs
+         JODXbfw9qIP3aY1L/FQJ3FL/xqP8SaLRBMwwxIERQAt5vP5Sqp/dlmmvJUPTOi3Pfdtl
+         CYCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=CT8GfIgnhQopWm8iDNrvhIrzFdMDsa9H0pNwgHwkLh4=;
+        b=HegGz5PEaDjX0nWlsuWbKJ3iSamrzfsBF2Ky7bI3pMJ4bOC1uVDYkW3q1n6oauddct
+         6DKf6eemPQHTMUviIf6qLdHyBWkUtcSc85f3k9ekq5Ye0MjQe+wdQU3V5BccnrMWAGOR
+         EIIuwR2i+IwMGuJ6sNUmNCv5YnEWPgP3VmChN44jna7GDRgnFb7TLfWHl/vKcxCcIX4r
+         FptWILB5p3CID4v9Ql9Hw7wNYmRlrRrM+ieNGCkPv9RnxMC3Ijlt8k3WKT7+cbgAa/VO
+         E2/aqvilpkhHZIJ4pAqpv+qB7ZZ++7+0ZZfa+rfTTzcxHMjAMcwp+KNFe7nZC8zcC4wp
+         GhFQ==
+X-Gm-Message-State: AOAM533Fb17FPidRWmr9vscs9jfEwBAp7RGwpQyNSoOHctp6M+MzcDlP
+        5sGbuhUQ2+fVaa7X/HfWbnTxz+nwZq1T3A==
+X-Google-Smtp-Source: ABdhPJxuXGAJ6xxmDfDRjdZr/xZDFyFSQ8yhw/xlqTPSYGv4M4BL2OyRyl45qSWxa6wvuKUegWVcKg==
+X-Received: by 2002:a6b:6b18:: with SMTP id g24mr45766867ioc.8.1594396881588;
+        Fri, 10 Jul 2020 09:01:21 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id a10sm3590388iln.20.2020.07.10.09.01.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 09:01:21 -0700 (PDT)
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [GIT PULL] clean up kernel read/write helpers
-Message-ID: <20200710160058.GA540798@infradead.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.8-rc5
+Message-ID: <2a7f5f56-a1be-46fc-7b5f-4cc35ca4b33d@kernel.dk>
+Date:   Fri, 10 Jul 2020 10:01:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(note that the new WARN_ONs in combination with syzcaller already found a
-missing input validation in 9p.  The fix should be on your way through
-the maintainer ASAP)
+Hi Linus,
 
-The following changes since commit dcde237b9b0eb1d19306e6f48c0a4e058907619f:
+- Fix memleak for error path in registered files (Yang)
+- Export CQ overflow state in flags, necessary to fix a case where
+  liburing doesn't know if it needs to enter the kernel (Xiaoguang)
+- Fix for a regression in when user memory is accounted freed, causing
+  issues with back-to-back ring exit + init if the ulimit -l setting is
+  very tight.
 
-  Merge tag 'perf-tools-fixes-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux (2020-07-07 15:38:53 -0700)
+Please pull!
+
+
+The following changes since commit b7db41c9e03b5189bc94993bd50e4506ac9e34c1:
+
+  io_uring: fix regression with always ignoring signals in io_cqring_wait() (2020-07-04 13:44:45 -0600)
 
 are available in the Git repository at:
 
-  git://git.infradead.org/users/hch/misc.git tags/cleanup-kernel_read_write
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-10
 
-for you to fetch changes up to 775802c0571fb438cd4f6548a323f9e4cb89f5aa:
+for you to fetch changes up to 309fc03a3284af62eb6082fb60327045a1dabf57:
 
-  fs: remove __vfs_read (2020-07-08 08:27:57 +0200)
-
-----------------------------------------------------------------
-cleanup in-kernel read and write operations
-
-Reshuffle the (__)kernel_read and (__)kernel_write helpers, and ensure
-all users of in-kernel file I/O use them if they don't use iov_iter
-based methods already.
+  io_uring: account user memory freed when exit has been queued (2020-07-10 09:18:35 -0600)
 
 ----------------------------------------------------------------
-Christoph Hellwig (11):
-      cachefiles: switch to kernel_write
-      autofs: switch to kernel_write
-      bpfilter: switch to kernel_write
-      fs: unexport __kernel_write
-      fs: check FMODE_WRITE in __kernel_write
-      fs: implement kernel_write using __kernel_write
-      fs: remove __vfs_write
-      fs: add a __kernel_read helper
-      integrity/ima: switch to using __kernel_read
-      fs: implement kernel_read using __kernel_read
-      fs: remove __vfs_read
+io_uring-5.8-2020-07-10
 
- fs/autofs/waitq.c            |   2 +-
- fs/cachefiles/rdwr.c         |   2 +-
- fs/read_write.c              | 131 +++++++++++++++++++++++++------------------
- include/linux/fs.h           |   2 +-
- net/bpfilter/bpfilter_kern.c |   2 +-
- security/integrity/iint.c    |  14 +----
- 6 files changed, 80 insertions(+), 73 deletions(-)
+----------------------------------------------------------------
+Jens Axboe (1):
+      io_uring: account user memory freed when exit has been queued
+
+Xiaoguang Wang (1):
+      io_uring: export cq overflow status to userspace
+
+Yang Yingliang (2):
+      io_uring: fix memleak in __io_sqe_files_update()
+      io_uring: fix memleak in io_sqe_files_register()
+
+ fs/io_uring.c                 | 29 +++++++++++++++++++++++------
+ include/uapi/linux/io_uring.h |  1 +
+ 2 files changed, 24 insertions(+), 6 deletions(-)
+
+-- 
+Jens Axboe
 
