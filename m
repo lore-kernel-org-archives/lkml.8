@@ -2,129 +2,251 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88304C433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECD9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67FC620748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BD12078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594381021;
-	bh=HbvkzCXrQUvGGQRjHnWmV8if5AoIJw8vGs4laXuFHZw=;
+	s=default; t=1594380863;
+	bh=wr+IWCClV9eDPEwnFOfkWntkNvbhm/9mJRk7vZLMMyE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mmAFbNw0V8c+UavOLlAtxryrnfJD6weZcIhGv0f0hSwdWK/87kIw5Gap+cYWSZXal
-	 MXykT0poHBfUDP31orULmfqvnD4QIUiqXBzaR41iJdeLDz5uggx4kGh549itZcfzec
-	 rX7dC7BttXkqPqsgZ7CDYAthV5XIIXaklgWcSLKA=
+	b=uQ8mgDDnr4e0NuzY+T8pPUZR9wUWyE/eZGRb8ybEMH7vuffvkVaNWF3wMgg/iHBHT
+	 zvT4RcEBJEmHtgQ7howAuTQp1SX9xygiqpA+Uqh/L/VZFFqV4TOgy9s+pAMNuCjv23
+	 YZg35u4SF6zha94vAzO/nW/rKOoag0beeVFEtoN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgGJLhA (ORCPT
+        id S1728009AbgGJLeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 07:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgGJLgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:36:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726725AbgGJLeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:34:19 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.179.81.62])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9EF2077D;
-        Fri, 10 Jul 2020 11:36:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E542077D;
+        Fri, 10 Jul 2020 11:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594381013;
-        bh=HbvkzCXrQUvGGQRjHnWmV8if5AoIJw8vGs4laXuFHZw=;
+        s=default; t=1594380858;
+        bh=wr+IWCClV9eDPEwnFOfkWntkNvbhm/9mJRk7vZLMMyE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bEgWNTxVkgi8WvHpvkba9nE4pNtwzhI+cTB5YCep38j+eU0aWu/HbG5MUqY/81wzU
-         47GWmopSyrkM/dm7bcpztJZRcJFINRc3DbaQWS6sInHjvcw8BNjNXq/xZa96PPOe/R
-         lZ1PoQAoNZW3oTZ/TIVQceCYk81CIynY8hR0M6dQ=
-Date:   Fri, 10 Jul 2020 13:36:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Jiri Slaby <jslaby@suse.com>, Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] vt: Reject zero-sized screen buffer size.
-Message-ID: <20200710113658.GA1238355@kroah.com>
-References: <20200710055329.3759-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200710105500.GA1232395@kroah.com>
- <7adf8aee-9bdd-8184-6cbe-291357677edd@i-love.sakura.ne.jp>
+        b=sfczV1GRR9zDjraJgJ81/5v6TS3qCtzSvfRGZFomzPe6JvEqaoyqvaEp5LEyw64g3
+         cafhkDp9qRkam5OmNYOCm4rIIHXX5UfRuj6YFtEfFL5o+KE31Va2s2xtjIoqXej+Q1
+         hBUVfVFpys7sSKRPamtr26E3VrKdgKg2FWJ7h/9s=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1FBD5405FF; Fri, 10 Jul 2020 08:34:15 -0300 (-03)
+Date:   Fri, 10 Jul 2020 08:34:15 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V7 15/15] perf script: Show text poke address symbol
+Message-ID: <20200710113415.GA22500@kernel.org>
+References: <20200512121922.8997-1-adrian.hunter@intel.com>
+ <20200512121922.8997-16-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7adf8aee-9bdd-8184-6cbe-291357677edd@i-love.sakura.ne.jp>
+In-Reply-To: <20200512121922.8997-16-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 08:31:42PM +0900, Tetsuo Handa wrote:
-> On 2020/07/10 19:55, Greg Kroah-Hartman wrote:
-> >> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> >> index 48a8199f7845..8497e9206607 100644
-> >> --- a/drivers/tty/vt/vt.c
-> >> +++ b/drivers/tty/vt/vt.c
-> >> @@ -1126,7 +1126,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
-> >>  		con_set_default_unimap(vc);
-> >>  
-> >>  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
-> >> -	if (!vc->vc_screenbuf)
-> >> +	if (ZERO_OR_NULL_PTR(vc->vc_screenbuf))
-> > 
-> > No, let's check this before we do kzalloc() please, that's just an odd
-> > way of doing an allocation we shouldn't have had to do.
-> 
-> OK. I can change to
-> 
-> +	if (vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
-> +		goto err_free;
->  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
->  	if (!vc->vc_screenbuf)
->  		goto err_free;
-> 
-> like vc_do_resize() does. But I'm currently waiting for syzbot to test this patch, for
-> I don't have an environment for reproducing this problem.
+Em Tue, May 12, 2020 at 03:19:22PM +0300, Adrian Hunter escreveu:
+> It is generally more useful to show the symbol with an address. In this
+> case, the print function requires the 'machine' which means changing
+> callers to provide it as a parameter. It is optional because most events
+> do not need it and the callers that matter can provide it.
 
-That looks much more sane, thanks.
+I'm just inverting the order of the parameters for
+perf_event__fprintf(), to keep as the first arg the pointer to the type
+that is the prefix for the function, i.e. instead of:
 
+size_t perf_event__fprintf_text_poke(struct machine *machine,
+				     union perf_event *event, FILE *fp)
 
+I'll make it be:
+
+size_t perf_event__fprintf_text_poke(union perf_event *event,
+				     struct machine *machine,FILE *fp)
+
+Ok?
+
+Thanks,
+
+- Arnaldo
+
+ 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/builtin-script.c    |  4 ++--
+>  tools/perf/tests/perf-record.c |  4 ++--
+>  tools/perf/util/event.c        | 23 ++++++++++++++++++-----
+>  tools/perf/util/event.h        |  6 ++++--
+>  tools/perf/util/intel-pt.c     |  2 +-
+>  tools/perf/util/machine.c      |  2 +-
+>  6 files changed, 28 insertions(+), 13 deletions(-)
 > 
-> > 
-> >>  		goto err_free;
-> >>  
-> >>  	/* If no drivers have overridden us and the user didn't pass a
-> >> @@ -1212,7 +1212,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
-> >>  	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
-> >>  		return 0;
-> >>  
-> >> -	if (new_screen_size > KMALLOC_MAX_SIZE)
-> >> +	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
-> >>  		return -EINVAL;
-> >>  	newscreen = kzalloc(new_screen_size, GFP_USER);
-> >>  	if (!newscreen)
-> >> @@ -3393,6 +3393,7 @@ static int __init con_init(void)
-> >>  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> >>  		tty_port_init(&vc->port);
-> >>  		visual_init(vc, currcons, 1);
-> >> +		/* Assuming vc->vc_screenbuf_size is sane here, for this is __init code. */
-> > 
-> > Shouldn't we also check this here, or before we get here, too?
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 35ed8f69ed6a..5bdd1a393399 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2170,7 +2170,7 @@ static int print_event_with_time(struct perf_tool *tool,
+>  					   event->header.type, stdout);
+>  	}
+>  
+> -	perf_event__fprintf(event, stdout);
+> +	perf_event__fprintf(machine, event, stdout);
+>  
+>  	thread__put(thread);
+>  
+> @@ -2305,7 +2305,7 @@ process_finished_round_event(struct perf_tool *tool __maybe_unused,
+>  			     struct ordered_events *oe __maybe_unused)
+>  
+>  {
+> -	perf_event__fprintf(event, stdout);
+> +	perf_event__fprintf(NULL, event, stdout);
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+> index 83adfd846ccd..ff6febf15269 100644
+> --- a/tools/perf/tests/perf-record.c
+> +++ b/tools/perf/tests/perf-record.c
+> @@ -185,14 +185,14 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+>  				err = perf_evlist__parse_sample(evlist, event, &sample);
+>  				if (err < 0) {
+>  					if (verbose > 0)
+> -						perf_event__fprintf(event, stderr);
+> +						perf_event__fprintf(NULL, event, stderr);
+>  					pr_debug("Couldn't parse sample\n");
+>  					goto out_delete_evlist;
+>  				}
+>  
+>  				if (verbose > 0) {
+>  					pr_info("%" PRIu64" %d ", sample.time, sample.cpu);
+> -					perf_event__fprintf(event, stderr);
+> +					perf_event__fprintf(NULL, event, stderr);
+>  				}
+>  
+>  				if (prev_time > sample.time) {
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index dde2f0147713..4b60cd57ad62 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -440,14 +440,26 @@ static int text_poke_printer(enum binary_printer_ops op, unsigned int val,
+>  	}
+>  }
+>  
+> -size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp)
+> +size_t perf_event__fprintf_text_poke(struct machine *machine,
+> +				     union perf_event *event, FILE *fp)
+>  {
+>  	struct perf_record_text_poke_event *tp = &event->text_poke;
+>  	size_t ret;
+>  	bool old;
+>  
+> -	ret = fprintf(fp, " %" PRI_lx64 " old len %u new len %u\n",
+> -		      tp->addr, tp->old_len, tp->new_len);
+> +	ret = fprintf(fp, " %" PRI_lx64 " ", tp->addr);
+> +	if (machine) {
+> +		struct addr_location al;
+> +
+> +		al.map = maps__find(&machine->kmaps, tp->addr);
+> +		if (al.map && map__load(al.map) >= 0) {
+> +			al.addr = al.map->map_ip(al.map, tp->addr);
+> +			al.sym = map__find_symbol(al.map, al.addr);
+> +			if (al.sym)
+> +				ret += symbol__fprintf_symname_offs(al.sym, &al, fp);
+> +		}
+> +	}
+> +	ret += fprintf(fp, " old len %u new len %u\n", tp->old_len, tp->new_len);
+>  	old = true;
+>  	ret += binary__fprintf(tp->bytes, tp->old_len, 16, text_poke_printer,
+>  			       &old, fp);
+> @@ -457,7 +469,8 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp)
+>  	return ret;
+>  }
+>  
+> -size_t perf_event__fprintf(union perf_event *event, FILE *fp)
+> +size_t perf_event__fprintf(struct machine *machine, union perf_event *event,
+> +			   FILE *fp)
+>  {
+>  	size_t ret = fprintf(fp, "PERF_RECORD_%s",
+>  			     perf_event__name(event->header.type));
+> @@ -502,7 +515,7 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
+>  		ret += perf_event__fprintf_bpf(event, fp);
+>  		break;
+>  	case PERF_RECORD_TEXT_POKE:
+> -		ret += perf_event__fprintf_text_poke(event, fp);
+> +		ret += perf_event__fprintf_text_poke(machine, event, fp);
+>  		break;
+>  	default:
+>  		ret += fprintf(fp, "\n");
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index dbbba6dea51d..611c8e5ad9d9 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -389,8 +389,10 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
+>  size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
+>  size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
+>  size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
+> -size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp);
+> -size_t perf_event__fprintf(union perf_event *event, FILE *fp);
+> +size_t perf_event__fprintf_text_poke(struct machine *machine,
+> +				     union perf_event *event, FILE *fp);
+> +size_t perf_event__fprintf(struct machine *machine, union perf_event *event,
+> +			   FILE *fp);
+>  
+>  int kallsyms__get_function_start(const char *kallsyms_filename,
+>  				 const char *symbol_name, u64 *addr);
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index e2e199a58222..4c6bb45d8200 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -236,7 +236,7 @@ static void intel_pt_log_event(union perf_event *event)
+>  	if (!intel_pt_enable_logging || !f)
+>  		return;
+>  
+> -	perf_event__fprintf(event, f);
+> +	perf_event__fprintf(NULL, event, f);
+>  }
+>  
+>  static void intel_pt_dump_sample(struct perf_session *session,
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 9120d7dc274f..5f52b579b3fe 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -821,7 +821,7 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
+>  	u8 cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+>  
+>  	if (dump_trace)
+> -		perf_event__fprintf_text_poke(event, stdout);
+> +		perf_event__fprintf_text_poke(machine, event, stdout);
+>  
+>  	if (!event->text_poke.new_len)
+>  		return 0;
+> -- 
+> 2.17.1
 > 
-> This is an __init function. Can we somehow pass column=0 or row=0 ?
 
-You could, it's much less likely, but why not catch this if you can?
+-- 
 
-> > Just checking the values and rejecting that as a valid screen size
-> > should be sufficient.
-> 
-> Hmm, where are we checking that column * row does not exceed UINT_MAX, given that
-> "struct vc_data"->vc_{cols,rows,screenbuf_size} are "unsigned int" and we do
-> 
->   vc->vc_size_row = vc->vc_cols << 1;
->   vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
-> 
-> in visual_init() ? Don't we need to reject earlier?
-
-Probably, it's some twisty code :(
-
+- Arnaldo
