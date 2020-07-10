@@ -2,146 +2,98 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E204C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0000AC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B46207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oNs76qPj"
+	by mail.kernel.org (Postfix) with ESMTP id DA9D8207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgGJN3l (ORCPT
+        id S1727839AbgGJNaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:29:41 -0400
-Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:18369
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726774AbgGJN3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:29:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cAhrTOy2mWqOy9r/vX+RhtQOnwjWC6COfOWXe5W8l8BIvpP6bZv9+DTsRGIjQw0EBJUlW22n7DxBGlZI0o2a5lNC8jFEDmP9vpOHgrb2gUH+4q1Avutl/zzQWI/ZSx8MpZd2bQl4ArcHb7xiDzhMGXnN5gSyMVa8vM41NtoAVBrKoOlUvYwjyIy/VACVO1QJk1L329z+tFbrTu4p/uJUCOx/xfbQT4e6HRN8HBv8S/3Jlw9ul+n71FGAw0XuDbsjzYrTpEDbdysZICoLHf3PL4XDLWwXgG9/UstFmJIQJVhR9y0TAPwC4qlfmrXoQLw/y0bpgRnzuKOgiSKOSPt2Yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VkC1NPCG2vM+bzuh3AqM7CH5bh+DnMSPjVTjlUnDEho=;
- b=a1kDQtu8a3v+IoesK17T3KL4IjrJXcYw1Rj6BezoCHflQ9XhFwqG76TY2Pv5Du992nwuvE05wHDy6pwwa/NGO1GDfJEzJKjMldBGs+MHreUCE4qO3D1vNgBlgvWnE3nuE/x3NbtxAgIr850cUcu10DD2K+cBjjFGztQiztYMPtQLImypK1Pir1GSegufqq1c6YtuDUu5urY3T0+NPXOg00YI3X6IQk/7llIJxGHqFcaOFZIs1WcRt4w5kLJjHD+CqO2cCB99EDSoK4//2E0L/9f7Qgc5ut7IBt1YMhxOD9UxIlhSgXURrh3bwhIydb8Jd5jXrgz8sULhM2KNR9/YYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VkC1NPCG2vM+bzuh3AqM7CH5bh+DnMSPjVTjlUnDEho=;
- b=oNs76qPjNK2Lw2hu/+ICyMyEjFP+VDvDvkL+Fz2I6NFuSQEQP7ELxQu/FHYIUWzo8SgopBba1wndTfpEMYjsS4ccCpGt7kVw3kDfaP4hMaOmZG5c8qGO6kjkjJtUHvF0aVEc9GNgLomJ2afHkaAtPw6yY60UhEKayrLe/6TApmc=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB8PR04MB7177.eurprd04.prod.outlook.com (2603:10a6:10:127::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Fri, 10 Jul
- 2020 13:29:37 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3174.022; Fri, 10 Jul 2020
- 13:29:37 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        "aford173@gmail.com" <aford173@gmail.com>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Build in CONFIG_GPIO_MXC by
- default
-Thread-Topic: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Build in CONFIG_GPIO_MXC
- by default
-Thread-Index: AQHWVLZf1P1D6v4l+EGvf4we2g/NU6kArZAAgAAk0AA=
-Date:   Fri, 10 Jul 2020 13:29:37 +0000
-Message-ID: <DB3PR0402MB3916C86F35D601A44FB03133F5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
-        <1594164323-14920-3-git-send-email-Anson.Huang@nxp.com>
- <20200710131435.38f1f8a0@kemnade.info>
-In-Reply-To: <20200710131435.38f1f8a0@kemnade.info>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kemnade.info; dkim=none (message not signed)
- header.d=none;kemnade.info; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.22.69]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1fcab664-7a47-490f-6025-08d824d54aae
-x-ms-traffictypediagnostic: DB8PR04MB7177:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB7177A23349232960916DA389F5650@DB8PR04MB7177.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 046060344D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jttIRCBAS7pez9XssB+kp/R3oDzLLp6LBAIm1feZv5N6Kkmp26BghEfc+uw1N9yP/JjR8ZoSV1Juh7mhbIroFLWT7GnPvYSWt2LFqnI8EXccVGsjMTlXCfyY46vLBhbUHCVZyOUQXMXMhATR1ZC5poKxdF0yjUq68DJCKVZZDHsY9/Dc1NwEaGzu6JsHczPRYuej8KG3kdnGKaibD8NyHv3KLINpulTuBA/jaDBVsKxUjZeiCj8rA3k0Ebyx0CuPxlZ5PoZ4crT1jMQluOhKdAlFcr5u7rml+zeKGMWJn/ExNr4aEnc69QSYYA+7I4rb
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(366004)(396003)(136003)(6916009)(4326008)(86362001)(71200400001)(6506007)(8936002)(478600001)(186003)(7416002)(33656002)(8676002)(316002)(54906003)(26005)(44832011)(7696005)(66946007)(66556008)(55016002)(9686003)(5660300002)(76116006)(66446008)(52536014)(66476007)(64756008)(4744005)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: BoWYTXKBojr9ufX/ekm7/WMipCBYthvsZhH6kA2EQT1D3JuLR+U7dzeWWRD7inYi1nGV9+YUtjeI1wWDQuQPGgdnFBYPdv6DY2Jm8HYKPa9REwOmW5lNqVtSc/3WcnExFT3mskGjIwJ700fPHrOWviIm0wvOAgGZvLzDkbdhAk6knjJIzvpf98fkCvdNLnShr0HaapHhJ3lTE5YbSgLSyJK/iKFQNMkWLM/nV5DtXv2S8zjCsotDdfmeQSv5UvzL+07ij5UDS/1UMf53jm52sKFpgQYcZ2zFoNtfmKEa+SDKvJxyp+rm8XeimV/l8qeKw9t7QlbE+hRncHuZxDlrTSJ21hAsgP+v+iHO4jCz857DL4wn5dAnRlbPVLFMLsTjw6O1QL7GULJDiQZhoi9R1VC3qC9Q6CkOY57qlvSoIZ3upWto07H6/b919r3boCwaMXXcjXd7HgBN4sON4DsMyw8hksT58+qsesIUcLu0Qwc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jul 2020 09:30:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:46612 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbgGJNaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:30:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD5431FB;
+        Fri, 10 Jul 2020 06:30:00 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AED53F8C6;
+        Fri, 10 Jul 2020 06:29:58 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 14:29:50 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 6/6] PCI: uniphier: Use
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200710132950.GA5540@e121166-lin.cambridge.arm.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
+ <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fcab664-7a47-490f-6025-08d824d54aae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 13:29:37.1171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ok7Z2DwlzndBLKp/BLtYpzVpipQ+HmKrAWbEgcdxTZgqDoYIuY9zNG8HCU1zCu49wsLndNqm6ZUPZl7Z8HtxOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7177
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andreas
+On Fri, Jul 10, 2020 at 09:54:12AM +0900, Kunihiko Hayashi wrote:
+> Hi Lorenzo,
+> 
+> This 6/6 patch has just been covered with the following patch:
+> https://patchwork.ozlabs.org/project/linux-pci/patch/20200708164013.5076-1-zhengdejin5@gmail.com/
+> 
+> As a result, my other patches conflict with this patch.
+> I'd like your comments in the patch 2/6, though,
+> should I rebase to pci/dwc and resend this series without 6/6?
 
-
-> Subject: Re: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Build in
-> CONFIG_GPIO_MXC by default
->=20
-> Hi,
->=20
-> On Wed,  8 Jul 2020 07:25:23 +0800
-> Anson Huang <Anson.Huang@nxp.com> wrote:
->=20
-> > i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC as
-> > built-in manually.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  arch/arm/configs/imx_v6_v7_defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> shouldn't this be done also in the multi_v7_defconfig?
-
-OK, I will add it in V2.
+No, don't worry about patch (6). I will review patch (2) shortly.
 
 Thanks,
-Anson
+Lorenzo
+
+> Thank you,
+> 
+> On 2020/06/18 17:38, Kunihiko Hayashi wrote:
+> > Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>f
+> > ---
+> >   drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
+> >   1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> > index 8356dd3..233d624 100644
+> > --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> > @@ -456,8 +456,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+> >   	if (IS_ERR(priv->pci.atu_base))
+> >   		priv->pci.atu_base = NULL;
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> > -	priv->base = devm_ioremap_resource(dev, res);
+> > +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+> >   	if (IS_ERR(priv->base))
+> >   		return PTR_ERR(priv->base);
+> > 
+> 
+> ---
+> Best Regards
+> Kunihiko Hayashi
