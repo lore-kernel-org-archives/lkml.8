@@ -2,61 +2,61 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD17CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0296EC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86789207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB5F206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pizfweZq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="i5f0uUoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGJPac (ORCPT
+        id S1728179AbgGJPan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:30:32 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54089 "EHLO
+        Fri, 10 Jul 2020 11:30:43 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54142 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgGJPa0 (ORCPT
+        with ESMTP id S1728037AbgGJPa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:30:26 -0400
+        Fri, 10 Jul 2020 11:30:28 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710153024euoutp02ef77f7ae0d3633126430a0e99743ee98~gbdPW-Pwd1342513425euoutp02T
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:30:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710153024euoutp02ef77f7ae0d3633126430a0e99743ee98~gbdPW-Pwd1342513425euoutp02T
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710153027euoutp0264865ebd88f5ce30f36bf288101f1d80~gbdRnZ00V1342013420euoutp02e
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:30:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710153027euoutp0264865ebd88f5ce30f36bf288101f1d80~gbdRnZ00V1342013420euoutp02e
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594395024;
-        bh=4k3syR3vVZUEDSCgdG8MlR8MpmUYKiOLq+S8hhYPLsQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=pizfweZq4SbiYLbHdwk7ceS71PN/olD1ordUbzFegpKyAz/uyV6IiJUD4Pk8+S5Tw
-         ErY16mzxjvd8fXfxHvg3tqVFwTjUU+5pMd+sZIwmpuPVZFOgL+5CIp86IOQR11rSDc
-         ct4166zB0NUUPGW9145fYxJ33h1W4qSATARd58XE=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200710153023eucas1p2352d04245efcdc922c73d37040f1656f~gbdOdgOJB1492614926eucas1p2w;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
+        s=mail20170921; t=1594395027;
+        bh=B440VBDLdLWidVVzamEgT8cxdzc8DwUiqZOX84CTZVs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i5f0uUoQ7ZR/lmT8DV8Ur5GoXgnkpZxKkpWkonx8e+aSgdxKiOtGPM6ysC2fgP5CV
+         uxyfrzxK7XDW2SsjZ9vk65SJPE9RG0XBj0yZLwbL3jdtaDRliQIZiY32TVa+XC+uOi
+         YZctEST0sMeQoXccz45vFkUOw66gzn8a32I/7V/I=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200710153026eucas1p1d277077a856967448ceb2c8ef06d4307~gbdRMgux-2715527155eucas1p1d;
+        Fri, 10 Jul 2020 15:30:26 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A5.0E.05997.F89880F5; Fri, 10
-        Jul 2020 16:30:23 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 40.26.06318.299880F5; Fri, 10
+        Jul 2020 16:30:26 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710153023eucas1p152c48e4208bff8c0ae9b8c734be45db2~gbdN6knUC2638126381eucas1p1B;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710153026eucas1p208e5850ddd9e7f376c4d56f892b05233~gbdQ1mvuI2493924939eucas1p2s;
+        Fri, 10 Jul 2020 15:30:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200710153023eusmtrp182e34e950478e27221e42c2cbb11ba6d~gbdN5zoCh2243522435eusmtrp1p;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-82-5f08898f7118
+        20200710153026eusmtrp11fbd8efa90c6d8b454a6933eebba61e3~gbdQ072S22243522435eusmtrp1u;
+        Fri, 10 Jul 2020 15:30:26 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-d5-5f088992fc78
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id FF.C8.06314.E89880F5; Fri, 10
-        Jul 2020 16:30:23 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 10.48.06017.299880F5; Fri, 10
+        Jul 2020 16:30:26 +0100 (BST)
 Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710153022eusmtip1206bd9fbb58e9db7894aa47da1c41f7c~gbdNGSqF70656006560eusmtip1n;
-        Fri, 10 Jul 2020 15:30:22 +0000 (GMT)
+        20200710153025eusmtip1c92b174adfcb32307df709cdaf7dd4b7~gbdQEhRTv0878108781eusmtip1t;
+        Fri, 10 Jul 2020 15:30:25 +0000 (GMT)
 From:   Andrzej Hajda <a.hajda@samsung.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
@@ -72,107 +72,86 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-Subject: [PATCH v8 0/5] driver core: add probe error check helper
-Date:   Fri, 10 Jul 2020 17:30:13 +0200
-Message-Id: <20200710153018.12226-1-a.hajda@samsung.com>
+Subject: [PATCH v8 4/5] drm/bridge: lvds-codec: simplify error handling
+Date:   Fri, 10 Jul 2020 17:30:17 +0200
+Message-Id: <20200710153018.12226-5-a.hajda@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSeUhUURTGub437z0nx16j4EVDcSJIIzUNupFtKvQgo/6KqFye+VzIjRk1
-        DVLbdLTcsslcEzUVc1zGpZSmZJK0xHFrREWTSAPFtBwXFMtmfGP99zv3+875zoFLYWKNwJYK
-        j4rlpFFshIQQ4m0f1rWHstOpALfi6gNovF4rQLM57wFqetYgQIqv0wTaasvF0OeVRQLdq2gg
-        kG5tFkMf53U4Ss+tJJHq24gADXcUE0ijUAOk7JokkSbrKipZVmCnaWZ4ZBBjFkcfkIx6tQxn
-        2gsnSaZIXiBgVLXpBNOTM2TGvCupI5mph91mTHNlMpPVUguYzsw8nNGr7C+Krgg9g7mI8HhO
-        6noyUBhWol8gY1Z3J6hWlYIUUGeRAcwpSB+BX0bm8QwgpMR0DYBrReMYXywDWKlYIPhCD+Dd
-        NLXZTsugfsDkqgawc32J/NeS0dWKG10E7QR/N48RRramPWB2X+G2CaM3cKhLSxUYBSv6DGye
-        kwMj4/R+WNlXThpZRCM4WJVuinOALxs7t+MgPUTC0swsnBd8YFH+E5PJCs51t5A874W9eY9M
-        nmQ4VXPf1CwHsLWxHeOF43BCu2FYjzKs5AQbOlyNCA0L6ZviebSEoz/2GM2YAR+35WP8swjK
-        U8X8DEc41ddqmmcDXwysEDwzsOXt1vZVYtoProwt4TnAvvB/VBkAtcCGi5NFhnIy9yjupouM
-        jZTFRYW6XI+OVAHDz+r90738GnRsBmkATQGJhaiMpQLEAjZelhipAZDCJNYir75ef7EomE28
-        xUmjA6RxEZxMA+woXGIj8iif9RPToWwsd4PjYjjpjmpGmdumAG8vZ51vUVLQpaP1ZxN2lxyE
-        2qWWn4zj9HdLhwvNw0kh3svy2x6lM1pQIGaVSt+yGUVCgdpj34h0GM1MnSvvOdGvtnkqSs51
-        TPGX5FHJwsvZn/SdPrbHuq/FO/dXhbzRpU48V7nPU75KufyXpx3nljgWeL4pdtcpmFCx+eoO
-        LcFlYexhZ0wqY/8ChgwDdVUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7r9nRzxBivPMlrcWneO1eLlhMOM
+In-Reply-To: <20200710153018.12226-1-a.hajda@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSaUhUURzFufNWBydeT8Gb1UhjggqlYeQNow3B96EwghYSl1c9zNRR5rn2
+        JatxbZrUSXLJGktJbNFc07JiCicRrdwLdRRDmMqFUiNRy+ez+va795z//1wOl8bYTsKVjtIm
+        CDotH6MhlXhj26+ubfnZdLjv6IA7+vS4i0D23NcAPSmsJlDB2GcS/W7Mw1Dv3DSJrtyrJlHf
+        TzuG2r/14Sg7r5xCteP9BOppuUUiS0ErQI/eDFPIYgxBpbMF2H6G6+n/gHHTg+kU1zpvxrnm
+        4mGKK8kqIrjaqmySe5vbreBelj6kONtVq4KrK7/IGeurAPfqmgnnftSqj6hOKfecFWKikgSd
+        z94I5bnCuhFFfKkyJXd+RJEG+ukcQNOQ2QnNd47nAAeaZSoBLNN75QDlCs8C2DzVBOTDDwBv
+        9FwCkksaaLPPkLJwH8DWrnbi30h2SQMuuUjGCy7VfSQldmb84PXOYkoyYcwCDvsyMwhJcGKC
+        YIa+e5VxxgMuto8oJFYxCBoGvq7FucEHNa8wiR2Y3XCq4OpqNGQmKdjyrIKQTYFwLm1CIbMT
+        /GKtp2TeBDtMBlzmi9BWqcfk4SwAG2qaMVkIgENdC6TUBrby7OoWH7mYA3C8KVjGdXBwcr1k
+        xlYwv/EmJl+rYFYGK+/YAm2dDWv7XGDF+zlSZg7aesswuR8DgPduFeK5wK34f5YZgCrgIiSK
+        sZGC6KcVkreLfKyYqI3cfiYuthasfLKOZevcU/Bi8bQFMDTQOKrMPB3OEnySmBprAZDGNM6q
+        g50dYazqLJ96QdDFhesSYwTRAjbSuMZF5XfXHsoykXyCEC0I8YLur6qgHVzTQOI795kxj0zP
+        KXbYEHbCc5fJI+ROU491M6g/bGwOfs4nL7e6QbPRI3S46JiLnXOs3qr+FU6cnLx9PqVEnQKP
+        avwn6utGTd5ui2mHLo1fVn8PaQhyZJkIfUqjuMGg1/qme5cE7hua2WSj8iYWMzfm+5+YsEZH
+        sAEWY5UgxC1pcPEcv8Mb04n8H5a0LihgAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xu7qTOjniDfp/81jcWneO1eLlhMOM
         FhtnrGe1mPrwCZvF/20TmS2ufH3PZtG8eD2bxdXvL5ktTr65ymLROXEJu8Wmx9dYLS7vmsNm
         cWjqXkaLtUfuslsc6ou2mPtlKrODgMflaxeZPd7faGX32PttAYvHzll32T1md8xk9di0qpPN
         48SES0we++euYfe4332cyWPzknqPvi2rGD0O9E5m8fi8SS6AN0rPpii/tCRVISO/uMRWKdrQ
-        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY+7nd+wF3/grNn1by9rAuIani5GT
-        Q0LAROLi5wvMXYxcHEICSxklLq6bxQqREJfYPf8tM4QtLPHnWhcbRNEnRok1q56AFbEJaEr8
-        3XyTDcQWETCW6D87ix2kiFmgjVVi7vkn7CAJYQFHic2vOhhBbBYBVYklZxeBxXkFLCQuLutk
-        gtggL7F6wwHmCYw8CxgZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgRGy7ZjPzfvYLy0MfgQ
-        owAHoxIP74JEjngh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2I0BVo+kVlK
-        NDkfGMl5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYFfdpV0/I
-        EDm1YZ/IfO/4rH0frY6mznCO79mUf8ZacXqZg1h06cX5uWveh2d8eXbgSHV64Ou6y+EdN211
-        UjqMbfW2/bfcmz99abr2Lwu7D06/mK5Z7cxZ0/Gt+MTiwtn/JvzUL/btW6eil9a2d62thZDU
-        +7S37y/MUVsQvXZF0fzd84z/KDa2KLEUZyQaajEXFScCAEGA8nCsAgAA
-X-CMS-MailID: 20200710153023eucas1p152c48e4208bff8c0ae9b8c734be45db2
+        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY8bme0wFc7kqJny7x9TAeI2ji5GT
+        Q0LAROLYyw9sXYxcHEICSxklZt9fwwSREJfYPf8tM4QtLPHnWhcbiC0k8IlRor2zAMRmE9CU
+        +Lv5JlhcRMBYov/sLHaQQcwCbawSc88/YQdJCAu4S7S1XGIFsVkEVCX+nLwHtoBXwEKi5/pr
+        RogF8hKrNxwAW8YpYCnxbmo31DILidvLvrNOYORbwMiwilEktbQ4Nz232EivODG3uDQvXS85
+        P3cTIzC2th37uWUHY9e74EOMAhyMSjy8CxI54oVYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmV
+        WpQfX1Sak1p8iNEU6KiJzFKiyfnAuM8riTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2a
+        WpBaBNPHxMEp1cC44fjrpRHTOo2UHLjUipeLTpf8PeuSj5fkAufop0LH+jxk5FOC6pamxaeZ
+        f3Kcptyev+9T+B19CW3tN5yBUcu7o7YeO6KY//FAZNr7KZ+1d7n+rTklf3+vwQbr769NhaPO
+        vnfQmNc1r4wp9u9p9rpjfzaF78i+UJa0fNKmC//KCzj3iTeemXpeiaU4I9FQi7moOBEAPT6F
+        38MCAAA=
+X-CMS-MailID: 20200710153026eucas1p208e5850ddd9e7f376c4d56f892b05233
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200710153023eucas1p152c48e4208bff8c0ae9b8c734be45db2
+X-RootMTR: 20200710153026eucas1p208e5850ddd9e7f376c4d56f892b05233
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200710153023eucas1p152c48e4208bff8c0ae9b8c734be45db2
-References: <CGME20200710153023eucas1p152c48e4208bff8c0ae9b8c734be45db2@eucas1p1.samsung.com>
+X-CMS-RootMailID: 20200710153026eucas1p208e5850ddd9e7f376c4d56f892b05233
+References: <20200710153018.12226-1-a.hajda@samsung.com>
+        <CGME20200710153026eucas1p208e5850ddd9e7f376c4d56f892b05233@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Using dev_err_probe code has following advantages:
+- shorter code,
+- recorded defer probe reason for debugging,
+- uniform error code logging.
 
-Thanks for comments.
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/bridge/lvds-codec.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-Changes since v7:
-- improved commit message
-- added R-Bs
-
-Changes since v6:
-- removed leftovers from old naming scheme in commit descritions,
-- added R-Bs.
-
-Changes since v5:
-- removed patch adding macro, dev_err_probe(dev, PTR_ERR(ptr), ...) should be used instead,
-- added dev_dbg logging in case of -EPROBE_DEFER,
-- renamed functions and vars according to comments,
-- extended docs,
-- cosmetics.
-
-Original message (with small adjustments):
-
-Recently I took some time to re-check error handling in drivers probe code,
-and I have noticed that number of incorrect resource acquisition error handling
-increased and there are no other propositions which can cure the situation.
-
-So I have decided to resend my old proposition of probe_err helper which should
-simplify resource acquisition error handling, it also extend it with adding defer
-probe reason to devices_deferred debugfs property, which should improve debugging
-experience for developers/testers.
-
-I have also added two patches showing usage and benefits of the helper.
-
-My dirty/ad-hoc cocci scripts shows that this helper can be used in at least 2700 places
-saving about 3500 lines of code.
-
-Regards
-Andrzej
-
-
-Andrzej Hajda (5):
-  driver core: add device probe log helper
-  driver core: add deferring probe reason to devices_deferred property
-  drm/bridge/sii8620: fix resource acquisition error handling
-  drm/bridge: lvds-codec: simplify error handling
-  coccinelle: add script looking for cases where probe__err can be used
-
- drivers/base/base.h                  |   3 +
- drivers/base/core.c                  |  46 +++++
- drivers/base/dd.c                    |  23 ++-
- drivers/gpu/drm/bridge/lvds-codec.c  |  10 +-
- drivers/gpu/drm/bridge/sil-sii8620.c |  21 +--
- include/linux/device.h               |   3 +
- probe_err.cocci                      | 247 +++++++++++++++++++++++++++
- 7 files changed, 333 insertions(+), 20 deletions(-)
- create mode 100644 probe_err.cocci
-
+diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+index 24fb1befdfa2..f19d9f7a5db2 100644
+--- a/drivers/gpu/drm/bridge/lvds-codec.c
++++ b/drivers/gpu/drm/bridge/lvds-codec.c
+@@ -71,13 +71,9 @@ static int lvds_codec_probe(struct platform_device *pdev)
+ 	lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
+ 	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 							     GPIOD_OUT_HIGH);
+-	if (IS_ERR(lvds_codec->powerdown_gpio)) {
+-		int err = PTR_ERR(lvds_codec->powerdown_gpio);
+-
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "powerdown GPIO failure: %d\n", err);
+-		return err;
+-	}
++	if (IS_ERR(lvds_codec->powerdown_gpio))
++		return dev_err_probe(dev, PTR_ERR(lvds_codec->powerdown_gpio),
++				     "powerdown GPIO failure\n");
+ 
+ 	/* Locate the panel DT node. */
+ 	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
 -- 
 2.17.1
 
