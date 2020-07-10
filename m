@@ -2,290 +2,516 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286A5C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A994C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F293F20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AAB20725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399153;
-	bh=wlTIEVuuaMZmtPeIcBWpbjZ1TUU6kjrlRUj6tDtvXgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kFdSbIR9QsqvMNmLPqTuiYa/Ln9GdBB7rwRURwZiUQjCIP1Ab3t6uqU6lOvyNJj2E
-	 eQuAaOrBz0I0OZ0vy9TB0kFyPm0Ke4lWEkCyP5icK/nfYw9HCwF4rmwnDSqdwsBX1g
-	 ntqsFy5/AhHTe07UO8tXhwzrT9IoLt90krSJ2xSI=
+	s=default; t=1594399181;
+	bh=SIzoKGrG+qkPEk/qrJU8zj3XGu2D4HkXDHV9NZmbCXE=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=zOp0e/W8u14MrDFxGqyQgKtgsmH5R7rWBcMhktsTDb4AYG0bQZ0LdHAWBNQTwUu9z
+	 GRakSpxCnGGqvHjtJZ71mCJu7Fqnt2tYLTgzRkIQAkmL9MQfofqo0Puvl8kEFEXCZd
+	 LYxDTKqrcQG0oFcgZL9dCfq9HC1AjEZ7iz3m38cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgGJQjJ (ORCPT
+        id S1728133AbgGJQjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:39:09 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38067 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgGJQjJ (ORCPT
+        Fri, 10 Jul 2020 12:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:39:09 -0400
-Received: by mail-il1-f194.google.com with SMTP id s21so5597632ilk.5;
-        Fri, 10 Jul 2020 09:39:08 -0700 (PDT)
+        Fri, 10 Jul 2020 12:39:39 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 070E8C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:39:39 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id n24so4611842otr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:39:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=67PxYPjEch8C6zTSY3ZVdK7Ai5qglilo8P3dvtMjP2I=;
+        b=E9yMShM6sDUhQaoeReQuGbgI9Vn3xImSR1eUM6By8RjxBWzXFo/jVabBWhH08e4l6A
+         /8tS7Ri72njF9MXMCfGvMOViQrDEgrjB6VhVAdNd8SL2XsKXKL1uQU/bGJkqCGfESfRh
+         JSRhx0llgU7FAov0AO7ApqKkevZpSLnFxB9pQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RDEiKXkfuo1LcvNVgxR5JlTZIhsrn+C+Okx9e1+bqZ4=;
-        b=saOGHK6ePcEtWiPDOLtNtdnjg/2nnJj61cNnhejzN3MUHDgNVBMyrGoYTZXrKmWqqo
-         +CCr0xyjQJMlyTcDXBlSGhIYapCqJOh9p/8mbJCVTX/yJUALX/wFZBR0+i6azcw5c6lZ
-         6ERaPuN51phFFg1SKqO0Is69oeoM+n1IZT4eNwM+5SsMjkdqXWWJR4adZ2yIGZ6jfXDW
-         L4OI3k7ILbD3Zjdt+l800X/lRFXMsJV4eJWv6jh8a63NCldFE4TMyBg8IH0Bnft9W0uq
-         ywwK2UlMpkKSSoAB7r9jW8KSiwfAm5VMOvNd8YdXjmFYjAtnjQ4oqXjaWtolKyjT7Mos
-         Bk7w==
-X-Gm-Message-State: AOAM5336JHOR/MP8TZaZLUt9VM9tjOqU6k5zdqSe2E82npmZLh1OMaUJ
-        KbMI8IMHlKKq8MwAzdD4Ng==
-X-Google-Smtp-Source: ABdhPJzLFaHStBCrMtyNEUyaEU9MNoIRNK7UH30HjnsBYGguV8MEdpVyBF9INgKlpdURHNTbgPM9bw==
-X-Received: by 2002:a92:5bdd:: with SMTP id c90mr47581679ilg.154.1594399147560;
-        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id y12sm3670759ilm.38.2020.07.10.09.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
-Received: (nullmailer pid 2774475 invoked by uid 1000);
-        Fri, 10 Jul 2020 16:39:05 -0000
-Date:   Fri, 10 Jul 2020 10:39:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        matthias.bgg@gmail.com, sean.wang@kernel.org,
-        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
-        eddie.huang@mediatek.com, chuanjia.liu@mediatek.com,
-        biao.huang@mediatek.com, hongzhou.yang@mediatek.com,
-        erin.lo@mediatek.com, sean.wang@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: mt8192: add binding document
-Message-ID: <20200710163905.GA2761779@bogus>
-References: <20200710072717.3056-1-zhiyong.tao@mediatek.com>
- <20200710072717.3056-3-zhiyong.tao@mediatek.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=67PxYPjEch8C6zTSY3ZVdK7Ai5qglilo8P3dvtMjP2I=;
+        b=GpIwuaLQXS5syBm49d4ccyU5fSfLIVHK2yeQf3LAVlF7vo8BD0DTK25ZiAjljuu6iV
+         VVz9Bf16pqqB/GPuvy9+JYGXv5uZbT0b/LQqP7Plzf6s5nzJrE4sG19sxFI8jSb5XutY
+         dNyv9yuGLGH50bl8Yq0JT1WJmybqYZrAye3W4jnTUnCoF15wAVPZ2WfQ/fe7kKk06Ort
+         Gf/RpZHxYd/Qyfec+2FbUOKCSxV39XnA3sJpb52JLI+P/W3wZQg0f0E2ee7lL6ZfrFZj
+         O0WllJwpKQPWKjZKKybU96icnP46fttBizO1t0IGmnkPe834RCqiwueBs7+EJCkzYt97
+         cF8g==
+X-Gm-Message-State: AOAM530LMqNccHWn1STY/kQEzgxuM7p/wji7DUPegEx2d5u6KBFMnJfP
+        mT8MGVewun/sH1wlgESdl6VFeg==
+X-Google-Smtp-Source: ABdhPJzZu8RJ5CiP3e56yR3ByIb+ZpA64vNU4j+ohS2B1YPBxZuN/9f93c3eItJoGb5gkgF04tCMIg==
+X-Received: by 2002:a9d:3a65:: with SMTP id j92mr38137082otc.14.1594399178326;
+        Fri, 10 Jul 2020 09:39:38 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m2sm1230613ooe.43.2020.07.10.09.39.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 09:39:37 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes update for Linux 5.8-rc5
+Message-ID: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
+Date:   Fri, 10 Jul 2020 10:39:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710072717.3056-3-zhiyong.tao@mediatek.com>
+Content-Type: multipart/mixed;
+ boundary="------------0C286AB941D5FF612009F235"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:27:16PM +0800, Zhiyong Tao wrote:
-> The commit adds mt8192 compatible node in binding document.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 170 ++++++++++++++++++
->  1 file changed, 170 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-> new file mode 100644
-> index 000000000000..c698b7f65950
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-> @@ -0,0 +1,170 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-mt8192.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek MT8192 Pin Controller
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
+This is a multi-part message in MIME format.
+--------------0C286AB941D5FF612009F235
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Should be someone who knows the h/w (Mediatek).
+Hi Linus,
 
-> +
-> +description: |
-> +  The Mediatek's Pin controller is used to control SoC pins.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8192-pinctrl
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description:
-> +      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
-> +      the amount of cells must be specified as 2. See the below
-> +      mentioned gpio binding representation for description of particular cells.
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    description: gpio valid number range.
-> +    maxItems: 1
-> +
-> +  reg:
-> +    description:
-> +      Physical address base for gpio base registers. There are 11 GPIO
-> +      physical address base in mt8192.
-> +    maxItems: 11
-> +
-> +  reg-names:
-> +    description:
-> +      Gpio base register names. There are 11 gpio base register names in mt8192.
-> +      They are "iocfg0", "iocfg_rm", "iocfg_bm", "iocfg_bl", "iocfg_br",
-> +      "iocfg_lm", "iocfg_lb", "iocfg_rt", "iocfg_lt", "iocfg_tl", "eint".
+Please pull the following Kselftest fixes update for Linux 5.8-rc5.
 
-Should be a schema.
+This Kselftest fixes update for Linux 5.8-rc5 consists of tmp2 test
+changes to run on python3 and kselftest framework fix to incorrect
+return type.
 
-> +    maxItems: 11
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    description: The interrupt outputs to sysirq.
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  subnode format:
+diff is attached.
 
-The child node name is 'subnode format'?
+thanks,
+-- Shuah
 
-> +    description:
-> +      A pinctrl node should contain at least one subnodes representing the
-> +      pinctrl groups available on the machine. Each subnode will list the
-> +      pins it needs, and how they should be configured, with regard to muxer
-> +      configuration, pullups, drive strength, input enable/disable and
-> +      input schmitt.
-> +
-> +      node {
-> +        pinmux = <PIN_NUMBER_PINMUX>;
-> +        GENERIC_PINCONFIG;
-> +      };
+----------------------------------------------------------------
+The following changes since commit 377ff83083c953dd58c5a030b3c9b5b85d8cc727:
 
-If you want to preserve formatting, description needs a literal block 
-notation on the end ('|').
+   selftests: tpm: Use /bin/sh instead of /bin/bash (2020-06-29 14:19:38 
+-0600)
 
-> +  '-pinmux$':
-> +    description:
-> +      Integer array, represents gpio pin number and mux setting.
-> +      Supported pin number and mux varies for different SoCs, and are defined
-> +      as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
-> +
-> +  GENERIC_PINCONFIG:
+are available in the Git repository at:
 
-You just defined a property called 'GENERIC_PINCONFIG'...
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-fixes-5.8-rc5
 
-> +    description:
-> +      It is the generic pinconfig options to use, bias-disable,
-> +      bias-pull-down, bias-pull-up, input-enable, input-disable, output-low,
-> +      output-high, input-schmitt-enable, input-schmitt-disable
-> +      and drive-strength are valid.
-> +
-> +      Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> +      resistors available, but for user, it's only need to set R1R0 as 00, 01,
-> +      10 or 11. So It needs config "mediatek,pull-up-adv" or
-> +      "mediatek,pull-down-adv" to support arguments for those special pins.
-> +      Valid arguments are from 0 to 3.
-> +
-> +      We can use "mediatek,tdsel" which is an integer describing the steps for
-> +      output level shifter duty cycle when asserted (high pulse width adjustment).
-> +      Valid arguments  are from 0 to 15.
-> +      We can use "mediatek,rdsel" which is an integer describing the steps for
-> +      input level shifter duty cycle when asserted (high pulse width adjustment).
-> +      Valid arguments are from 0 to 63.
-> +
-> +      When config drive-strength, it can support some arguments, such as
-> +      MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-> +      It can only support 2/4/6/8/10/12/14/16mA in mt8192.
-> +      For I2C pins, there are existing generic driving setup and the specific
-> +      driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA driving
-> +      adjustment in generic driving setup. But in specific driving setup,
-> +      they can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
-> +      driving setup for I2C pins, the existing generic driving setup will be
-> +      disabled. For some special features, we need the I2C pins specific
-> +      driving setup. The specific driving setup is controlled by E1E0EN.
-> +      So we need add extra vendor driving preperty instead of
-> +      the generic driving property.
-> +      We can add "mediatek,drive-strength-adv = <XXX>;" to describe the specific
-> +      driving setup property. "XXX" means the value of E1E0EN. EN is 0 or 1.
-> +      It is used to enable or disable the specific driving setup.
-> +      E1E0 is used to describe the detail strength specification of the I2C pin.
-> +      When E1=0/E0=0, the strength is 0.125mA.
-> +      When E1=0/E0=1, the strength is 0.25mA.
-> +      When E1=1/E0=0, the strength is 0.5mA.
-> +      When E1=1/E0=1, the strength is 1mA.
-> +      So the valid arguments of "mediatek,drive-strength-adv" are from 0 to 7.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +examples:
-> +  - |
-> +            #include <dt-bindings/pinctrl/mt8192-pinfunc.h>
-> +            #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +            pio: pinctrl@10005000 {
+for you to fetch changes up to 3c01655ac82eb6d1cc2cfe9507031f1b5e0a6df1:
 
-Drop unused labels.
+   kselftest: ksft_test_num return type should be unsigned (2020-07-06 
+15:07:47 -0600)
 
-> +                    compatible = "mediatek,mt8192-pinctrl";
-> +                    reg = <0 0x10005000 0 0x1000>,
-> +                          <0 0x11c20000 0 0x1000>,
-> +                          <0 0x11d10000 0 0x1000>,
-> +                          <0 0x11d30000 0 0x1000>,
-> +                          <0 0x11d40000 0 0x1000>,
-> +                          <0 0x11e20000 0 0x1000>,
-> +                          <0 0x11e70000 0 0x1000>,
-> +                          <0 0x11ea0000 0 0x1000>,
-> +                          <0 0x11f20000 0 0x1000>,
-> +                          <0 0x11f30000 0 0x1000>,
-> +                          <0 0x1000b000 0 0x1000>;
-> +                    reg-names = "iocfg0", "iocfg_rm", "iocfg_bm",
-> +                          "iocfg_bl", "iocfg_br", "iocfg_lm",
-> +                          "iocfg_lb", "iocfg_rt", "iocfg_lt",
-> +                          "iocfg_tl", "eint";
-> +                    gpio-controller;
-> +                    #gpio-cells = <2>;
-> +                    gpio-ranges = <&pio 0 0 220>;
-> +                    interrupt-controller;
-> +                    interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH 0>;
-> +                    #interrupt-cells = <2>;
-> +                    i2c0_pins_a: i2c0 {
+----------------------------------------------------------------
+linux-kselftest-fixes-5.8-rc5
 
-Doesn't match the schema.
+This Kselftest fixes update for Linux 5.8-rc5 consists of tmp2 test
+changes to run on python3 and kselftest framework fix to incorrect
+return type.
 
-> +                        pins {
+----------------------------------------------------------------
+Paolo Bonzini (1):
+       kselftest: ksft_test_num return type should be unsigned
 
-Doesn't match the schema. Why do you need 2 levels of nodes here?
+Pengfei Xu (1):
+       selftests: tpm: upgrade TPM2 tests from Python 2 to Python 3
 
-> +                                pinmux = <PINMUX_GPIO118__FUNC_SCL1>,
-> +                                         <PINMUX_GPIO119__FUNC_SDA1>;
-> +                                mediatek,pull-up-adv = <3>;
-> +                                mediatek,drive-strength-adv = <7>;
-> +                        };
-> +                    };
-> +                    i2c1_pins_a: i2c1 {
-> +                        pins {
-> +                                pinmux = <PINMUX_GPIO141__FUNC_SCL2>,
-> +                                         <PINMUX_GPIO142__FUNC_SDA2>;
-> +                                mediatek,pull-down-adv = <2>;
-> +                                mediatek,drive-strength-adv = <4>;
-> +                       };
-> +                   };
-> +            };
-> -- 
-> 2.18.0
+  tools/testing/selftests/kselftest.h        |  2 +-
+  tools/testing/selftests/tpm2/test_smoke.sh |  4 +--
+  tools/testing/selftests/tpm2/test_space.sh |  2 +-
+  tools/testing/selftests/tpm2/tpm2.py       | 56 
+++++++++++++++++--------------
+  tools/testing/selftests/tpm2/tpm2_tests.py | 39 +++++++++++----------
+  5 files changed, 53 insertions(+), 50 deletions(-)
+----------------------------------------------------------------
+
+--------------0C286AB941D5FF612009F235
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-fixes-5.8-rc5.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-fixes-5.8-rc5.diff"
+
+diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
+index 0ac49d91a260..862eee734553 100644
+--- a/tools/testing/selftests/kselftest.h
++++ b/tools/testing/selftests/kselftest.h
+@@ -36,7 +36,7 @@ struct ksft_count {
+ static struct ksft_count ksft_cnt;
+ static unsigned int ksft_plan;
+ 
+-static inline int ksft_test_num(void)
++static inline unsigned int ksft_test_num(void)
+ {
+ 	return ksft_cnt.ksft_pass + ksft_cnt.ksft_fail +
+ 		ksft_cnt.ksft_xfail + ksft_cnt.ksft_xpass +
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 1334e301d2a0..3e5ff29ee1dd 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -6,5 +6,5 @@ ksft_skip=4
+ 
+ [ -e /dev/tpm0 ] || exit $ksft_skip
+ 
+-python -m unittest -v tpm2_tests.SmokeTest
+-python -m unittest -v tpm2_tests.AsyncTest
++python3 -m unittest -v tpm2_tests.SmokeTest
++python3 -m unittest -v tpm2_tests.AsyncTest
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index 00259cb746cf..04c47b13fe8a 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -6,4 +6,4 @@ ksft_skip=4
+ 
+ [ -e /dev/tpmrm0 ] || exit $ksft_skip
+ 
+-python -m unittest -v tpm2_tests.SpaceTest
++python3 -m unittest -v tpm2_tests.SpaceTest
+diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
+index d0fcb66a88a6..f34486cd7342 100644
+--- a/tools/testing/selftests/tpm2/tpm2.py
++++ b/tools/testing/selftests/tpm2/tpm2.py
+@@ -247,14 +247,14 @@ class ProtocolError(Exception):
+ class AuthCommand(object):
+     """TPMS_AUTH_COMMAND"""
+ 
+-    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
+-                 hmac=''):
++    def __init__(self, session_handle=TPM2_RS_PW, nonce=bytes(),
++                 session_attributes=0, hmac=bytes()):
+         self.session_handle = session_handle
+         self.nonce = nonce
+         self.session_attributes = session_attributes
+         self.hmac = hmac
+ 
+-    def __str__(self):
++    def __bytes__(self):
+         fmt = '>I H%us B H%us' % (len(self.nonce), len(self.hmac))
+         return struct.pack(fmt, self.session_handle, len(self.nonce),
+                            self.nonce, self.session_attributes, len(self.hmac),
+@@ -268,11 +268,11 @@ class AuthCommand(object):
+ class SensitiveCreate(object):
+     """TPMS_SENSITIVE_CREATE"""
+ 
+-    def __init__(self, user_auth='', data=''):
++    def __init__(self, user_auth=bytes(), data=bytes()):
+         self.user_auth = user_auth
+         self.data = data
+ 
+-    def __str__(self):
++    def __bytes__(self):
+         fmt = '>H%us H%us' % (len(self.user_auth), len(self.data))
+         return struct.pack(fmt, len(self.user_auth), self.user_auth,
+                            len(self.data), self.data)
+@@ -296,8 +296,9 @@ class Public(object):
+         return '>HHIH%us%usH%us' % \
+             (len(self.auth_policy), len(self.parameters), len(self.unique))
+ 
+-    def __init__(self, object_type, name_alg, object_attributes, auth_policy='',
+-                 parameters='', unique=''):
++    def __init__(self, object_type, name_alg, object_attributes,
++                 auth_policy=bytes(), parameters=bytes(),
++                 unique=bytes()):
+         self.object_type = object_type
+         self.name_alg = name_alg
+         self.object_attributes = object_attributes
+@@ -305,7 +306,7 @@ class Public(object):
+         self.parameters = parameters
+         self.unique = unique
+ 
+-    def __str__(self):
++    def __bytes__(self):
+         return struct.pack(self.__fmt(),
+                            self.object_type,
+                            self.name_alg,
+@@ -343,7 +344,7 @@ def get_algorithm(name):
+ 
+ def hex_dump(d):
+     d = [format(ord(x), '02x') for x in d]
+-    d = [d[i: i + 16] for i in xrange(0, len(d), 16)]
++    d = [d[i: i + 16] for i in range(0, len(d), 16)]
+     d = [' '.join(x) for x in d]
+     d = os.linesep.join(d)
+ 
+@@ -401,7 +402,7 @@ class Client:
+         pcrsel_len = max((i >> 3) + 1, 3)
+         pcrsel = [0] * pcrsel_len
+         pcrsel[i >> 3] = 1 << (i & 7)
+-        pcrsel = ''.join(map(chr, pcrsel))
++        pcrsel = ''.join(map(chr, pcrsel)).encode()
+ 
+         fmt = '>HII IHB%us' % (pcrsel_len)
+         cmd = struct.pack(fmt,
+@@ -443,7 +444,7 @@ class Client:
+             TPM2_CC_PCR_EXTEND,
+             i,
+             len(auth_cmd),
+-            str(auth_cmd),
++            bytes(auth_cmd),
+             1, bank_alg, dig)
+ 
+         self.send_cmd(cmd)
+@@ -457,7 +458,7 @@ class Client:
+                           TPM2_RH_NULL,
+                           TPM2_RH_NULL,
+                           16,
+-                          '\0' * 16,
++                          ('\0' * 16).encode(),
+                           0,
+                           session_type,
+                           TPM2_ALG_NULL,
+@@ -472,7 +473,7 @@ class Client:
+ 
+         for i in pcrs:
+             pcr = self.read_pcr(i, bank_alg)
+-            if pcr == None:
++            if pcr is None:
+                 return None
+             x += pcr
+ 
+@@ -489,7 +490,7 @@ class Client:
+         pcrsel = [0] * pcrsel_len
+         for i in pcrs:
+             pcrsel[i >> 3] |= 1 << (i & 7)
+-        pcrsel = ''.join(map(chr, pcrsel))
++        pcrsel = ''.join(map(chr, pcrsel)).encode()
+ 
+         fmt = '>HII IH%usIHB3s' % ds
+         cmd = struct.pack(fmt,
+@@ -497,7 +498,8 @@ class Client:
+                           struct.calcsize(fmt),
+                           TPM2_CC_POLICY_PCR,
+                           handle,
+-                          len(dig), str(dig),
++                          len(dig),
++                          bytes(dig),
+                           1,
+                           bank_alg,
+                           pcrsel_len, pcrsel)
+@@ -534,7 +536,7 @@ class Client:
+ 
+         self.send_cmd(cmd)
+ 
+-    def create_root_key(self, auth_value = ''):
++    def create_root_key(self, auth_value = bytes()):
+         attributes = \
+             Public.FIXED_TPM | \
+             Public.FIXED_PARENT | \
+@@ -570,11 +572,11 @@ class Client:
+             TPM2_CC_CREATE_PRIMARY,
+             TPM2_RH_OWNER,
+             len(auth_cmd),
+-            str(auth_cmd),
++            bytes(auth_cmd),
+             len(sensitive),
+-            str(sensitive),
++            bytes(sensitive),
+             len(public),
+-            str(public),
++            bytes(public),
+             0, 0)
+ 
+         return struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
+@@ -587,7 +589,7 @@ class Client:
+         attributes = 0
+         if not policy_dig:
+             attributes |= Public.USER_WITH_AUTH
+-            policy_dig = ''
++            policy_dig = bytes()
+ 
+         auth_cmd =  AuthCommand()
+         sensitive = SensitiveCreate(user_auth=auth_value, data=data)
+@@ -608,11 +610,11 @@ class Client:
+             TPM2_CC_CREATE,
+             parent_key,
+             len(auth_cmd),
+-            str(auth_cmd),
++            bytes(auth_cmd),
+             len(sensitive),
+-            str(sensitive),
++            bytes(sensitive),
+             len(public),
+-            str(public),
++            bytes(public),
+             0, 0)
+ 
+         rsp = self.send_cmd(cmd)
+@@ -635,7 +637,7 @@ class Client:
+             TPM2_CC_LOAD,
+             parent_key,
+             len(auth_cmd),
+-            str(auth_cmd),
++            bytes(auth_cmd),
+             blob)
+ 
+         data_handle = struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
+@@ -653,7 +655,7 @@ class Client:
+             TPM2_CC_UNSEAL,
+             data_handle,
+             len(auth_cmd),
+-            str(auth_cmd))
++            bytes(auth_cmd))
+ 
+         try:
+             rsp = self.send_cmd(cmd)
+@@ -675,7 +677,7 @@ class Client:
+             TPM2_CC_DICTIONARY_ATTACK_LOCK_RESET,
+             TPM2_RH_LOCKOUT,
+             len(auth_cmd),
+-            str(auth_cmd))
++            bytes(auth_cmd))
+ 
+         self.send_cmd(cmd)
+ 
+@@ -693,7 +695,7 @@ class Client:
+         more_data, cap, cnt = struct.unpack('>BII', rsp[:9])
+         rsp = rsp[9:]
+ 
+-        for i in xrange(0, cnt):
++        for i in range(0, cnt):
+             handle = struct.unpack('>I', rsp[:4])[0]
+             handles.append(handle)
+             rsp = rsp[4:]
+diff --git a/tools/testing/selftests/tpm2/tpm2_tests.py b/tools/testing/selftests/tpm2/tpm2_tests.py
+index 728be7c69b76..9d764306887b 100644
+--- a/tools/testing/selftests/tpm2/tpm2_tests.py
++++ b/tools/testing/selftests/tpm2/tpm2_tests.py
+@@ -20,8 +20,8 @@ class SmokeTest(unittest.TestCase):
+         self.client.close()
+ 
+     def test_seal_with_auth(self):
+-        data = 'X' * 64
+-        auth = 'A' * 15
++        data = ('X' * 64).encode()
++        auth = ('A' * 15).encode()
+ 
+         blob = self.client.seal(self.root_key, data, auth, None)
+         result = self.client.unseal(self.root_key, blob, auth, None)
+@@ -30,8 +30,8 @@ class SmokeTest(unittest.TestCase):
+     def test_seal_with_policy(self):
+         handle = self.client.start_auth_session(tpm2.TPM2_SE_TRIAL)
+ 
+-        data = 'X' * 64
+-        auth = 'A' * 15
++        data = ('X' * 64).encode()
++        auth = ('A' * 15).encode()
+         pcrs = [16]
+ 
+         try:
+@@ -58,14 +58,15 @@ class SmokeTest(unittest.TestCase):
+         self.assertEqual(data, result)
+ 
+     def test_unseal_with_wrong_auth(self):
+-        data = 'X' * 64
+-        auth = 'A' * 20
++        data = ('X' * 64).encode()
++        auth = ('A' * 20).encode()
+         rc = 0
+ 
+         blob = self.client.seal(self.root_key, data, auth, None)
+         try:
+-            result = self.client.unseal(self.root_key, blob, auth[:-1] + 'B', None)
+-        except ProtocolError, e:
++            result = self.client.unseal(self.root_key, blob,
++                        auth[:-1] + 'B'.encode(), None)
++        except ProtocolError as e:
+             rc = e.rc
+ 
+         self.assertEqual(rc, tpm2.TPM2_RC_AUTH_FAIL)
+@@ -73,8 +74,8 @@ class SmokeTest(unittest.TestCase):
+     def test_unseal_with_wrong_policy(self):
+         handle = self.client.start_auth_session(tpm2.TPM2_SE_TRIAL)
+ 
+-        data = 'X' * 64
+-        auth = 'A' * 17
++        data = ('X' * 64).encode()
++        auth = ('A' * 17).encode()
+         pcrs = [16]
+ 
+         try:
+@@ -91,7 +92,7 @@ class SmokeTest(unittest.TestCase):
+         # This should succeed.
+ 
+         ds = tpm2.get_digest_size(tpm2.TPM2_ALG_SHA1)
+-        self.client.extend_pcr(1, 'X' * ds)
++        self.client.extend_pcr(1, ('X' * ds).encode())
+ 
+         handle = self.client.start_auth_session(tpm2.TPM2_SE_POLICY)
+ 
+@@ -108,7 +109,7 @@ class SmokeTest(unittest.TestCase):
+ 
+         # Then, extend a PCR that is part of the policy and try to unseal.
+         # This should fail.
+-        self.client.extend_pcr(16, 'X' * ds)
++        self.client.extend_pcr(16, ('X' * ds).encode())
+ 
+         handle = self.client.start_auth_session(tpm2.TPM2_SE_POLICY)
+ 
+@@ -119,7 +120,7 @@ class SmokeTest(unittest.TestCase):
+             self.client.policy_password(handle)
+ 
+             result = self.client.unseal(self.root_key, blob, auth, handle)
+-        except ProtocolError, e:
++        except ProtocolError as e:
+             rc = e.rc
+             self.client.flush_context(handle)
+         except:
+@@ -130,13 +131,13 @@ class SmokeTest(unittest.TestCase):
+ 
+     def test_seal_with_too_long_auth(self):
+         ds = tpm2.get_digest_size(tpm2.TPM2_ALG_SHA1)
+-        data = 'X' * 64
+-        auth = 'A' * (ds + 1)
++        data = ('X' * 64).encode()
++        auth = ('A' * (ds + 1)).encode()
+ 
+         rc = 0
+         try:
+             blob = self.client.seal(self.root_key, data, auth, None)
+-        except ProtocolError, e:
++        except ProtocolError as e:
+             rc = e.rc
+ 
+         self.assertEqual(rc, tpm2.TPM2_RC_SIZE)
+@@ -152,7 +153,7 @@ class SmokeTest(unittest.TestCase):
+                               0xDEADBEEF)
+ 
+             self.client.send_cmd(cmd)
+-        except IOError, e:
++        except IOError as e:
+             rejected = True
+         except:
+             pass
+@@ -212,7 +213,7 @@ class SmokeTest(unittest.TestCase):
+             self.client.tpm.write(cmd)
+             rsp = self.client.tpm.read()
+ 
+-        except IOError, e:
++        except IOError as e:
+             # read the response
+             rsp = self.client.tpm.read()
+             rejected = True
+@@ -283,7 +284,7 @@ class SpaceTest(unittest.TestCase):
+         rc = 0
+         try:
+             space1.send_cmd(cmd)
+-        except ProtocolError, e:
++        except ProtocolError as e:
+             rc = e.rc
+ 
+         self.assertEqual(rc, tpm2.TPM2_RC_COMMAND_CODE |
+
+--------------0C286AB941D5FF612009F235--
