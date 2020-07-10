@@ -2,78 +2,335 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF617C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F61C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEB220853
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D448920720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cT4XZXtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGJMuh (ORCPT
+        id S1727061AbgGJMzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:50:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47066 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgGJMug (ORCPT
+        Fri, 10 Jul 2020 08:55:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56412 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726725AbgGJMzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:50:36 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jtsTv-0005O8-3s; Fri, 10 Jul 2020 12:50:23 +0000
-Date:   Fri, 10 Jul 2020 14:50:22 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     alex.gaynor@gmail.com, Greg KH <gregkh@linuxfoundation.org>,
-        geofft@ldpreload.com, jbaublitz@redhat.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        keescook@chromium.org
-Subject: Re: Linux kernel in-tree Rust support
-Message-ID: <20200710125022.alry7wkymalmv3ge@wittgenstein>
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
- <20200710062803.GA1071395@kroah.com>
+        Fri, 10 Jul 2020 08:55:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594385716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jzg2wtxzp+eHBwgl8GzKA1QrNROln2TAWisTWE/iRDY=;
+        b=cT4XZXtKEFVWdBnY39NjbS3vVHJRVatJp/s90tDYmwk23QuY8s3LrpFC3hl2CrMuHRDZLj
+        1glXmV5AWFvOS8uBLQdriRhnk4JPZnX14mzJAOBzXSK4z/RLlJT+eQRk2hzyo3X8uigO5d
+        JjbjG3b8olXslS6U5WtXtEnbZEpqIt4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-rwP4P9u6PGSUaPMO1hmaRw-1; Fri, 10 Jul 2020 08:55:13 -0400
+X-MC-Unique: rwP4P9u6PGSUaPMO1hmaRw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46A548027E4;
+        Fri, 10 Jul 2020 12:55:09 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA58619C4;
+        Fri, 10 Jul 2020 12:55:00 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 06:55:00 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
+ (alloc/free)
+Message-ID: <20200710065500.2478db37@x1.home>
+In-Reply-To: <DM5PR11MB1435AA0A724D4A59B56E8CA8C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
+        <20200702151832.048b44d1@x1.home>
+        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
+        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <20200708135444.4eac48a4@x1.home>
+        <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
+        <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
+        <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <DM5PR11MB143584D5A0AAE13E0D2D04B7C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <20200709082751.320742ab@x1.home>
+        <DM5PR11MB1435AA0A724D4A59B56E8CA8C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200710062803.GA1071395@kroah.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 08:28:03AM +0200, Greg KH wrote:
-> On Thu, Jul 09, 2020 at 11:41:47AM -0700, Nick Desaulniers wrote:
-> > Hello folks,
-> > I'm working on putting together an LLVM "Micro Conference" for the
-> > upcoming Linux Plumbers Conf
-> > (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
-> > solidified yet, but I would really like to run a session on support
-> > for Rust "in tree."  I suspect we could cover technical aspects of
-> > what that might look like (I have a prototype of that, was trivial to
-> > wire up KBuild support), but also a larger question of "should we do
-> > this?" or "how might we place limits on where this can be used?"
-> > 
-> > Question to folks explicitly in To:, are you planning on attending plumbers?
-> > 
-> > If so, would this be an interesting topic that you'd participate in?
+On Fri, 10 Jul 2020 05:39:57 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+
+> Hi Alex, 
 > 
-> Yes, I'll be there.
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Thursday, July 9, 2020 10:28 PM
+> > 
+> > On Thu, 9 Jul 2020 07:16:31 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > Hi Alex,
+> > >
+> > > After more thinking, looks like adding a r-b tree is still not enough to
+> > > solve the potential problem for free a range of PASID in one ioctl. If
+> > > caller gives [0, MAX_UNIT] in the free request, kernel anyhow should
+> > > loop all the PASIDs and search in the r-b tree. Even VFIO can track the
+> > > smallest/largest allocated PASID, and limit the free range to an accurate
+> > > range, it is still no efficient. For example, user has allocated two PASIDs
+> > > ( 1 and 999), and user gives the [0, MAX_UNIT] range in free request. VFIO
+> > > will limit the free range to be [1, 999], but still needs to loop PASID 1 -
+> > > 999, and search in r-b tree.  
+> > 
+> > That sounds like a poor tree implementation.  Look at vfio_find_dma()
+> > for instance, it returns a node within the specified range.  If the
+> > tree has two nodes within the specified range we should never need to
+> > call a search function like vfio_find_dma() more than three times.  We
+> > call it once, get the first node, remove it.  Call it again, get the
+> > other node, remove it.  Call a third time, find no matches, we're done.
+> > So such an implementation limits searches to N+1 where N is the number
+> > of nodes within the range.  
+> 
+> I see. When getting a free range from user. Use the range to find suited
+> PASIDs in the r-b tree. For the example I mentioned, if giving [0, MAX_UNIT],
+> will find two nodes. If giving [0, 100] range, then only one node will be
+> found. But even though, it still take some time if the user holds a bunch
+> of PASIDs and user gives a big free range.
 
-We actually had this dicussion a while back and there were some more
-people interested in this. I'd be interested to attend this and I've
-spoken with Kees and a few others about this topic at last Plumbers (I
-think Greg might have been around for this informal discussion as well.
-But I might be imagining things.).
 
-Christian
+But that time is bounded.  The complexity of the tree and maximum
+number of operations on the tree are bounded by the number of nodes,
+which is bound by the user's pasid quota.  Thanks,
+
+Alex
+ 
+> > > So I'm wondering can we fall back to prior proposal which only free one
+> > > PASID for a free request. how about your opinion?  
+> > 
+> > Doesn't it still seem like it would be a useful user interface to have
+> > a mechanism to free all pasids, by calling with exactly [0, MAX_UINT]?
+> > I'm not sure if there's another use case for this given than the user
+> > doesn't have strict control of the pasid values they get.  Thanks,  
+> 
+> I don't have such use case neither. perhaps we may allow it in future by
+> adding flag. but if it's still useful, I may try with your suggestion. :-)
+> 
+> Regards,
+> Yi Liu
+> 
+> > Alex
+> >   
+> > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Sent: Thursday, July 9, 2020 10:26 AM
+> > > >
+> > > > Hi Kevin,
+> > > >  
+> > > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > > Sent: Thursday, July 9, 2020 10:18 AM
+> > > > >  
+> > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > Sent: Thursday, July 9, 2020 10:08 AM
+> > > > > >
+> > > > > > Hi Kevin,
+> > > > > >  
+> > > > > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > > > > Sent: Thursday, July 9, 2020 9:57 AM
+> > > > > > >  
+> > > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > > > Sent: Thursday, July 9, 2020 8:32 AM
+> > > > > > > >
+> > > > > > > > Hi Alex,
+> > > > > > > >  
+> > > > > > > > > Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > > > Sent: Thursday, July 9, 2020 3:55 AM
+> > > > > > > > >
+> > > > > > > > > On Wed, 8 Jul 2020 08:16:16 +0000 "Liu, Yi L"
+> > > > > > > > > <yi.l.liu@intel.com> wrote:
+> > > > > > > > >  
+> > > > > > > > > > Hi Alex,
+> > > > > > > > > >  
+> > > > > > > > > > > From: Liu, Yi L < yi.l.liu@intel.com>
+> > > > > > > > > > > Sent: Friday, July 3, 2020 2:28 PM
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Alex,
+> > > > > > > > > > >  
+> > > > > > > > > > > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > > > > > > Sent: Friday, July 3, 2020 5:19 AM
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Wed, 24 Jun 2020 01:55:19 -0700 Liu Yi L
+> > > > > > > > > > > > <yi.l.liu@intel.com> wrote:
+> > > > > > > > > > > >  
+> > > > > > > > > > > > > This patch allows user space to request PASID
+> > > > > > > > > > > > > allocation/free,  
+> > > > > > e.g.  
+> > > > > > > > > > > > > when serving the request from the guest.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > PASIDs that are not freed by userspace are
+> > > > > > > > > > > > > automatically freed  
+> > > > > > > > when  
+> > > > > > > > > > > > > the IOASID set is destroyed when process exits.  
+> > > > > > > > > > [...]  
+> > > > > > > > > > > > > +static int vfio_iommu_type1_pasid_request(struct
+> > > > > > > > > > > > > +vfio_iommu  
+> > > > > > > > *iommu,  
+> > > > > > > > > > > > > +					  unsigned long arg) {
+> > > > > > > > > > > > > +	struct vfio_iommu_type1_pasid_request req;
+> > > > > > > > > > > > > +	unsigned long minsz;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +	minsz = offsetofend(struct  
+> > > > > vfio_iommu_type1_pasid_request,  
+> > > > > > > > > range);  
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
+> > > > > > > > > > > > > +		return -EFAULT;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +	if (req.argsz < minsz || (req.flags &  
+> > > > > > > > > ~VFIO_PASID_REQUEST_MASK))  
+> > > > > > > > > > > > > +		return -EINVAL;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +	if (req.range.min > req.range.max)  
+> > > > > > > > > > > >
+> > > > > > > > > > > > Is it exploitable that a user can spin the kernel for a
+> > > > > > > > > > > > long time in the case of a free by calling this with [0,
+> > > > > > > > > > > > MAX_UINT] regardless of their  
+> > > > > > > > > actual  
+> > > > > > > > > > > allocations?
+> > > > > > > > > > >
+> > > > > > > > > > > IOASID can ensure that user can only free the PASIDs
+> > > > > > > > > > > allocated to the  
+> > > > > > > > user.  
+> > > > > > > > > but  
+> > > > > > > > > > > it's true, kernel needs to loop all the PASIDs within the
+> > > > > > > > > > > range provided by user.  
+> > > > > > > > > it  
+> > > > > > > > > > > may take a long time. is there anything we can do? one
+> > > > > > > > > > > thing may limit  
+> > > > > > > > the  
+> > > > > > > > > range  
+> > > > > > > > > > > provided by user?  
+> > > > > > > > > >
+> > > > > > > > > > thought about it more, we have per-VM pasid quota (say
+> > > > > > > > > > 1000), so even if user passed down [0, MAX_UNIT], kernel
+> > > > > > > > > > will only loop the
+> > > > > > > > > > 1000 pasids at most. do you think we still need to do something on  
+> > it?  
+> > > > > > > > >
+> > > > > > > > > How do you figure that?  vfio_iommu_type1_pasid_request()
+> > > > > > > > > accepts the user's min/max so long as (max > min) and passes
+> > > > > > > > > that to vfio_iommu_type1_pasid_free(), then to
+> > > > > > > > > vfio_pasid_free_range() which loops as:
+> > > > > > > > >
+> > > > > > > > > 	ioasid_t pasid = min;
+> > > > > > > > > 	for (; pasid <= max; pasid++)
+> > > > > > > > > 		ioasid_free(pasid);
+> > > > > > > > >
+> > > > > > > > > A user might only be able to allocate 1000 pasids, but
+> > > > > > > > > apparently they can ask to free all they want.
+> > > > > > > > >
+> > > > > > > > > It's also not obvious to me that calling ioasid_free() is only
+> > > > > > > > > allowing the user to free their own passid.  Does it?  It
+> > > > > > > > > would be a pretty  
+> > > > > > >
+> > > > > > > Agree. I thought ioasid_free should at least carry a token since
+> > > > > > > the user  
+> > > > > > space is  
+> > > > > > > only allowed to manage PASIDs in its own set...
+> > > > > > >  
+> > > > > > > > > gaping hole if a user could free arbitrary pasids.  A r-b tree
+> > > > > > > > > of passids might help both for security and to bound spinning in a  
+> > loop.  
+> > > > > > > >
+> > > > > > > > oh, yes. BTW. instead of r-b tree in VFIO, maybe we can add an
+> > > > > > > > ioasid_set parameter for ioasid_free(), thus to prevent the user
+> > > > > > > > from freeing PASIDs that doesn't belong to it. I remember Jacob
+> > > > > > > > mentioned it  
+> > > > > > before.  
+> > > > > > > >  
+> > > > > > >
+> > > > > > > check current ioasid_free:
+> > > > > > >
+> > > > > > >         spin_lock(&ioasid_allocator_lock);
+> > > > > > >         ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> > > > > > >         if (!ioasid_data) {
+> > > > > > >                 pr_err("Trying to free unknown IOASID %u\n", ioasid);
+> > > > > > >                 goto exit_unlock;
+> > > > > > >         }
+> > > > > > >
+> > > > > > > Allow an user to trigger above lock paths with MAX_UINT times
+> > > > > > > might still  
+> > > > > > be bad.
+> > > > > >
+> > > > > > yeah, how about the below two options:
+> > > > > >
+> > > > > > - comparing the max - min with the quota before calling ioasid_free().
+> > > > > >   If max - min > current quota of the user, then should fail it. If
+> > > > > >   max - min < quota, then call ioasid_free() one by one. still trigger
+> > > > > >   the above lock path with quota times.  
+> > > > >
+> > > > > This is definitely wrong. [min, max] is about the range of the PASID
+> > > > > value, while quota is about the number of allocated PASIDs. It's a bit
+> > > > > weird to mix two together.  
+> > > >
+> > > > got it.
+> > > >  
+> > > > > btw what is the main purpose of allowing batch PASID free requests?
+> > > > > Can we just simplify to allow one PASID in each free just like how is
+> > > > > it done in allocation path?  
+> > > >
+> > > > it's an intention to reuse the [min, max] range as allocation path. currently,  
+> > we  
+> > > > don't have such request as far as I can see.
+> > > >  
+> > > > > >
+> > > > > > - pass the max and min to ioasid_free(), let ioasid_free() decide. should
+> > > > > >   be able to avoid trigger the lock multiple times, and ioasid has have a
+> > > > > >   track on how may PASIDs have been allocated, if max - min is larger than
+> > > > > >   the allocated number, should fail anyway.  
+> > > > >
+> > > > > What about Alex's r-b tree suggestion? Is there any downside in you mind?  
+> > > >
+> > > > no downside, I was just wanting to reuse the tracks in ioasid_set. I can add a  
+> > r-b  
+> > > > for allocated PASIDs and find the PASIDs in the r-b tree only do free for the
+> > > > PASIDs found in r-b tree, others in the range would be ignored.
+> > > > does it look good?
+> > > >
+> > > > Regards,
+> > > > Yi Liu
+> > > >  
+> > > > > Thanks,
+> > > > > Kevin  
+> > >  
+> 
 
