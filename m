@@ -2,114 +2,112 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983FB2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1FB2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKd+Cf8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGJF27 (ORCPT
+        id S1727097AbgGJF24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:28:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28171 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgGJF2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:28:49 -0400
-IronPort-SDR: t2uhjyRIx2shCvXcguclmRuwGqvf2TNvh5ggvTdgAnGOOi4NUhIIICUs2GIexDQFx/8FpC4r53
- QLJhyupS0cgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146225299"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="146225299"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:28:48 -0700
-IronPort-SDR: GzE06fwv1iXqpMSDnrSYW3Rfn05uzXodKsmCbQ2Kpz7cVL5qipKYcSnwLctqVRMyqIJ1DUkjLZ
- if117iTlAliA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="389378494"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 22:28:46 -0700
-Date:   Fri, 10 Jul 2020 13:24:43 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     "Wu, Hao" <hao.wu@intel.com>, "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>
-Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Message-ID: <20200710052443.GB8689@yilunxu-OptiPlex-7050>
-References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
- <20200709093527.GA32541@yilunxu-OptiPlex-7050>
- <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
- <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+        Fri, 10 Jul 2020 01:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgGJFZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:25:34 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39BDC08C5DD;
+        Thu,  9 Jul 2020 22:25:33 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id a11so4075514ilk.0;
+        Thu, 09 Jul 2020 22:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1cVDfB4v6J4ClnDi/ClpZbQ7jFtPWUjhu9zER11wqP8=;
+        b=HKd+Cf8scR4pDATBdPv9J6bE79bp4QubfdMiZ3HWIifUJzxv80tzeOxDgAmi8ijh9e
+         ba2qJSxjWfstzcK45BHkPk7sfCs9LLn2RCk5MfrIgvx/Kc6gAXyZAwomlnnti59FkegO
+         dS0fyvUAXp5Bmw2w7tfN7uvWfKAsDNTqw4BFji62qVv+80eGdGB7KeY53GgSwsbvcIu5
+         sYQDkjXaGNcgqkHw2Lsf993+nAZZVFJodIWkZVHQZ3TBFoOXAD6ZMGrGxDqSyYofdS3o
+         OB3t6+/eV71jgo8m3oH7oAJ4gM5mYbIGPUbzmOoWqWuWRzZPM/1AUdIOF4XaCheguvh6
+         LYPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1cVDfB4v6J4ClnDi/ClpZbQ7jFtPWUjhu9zER11wqP8=;
+        b=EjeoVctYr/EJkMojp2xNl25Jelpq+ElU2pZ7HGSra4/vBwnlP3axfizC59PxAfZn90
+         xcIjDNOoUkIwJfxfQkMwnq/kVZh/ONCjkKXAK38gYdXGG6aMo8VR89mWObMPEFyAPL6f
+         KDWNFdBWV9fTBfq34HLwM/BKsPj57+f28EO+2sGy5eFL2Roq3N0L5YideeR2tYJyA7Q6
+         P3u1cMEoWDrlTDzUo7xsGwK822GGjqMiqGDLRsqxz0o7QrGBVbET105aP5a0DAk5V5Xq
+         dH0JO2lxeiPdXiDwv2JkZsXxY8wiCx3jhr5zaSUwsSMkvpnr4ksrciqniRZsJPGzw8hl
+         b8tg==
+X-Gm-Message-State: AOAM533OYzGkrvARRFdyW9oTyd52W5KzICgld4FeWSmRbmmR+JCyqvyP
+        lHEC+yWI7LJ8zDRRvSRw6HdOLltCH5SlBwO10t0=
+X-Google-Smtp-Source: ABdhPJw2WPKWI/PMXVjCNufYc0XZl4hZWcBY1ymfaGsvwrEOqU+aXVi0iLdPhxgpzq4Gj739y5aJg/JXvjAEf1A89Rk=
+X-Received: by 2002:a92:c78d:: with SMTP id c13mr50475751ilk.85.1594358733111;
+ Thu, 09 Jul 2020 22:25:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 9 Jul 2020 22:25:19 -0700
+Message-ID: <CANcMJZDsfK35GxiRA0QBcX0wThY8w5tw2st_dZ=BJ9GJqnxePQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] iommu/arm-smmu: Support maintaining bootloader mappings
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
-> 
-> On 7/9/20 3:14 AM, Wu, Hao wrote:
-> >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
-> >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-> >>>>
-> >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
-> >>>>
-> >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> >>>> ---
-> >>>>  drivers/fpga/dfl-pci.c | 2 ++
-> >>>>  1 file changed, 2 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> >>>> index 73b5153..824aecf 100644
-> >>>> --- a/drivers/fpga/dfl-pci.c
-> >>>> +++ b/drivers/fpga/dfl-pci.c
-> >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
-> >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
-> >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
-> >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
-> >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
-> >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
-> >> I think we could keep _PF_, also there is no need to support VF of pac
-> >> n3000 in product now, but it does exist (ID: 0x0b31).
-> 
-> I was wondering about the vf id, thanks!
-> 
-> >>
-> >> And add _INTEL_ is good to me.
-> >>
-> >> Then how about this one:
-> >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
-> > I am just considering the alignment with ids defined in include/linux/pci_ids.h
-> > So drop _PF_ before _INTEL_ would be better? : )
-> 
-> To be consistent, all the id's are intel and all could drop pf.
+On Wed, Jul 8, 2020 at 10:02 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Based on previous attempts and discussions this is the latest attempt at
+> inheriting stream mappings set up by the bootloader, for e.g. boot splash or
+> efifb.
+>
+> The first patch is an implementation of Robin's suggestion that we should just
+> mark the relevant stream mappings as BYPASS. Relying on something else to set
+> up the stream mappings wanted - e.g. by reading it back in platform specific
+> implementation code.
+>
+> The series then tackles the problem seen in most versions of Qualcomm firmware,
+> that the hypervisor intercepts BYPASS writes and turn them into FAULTs. It does
+> this by allocating context banks for identity domains as well, with translation
+> disabled.
+>
+> Lastly it amends the stream mapping initialization code to allocate a specific
+> identity domain that is used for any mappings inherited from the bootloader, if
+> above Qualcomm quirk is required.
+>
+>
+> The series has been tested and shown to allow booting SDM845, SDM850, SM8150,
+> SM8250 with boot splash screen setup by the bootloader. Specifically it also
+> allows the Lenovo Yoga C630 to boot with SMMU and efifb enabled.
 
-That's good to me after checking the pci_ids.h. So we have:
+This series allows the db845c to boot successfully! (Without it we crash!)
+It would be really great to have this upstream!
 
-#define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
+For the series:
+  Tested-by: John Stultz <john.stultz@linaro.org>
 
-> 
-> Tom
-> 
-> >
-> > Thanks
-> > Hao
-> >
+Thanks so much!
+-john
