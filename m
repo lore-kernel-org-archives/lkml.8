@@ -2,139 +2,105 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2908C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A5EC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADD520857
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822952063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594388505;
+	bh=i75CBXIgGhcZUa4Q5eVv78+LmWfKj2lmU+kA47/adfU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FFGIYE1LTv2EVq4zWdgO2kaDfAcAMcBIaA6JbqqgVGqSMZzxn9YiaBf2L55DHiyPs
+	 J18hLz8g0izdPPFH5T2JKU9ohgkBLyKG5ePlFITXxoBeGSsduu9S2T2ZfkE2fXwvSn
+	 L/p2NxpFtUlL/lIUFfe1zOZ6i8ilSgDnnSwIvTXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGJNlg (ORCPT
+        id S1727944AbgGJNlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:41:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:47256 "EHLO foss.arm.com"
+        Fri, 10 Jul 2020 09:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgGJNlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:41:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F14C1FB;
-        Fri, 10 Jul 2020 06:41:35 -0700 (PDT)
-Received: from [10.37.12.58] (unknown [10.37.12.58])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6843F3F8C6;
-        Fri, 10 Jul 2020 06:41:31 -0700 (PDT)
-Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
- interval and uptreshold
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
-        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-References: <20200708153420.29484-1-lukasz.luba@arm.com>
- <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
- <20200708153420.29484-2-lukasz.luba@arm.com>
- <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
- <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
- <c016e256-65a6-8075-d88d-c3fad4815b4d@samsung.com>
- <20200710131921.GA23039@pi3>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <4bfa227e-3a6b-dfe2-140b-b402dea52231@arm.com>
-Date:   Fri, 10 Jul 2020 14:41:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726774AbgGJNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:41:43 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95917207DF;
+        Fri, 10 Jul 2020 13:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594388502;
+        bh=i75CBXIgGhcZUa4Q5eVv78+LmWfKj2lmU+kA47/adfU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BVP2jY9BJ54jjApBEPD0xvCJ3d7zT7Oyt4yCdw6oxKWIRmgnSMcGpIU28L0X3wCxh
+         bXzut1P37bZxexmGGjWs8ERCJodOW/vggL3EuRUxtOy4TZBDtPsFf8/2Lxaz6AIvYX
+         2BbnS0Pdbqa9ra4kz6hbuXtlqtqQ4nbR47BzrjBc=
+Received: by mail-ot1-f51.google.com with SMTP id h1so4179773otq.12;
+        Fri, 10 Jul 2020 06:41:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530r2+Cz20n1SpT+xeudNBFl0PqXzFDpPWvhjHJxIkTRQOhXAmYS
+        52xXlgRGrJjKt0kTaFIKzgrMHWGS3tEPsBxuvN8=
+X-Google-Smtp-Source: ABdhPJzMDks2bKtBSSU06I1kMxmshqTzgvxqZ+s5CEUL5PYeC51lRTbaxITZFvhimohokw08oLmR71FMFMUIrqKF7Zk=
+X-Received: by 2002:a9d:7553:: with SMTP id b19mr11274563otl.77.1594388501943;
+ Fri, 10 Jul 2020 06:41:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200710131921.GA23039@pi3>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200610141052.13258-1-jgross@suse.com> <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
+ <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
+ <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com> <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
+ <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com> <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
+In-Reply-To: <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 10 Jul 2020 16:41:30 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXGsAsOiBsbhT9TXNBsjba=GXHegYbGOpaVFR0vZ8w3+bw@mail.gmail.com>
+Message-ID: <CAMj1kXGsAsOiBsbhT9TXNBsjba=GXHegYbGOpaVFR0vZ8w3+bw@mail.gmail.com>
+Subject: Re: [PATCH] efi: avoid error message when booting under Xen
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 10 Jul 2020 at 16:38, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote=
+:
+>
+> On 10.07.20 15:27, Ard Biesheuvel wrote:
+> > On Fri, 10 Jul 2020 at 13:17, Bartlomiej Zolnierkiewicz
+> > <b.zolnierkie@samsung.com> wrote:
+> >>
+> >>
+> >> [ added EFI Maintainer & ML to Cc: ]
+> >>
+> >> Hi,
+> >>
+> >> On 7/9/20 11:17 AM, J=C3=BCrgen Gro=C3=9F wrote:
+> >>> On 28.06.20 10:50, J=C3=BCrgen Gro=C3=9F wrote:
+> >>>> Ping?
+> >>>>
+> >>>> On 10.06.20 16:10, Juergen Gross wrote:
+> >>>>> efifb_probe() will issue an error message in case the kernel is boo=
+ted
+> >>>>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoi=
+d
+> >>>>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
+> >>>>> isn't set.
+> >>>>>
+> >
+> > Why not test for EFI_MEMMAP instead of EFI_BOOT?
+>
+> Honestly I'm not sure EFI_BOOT is always set in that case. If you tell
+> me it is fine to just replace the test to check for EFI_MEMMAP I'm fine
+> to modify my patch.
+>
 
 
-On 7/10/20 2:19 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jul 10, 2020 at 03:13:18PM +0200, Marek Szyprowski wrote:
->> Hi Lukasz,
->>
->> On 10.07.2020 10:34, Lukasz Luba wrote:
->>> Hi Chanwoo,
->>>
->>> On 7/9/20 5:08 AM, Chanwoo Choi wrote:
->>>> Hi Lukasz,
->>>>
->>>> On 7/9/20 12:34 AM, Lukasz Luba wrote:
->>>>> In order to react faster and make better decisions under some
->>>>> workloads,
->>>>> benchmarking the memory subsystem behavior, adjust the polling interval
->>>>> and upthreshold value used by the simple_ondemand governor.
->>>>>
->>>>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
->>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->>>>> ---
->>>>>    drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
->>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/memory/samsung/exynos5422-dmc.c
->>>>> b/drivers/memory/samsung/exynos5422-dmc.c
->>>>> index 93e9c2429c0d..e03ee35f0ab5 100644
->>>>> --- a/drivers/memory/samsung/exynos5422-dmc.c
->>>>> +++ b/drivers/memory/samsung/exynos5422-dmc.c
->>>>> @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct
->>>>> platform_device *pdev)
->>>>>             * Setup default thresholds for the devfreq governor.
->>>>>             * The values are chosen based on experiments.
->>>>>             */
->>>>> -        dmc->gov_data.upthreshold = 30;
->>>>> +        dmc->gov_data.upthreshold = 10;
->>>>>            dmc->gov_data.downdifferential = 5;
->>>>>    -        exynos5_dmc_df_profile.polling_ms = 500;
->>>>> +        exynos5_dmc_df_profile.polling_ms = 100;
->>>>>        }
->>>>>
->>>>
->>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>
->>>
->>> Thank you for the review. Do you think this patch could go through
->>> your tree together with your patches?
->>>
->>> I don't know Krzysztof's opinion about the patch 2/2, but
->>> I would expect, assuming the patch itself is correct, he would
->>> like to take it into his next/dt branch.
->>
->> Is there really a need to remove the interrupts property? imho they are
->> correct hw description, it just a matter of the driver to use or not to
->> use them.
-
-Marek, I agree with you, they are correct hw description. Unfortunately,
-I don't have TRM to experiment and maybe fix the interrupt mode code.
-
-> 
-> That's actually very good point. I would also prefer to leave them.
-> However I understood that driver chooses mode depending on the property.
-
-Correct
-
-> 
-> In such case, maybe as you said, let's switch to polling mode
-> unconditionally?
-
-I can make happen that the polling mode will be unconditionally
-set as default.
-
-Do you think that the interrupt mode code can still stay in the
-driver, because maybe in future could be fixed?
-
-
-> 
-> Best regards,
-> Krzysztof
-> 
+Yes please
