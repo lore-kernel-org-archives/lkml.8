@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C05C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B003C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C87920725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DC420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2ig4kvm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="carzkvlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGJJ0R (ORCPT
+        id S1727944AbgGJJ0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
+        Fri, 10 Jul 2020 05:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbgGJJ0C (ORCPT
+        with ESMTP id S1727834AbgGJJ0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:26:02 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6BFC08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:26:02 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so5374167wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:26:02 -0700 (PDT)
+        Fri, 10 Jul 2020 05:26:08 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544F1C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:26:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so5351605wmh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:26:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xXA70POHCV2GWsHX4CvRyqRrbTFQBlpDYTBkU8Vpd/0=;
-        b=S2ig4kvmDSJIPwYoXEgwMT8FZkjfG9AVU443JHmffIUG51/Is4LsPtP5tODmYYaEsc
-         auB8gLKNNCaSSTKDeLuP9AHMK8ekbeF3eb2nz2ZLiKUxjW9avc5hIebi+FQ1LkyRpfE9
-         1HnrWiQh0UzK+EyDN0LW8bI8ANdBw2aAafYBFf9oCnGTmQ1mIJj5tarTQBvjn6ECNjkL
-         brj0s1P/EIxKJShtsZRjCpDx5bewqgdUs1SfYoESwuAkI6ipnjL9vYjLdmZVfzF03Jac
-         kyL4fMD+LmzMTVWrea13dQl6Sf91dDhNWSyQcjcrCx90ZO7e9Nhm+6Fz9qJDVXXACAJn
-         j8lQ==
+        bh=8VG9wQ36+6wND2b+1ll55zwCVUgbhF9bJxt2xblFID8=;
+        b=carzkvlL4fPgiY8/ikmG/X30/j14DZTnoy/ZCCRzPEovmjSSEjaSr0hHan1ZPp5ctO
+         +Gf9XxFrLm6CMf32AlmmkOYRBK2KOQlUMNwqO6MQxwL3MEU3+WmznHgYSnqq3jCxiNx5
+         h69+pu8JnjF+P/MaOiPDCMrDomeMx3FGwAege9a9KaSs0A8xh9TxWgGv2q8RrfYAyEiC
+         a5JYNYsmWkxJkuPs2Y8YW5q4s4BF7OCzFr88UMxVXvx60wiQpfc0cWW0J0MFglDsH+nQ
+         Hn1+k2D4l1a4ja044od/3j4EJ5iRrG9p2lsarnlD4ZtI9J/G2mvxM6XLT4ahZ9o/yr0h
+         CaFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xXA70POHCV2GWsHX4CvRyqRrbTFQBlpDYTBkU8Vpd/0=;
-        b=JD0d+vWt7qLkp+9qwA8lc2uLDHMmBH/FfBgFyxxyuGBgGgmvAY+PsxW9P+LFGgajIC
-         KZrvozNdviAnfsm/yjcgeBG7XmKxNcW/SScG0RwGuWqaD3zhDSFb7jrSh8cFbm1y5YiK
-         qK9SsCv79di/f1WBzQt7AtW3Qz0931C9g0fM3AEGCmLlCpuWmQtT+Z9u3i2TZN4nFmLk
-         2xJkk+82VFuW9DtVY/e394ein9n+wq8Fa/c0G6Yk2YNddGEawyrDRo0eWpokwXxWvo7C
-         3TR2ImmWBbEcgTjA1YnzyeNGfoajXbqj/wKeVAonR/A3y7qUENW+vpQHY/VZPt53wOHo
-         yQDw==
-X-Gm-Message-State: AOAM531DrSxzCMPBqTD/KC3ECiJTToNYoH7YAolWr1T4t2dxQL/pOaCB
-        DCQlrAaiCwVB9b0pyEzOcf0=
-X-Google-Smtp-Source: ABdhPJwf0I1oRgP5F+GFt4RKjJo/KGgOpRV0lTTEpc+BKVvDFwJ4KfE3PAObQkkIVtQDkCgqg4qb5g==
-X-Received: by 2002:a7b:c194:: with SMTP id y20mr4487588wmi.83.1594373160910;
-        Fri, 10 Jul 2020 02:26:00 -0700 (PDT)
+        bh=8VG9wQ36+6wND2b+1ll55zwCVUgbhF9bJxt2xblFID8=;
+        b=CRSgEZCDNZMe6vQ4pdJtHTEnq18pLXIn0XJTgULyWd0vg91/Gf9xHsvyfhOELToosy
+         S/g5xAjDHpZdbua1mi4xMOsKWbzJ2NPaKr5b9bFQPlKu7+hqU3k3dG7fJ8trwUPmM2mI
+         mk64+zJL16Rpn7O/1/o/9O3BEuqTRIxMyVy8HF4YT/pxjxcH79GjtyFCgekOBcpec9E9
+         DIiTSkNwPITtKXAr6jMzkGmmVbnymqUJuxWoNSLUYIYwtsSdh+ttbx6nXtDee/M0BRGH
+         sZbR89goQV77x3y+DaXwIID7M+YvqhchKJ/duJPZwBpXFDcg4ITiKvUS+D+tKGlb72WL
+         WZ1A==
+X-Gm-Message-State: AOAM531nY3ud30dfBajuQ6maoTMOSY/CWkMkYdbai+ukqlXlD1W1tDNj
+        kCdpCk2WwHE1xPcSPA4YwIY=
+X-Google-Smtp-Source: ABdhPJzfsp51zsDGVN3GNH7Jbje1TAsP8U6D5DpK8iDepJ7CTVH039bhVIuUP/0C2wAuc0dbbbuGtw==
+X-Received: by 2002:a7b:ca59:: with SMTP id m25mr4494841wml.151.1594373167015;
+        Fri, 10 Jul 2020 02:26:07 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id h23sm8179559wmb.3.2020.07.10.02.25.59
+        by smtp.gmail.com with ESMTPSA id h23sm8179559wmb.3.2020.07.10.02.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 02:26:00 -0700 (PDT)
+        Fri, 10 Jul 2020 02:26:06 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 07/14] drm/panfrost: rename error labels in device_init
-Date:   Fri, 10 Jul 2020 11:25:41 +0200
-Message-Id: <20200710092548.316054-8-peron.clem@gmail.com>
+Subject: [PATCH v4 12/14] arm64: dts: allwinner: h6: Add cooling map for GPU
+Date:   Fri, 10 Jul 2020 11:25:46 +0200
+Message-Id: <20200710092548.316054-13-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200710092548.316054-1-peron.clem@gmail.com>
 References: <20200710092548.316054-1-peron.clem@gmail.com>
@@ -85,91 +85,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename goto labels in device_init it will be easier to maintain.
+Add a simple cooling map for the GPU.
 
 Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_device.c | 30 +++++++++++-----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index b172087eee6a..9f89984f652a 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -216,56 +216,56 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 9ce78a7b117d..1c939c55aaea 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -175,6 +175,7 @@ gpu: gpu@1800000 {
+ 			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
+ 			clock-names = "core", "bus";
+ 			resets = <&ccu RST_BUS_GPU>;
++			#cooling-cells = <2>;
+ 			status = "disabled";
+ 		};
  
- 	err = panfrost_regulator_init(pfdev);
- 	if (err)
--		goto err_out0;
-+		goto out_clk;
- 
- 	err = panfrost_reset_init(pfdev);
- 	if (err) {
- 		dev_err(pfdev->dev, "reset init failed %d\n", err);
--		goto err_out1;
-+		goto out_regulator;
- 	}
- 
- 	err = panfrost_pm_domain_init(pfdev);
- 	if (err)
--		goto err_out2;
-+		goto out_reset;
- 
- 	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
- 	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
- 	if (IS_ERR(pfdev->iomem)) {
- 		dev_err(pfdev->dev, "failed to ioremap iomem\n");
- 		err = PTR_ERR(pfdev->iomem);
--		goto err_out3;
-+		goto out_pm_domain;
- 	}
- 
- 	err = panfrost_gpu_init(pfdev);
- 	if (err)
--		goto err_out3;
-+		goto out_pm_domain;
- 
- 	err = panfrost_mmu_init(pfdev);
- 	if (err)
--		goto err_out4;
-+		goto out_gpu;
- 
- 	err = panfrost_job_init(pfdev);
- 	if (err)
--		goto err_out5;
-+		goto out_mmu;
- 
- 	err = panfrost_perfcnt_init(pfdev);
- 	if (err)
--		goto err_out6;
-+		goto out_job;
- 
- 	return 0;
--err_out6:
-+out_job:
- 	panfrost_job_fini(pfdev);
--err_out5:
-+out_mmu:
- 	panfrost_mmu_fini(pfdev);
--err_out4:
-+out_gpu:
- 	panfrost_gpu_fini(pfdev);
--err_out3:
-+out_pm_domain:
- 	panfrost_pm_domain_fini(pfdev);
--err_out2:
-+out_reset:
- 	panfrost_reset_fini(pfdev);
--err_out1:
-+out_regulator:
- 	panfrost_regulator_fini(pfdev);
--err_out0:
-+out_clk:
- 	panfrost_clk_fini(pfdev);
- 	return err;
- }
+@@ -1013,6 +1014,27 @@ gpu-thermal {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&ths 1>;
++
++			trips {
++				gpu_alert: gpu-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu-crit {
++					temperature = <100000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.25.1
 
