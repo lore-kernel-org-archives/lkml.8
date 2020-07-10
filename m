@@ -2,149 +2,294 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE59C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4472065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E6E2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:12:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HYGsk6XQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgGJELG (ORCPT
+        id S1726644AbgGJEMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:11:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:48310 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbgGJELF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:11:05 -0400
-IronPort-SDR: zthha9ddH52MsCsaeheEjUVTGXHBiHwoBCYKHae8iiNM4x+lLZaAAqWg0hwj6ZOED+Rfoz1CLq
- WE8g66mFQ3SQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="135611521"
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="135611521"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 21:11:05 -0700
-IronPort-SDR: O8JSIaYP8xEdErt152VGO90GCWM6m1o5mEKemJL0bHREATm5oBf16JEQe97HEdZ2/CohI0VM5z
- qXbRCTstSjIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
-   d="scan'208";a="389362043"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 21:11:02 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.c.chen@intel.com>, Len Brown <len.brown@intel.com>
-Subject: [PATCH][v2] intel_idle: Customize IceLake server support
-Date:   Fri, 10 Jul 2020 12:12:01 +0800
-Message-Id: <20200710041201.22390-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Jul 2020 00:12:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgGJEMV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:12:21 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF91AC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:12:20 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id u6so1410099uau.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xFtqd/2QNLLRFKTwkoyRLlBqWZF8TYezgrp3LmAuB5w=;
+        b=HYGsk6XQv7pKew7gvxg4OvE+OHnsBXXsbjk0fQFUW6L2EyTcSa8qFi7fRWcUERDxTX
+         8Z2sQokRGj+KwAKYsjt7YgG+IBPD6QQcd9wNwoBvG8MYSM2aLyYuLbN4oSLYc3VodSB6
+         zSlflC98ztn0yQ23AeKmcZXyMg1lPljk+9kzg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xFtqd/2QNLLRFKTwkoyRLlBqWZF8TYezgrp3LmAuB5w=;
+        b=nG+JJdruESS41zJVHeZzaTOY3lQ2tlH1iEyhH5svVBiBqA9cD3Okl3BTMslaUQEss3
+         gtSThN1D5Dk8X0rrg80tAODeXexAtMrrIwZzmM3dBXnD3E3pyX13hAyI3EiTcyEvgnaO
+         ECLHDKSiQ3KU/oFrhAz6XGqMJo6HLXroHXMXkLdwLdukkDUsbFBwB7lHzYzPOpg8lNe3
+         4LttlSTRX25QjnWmNazj9A4mVTaUH/55KHTERjWy5bsBANVCft7U53cSuB1HtbU9Vp6A
+         QB6eEpSDqDoXZ8jKHZ3dJ6JZt03v83EzpMADLmk6acClyXuN9sHSdfltZpZpgCDOxhmS
+         mL7w==
+X-Gm-Message-State: AOAM531xuGvpb38qr2WdHAiE9gING9lb3nr/fyDi3R5FhKi5ats8onYF
+        LKODQkPmLGfJ9MaiPnXYz0iTK5ZtqJ4=
+X-Google-Smtp-Source: ABdhPJwEg9h7Y0Ef5SAMIiy+7/usJxflDfCx4Bj1LUMoEeRuJPoW8AUQfupLubr4xx5pMpwy9xSWxg==
+X-Received: by 2002:ab0:1167:: with SMTP id g39mr30213700uac.60.1594354339672;
+        Thu, 09 Jul 2020 21:12:19 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id h77sm705514vke.21.2020.07.09.21.12.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 21:12:19 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id t187so947579vke.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:12:18 -0700 (PDT)
+X-Received: by 2002:a1f:9d57:: with SMTP id g84mr24862294vke.100.1594354337635;
+ Thu, 09 Jul 2020 21:12:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
+ <20200710011935.GA7056@gentoo.org> <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
+ <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
+ <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org> <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
+ <bc795659-7dd6-c667-1c93-4331510ecfbc@kali.org>
+In-Reply-To: <bc795659-7dd6-c667-1c93-4331510ecfbc@kali.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 9 Jul 2020 21:12:06 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VC+RP8WfS-yuc65WRN2KokNbAs-F3UdQtQoZjcMMSNFA@mail.gmail.com>
+Message-ID: <CAD=FV=VC+RP8WfS-yuc65WRN2KokNbAs-F3UdQtQoZjcMMSNFA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+To:     Steev Klimaszewski <steev@kali.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Steev Klimaszewski <steev@gentoo.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On ICX platform, the CPU frequency will slowly ramp up
-when woken up from C-states deeper than/equals to C1E.
-Although this feature does save energy in many cases
-this might also cause unexpected result. For example,
-workload might get unstable performance due to the uncertainty
-of CPU frequency. Besides, the CPU frequency might not be locked
-to specific level when the CPU utilization is low.
+Hi,
 
-Thus this patch disables C1E auto-promotion and expose
-C1E as a separate idle state, so that the C1E and C6 can
-be disabled via sysfs when necessary.
+On Thu, Jul 9, 2020 at 8:43 PM Steev Klimaszewski <steev@kali.org> wrote:
+>
+>
+> On 7/9/20 10:17 PM, Steev Klimaszewski wrote:
+> >
+> > On 7/9/20 10:12 PM, Steev Klimaszewski wrote:
+> >>
+> >> On 7/9/20 9:14 PM, Doug Anderson wrote:
+> >>> Hi,
+> >>>
+> >>> On Thu, Jul 9, 2020 at 6:38 PM Doug Anderson <dianders@chromium.org>
+> >>> wrote:
+> >>>> Hi,
+> >>>>
+> >>>> On Thu, Jul 9, 2020 at 6:19 PM Steev Klimaszewski
+> >>>> <steev@gentoo.org> wrote:
+> >>>>> Hi Doug,
+> >>>>>
+> >>>>> I've been testing 5.8 and linux-next on the Lenovo Yoga C630, and
+> >>>>> with this patch applied, there is really bad banding on the display.
+> >>>>>
+> >>>>> I'm really bad at explaining it, but you can see the differences
+> >>>>> in the following:
+> >>>>>
+> >>>>> 24bit (pre-5.8) - https://dev.gentoo.org/~steev/files/image0.jpg
+> >>>>>
+> >>>>> 18bit (5.8/linux-next) -
+> >>>>> https://dev.gentoo.org/~steev/files/image1.jpg
+> >>>> Presumably this means that your panel is defined improperly? If the
+> >>>> panel reports that it's a 6 bits per pixel panel but it's actually an
+> >>>> 8 bits per pixel panel then you'll run into this problem.
+> >>>>
+> >>>> I would have to assume you have a bunch of out of tree patches to
+> >>>> support your hardware since I don't see any device trees in linuxnext
+> >>>> (other than cheza) that use this bridge chip.  Otherwise I could try
+> >>>> to check and confirm that was the problem.
+> >>> Ah, interesting.  Maybe you have the panel:
+> >>>
+> >>> boe,nv133fhm-n61
+> >>>
+> >>> As far as I can tell from the datasheet (I have the similar
+> >>> boe,nv133fhm-n62) this is a 6bpp panel.  ...but if you feed it 8bpp
+> >>> the banding goes away!  Maybe the panel itself knows how to dither???
+> >>> ...or maybe the datasheet / edid are wrong and this is actually an
+> >>> 8bpp panel.  Seems unlikely...
+> >>>
+> >>> In any case, one fix is to pick
+> >>> <https://lore.kernel.org/dri-devel/1593087419-903-1-git-send-email-kalyan_t@codeaurora.org/>,
+> >>>
+> >>> though right now that patch is only enabled for sc7180.  Maybe you
+> >>> could figure out how to apply it to your hardware?
+> >>>
+> >>> ...another fix would be to pretend that your panel is 8bpp even though
+> >>> it's actually 6bpp.  Ironically if anyone ever tried to configure BPP
+> >>> from the EDID they'd go back to 6bpp.  You can read the EDID of your
+> >>> panel with this:
+> >>>
+> >>> bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
+> >>> i2cdump ${bus} 0x50 i
+> >>>
+> >>> When I do that and then decode it on the "boe,nv133fhm-n62" panel, I
+> >>> find:
+> >>>
+> >>> 6 bits per primary color channel
+> >>>
+> >>> -Doug
+> >>
+> >>
+> >> Hi Doug,
+> >>
+> >> Decoding it does show be to boe,nv133fhm-n61 - and yeah it does say
+> >> it's 6-bit according to panelook's specs for it.
+>
+>
+> I derped again...
+>
+> root@c630:~# bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
+> root@c630:~# i2cdump ${bus} 0x50 i > edid
+> WARNING! This program can confuse your I2C bus, cause data loss and worse!
+> I will probe file /dev/i2c-16, address 0x50, mode i2c block
+> Continue? [Y/n]
+> root@c630:~# edid-decode edid
+> edid-decode (hex):
+>
+> 00 ff ff ff ff ff ff 00 09 e5 d1 07 00 00 00 00
+> 01 1c 01 04 a5 1d 11 78 0a 1d b0 a6 58 54 9e 26
+> 0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 c0 39 80 18 71 38 28 40 30 20
+> 36 00 26 a5 10 00 00 1a 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 1a 00 00 00 fe 00 42
+> 4f 45 20 43 51 0a 20 20 20 20 20 20 00 00 00 fe
+> 00 4e 56 31 33 33 46 48 4d 2d 4e 36 31 0a 00 9a
+>
+> 03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb
+> fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73
+> 44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61
+> 92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2
+> 66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70
+> 43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc
+> 45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3
+> 30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29
+>
+> ----------------
+>
+> EDID version: 1.4
+> Manufacturer: BOE Model 2001 Serial Number 0
+> Made in week 1 of 2018
+> Digital display
+> 8 bits per primary color channel
+> DisplayPort interface
+> Maximum image size: 29 cm x 17 cm
+> Gamma: 2.20
+> Supported color formats: RGB 4:4:4, YCrCb 4:4:4
+> First detailed timing includes the native pixel format and preferred
+> refresh rate
+> Color Characteristics
+>    Red:   0.6484, 0.3447
+>    Green: 0.3310, 0.6181
+>    Blue:  0.1503, 0.0615
+>    White: 0.3125, 0.3281
+> Established Timings I & II: none
+> Standard Timings: none
+> Detailed mode: Clock 147.840 MHz, 294 mm x 165 mm
+>                 1920 1968 2000 2200 ( 48  32 200)
+>                 1080 1083 1089 1120 (  3   6  31)
+>                 +hsync -vsync
+>                 VertFreq: 60.000 Hz, HorFreq: 67.200 kHz
+> Manufacturer-Specified Display Descriptor (0x00): 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 1a  ................
+> Alphanumeric Data String: BOE CQ
+> Alphanumeric Data String: NV133FHM-N61
+> Checksum: 0x9a
+>
+> ----------------
+>
+> Unknown EDID Extension Block 0x03
+>    03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb .&.w...qo...C.j.
+>    fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73  ... 9."nehwp..4s
+>    44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61 D!...m.b.*|...ja
+>    92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2 ...SL9...#.H.9..
+>    66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70 f.p..w.J..Lrn]Gp
+>    43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc C......x..A..j(.
+>    45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3 E....*..5.4.>.^.
+>    30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29 0^.).H.....1..;)
+> Checksum: 0x29 (should be 0x82)
+>
+>
+> - My edid does in fact say it's 8bit
 
-Besides C1 and C1E, the exit latency of C6 was measured
-by a dedicated tool. However the exit latency(41us) exposed
-by _CST is much smaller than the one we measured(128us). This
-is probably due to the _CST uses the exit latency when woken
-up from PC0+C6, rather than PC6+C6 when C6 was measured. Choose
-the latter as we need the longest latency in theory.
+Crazy!  Mine:
 
-Reported-by: kernel test robot <lkp@intel.com>
-Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Acked-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v2: Minor commit message refinement for better understanding.
---
- drivers/idle/intel_idle.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Extracted contents:
+header:          00 ff ff ff ff ff ff 00
+serial number:   09 e5 2d 08 00 00 00 00 23 1c
+version:         01 04
+basic params:    95 1d 11 78 02
+chroma info:     d5 00 a6 58 54 9f 27 0f 4f 57
+established:     00 00 00
+standard:        01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
+descriptor 1:    c0 39 80 18 71 38 28 40 30 20 36 00 26 a5 10 00 00 1a
+descriptor 2:    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+descriptor 3:    00 00 00 fe 00 42 4f 45 20 43 51 0a 20 20 20 20 20 20
+descriptor 4:    00 00 00 fe 00 4e 56 31 33 33 46 48 4d 2d 4e 36 32 0a
+extensions:      00
+checksum:        40
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index f4495841bf68..1eab606d858b 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -752,6 +752,35 @@ static struct cpuidle_state skx_cstates[] __initdata = {
- 		.enter = NULL }
- };
- 
-+static struct cpuidle_state icx_cstates[] __initdata = {
-+	{
-+		.name = "C1",
-+		.desc = "MWAIT 0x00",
-+		.flags = MWAIT2flg(0x00),
-+		.exit_latency = 1,
-+		.target_residency = 1,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.name = "C1E",
-+		.desc = "MWAIT 0x01",
-+		.flags = MWAIT2flg(0x01) | CPUIDLE_FLAG_ALWAYS_ENABLE,
-+		.exit_latency = 4,
-+		.target_residency = 4,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.name = "C6",
-+		.desc = "MWAIT 0x20",
-+		.flags = MWAIT2flg(0x20) | CPUIDLE_FLAG_TLB_FLUSHED,
-+		.exit_latency = 128,
-+		.target_residency = 384,
-+		.enter = &intel_idle,
-+		.enter_s2idle = intel_idle_s2idle, },
-+	{
-+		.enter = NULL }
-+};
-+
- static struct cpuidle_state atom_cstates[] __initdata = {
- 	{
- 		.name = "C1E",
-@@ -1056,6 +1085,12 @@ static const struct idle_cpu idle_cpu_skx __initconst = {
- 	.use_acpi = true,
- };
- 
-+static const struct idle_cpu idle_cpu_icx __initconst = {
-+	.state_table = icx_cstates,
-+	.disable_promotion_to_c1e = true,
-+	.use_acpi = true,
-+};
-+
- static const struct idle_cpu idle_cpu_avn __initconst = {
- 	.state_table = avn_cstates,
- 	.disable_promotion_to_c1e = true,
-@@ -1110,6 +1145,7 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&idle_cpu_bxt),
--- 
-2.17.1
+Manufacturer: BOE Model 82d Serial Number 0
+Made week 35 of 2018
+EDID version: 1.4
+Digital display
+6 bits per primary color channel
+DisplayPort interface
+Maximum image size: 29 cm x 17 cm
+Gamma: 2.20
+Supported color formats: RGB 4:4:4
+First detailed timing is preferred timing
+Established timings supported:
+Standard timings supported:
+Detailed mode: Clock 147.840 MHz, 294 mm x 165 mm
+               1920 1968 2000 2200 hborder 0
+               1080 1083 1089 1120 vborder 0
+               +hsync -vsync
+Manufacturer-specified data, tag 0
+ASCII string: BOE
+ASCII string: NV133FHM-N62
+Checksum: 0x40 (valid)
 
+Unknown extension block
+
+EDID block does NOT conform to EDID 1.3!
+        Missing name descriptor
+        Missing monitor ranges
+        Detailed block string not properly terminated
+EDID block does not conform at all!
+        Has 128 nonconformant extension block(s)
