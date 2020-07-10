@@ -2,179 +2,194 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF62C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD5DC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D23720767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiUD1SeS"
+	by mail.kernel.org (Postfix) with ESMTP id 072A1207DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgGJNrc (ORCPT
+        id S1728048AbgGJNrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgGJNrb (ORCPT
+        Fri, 10 Jul 2020 09:47:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18276 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbgGJNrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:47:31 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B0C3C08C5CE;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so6002789wrl.8;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=HiUD1SeS9oNEOQGLlGjspqlx1ucgIHwcztodspOdsWF5ZLU+APPJD7sBYoCs4essF+
-         iXgSyAj2XPcG3o0aOB4IvQ7R+0mCaei3Vineeb3Jnx6Iix8KSmow+PxMGaa/BzxztTPy
-         4rbyx0c8P12c5p1sgmpGPzsj1/CRo+hL11l1RTydDnt82Fjj7hflsJezjbzZocMlYe7t
-         3fcb3ZuCkDRaexCjlYWVuJ0pa1YLBTdk5C8/mzS3IdNLnwwyWDjp7vW8Tgv7st0tSHaa
-         fSTZN5E5d3BiwyZy+8IV6CghewKF9APDlPS7mjHJCClCC3aUJIFsXvWSBEkfC3My+R1w
-         FJ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=rkqRjJ0tjtbLHRxrtjZ0IXxrYgnTkWRmE3iTDTGI2zC0meRgfO5HB9IoIZnBiz0LGF
-         h5TSw2qBXiVWX9DCAgPYLKNJDSV0FPJeuY3Qj/UKNNV8bikIb6NrnkLWdO6mk81LpyNs
-         fs2gFNZzL12BXBuby3/fF4w0RftKIyTIXFCrS/v+NcgV+gKYlaxIdPXFgdFICIrz1RhJ
-         0qtORv63kuiylQ4Aa7BjKcE8uXZxWCPA9Zai3W7S7UL26W9CkTQoY9EteChWZf4VTiOB
-         jLoffK7AVZOtdUaL/YgF2pD8+PnC7I/jseHa0psyc8+5SYFPvZlZgwtgJdKD39RyjyV4
-         D4Uw==
-X-Gm-Message-State: AOAM530aUXBcx32WVQaqeXnvEbAAditxUbNHurw5C3pdMIN3p7nIysA8
-        9XKCONSLeAq2bU/1X0AFvCo=
-X-Google-Smtp-Source: ABdhPJz30P3Ja6nlaCcxoVO3T84UFVmzRkAQoQzS2oPJFdsgjFqTddAfgdfaqHdktNmYIqTpnDGbFQ==
-X-Received: by 2002:adf:e6c1:: with SMTP id y1mr42243181wrm.116.1594388850081;
-        Fri, 10 Jul 2020 06:47:30 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id y6sm4572954wrr.74.2020.07.10.06.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 06:47:29 -0700 (PDT)
-Subject: Re: [PATCH v7 7/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
- <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
-Date:   Fri, 10 Jul 2020 15:47:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 09:47:48 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ADW2SU122001;
+        Fri, 10 Jul 2020 09:47:47 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpkmua6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 09:47:47 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ADZRr4022647;
+        Fri, 10 Jul 2020 13:47:45 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 326bch8nb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 13:47:45 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ADlgcP65732700
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 13:47:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82015AE04D;
+        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B2B6AE056;
+        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
+Received: from osiris (unknown [9.171.65.223])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
+Date:   Fri, 10 Jul 2020 15:47:40 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] more s390 updates for 5.8-rc5
+Message-ID: <20200710134740.GA14845@osiris>
 MIME-Version: 1.0
-In-Reply-To: <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_06:2020-07-10,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
+ suspectscore=7 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007100093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+please pull more small s390 updates for 5.8-rc5.
 
-On 02/07/2020 14:57, Hanks Chen wrote:
-> this adds initial MT6779 dts settings for board support,
-> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
-> 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->   arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 +++
->   arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  271 +++++++++++++++++++++++++++
->   3 files changed, 303 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> 
-[...]
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
+This request is mainly due to the fact that Gerald Schaefer's and also
+my old email addresses currently do not work any longer. Therefore we
+decided to switch to new email addresses and reflect that in the
+MAINTAINERS file.
 
-I suppose that should be:
+Thanks,
+Heiko
 
-clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
+The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
 
+  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
 
-Regards,
-Matthias
+are available in the Git repository at:
 
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		audio: clock-controller@11210000 {
-> +			compatible = "mediatek,mt6779-audio", "syscon";
-> +			reg = <0 0x11210000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mfgcfg: clock-controller@13fbf000 {
-> +			compatible = "mediatek,mt6779-mfgcfg", "syscon";
-> +			reg = <0 0x13fbf000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mmsys: syscon@14000000 {
-> +			compatible = "mediatek,mt6779-mmsys", "syscon";
-> +			reg = <0 0x14000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		imgsys: clock-controller@15020000 {
-> +			compatible = "mediatek,mt6779-imgsys", "syscon";
-> +			reg = <0 0x15020000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vdecsys: clock-controller@16000000 {
-> +			compatible = "mediatek,mt6779-vdecsys", "syscon";
-> +			reg = <0 0x16000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencsys: clock-controller@17000000 {
-> +			compatible = "mediatek,mt6779-vencsys", "syscon";
-> +			reg = <0 0x17000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		camsys: clock-controller@1a000000 {
-> +			compatible = "mediatek,mt6779-camsys", "syscon";
-> +			reg = <0 0x1a000000 0 0x10000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipesys: clock-controller@1b000000 {
-> +			compatible = "mediatek,mt6779-ipesys", "syscon";
-> +			reg = <0 0x1b000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +	};
-> +};
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
+
+for you to fetch changes up to dd9ce2d6eeaebbdd342cbe095b7a195d569f18d3:
+
+  MAINTAINERS: update email address for Gerald Schaefer (2020-07-10 15:06:49 +0200)
+
+----------------------------------------------------------------
+- Update email addresses in MAINTAINERS file and add .mailmap entries
+  for Gerald Schaefer and Heiko Carstens.
+
+- Fix huge pte soft dirty copying.
+
+----------------------------------------------------------------
+Gerald Schaefer (1):
+      MAINTAINERS: update email address for Gerald Schaefer
+
+Heiko Carstens (1):
+      MAINTAINERS: update email address for Heiko Carstens
+
+Janosch Frank (1):
+      s390/mm: fix huge pte soft dirty copying
+
+ .mailmap                   | 5 +++++
+ MAINTAINERS                | 8 ++++----
+ arch/s390/mm/hugetlbpage.c | 2 +-
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/.mailmap b/.mailmap
+index c69d9c734fb5..6da12dfd10dc 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -90,11 +90,16 @@ Frank Rowand <frowand.list@gmail.com> <frank.rowand@sonymobile.com>
+ Frank Zago <fzago@systemfabricworks.com>
+ Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
+ Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
++Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
++Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
++Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@linux.vnet.ibm.com>
+ Greg Kroah-Hartman <greg@echidna.(none)>
+ Greg Kroah-Hartman <gregkh@suse.de>
+ Greg Kroah-Hartman <greg@kroah.com>
+ Gregory CLEMENT <gregory.clement@bootlin.com> <gregory.clement@free-electrons.com>
+ Hanjun Guo <guohanjun@huawei.com> <hanjun.guo@linaro.org>
++Heiko Carstens <hca@linux.ibm.com> <h.carstens@de.ibm.com>
++Heiko Carstens <hca@linux.ibm.com> <heiko.carstens@de.ibm.com>
+ Henk Vergonet <Henk.Vergonet@gmail.com>
+ Henrik Kretzschmar <henne@nachtwindheim.de>
+ Henrik Rydberg <rydberg@bitmath.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d4aa7f942de..06f61751353c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3306,7 +3306,7 @@ X:	arch/riscv/net/bpf_jit_comp32.c
+ 
+ BPF JIT for S390
+ M:	Ilya Leoshkevich <iii@linux.ibm.com>
+-M:	Heiko Carstens <heiko.carstens@de.ibm.com>
++M:	Heiko Carstens <hca@linux.ibm.com>
+ M:	Vasily Gorbik <gor@linux.ibm.com>
+ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+@@ -14831,7 +14831,7 @@ S:	Maintained
+ F:	drivers/video/fbdev/savage/
+ 
+ S390
+-M:	Heiko Carstens <heiko.carstens@de.ibm.com>
++M:	Heiko Carstens <hca@linux.ibm.com>
+ M:	Vasily Gorbik <gor@linux.ibm.com>
+ M:	Christian Borntraeger <borntraeger@de.ibm.com>
+ L:	linux-s390@vger.kernel.org
+@@ -14862,7 +14862,7 @@ F:	drivers/s390/block/dasd*
+ F:	include/linux/dasd_mod.h
+ 
+ S390 IOMMU (PCI)
+-M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
++M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+ L:	linux-s390@vger.kernel.org
+ S:	Supported
+ W:	http://www.ibm.com/developerworks/linux/linux390/
+@@ -14890,7 +14890,7 @@ F:	drivers/s390/net/
+ 
+ S390 PCI SUBSYSTEM
+ M:	Niklas Schnelle <schnelle@linux.ibm.com>
+-M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
++M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+ L:	linux-s390@vger.kernel.org
+ S:	Supported
+ W:	http://www.ibm.com/developerworks/linux/linux390/
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 82df06d720e8..3b5a4d25ca9b 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
+ 					     _PAGE_YOUNG);
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+ 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
+-					     _PAGE_DIRTY);
++					     _PAGE_SOFT_DIRTY);
+ #endif
+ 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
+ 					     _PAGE_NOEXEC);
