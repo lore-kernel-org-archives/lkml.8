@@ -2,115 +2,119 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EB0C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F426C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7802078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ea77Z4Ro"
+	by mail.kernel.org (Postfix) with ESMTP id 05C9320772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGJLbo (ORCPT
+        id S1728051AbgGJLcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:31:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21763 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728024AbgGJLbn (ORCPT
+        Fri, 10 Jul 2020 07:32:04 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62577 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbgGJLcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:31:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594380701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=5Ofr2MCGvPvfpwIdGlSnpSEf1nx+bNb0i5ZzaI9/r3g=;
-        b=ea77Z4Rozl+oBx2N//ruO8G7A9G75ak3Inwg3JToKlffzcobwWScPB2HGLGZcf33DjwTar
-        jerbmzPFL7PlAwB5vr9Mp6iCO8Bb1Buq0Gt4jdYPZzs+SlvLpAt8fU2sVUVfciWIskRQea
-        F50Pep5csgXhBida/frXdI5iV6W7Pqo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-hY56vrMPO6uzEaps24TObA-1; Fri, 10 Jul 2020 07:31:40 -0400
-X-MC-Unique: hY56vrMPO6uzEaps24TObA-1
-Received: by mail-wr1-f70.google.com with SMTP id b8so5767425wro.19
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 04:31:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=5Ofr2MCGvPvfpwIdGlSnpSEf1nx+bNb0i5ZzaI9/r3g=;
-        b=f+B1ll2d9PrVR45v20RmEp9F2v7RALdwge97k3ufFrP85HiV6CS2Wfw10Lyk/WRTAk
-         sL2GUF6nKtxnqU7nTw4uFmkrvi3dkBNj2g4bQKnZfLj7wbb+vMKmfo3v1zeFpQRSOz3V
-         HRkium/Ah72Y7DfoKBZqR+RfbUOXwswXYaCOITncjUk+MTdp300XW8DGHyDSuR3sx+AZ
-         QCsoXayW2tZ3GUI0n8a2jk2ZDE4sZOGSL1bo9NSdO+DjqVkV05bc5cIFqj7IUxx4yuJi
-         RhYkwre5ESKivRHtyxX/bGrcjLjLqfPB+A/V1kPWAoohlMq+2GIoir23xTzZJb3pzm2A
-         jaIQ==
-X-Gm-Message-State: AOAM531drevKDAYi2ZvE7u+vvnJXn90vdY+V9p78/hKZGIZw2ZQw+sRY
-        xDwL6abhiKumhE0O75njBSxE7k8zWcNmPqKgYiCPg21nxKj0PxzpyX9d3bbjqFTc2wyGaVoitF0
-        q9ahlLjIoRzT3RauqjOgDAvjH
-X-Received: by 2002:adf:ea06:: with SMTP id q6mr65083189wrm.69.1594380698302;
-        Fri, 10 Jul 2020 04:31:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz4g++MZXIVwdtMKOQxK6lrsv51Rp7rwp+FV4RYaCSdZuYHSZRZ0n8HTomwQMFHmG03mUFrHg==
-X-Received: by 2002:adf:ea06:: with SMTP id q6mr65083170wrm.69.1594380698095;
-        Fri, 10 Jul 2020 04:31:38 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id o21sm8912958wmh.18.2020.07.10.04.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 04:31:37 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 07:31:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: [PATCH] virtio_balloon: clear modern features under legacy
-Message-ID: <20200710113046.421366-1-mst@redhat.com>
+        Fri, 10 Jul 2020 07:32:02 -0400
+Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06ABVlOt059266;
+        Fri, 10 Jul 2020 20:31:47 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
+ Fri, 10 Jul 2020 20:31:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06ABVl9i059263
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 10 Jul 2020 20:31:47 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] vt: Reject zero-sized screen buffer size.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+References: <20200710055329.3759-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200710105500.GA1232395@kroah.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7adf8aee-9bdd-8184-6cbe-291357677edd@i-love.sakura.ne.jp>
+Date:   Fri, 10 Jul 2020 20:31:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+In-Reply-To: <20200710105500.GA1232395@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Page reporting features were never supported by legacy hypervisors.
-Supporting them poses a problem: should we use native endian-ness (like
-current code assumes)? Or little endian-ness like the virtio spec says?
-Rather than try to figure out, and since results of
-incorrect endian-ness are dire, let's just block this configuration.
+On 2020/07/10 19:55, Greg Kroah-Hartman wrote:
+>> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+>> index 48a8199f7845..8497e9206607 100644
+>> --- a/drivers/tty/vt/vt.c
+>> +++ b/drivers/tty/vt/vt.c
+>> @@ -1126,7 +1126,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+>>  		con_set_default_unimap(vc);
+>>  
+>>  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+>> -	if (!vc->vc_screenbuf)
+>> +	if (ZERO_OR_NULL_PTR(vc->vc_screenbuf))
+> 
+> No, let's check this before we do kzalloc() please, that's just an odd
+> way of doing an allocation we shouldn't have had to do.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/virtio/virtio_balloon.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+OK. I can change to
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 5d4b891bf84f..b9bc03345157 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
- 
- static int virtballoon_validate(struct virtio_device *vdev)
- {
-+	/*
-+	 * Legacy devices never specified how modern features should behave.
-+	 * E.g. which endian-ness to use? Better not to assume anything.
-+	 */
-+	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
-+		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
-+		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
-+		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
-+	}
- 	/*
- 	 * Inform the hypervisor that our pages are poisoned or
- 	 * initialized. If we cannot do that then we should disable
--- 
-MST
++	if (vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+
+like vc_do_resize() does. But I'm currently waiting for syzbot to test this patch, for
+I don't have an environment for reproducing this problem.
+
+> 
+>>  		goto err_free;
+>>  
+>>  	/* If no drivers have overridden us and the user didn't pass a
+>> @@ -1212,7 +1212,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+>>  	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+>>  		return 0;
+>>  
+>> -	if (new_screen_size > KMALLOC_MAX_SIZE)
+>> +	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+>>  		return -EINVAL;
+>>  	newscreen = kzalloc(new_screen_size, GFP_USER);
+>>  	if (!newscreen)
+>> @@ -3393,6 +3393,7 @@ static int __init con_init(void)
+>>  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+>>  		tty_port_init(&vc->port);
+>>  		visual_init(vc, currcons, 1);
+>> +		/* Assuming vc->vc_screenbuf_size is sane here, for this is __init code. */
+> 
+> Shouldn't we also check this here, or before we get here, too?
+
+This is an __init function. Can we somehow pass column=0 or row=0 ?
+
+> 
+> Just checking the values and rejecting that as a valid screen size
+> should be sufficient.
+
+Hmm, where are we checking that column * row does not exceed UINT_MAX, given that
+"struct vc_data"->vc_{cols,rows,screenbuf_size} are "unsigned int" and we do
+
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+
+in visual_init() ? Don't we need to reject earlier?
 
