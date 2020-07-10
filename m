@@ -2,79 +2,99 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB37C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2470206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2562920772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Irx4KP3W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="br/6N3S/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGJJru (ORCPT
+        id S1727844AbgGJJsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:47:50 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38988 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726288AbgGJJru (ORCPT
+        Fri, 10 Jul 2020 05:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgGJJsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:47:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594374469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IQvdU3iRt56w7HpkGVuSwd8XeVDq7ZK+VynoX1ee5lc=;
-        b=Irx4KP3Ww0ay4Lft3Wgabh3WwkWlF9sl+vQu+qV7QzVfQd2prcuikFNKNb+ynxYRi5CjSs
-        RTtHvMTUdAukrx4RVYwqbz5Rcm/eSRBwh76uk93H8VZrNNctbLrLCthJ2P3Xf/vUO0Ct7Q
-        f8pEe37pzT0JwOp0+ImIxfvONkX7cfE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-aWm8zGwqNZ-WDNJn0Vw6SA-1; Fri, 10 Jul 2020 05:47:47 -0400
-X-MC-Unique: aWm8zGwqNZ-WDNJn0Vw6SA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29C69800FF1;
-        Fri, 10 Jul 2020 09:47:46 +0000 (UTC)
-Received: from T590 (ovpn-12-41.pek2.redhat.com [10.72.12.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F49B6FEF4;
-        Fri, 10 Jul 2020 09:47:39 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 17:47:35 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     axboe@kernel.dk, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-mq: Remove unnecessary validation before calling
- blk_mq_sched_completed_request()
-Message-ID: <20200710094735.GB3417252@T590>
-References: <969d0e9f637b2a0dbfb3d284abfbed6fc7665ea4.1593846855.git.baolin.wang7@gmail.com>
- <20200710082304.GB29262@VM20190228-100.tbsite.net>
+        Fri, 10 Jul 2020 05:48:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EEEC08C5CE;
+        Fri, 10 Jul 2020 02:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w3kp1+jdf3bXyU6T7tLgS3NnoV3a3u51ChfZ8zM0K6Y=; b=br/6N3S/jhoP3JJtrayUvCy7E2
+        /oRU43tMNdc0fhNyVDv7fH8+PstYkTFr08/wfrTrxhGC49B2ucWOnnRIlRuLDLPqDItmT26eTHVVT
+        rKad4E6DtLTLe7r82xihXktEnX6M01WB8CtpTMKx0JkiRXLtOdgDsB46LJ2Um4Kwx0VPp7Sn4uFnj
+        9peCcN+glsBEtOBgkQNs5SlFneyn96pQGzqF1XgyfYmbBC6yaqpGsgv4jn5/X3BVoAhe1YjIuxGN7
+        +Ih7bvd7BtJLcLS+PaTsRy3yVa67fyYc9A2jpYSkiYQJx+S2batZv+RGXRz90Vxfyba40R2zVSQm8
+        SQgM/Jpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtpdR-0001ld-Ea; Fri, 10 Jul 2020 09:48:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAD99304E03;
+        Fri, 10 Jul 2020 11:48:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D7BCF2B5130F2; Fri, 10 Jul 2020 11:48:00 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 11:48:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, x86@kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        Anton Blanchard <anton@ozlabs.org>
+Subject: Re: [RFC PATCH 5/7] lazy tlb: introduce lazy mm refcount helper
+ functions
+Message-ID: <20200710094800.GA4800@hirez.programming.kicks-ass.net>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+ <20200710015646.2020871-6-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710082304.GB29262@VM20190228-100.tbsite.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200710015646.2020871-6-npiggin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 04:23:04PM +0800, Baolin Wang wrote:
-> Hi,
-> 
-> On Sat, Jul 04, 2020 at 03:28:21PM +0800, Baolin Wang wrote:
-> > We've already validated the 'q->elevator' before calling ->ops.completed_request()
-> > in blk_mq_sched_completed_request(), thus no need to validate rq->internal_tag again,
-> > and remove it.
-> 
-> A gentle ping?
+On Fri, Jul 10, 2020 at 11:56:44AM +1000, Nicholas Piggin wrote:
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index 73199470c265..ad95812d2a3f 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -1253,7 +1253,7 @@ void start_secondary(void *unused)
+>  	unsigned int cpu = smp_processor_id();
+>  	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+>  
+> -	mmgrab(&init_mm);
+> +	mmgrab(&init_mm); /* XXX: where is the mmput for this? */
+>  	current->active_mm = &init_mm;
+>  
+>  	smp_store_cpu_info(cpu);
 
--- 
-Ming
+Right; so IIRC it should be this one:
+
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 134688d79589..ff9fcbc4e76b 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -578,7 +578,7 @@ static int finish_cpu(unsigned int cpu)
+>  	 */
+>  	if (mm != &init_mm)
+>  		idle->active_mm = &init_mm;
+> -	mmdrop(mm);
+> +	mmdrop_lazy_tlb(mm);
+>  	return 0;
+>  }
 
