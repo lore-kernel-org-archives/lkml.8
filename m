@@ -2,175 +2,125 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBDC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B598720657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OashMJfM"
+	by mail.kernel.org (Postfix) with ESMTP id 947B5206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594398684;
+	bh=euKtksIq2/7MC0Mi3qJ2A5NRDnWyitzcHd8aU3VneGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cfcz60g538Thyu8YShtLxU3zRhzchkZJAYGlmQrbfC1Kp56oTMha5u/omKtLSdQWv
+	 fbIl4HoWCl4qOPFrhmnfOr1Y8ypq4nO4VNCvlw+FEbKXARLoi9JEhJVUoeiIn+jiTQ
+	 ZV08aa67ugM5kh0IW3bcXSSFzh0QZZbT9uWtn7/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgGJQbA (ORCPT
+        id S1728301AbgGJQbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:31:00 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3136 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgGJQa6 (ORCPT
+        Fri, 10 Jul 2020 12:31:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43357 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:30:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0897550003>; Fri, 10 Jul 2020 09:29:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 09:30:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 Jul 2020 09:30:58 -0700
-Received: from [10.26.72.135] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 16:30:56 +0000
-Subject: Re: [PATCH v2 4/6] devres: handle zero size in devm_kmalloc()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-hwmon@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629065008.27620-1-brgl@bgdev.pl>
- <20200629065008.27620-5-brgl@bgdev.pl>
- <5c2e7514-b6d0-1331-37b0-d17a0cdb9693@nvidia.com>
- <CAMRc=Mf1Laqa65hEOG3iLSQu6J-u5yHmrMNh8NMJmt3amw2A6Q@mail.gmail.com>
- <9cd4521b-aba0-616b-8957-8f21b9ba3068@nvidia.com>
- <CAMRc=Md+iHTeaYi1F-ykb3HaDTBoiGuNr7s224ay9Jgfhy1TcA@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c780f571-9aef-d02a-a9c0-677f6c1f7a0b@nvidia.com>
-Date:   Fri, 10 Jul 2020 17:30:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 12:31:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id k23so6631962iom.10;
+        Fri, 10 Jul 2020 09:31:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ri5Ju8/pmRRLLJvGOFF2lCmuUcpkIXlf+EO6oa9lkeg=;
+        b=nqA8jhOyMWl6zDz1D/rGpo03eDm1D3IS/FdHuyF1LPT26sjCt792sMeuNcIO7mOvL2
+         OUme2VhRUu2LUw5xB/KIpJTaSDWxKohp/V32eTKEb9MBnBcn2tUyyyzpizmNYhZZYG1O
+         22L1C11jZKSJ85zgzMqp2/8NhieoBucz8bLIdfjrHWadipzweQie9XiPB72eHY71kb9h
+         r2t68aE26ZIrP4KdYJtrj5XtPOr9X3iRn3BMf1LV1mbvH+oaBZv984BV0sQcaOGi5Sca
+         70x0K8HnQNPXXdctyZ7Q26RH2MUaxHPybRG0ckrYP1guNH9A7kpKgXuQrF1fdnmfAvE7
+         ykTA==
+X-Gm-Message-State: AOAM532UptoJOIU/48bAvz08dzheXFh6VdzoZlzsLAZkisG5KOc1Bb5i
+        yX66bbthYC/CoHiJp8auAZ6HPfnLCJ9E
+X-Google-Smtp-Source: ABdhPJzvLnRx24MgOhUZQEp05+U4gq81sv1JxrEdwFInJenxWlUIT/AyApoNCnP+LtIFrZS4Zidw3A==
+X-Received: by 2002:a6b:9042:: with SMTP id s63mr49394517iod.195.1594398681647;
+        Fri, 10 Jul 2020 09:31:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id a5sm3706284ilt.71.2020.07.10.09.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:31:20 -0700 (PDT)
+Received: (nullmailer pid 2759342 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:31:19 -0000
+Date:   Fri, 10 Jul 2020 10:31:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mike Tipton <mdtipton@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: interconnect: Add property to set
+ BCM TCS wait behavior
+Message-ID: <20200710163119.GA2753833@bogus>
+References: <20200710015652.19206-1-mdtipton@codeaurora.org>
+ <20200710015652.19206-3-mdtipton@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=Md+iHTeaYi1F-ykb3HaDTBoiGuNr7s224ay9Jgfhy1TcA@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594398549; bh=wPbMvPXTwmmZyNSlsW+QBsjbAUy/OrrNRVHRg/UgtC4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OashMJfMHNodUZ63liXAW3lX8xNoFwNA2F0TimvpIET1HqnGobjCjh6h87sXKCJql
-         tDhnHi1dCFssHAeIFR5AHL/q3c37gKZ//xE+w12I6lP8mUC/zpJcTK6aGhcTLaHQmI
-         uIlhILBmtYgv0x3rTVPkBghDJFD5j2S5nLKktfY+G3nCpS/BdW/eUXhXNMgJx7TY0V
-         ulE96GaL52cPLA5o64y0xhHsfpCvXHzPuCw1iCWn5E8qhM2MPwgjUSCHq6IJ+JYVTf
-         1Gx1Bs8swFAWDSWul6nQAZi84ZRGcRumhRM/M7mlfRXvMLBv9ZaCyIpb5WXruCMI7X
-         JkfNQG7rQAxPQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710015652.19206-3-mdtipton@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/07/2020 17:24, Bartosz Golaszewski wrote:
-> On Fri, Jul 10, 2020 at 6:11 PM Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->>
->> On 10/07/2020 17:03, Bartosz Golaszewski wrote:
->>> On Fri, Jul 10, 2020 at 3:46 PM Jon Hunter <jonathanh@nvidia.com> wrote:
->>>>
->>>> Hi Bartosz,
->>>>
->>>> On 29/06/2020 07:50, Bartosz Golaszewski wrote:
->>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>
->>>>> Make devm_kmalloc() behave similarly to non-managed kmalloc(): return
->>>>> ZERO_SIZE_PTR when requested size is 0. Update devm_kfree() to handle
->>>>> this case.
->>>>>
->>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>> ---
->>>>>  drivers/base/devres.c | 9 ++++++---
->>>>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
->>>>> index 1df1fb10b2d9..ed615d3b9cf1 100644
->>>>> --- a/drivers/base/devres.c
->>>>> +++ b/drivers/base/devres.c
->>>>> @@ -819,6 +819,9 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
->>>>>  {
->>>>>       struct devres *dr;
->>>>>
->>>>> +     if (unlikely(!size))
->>>>> +             return ZERO_SIZE_PTR;
->>>>> +
->>>>>       /* use raw alloc_dr for kmalloc caller tracing */
->>>>>       dr = alloc_dr(devm_kmalloc_release, size, gfp, dev_to_node(dev));
->>>>>       if (unlikely(!dr))
->>>>> @@ -950,10 +953,10 @@ void devm_kfree(struct device *dev, const void *p)
->>>>>       int rc;
->>>>>
->>>>>       /*
->>>>> -      * Special case: pointer to a string in .rodata returned by
->>>>> -      * devm_kstrdup_const().
->>>>> +      * Special cases: pointer to a string in .rodata returned by
->>>>> +      * devm_kstrdup_const() or NULL/ZERO ptr.
->>>>>        */
->>>>> -     if (unlikely(is_kernel_rodata((unsigned long)p)))
->>>>> +     if (unlikely(is_kernel_rodata((unsigned long)p) || ZERO_OR_NULL_PTR(p)))
->>>>>               return;
->>>>>
->>>>>       rc = devres_destroy(dev, devm_kmalloc_release,
->>>>
->>>>
->>>> This change caught a bug in one of our Tegra drivers, which I am in the
->>>> process of fixing. Once I bisected to this commit it was easy to track
->>>> down, but I am wondering if there is any reason why we don't add a
->>>> WARN_ON() if size is 0 in devm_kmalloc? It was essentially what I ended
->>>> up doing to find the bug.
->>>>
->>>> Jon
->>>>
->>>> --
->>>> nvpublic
->>>
->>> Hi Jon,
->>>
->>> this is in line with what the regular kmalloc() does. If size is zero,
->>> it returns ZERO_SIZE_PTR. It's not an error condition. Actually in
->>> user-space malloc() does a similar thing: for size == 0 it allocates
->>> one-byte and returns a pointer to it (at least in glibc).
->>
->>
->> Yes that's fine, I was just wondering if there is any reason not to WARN
->> as well?
->>
->> Cheers
->> Jon
->>
+On Thu, Jul 09, 2020 at 06:56:48PM -0700, Mike Tipton wrote:
+> Add "qcom,tcs-wait" property to set which TCS should wait for completion
+> when triggering.
 > 
-> Why? Nothing bad happens. Regular kmalloc() doesn't warn, why should
-> devm_kmalloc() do?
+> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+> ---
+>  .../bindings/interconnect/qcom,bcm-voter.yaml       | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+> index 5971fc1df08d..f0c3d6b01831 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+> @@ -21,6 +21,16 @@ properties:
+>      enum:
+>        - qcom,bcm-voter
+>  
+> +  qcom,tcs-wait:
+> +    description: |
+> +      Optional mask of which TCSs (Triggered Command Sets) wait for completion
+> +      upon triggering. In most cases, it's necessary to wait in both the AMC
+> +      and WAKE sets to ensure resources are available before use. If a specific
+> +      RSC and its use cases can ensure sufficient delay by other means, then
+> +      this can be overridden to reduce latencies.
 
+I have no idea what any of this means to provide any meaningful comment.
 
-Simply because it is easier to track down a bug. In my case the NULL
-pointer crash did not occur until entering suspend when the memory, that
-was allocated at probe time, was first actually accessed. So it was not
-immediately obvious which call to devm_kmalloc caused the problem.
-Anyway, if kmalloc does not warn either, then fine, it was purely a
-question.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: QCOM_ICC_TAG_ACTIVE_ONLY
 
-Jon
+Can't use defines here.
 
--- 
-nvpublic
+> +
+>  required:
+>    - compatible
+>  
+> @@ -39,7 +49,10 @@ examples:
+>    # as defined in Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>    - |
+>  
+> +    #include <dt-bindings/interconnect/qcom,icc.h>
+> +
+>      disp_bcm_voter: bcm_voter {
+>          compatible = "qcom,bcm-voter";
+> +        qcom,tcs-wait = <QCOM_ICC_TAG_AMC>;
+>      };
+>  ...
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
