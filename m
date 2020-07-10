@@ -2,119 +2,81 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F862C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A39C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7860520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="GX8zxuVh"
+	by mail.kernel.org (Postfix) with ESMTP id 1F92F20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgGJNg4 (ORCPT
+        id S1727086AbgGJNix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGJNgy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:36:54 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2252C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:36:53 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 72so4213376otc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nmcel6hnCJlIj22fihRFD6BrYZLNIkP5+FTjhcnw9o8=;
-        b=GX8zxuVhdC9uja2zMn8o2d29S/xFaumMWA9hqdJJaq4Yt+cFx8noGVO2kG/WtV0f8A
-         /bUlgvYm4jLyOy4+NzLFTMxf91WwW97uDdzz7ske13qLjXYQj8Xx6ZTY6ac7NROEr5SA
-         SxzzZLU1A2SNWhD4CAjRWAvnFFXkdDQNuVDAg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nmcel6hnCJlIj22fihRFD6BrYZLNIkP5+FTjhcnw9o8=;
-        b=ddzbN92+I2COOwhZvGFWwB1vw316d9eyz59HO9B94dpOXh1UK7v5WygKShn/Hsn2Wl
-         9pYPzx5oMhu15F7bxIWmBy+OOwX7HuIyrTStrSALGZEuTiVXpgu7O4+ur+U/X6WwrDnT
-         MuU3sX6o5INPUtbaEYmLAhxN7T0euvKrRiZO+kVF7mF2Y8JflYjyLTF6jT+XBLJhMyk0
-         r/LfcV7s0lE3rtvn7eLkjAJ4qnoUxlF+K62/SrF72UImHZU75btT9s7czi9VTg0LDHxr
-         bsXZ3wUCAAQctrb5CwzSdddTWRJih+44mfZPSeu12Osm02ECyt7svJKfzxc8wJDoaCOx
-         PUuw==
-X-Gm-Message-State: AOAM5326CQRQFNwu/heU50O30qeFDu8fx0GaV2SpXu6yHzFZa3uZ34Ox
-        ptcnjziTTI5+5S4t6ElVqOzbqwLcL3pqu+5P99XNKg==
-X-Google-Smtp-Source: ABdhPJwVBbcsNjNQvs02Ak+32h+kJHFtnmZ1zNowEhHhzLcOKvCq1Vt5X4LsucLlQ1RJzMaKN62kgE/jK9bd0JxcWcM=
-X-Received: by 2002:a9d:7a98:: with SMTP id l24mr59311273otn.75.1594388213194;
- Fri, 10 Jul 2020 06:36:53 -0700 (PDT)
+        Fri, 10 Jul 2020 09:38:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57954 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgGJNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:38:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EAE72AC9F;
+        Fri, 10 Jul 2020 13:38:51 +0000 (UTC)
+Subject: Re: [PATCH] efi: avoid error message when booting under Xen
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+References: <20200610141052.13258-1-jgross@suse.com>
+ <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
+ <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
+ <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
+ <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
+ <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
+Date:   Fri, 10 Jul 2020 15:38:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <c783b3890b6df669a72c7c4a3012950d009b8034.1593530334.git.vpillai@digitalocean.com>
- <ed837e01-043b-e19b-293c-30d44df6f3a8@linux.intel.com>
-In-Reply-To: <ed837e01-043b-e19b-293c-30d44df6f3a8@linux.intel.com>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Fri, 10 Jul 2020 09:36:42 -0400
-Message-ID: <CANaguZArdu1Jz3SvogFSXhnqmbdKX5aAORmGMf_uc+J=UQZpJw@mail.gmail.com>
-Subject: Re: [RFC PATCH 14/16] irq: Add support for core-wide protection of
- IRQ and softirq
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Vineeth Pillai <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aubrey,
+On 10.07.20 15:27, Ard Biesheuvel wrote:
+> On Fri, 10 Jul 2020 at 13:17, Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+>>
+>>
+>> [ added EFI Maintainer & ML to Cc: ]
+>>
+>> Hi,
+>>
+>> On 7/9/20 11:17 AM, Jürgen Groß wrote:
+>>> On 28.06.20 10:50, Jürgen Groß wrote:
+>>>> Ping?
+>>>>
+>>>> On 10.06.20 16:10, Juergen Gross wrote:
+>>>>> efifb_probe() will issue an error message in case the kernel is booted
+>>>>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+>>>>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
+>>>>> isn't set.
+>>>>>
+> 
+> Why not test for EFI_MEMMAP instead of EFI_BOOT?
 
-On Fri, Jul 10, 2020 at 8:19 AM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->
-> Hi Joel/Vineeth,
-> [...]
-> The problem is gone when we reverted this patch. We are running multiple
-> uperf threads(equal to cpu number) in a cgroup with coresched enabled.
-> This is 100% reproducible on our side.
->
-> Just wonder if anything already known before we dig into it.
->
-Thanks for reporting this. We haven't seen any lockups like this
-in our testing yet.
+Honestly I'm not sure EFI_BOOT is always set in that case. If you tell
+me it is fine to just replace the test to check for EFI_MEMMAP I'm fine
+to modify my patch.
 
-Could you please add more information on how to reproduce this?
-Was it a simple uperf run without any options or was it running any
-specific kind of network test?
 
-We shall also try to reproduce this and investigate.
-
-Thanks,
-Vineeth
+Juergen
