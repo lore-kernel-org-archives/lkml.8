@@ -2,116 +2,131 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49E72077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:34:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Hx7glFFa"
+	by mail.kernel.org (Postfix) with ESMTP id 03DCE206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGJGeA (ORCPT
+        id S1726852AbgGJGfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727871AbgGJGd7 (ORCPT
+        Fri, 10 Jul 2020 02:35:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12912 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbgGJGfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:33:59 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C08C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:33:59 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id EED5E1FF18;
-        Fri, 10 Jul 2020 06:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1594362838; bh=k4tTRKe0YcW9MuCAbiRePPA3r0/yfJjA+o3AHhYVve0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hx7glFFaP226ppsZTavLI+KYfcucuncxjrYH3DHF6fg+JZspH/AV0K4mDoLoCjyii
-         pX89roUu8CB8UCCSo1Rs37Xf6qbIHfodqpNoUkGM5tRKoOUUi/mX/ZjRO/yn7mTPaE
-         zP/FY3rqQ5qREF31tnubfVBnD32BvOWBecQkYytS5wQLrqBQgPkPOSDrQ+2O+2toyI
-         /h6S/l9a/PQCTk5g6htWa5h/h+n2di1BG4VsvZf7OCIgI7l8iScduZ2ESr61OyFsso
-         21/QFSwehpOrkBxXlARXmtNzTRaJmAWYizJhrMqQQyhc2ghKSMXYcP3hcACvnzjIEz
-         YMKwj/+L0D1Vw==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [RFC PATCH 3/3] MIPS: KVM: Remove outdated README
-Date:   Fri, 10 Jul 2020 14:30:18 +0800
-Message-Id: <20200710063047.154611-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200710063047.154611-1-jiaxun.yang@flygoat.com>
-References: <20200710063047.154611-1-jiaxun.yang@flygoat.com>
+        Fri, 10 Jul 2020 02:35:31 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A6WFYu068012;
+        Fri, 10 Jul 2020 02:35:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpk9pvm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 02:35:19 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06A6ZCY2083047;
+        Fri, 10 Jul 2020 02:35:19 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpk9put-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 02:35:19 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06A6RTVO028249;
+        Fri, 10 Jul 2020 06:35:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 326bahrb5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 06:35:16 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06A6ZE2d57213088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 06:35:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44EEC4C04E;
+        Fri, 10 Jul 2020 06:35:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D1DC4C046;
+        Fri, 10 Jul 2020 06:35:12 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.35.16])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 10 Jul 2020 06:35:12 +0000 (GMT)
+Date:   Fri, 10 Jul 2020 12:05:09 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     linux-mm@kvack.org, kvm-ppc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] mm/migrate: optimize migrate_vma_setup() for holes
+Message-ID: <20200710063509.GE7902@in.ibm.com>
+Reply-To: bharata@linux.ibm.com
+References: <20200709165711.26584-1-rcampbell@nvidia.com>
+ <20200709165711.26584-2-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709165711.26584-2-rcampbell@nvidia.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_01:2020-07-09,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=612 spamscore=0 malwarescore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007100040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file was created long ago and information inside is
-obviously outdated.
+On Thu, Jul 09, 2020 at 09:57:10AM -0700, Ralph Campbell wrote:
+> When migrating system memory to device private memory, if the source
+> address range is a valid VMA range and there is no memory or a zero page,
+> the source PFN array is marked as valid but with no PFN. This lets the
+> device driver allocate private memory and clear it, then insert the new
+> device private struct page into the CPU's page tables when
+> migrate_vma_pages() is called. migrate_vma_pages() only inserts the
+> new page if the VMA is an anonymous range. There is no point in telling
+> the device driver to allocate device private memory and then not migrate
+> the page. Instead, mark the source PFN array entries as not migrating to
+> avoid this overhead.
+> 
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>  mm/migrate.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index b0125c082549..8aa434691577 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2204,9 +2204,13 @@ static int migrate_vma_collect_hole(unsigned long start,
+>  {
+>  	struct migrate_vma *migrate = walk->private;
+>  	unsigned long addr;
+> +	unsigned long flags;
+> +
+> +	/* Only allow populating anonymous memory. */
+> +	flags = vma_is_anonymous(walk->vma) ? MIGRATE_PFN_MIGRATE : 0;
+>  
+>  	for (addr = start; addr < end; addr += PAGE_SIZE) {
+> -		migrate->src[migrate->npages] = MIGRATE_PFN_MIGRATE;
+> +		migrate->src[migrate->npages] = flags;
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/kvm/00README.txt | 31 -------------------------------
- 1 file changed, 31 deletions(-)
- delete mode 100644 arch/mips/kvm/00README.txt
+I see a few other such cases where we directly populate MIGRATE_PFN_MIGRATE
+w/o a pfn in migrate_vma_collect_pmd() and wonder why the vma_is_anonymous()
+check can't help there as well?
 
-diff --git a/arch/mips/kvm/00README.txt b/arch/mips/kvm/00README.txt
-deleted file mode 100644
-index 51617e481aa3..000000000000
---- a/arch/mips/kvm/00README.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--KVM/MIPS Trap & Emulate Release Notes
--=====================================
--
--(1) KVM/MIPS should support MIPS32R2 and beyond. It has been tested on the following platforms:
--    Malta Board with FPGA based 34K
--    Sigma Designs TangoX board with a 24K based 8654 SoC.
--    Malta Board with 74K @ 1GHz
--
--(2) Both Guest kernel and Guest Userspace execute in UM.
--    Guest User address space:   0x00000000 -> 0x40000000
--    Guest Kernel Unmapped:      0x40000000 -> 0x60000000
--    Guest Kernel Mapped:        0x60000000 -> 0x80000000
--
--    Guest Usermode virtual memory is limited to 1GB.
--
--(2) 16K Page Sizes: Both Host Kernel and Guest Kernel should have the same page size, currently at least 16K.
--    Note that due to cache aliasing issues, 4K page sizes are NOT supported.
--
--(3) No HugeTLB Support
--    Both the host kernel and Guest kernel should have the page size set to 16K.
--    This will be implemented in a future release.
--
--(4) KVM/MIPS does not have support for SMP Guests
--    Linux-3.7-rc2 based SMP guest hangs due to the following code sequence in the generated TLB handlers:
--	LL/TLBP/SC.  Since the TLBP instruction causes a trap the reservation gets cleared
--	when we ERET back to the guest. This causes the guest to hang in an infinite loop.
--	This will be fixed in a future release.
--
--(5) Use Host FPU
--    Currently KVM/MIPS emulates a 24K CPU without a FPU.
--    This will be fixed in a future release
--- 
-2.27.0
+1. pte_none() check in migrate_vma_collect_pmd()
+2. is_zero_pfn() check in migrate_vma_collect_pmd()
 
+Regards,
+Bharata.
