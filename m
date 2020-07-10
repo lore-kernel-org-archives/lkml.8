@@ -2,58 +2,57 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C162C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D7920725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2564F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUQSnJRv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bc7Jv71U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgGJPsh (ORCPT
+        id S1728255AbgGJPsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:48:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51956 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728066AbgGJPs3 (ORCPT
+        Fri, 10 Jul 2020 11:48:46 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58816 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728186AbgGJPso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:48:29 -0400
+        Fri, 10 Jul 2020 11:48:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594396108;
+        s=mimecast20190719; t=1594396122;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J/AGTBlK1o+2IPa7406J2i89Guvy+o/b2HYyWuhUdeA=;
-        b=gUQSnJRv/JWT20GY+HelU9+gm5CjspG+nDROXBzg47bU1EQs6C8QOEtQvyXHp31iNx8Yum
-        iMXX17y3bTJaiprhN+rFepEff4QT25hGTlgiG5qhH1g98ngYXCmsqrHCPtyDy1y7CIZDQ6
-        gHYgA7X27z4aDjDYBoKFhZYVA7Yh5ig=
+        bh=FpqSvw1KbghxVfbY79oQ4mBwCCU5KJ0+qcfULEWjODc=;
+        b=Bc7Jv71UizwQK2gyZfimlLPkJwAAdMspgbh1ogytTMF9YWkjzu//EWpIB7qf2rc1L79GvR
+        SyX/Wzyn5+u+J6ipRgIqrxuvPiNf0W5zqqd0Mwwu6uHbtgD7PR9fDWnGX7Bfa42GsTBSSS
+        Un84cGWgwdTXFU3B3qQwMesrGo8ISEg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-ksIrcMFqNT2GewDMu9iY4w-1; Fri, 10 Jul 2020 11:48:26 -0400
-X-MC-Unique: ksIrcMFqNT2GewDMu9iY4w-1
+ us-mta-400-uUU84V-WMWmFTxr7vM3gcg-1; Fri, 10 Jul 2020 11:48:37 -0400
+X-MC-Unique: uUU84V-WMWmFTxr7vM3gcg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CDC5106B247;
-        Fri, 10 Jul 2020 15:48:25 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8509C1083E8E;
+        Fri, 10 Jul 2020 15:48:36 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-114-235.ams2.redhat.com [10.36.114.235])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1416F7EFA3;
-        Fri, 10 Jul 2020 15:48:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A67D47EF9E;
+        Fri, 10 Jul 2020 15:48:33 +0000 (UTC)
 From:   Mohammed Gamal <mgamal@redhat.com>
 To:     kvm@vger.kernel.org, pbonzini@redhat.com
 Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
         sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org,
-        Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH v3 2/9] KVM: x86: mmu: Move translate_gpa() to mmu.c
-Date:   Fri, 10 Jul 2020 17:48:04 +0200
-Message-Id: <20200710154811.418214-3-mgamal@redhat.com>
+        jmattson@google.com, joro@8bytes.org
+Subject: [PATCH v3 6/9] KVM: VMX: introduce vmx_need_pf_intercept
+Date:   Fri, 10 Jul 2020 17:48:08 +0200
+Message-Id: <20200710154811.418214-7-mgamal@redhat.com>
 In-Reply-To: <20200710154811.418214-1-mgamal@redhat.com>
 References: <20200710154811.418214-1-mgamal@redhat.com>
 MIME-Version: 1.0
@@ -64,50 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also no point of it being inline since it's always called through
-function pointers. So remove that.
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 6 ------
- arch/x86/kvm/mmu/mmu.c          | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 28 +++++++++++++++++-----------
+ arch/x86/kvm/vmx/vmx.c    |  2 +-
+ arch/x86/kvm/vmx/vmx.h    |  5 +++++
+ 3 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index be5363b21540..62373cc06c72 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1551,12 +1551,6 @@ void kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd, bool skip_tlb_flush,
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index b26655104d4a..1aea9e3b8c43 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2433,22 +2433,28 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
  
- void kvm_configure_mmu(bool enable_tdp, int tdp_page_level);
+ 	/*
+ 	 * Whether page-faults are trapped is determined by a combination of
+-	 * 3 settings: PFEC_MASK, PFEC_MATCH and EXCEPTION_BITMAP.PF.
+-	 * If enable_ept, L0 doesn't care about page faults and we should
+-	 * set all of these to L1's desires. However, if !enable_ept, L0 does
+-	 * care about (at least some) page faults, and because it is not easy
+-	 * (if at all possible?) to merge L0 and L1's desires, we simply ask
+-	 * to exit on each and every L2 page fault. This is done by setting
+-	 * MASK=MATCH=0 and (see below) EB.PF=1.
++	 * 3 settings: PFEC_MASK, PFEC_MATCH and EXCEPTION_BITMAP.PF.  If L0
++	 * doesn't care about page faults then we should set all of these to
++	 * L1's desires. However, if L0 does care about (some) page faults, it
++	 * is not easy (if at all possible?) to merge L0 and L1's desires, we
++	 * simply ask to exit on each and every L2 page fault. This is done by
++	 * setting MASK=MATCH=0 and (see below) EB.PF=1.
+ 	 * Note that below we don't need special code to set EB.PF beyond the
+ 	 * "or"ing of the EB of vmcs01 and vmcs12, because when enable_ept,
+ 	 * vmcs01's EB.PF is 0 so the "or" will take vmcs12's value, and when
+ 	 * !enable_ept, EB.PF is 1, so the "or" will always be 1.
+ 	 */
+-	vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK,
+-		enable_ept ? vmcs12->page_fault_error_code_mask : 0);
+-	vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH,
+-		enable_ept ? vmcs12->page_fault_error_code_match : 0);
++	if (vmx_need_pf_intercept(&vmx->vcpu)) {
++		/*
++		 * TODO: if both L0 and L1 need the same MASK and MATCH,
++		 * go ahead and use it?
++		 */
++		vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK, 0);
++		vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH, 0);
++	} else {
++		vmcs_write32(PAGE_FAULT_ERROR_CODE_MASK, vmcs12->page_fault_error_code_mask);
++		vmcs_write32(PAGE_FAULT_ERROR_CODE_MATCH, vmcs12->page_fault_error_code_match);
++	}
  
--static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
--				  struct x86_exception *exception)
--{
--	return gpa;
--}
--
- static inline struct kvm_mmu_page *page_header(hpa_t shadow_page)
- {
- 	struct page *page = pfn_to_page(shadow_page >> PAGE_SHIFT);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 6d6a0ae7800c..f8b3c5181466 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -515,6 +515,12 @@ static bool check_mmio_spte(struct kvm_vcpu *vcpu, u64 spte)
- 	return likely(kvm_gen == spte_gen);
+ 	if (cpu_has_vmx_apicv()) {
+ 		vmcs_write64(EOI_EXIT_BITMAP0, vmcs12->eoi_exit_bitmap0);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 178ee92551a9..770b090969fb 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -780,7 +780,7 @@ void update_exception_bitmap(struct kvm_vcpu *vcpu)
+ 		eb |= 1u << BP_VECTOR;
+ 	if (to_vmx(vcpu)->rmode.vm86_active)
+ 		eb = ~0;
+-	if (enable_ept)
++	if (!vmx_need_pf_intercept(vcpu))
+ 		eb &= ~(1u << PF_VECTOR);
+ 
+ 	/* When we are running a nested L2 guest and L1 specified for it a
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 639798e4a6ca..b0e5e210f1c1 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -550,6 +550,11 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
+ 		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
  }
  
-+static gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
-+                                  struct x86_exception *exception)
++static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
 +{
-+        return gpa;
++	return !enable_ept;
 +}
 +
- /*
-  * Sets the shadow PTE masks used by the MMU.
-  *
+ void dump_vmcs(void);
+ 
+ #endif /* __KVM_X86_VMX_H */
 -- 
 2.26.2
 
