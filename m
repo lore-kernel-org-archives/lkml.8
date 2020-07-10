@@ -2,109 +2,127 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB46C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46BD820772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC5920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RMf7k+mO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ax9JFe+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgGJCPA (ORCPT
+        id S1726958AbgGJCPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 22:15:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:14378 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726323AbgGJCO5 (ORCPT
+        Thu, 9 Jul 2020 22:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJCPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 22:14:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594347297; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=pZBbWOAImaAXj4ymXtVBbnn0fW0JrVwullPsUepvzus=; b=RMf7k+mOH9XUGUki4wqMHbDVqwtJKaUtc5kKOsq+fVhUcvObWr5or3x303MrMDGjh5Nv0eTd
- lVkfLjTx6Pj+mkCFTVdllfLtXVRAZ7G0uiVaeUB2F9s1T1SFb+qFFBRWXtvzmiS18h+YQ0zQ
- PiJAO7h5yVh1RXekg4Yhk2c4Ra4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f07cf1919b27ae9cecb4117 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 02:14:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C34F5C433C8; Fri, 10 Jul 2020 02:14:48 +0000 (UTC)
-Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC953C433C6;
-        Fri, 10 Jul 2020 02:14:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC953C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-Subject: Re: [PATCH] interconnect: msm8916: Fix buswidth of pcnoc_s nodes
-To:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, jun.nie@linaro.org,
-        okukatla@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709130004.12462-1-georgi.djakov@linaro.org>
-From:   Mike Tipton <mdtipton@codeaurora.org>
-Message-ID: <320b3577-d7cd-886d-7a39-eafa286a8286@codeaurora.org>
-Date:   Thu, 9 Jul 2020 19:14:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 22:15:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE4CC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 19:15:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e18so1828172pgn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 19:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkQSECiHHKjY2wMf5WdW+4+ngmPLR5hshwDsZDOZ0qY=;
+        b=Ax9JFe+xCSrnS5iZU07rdj4BMegbKRHByEA8KIB170r2p1prZMYiQAksTM9eePOgkC
+         KARvN11mXFlZAJDSrxVeHL1H6nMIPbDpWBOuv4n43DtfSn7p9IvAScA6o20QG66Y7R4W
+         jxn2azc1m+a04Ntx+D8JD+Eczob/PWHJnVxQ6SDWIGNzbPMzrsL/h6aQ0H6zqyC7smwM
+         Tg8GNZFODhVFkwp0XnLWkGl9aTqy/89dr29vGrZmftswi8hiOYYAKOMEnQbDCVlHM78v
+         llSDRikRevxxx8UoFfKBhrPXZrOvsV9oHK9MGC0mid+jFw7AbHue6UZvt3viR06NewKZ
+         QORw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkQSECiHHKjY2wMf5WdW+4+ngmPLR5hshwDsZDOZ0qY=;
+        b=XITLGbE0M3SGW8zBThGvsY21MUVjNzoSXOrarFzsLM7ZyKHdVn77nm1q/BKe9wxV6K
+         uNKbE7GBcomcG/sjtA20zNGCRkryfWHRkMkp6MaQbexWNq5p+zUmdqjRxvWei+MBpeV6
+         PZwCgT9327ND4ahSuYEIa23yxO/3OEvpUz+GZQ5wK3XvubRgZDKt7dpfHWHHHzCMvI0S
+         aI8UEptTgB9ohmDpapXIGD/7MHeOwif2j9TONlMCjVumPbueOG3d61O1WlKMatRIOllc
+         R1RxkItfKuTfHu6BxJeUm0SQNH+vv1mi0heYb4pTEu6GBju1BVw1G26AdjgqjQwCeCRI
+         tRig==
+X-Gm-Message-State: AOAM5327s/2F+Z2uW76dx+yrQhHL2quCWstfNxFyhmH036nR9uhQNo5I
+        i6EDlCwsi93cKTTkYiN9ZKqReou3D+U=
+X-Google-Smtp-Source: ABdhPJwpYkmZ/KMKHhtbV3Hu1nYb4/nC7sN7C42DNAWlijZqn0K49dgejQ93gXTEHUhacz5lDin4Lg==
+X-Received: by 2002:a62:e206:: with SMTP id a6mr53727039pfi.24.1594347312716;
+        Thu, 09 Jul 2020 19:15:12 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([172.30.115.29])
+        by smtp.gmail.com with ESMTPSA id y18sm4190687pff.10.2020.07.09.19.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 19:15:11 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: change the way of handling range.len in F2FS_IOC_SEC_TRIM_FILE
+Date:   Fri, 10 Jul 2020 11:15:05 +0900
+Message-Id: <20200710021505.2405872-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
-In-Reply-To: <20200709130004.12462-1-georgi.djakov@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/2020 6:00 AM, Georgi Djakov wrote:
-> The buswidth of the pcnoc_s_* nodes is actually not 8, but
-> 4 bytes. Let's fix it.
-> 
-> Reported-by: Jun Nie <jun.nie@linaro.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->   drivers/interconnect/qcom/msm8916.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
+From: Daeho Jeong <daehojeong@google.com>
 
-Reviewed-by: Mike Tipton <mdtipton@codeaurora.org>
+Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
+ 1. Added -1 value support for range.len to signify the end of file.
+ 2. If the end of the range passes over the end of file, it means until
+    the end of file.
+ 3. ignored the case of that range.len is zero to prevent the function
+    from making end_addr zero and triggering different behaviour of
+    the function.
 
-> 
-> diff --git a/drivers/interconnect/qcom/msm8916.c b/drivers/interconnect/qcom/msm8916.c
-> index e94f3c5228b7..42c6c5581662 100644
-> --- a/drivers/interconnect/qcom/msm8916.c
-> +++ b/drivers/interconnect/qcom/msm8916.c
-> @@ -197,13 +197,13 @@ DEFINE_QNODE(pcnoc_int_0, MSM8916_PNOC_INT_0, 8, -1, -1, MSM8916_PNOC_SNOC_MAS,
->   DEFINE_QNODE(pcnoc_int_1, MSM8916_PNOC_INT_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
->   DEFINE_QNODE(pcnoc_m_0, MSM8916_PNOC_MAS_0, 8, -1, -1, MSM8916_PNOC_INT_0);
->   DEFINE_QNODE(pcnoc_m_1, MSM8916_PNOC_MAS_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
-> -DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 8, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
-> -DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 8, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
-> -DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 8, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
-> -DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 8, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
-> -DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 8, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
-> -DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 8, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
-> -DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 8, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
-> +DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 4, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
-> +DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 4, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
-> +DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 4, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
-> +DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 4, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
-> +DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 4, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
-> +DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 4, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
-> +DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 4, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
->   DEFINE_QNODE(pcnoc_snoc_mas, MSM8916_PNOC_SNOC_MAS, 8, 29, -1, MSM8916_PNOC_SNOC_SLV);
->   DEFINE_QNODE(pcnoc_snoc_slv, MSM8916_PNOC_SNOC_SLV, 8, -1, 45, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC, MSM8916_SNOC_INT_1);
->   DEFINE_QNODE(qdss_int, MSM8916_SNOC_QDSS_INT, 8, -1, -1, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC);
-> 
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/file.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 368c80f8e2a1..1c4601f99326 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+ 	file_start_write(filp);
+ 	inode_lock(inode);
+ 
+-	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
++	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
++			range.start >= inode->i_size) {
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-	if (range.start >= inode->i_size) {
+-		ret = -EINVAL;
++	if (range.len == 0)
+ 		goto err;
+-	}
+ 
+-	if (inode->i_size - range.start < range.len) {
+-		ret = -E2BIG;
+-		goto err;
+-	}
+-	end_addr = range.start + range.len;
++	if (range.len == (u64)-1 || inode->i_size - range.start < range.len)
++		end_addr = inode->i_size;
++	else
++		end_addr = range.start + range.len;
+ 
+ 	to_end = (end_addr == inode->i_size);
+ 	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
+-- 
+2.27.0.383.g050319c2ae-goog
+
