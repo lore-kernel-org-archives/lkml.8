@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C67C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A563C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A48207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044AD206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594400010;
-	bh=lo++HzUCZcseWsXH6aNMxRmLUla8AP614+SoLXNY6Nc=;
+	s=default; t=1594400019;
+	bh=whhs7oG4eHwGU4eTV3G4HHpSTjSYq15t2QvyL7KoLOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=feVU/fSI/TTopS89a1dx0UOqsfGUvpssX1FqVH/e1PdT3fUOAdaOW7lcSeqn6M0q+
-	 jT5/Iu/o0VQ7tgDbyY+t8+rwz2eZP5hMaVnVXz6JVHWvGkxHveewmUoOBSSeTFhj6j
-	 sAFFYryjly8fGjXOb4gjHwVfREYx+bpGN5THiE04=
+	b=1SCPGBoYxyCAd0IxG//w8acd0Q4i8KDagBWbyN11HpbOWyRz45x/2QTKgfqR2KnQo
+	 ZTvue5KiThRr+7cd/4ltjKFvz0V1SHi0LBfWeiiGLx/E5X2eYJyIRFUKFqw3HKbPZ8
+	 lfygJLf5jh/ZVYlvMy7eux4LoC4QaNQ1cqNd5ehI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgGJQx3 (ORCPT
+        id S1728708AbgGJQxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60620 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 12:53:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbgGJQxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:53:21 -0400
+        id S1728689AbgGJQx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:53:29 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB2C3207FC;
-        Fri, 10 Jul 2020 16:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83FD20870;
+        Fri, 10 Jul 2020 16:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594400001;
-        bh=lo++HzUCZcseWsXH6aNMxRmLUla8AP614+SoLXNY6Nc=;
+        s=default; t=1594400009;
+        bh=whhs7oG4eHwGU4eTV3G4HHpSTjSYq15t2QvyL7KoLOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wioky7G8nkNSjl2XQPmCqPE30UjsKdtrUCYgBhZqv84ZHXwYiugY8ZG8QyMrsMQzY
-         +QjjU2xVz0g31dIymppay2CiAY3xSeRAJXC65ganmjb+jvhs2b987FE+FklCdfEr9c
-         5cVxcHTYzzEi76gibYJHqwiwNzBGnJ/Y6VIP3b6c=
+        b=RJVGcKh/R1hwa/3n0Lq+mqdvEmG0AHuCSSUcXFmNcyOVuLckQGiOAeoG18ntgAIKM
+         WmwfJTW++NgmCHIA0mRueiz/gUwGYbIBvUtW0VRWUoaU1fiwJaV8kF4CYord+yvYLM
+         7jd8EIzwRW6LPQbt5GXxC6xX39zMMchRx1itqKRY=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
@@ -60,9 +60,9 @@ Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH v3 17/19] arm64: cpufeatures: Add capability for LDAPR instruction
-Date:   Fri, 10 Jul 2020 17:52:01 +0100
-Message-Id: <20200710165203.31284-18-will@kernel.org>
+Subject: [PATCH v3 19/19] arm64: lto: Strengthen READ_ONCE() to acquire when CONFIG_LTO=y
+Date:   Fri, 10 Jul 2020 17:52:03 +0100
+Message-Id: <20200710165203.31284-20-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 References: <20200710165203.31284-1-will@kernel.org>
@@ -73,72 +73,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Armv8.3 introduced the LDAPR instruction, which provides weaker memory
-ordering semantics than LDARi (RCpc vs RCsc). Generally, we provide an
-RCsc implementation when implementing the Linux memory model, but LDAPR
-can be used as a useful alternative to dependency ordering, particularly
-when the compiler is capable of breaking the dependencies.
+When building with LTO, there is an increased risk of the compiler
+converting an address dependency headed by a READ_ONCE() invocation
+into a control dependency and consequently allowing for harmful
+reordering by the CPU.
 
-Since LDAPR is not available on all CPUs, add a cpufeature to detect it at
-runtime and allow the instruction to be used with alternative code
-patching.
+Ensure that such transformations are harmless by overriding the generic
+READ_ONCE() definition with one that provides acquire semantics when
+building with LTO.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/arm64/Kconfig               |  3 +++
- arch/arm64/include/asm/cpucaps.h |  3 ++-
- arch/arm64/kernel/cpufeature.c   | 10 ++++++++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
+ arch/arm64/kernel/vdso/Makefile   |  2 +-
+ arch/arm64/kernel/vdso32/Makefile |  2 +-
+ 3 files changed, 65 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/include/asm/rwonce.h
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 66dc41fd49f2..e1073210e70b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1409,6 +1409,9 @@ config ARM64_PAN
- 	 The feature is detected at runtime, and will remain as a 'nop'
- 	 instruction if the cpu does not implement the feature.
- 
-+config AS_HAS_LDAPR
-+	def_bool $(as-instr,.arch_extension rcpc)
+diff --git a/arch/arm64/include/asm/rwonce.h b/arch/arm64/include/asm/rwonce.h
+new file mode 100644
+index 000000000000..d78eb4cb795b
+--- /dev/null
++++ b/arch/arm64/include/asm/rwonce.h
+@@ -0,0 +1,63 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020 Google LLC.
++ */
++#ifndef __ASM_RWONCE_H
++#define __ASM_RWONCE_H
 +
- config ARM64_LSE_ATOMICS
- 	bool
- 	default ARM64_USE_LSE_ATOMICS
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index d7b3bb0cb180..3ff0103d4dfd 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -62,7 +62,8 @@
- #define ARM64_HAS_GENERIC_AUTH			52
- #define ARM64_HAS_32BIT_EL1			53
- #define ARM64_BTI				54
-+#define ARM64_HAS_LDAPR				55
++#ifdef CONFIG_LTO
++
++#include <linux/compiler_types.h>
++#include <asm/alternative-macros.h>
++
++#ifndef BUILD_VDSO
++
++#ifdef CONFIG_AS_HAS_LDAPR
++#define __LOAD_RCPC(sfx, regs...)					\
++	ALTERNATIVE(							\
++		"ldar"	#sfx "\t" #regs,				\
++		".arch_extension rcpc\n"				\
++		"ldapr"	#sfx "\t" #regs,				\
++	ARM64_HAS_LDAPR)
++#else
++#define __LOAD_RCPC(sfx, regs...)	"ldar" #sfx "\t" #regs
++#endif /* CONFIG_AS_HAS_LDAPR */
++
++#define __READ_ONCE(x)							\
++({									\
++	typeof(&(x)) __x = &(x);					\
++	int atomic = 1;							\
++	union { __unqual_scalar_typeof(*__x) __val; char __c[1]; } __u;	\
++	switch (sizeof(x)) {						\
++	case 1:								\
++		asm volatile(__LOAD_RCPC(b, %w0, %1)			\
++			: "=r" (*(__u8 *)__u.__c)			\
++			: "Q" (*__x) : "memory");			\
++		break;							\
++	case 2:								\
++		asm volatile(__LOAD_RCPC(h, %w0, %1)			\
++			: "=r" (*(__u16 *)__u.__c)			\
++			: "Q" (*__x) : "memory");			\
++		break;							\
++	case 4:								\
++		asm volatile(__LOAD_RCPC(, %w0, %1)			\
++			: "=r" (*(__u32 *)__u.__c)			\
++			: "Q" (*__x) : "memory");			\
++		break;							\
++	case 8:								\
++		asm volatile(__LOAD_RCPC(, %0, %1)			\
++			: "=r" (*(__u64 *)__u.__c)			\
++			: "Q" (*__x) : "memory");			\
++		break;							\
++	default:							\
++		atomic = 0;						\
++	}								\
++	atomic ? (typeof(*__x))__u.__val : (*(volatile typeof(__x))__x);\
++})
++
++#endif	/* !BUILD_VDSO */
++#endif	/* CONFIG_LTO */
++
++#include <asm-generic/rwonce.h>
++
++#endif	/* __ASM_RWONCE_H */
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index 45d5cfe46429..60df97f2e7de 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -28,7 +28,7 @@ ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv	\
+ 	     $(btildflags-y) -T
  
--#define ARM64_NCAPS				55
-+#define ARM64_NCAPS				56
+ ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
+-ccflags-y += -DDISABLE_BRANCH_PROFILING
++ccflags-y += -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
  
- #endif /* __ASM_CPUCAPS_H */
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fae0efc80c1..498bd9a7f1bc 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2058,6 +2058,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.sign = FTR_UNSIGNED,
- 	},
- #endif
-+	{
-+		.desc = "RCpc load-acquire (LDAPR)",
-+		.capability = ARM64_HAS_LDAPR,
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.sys_reg = SYS_ID_AA64ISAR1_EL1,
-+		.sign = FTR_UNSIGNED,
-+		.field_pos = ID_AA64ISAR1_LRCPC_SHIFT,
-+		.matches = has_cpuid_feature,
-+		.min_field_value = 1,
-+	},
- 	{},
- };
+ CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS) $(GCC_PLUGINS_CFLAGS)
+ KBUILD_CFLAGS			+= $(DISABLE_LTO)
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index d88148bef6b0..4fdf3754a058 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -43,7 +43,7 @@ cc32-as-instr = $(call try-run,\
+ # As a result we set our own flags here.
  
+ # KBUILD_CPPFLAGS and NOSTDINC_FLAGS from top-level Makefile
+-VDSO_CPPFLAGS := -D__KERNEL__ -nostdinc -isystem $(shell $(CC_COMPAT) -print-file-name=include)
++VDSO_CPPFLAGS := -DBUILD_VDSO -D__KERNEL__ -nostdinc -isystem $(shell $(CC_COMPAT) -print-file-name=include)
+ VDSO_CPPFLAGS += $(LINUXINCLUDE)
+ 
+ # Common C and assembly flags
 -- 
 2.27.0.383.g050319c2ae-goog
 
