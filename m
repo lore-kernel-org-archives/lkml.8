@@ -2,56 +2,56 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D70DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4B6C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB3A2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC01B2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vd2IDop9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iAEGsQJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGJMrX (ORCPT
+        id S1727975AbgGJMrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:47:23 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:49507 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJMrX (ORCPT
+        Fri, 10 Jul 2020 08:47:35 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:50543 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgGJMra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:47:23 -0400
+        Fri, 10 Jul 2020 08:47:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594385242; x=1625921242;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xLfmshkpWd2aPH7pkCemLYvnT4Uwrw+Ep4bfRxiIgoI=;
-  b=vd2IDop9IMn2PlGdA93Fp808vN8C1Uaowf5Vx+AX3qlQrSldIrw0edIZ
-   NrYnp4y2ASAmT9TyC/q9krHrraehBVZbztr9mMo+BIXhVyIRuL9i1uaqP
-   S4gQgYeAG6vdY59v35tWSjeOCNKm9hJ4WokDV/ijhK7Ciu+0so7dEeOQn
-   e0qNEZXc54iWRjsvVpvulGyAnQxXYNa81xx7FH2wcK5ryQyBE85PWh7W4
-   jkO1EO1EXHf8N8odUQCIG0kiea/R/e1NK3/zn0s+DwhBeQk3zrPvVX9ge
-   jE0Xe51KZefqYvlVyJ3lJC9KOgokvtcYqMiAr0eQfh+WFncHpTmQQgkCW
-   A==;
-IronPort-SDR: 29sAthIvWYA09TD6RubA5XnKXwmkVwup5JbrbBbAFI2mNB6uqYyGe53H3DmoFlRU1QOdjoR1nA
- 5YJNC32onJ7wLmZkxhaU0I29tXzYTqqe1xlixE7dtO0gb1QnGQbdnyya1VX5AHdHKMh1Gc2Px5
- nFOxOAIe2Ync+HoubkPzulMaeC3wh3UtTp3j1vgwbCaxPjEXW4yTzoGeVuHgAsNIP+Nqs4TCj0
- 0hhx1QdaULMWTbomAWh25qkAaQMkEYFVUX3A0dLo+w9w7fUxnKTn9/hqjY9sagt2VWE0N6rJbf
- yPo=
+  t=1594385249; x=1625921249;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3dSAtd0YST9naogJUwhR283iRPreXicwpYimF4Vmvi0=;
+  b=iAEGsQJIbz2QIwJd9GGxifSENkQEEskX8osCpOkgrEPgvyO93dTal5O+
+   qAu3zxe9vJQr9ZY6BevRZZ5NGVdrkSuuhSe7XpZLL9cAayHH8UTD/Ktit
+   GZqFw5BxcSF7DvkYyJlKDHiSEInQb0wRfoySX8kip6ogWLXxp/icX0qZZ
+   YtvzWhpr51OAZYzb7cb7Hof8reaXPm/5sy2BKZnEx8JSkYZwtkMJxvqZD
+   QHGLqiIXyQCv1rRn4/oH9d1/k+UJY7NvgVTc5OtSNqgk0HrJvF2Na0hyY
+   XXkyQHEH+jdoLNjz9SlbsF14Itp3ysthIHPzePFbRRvffwdWCn305KYqk
+   w==;
+IronPort-SDR: SwZKNCbVMNiyrrtLkALj6JNq8fh0MZ2dVkj7HytbeXgGXnQikweAeLAJJZiauk3XXQbrW+8uNf
+ bARdVIdkKIbaDpuw0Y0q1X69lwMLUcRxQcsGNpVxM63XK02v7LTkUYimiatzLPvANHSA4hDT0s
+ VnF6QH+kB6ZDZSxKqfXEvytZGi608N7K5pOmZX1eBjV1cgjwfIFxSaxrDHYx/3U24KK3wKCoJI
+ 6A58hGLNlafdyqhigrB7r25poiUmOZs+e1T2c0gW3X2FsJ0X8DMrkj+UlpOy7Ulbv7E8IOBsWa
+ aM8=
 X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="87021923"
+   d="scan'208";a="83305784"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jul 2020 05:47:22 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jul 2020 05:47:29 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 10 Jul 2020 05:46:54 -0700
+ 15.1.1979.3; Fri, 10 Jul 2020 05:47:01 -0700
 Received: from ness.mchp-main.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
  (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Fri, 10 Jul 2020 05:47:18 -0700
+ Transport; Fri, 10 Jul 2020 05:47:25 -0700
 From:   <nicolas.ferre@microchip.com>
 To:     <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
         <netdev@vger.kernel.org>,
@@ -61,11 +61,14 @@ CC:     <linux-kernel@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         <antoine.tenart@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v5 0/5] net: macb: Wake-on-Lan magic packet fixes and GEM handling
-Date:   Fri, 10 Jul 2020 14:46:40 +0200
-Message-ID: <cover.1594384335.git.nicolas.ferre@microchip.com>
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH v5 2/5] net: macb: mark device wake capable when "magic-packet" property present
+Date:   Fri, 10 Jul 2020 14:46:42 +0200
+Message-ID: <b0e3fcc43bc7284598341c27840bc7947adf01b0.1594384335.git.nicolas.ferre@microchip.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1594384335.git.nicolas.ferre@microchip.com>
+References: <cover.1594384335.git.nicolas.ferre@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -76,53 +79,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Hi,
-Here is a split series to fix WoL magic-packet on the current macb driver. Only
-fixes in this one based on current net/master.
+Change the way the "magic-packet" DT property is handled in the
+macb_probe() function, matching DT binding documentation.
+Now we mark the device as "wakeup capable" instead of calling the
+device_init_wakeup() function that would enable the wakeup source.
 
-Best regards,
-  Nicolas
+For Ethernet WoL, enabling the wakeup_source is done by
+using ethtool and associated macb_set_wol() function that
+already calls device_set_wakeup_enable() for this purpose.
 
-Changes in v5:
-- Addressed the error code returned by phylink_ethtool_set_wol() as suggested
-  by Russell.
-  If PHY handles WoL, MAC doesn't stay in the way.
-- Removed Florian's tag on 3/5 because of the above changes.
-- Correct the "Fixes" tag on 1/5.
+That would reduce power consumption by cutting more clocks if
+"magic-packet" property is set but WoL is not configured by ethtool.
 
-Changes in v4:
-- Pure bug fix series for 'net'. GEM addition and MACB update removed: will be
-  sent later.
+Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v3:
-- Revert some of the v2 changes done in macb_resume(). Now the resume function
-  supports in-depth re-configuration of the controller in order to deal with
-  deeper sleep states. Basically as it was before changes introduced by this
-  series
-- Tested for non-regression with our deeper Power Management mode which cuts
-  power to the controller completely
-
-Changes in v2:
-- Add patch 4/7 ("net: macb: fix macb_suspend() by removing call to netif_carrier_off()")
-  needed for keeping phy state consistent
-- Add patch 5/7 ("net: macb: fix call to pm_runtime in the suspend/resume functions") that prevent
-  putting the macb in runtime pm suspend mode when WoL is used
-- Collect review tags on 3 first patches from Florian: Thanks!
-- Review of macb_resume() function
-- Addition of pm_wakeup_event() in both MACB and GEM WoL IRQ handlers
-
-
-Nicolas Ferre (5):
-  net: macb: fix wakeup test in runtime suspend/resume routines
-  net: macb: mark device wake capable when "magic-packet" property
-    present
-  net: macb: fix macb_get/set_wol() when moving to phylink
-  net: macb: fix macb_suspend() by removing call to netif_carrier_off()
-  net: macb: fix call to pm_runtime in the suspend/resume functions
-
- drivers/net/ethernet/cadence/macb_main.c | 31 +++++++++++++++---------
- 1 file changed, 19 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 55e680f35022..4cafe343c0a2 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4422,7 +4422,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	bp->wol = 0;
+ 	if (of_get_property(np, "magic-packet", NULL))
+ 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
+-	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
++	device_set_wakeup_capable(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
+ 
+ 	spin_lock_init(&bp->lock);
+ 
 -- 
 2.27.0
 
