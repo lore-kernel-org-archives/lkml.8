@@ -2,191 +2,106 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243AAC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C72C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0884620720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C67B20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGJMSd (ORCPT
+        id S1727818AbgGJMTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgGJMSd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:18:33 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8468C08C5CE;
-        Fri, 10 Jul 2020 05:18:32 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id AA8432A6973
-Message-ID: <ec409a20cf266938fa804bd685a8ed3f1e30b0be.camel@collabora.com>
-Subject: Re: [RFC 07/12] media: uapi: h264: Add DPB entry field reference
- flags
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 10 Jul 2020 09:18:20 -0300
-In-Reply-To: <4e91d580-98a8-0ba8-dbb9-6af3a2634d8e@kwiboo.se>
-References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <20190901124531.23645-1-jonas@kwiboo.se>
-         <HE1PR06MB4011559BF2447047C66285D2ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-         <233509924f72d69824920d9312373eced68674c0.camel@collabora.com>
-         <20200710101333.05077f18@collabora.com>
-         <4e91d580-98a8-0ba8-dbb9-6af3a2634d8e@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+        Fri, 10 Jul 2020 08:19:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38280 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbgGJMTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:19:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EB156AC46;
+        Fri, 10 Jul 2020 12:19:23 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 14:19:23 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, sergey.senozhatsky@gmail.com,
+        torvalds@linux-foundation.org, Jason@zx2c4.com
+Subject: Re: [PATCH] doc:kmsg: explictly state the return value in case of
+ SEEK_CUR
+Message-ID: <20200710121923.GO4751@alley>
+References: <20200709155415.41207-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709155415.41207-1-bmeneg@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-10 at 08:48 +0000, Jonas Karlman wrote:
-> On 2020-07-10 10:13, Boris Brezillon wrote:
-> > On Fri, 10 Jul 2020 01:21:07 -0300
-> > Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > 
-> > > Hello Jonas,
-> > > 
-> > > In the context of the uAPI cleanup,
-> > > I'm revisiting this patch.
-> > > 
-> > > On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
-> > > > Add DPB entry flags to help indicate when a reference frame is a field picture
-> > > > and how the DPB entry is referenced, top or bottom field or full frame.
-> > > > 
-> > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> > > > ---
-> > > >  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
-> > > >  include/media/h264-ctrls.h                       |  4 ++++
-> > > >  2 files changed, 16 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > > > index bc5dd8e76567..eb6c32668ad7 100644
-> > > > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > > > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > > > @@ -2022,6 +2022,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
-> > > >        - 0x00000004
-> > > >        - The DPB entry is a long term reference frame
-> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
-> > > > +      - 0x00000008
-> > > > +      - The DPB entry is a field picture
-> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
-> > > > +      - 0x00000010
-> > > > +      - The DPB entry is a top field reference
-> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
-> > > > +      - 0x00000020
-> > > > +      - The DPB entry is a bottom field reference
-> > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
-> > > > +      - 0x00000030
-> > > > +      - The DPB entry is a reference frame
-> > > >  
-> > > >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
-> > > >      Specifies the decoding mode to use. Currently exposes slice-based and
-> > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > > > index e877bf1d537c..76020ebd1e6c 100644
-> > > > --- a/include/media/h264-ctrls.h
-> > > > +++ b/include/media/h264-ctrls.h
-> > > > @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
-> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
-> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
-> > > >  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
-> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
-> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
-> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
-> > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
-> > > >    
-> > > 
-> > > I've been going thru the H264 spec and I'm unsure,
-> > > are all these flags semantically needed?
-> > > 
-> > > For instance, if one of REF_BOTTOM or REF_TOP (or both)
-> > > are set, doesn't that indicate it's a field picture?
+On Thu 2020-07-09 12:54:15, Bruno Meneguele wrote:
+> The commit 625d3449788f ("Revert "kernel/printk: add kmsg SEEK_CUR
+> handling"") reverted a change done to the return value in case a SEEK_CUR
+> operation was performed for kmsg buffer based on the fact that different
+> userspace apps were handling the new return value (-ESPIPE) in different
+> ways, breaking them.
 > 
-> These flags would only indicate how the frame / field pair / field is
-> referenced and not if the DPB entry was decoded as a frame or field pair.
+> At the same time -ESPIPE was the wrong decision because kmsg /does support/
+> seek() but doesn't follow the "normal" behavior userspace is used to.
+> Because of that and also considering the time -EINVAL has been used, it was
+> decided to keep this way to avoid more userspace breakage.
 > 
-
-I believe _how_ the picture is referenced shouldn't (or can't?) be signaled
-in the DPB representation. It seems Jernej's [1] which properly adds a
-flag for each entry in ref_pic_list0 is the right way.
-
-https://patchwork.linuxtv.org/patch/64289/
-
-> Both hantro and rkvdec needs to know how the referenced frame / field pair
-> was decoded (not how it is referenced), my best guess is that MV is stored
-> differently for a frame (linear) and field pair (buffer split in two).
+> This patch adds an official statement to the kmsg documentation pointing to
+> the current return value for SEEK_CUR, -EINVAL, thus userspace libraries and
+> apps can refer to it for a definitive guide on what to expected.
 > 
-> I think we should be able to track how the buffer was decoded similar to
-> how VP9 keep track of buffer width/height.
-> 
-> When I played with interlaced decoding of rkvdec a few weeks ago I
-> reverted flags to something similar as my initial rfc patch, see [1].
-> I guess it should be possible to keep current flags and track field_pic
-> in driver, some macro to simplify check for top/bottom ref could be
-> useful if flags is kept as-is.
-> 
-> I am hoping to find some time next week to revisit hantro interlaced
-> and refine rkvdec interlaced support.
-> 
-> [1] https://github.com/Kwiboo/linux-rockchip/compare/da52ca6f8d2284aebea2d0b99d254b64922faa2d...c9f04cd9bc65eda0da713f4ce1c77eeb1960bd70
-> 
+> --- a/Documentation/ABI/testing/dev-kmsg
+> +++ b/Documentation/ABI/testing/dev-kmsg
+> @@ -56,6 +56,11 @@ Description:	The /dev/kmsg character device node provides userspace access
+>  		  seek after the last record available at the time
+>  		  the last SYSLOG_ACTION_CLEAR was issued.
+>  
+> +		Considering that the seek operation is supported but has 
+> +		special meaning to the device, any attempt to seek specific
+> +		positions on the buffer (i.e.  using SEEK_CUR) results in an
+> +		-EINVAL error returned to userspace.
 
-Yup, I noticed this and it's why I started looking at the uAPI side
-of the DPB.
+Sigh, I see that devkmsg_llseek() returns -ESPIPE when offset is not
+zero. This is a real mess.
 
-It seems to me all we are missing is further clarification
-of the meaning of each DPB_ENTRY_FLAG (possibly adding/removing
-flags).
+I wonder if we could afford to switch this one to -EINVAL and reduce
+the mess.
 
-From this snippet:
+Anyway, for a random reader, it might be pretty unclear what is
+exactly special about /dev/kmsg. I wonder if the following might
+be more explanatory and strightforward:
 
-		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD_PIC)
-			refer_addr |= RKVDEC_FIELD_REF;
-		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_TOP_REF)
-			refer_addr |= RKVDEC_TOPFIELD_USED_REF;
-		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_REF)
-			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
-		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE)
-			refer_addr |= RKVDEC_COLMV_USED_FLAG_REF;
+		Other seek operations or offsets are not supported because of
+		the special behavior. The device allows to read or write
+		only whole variable lenght messages that are stored in
+		a ring buffer.
 
-Which of these flags are needed, i.e. which are required to fully
-describe a picture stored in the DPB?
-
-Also, since we are here, I wonder what is exactly RKVDEC COLMV
-and what's the condition for RKVDEC_COLMV_USED_FLAG_REF.
-
-Thanks a lot!
-Ezequiel
-
-> Regards,
-> Jonas
-> 
-> > > Or conversely, if neither REF_BOTTOM or REF_TOP are set,
-> > > then it's a frame picture?
-> > 
-> > I think that's what I was trying to do here [1]
-> > 
-> > [1]https://patchwork.kernel.org/patch/11392095/
-> > 
+		Because of the non-standard behavior also the error values
+		are non-standardand. -ESPIPE is returned for non-zero offset.
+		-EINVAL is returned for other operations, e.g. SEEK_CUR.
+		This behavior is historical and could not be modified
+		wihtout the risk of breaking userspace.
 
 
+Finally, only few people read documentation. We should add some
+warning also to the code. I think about a something like:
+
+/*
+ * Be careful when modifying this function!!!
+ *
+ * Only few operations are supported because the device works only with
+ * the entire variable length messages. Non-standard error values are
+ * returned in the other cases. User space applications might depend
+ * on this behavior.
+ */
+
+Best Regards,
+Petr
