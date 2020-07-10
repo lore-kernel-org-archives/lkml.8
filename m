@@ -2,207 +2,223 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27248C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE3D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IGqdsQd8"
+	by mail.kernel.org (Postfix) with ESMTP id EADAF2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594415247;
+	bh=prIJu7Nfrz+JgHutqJ5X3omRvEUNLOJ1CmZ+pqztTEA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=pYiUPaIeBL3kgBps7SHa0SJPnWkAHJXnieKHytVl6UlT5Zj/qc4kCbOyEkFJj8oH2
+	 cYbQtzSqwI8oo4ucNxnohvRfiQd+3qMPilr0HoR1tkb0tizmJ/zR9TE4MeCURkMcCk
+	 0syh0bqvTYm8apw2A5JK+2WmP4tMLiL5GFNqVT80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgGJVFr (ORCPT
+        id S1726342AbgGJVHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:05:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58204 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgGJVFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:05:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AL4go3110049;
-        Fri, 10 Jul 2020 16:04:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594415082;
-        bh=YN94F55WhKkuP89j9A3mDlZdwphR/xlr7fYpfgmUT9U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IGqdsQd8Kl4kHd53/f9MZdbRcD0OCoDajtwIWgsoUIaFbV2gts0+uWO3l2fp1c0Pz
-         B4ZO3rBKMXp8Lcn7wcZKyqWEbAUCGk0Ks3vKcVIqWGHcJBC1rlCzqZByJx9swRTqi0
-         c+EEtheJyKv5iJvcoBEmDEZ0mQN6iLiFMT4VXp+I=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AL4g9P022931
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 16:04:42 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 16:04:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 16:04:41 -0500
-Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AL4fnr089140;
-        Fri, 10 Jul 2020 16:04:41 -0500
-Subject: Re: [PATCHv3 4/6] irqchip/irq-pruss-intc: Implement
- irq_{get,set}_irqchip_state ops
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
-        "Mills, William" <wmills@ti.com>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-5-git-send-email-grzegorz.jaszczyk@linaro.org>
- <658e3a8d3374eca91387932a9a246add@kernel.org>
- <CAMxfBF5oB9=qkA8G4jD=KPht+OmZdOaTpsoqvRE881da51S2AA@mail.gmail.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <8189e095-6531-8e68-844c-22dd3a38a28d@ti.com>
-Date:   Fri, 10 Jul 2020 16:04:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 17:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgGJVHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 17:07:25 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DDD20748;
+        Fri, 10 Jul 2020 21:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594415244;
+        bh=prIJu7Nfrz+JgHutqJ5X3omRvEUNLOJ1CmZ+pqztTEA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pXk8jGF6w7azt3wKQbJjQ+dWPfTM1ngRNoPIMHjUEfkXGf4XlhMjFtcU0EacIUyB+
+         WAgGzMCxej6URkX7+S6JWmPclFHtFtA5QX1ERqZeYO6ViSD1HMg0yTDnejL5bP9eXH
+         xsOdSx6P8jNwK9ef5uPxBkEWre5eRvPmcgVXIMmI=
+Date:   Fri, 10 Jul 2020 16:07:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
+ error_detect()
+Message-ID: <20200710210722.GA80765@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <CAMxfBF5oB9=qkA8G4jD=KPht+OmZdOaTpsoqvRE881da51S2AA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <HE1PR0402MB3371231EDD66A938F650269584830@HE1PR0402MB3371.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/20 12:04 PM, Grzegorz Jaszczyk wrote:
-> On Thu, 2 Jul 2020 at 19:54, Marc Zyngier <maz@kernel.org> wrote:
->>
->> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
->>> From: David Lechner <david@lechnology.com>
->>>
->>> This implements the irq_get_irqchip_state and irq_set_irqchip_state
->>> callbacks for the TI PRUSS INTC driver. The set callback can be used
->>> by drivers to "kick" a PRU by enabling a PRU system event.
->>
->> "enabling"? That'd be unmasking an interrupt, which isn't what this
->> does. "injecting", maybe?
+On Wed, Jun 10, 2020 at 04:07:35AM +0000, Z.q. Hou wrote:
+> Hi Kuppuswamy,
 > 
-> Yes "injecting" is much better.
+> Thanks a lot for your comments and sorry for my late response!
 > 
->>
->>>
->>> Example:
->>>       irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
->>
->> Nice example.
->>
->> What this example does explain is how you are actually going to kick
->> a PRU via this interface. For that to happen, you'd have to have on
->> the Linux side an interrupt that is actually routed to a PRU.
+> > -----Original Message-----
+> > From: Kuppuswamy, Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > Sent: 2020年5月29日 12:25
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>; linux-pci@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; ruscur@russell.cc; sbobroff@linux.ibm.com;
+> > oohall@gmail.com; bhelgaas@google.com
+> > Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
+> > error_detect()
+> > 
+> > 
+> > 
+> > On 5/28/20 9:04 PM, Z.q. Hou wrote:
+> > > Hi Kuppuswamy,
+> > >
+> > >> -----Original Message-----
+> > >> From: Kuppuswamy, Sathyanarayanan
+> > >> <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > >> Sent: 2020年5月29日 5:19
+> > >> To: Z.q. Hou <zhiqiang.hou@nxp.com>; linux-pci@vger.kernel.org;
+> > >> linux-kernel@vger.kernel.org; ruscur@russell.cc;
+> > >> sbobroff@linux.ibm.com; oohall@gmail.com; bhelgaas@google.com
+> > >> Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
+> > >> error_detect()
+> > >>
+> > >> Hi,
+> > >>
+> > >> On 5/27/20 1:31 AM, Zhiqiang Hou wrote:
+> > >>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >>>
+> > >>> The commit 6d2c89441571 ("PCI/ERR: Update error status after
+> > >>> reset_link()") overrode the 'status' returned by the error_detect()
+> > >>> call back function, which is depended on by the next step. This
+> > >>> overriding makes the Endpoint driver's required info (kept in the
+> > >>> var
+> > >>> status) lost, so it results in the fatal errors' recovery failed and
+> > >>> then kernel
+> > >> panic.
+> > >> Can you explain why updating status affects the recovery ?
+> > >
+> > > Take the e1000e as an example:
+> > > Once a fatal error is reported by e1000e, the e1000e's error_detect()
+> > > will be called and it will return PCI_ERS_RESULT_NEED_RESET to request
+> > > a slot reset, the return value is stored in the '&status' of the
+> > > calling pci_walk_bus(bus,report_frozen_detected, &status).
+> > > If you update the 'status' with the reset_link()'s return value
+> > > (PCI_ERS_RESULT_RECOVERED if the reset link succeed), then the
+> > > 'status' has the value PCI_ERS_RESULT_RECOVERED and e1000e's request
+> > > PCI_ERS_RESULT_NEED_RESET lost, then e1000e's callback function
+> > > .slot_reset() will be skipped and directly call the .resume().
+> > I believe you are working with non hotplug capable device. If yes, then this
+> > issue will be addressed by the following patch.
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org
+> > %2Flkml%2F2020%2F5%2F6%2F1545&amp;data=02%7C01%7Czhiqiang.hou%4
+> > 0nxp.com%7C4f0ad836e4384f40400f08d80388383c%7C686ea1d3bc2b4c6fa92
+> > cd99c5c301635%7C0%7C1%7C637263230875781678&amp;sdata=ap0PUMzse
+> > xIuCnOpBCFPW%2BrUEwMWgAYzT7yxGP8pjio%3D&amp;reserved=0
 > 
-> Correct.
-> 
->> And from what I have understood of the previous patches, this can't
->> be the case. What didi I miss?
-> 
-> The hwirq's handled by this driver are so called system events in
-> PRUSS nomenclature. This driver is responsible for the entire mapping
-> of those system events to PRUSS specific channels which are next
-> mapped to host_irq (patch #6 https://lkml.org/lkml/2020/7/2/612).
-> There are 8 host_irqs that are routed to the main cpu (running Linux)
-> and they are called host_intr0..host_intr7 (were seen in previous
-> patches of this series). But there are other "host_interrupts" that
-> are routed not to the main CPU but to PRU cores and this driver is
-> responsible for creating proper mapping (system
-> event/channel/host_irq) for them, and allowing to kick PRU via the
-> introduced interface.
-> 
-> It is worth noting that the PRUSS is quite flexible and allows various
-> things e.g.:
-> - map any of 160/64 internal system events to any of the 20/10 channels
-> - map any of the 20/10 channels to any of the 20/10 host interrupts.
-> 
-> So e.g. it is possible to map e.g. system event 17 to the main CPU
-> (through e.g. channel 1 which is the next map to e.g. host_intr0). Or
-> (exclusively) map the same system event 17 to PRU core (through e.g.
-> channel 1 which is the next map to PRU0).
+> I'll try this patch, seems it also override the 'status' in the pci_channel_io_frozen
+> Case but it make sense for me.
 
-Grzegorz has explained in detail, the short summary is we trigger a 
-system event, and the mapping for that event ensures the interrupt is 
-routed at the desired processor.
+I'm not sure what the resolution of this was.  Please repost this
+patch if it's still needed.
 
-regards
-Suman
-
-> 
->>
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
->>> Reviewed-by: Lee Jones <lee.jones@linaro.org>
->>> ---
->>> v2->v3:
->>> - Get rid of unnecessary pruss_intc_check_write() and use
->>>    pruss_intc_write_reg directly.
->>> v1->v2:
->>> - https://patchwork.kernel.org/patch/11069769/
->>> ---
->>>   drivers/irqchip/irq-pruss-intc.c | 43
->>> ++++++++++++++++++++++++++++++++++++++--
->>>   1 file changed, 41 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-pruss-intc.c
->>> b/drivers/irqchip/irq-pruss-intc.c
->>> index 49c936f..19b3d38 100644
->>> --- a/drivers/irqchip/irq-pruss-intc.c
->>> +++ b/drivers/irqchip/irq-pruss-intc.c
->>> @@ -7,6 +7,7 @@
->>>    *   Suman Anna <s-anna@ti.com>
->>>    */
->>>
->>> +#include <linux/interrupt.h>
->>>   #include <linux/irq.h>
->>>   #include <linux/irqchip/chained_irq.h>
->>>   #include <linux/irqdomain.h>
->>> @@ -39,8 +40,7 @@
->>>   #define PRU_INTC_HIEISR              0x0034
->>>   #define PRU_INTC_HIDISR              0x0038
->>>   #define PRU_INTC_GPIR                0x0080
->>> -#define PRU_INTC_SRSR0               0x0200
->>> -#define PRU_INTC_SRSR1               0x0204
->>> +#define PRU_INTC_SRSR(x)     (0x0200 + (x) * 4)
->>>   #define PRU_INTC_SECR0               0x0280
->>>   #define PRU_INTC_SECR1               0x0284
->>>   #define PRU_INTC_ESR0                0x0300
->>> @@ -145,6 +145,43 @@ static void pruss_intc_irq_relres(struct irq_data
->>> *data)
->>>        module_put(THIS_MODULE);
->>>   }
->>>
->>> +static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
->>> +                                         enum irqchip_irq_state which,
->>> +                                         bool *state)
->>> +{
->>> +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
->>> +     u32 reg, mask, srsr;
->>> +
->>> +     if (which != IRQCHIP_STATE_PENDING)
->>> +             return -EINVAL;
->>> +
->>> +     reg = PRU_INTC_SRSR(data->hwirq / 32);
->>
->> I assume the register file scales as more interrupts are added in the
->> subsequent patch?
->>
-> Yes, after I will move part of the next patch to patch #2 as you
-> suggested it will stop being confusing.
-> 
-> Thank you,
-> Grzegorz
-> 
-
+> > > So this is how the update of 'status' break the handshake between RC's
+> > > AER driver and the Endpoint's protocol driver error_handlers, then result in
+> > the recovery failure.
+> > >
+> > >>>
+> > >>> In the e1000e case, the error logs:
+> > >>> pcieport 0002:00:00.0: AER: Uncorrected (Fatal) error received:
+> > >>> 0002:01:00.0 e1000e 0002:01:00.0: AER: PCIe Bus Error:
+> > >>> severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent
+> > >>> ID) pcieport 0002:00:00.0: AER: Root Port link has been reset
+> > >> As per above commit log, it looks like link is reset correctly.
+> > >
+> > > Yes, see my comments above.
+> > >
+> > > Thanks,
+> > > Zhiqiang
+> > >
+> > >>> SError Interrupt on CPU0, code 0xbf000002 -- SError
+> > >>> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted
+> > >>> 5.7.0-rc7-next-20200526 #8 Hardware name: LS1046A RDB Board (DT)
+> > >>> pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--) pc :
+> > >>> __pci_enable_msix_range+0x4c8/0x5b8
+> > >>> lr : __pci_enable_msix_range+0x480/0x5b8
+> > >>> sp : ffff80001116bb30
+> > >>> x29: ffff80001116bb30 x28: 0000000000000003
+> > >>> x27: 0000000000000003 x26: 0000000000000000
+> > >>> x25: ffff00097243e0a8 x24: 0000000000000001
+> > >>> x23: ffff00097243e2d8 x22: 0000000000000000
+> > >>> x21: 0000000000000003 x20: ffff00095bd46080
+> > >>> x19: ffff00097243e000 x18: ffffffffffffffff
+> > >>> x17: 0000000000000000 x16: 0000000000000000
+> > >>> x15: ffffb958fa0e9948 x14: ffff00095bd46303
+> > >>> x13: ffff00095bd46302 x12: 0000000000000038
+> > >>> x11: 0000000000000040 x10: ffffb958fa101e68
+> > >>> x9 : ffffb958fa101e60 x8 : 0000000000000908
+> > >>> x7 : 0000000000000908 x6 : ffff800011600000
+> > >>> x5 : ffff00095bd46800 x4 : ffff00096e7f6080
+> > >>> x3 : 0000000000000000 x2 : 0000000000000000
+> > >>> x1 : 0000000000000000 x0 : 0000000000000000 Kernel panic - not
+> > >>> syncing: Asynchronous SError Interrupt
+> > >>> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted
+> > >>> 5.7.0-rc7-next-20200526 #8
+> > >>>
+> > >>> I think it's the expected result that "if the initial value of error
+> > >>> status is PCI_ERS_RESULT_DISCONNECT or
+> > >> PCI_ERS_RESULT_NO_AER_DRIVER
+> > >>> then even after successful recovery (using reset_link())
+> > >>> pcie_do_recovery() will report the recovery result as failure" which
+> > >>> is described in commit 6d2c89441571 ("PCI/ERR: Update error status
+> > >>> after
+> > >> reset_link()").
+> > >>>
+> > >>> Refer to the Documentation/PCI/pci-error-recovery.rst.
+> > >>> As the error_detect() is mandatory callback if the pci_err_handlers
+> > >>> is implemented, if it return the PCI_ERS_RESULT_DISCONNECT, it means
+> > >>> the driver doesn't want to recover at all; For the case
+> > >>> PCI_ERS_RESULT_NO_AER_DRIVER, if the pci_err_handlers is not
+> > >>> implemented, the failure is more expected.
+> > >>>
+> > >>> Fixes: commit 6d2c89441571 ("PCI/ERR: Update error status after
+> > >>> reset_link()")
+> > >>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >>> ---
+> > >>>    drivers/pci/pcie/err.c | 3 +--
+> > >>>    1 file changed, 1 insertion(+), 2 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
+> > >>> 14bb8f54723e..84f72342259c 100644
+> > >>> --- a/drivers/pci/pcie/err.c
+> > >>> +++ b/drivers/pci/pcie/err.c
+> > >>> @@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev
+> > >> *dev,
+> > >>>    	pci_dbg(dev, "broadcast error_detected message\n");
+> > >>>    	if (state == pci_channel_io_frozen) {
+> > >>>    		pci_walk_bus(bus, report_frozen_detected, &status);
+> > >>> -		status = reset_link(dev);
+> > >>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> > >>> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+> > >>>    			pci_warn(dev, "link reset failed\n");
+> > >>>    			goto failed;
+> > >>>    		}
+> > >>>
+> > >>
+> > >> --
+> > >> Sathyanarayanan Kuppuswamy
+> > >> Linux Kernel Developer
+> > 
+> > --
+> > Sathyanarayanan Kuppuswamy
+> > Linux Kernel Developer
