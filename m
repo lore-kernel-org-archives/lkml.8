@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB3CC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E65C220725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651F820725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="itWt5k8S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EzA9Xw2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgGJPs4 (ORCPT
+        id S1728315AbgGJPtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:48:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32500 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728199AbgGJPsx (ORCPT
+        Fri, 10 Jul 2020 11:49:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33155 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728293AbgGJPsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 11:48:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594396132;
+        s=mimecast20190719; t=1594396131;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ph4T4YDVII3jrJWIHOD3/5mI3kXc9Jt7+WbkEloGPMo=;
-        b=itWt5k8SD/6jmpeQKodw9TWt7ddyacGADAWKdW/5iOu2RQoQDr3v2Gd0wN8K2lOergZ5qb
-        8L5JSCYWMIEJkuepn8YNRBUbUGkcjgo7YJ6083meYM7IR6f0UQ/E5QUtfuXLPeQkLb29Ff
-        SNrsGHzDWcSKfaO/J8h/2hvobKhbx1E=
+        bh=FfpxmN5laAl/y/N2q1Y7cTgVN6qGZtCHt/1dR+y0tY8=;
+        b=EzA9Xw2i/ytLPHHnyK2jpuwfINOKceYrO1xqKn+869A2D5zzs5vT4AHeXiRn0FNq8Ioy+H
+        PtgANBwBDHR/m8+P9mlsp0ViduYgjw8fo+4CI7Dlhspd1r9Yk0v14Zp7gB/PUoavPzph/Z
+        IqgUa1kfWFQZrJ2BWj1HTXWnQcOKljc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-yoUJBosHOyqKK9LKAMCJsw-1; Fri, 10 Jul 2020 11:48:32 -0400
-X-MC-Unique: yoUJBosHOyqKK9LKAMCJsw-1
+ us-mta-148-l2N29321O0ieKsqQhVWYWQ-1; Fri, 10 Jul 2020 11:48:48 -0400
+X-MC-Unique: l2N29321O0ieKsqQhVWYWQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39A6F800FEB;
-        Fri, 10 Jul 2020 15:48:30 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67BBF1083;
+        Fri, 10 Jul 2020 15:48:46 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-114-235.ams2.redhat.com [10.36.114.235])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4902E7EF9B;
-        Fri, 10 Jul 2020 15:48:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 33A265BAC3;
+        Fri, 10 Jul 2020 15:48:44 +0000 (UTC)
 From:   Mohammed Gamal <mgamal@redhat.com>
 To:     kvm@vger.kernel.org, pbonzini@redhat.com
 Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
         sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org
-Subject: [PATCH v3 4/9] KVM: x86: rename update_bp_intercept to update_exception_bitmap
-Date:   Fri, 10 Jul 2020 17:48:06 +0200
-Message-Id: <20200710154811.418214-5-mgamal@redhat.com>
+        jmattson@google.com, joro@8bytes.org,
+        Mohammed Gamal <mgamal@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Babu Moger <babu.moger@amd.com>
+Subject: [PATCH v3 9/9] KVM: x86: SVM: VMX: Make GUEST_MAXPHYADDR < HOST_MAXPHYADDR support configurable
+Date:   Fri, 10 Jul 2020 17:48:11 +0200
+Message-Id: <20200710154811.418214-10-mgamal@redhat.com>
 In-Reply-To: <20200710154811.418214-1-mgamal@redhat.com>
 References: <20200710154811.418214-1-mgamal@redhat.com>
 MIME-Version: 1.0
@@ -63,94 +66,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+The reason behind including this patch is unexpected behaviour we see
+with NPT vmexit handling in AMD processor.
 
-We would like to introduce a callback to update the #PF intercept
-when CPUID changes.  Just reuse update_bp_intercept since VMX is
-already using update_exception_bitmap instead of a bespoke function.
+With previous patch ("KVM: SVM: Add guest physical address check in
+NPF/PF interception") we see the followning error multiple times in
+the 'access' test in kvm-unit-tests:
 
-While at it, remove an unnecessary assignment in the SVM version,
-which is already done in the caller (kvm_arch_vcpu_ioctl_set_guest_debug)
-and has nothing to do with the exception bitmap.
+            test pte.p pte.36 pde.p: FAIL: pte 2000021 expected 2000001
+            Dump mapping: address: 0x123400000000
+            ------L4: 24c3027
+            ------L3: 24c4027
+            ------L2: 24c5021
+            ------L1: 1002000021
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This shows that the PTE's accessed bit is apparently being set by
+the CPU hardware before the NPF vmexit. This completely handled by
+hardware and can not be fixed in software.
+
+This patch introduces a workaround. We add a boolean variable:
+'allow_smaller_maxphyaddr'
+Which is set individually by VMX and SVM init routines. On VMX it's
+always set to true, on SVM it's only set to true when NPT is not
+enabled.
+
+We also add a new capability KVM_CAP_SMALLER_MAXPHYADDR which
+allows userspace to query if the underlying architecture would
+support GUEST_MAXPHYADDR < HOST_MAXPHYADDR and hence act accordingly
+(e.g. qemu can decide if it would ignore the -cpu ..,phys-bits=X)
+
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/svm/svm.c          | 7 +++----
- arch/x86/kvm/vmx/vmx.c          | 2 +-
- arch/x86/kvm/x86.c              | 2 +-
- 4 files changed, 6 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/svm/svm.c          | 15 +++++++++++++++
+ arch/x86/kvm/vmx/vmx.c          |  7 +++++++
+ arch/x86/kvm/x86.c              |  6 ++++++
+ include/uapi/linux/kvm.h        |  1 +
+ 5 files changed, 30 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 62373cc06c72..bb4044ffb7b7 100644
+index bb4044ffb7b7..26002e1b47f7 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1098,7 +1098,7 @@ struct kvm_x86_ops {
- 	void (*vcpu_load)(struct kvm_vcpu *vcpu, int cpu);
- 	void (*vcpu_put)(struct kvm_vcpu *vcpu);
+@@ -1304,7 +1304,7 @@ struct kvm_arch_async_pf {
+ };
  
--	void (*update_bp_intercept)(struct kvm_vcpu *vcpu);
-+	void (*update_exception_bitmap)(struct kvm_vcpu *vcpu);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 	u64 (*get_segment_base)(struct kvm_vcpu *vcpu, int seg);
+ extern u64 __read_mostly host_efer;
+-
++extern bool __read_mostly allow_smaller_maxphyaddr;
+ extern struct kvm_x86_ops kvm_x86_ops;
+ 
+ #define __KVM_HAVE_ARCH_VM_ALLOC
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c0da4dd78ac5..79c33b3539f0 100644
+index 79c33b3539f0..f3d7ae26875c 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -1627,7 +1627,7 @@ static void svm_set_segment(struct kvm_vcpu *vcpu,
- 	mark_dirty(svm->vmcb, VMCB_SEG);
- }
+@@ -924,6 +924,21 @@ static __init int svm_hardware_setup(void)
  
--static void update_bp_intercept(struct kvm_vcpu *vcpu)
-+static void update_exception_bitmap(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	svm_set_cpu_caps();
  
-@@ -1636,8 +1636,7 @@ static void update_bp_intercept(struct kvm_vcpu *vcpu)
- 	if (vcpu->guest_debug & KVM_GUESTDBG_ENABLE) {
- 		if (vcpu->guest_debug & KVM_GUESTDBG_USE_SW_BP)
- 			set_exception_intercept(svm, BP_VECTOR);
--	} else
--		vcpu->guest_debug = 0;
-+	}
- }
++	/*
++	 * It seems that on AMD processors PTE's accessed bit is
++	 * being set by the CPU hardware before the NPF vmexit.
++	 * This is not expected behaviour and our tests fail because
++	 * of it.
++	 * A workaround here is to disable support for
++	 * GUEST_MAXPHYADDR < HOST_MAXPHYADDR if NPT is enabled.
++	 * In this case userspace can know if there is support using
++	 * KVM_CAP_SMALLER_MAXPHYADDR extension and decide how to handle
++	 * it
++	 * If future AMD CPU models change the behaviour described above,
++	 * this variable can be changed accordingly
++	 */
++	allow_smaller_maxphyaddr = !npt_enabled;
++
+ 	return 0;
  
- static void new_asid(struct vcpu_svm *svm, struct svm_cpu_data *sd)
-@@ -3989,7 +3988,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.vcpu_blocking = svm_vcpu_blocking,
- 	.vcpu_unblocking = svm_vcpu_unblocking,
- 
--	.update_bp_intercept = update_bp_intercept,
-+	.update_exception_bitmap = update_exception_bitmap,
- 	.get_msr_feature = svm_get_msr_feature,
- 	.get_msr = svm_get_msr,
- 	.set_msr = svm_set_msr,
+ err:
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 13745f2a5ecd..178ee92551a9 100644
+index 0cebc4832805..8a8e85e6c529 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7859,7 +7859,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.vcpu_load = vmx_vcpu_load,
- 	.vcpu_put = vmx_vcpu_put,
+@@ -8294,6 +8294,13 @@ static int __init vmx_init(void)
+ #endif
+ 	vmx_check_vmcs12_offsets();
  
--	.update_bp_intercept = update_exception_bitmap,
-+	.update_exception_bitmap = update_exception_bitmap,
- 	.get_msr_feature = vmx_get_msr_feature,
- 	.get_msr = vmx_get_msr,
- 	.set_msr = vmx_set_msr,
++	/*
++	 * Intel processors don't have problems with
++	 * GUEST_MAXPHYADDR < HOST_MAXPHYADDR so enable
++	 * it for VMX by default
++	 */
++	allow_smaller_maxphyaddr = true;
++
+ 	return 0;
+ }
+ module_init(vmx_init);
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1f5f4074fc59..03c401963062 100644
+index 03c401963062..167becd6a634 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -9281,7 +9281,7 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
- 	 */
- 	kvm_set_rflags(vcpu, rflags);
+@@ -187,6 +187,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
+ u64 __read_mostly host_efer;
+ EXPORT_SYMBOL_GPL(host_efer);
  
--	kvm_x86_ops.update_bp_intercept(vcpu);
-+	kvm_x86_ops.update_exception_bitmap(vcpu);
++bool __read_mostly allow_smaller_maxphyaddr;
++EXPORT_SYMBOL_GPL(allow_smaller_maxphyaddr);
++
+ static u64 __read_mostly host_xss;
+ u64 __read_mostly supported_xss;
+ EXPORT_SYMBOL_GPL(supported_xss);
+@@ -3538,6 +3541,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+ 		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
+ 		break;
++	case KVM_CAP_SMALLER_MAXPHYADDR:
++		r = (int) allow_smaller_maxphyaddr;
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 4fdf30316582..68cd3a0af9bb 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PPC_SECURE_GUEST 181
+ #define KVM_CAP_HALT_POLL 182
+ #define KVM_CAP_ASYNC_PF_INT 183
++#define KVM_CAP_SMALLER_MAXPHYADDR 184
  
- 	r = 0;
+ #ifdef KVM_CAP_IRQ_ROUTING
  
 -- 
 2.26.2
