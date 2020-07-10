@@ -2,130 +2,114 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D04492076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983FB2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGJF2w (ORCPT
+        id S1727768AbgGJF27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:28:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50814 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726369AbgGJFWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:22:47 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A5233a065689;
-        Fri, 10 Jul 2020 01:22:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpk836s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 01:22:19 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06A54svC071807;
-        Fri, 10 Jul 2020 01:22:19 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpk8365-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 01:22:19 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06A5GaN0032336;
-        Fri, 10 Jul 2020 05:22:17 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 326bc309me-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 05:22:17 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06A5MErN8651142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 05:22:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 692F4A4054;
-        Fri, 10 Jul 2020 05:22:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85164A405B;
-        Fri, 10 Jul 2020 05:22:12 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.105.207])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Jul 2020 05:22:12 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        mikey@neuling.org, ravi.bangoria@linux.ibm.com,
-        ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        psampat@linux.ibm.com, pratik.r.sampat@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] powerpc/powernv/idle: save-restore DAWR0,DAWRX0 for P10
-Date:   Fri, 10 Jul 2020 10:52:06 +0530
-Message-Id: <20200710052207.12003-3-psampat@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200710052207.12003-1-psampat@linux.ibm.com>
-References: <20200710052207.12003-1-psampat@linux.ibm.com>
+        Fri, 10 Jul 2020 01:28:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:28171 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbgGJF2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:28:49 -0400
+IronPort-SDR: t2uhjyRIx2shCvXcguclmRuwGqvf2TNvh5ggvTdgAnGOOi4NUhIIICUs2GIexDQFx/8FpC4r53
+ QLJhyupS0cgg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146225299"
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208";a="146225299"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 22:28:48 -0700
+IronPort-SDR: GzE06fwv1iXqpMSDnrSYW3Rfn05uzXodKsmCbQ2Kpz7cVL5qipKYcSnwLctqVRMyqIJ1DUkjLZ
+ if117iTlAliA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,334,1589266800"; 
+   d="scan'208";a="389378494"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 22:28:46 -0700
+Date:   Fri, 10 Jul 2020 13:24:43 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     "Wu, Hao" <hao.wu@intel.com>, "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Message-ID: <20200710052443.GB8689@yilunxu-OptiPlex-7050>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200709093527.GA32541@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_01:2020-07-09,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=840 spamscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100029
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Additional registers DAWR0, DAWRX0 may be lost on Power 10 for
-stop levels < 4.
-Therefore save the values of these SPRs before entering a  "stop"
-state and restore their values on wakeup.
+On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
+> 
+> On 7/9/20 3:14 AM, Wu, Hao wrote:
+> >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
+> >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+> >>>>
+> >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
+> >>>>
+> >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> >>>> ---
+> >>>>  drivers/fpga/dfl-pci.c | 2 ++
+> >>>>  1 file changed, 2 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> >>>> index 73b5153..824aecf 100644
+> >>>> --- a/drivers/fpga/dfl-pci.c
+> >>>> +++ b/drivers/fpga/dfl-pci.c
+> >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
+> >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
+> >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
+> >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
+> >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
+> >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
+> >> I think we could keep _PF_, also there is no need to support VF of pac
+> >> n3000 in product now, but it does exist (ID: 0x0b31).
+> 
+> I was wondering about the vf id, thanks!
+> 
+> >>
+> >> And add _INTEL_ is good to me.
+> >>
+> >> Then how about this one:
+> >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+> > I am just considering the alignment with ids defined in include/linux/pci_ids.h
+> > So drop _PF_ before _INTEL_ would be better? : )
+> 
+> To be consistent, all the id's are intel and all could drop pf.
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/idle.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+That's good to me after checking the pci_ids.h. So we have:
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 19d94d021357..f2e2a6a4c274 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -600,6 +600,8 @@ struct p9_sprs {
- 	u64 iamr;
- 	u64 amor;
- 	u64 uamor;
-+	u64 dawr0;
-+	u64 dawrx0;
- };
- 
- static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
-@@ -687,6 +689,10 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 	sprs.iamr	= mfspr(SPRN_IAMR);
- 	sprs.amor	= mfspr(SPRN_AMOR);
- 	sprs.uamor	= mfspr(SPRN_UAMOR);
-+	if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-+		sprs.dawr0 = mfspr(SPRN_DAWR0);
-+		sprs.dawrx0 = mfspr(SPRN_DAWRX0);
-+	}
- 
- 	srr1 = isa300_idle_stop_mayloss(psscr);		/* go idle */
- 
-@@ -710,6 +716,10 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		mtspr(SPRN_IAMR,	sprs.iamr);
- 		mtspr(SPRN_AMOR,	sprs.amor);
- 		mtspr(SPRN_UAMOR,	sprs.uamor);
-+		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-+			mtspr(SPRN_DAWR0, sprs.dawr0);
-+			mtspr(SPRN_DAWRX0, sprs.dawrx0);
-+		}
- 
- 		/*
- 		 * Workaround for POWER9 DD2.0, if we lost resources, the ERAT
--- 
-2.25.4
+#define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
 
+> 
+> Tom
+> 
+> >
+> > Thanks
+> > Hao
+> >
