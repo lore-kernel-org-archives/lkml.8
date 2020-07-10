@@ -2,63 +2,64 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A93C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D824B2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B328A207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6Fbp+qQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhVboXMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgGJNnv (ORCPT
+        id S1727963AbgGJNn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        Fri, 10 Jul 2020 09:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgGJNnu (ORCPT
+        with ESMTP id S1726774AbgGJNnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:43:50 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B88C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id f16so2638805pjt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
+        Fri, 10 Jul 2020 09:43:55 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA2CC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:55 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 1so2552427pfn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xlL+dOHETChI19feaNn5OZODjfzHvkpc+NvYB/39YL0=;
-        b=f6Fbp+qQiGRfG3hVNWwP4AvCgyrWn2xbrX7SkAerV9jHFukKWZLr8+jEztiUfaGtrs
-         rjUFFpbeu8LFpTFNfJyrUqdgk/a/w9O8wCjSFrJnb4TX4pvHc7iwYfUmNGq+8f1w3zLA
-         +klKV+bD9UCY13Zafk+yrtcCmGsYAuBW7IiFyhS82rY+xKnt9T/aIeI76xh0G4S/UuK0
-         5fBwatwHoIMsg2u7oQaUKB187tbXH5Lm0ge22FpiPAZF7Qm3qjmSEM7Un/WsfLzXckF+
-         m+AvA+QrBjqXkHnwrxppwQZX0DnlIqbkW1JVnlqgZpNp6dzbrVSz7nxFVA1Zk6Hyllec
-         SNfA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TevwpdpkGTIVWOgepqkuv2WRKI9YZMyHnPvrWjpZh1I=;
+        b=MhVboXMBdFFVfnOs7V/gZpF68Cj0ht7NMM+wcZ67SIomfXTimXIYUiX41WEmbC9Xrz
+         UxHm90MyS6zVlgVBpHL7w0T4gRfXiFuIA/fwzY9r8JB6IMUqmGwXzqSmFA0gOPI+bXjI
+         J10xxWXr4nJHBekiPMohLW5aDwNb/ATxlGW1bnssMiy1TQ1Kf3mUAdkwgLlEzWAJHmwl
+         8NOc9Ue8qrhXgSUxigxtMUheLLAwpsk2twHtu8BWbOrt4iZ2D6RKOHdwPmDJG0exphtb
+         1mfjEIOeUhSwUm7GquQkWErIifLjQwqlwo017Gedt0EOQvIILQmu8ytspJ7d8pOKFDWe
+         hMQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xlL+dOHETChI19feaNn5OZODjfzHvkpc+NvYB/39YL0=;
-        b=fEqwFL1wbVxiD1AcQQ6Vbv4OEz8bXGMcQzfy4/5X3j3tesuYo6T4MQV/3mGb8GDfE+
-         hqFiqxI3RrQGgYXqC9rjS3vCoqdsDPKM4gvQfFa93Jz6b9W0EoqaBiC+F4gklaS+uCWY
-         wnT//kDRPPbdPNSFl6zKuxnIHc1rFoaMpoSB/nCXVy4UuK7Be5ntSaNjKMnIcajo0TE3
-         oYgX7rIfzUEhVGNlXXmD/H76NmcOyGSUtRxL9SvLtsDlSQRmnxPtmUcGsNThuqYvntSm
-         5E5EJwBH3z30RukdPXOb4itXWopMETGDpZYsQ/9TiPWGr5ieSiOT5mq8n9zBFYRoYA9k
-         7hLg==
-X-Gm-Message-State: AOAM533O9S2P17g1HpcLxUMDxu25wXHVGVe+6Qnk1gqJlAk0inPv9c1F
-        dvKvAnj3iQDpG8I+IRzjWTM=
-X-Google-Smtp-Source: ABdhPJxvtyYyS9lv3+uWjI6ghN3u9/w5KInwnSEp2LfzyGeoC4Tgq0cXDaLYjtXnCkROrVxHnNUqCA==
-X-Received: by 2002:a17:90a:db8a:: with SMTP id h10mr5930005pjv.197.1594388630223;
-        Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TevwpdpkGTIVWOgepqkuv2WRKI9YZMyHnPvrWjpZh1I=;
+        b=dgSJ9ueklc8oXZFqhXt7szZHo+9/U6KywvjRBIds8zOLvP/M2tjxE6w83mk8YHyUn8
+         8O5UctrtJh5MNXJyilRUb9a7AuDTDKmLHwSLxRyP6pjkC6ZJAIzhGghPKpzfecfzPUSQ
+         30Hu7ZIbrE/nngA6zbUTEm/qi978xEKXkuVWmA2oGXbnjvWBpmwDPQULS0sx9Hg6mO0J
+         ZywdWEuhC37ddPXPNji6sjHsAK1wzLhxSdPr4juCUtBHz41CPFmBNShzemR/ONWzqpea
+         hRawRUGj3RlSgbY3HW4+5ABRgRu8LaheMomAwp+jnUwedNs1UY7UYrCTZpdb2PPp/mZk
+         2nKw==
+X-Gm-Message-State: AOAM530R/RweXK9b/bDP8STlMjVeeKgrJi1UVrMQPl6Z7sevboAtptyB
+        PoiTymoAfhBzNlFPi2p8w04=
+X-Google-Smtp-Source: ABdhPJwffSup+gsmMjOAOvY4Qwxs6l3HzZ2n69Y1wTrfuArpzUYQCPxR2ZHYzvS/UY1/F9uxAQNA5A==
+X-Received: by 2002:a63:100b:: with SMTP id f11mr56200560pgl.287.1594388635383;
+        Fri, 10 Jul 2020 06:43:55 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.43.43
+        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.43.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:43:49 -0700 (PDT)
+        Fri, 10 Jul 2020 06:43:54 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -67,10 +68,12 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 00/17] perf: ftrace enhancement
-Date:   Fri, 10 Jul 2020 21:43:05 +0800
-Message-Id: <20200710134322.15400-1-changbin.du@gmail.com>
+Subject: [PATCH v4 01/17] perf ftrace: select function/function_graph tracer automatically
+Date:   Fri, 10 Jul 2020 21:43:06 +0800
+Message-Id: <20200710134322.15400-2-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200710134322.15400-1-changbin.du@gmail.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,90 +81,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The perf has basic kernel ftrace support but lack support of most tracing
-options. This serias is target to enhance the perf ftrace functionality so
-that we can make full use of kernel ftrace with perf.
+The '-g/-G' options have already implied function_graph tracer should be
+used instead of function tracer. So the extra option '--tracer' can be
+killed.
 
-In general, this serias be cataloged into two main changes:
-  1) Improve usability of existing functions. For example, we don't need to type
-     extra option to select the tracer.
-  2) Add new options to support all other ftrace functions.
+This patch changes the behavior as below:
+  - By default, function tracer is used.
+  - If '-g' or '-G' option is on, then function_graph tracer is used.
+  - The perf configuration item 'ftrace.tracer' is marked as deprecated.
+  - The option '--tracer' is marked as deprecated.
 
-Here is a glance of all ftrace functions with this serias:
+Here are some examples.
 
-$ sudo perf ftrace -h
+This will start tracing all functions using function tracer:
+  $ sudo perf ftrace
 
- Usage: perf ftrace [<options>] [<command>]
-    or: perf ftrace [<options>] -- <command> [<options>]
+This will trace all functions using function graph tracer:
+  $ sudo perf ftrace -G
 
-    -a, --all-cpus        system-wide collection from all CPUs
-    -C, --cpu <cpu>       list of cpus to monitor
-    -D, --delay <n>       ms to wait before starting tracing after program start
-    -F, --funcs           Show available functions to filter
-    -G, --graph-funcs <func>
-                          trace given functions using function_graph tracer
-    -g, --nograph-funcs <func>
-                          Set nograph filter on given functions
-    -m, --buffer-size <size>
-                          size of per cpu buffer
-    -N, --notrace-funcs <func>
-                          do not trace given functions
-    -p, --pid <pid>       trace on existing process id
-    -t, --tid <tid>       trace on existing thread id (exclusive to --pid)
-    -T, --trace-funcs <func>
-                          trace given functions using function tracer
-    -t, --tracer <tracer>
-                          tracer to use: function or function_graph (This option is deprecated)
-    -v, --verbose         be more verbose
-        --func-opts <options>
-                          function tracer options, available options: call-graph,irq-info
-        --graph-opts <options>
-                          graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
-        --inherit         trace children processes
+This will trace function vfs_read using function graph tracer:
+  $ sudo perf ftrace -G vfs_read
 
-v4:
-  o add util/parse-sublevel-options.c
-  O remove -D/--graph-depth
-v3:
-  o add --func-opts and --graph-opts to set tracer specific options.
-  o support units as a suffix for option '-m/--buffer-size'.
-v2:
-  o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
-  o update all related perf documentation.
-  o rename some options. Now all funcgraph tracer options are prefixed with
-    '--graph-', while all function tracer options are prefixed with '--func-'.
-  o mark old options deprecated instead of removing them.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-Changbin Du (17):
-  perf ftrace: select function/function_graph tracer automatically
-  perf ftrace: add option '-F/--funcs' to list available functions
-  perf ftrace: add option -t/--tid to filter by thread id
-  perf ftrace: factor out function write_tracing_file_int()
-  perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
-  perf ftrace: show trace column header
-  perf ftrace: add option '--inherit' to trace children processes
-  perf: util: add general function to parse sublevel options
-  perf ftrace: add support for tracing option 'func_stack_trace'
-  perf ftrace: add support for trace option sleep-time
-  perf ftrace: add support for trace option funcgraph-irqs
-  perf ftrace: add support for tracing option 'irq-info'
-  perf ftrace: add option 'verbose' to show more info for graph tracer
-  perf ftrace: add support for trace option tracing_thresh
-  perf: ftrace: allow set graph depth by '--graph-opts'
-  perf ftrace: add option -D/--delay to delay tracing
-  perf ftrace: add change log
+---
+v3: remove default '*' for -G/-T.
+---
+ tools/perf/Documentation/perf-config.txt |  5 -----
+ tools/perf/Documentation/perf-ftrace.txt |  2 +-
+ tools/perf/builtin-ftrace.c              | 15 ++++++++++-----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
- tools/perf/Documentation/perf-config.txt |   5 -
- tools/perf/Documentation/perf-ftrace.txt |  37 ++-
- tools/perf/builtin-ftrace.c              | 367 ++++++++++++++++++++++-
- tools/perf/util/Build                    |   1 +
- tools/perf/util/debug.c                  |  61 ++--
- tools/perf/util/parse-sublevel-options.c |  63 ++++
- tools/perf/util/parse-sublevel-options.h |  11 +
- 7 files changed, 477 insertions(+), 68 deletions(-)
- create mode 100644 tools/perf/util/parse-sublevel-options.c
- create mode 100644 tools/perf/util/parse-sublevel-options.h
-
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index c7d3df5798e2..a25fee7de3b2 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -612,11 +612,6 @@ trace.*::
+ 		"libbeauty", the default, to use the same argument beautifiers used in the
+ 		strace-like sys_enter+sys_exit lines.
+ 
+-ftrace.*::
+-	ftrace.tracer::
+-		Can be used to select the default tracer. Possible values are
+-		'function' and 'function_graph'.
+-
+ llvm.*::
+ 	llvm.clang-path::
+ 		Path to clang. If omit, search it from $PATH.
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index b80c84307dc9..952e46669168 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -24,7 +24,7 @@ OPTIONS
+ 
+ -t::
+ --tracer=::
+-	Tracer to use: function_graph or function.
++	Tracer to use: function_graph or function. This option is deprecated.
+ 
+ -v::
+ --verbose=::
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 2bfc1b0db536..5f53da87040d 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -27,7 +27,6 @@
+ #include "util/cap.h"
+ #include "util/config.h"
+ 
+-#define DEFAULT_TRACER  "function_graph"
+ 
+ struct perf_ftrace {
+ 	struct evlist		*evlist;
+@@ -419,6 +418,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
+ 	if (strcmp(var, "ftrace.tracer"))
+ 		return -1;
+ 
++	pr_warning("Configuration ftrace.tracer is deprecated\n");
+ 	if (!strcmp(value, "function_graph") ||
+ 	    !strcmp(value, "function")) {
+ 		ftrace->tracer = value;
+@@ -459,7 +459,7 @@ int cmd_ftrace(int argc, const char **argv)
+ {
+ 	int ret;
+ 	struct perf_ftrace ftrace = {
+-		.tracer = DEFAULT_TRACER,
++		.tracer = "function",
+ 		.target = { .uid = UINT_MAX, },
+ 	};
+ 	const char * const ftrace_usage[] = {
+@@ -469,7 +469,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 	};
+ 	const struct option ftrace_options[] = {
+ 	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
+-		   "tracer to use: function_graph(default) or function"),
++		   "tracer to use: function or function_graph (This option is deprecated)"),
+ 	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+ 		   "trace on existing process id"),
+ 	OPT_INCR('v', "verbose", &verbose,
+@@ -479,11 +479,13 @@ int cmd_ftrace(int argc, const char **argv)
+ 	OPT_STRING('C', "cpu", &ftrace.target.cpu_list, "cpu",
+ 		    "list of cpus to monitor"),
+ 	OPT_CALLBACK('T', "trace-funcs", &ftrace.filters, "func",
+-		     "trace given functions only", parse_filter_func),
++		     "trace given functions using function tracer",
++		     parse_filter_func),
+ 	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+ 		     "do not trace given functions", parse_filter_func),
+ 	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+-		     "Set graph filter on given functions", parse_filter_func),
++		     "trace given functions using function_graph tracer",
++		     parse_filter_func),
+ 	OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
+ 		     "Set nograph filter on given functions", parse_filter_func),
+ 	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
+@@ -505,6 +507,9 @@ int cmd_ftrace(int argc, const char **argv)
+ 	if (!argc && target__none(&ftrace.target))
+ 		ftrace.target.system_wide = true;
+ 
++	if (!list_empty(&ftrace.graph_funcs) || !list_empty(&ftrace.nograph_funcs))
++		ftrace.tracer = "function_graph";
++
+ 	ret = target__validate(&ftrace.target);
+ 	if (ret) {
+ 		char errbuf[512];
 -- 
 2.25.1
 
