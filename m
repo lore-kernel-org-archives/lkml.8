@@ -2,89 +2,93 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31310C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E87BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0609E20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9760207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594395467;
-	bh=jf8q7n27+kP9L8DDPlNvcNUJRjNvy/mml7kUbzQ89Oo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=kO6Qsr9e+aiXZQVrjYNykNLfu3rj4EvRDvZcycatFadV4xrG8iyg7R9IVkDYSrd2O
-	 nVv/YMYbtjgurWbH1S+e8+c2nDiKDCdkX6XZgciOzUI1qCRvj0/TOJxob9CNC1ASPL
-	 asGNGV6M0uO2KcYCWYqFaLjuK9fE6rKf9N43o7vA=
+	s=default; t=1594395601;
+	bh=V0MxTffCGmaOnddHTfSCUdkOwgjWSlGLURFExxwvWa4=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=EtMDj2sZWmRS9OxCa+R9ljtF7e44j5MU26SEQjZmj6OnMJKYwy7NvYe9YdFBzJ0AM
+	 qiflogF/zhEhYP4huDLVHIMzTiPIxIgiXyy2X5xfUDx2bIUY4Fv9ss97obF5gA3R9h
+	 c0UD01gk1fgppFavcGOf2RsjjZZHJpcrzcXWui2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgGJPhp (ORCPT
+        id S1727091AbgGJPkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55780 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 11:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgGJPhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:37:45 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1726872AbgGJPkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:40:00 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FFE20725;
-        Fri, 10 Jul 2020 15:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3047D2078B;
+        Fri, 10 Jul 2020 15:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594395464;
-        bh=jf8q7n27+kP9L8DDPlNvcNUJRjNvy/mml7kUbzQ89Oo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JE9TsAInvipOp7YWw0VDP1pE0nJXL97yW6rRV3fU0ODrQia3jRnm8KpQbpz65k91g
-         BbH3KE2h/e/wJ98jZc4PYwNWUPGw7LidXXtG3Wrob6yOfPNjaRVYwndZ+RolHXKCYo
-         UDeh75CK9hmoJvewF+McMQaCMqkfFDhFD7m4zTGs=
-Date:   Fri, 10 Jul 2020 10:37:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200710153742.GA61966@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710150819.GA410874@silpixa00400314>
+        s=default; t=1594395599;
+        bh=V0MxTffCGmaOnddHTfSCUdkOwgjWSlGLURFExxwvWa4=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=DqsxumqgRIHMunsu1recsgEeyIYZ60a6TTOR2kIBx0AjtDK+mqMeeRWWug34Uwwll
+         TaVCn0Lr4pknuDBBo1+XRnsMmERCLg9288IhTdISfrsyt/5DIk0M9e8+Begy4OB3Hu
+         3YkbaQZphfB+fp1hSO8vi2YGo46gkISC8AkMYPuc=
+Date:   Fri, 10 Jul 2020 16:39:53 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     timur@kernel.org, alsa-devel@alsa-project.org, perex@perex.cz,
+        festevam@gmail.com, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        nicoleotsuka@gmail.com, tiwai@suse.com, Xiubo.Lee@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1594112066-31297-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1594112066-31297-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 0/2] ASoC: fsl_spdif: Clear the validity bit for TX
+Message-Id: <159439557864.48910.15440396587948281544.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote:
-> On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
-> > > The current generation of Intel® QuickAssist Technology devices
-> > > are not designed to run in an untrusted environment because of the
-> > > following issues reported in the release notes in
-> > > https://01.org/intel-quickassist-technology:
-> > 
-> > It would be nice if this link were directly clickable, e.g., if there
-> > were no trailing ":" or something.
-> > 
-> > And it would be even better if it went to a specific doc that
-> > described these issues.  I assume these are errata, and it's not easy
-> > to figure out which doc mentions them.
-> Sure. I will fix the commit message in the next revision and point to the
-> actual document:
-> https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf
+On Tue, 7 Jul 2020 16:54:24 +0800, Shengjiu Wang wrote:
+> Clear the validity bit for TX
+> Add kctl for configuring TX validity bit
+> 
+> Shengjiu Wang (2):
+>   ASoC: fsl_spdif: Clear the validity bit for TX
+>   ASoC: fsl_spdif: Add kctl for configuring TX validity bit
+> 
+> [...]
 
-Since URLs tend to go stale, please also include the Intel document
-number and title.
+Applied to
 
-When you update this, you might also update the subject lines.  It
-looks like the VFIO convention is "vfio/pci: <Capitalized> ...",
-based on "git log --oneline drivers/vfio/pci/".  And "QAT" should be
-capitalized also since it's not a word by itself (and to match usage
-in the spec).
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Bjorn
+Thanks!
+
+[1/2] ASoC: fsl_spdif: Clear the validity bit for TX
+      commit: 055b082156704b85a059770359d6cdedfb24831d
+[2/2] ASoC: fsl_spdif: Add kctl for configuring TX validity bit
+      commit: aa3fce5cd454db551a4ea1656bab9c2bacd2d1f4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
