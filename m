@@ -2,144 +2,102 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35657C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD1A20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4512065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594421044;
+	bh=016dFnug2fKc/w3bSkiGB5S+kVrXvzzD9ms2E0fwUTI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dIHKr+zgEVtF+UzdqOKcJPhhcUlyhqAAnKIPJBzQQ0jRnZidHhn57zLN/JBnFqWvK
+	 QV3JFGR8pQvfFl53JxhyNxUYoqWQ6yHd5d/xCnvF9EVyz2x3lVnWTVleYn+UkvdIs0
+	 i9Cafmsb71axNiPcNmgOEUiHc1gdsfgFpbEv8Gvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgGJWmd (ORCPT
+        id S1726766AbgGJWoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgGJWmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:42:32 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9C52065F;
-        Fri, 10 Jul 2020 22:42:30 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 18:42:29 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 11/17] static_call: Simple self-test
-Message-ID: <20200710184229.3c3f5d8d@oasis.local.home>
-In-Reply-To: <20200710134336.798619415@infradead.org>
-References: <20200710133831.943894387@infradead.org>
-        <20200710134336.798619415@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 10 Jul 2020 18:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgGJWoC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:44:02 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A8EC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:44:02 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so8109928ljg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+thtRKJEj4DhIkEI6p+GkkTjAsDSYTDkX8oKURyOcGc=;
+        b=EGO2snRnxuL6RoH27XeBowczxmsAaLfO6uLpBlMOy45LATMKOWSFFk1IrSjjsXFz2v
+         rNlXSeDKRIbt38tUxq7xLAWLsXI6Wf+wbETMPA63v2Z/YsrZH01CZAC5MYeCWgJOletJ
+         O9AL8l7WpdulV3yDBrfd+PUo1fjJNcFW5TnuE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+thtRKJEj4DhIkEI6p+GkkTjAsDSYTDkX8oKURyOcGc=;
+        b=A96HFNL0X+qaq+Yri9ILmKOUwAmAEzx7VrlaL4JepvCUtLo591dOMuzhiIRWu+q5ad
+         ipGLGFLqa46Izixgvaoz/D8gUMsY8u4/mMZCXyVndxqKFBPMxNKGlLmpqZ1HqKuObs0t
+         /T3D7l9fIlrRx1F/1WRIvZvSLI0QCFxFTQJumJPhDun9BOguImq/SArrseMsp4HxgaY0
+         z8+W9mygWjYJECIG2K+LJTuY9e+e5OvDDr6TxTzaQycuFCv5AYBIegUbApFiTelp6aHS
+         x6l9hiPMU1ihn+hf2VHBpRvnXgX9n29tINRxm/wSGCDU+hw2jVFQ3B6FM9oVKNu82eS6
+         qAuw==
+X-Gm-Message-State: AOAM530FW1y7cENbpzPFvNtMHIQtaskWb7rf33wOeg0BkWVBBmAQAqeg
+        m8CAHRekrPBHqt1FzXk9gdEajiRS+HA=
+X-Google-Smtp-Source: ABdhPJxTXCYByR9YiZGmfeQ2xxlNDDiXY4yJIXIvRtZtIHKLrWoU/wqtZ1glBAOms6JNBOfVekpimA==
+X-Received: by 2002:a2e:954c:: with SMTP id t12mr40834896ljh.287.1594421040640;
+        Fri, 10 Jul 2020 15:44:00 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id q1sm2338750lji.71.2020.07.10.15.43.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 15:43:59 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id q4so8180355lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:43:59 -0700 (PDT)
+X-Received: by 2002:a05:651c:1b6:: with SMTP id c22mr36397087ljn.421.1594421039353;
+ Fri, 10 Jul 2020 15:43:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200709221102.323356-1-cesarb@cesarb.eti.br> <20200710223441.756320-1-natechancellor@gmail.com>
+In-Reply-To: <20200710223441.756320-1-natechancellor@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 10 Jul 2020 15:43:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjb_WVt2Dxe6GUVcMzgms1od7Qt83dOShQ1-ux+tp1RsA@mail.gmail.com>
+Message-ID: <CAHk-=wjb_WVt2Dxe6GUVcMzgms1od7Qt83dOShQ1-ux+tp1RsA@mail.gmail.com>
+Subject: Re: [PATCH] mips: Remove compiler check in unroll macro
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cesar Eduardo Barros <cesarb@cesarb.eti.br>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 15:38:42 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jul 10, 2020 at 3:34 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang 8 was chosen as a minimum version for this check because there
+> were some improvements around __builtin_constant_p in that release. In
+> reality, MIPS was not even buildable until clang 9 so that check was not
+> technically necessary. Just remove all compiler checks and just assume
+> that we have a working compiler.
 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/Kconfig         |    6 ++++++
->  kernel/static_call.c |   28 ++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -103,6 +103,12 @@ config STATIC_KEYS_SELFTEST
->  	help
->  	  Boot time self-test of the branch patching code.
->  
-> +config STATIC_CALL_SELFTEST
-> +	bool "Static call selftest"
-> +	depends on HAVE_STATIC_CALL
-> +	help
-> +	  Boot time self-test of the call patching code.
-> +
->  config OPTPROBES
->  	def_bool y
->  	depends on KPROBES && HAVE_OPTPROBES
-> --- a/kernel/static_call.c
-> +++ b/kernel/static_call.c
-> @@ -364,3 +364,31 @@ static void __init static_call_init(void
->  #endif
->  }
->  early_initcall(static_call_init);
-> +
-> +#ifdef CONFIG_STATIC_CALL_SELFTEST
-> +
-> +static int func_a(int x)
-> +{
-> +	return x+1;
-> +}
-> +
-> +static int func_b(int x)
-> +{
-> +	return x+2;
-> +}
-> +
-> +DEFINE_STATIC_CALL(sc_selftest, func_a);
-> +
-> +static int __init test_static_call_init(void)
-> +{
-> +	WARN_ON(static_call(sc_selftest)(2) != 3);
-> +	static_call_update(sc_selftest, &func_b);
-> +	WARN_ON(static_call(sc_selftest)(2) != 4);
-> +	static_call_update(sc_selftest, &func_a);
-> +	WARN_ON(static_call(sc_selftest)(2) != 3);
-> +
-> +	return 0;
-> +}
+Thanks, that looks much nicer.
 
-I wonder if this would be better if we were testing the same static call each time?
+Applied.
 
-static int __init run_static_call(int val)
-{
-	return static_call(sc_selftest)(val);
-}
+I think we could probably remove the (unrelated) clang-8 check in the
+arm side too, but I guess I'll let arm/clang people worry about it.
 
-static struct {
-	int (*func)(int);
-	int val;
-	int expect;
-} static_call_data [] = {
-	{ NULL, 2, 3 }
-	( func_b, 2 , 4},
-	{ func_a, 2, 3}
-} __initdata;
-
-static int __init test_static_call_init(void)
-{
-	int i;
-
-	for (i = 0; i < ARRAY_SIZE(static_call_data); i++ ) {
-		if (static_call_data[i].func)
-			static_call_update(sc_selftest, static_call_data[i].func);
-		WARN_ON(run_static_call(static_call_data[i].val) != static_call_data[i].expect);
-	}
-
-	return 0;
-}
-
--- Steve
-
-
-> +early_initcall(test_static_call_init);
-> +
-> +#endif /* CONFIG_STATIC_CALL_SELFTEST */
-> 
-
+            Linus
