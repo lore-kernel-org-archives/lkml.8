@@ -2,181 +2,95 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D98C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B58206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A40206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WDvzP9jY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgGJOhC (ORCPT
+        id S1728220AbgGJOht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:37:02 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59992 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgGJOhC (ORCPT
+        Fri, 10 Jul 2020 10:37:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47192 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgGJOht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:37:02 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06AEaVwI076432;
-        Fri, 10 Jul 2020 23:36:31 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
- Fri, 10 Jul 2020 23:36:31 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06AEaLY2076229
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 10 Jul 2020 23:36:30 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-Subject: [PATCH v2] vt: Reject zero-sized screen buffer size.
-Date:   Fri, 10 Jul 2020 23:34:55 +0900
-Message-Id: <20200710143455.3438-1-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200710113658.GA1238355@kroah.com>
-References: <20200710113658.GA1238355@kroah.com>
+        Fri, 10 Jul 2020 10:37:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbdOo090306;
+        Fri, 10 Jul 2020 09:37:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594391859;
+        bh=s/Z8V9mGX3gOoutpqf8o4ND8qHAKcSCacNptqGjaKUI=;
+        h=From:To:CC:Subject:Date;
+        b=WDvzP9jYBZUZkzu325ftwGkluhcMqAEvy+t5AUGlcTXz8nf6IwSn1k1iWbVe3McDK
+         xhceuPIyQvRQo+L3ZAvZul8Zfhr24ZyIEUq+cDAeWEedokiaQAIgiEcs7u16oLp0Ux
+         t8ecclIzVMmPtPYSvwHdFQPjXDayhMWQDbYiUiFc=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AEbdYm118635
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 09:37:39 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 09:37:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 09:37:39 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbc0S083159;
+        Fri, 10 Jul 2020 09:37:39 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v2 0/2] DP83822 Fiber enablement
+Date:   Fri, 10 Jul 2020 09:37:31 -0500
+Message-ID: <20200710143733.30751-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting general protection fault in do_con_write() [1] caused
-by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
-caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 being passed
-to ioctl(FBIOPUT_VSCREENINFO) request on /dev/fb0 , for gotoxy(vc, 0, 0)
- from reset_terminal() from vc_init() from vc_allocate() on such console
-causes vc->vc_pos == 0x10000000e due to
-((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
+Hello
 
-I don't think that a console with 0 column and/or 0 row makes sense, and
-I think that we can reject such bogus arguments in fb_set_var() from
-ioctl(FBIOPUT_VSCREENINFO). Regardless, I think that it is safer to also
-check vc->vc_screenbuf_size when allocating vc->vc_screenbuf from
-vc_allocate() from con_install() from tty_init_dev() from tty_open().
+The DP83822 Ethernet PHY has the ability to connect via a Fiber port.  The
+derivative PHYs DP83825 and DP83826 do not have this ability. In fiber mode
+the DP83822 disables auto negotiation and has a fixed 100Mbps speed with
+support for full or half duplex modes.
 
-Theoretically, cols and rows can be any range as long as
-0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
-cols == 1048576 && rows == 2 is possible) because of
+A devicetree binding was added to set the signal polarity for the fiber
+connection.  This property is only applicable if the FX_EN strap is set in
+hardware other wise the signal loss detection is disabled on the PHY.
 
-  vc->vc_size_row = vc->vc_cols << 1;
-  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+If the FX_EN is not strapped the device can be configured to run in fiber mode
+via the device tree. All be it the PHY will not perfomr signal loss detection.
 
-in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
+Dan
 
-But since vc_do_resize() requires cols <= 32767 and rows <= 32767,
-applying 1 <= cols <= 32767 and 1 <= rows <= 32767 requirements to
-vc_allocate() will be practically fine. (cols != 0 && rows != 0 is
-implicitly checked via screenbuf_size != 0.)
+Dan Murphy (2):
+  dt-bindings: net: dp83822: Add TI dp83822 phy
+  net: phy: DP83822: Add ability to advertise Fiber connection
 
-This patch does not touch con_init(), for returning -EINVAL there
-does not help when we are not returning -ENOMEM.
+ .../devicetree/bindings/net/ti,dp83822.yaml   |  80 +++++++++
+ drivers/net/phy/dp83822.c                     | 161 ++++++++++++++++++
+ 2 files changed, 241 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
 
-[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
-
-Reported-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- drivers/tty/vt/vt.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 48a8199f7845..42d8c67a481f 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1092,10 +1092,19 @@ static const struct tty_port_operations vc_port_ops = {
- 	.destruct = vc_port_destruct,
- };
- 
-+/*
-+ * Change # of rows and columns (0 means unchanged/the size of fg_console)
-+ * [this is to be used together with some user program
-+ * like resize that changes the hardware videomode]
-+ */
-+#define VC_MAXCOL (32767)
-+#define VC_MAXROW (32767)
-+
- int vc_allocate(unsigned int currcons)	/* return 0 on success */
- {
- 	struct vt_notifier_param param;
- 	struct vc_data *vc;
-+	int err;
- 
- 	WARN_CONSOLE_UNLOCKED();
- 
-@@ -1125,6 +1134,11 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
- 	if (!*vc->vc_uni_pagedir_loc)
- 		con_set_default_unimap(vc);
- 
-+	err = -EINVAL;
-+	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
-+	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
-+		goto err_free;
-+	err = -ENOMEM;
- 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
- 	if (!vc->vc_screenbuf)
- 		goto err_free;
-@@ -1143,7 +1157,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
- 	visual_deinit(vc);
- 	kfree(vc);
- 	vc_cons[currcons].d = NULL;
--	return -ENOMEM;
-+	return err;
- }
- 
- static inline int resize_screen(struct vc_data *vc, int width, int height,
-@@ -1158,14 +1172,6 @@ static inline int resize_screen(struct vc_data *vc, int width, int height,
- 	return err;
- }
- 
--/*
-- * Change # of rows and columns (0 means unchanged/the size of fg_console)
-- * [this is to be used together with some user program
-- * like resize that changes the hardware videomode]
-- */
--#define VC_RESIZE_MAXCOL (32767)
--#define VC_RESIZE_MAXROW (32767)
--
- /**
-  *	vc_do_resize	-	resizing method for the tty
-  *	@tty: tty being resized
-@@ -1201,7 +1207,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	user = vc->vc_resize_user;
- 	vc->vc_resize_user = 0;
- 
--	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
-+	if (cols > VC_MAXCOL || lines > VC_MAXROW)
- 		return -EINVAL;
- 
- 	new_cols = (cols ? cols : vc->vc_cols);
-@@ -1212,7 +1218,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
- 		return 0;
- 
--	if (new_screen_size > KMALLOC_MAX_SIZE)
-+	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
- 		return -EINVAL;
- 	newscreen = kzalloc(new_screen_size, GFP_USER);
- 	if (!newscreen)
-@@ -3393,6 +3399,7 @@ static int __init con_init(void)
- 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 		tty_port_init(&vc->port);
- 		visual_init(vc, currcons, 1);
-+		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
- 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
- 		vc_init(vc, vc->vc_rows, vc->vc_cols,
- 			currcons || !vc->vc_sw->con_save_screen);
 -- 
-2.18.4
+2.27.0
 
