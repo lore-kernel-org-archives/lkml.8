@@ -2,116 +2,136 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B01C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C570820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594351578;
-	bh=7gmNfMi/rLNIENPbSZx/x5H/MTRJkr2euZEuEvVPgUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2kBCvH5Yq9gRCj4aC23nFuwXlSWDH7xr6YtX+t5sun+W1YLxYu/W4qPKlX2YSlIZk
-	 T+eioKAjA4v10I8dewJR+K4KW6bMJSkKKukCB+NwDEVXJsFx4CBH4Quedvn6v7wrPK
-	 zH9o23yePqNV9XPD8hlYQmfVkD2TRmsGvXULGdoo=
+	by mail.kernel.org (Postfix) with ESMTP id A224120674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f4ITW2HJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgGJD0R (ORCPT
+        id S1726774AbgGJD2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgGJD0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:26:17 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADC62065C;
-        Fri, 10 Jul 2020 03:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594351576;
-        bh=7gmNfMi/rLNIENPbSZx/x5H/MTRJkr2euZEuEvVPgUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b9CaNGGMcFwZccyYv5fh7EOp8Y1iQNgL/U5aRlkn/hkKwXR6hDo5OEPj2dUz8ncyL
-         O+yY0glchFxS3hl8voOv6GiuHIQt4DKSyDS5R3GBod4TnXRwZb954mpzTTR3E+Qf69
-         V/qcV/+xeB2c3x7DypQ5D+xqTPX5ktJDR3L5+ypE=
-Date:   Thu, 9 Jul 2020 20:26:16 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
-Message-ID: <20200710032616.GC545837@google.com>
-References: <20200709053027.351974-1-jaegeuk@kernel.org>
- <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
- <20200709190545.GA3001066@google.com>
- <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
+        Thu, 9 Jul 2020 23:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgGJD2P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:28:15 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57EAC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:28:15 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x9so1683759plr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZxvdxfBILaYnXJQNJZ+x2bh2Jwx9Lc0OH867FBGnbFU=;
+        b=f4ITW2HJaDpzmlUOq9gsCcnsNeXZ5kAxGhOJ1WsdU6gBY38JfAB7ZB1Gx59a4IBjah
+         zA4j4PHyy+SO/ZuI+Nel6mFtFa33tswvI6qeX9gTLKSF1tDJx6lWL8IaQ1ybtqVB4vP3
+         FUgbKXueG7i4hIHeoJnHrFbdDWr9b/AA24yBVyFCU0AqFufs0S130Vik8qr14gB6xOeQ
+         LjiLF+PpGsr+x6GRaIC6KqD5KYa+gIri9QIk9/gRFK7Z2/xLLTFiIIuvtW9Fdxr+Wh1C
+         /P1PVyt9zt2czjYTNr/6HJ6iLXe4UCCj39nJ/Lj8Euc5P7DX3DrQ9H6WECyHeJNOZi1o
+         r7Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZxvdxfBILaYnXJQNJZ+x2bh2Jwx9Lc0OH867FBGnbFU=;
+        b=p1vcoKp+0uM3tCRwa26jCYBfQ2c6+sYma8HgD5J0MXYuAoCF6LnjYriyPikU6BKbpg
+         6mVAnSTsBo059YhZ8IdkDXd+Ga9n31hcJjsTxqtDjqT5ULsW2hlmdchJRmONT42FFRGu
+         AQFv9lSQAcGwcqZcxX61k4PjT1Di9gkHJeyOOUBMtDjiwSopJCschVw1n9RrSF0lqxsc
+         r6HyZ7tXT5ZaJm62+BwhwsIxpYdjKGcX+wBVgW3sCsQglAkTW/aL0keYrLnGsGECdDm/
+         Q22fZ9sT4OXK6QbklGnDQ92hf6ks1VzPYV4t9qkQAf6+R/ersHoTpbDg/m930/rvkzEp
+         TMUQ==
+X-Gm-Message-State: AOAM530ipl3yPTUif2DKe7TZ8oyelCpNwCxvxHkvQxoE/45zXJSP4Wb6
+        W3xvD+GV/xbqHOlpGOliEmOMoQ==
+X-Google-Smtp-Source: ABdhPJwC9zCaMf7YyiHY62PJWxCjHJlpdSjtle2sA2rDlVKwWWZXjY3oGD4zZ5m1JyPbt/hCXLnJyw==
+X-Received: by 2002:a17:902:ee8b:: with SMTP id a11mr45310502pld.26.1594351695336;
+        Thu, 09 Jul 2020 20:28:15 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id a9sm4313852pfr.103.2020.07.09.20.28.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jul 2020 20:28:14 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 08:58:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: topology: Don't support AMU without cpufreq
+Message-ID: <20200710032812.s7te6irtjiftljdb@vireshk-i7>
+References: <a710fc4e4e0f1d2e561320130b99bcb5167d73b4.1594277563.git.viresh.kumar@linaro.org>
+ <20200709101734.GB5623@arm.com>
+ <20200709104048.emwuquj2qkyascb3@vireshk-i7>
+ <20200709124630.GB15342@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
+In-Reply-To: <20200709124630.GB15342@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10, Chao Yu wrote:
-> On 2020/7/10 3:05, Jaegeuk Kim wrote:
-> > On 07/09, Chao Yu wrote:
-> >> On 2020/7/9 13:30, Jaegeuk Kim wrote:
-> >>> It doesn't need to bypass flushing quota data in background.
-> >>
-> >> The condition is used to flush quota data in batch to avoid random
-> >> small-sized udpate, did you hit any problem here?
-> > 
-> > I suspect this causes fault injection test being stuck by waiting for inode
-> > writeback completion. With this patch, it has been running w/o any issue so far.
-> > I keep an eye on this.
-> 
-> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
-> issue deeper.
-> 
-> How about just keeping this patch in our private branch to let fault injection
-> test not be stuck? until we find the root cause in upstream codes.
+On 09-07-20, 13:46, Ionela Voinescu wrote:
+> I saw this case during FVP testing, although I acknowledge the 'virtual'
+> part of that platform [1]. But allowing this does enable AMU testing on
+> an AEM FVP.
 
-Well, I don't think this hides something. When the issue happens, I saw inodes
-being stuck due to writeback while only quota has some dirty data. At that time,
-there was no dirty data page from other inodes.
+In kernel, we only support things that are in mainline, else we don't
+care about them. That's the general rule. And yeah I understand that
+this is early support for a new hardware, and so it is better to add
+code for things we are sure about.
 
-More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
-waits for wb_wait_for_completion().
+> While I completely understand the reasoning behind avoiding to introduce
+> large changes for small corner-case gains,
 
+I think even that is fine, if there is a problem to be solved it needs
+to be solved, big or small doesn't really matter. Just that it needs
+to be there in mainline.
+
+> the arguments for this
+> support was:
+>  - (1) AMUs are a new feature and it will take some time until we see the
+>    real usecases. That's always the case with early support for a
+>    feature - we want to add it early to enable its use and testing, but
+>    it will take some time to establish the true usecases.
+
+Exactly, and so people normally prefer to keep things simple until the
+time the needs arises for the same. A patch can be added later, its no
+big deal. But it should be added when we need it.
+
+>  - (2) It literally needed 2 lines of code + the weak cpufreq function
+>    to support this.
+
+Yeah, small or big doesn't really matter.
+
+> Given that I can't guarantee what hardware will or won't do, and given
+> that AMUs are an optional feature, I controlled the only thing I could:
+> the software :). By not making assumptions about the hardware, I ensured
+> that the code does not break the interaction between cpufreq use or AMU
+> use for frequency invariance.
 > 
-> Thanks,
-> 
-> > 
-> > Thanks,
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>> ---
-> >>>  fs/f2fs/data.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>> index 44645f4f914b6..72e8b50e588c1 100644
-> >>> --- a/fs/f2fs/data.c
-> >>> +++ b/fs/f2fs/data.c
-> >>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
-> >>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> >>>  		goto skip_write;
-> >>>  
-> >>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-> >>> +	if (S_ISDIR(inode->i_mode) &&
-> >>>  			wbc->sync_mode == WB_SYNC_NONE &&
-> >>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
-> >>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
-> >>>
-> > .
-> > 
+> This will be nicer in the new code as the control will be at CPU level,
+> rather than policy level.
+
+I won't try to force you to remove this piece and will leave it for
+you to decide.
+
+But, I don't see a future system in mainline which uses AMU but
+doesn't have cpufreq for all its CPUs. And so I won't have kept code
+for that, even if it is just 2 lines. We can always add it back when
+required.
+
+Thanks for the review again Ionela.
+
+-- 
+viresh
