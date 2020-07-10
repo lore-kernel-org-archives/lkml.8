@@ -2,86 +2,167 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0DD2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0072068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="IhVmn6R4"
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="z2hrydle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgGJVMZ (ORCPT
+        id S1726460AbgGJVNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49696 "EHLO
+        Fri, 10 Jul 2020 17:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgGJVMY (ORCPT
+        with ESMTP id S1726251AbgGJVNj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:12:24 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71867C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:12:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so7461145wmj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:12:24 -0700 (PDT)
+        Fri, 10 Jul 2020 17:13:39 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80E9C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:13:38 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id j10so5561402qtq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:13:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iDU8fng2u/ptUYYN0OIalaQDIlRQ0CTBvjvqWdkkHMk=;
-        b=IhVmn6R4tsUfkKh5I/ciZ/rBQ8BsnoOVHYitAACUrBI96Gx5knzzbDJxd1g8amSNc1
-         h9NfSTz9p4iFMllLRKvvgIBucijejW6s+LUcmt7ZbsHKNINLfAQhhmh1f80wtJ/31ZIL
-         OBaw7HIjiBAK+SqgzXOECZj7SIbMC7eTvAcZx3O/DF3HMPS2sIPK+FXnGBYt+JQeMiuz
-         tacnne67e4StiLJQ0nh2JzxX3hC9xEIdAe+U4gnmooNA21ND0tIeBNFaercXcxxrbJ49
-         ByG6nTNPDRsZtM57GJLwiezngo4vT+tdYc5SATOmz5BLMvQiAm2VJwURTN4bRjysI6i9
-         5XTQ==
+        d=labbott.name; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Py7sbUg6SrhS/tqtX2Sq8t6PBGylJUmZvrnUWwDIZKQ=;
+        b=z2hrydleOwcHTXUTY3Zdw8+qKJdrCWfJB9WN6Em2f/LdnIx8oUqkbqEsO2E3Jn4n5c
+         WGWDW79gtum6V0gRq8VNRWPBOaUoJivLznSnq94+8ARITJSAp7ghn3Vb2Ft1hRqn1a7N
+         nAJjVeMEupzJ1xbWmmWyT7HWG08fr8APAxDFs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iDU8fng2u/ptUYYN0OIalaQDIlRQ0CTBvjvqWdkkHMk=;
-        b=P+xs9jMeh8cH9Zs87nvt9xp2zJVYHaBEUq6oGEN3YF3ARRaTo5EgbBpbKiK1n7vQX2
-         UlrdEBBFy+dRHRQ0O05r/mSMSs6Rby4klMNX9gS04ra2WwOHcYYaxqedr8hogTDSQjZy
-         AwuIINCm82/ShuQb3xyY+3HvcCqE4Dx43HI5w7JAQHjnW3nT3BT/72BokHQaZ+wayDIu
-         LmXssJZHpukxOV26mg0tS+N3zUnWXx1COa0B6COYKVONfCAZCm/uGbM20imghEf+HM9Y
-         bDhfQeOiNy1MNtdWRaYTHDvPRFJJMdMLU79V6uzkElk0QpL/vKrPztMTapycBnkmvNF9
-         CjdA==
-X-Gm-Message-State: AOAM530FBWY50nk6bdvE1NIyhDWFi5Bb7sUeU6OPSD75QSDd14PWhNGa
-        zX9qf1qRvSO/2/zsfi57mONqSn5qjGqgrg9+jrEUVZu48+w=
-X-Google-Smtp-Source: ABdhPJw0YGnnoDBY2TL0MP5/In74DMvl0tW5Rc0TZ5jcVzPWcrZ/lgxBz9FeD1GSxb4qE+8Xci1yeE8ZPWNpKsDhnKc=
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr6698254wml.36.1594415543141;
- Fri, 10 Jul 2020 14:12:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Fri, 10 Jul 2020 14:12:11 -0700
-Message-ID: <CALCETrVufhJTh3LweQqqH1OHc2rTsGkMcmTzCq6kKh1ETY0arw@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v3] CodingStyle: Inclusive Terminology
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Py7sbUg6SrhS/tqtX2Sq8t6PBGylJUmZvrnUWwDIZKQ=;
+        b=AT47exbDo+E8aoXYjRbS6rnIn2Pw+NfXh3K6zOg4ywFBKeuqWCxNLwpI22fFlVqgoy
+         URewVzE6gilimz2MSMQ0+xlcr+HQdFhmVBT7xFBi3IcIpSgvPjHEcUm6eZNGJXuUU8h3
+         GRsEljto870BjXlvig0SZ0rt4eCL2m7ysrQ4Aawh2wpRofbZ557UOXOcCMyjgcMsGEWp
+         J2dIoiC5cEdGVaW/r9VkrbsZvjj1rKX8wxRyFmQ+Ft7ghPspGH+jMiREmZzrAhmNJxhv
+         wlMXlvfMygvwLNfRCHOj/Nzfk5bsmt3hC8KtIfmYxhNsJ/rO8B++vGt3zMyWVW6B38ah
+         kF8A==
+X-Gm-Message-State: AOAM530y70vDd+tvSj9vXVmfz+GCAssxeMjkpPqSIlF2MO0/zwLXlZ+e
+        jRUe4hhxsu4dRF9vvamwGYqiKj8pSFTbRw==
+X-Google-Smtp-Source: ABdhPJyyT+pNMBHbp+rM/XUuxP36fWE0gYZosn0juRTh7hjb86WB84iL4vCYnrV250o29G7X0RUy4A==
+X-Received: by 2002:ac8:197b:: with SMTP id g56mr52023025qtk.105.1594415617748;
+        Fri, 10 Jul 2020 14:13:37 -0700 (PDT)
+Received: from [192.168.1.168] (pool-74-109-246-95.pitbpa.fios.verizon.net. [74.109.246.95])
+        by smtp.gmail.com with ESMTPSA id b53sm9292264qtc.65.2020.07.10.14.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 14:13:37 -0700 (PDT)
+Subject: Re: [PATCH v3] CodingStyle: Inclusive Terminology
+To:     Dan Williams <dan.j.williams@intel.com>, corbet@lwn.net
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Dave Airlie <airlied@redhat.com>,
+        SeongJae Park <sjpark@amazon.de>,
         Christian Brauner <christian.brauner@ubuntu.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mark Brown <broonie@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org,
+        tech-board-discuss@lists.linuxfoundation.org,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Laura Abbott <laura@labbott.name>
+Message-ID: <97c24e99-9f49-f094-acfb-705c2da12a76@labbott.name>
+Date:   Fri, 10 Jul 2020 17:13:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 11:30 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
+On 7/8/20 2:14 PM, Dan Williams wrote:
 > Linux maintains a coding-style and its own idiomatic set of terminology.
 > Update the style guidelines to recommend replacements for the terms
 > master/slave and blacklist/whitelist.
+> 
+> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Acked-by: Dave Airlie <airlied@redhat.com>
+> Acked-by: SeongJae Park <sjpark@amazon.de>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Acked-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Chris Mason <clm@fb.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Changes since v2 [1]:
+> - Pick up missed sign-offs and acks from Jon, Shuah, and Christian
+>    (sorry about missing those earlier).
+> 
+> - Reformat the replacement list to make it easier to read.
+> 
+> - Add 'controller' as a suggested replacement (Kees and Mark)
+> 
+> - Fix up the paired term for 'performer' to be 'director' (Kees)
+> 
+> - Collect some new acks, reviewed-by's, and sign-offs for v2.
+> 
+> - Fix up Chris's email
+> 
+> [1]: http://lore.kernel.org/r/159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com
+> 
+> 
+>   Documentation/process/coding-style.rst |   20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> index 2657a55c6f12..1bee6f8affdb 100644
+> --- a/Documentation/process/coding-style.rst
+> +++ b/Documentation/process/coding-style.rst
+> @@ -319,6 +319,26 @@ If you are afraid to mix up your local variable names, you have another
+>   problem, which is called the function-growth-hormone-imbalance syndrome.
+>   See chapter 6 (Functions).
+>   
+> +For symbol names and documentation, avoid introducing new usage of
+> +'master / slave' (or 'slave' independent of 'master') and 'blacklist /
+> +whitelist'.
+> +
+> +Recommended replacements for 'master / slave' are:
+> +    '{primary,main} / {secondary,replica,subordinate}'
+> +    '{initiator,requester} / {target,responder}'
+> +    '{controller,host} / {device,worker,proxy}'
+> +    'leader / follower'
+> +    'director / performer'
+> +
+> +Recommended replacements for 'blacklist/whitelist' are:
+> +    'denylist / allowlist'
+> +    'blocklist / passlist'
+> +
+> +Exceptions for introducing new usage is to maintain a userspace ABI/API,
+> +or when updating code for an existing (as of 2020) hardware or protocol
+> +specification that mandates those terms. For new specifications
+> +translate specification usage of the terminology to the kernel coding
+> +standard where possible.
+>   
+>   5) Typedefs
+>   -----------
+> 
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Acked-by: Laura Abbott <laura@labbott.name>
