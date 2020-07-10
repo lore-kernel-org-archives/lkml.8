@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E6C4345F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6E2C4345C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFD420767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4EE20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="czcZnmWK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lq+MGkGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgGJXDQ (ORCPT
+        id S1727105AbgGJXDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
+        Fri, 10 Jul 2020 19:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgGJXCv (ORCPT
+        with ESMTP id S1726996AbgGJXCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:02:51 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFA0C08E806
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:51 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ls15so3227819pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:51 -0700 (PDT)
+        Fri, 10 Jul 2020 19:02:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1ACC08E8A9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q17so3162613pfu.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Y5w7thCJ47LiXz+1HKLTnKORVAb6dWtKvGhWSiH+CyA=;
-        b=czcZnmWK3uUzXU3jJUftlmd87xKqg1vh36GGnjurujBnUEgeXlC1M6Wca16FDUQn+1
-         yZj82s/zD8peaRgTCevChpsENm2MclhtbVlqV1ldKm3+JpWTwS2UBaCObUuYsJAEdxXc
-         onrMx7dOMRZrpJlLHafrJXEdUPVfZeTEt2K9g=
+        bh=9Qsyzl86u0xp/Q3AsfuSrATvhmR+NH14naSidgeU2PQ=;
+        b=lq+MGkGphLSf5MfibDTvyQhzb4kbnr6BuiTTOfoYVXvs6hnNVAZTeS4GzeWIxArgee
+         Y/DxQGYcoFo+gk/NY0IejlYOm3y/3+wSh+PT17XFNxMNb8K+oQfFlM+FQezfd3als/7y
+         0D+mf6sp9cX0TEI2MsZR5iuiPVqiJ/+S4Grxc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Y5w7thCJ47LiXz+1HKLTnKORVAb6dWtKvGhWSiH+CyA=;
-        b=k+aIkjfp6C2KYXycVgOTaRhPqJ12/2z8SVpMT6y72rhMjbfr7ZgCyqGE69PyGq6axr
-         p3HnB/HW4l1uCsqVVIHxYToixKwEU78QuG/e0zYJkaHjIRuvw0/D6NA0W27HNszLfu/k
-         lU1bPWpsB9F7FJ1Dlg5T9CLNXKB3tRQvisP8ujV5GEDMK0/0iZbNjvCKMNKzxXyIQux8
-         GciNmoAV/R9N6S6dqnqP8TSbs2kd+D2D4xWEhv9/EK9PaP45R4L+PCNStNoogQh3rKGM
-         0gk8zwD42srwWytl/3GlR0Rk4AJaFq0u0kMoFaEDLHFaw9bEM22y+qpTE2ijktfO04PI
-         /JbQ==
-X-Gm-Message-State: AOAM5338+0u6gOupBZLKhDVPrX54s0yd3Rv+iI/HKSXFUNPXcKVA5LGf
-        jH5S0feegxanzWVs0pStoZ3Y/g==
-X-Google-Smtp-Source: ABdhPJzLC+zTXfa46e2kfj0dmtwYoXm+w+JRkwViDCVwoTfSIS5JSFTH2m0RSp/FhlQFUwXtRHO+CA==
-X-Received: by 2002:a17:902:9a4b:: with SMTP id x11mr54096770plv.150.1594422171008;
-        Fri, 10 Jul 2020 16:02:51 -0700 (PDT)
+        bh=9Qsyzl86u0xp/Q3AsfuSrATvhmR+NH14naSidgeU2PQ=;
+        b=D3BvMpjEfN5qxI7fiTJO217gggz5RNMfLffF01Tj1tvA6CEfL69B8aLX7RjXcUcJ25
+         6qWlgyCT/Sp7qZw+jdp9aRL6S4nWD7U6YYzyVttardND3ClSXRSBt0xKZWVFi9V164ye
+         XsLGwNeg55RgtbHd/52dOxxPOKsCV1E8mEGi+z1xuEBsa1dip5PQzGxXIHwzrH1nKwQA
+         MPcY/54CZpBlIbpz9MU4WpugOgVTreYGCFrbi62D44nhOW7BYCjYNJMpLpBLN18vMNaD
+         146ui935/BrfKSwe7BtCaRy/5UfWG/s5aaC2eS5Ca/nKCpEeTY7BW8TVeUSwp6ABxyxm
+         p3/w==
+X-Gm-Message-State: AOAM532b87uF6LkOwujHdSHSYPHCJ7ZoO1yvs89LCSI8/ZXLBJb+QXy/
+        +zufYUrtAO1NR4FBObcvNY5lXA==
+X-Google-Smtp-Source: ABdhPJysOX+rXIvX5/wYSLxirccnx0NQRBQKy0k+Iygaxavdr8HbCK/P41qasElxbHYh6Os2dg4vCg==
+X-Received: by 2002:a62:5a45:: with SMTP id o66mr5243667pfb.43.1594422173149;
+        Fri, 10 Jul 2020 16:02:53 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.50
+        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 16:02:50 -0700 (PDT)
+        Fri, 10 Jul 2020 16:02:52 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
         Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] arm64: dts: qcom: sc7180: Add "simple-bus" to our mdss node
-Date:   Fri, 10 Jul 2020 16:02:20 -0700
-Message-Id: <20200710160131.5.I27644b643854c6deaae89c750041a5b69985b9d0@changeid>
+Subject: [PATCH 7/9] arm64: dts: qcom: msm8916: Add "simple-bus" to our mdss node
+Date:   Fri, 10 Jul 2020 16:02:22 -0700
+Message-Id: <20200710160131.7.I1605593efa85e3c9260e64fe51aedd0524544d81@changeid>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
 References: <20200710230224.2265647-1-dianders@chromium.org>
@@ -91,22 +91,24 @@ populated and it will be a no-op.  When it gets a defer it will then
 depouplate them (even though it didn't populate them) and future calls
 will just populate them again.
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+NOTE: I have no way to test this patch, but I'm assuming it works OK?
+
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 2be81a2a1512..cae6c69fd85a 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2594,7 +2594,7 @@ camnoc_virt: interconnect@ac00000 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 67cae5f9e47e..491362fe02ac 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1023,7 +1023,7 @@ opp-19200000 {
  		};
  
- 		mdss: mdss@ae00000 {
--			compatible = "qcom,sc7180-mdss";
-+			compatible = "qcom,sc7180-mdss", "simple-bus";
- 			reg = <0 0x0ae00000 0 0x1000>;
- 			reg-names = "mdss";
- 
+ 		mdss: mdss@1a00000 {
+-			compatible = "qcom,mdss";
++			compatible = "qcom,mdss", "simple-bus";
+ 			reg = <0x1a00000 0x1000>,
+ 			      <0x1ac8000 0x3000>;
+ 			reg-names = "mdss_phys", "vbif_phys";
 -- 
 2.27.0.383.g050319c2ae-goog
 
