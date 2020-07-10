@@ -2,106 +2,140 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D54C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7158D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGBtdSgN"
+	by mail.kernel.org (Postfix) with ESMTP id CCCDB2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgGJSdP (ORCPT
+        id S1728163AbgGJSiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:33:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgGJSdO (ORCPT
+        Fri, 10 Jul 2020 14:38:19 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:37654 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgGJSiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:33:14 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE5FC08C5DC;
-        Fri, 10 Jul 2020 11:33:14 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id k18so5184793qtm.10;
-        Fri, 10 Jul 2020 11:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TK+rDfPiXDQ6Wu0ZZ4teUJXL+8D2schXrnWNQq/FvPI=;
-        b=hGBtdSgNTkNUEE7x3DH3AHt0Qa/l2KdiClP88SJGpoDyI/aeCg/X2CWVGTebhWfTm7
-         P4+1ZHGPKnxWDAswdTk6DLMza/UTmbHCD4xOBpOpw9C+7lzpehbnv3Y6hZwafLxXwl7z
-         aEHmsiHH0cL0GZwzZD3enn/Ds7OdN+HlguPhIvpHQ1qPQ2kcs+E2wCOWE7n4pumRL0gJ
-         oA/fDcPTyAeQZH4/J84K7W/VQf7VaYzyWY/IAzlejHCgm6CnslA34rw9zrXApn07dNSe
-         DhJuM+oBc3bB7s+X22Y+B56L4MgMKThGBAyS8eoo+7jvWLkKkrR/DK/a5ZejUmXnV/Rg
-         y1/g==
+        Fri, 10 Jul 2020 14:38:18 -0400
+Received: by mail-il1-f197.google.com with SMTP id x23so4293354ilk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 11:38:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TK+rDfPiXDQ6Wu0ZZ4teUJXL+8D2schXrnWNQq/FvPI=;
-        b=pqZ/a5+VXKsPZhvaev0diN8LH8N1BIaBgZDbdRmfYwFwRnYbhRt9mhqqBGMAJuJmNf
-         s3LpmhXBYpuoLum3XqTVwYiqFtiU0n7NPEaFp6AVyEmL9UIYRQVaPcFjZYCPdug6rwNK
-         u47Ju5fzC4z3YDGOj2CLaUnKTUsFHdsz5F+CRFnOjBhAOl2J549xb7VT5uAaU1jmzdnJ
-         657MuxOZ9eJbyRSs1EtGedxQBNIhs8V+jhrwsMw/cf63AGKvSeL4Mc1CW6kf3u1BGgzW
-         4UR/KQWr0f7vuJjt+1py3kDPm1AW1t8vCHo7zLWnEDdW2GuZGgINSitB1LMXiysNXT+G
-         9uHQ==
-X-Gm-Message-State: AOAM533/AxcT6ovPTWJO7BMiV54bbmQJskXmICHC2tnNOkY95VKMYCvx
-        y88/UXc3fphpoevQkyb9IfTyFshMrbY=
-X-Google-Smtp-Source: ABdhPJx86wfeZryei9Se+7s7/y7sXiGegaCswPNlv78kzGV7L3SRbYE0nhSOc+Bm+d+yx9QN3006Hg==
-X-Received: by 2002:aed:21e1:: with SMTP id m30mr44596251qtc.367.1594405993859;
-        Fri, 10 Jul 2020 11:33:13 -0700 (PDT)
-Received: from [192.168.1.110] ([99.85.27.166])
-        by smtp.gmail.com with ESMTPSA id k14sm9234818qtb.38.2020.07.10.11.33.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 11:33:13 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Git v2.28.0-rc0
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-References: <xmqqh7ugwen6.fsf@gitster.c.googlers.com>
- <01e87be3-3911-afc1-e738-69446275c8c0@gmail.com>
- <xmqqa707uzf6.fsf@gitster.c.googlers.com>
-From:   Derrick Stolee <stolee@gmail.com>
-Message-ID: <6989c299-0431-d751-33e4-a94bd78dcafc@gmail.com>
-Date:   Fri, 10 Jul 2020 14:33:13 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=WqdH68p6XjuG3WJATM6GmNbQRoflL6uFHqhjW36VFBI=;
+        b=tAdtIv5TP1txPsQo68JyncR4T2k60owAQ865cmIjXHDes95rdGlunT95n/8cJezJgu
+         xfJvUtdOsr3+EOZjQ8WPSPBVKz2E6x/OS5RNbgs7+I9qWJJ1Z1jTfWjGr4J55k8z9pIQ
+         upbETtHN9S3rSS3xMUa3bnUjz2mbEOWcKk2iHHm5SdtKB48XpCOGO0Dfiw/XqGtgrHhV
+         2ZdN/Mr1K3jdgX5D75fICZlmfxTCf8vXmxxzUzHGMwNYsvd1N2W/GjCpN/sUvjwbCbbT
+         V6XcoOxVZTyumkvqqC1EYY57hbGb5niG5kBPuEiXa72McBIHO8Mvsri/jVw0AzByrhAa
+         2Zjg==
+X-Gm-Message-State: AOAM532B2s6sm/cfWNmzwph1JQxhvzCf3olNGl643OWlSzzymGE8Ot5A
+        iTl+Wh26DhTcDG6TpyquyMbBHakWQyYtH+0xPwbaTWsMHxOH
+X-Google-Smtp-Source: ABdhPJz4xg63WBLjem4rE0VTxzgBQIchhCQvKSZPrPVyR0wiGwBEI9XprvdZYiAjtwzQFWMSU9WwVDmpnGdw0BiCx2YmmHrBQdE0
 MIME-Version: 1.0
-In-Reply-To: <xmqqa707uzf6.fsf@gitster.c.googlers.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:730a:: with SMTP id e10mr49422839ioh.108.1594406298127;
+ Fri, 10 Jul 2020 11:38:18 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 11:38:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000714f605aa1aa56c@google.com>
+Subject: general protection fault in raw_notifier
+From:   syzbot <syzbot+d2ff507f470081495266@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/2020 12:07 PM, Junio C Hamano wrote:
-> Derrick Stolee <stolee@gmail.com> writes:
-> 
->> On 7/9/2020 5:40 PM, Junio C Hamano wrote:
->>> An early preview release Git v2.28.0-rc0 is now available for
->>> testing at the usual places.  
->>
->> This might be part of your new process, or it might be an
->> oversight. It seems that GIT-VERSION-GEN did not update with
->> this RC, so the built version will still have a 2.27 start [1].
->>
->> This differs from previous rc's [2].
-> 
-> Sorry, I screwed up.  Thanks for a set of sharp eyes.
+Hello,
 
-No worries. The only reason I was confused was because I
-always hit a conflict on GIT-VERSION-GEN when rebasing
-microsoft/git onto a git-for-windows/git version (so we
-can add the ".vfs." into the version string). I had no
-idea if this would cause anyone trouble.
+syzbot found the following crash on:
 
-Thanks,
--Stolee
+HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=111cddcb100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
+dashboard link: https://syzkaller.appspot.com/bug?extid=d2ff507f470081495266
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d2ff507f470081495266@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xe0000aeee00000aa: 0000 [#1] PREEMPT SMP KASAN
+KASAN: probably user-memory-access in range [0x0000777700000550-0x0000777700000557]
+CPU: 0 PID: 8345 Comm: syz-executor.5 Not tainted 5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
+RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
+RIP: 0010:raw_notifier+0x7c/0x740 net/can/raw.c:273
+Code: 03 80 3c 02 00 0f 85 de 05 00 00 4d 8d b7 98 05 00 00 48 8b ab 70 fb ff ff 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 05 00 00 49 3b af 98 05 00 00 74 16 e8 0c 5d
+RSP: 0018:ffffc9001ab27c78 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff88802521c4c0 RCX: ffffc90014660000
+RDX: 00000eeee00000aa RSI: ffffffff871159dc RDI: ffff88802521c030
+RBP: ffff88805602a180 R08: 0000000000000000 R09: ffffffff8a7b30cb
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000005
+R13: ffffed1004a43898 R14: 0000777700000550 R15: 00007776ffffffb8
+FS:  00007fe94efbf700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d21000 CR3: 00000001e1c55000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ call_netdevice_notifier net/core/dev.c:1727 [inline]
+ call_netdevice_register_notifiers net/core/dev.c:1735 [inline]
+ call_netdevice_register_net_notifiers+0xdd/0x2b0 net/core/dev.c:1765
+ register_netdevice_notifier+0xf5/0x260 net/core/dev.c:1816
+ raw_init+0x296/0x340 net/can/raw.c:339
+ can_create+0x27c/0x4d0 net/can/af_can.c:168
+ __sock_create+0x3ca/0x740 net/socket.c:1428
+ sock_create net/socket.c:1479 [inline]
+ __sys_socket+0xef/0x200 net/socket.c:1521
+ __do_sys_socket net/socket.c:1530 [inline]
+ __se_sys_socket net/socket.c:1528 [inline]
+ __x64_sys_socket+0x6f/0xb0 net/socket.c:1528
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb29
+Code: Bad RIP value.
+RSP: 002b:00007fe94efbec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
+RAX: ffffffffffffffda RBX: 00000000005084a0 RCX: 000000000045cb29
+RDX: 0000000000000001 RSI: 0000000000000003 RDI: 000000000000001d
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000bb8 R14: 00000000004ce1ab R15: 00007fe94efbf6d4
+Modules linked in:
+---[ end trace 8db5579e5986dda6 ]---
+RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
+RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
+RIP: 0010:raw_notifier+0x7c/0x740 net/can/raw.c:273
+Code: 03 80 3c 02 00 0f 85 de 05 00 00 4d 8d b7 98 05 00 00 48 8b ab 70 fb ff ff 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 05 00 00 49 3b af 98 05 00 00 74 16 e8 0c 5d
+RSP: 0018:ffffc9001ab27c78 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff88802521c4c0 RCX: ffffc90014660000
+RDX: 00000eeee00000aa RSI: ffffffff871159dc RDI: ffff88802521c030
+RBP: ffff88805602a180 R08: 0000000000000000 R09: ffffffff8a7b30cb
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000005
+R13: ffffed1004a43898 R14: 0000777700000550 R15: 00007776ffffffb8
+FS:  00007fe94efbf700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe94ef7cdb8 CR3: 00000001e1c55000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
