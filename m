@@ -2,269 +2,165 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDC8C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F080C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBF220870
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFC5207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EcXG0ozq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGJOCX (ORCPT
+        id S1728317AbgGJOCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:02:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10795 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgGJOCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:02:20 -0400
-IronPort-SDR: GzAHSXQpWeVTu5KOnkyPzld+CXInNq85q2y/VemT6FGe8IVSWrAE7VyJUmvbMsvSTubWgK8LsQ
- LIjBcJjFMubw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146267652"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="146267652"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 07:02:08 -0700
-IronPort-SDR: GHH9ax0KhWzrg0MR0pQWTtFCjBFJr49qObvLj/i1znSakK6C9EfRnc99IZfHwI8oQFA+DVTf4C
- iPGLKauHK3Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="458287227"
-Received: from shbuild999.sh.intel.com ([10.239.146.107])
-  by orsmga005.jf.intel.com with ESMTP; 10 Jul 2020 07:02:05 -0700
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>, Qian Cai <cai@lca.pw>,
-        Dennis Zhou <dennis@kernel.org>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>
-Subject: [PATCH v6 4/4] mm: adjust vm_committed_as_batch according to vm overcommit policy
-Date:   Fri, 10 Jul 2020 22:01:48 +0800
-Message-Id: <1594389708-60781-5-git-send-email-feng.tang@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594389708-60781-1-git-send-email-feng.tang@intel.com>
-References: <1594389708-60781-1-git-send-email-feng.tang@intel.com>
+        Fri, 10 Jul 2020 10:02:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32643 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727097AbgGJOCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:02:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594389758;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=WSuI50560S+tdtnzkqVTC9NgLeereIHSl7vh7RJTZQc=;
+        b=EcXG0ozqgduzAhsO3TIGZpGIjlVa6j5RXT9VGFynTvfbR1zVNPHdi+hqzXh9Aq5yN0VZUs
+        4yMWgGu7k3douu/mKvV0jUIjq9x+1anNYZgYsTszu14AliVqGTAUcXypO0mPVdLEkOJfXg
+        6IAFK5nToq1vOOnAkK40MsJUoupSZlQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-s0aL1xq6P7WTDJIWI3cyew-1; Fri, 10 Jul 2020 10:02:34 -0400
+X-MC-Unique: s0aL1xq6P7WTDJIWI3cyew-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA1C919253C2;
+        Fri, 10 Jul 2020 14:02:32 +0000 (UTC)
+Received: from [10.36.114.41] (ovpn-114-41.ams2.redhat.com [10.36.114.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3977D5C1D3;
+        Fri, 10 Jul 2020 14:02:31 +0000 (UTC)
+Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200703133917.39045-1-david@redhat.com>
+ <20200707120849.GB12303@osiris>
+ <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+ <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
+ <13549874-c33b-c47a-adbd-d625c83cc87d@redhat.com>
+ <20200710135709.GB14845@osiris>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <a492b5c7-55b0-7580-ec3c-1ba34e69e51a@redhat.com>
+Date:   Fri, 10 Jul 2020 16:02:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200710135709.GB14845@osiris>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When checking a performance change for will-it-scale scalability mmap test
-[1], we found very high lock contention for spinlock of percpu counter
-'vm_committed_as':
+On 10.07.20 15:57, Heiko Carstens wrote:
+> On Wed, Jul 08, 2020 at 02:16:39PM +0200, David Hildenbrand wrote:
+>>>>> Hmm.. I really would like to see if there would be only a single page
+>>>>> table walker left in vmem.c, which handles both adding and removing
+>>>>> things.
+>>>>> Now we end up with two different page table walk implementations
+>>>>> within the same file. However not sure if it is worth the effort to
+>>>>> unify them though.
+>>>>
+>>>> I tried to unify vmemmap_populate() and vmem_add_range() already and
+>>>> didn't like the end result ... so, unifying these along with the removal
+>>>> part won't be any better - most probably. Open for suggestions :)
+>>>>
+>>>> (at least arm64 and x86-64 handle it similarly)
+>>>>
+>>>
+>>> I'll play with something like
+>>>
+>>> static void modify_pagetable(unsigned long start, unsigned long end,
+>>> 			     bool direct, bool add)
+>>>
+>>> and see how it turns out.
+>>>
+>>
+>> Did a quick hack. With a single walker (modify_pagetable) I get
+>>
+>>  arch/s390/mm/vmem.c | 628 ++++++++++++++++++++++++++++++--------------
+>>  1 file changed, 434 insertions(+), 194 deletions(-)
+>>
+>> Overall looks cleaner, only modify_pte_table() and modify_pmd_table()
+>> are a little more involved ...
+> 
+> Would you mind to resend the series with this integrated?
+> 
 
-    94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
-    48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
-    45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
+Yes, did some testing yesterday. Want to reshuffle/cleanup some things
+before posting.
 
-Actually this heavy lock contention is not always necessary.  The
-'vm_committed_as' needs to be very precise when the strict
-OVERCOMMIT_NEVER policy is set, which requires a rather small batch number
-for the percpu counter.
+Will be out of office next week, so expect a v2 some-when in 1-2 weeks.
 
-So keep 'batch' number unchanged for strict OVERCOMMIT_NEVER policy, and
-lift it to 64X for OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS policies.  Also
-add a sysctl handler to adjust it when the policy is reconfigured.
+Cheers!
 
-Benchmark with the same testcase in [1] shows 53% improvement on a 8C/16T
-desktop, and 2097%(20X) on a 4S/72C/144T server.  We tested with test
-platforms in 0day (server, desktop and laptop), and 80%+ platforms shows
-improvements with that test.  And whether it shows improvements depends on
-if the test mmap size is bigger than the batch number computed.
-
-And if the lift is 16X, 1/3 of the platforms will show improvements,
-though it should help the mmap/unmap usage generally, as Michal Hocko
-mentioned:
-
-: I believe that there are non-synthetic worklaods which would benefit from
-: a larger batch.  E.g.  large in memory databases which do large mmaps
-: during startups from multiple threads.
-
-[1] https://lore.kernel.org/lkml/20200305062138.GI5972@shao2-debian/
-
-Link: http://lkml.kernel.org/r/1589611660-89854-4-git-send-email-feng.tang@intel.com
-Link: http://lkml.kernel.org/r/1592725000-73486-4-git-send-email-feng.tang@intel.com
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Tim Chen <tim.c.chen@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
----
- include/linux/mm.h   |  2 ++
- include/linux/mman.h |  4 ++++
- kernel/sysctl.c      |  2 +-
- mm/mm_init.c         | 22 ++++++++++++++++------
- mm/util.c            | 41 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 64 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e529e90..678ea25 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -208,6 +208,8 @@ int overcommit_ratio_handler(struct ctl_table *, int, void *, size_t *,
- 		loff_t *);
- int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
- 		loff_t *);
-+int overcommit_policy_handler(struct ctl_table *, int, void *, size_t *,
-+		loff_t *);
- 
- #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
- 
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index 6733f2f..629cefc 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -57,8 +57,12 @@ extern struct percpu_counter vm_committed_as;
- 
- #ifdef CONFIG_SMP
- extern s32 vm_committed_as_batch;
-+extern void mm_compute_batch(int overcommit_policy);
- #else
- #define vm_committed_as_batch 0
-+static inline void mm_compute_batch(int overcommit_policy)
-+{
-+}
- #endif
- 
- unsigned long vm_memory_committed(void);
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8dca889..51ad1aa 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2664,7 +2664,7 @@ static struct ctl_table vm_table[] = {
- 		.data		= &sysctl_overcommit_memory,
- 		.maxlen		= sizeof(sysctl_overcommit_memory),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
-+		.proc_handler	= overcommit_policy_handler,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= &two,
- 	},
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 435e5f7..b06a30f 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -13,6 +13,7 @@
- #include <linux/memory.h>
- #include <linux/notifier.h>
- #include <linux/sched.h>
-+#include <linux/mman.h>
- #include "internal.h"
- 
- #ifdef CONFIG_DEBUG_MEMORY_INIT
-@@ -144,14 +145,23 @@ EXPORT_SYMBOL_GPL(mm_kobj);
- #ifdef CONFIG_SMP
- s32 vm_committed_as_batch = 32;
- 
--static void __meminit mm_compute_batch(void)
-+void mm_compute_batch(int overcommit_policy)
- {
- 	u64 memsized_batch;
- 	s32 nr = num_present_cpus();
- 	s32 batch = max_t(s32, nr*2, 32);
--
--	/* batch size set to 0.4% of (total memory/#cpus), or max int32 */
--	memsized_batch = min_t(u64, (totalram_pages()/nr)/256, 0x7fffffff);
-+	unsigned long ram_pages = totalram_pages();
-+
-+	/*
-+	 * For policy OVERCOMMIT_NEVER, set batch size to 0.4% of
-+	 * (total memory/#cpus), and lift it to 25% for other policies
-+	 * to easy the possible lock contention for percpu_counter
-+	 * vm_committed_as, while the max limit is INT_MAX
-+	 */
-+	if (overcommit_policy == OVERCOMMIT_NEVER)
-+		memsized_batch = min_t(u64, ram_pages/nr/256, INT_MAX);
-+	else
-+		memsized_batch = min_t(u64, ram_pages/nr/4, INT_MAX);
- 
- 	vm_committed_as_batch = max_t(s32, memsized_batch, batch);
- }
-@@ -162,7 +172,7 @@ static int __meminit mm_compute_batch_notifier(struct notifier_block *self,
- 	switch (action) {
- 	case MEM_ONLINE:
- 	case MEM_OFFLINE:
--		mm_compute_batch();
-+		mm_compute_batch(sysctl_overcommit_memory);
- 	default:
- 		break;
- 	}
-@@ -176,7 +186,7 @@ static struct notifier_block compute_batch_nb __meminitdata = {
- 
- static int __init mm_compute_batch_init(void)
- {
--	mm_compute_batch();
-+	mm_compute_batch(sysctl_overcommit_memory);
- 	register_hotmemory_notifier(&compute_batch_nb);
- 
- 	return 0;
-diff --git a/mm/util.c b/mm/util.c
-index d076218..79c965d 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -746,6 +746,47 @@ int overcommit_ratio_handler(struct ctl_table *table, int write, void *buffer,
- 	return ret;
- }
- 
-+static void sync_overcommit_as(struct work_struct *dummy)
-+{
-+	percpu_counter_sync(&vm_committed_as);
-+}
-+
-+int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
-+		size_t *lenp, loff_t *ppos)
-+{
-+	struct ctl_table t;
-+	int new_policy;
-+	int ret;
-+
-+	/*
-+	 * The deviation of sync_overcommit_as could be big with loose policy
-+	 * like OVERCOMMIT_ALWAYS/OVERCOMMIT_GUESS. When changing policy to
-+	 * strict OVERCOMMIT_NEVER, we need to reduce the deviation to comply
-+	 * with the strict "NEVER", and to avoid possible race condtion (even
-+	 * though user usually won't too frequently do the switching to policy
-+	 * OVERCOMMIT_NEVER), the switch is done in the following order:
-+	 *	1. changing the batch
-+	 *	2. sync percpu count on each CPU
-+	 *	3. switch the policy
-+	 */
-+	if (write) {
-+		t = *table;
-+		t.data = &new_policy;
-+		ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
-+		if (ret)
-+			return ret;
-+
-+		mm_compute_batch(new_policy);
-+		if (new_policy == OVERCOMMIT_NEVER)
-+			schedule_on_each_cpu(sync_overcommit_as);
-+		sysctl_overcommit_memory = new_policy;
-+	} else {
-+		ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	}
-+
-+	return ret;
-+}
-+
- int overcommit_kbytes_handler(struct ctl_table *table, int write, void *buffer,
- 		size_t *lenp, loff_t *ppos)
- {
 -- 
-2.7.4
+Thanks,
+
+David / dhildenb
 
