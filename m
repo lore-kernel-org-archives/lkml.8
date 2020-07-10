@@ -2,104 +2,129 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2F2C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88304C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543C52078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="doF2Dk/z"
+	by mail.kernel.org (Postfix) with ESMTP id 67FC620748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594381021;
+	bh=HbvkzCXrQUvGGQRjHnWmV8if5AoIJw8vGs4laXuFHZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mmAFbNw0V8c+UavOLlAtxryrnfJD6weZcIhGv0f0hSwdWK/87kIw5Gap+cYWSZXal
+	 MXykT0poHBfUDP31orULmfqvnD4QIUiqXBzaR41iJdeLDz5uggx4kGh549itZcfzec
+	 rX7dC7BttXkqPqsgZ7CDYAthV5XIIXaklgWcSLKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGJLe5 (ORCPT
+        id S1728186AbgGJLhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:34:57 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40170 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726725AbgGJLe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594380894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=EzC4+3Uio0btE/eT99wb28DjwFQm8PNAr1hwJ0RyCaw=;
-        b=doF2Dk/zaBKv80zygCsH7ZBrni8Xt5LeQkfdf/33PlU7BuSxFOHjJyoUFHZM2ohfWMjwkK
-        PwzmXZz/KTLFjBGktD9PCd+nKeWfnoVX75kayXxjSeBn28ThyxNuzZxYD1BmlJOB8955G8
-        Gfzwb3GF1sT/pH4YZrqbsjPTyose+Ks=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-RMmTb912MzertXFcu_Sr4A-1; Fri, 10 Jul 2020 07:34:53 -0400
-X-MC-Unique: RMmTb912MzertXFcu_Sr4A-1
-Received: by mail-wr1-f72.google.com with SMTP id v3so5797077wrq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 04:34:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=EzC4+3Uio0btE/eT99wb28DjwFQm8PNAr1hwJ0RyCaw=;
-        b=ERsUiYS3rpkfFxR/PsO5aaIME5IsDdKFTxnumCDmtZbEdgWcetybaGy5CHeKV9hBDE
-         M3VyGhNV6HMcqAgIYnV6/AwsbEihXHLIFIOaAZaRdKOr0hyNseWVAY+WvkQiYaZxo6SO
-         Mau1bDTztENJ0GszCGEGySFYlwWw9Uz//AWx9bx7EO/Wo5oVjDH3XhS4RIDEIEUC1ACY
-         5JxFrf76eWHfic1kPMfIyRBK7cVdGB6uN8WMgkAwl5GUKwdVZOuE4ro1zpOr+L6XpzZw
-         HqqajYEyhHP4jASRK/kboK5+ewsbwUmS4rylrAtwvGErMXT/ecTsIG/K3OfqBgctwABA
-         Eihg==
-X-Gm-Message-State: AOAM532tLahPa/XDCFSK2ANxs9QbLNvP1zizERQdZHL69G8vt7I+JuhJ
-        hD3f+1gXJGBczEGKcrD0K/wrCG/m3g/rpbDmp+RAt/ojSmVwtI+ITVgPQacB8X0j8WcpKYvLNDt
-        crh85M8UKMJ9qOAz6LJ24hZVX
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr4470532wmh.166.1594380891721;
-        Fri, 10 Jul 2020 04:34:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx90BpB4I7EqEP/O5J2f309s9HJt8HSPK6EszINTBtjxI/xy0htX3AuOl6odIkAErop9ZzsVA==
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr4470520wmh.166.1594380891509;
-        Fri, 10 Jul 2020 04:34:51 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id c194sm8970921wme.8.2020.07.10.04.34.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 04:34:50 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 07:34:49 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] vop: sparse warning fixup
-Message-ID: <20200710113447.427927-1-mst@redhat.com>
+        Fri, 10 Jul 2020 07:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgGJLgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:36:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E9EF2077D;
+        Fri, 10 Jul 2020 11:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594381013;
+        bh=HbvkzCXrQUvGGQRjHnWmV8if5AoIJw8vGs4laXuFHZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bEgWNTxVkgi8WvHpvkba9nE4pNtwzhI+cTB5YCep38j+eU0aWu/HbG5MUqY/81wzU
+         47GWmopSyrkM/dm7bcpztJZRcJFINRc3DbaQWS6sInHjvcw8BNjNXq/xZa96PPOe/R
+         lZ1PoQAoNZW3oTZ/TIVQceCYk81CIynY8hR0M6dQ=
+Date:   Fri, 10 Jul 2020 13:36:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Jiri Slaby <jslaby@suse.com>, Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] vt: Reject zero-sized screen buffer size.
+Message-ID: <20200710113658.GA1238355@kroah.com>
+References: <20200710055329.3759-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200710105500.GA1232395@kroah.com>
+ <7adf8aee-9bdd-8184-6cbe-291357677edd@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+In-Reply-To: <7adf8aee-9bdd-8184-6cbe-291357677edd@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vop_dc_to_vdev dropped an __iomem tag on its argument,
-causing a sparse warning. Fix it up.
+On Fri, Jul 10, 2020 at 08:31:42PM +0900, Tetsuo Handa wrote:
+> On 2020/07/10 19:55, Greg Kroah-Hartman wrote:
+> >> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> >> index 48a8199f7845..8497e9206607 100644
+> >> --- a/drivers/tty/vt/vt.c
+> >> +++ b/drivers/tty/vt/vt.c
+> >> @@ -1126,7 +1126,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+> >>  		con_set_default_unimap(vc);
+> >>  
+> >>  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+> >> -	if (!vc->vc_screenbuf)
+> >> +	if (ZERO_OR_NULL_PTR(vc->vc_screenbuf))
+> > 
+> > No, let's check this before we do kzalloc() please, that's just an odd
+> > way of doing an allocation we shouldn't have had to do.
+> 
+> OK. I can change to
+> 
+> +	if (vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
+> +		goto err_free;
+>  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+>  	if (!vc->vc_screenbuf)
+>  		goto err_free;
+> 
+> like vc_do_resize() does. But I'm currently waiting for syzbot to test this patch, for
+> I don't have an environment for reproducing this problem.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/misc/mic/vop/vop_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That looks much more sane, thanks.
 
-diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
-index 85942f6717c5..25ed7d731701 100644
---- a/drivers/misc/mic/vop/vop_main.c
-+++ b/drivers/misc/mic/vop/vop_main.c
-@@ -546,7 +546,7 @@ static int vop_match_desc(struct device *dev, void *data)
- 	return vdev->desc == (void __iomem *)data;
- }
- 
--static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl *dc)
-+static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl __iomem *dc)
- {
- 	return (struct _vop_vdev *)(unsigned long)readq(&dc->vdev);
- }
--- 
-MST
+
+> 
+> > 
+> >>  		goto err_free;
+> >>  
+> >>  	/* If no drivers have overridden us and the user didn't pass a
+> >> @@ -1212,7 +1212,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+> >>  	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+> >>  		return 0;
+> >>  
+> >> -	if (new_screen_size > KMALLOC_MAX_SIZE)
+> >> +	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+> >>  		return -EINVAL;
+> >>  	newscreen = kzalloc(new_screen_size, GFP_USER);
+> >>  	if (!newscreen)
+> >> @@ -3393,6 +3393,7 @@ static int __init con_init(void)
+> >>  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+> >>  		tty_port_init(&vc->port);
+> >>  		visual_init(vc, currcons, 1);
+> >> +		/* Assuming vc->vc_screenbuf_size is sane here, for this is __init code. */
+> > 
+> > Shouldn't we also check this here, or before we get here, too?
+> 
+> This is an __init function. Can we somehow pass column=0 or row=0 ?
+
+You could, it's much less likely, but why not catch this if you can?
+
+> > Just checking the values and rejecting that as a valid screen size
+> > should be sufficient.
+> 
+> Hmm, where are we checking that column * row does not exceed UINT_MAX, given that
+> "struct vc_data"->vc_{cols,rows,screenbuf_size} are "unsigned int" and we do
+> 
+>   vc->vc_size_row = vc->vc_cols << 1;
+>   vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+> 
+> in visual_init() ? Don't we need to reject earlier?
+
+Probably, it's some twisty code :(
 
