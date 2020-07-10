@@ -2,149 +2,136 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED46C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBA320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B929B20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594361300;
+	bh=0oFpgD9D9qzya4+Km3ZH6Km/e2tBwdXbf0TuXwfXHxQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Bcp1tzryDjngHGLrWOqRJeRlwyvkh5n9dDe1+I/koWMuDuKWtKHDYqsnebvrHJYIL
+	 cbFUkumZos2h+3U58aNKn82ujzfOP6s35H+liVAFJm9S2ad3tAaCe+7l7qBOIiBNrZ
+	 fcn7L5cOYFuEV+QFDHTtgzf7FqFGBhURLGL05rIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgGJGHv (ORCPT
+        id S1727097AbgGJGIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:07:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42238 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbgGJGHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:07:47 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F1D5F97A1F5DAAF31D88;
-        Fri, 10 Jul 2020 14:07:41 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.75) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Jul 2020
- 14:07:34 +0800
-Subject: Re: [PATCH v1 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-To:     Catalin Marinas <catalin.marinas@arm.com>
-CC:     <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200709091054.1698-1-yezhenyu2@huawei.com>
- <20200709091054.1698-3-yezhenyu2@huawei.com> <20200709173616.GC6579@gaia>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <8ada2e1b-19d8-58cc-e9cb-e52ddeafd876@huawei.com>
-Date:   Fri, 10 Jul 2020 14:07:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 10 Jul 2020 02:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJGIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:08:16 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81421C08C5CE;
+        Thu,  9 Jul 2020 23:08:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so5086973ljv.5;
+        Thu, 09 Jul 2020 23:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
+        b=Kz6CctuCGvLTKE/zff1VDJnM5l9JFbToUmtSnV+Ak0hGdyS8MkDYxYaf50tYG6xVwl
+         EhkoKRTzCKFutu5+uMot2oIkrXduH11LSNmTVZYoAZykJjqsMfKguC11TRqXwaoJqmIN
+         VXUQgtsd0uNhcDtpKRPXKPRpoE6mLoXwo9o29f4sJmJMxiyDBaGOQTCWjFTQKE7i0LL5
+         P+rCf8rg3fnKgRPuqTs+QdhbUEBARbhEFbwwn0RGyRbh6rM7AMo8kP6sI8UADZStU2d7
+         BgZSOs9pGkV+wabPGNT3aqtt6bpLDIZKWy3upYwC5A7Vz+PbZBXCL84Jb7NrhkPU841h
+         ZIPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
+        b=KKoar2uwI4QtQIUwxNCEMS/TnhnimOpaZM7xHoSs/duO3qyR7r48M6RtrKKf8X2ihs
+         KR2HhwLPw+/h4ZCniOWl91r5AdQbYL3fnZUH5wdMTZoiCTRNe7fp4HtT2HlbQlM9EpD7
+         THqISFE2nhKB6SgZogBFtPoegf75bCJlmhvmH5usKkE8k69M1toYXb7HtOtuGFL6SYzh
+         8q3lkJ1BMVBb2Z3ybFKzJMLKHw7AEM3kzPUyrQEAhbMYBUXRszgBFkq1nm5Nj+y1A0BJ
+         9TmeDGkZSkocp9LQGNmCgkcw342aoFbypNEUJvmzAD3wxgXv8+FWtirsN0RF0wK7nTcN
+         nCNw==
+X-Gm-Message-State: AOAM530YE6ChIdfH9XdkmhQ9vxYGaSRj+0HnHei+MpC2OZH6SRxymiKL
+        yW4QMw54FKZlrIAvnvSCobg=
+X-Google-Smtp-Source: ABdhPJxGGMmuPkrDz1atQLdBX2QRyj5KbJAuPHduR2muUCVw+/VATbS8wijHIodTpTMmPpG0A/ezCg==
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr29940355ljc.124.1594361294942;
+        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id s8sm1545691ljh.74.2020.07.09.23.08.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Ramuthevar\,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org, robh@kernel.org,
+        p.zabel@pengutronix.de
+Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+In-Reply-To: <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com> <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Date:   Fri, 10 Jul 2020 09:08:09 +0300
+Message-ID: <87blknrjg6.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200709173616.GC6579@gaia>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/7/10 1:36, Catalin Marinas wrote:
-> On Thu, Jul 09, 2020 at 05:10:54PM +0800, Zhenyu Ye wrote:
->>  #define __tlbi_level(op, addr, level) do {				\
->>  	u64 arg = addr;							\
->>  									\
->>  	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&		\
->> +	    !cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&		\
->>  	    level) {							\
->>  		u64 ttl = level & 3;					\
->> -									\
->> -		switch (PAGE_SIZE) {					\
->> -		case SZ_4K:						\
->> -			ttl |= TLBI_TTL_TG_4K << 2;			\
->> -			break;						\
->> -		case SZ_16K:						\
->> -			ttl |= TLBI_TTL_TG_16K << 2;			\
->> -			break;						\
->> -		case SZ_64K:						\
->> -			ttl |= TLBI_TTL_TG_64K << 2;			\
->> -			break;						\
->> -		}							\
->> -									\
->> +		ttl |= get_trans_granule() << 2;			\
->>  		arg &= ~TLBI_TTL_MASK;					\
->>  		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
->>  	}								\
-> 
-> I think checking for !ARM64_HAS_TLBI_RANGE here is incorrect. I can see
-> why you attempted this since the range and classic ops have a different
-> position for the level but now you are not passing the TTL at all for
-> the classic TLBI. It's also inconsistent to have the range ops get the
-> level in the addr argument while the classic ops added in the
-> __tlbi_level macro.
-> 
 
-You are right, this is really a serious problem.  But this can be avoided
-after removing the check for ARM64_HAS_TLBI_RANGE and dropping the
-__tlbi_last_level.
-Just call __tlbi() and __tlbi_user() when doing range ops.
+Hi,
 
-> I'd rather have two sets of macros, __tlbi_level and __tlbi_range_level,
-> called depending on whether you use classic or range ops.
-> 
+"Ramuthevar,Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> writes:
 
-Then we have to add __tlbi_user_range_level, too. And if we move the num
-and scale out of __TLBI_VADDR_RANGE, the __TLBI_VADDR_RANGE macro will make
-little sense (addr and asid also can be moved out).
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
+.com>
+>
+> Add support for USB PHY on Intel LGM SoC.
+>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
+nux.intel.com>
+> ---
+>  drivers/usb/phy/Kconfig       |  11 ++
+>  drivers/usb/phy/Makefile      |   1 +
+>  drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++=
+++++++
 
-__TLBI_VADDR macro is defined to create a properly formatted VA operand for
-the TLBI, then how about add the level to __TLBI_VADDR, just like:
+new phy drivers should use drivers/phy instead.
 
-	#define __TLBI_VADDR(addr, asid, level)				\
-	({								\
-		unsigned long __ta = (addr) >> 12;			\
-		__ta &= GENMASK_ULL(43, 0);				\
-		__ta |= (unsigned long)(asid) << 48;			\
-		if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL)) {	\
-			u64 ttl = get_trans_granule() << 2 + level & 3;	\
-			__ta |= ttl << 44;				\
-		}							\
-		__ta;							\
-	})
+=2D-=20
+balbi
 
-Then we should make sure __TLBI_VADDR is used for all TLBI operands. But
-the related code has changed a lot in this merge window, so I perfer to
-do this in the future, after all below be merged:
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git kvm-arm64/el2-obj-v4.1
-git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git kvm-arm64/pre-nv-5.9
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
+-----BEGIN PGP SIGNATURE-----
 
-Currently, keep the range ops get the level in the addr argument, the classic
-ops added the level in the __tlbi_level macro.
-
->> @@ -108,6 +119,49 @@
->>  		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
->>  } while (0)
->>  
->> +#define __tlbi_last_level(op1, op2, arg, last_level, tlb_level) do {	\
->> +	if (last_level)	{						\
->> +		__tlbi_level(op1, arg, tlb_level);			\
->> +		__tlbi_user_level(op1, arg, tlb_level);			\
->> +	} else {							\
->> +		__tlbi_level(op2, arg, tlb_level);			\
->> +		__tlbi_user_level(op2, arg, tlb_level);			\
->> +	}								\
->> +} while (0)
-> 
-> And you could drop this altogether. I know it's slightly more lines of
-> code but keeping it expanded in __flush_tlb_range() would be clearer.
-
-Thanks,
-Zhenyu
-
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8IBckACgkQzL64meEa
+mQYZ6BAAu5MqDG/JYVcpiey75QpGHGvsHZBZTk7WOeelxqLVV3w2Nt2hv3678T0Q
+MZE47NTCyKryH6pNph9WdUxTdPLWqIAnUNXEZYbyGJypSesojI+MDvOH/lNFLzn0
+aJsg8mngVJoQeOe7vY694PvQYgpf2NlTiw8pqPRUkhaDRKTSyEZ03e0RQnsJx+I4
+Rf3cKvvfhRY5o1PFa1XIZt8hBJ/6HbYBfXObxwdr3tNV8hjSArKzh8AnT017VGHq
+THQPa1pxGRsyTthgUAT03sqiDIbeEmNdvjhST5OcfrH00kLztJflLO35c8TWiZGQ
+P3vcM/jFBKYMSt6vkRWiejslL/wxFi+hDaNM3jYSGRXeblqfhP9wuTCXlymVJ3Oq
+9sga4yDpXvDF4w89IVyOMyheXEM+L3TRcs+3EzLXnbOWzeJroyIPPvcDPzhg0X9J
+VQp+ZirKFKJDBj2420O+a17l76m0q5Gru1qEDfmBiktYRw527RQkH+zU6Viv3PR5
+H/cXhIEjQt2mofRiVfMyvOC37r2Fv0ucfHCAWRr1LHKsRLt6PyWztOqWZ6vuPlma
+Nl5qRGSo7OHDYmETGiolEYqE09zv5zzCJT3D3eVf5nMyn2VoDSyEWH705Xq3XOSj
+IyWcMERI9OthanyVYWeRG0lChTC1XAUHUltZ3TCvewjwAlK6b0A=
+=i/Uk
+-----END PGP SIGNATURE-----
+--=-=-=--
