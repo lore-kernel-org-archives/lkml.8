@@ -2,127 +2,135 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E697DC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06DD2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8512068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tXbYRLBm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UXIO9akG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGJVNu (ORCPT
+        id S1726514AbgGJVOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:13:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:48037 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbgGJVNt (ORCPT
+        Fri, 10 Jul 2020 17:14:49 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59024 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgGJVOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:13:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594415629; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Y1rBBSjHn58KkYWcfa8FN19qXT4mpd6FmEsIOBn/G4I=; b=tXbYRLBmFq1laidGr1plL76Q7Nnynpm50FblsOkaT90v1LVgodi2C8t5Klk5SLqOe8lPkIK/
- yJQvceH9Stj+TzQAfthuNa2Ykz7X3ciUIC9oA1SLTd2uZT39ufrMy0ahEIXKbq1j06g1b8sk
- mcpH6WmeEBx+X8q94m2VET2YQjI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5f08d9e57c8ca473a82dccfc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 21:13:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2269EC433CB; Fri, 10 Jul 2020 21:13:09 +0000 (UTC)
-Received: from [192.168.1.9] (unknown [117.210.185.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66CF0C433C8;
-        Fri, 10 Jul 2020 21:13:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66CF0C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [PATCH v4 3/7] drm: msm: a6xx: set gpu freq through hfi
-To:     Jonathan Marek <jonathan@marek.ca>, freedreno@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, saravanak@google.com,
-        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dri-devel@freedesktop.org, viresh.kumar@linaro.org,
-        sibis@codeaurora.org
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
- <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
- <322c921f-7c8f-7052-b191-44f0dade742e@marek.ca>
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-Message-ID: <40f6df1d-f524-c612-9215-591fd7f16e3b@codeaurora.org>
-Date:   Sat, 11 Jul 2020 02:43:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 17:14:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06ALDx9N112187;
+        Fri, 10 Jul 2020 16:13:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594415639;
+        bh=q1pnMYCq9dsed/gdYAEjNLBVNb25WLckeWzTyxQdg+0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UXIO9akGzFSjh1182Sj19Pe95TBE6s/S5AuaU0zNJRiHeWMniq5+5r42XicMQY6V9
+         a3rIrMIqiHI+FerNiWpjnaqhpZllqht4kFLNB4ToNBg7Lwe03h074vBz9FLWLy3ZV1
+         3+xjQzQkOFuWZHCToSEacoXZFa8pHipKwPNwxErg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06ALDxF0127631;
+        Fri, 10 Jul 2020 16:13:59 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 16:13:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 16:13:58 -0500
+Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06ALDwLm026850;
+        Fri, 10 Jul 2020 16:13:58 -0500
+Subject: Re: [PATCHv3 5/6] irqchip/irq-pruss-intc: Add support for ICSSG INTC
+ on K3 SoCs
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
+        "Mills, William" <wmills@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <d1b232c6f33a629117a2ecbd440622d0@kernel.org>
+ <CAMxfBF5p3kh-E-vUxo60a+QTuqQXbsSVYSTc_qYvN8ZckLPKzA@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <8de2316f-733e-25d3-7512-f7725ac4e9eb@ti.com>
+Date:   Fri, 10 Jul 2020 16:13:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <322c921f-7c8f-7052-b191-44f0dade742e@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMxfBF5p3kh-E-vUxo60a+QTuqQXbsSVYSTc_qYvN8ZckLPKzA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
-On 7/10/2020 1:34 AM, Jonathan Marek wrote:
-> On 7/9/20 4:00 PM, Akhil P Oommen wrote:
->> Newer targets support changing gpu frequency through HFI. So
->> use that wherever supported instead of the legacy method.
+On 7/3/20 12:05 PM, Grzegorz Jaszczyk wrote:
+> On Thu, 2 Jul 2020 at 19:59, Marc Zyngier <maz@kernel.org> wrote:
 >>
+>> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+>>> From: Suman Anna <s-anna@ti.com>
+>>>
+>>> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS
+>>> IP,
+>>> commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
+>>> more System Events (160 vs 64), more Interrupt Channels and Host
+>>> Interrupts
+>>> (20 vs 10) compared to the previous generation PRUSS INTC instances.
+>>> The
+>>> first 2 and the last 10 of these host interrupt lines are used by the
+>>> PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
+>>> host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
+>>> connected to the other ICSSG instances within the SoC and can be
+>>> partitioned as per system integration through the board dts files.
+>>>
+>>> Enhance the PRUSS INTC driver to add support for this ICSSG INTC
+>>> instance. This support is added using specific compatible and match
+>>> data and updating the code to use this data instead of the current
+>>> hard-coded macros. The INTC config structure is updated to use the
+>>> higher events and channels on all SoCs, while limiting the actual
+>>> processing to only the relevant number of events/channels/interrupts.
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+>>> ---
+>>> v2->v3:
+>>> - Change patch order: use it directly after "irqchip/irq-pruss-intc:
+>>>    Implement irq_{get,set}_irqchip_state ops" and before new
+>>>    "irqchip/irq-pruss-intc: Add event mapping support" in order to
+>>> reduce
+>>>    diff.
+>>
+>> The diff would be even smaller if you introduced a variable number of
+>> inputs the first place, i.e. in patch #2. Most if this patch just
+>> retrofits it. Please squash these changes into that initial patch,
+>> and only add the platform stuff here.
+
+Yeah, all the variables were introduced in this patch based on patch 
+history. Until this new IP came, we haven't had a need to use variables 
+in the original driver code. That's also the reason for this being a 
+separate patch rather than squashed into the original patch.
+
+regards
+Suman
+
 >
-> It was already using HFI on newer targets. Don't break it in one 
-> commit then fix it in the next.
+> Sure I will do that.
+> 
+> Thank you,
+> Grzegorz
+> 
 
-Oops. I somehow got confused. Will fix and resend.
-
--Akhil
-
->
->> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c 
->> b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> index 233afea..b547339 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> @@ -121,6 +121,12 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, 
->> struct dev_pm_opp *opp)
->>           if (gpu_freq == gmu->gpu_freqs[perf_index])
->>               break;
->>   +    if (!gmu->legacy) {
->> +        a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->> +        icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +        return;
->> +    }
->> +
->>       gmu->current_perf_index = perf_index;
->>       gmu->freq = gmu->gpu_freqs[perf_index];
->>   @@ -893,10 +899,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>       enable_irq(gmu->hfi_irq);
->>         /* Set the GPU to the current freq */
->> -    if (gmu->legacy)
->> -        a6xx_gmu_set_initial_freq(gpu, gmu);
->> -    else
->> -        a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->> +    a6xx_gmu_set_initial_freq(gpu, gmu);
->>         /*
->>        * "enable" the GX power domain which won't actually do 
->> anything but it
->>
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
