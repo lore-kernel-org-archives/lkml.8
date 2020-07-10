@@ -6,154 +6,157 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD275C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D3220748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F6720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594353056;
-	bh=hObc9B15Ofq12aAQ4BtIME3uk1sIIW2p9hj83IUp0cw=;
+	s=default; t=1594353138;
+	bh=xLvKF2sWDcGdNloTJLpeuSq/KhHOkOtOuMlIFvINFr8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZSaEgHmlFL65sUvn6cLTiMYD7Shu7P1OdEwW4pVTDUwKw0fV6TaMfID8TSpnr0+AS
-	 UlPbKlIdgb0BQKXogrVEh24v171SQnCC6SVXMjNMWOfY+tO4gky16ZUq2Sj1A134zr
-	 NnhcRKhoqbCyfyZwhv6qTVALnj/XVliPDzTL+Cyk=
+	b=DQMN0pLNPH3YolgNjkcgOYR6SzVLXJ8IQ2ynq2oOIIlrO/KVRDZVAShqklLwoLgK8
+	 eFNmCEpkfOwLQSTuJLdLEcALalz6jdtzBZoUfiZ/IWGjbKvybiSK80BcHmdUekaQv5
+	 kb/6YjhDaZWbMWyFq+Z06+1xjA6qUuR/QVg15izE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgGJDuz (ORCPT
+        id S1726920AbgGJDwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 23:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgGJDuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:50:54 -0400
+        id S1726509AbgGJDwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:52:17 -0400
 Received: from localhost (unknown [104.132.1.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F361D2072E;
-        Fri, 10 Jul 2020 03:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EEC12072E;
+        Fri, 10 Jul 2020 03:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594353054;
-        bh=hObc9B15Ofq12aAQ4BtIME3uk1sIIW2p9hj83IUp0cw=;
+        s=default; t=1594353136;
+        bh=xLvKF2sWDcGdNloTJLpeuSq/KhHOkOtOuMlIFvINFr8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DRMSHRXgW+6+9XZgjy5ubtuWyfVl2iQzIsm3m/Ihrvy+tdbGG18Tj92ewpb3jm47d
-         v7GL054oxMje9ucMbtaSN1O/DXxSKJJCCK57sepC5g+T/dzJeJEYMfBFWX4IYlptg+
-         ABM+NKjFFSwPFGYNqPC/yKDjTNmOXIzRvP3jurWQ=
-Date:   Thu, 9 Jul 2020 20:50:53 -0700
+        b=LRUJV3hPsaC5eC2jDa4m2VO6wXQ533lEQU80iGsTlYYbaqYNMSvP6brBtcbxFuhcc
+         x0NOGXCxuW0R+O8F9fOMVCP0vV94um/7aBKonAWbgBj6g62PIkGQRPtWXSMB9TVlkv
+         DSv6R3fqXapSYwfxwYflnXu740Ivry6+HBR3vTF8=
+Date:   Thu, 9 Jul 2020 20:52:15 -0700
 From:   Jaegeuk Kim <jaegeuk@kernel.org>
 To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
-Message-ID: <20200710035053.GH545837@google.com>
-References: <20200709053027.351974-1-jaegeuk@kernel.org>
- <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
- <20200709190545.GA3001066@google.com>
- <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
- <20200710032616.GC545837@google.com>
- <01d0db54-eee1-f6cd-76c3-ebe59a7abae4@huawei.com>
+Cc:     Daeho Jeong <daeho43@gmail.com>,
+        Daeho Jeong <daehojeong@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in
+ F2FS_IOC_SEC_TRIM_FILE
+Message-ID: <20200710035215.GI545837@google.com>
+References: <20200710021505.2405872-1-daeho43@gmail.com>
+ <20200710030246.GA545837@google.com>
+ <62c9dd7a-5d18-8bb6-8e43-c055fcff51cc@huawei.com>
+ <20200710033100.GE545837@google.com>
+ <ede6620c-6fc9-797d-e3ea-e630eb76b309@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01d0db54-eee1-f6cd-76c3-ebe59a7abae4@huawei.com>
+In-Reply-To: <ede6620c-6fc9-797d-e3ea-e630eb76b309@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 07/10, Chao Yu wrote:
-> On 2020/7/10 11:26, Jaegeuk Kim wrote:
+> On 2020/7/10 11:31, Jaegeuk Kim wrote:
 > > On 07/10, Chao Yu wrote:
-> >> On 2020/7/10 3:05, Jaegeuk Kim wrote:
-> >>> On 07/09, Chao Yu wrote:
-> >>>> On 2020/7/9 13:30, Jaegeuk Kim wrote:
-> >>>>> It doesn't need to bypass flushing quota data in background.
+> >> On 2020/7/10 11:02, Jaegeuk Kim wrote:
+> >>> On 07/10, Daeho Jeong wrote:
+> >>>> From: Daeho Jeong <daehojeong@google.com>
 > >>>>
-> >>>> The condition is used to flush quota data in batch to avoid random
-> >>>> small-sized udpate, did you hit any problem here?
+> >>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
+> >>>>  1. Added -1 value support for range.len to signify the end of file.
+> >>>>  2. If the end of the range passes over the end of file, it means until
+> >>>>     the end of file.
+> >>>>  3. ignored the case of that range.len is zero to prevent the function
+> >>>>     from making end_addr zero and triggering different behaviour of
+> >>>>     the function.
+> >>>>
+> >>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> >>>> ---
+> >>>>  fs/f2fs/file.c | 16 +++++++---------
+> >>>>  1 file changed, 7 insertions(+), 9 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>> index 368c80f8e2a1..1c4601f99326 100644
+> >>>> --- a/fs/f2fs/file.c
+> >>>> +++ b/fs/f2fs/file.c
+> >>>> @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+> >>>>  	file_start_write(filp);
+> >>>>  	inode_lock(inode);
+> >>>>  
+> >>>> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
+> >>>> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
+> >>>> +			range.start >= inode->i_size) {
+> >>>>  		ret = -EINVAL;
+> >>>>  		goto err;
+> >>>>  	}
+> >>>>  
+> >>>> -	if (range.start >= inode->i_size) {
+> >>>> -		ret = -EINVAL;
+> >>>> +	if (range.len == 0)
+> >>>>  		goto err;
+> >>>> -	}
+> >>>>  
+> >>>> -	if (inode->i_size - range.start < range.len) {
+> >>>> -		ret = -E2BIG;
+> >>>> -		goto err;
+> >>>> -	}
+> >>>> -	end_addr = range.start + range.len;
+> >>>> +	if (range.len == (u64)-1 || inode->i_size - range.start < range.len)
+> >>>> +		end_addr = inode->i_size;
+> >>
+> >> We can remove 'range.len == (u64)-1' condition since later condition can cover
+> >> this?
+> >>
 > >>>
-> >>> I suspect this causes fault injection test being stuck by waiting for inode
-> >>> writeback completion. With this patch, it has been running w/o any issue so far.
-> >>> I keep an eye on this.
+> >>> Hmm, what if there are blocks beyond i_size? Do we need to check i_blocks for
 > >>
-> >> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
-> >> issue deeper.
-> >>
-> >> How about just keeping this patch in our private branch to let fault injection
-> >> test not be stuck? until we find the root cause in upstream codes.
+> >> The blocks beyond i_size will never be written, there won't be any valid message
+> >> there, so we don't need to worry about that.
 > > 
-> > Well, I don't think this hides something. When the issue happens, I saw inodes
-> > being stuck due to writeback while only quota has some dirty data. At that time,
-> > there was no dirty data page from other inodes.
+> > I don't think we have a way to guarantee the order of i_size and block
+> > allocation in f2fs. See f2fs_write_begin and f2fs_write_end.
 > 
-> Okay,
-> 
-> > 
-> > More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
-> > waits for wb_wait_for_completion().
-> 
-> Did you record any callstack after the issue happened?
+> However, write_begin & write_end are covered by inode_lock, it could not be
+> racy with inode size check in f2fs_sec_trim_file() as it hold inode_lock as
+> well?
 
-I found this.
-
-[213389.297642]  __schedule+0x2dd/0x780^M
-[213389.299224]  schedule+0x55/0xc0^M
-[213389.300745]  wb_wait_for_completion+0x56/0x90^M
-[213389.302469]  ? wait_woken+0x80/0x80^M
-[213389.303997]  __writeback_inodes_sb_nr+0xa8/0xd0^M
-[213389.305760]  writeback_inodes_sb+0x4b/0x60^M
-[213389.307439]  sync_filesystem+0x2e/0xa0^M
-[213389.308999]  generic_shutdown_super+0x27/0x110^M
-[213389.310738]  kill_block_super+0x27/0x50^M
-[213389.312327]  kill_f2fs_super+0x76/0xe0 [f2fs]^M
-[213389.314014]  deactivate_locked_super+0x3b/0x80^M
-[213389.315692]  deactivate_super+0x3e/0x50^M
-[213389.317226]  cleanup_mnt+0x109/0x160^M
-[213389.318718]  __cleanup_mnt+0x12/0x20^M
-[213389.320177]  task_work_run+0x70/0xb0^M
-[213389.321609]  exit_to_usermode_loop+0x131/0x160^M
-[213389.323306]  do_syscall_64+0x170/0x1b0^M
-[213389.324762]  entry_SYSCALL_64_after_hwframe+0x44/0xa9^M
-[213389.326477] RIP: 0033:0x7fc4b5e6a35b^M
-
-> 
-> Still I'm confused that why directory's data written could be skipped, but
-> quota's data couldn't, what's the difference?
-
-I suspect different blocking timing from cp_error between quota and dentry.
-e.g., we block dir operations right after cp_error, while quota can make
-dirty pages in more fine granularity.
+Like Daeho said, write_begin -> checkpoint -> power-cut can give bigger i_blocks
+than i_size.
 
 > 
 > > 
 > >>
 > >> Thanks,
 > >>
+> >>> ending criteria?
 > >>>
-> >>> Thanks,
+> >>>> +	else
+> >>>> +		end_addr = range.start + range.len;
+> >>>>  
+> >>>>  	to_end = (end_addr == inode->i_size);
+> >>>>  	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
+> >>>> -- 
+> >>>> 2.27.0.383.g050319c2ae-goog
+> >>>>
+> >>>>
+> >>>>
+> >>>> _______________________________________________
+> >>>> Linux-f2fs-devel mailing list
+> >>>> Linux-f2fs-devel@lists.sourceforge.net
+> >>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 > >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>>>> ---
-> >>>>>  fs/f2fs/data.c | 2 +-
-> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>>>> index 44645f4f914b6..72e8b50e588c1 100644
-> >>>>> --- a/fs/f2fs/data.c
-> >>>>> +++ b/fs/f2fs/data.c
-> >>>>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
-> >>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> >>>>>  		goto skip_write;
-> >>>>>  
-> >>>>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-> >>>>> +	if (S_ISDIR(inode->i_mode) &&
-> >>>>>  			wbc->sync_mode == WB_SYNC_NONE &&
-> >>>>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
-> >>>>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
-> >>>>>
+> >>>
+> >>> _______________________________________________
+> >>> Linux-f2fs-devel mailing list
+> >>> Linux-f2fs-devel@lists.sourceforge.net
+> >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 > >>> .
 > >>>
 > > .
