@@ -2,140 +2,116 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42359C43458
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2092065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:36:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k5N4r23p"
+	by mail.kernel.org (Postfix) with ESMTP id 128D5206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594420503;
+	bh=/MGI6bbpyfeW2PBoCKZ5Cz+tMk9tLtI9QoqYjLImzVc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rQa368EyzVZvi6XnEl6j9n+5iIcSkZA4QC1lR8wlmygYUeF99eaBz9fWb7aakvA94
+	 ekLZOyOv6lglDCIknqZQl5RDewfbF/tSmuWpN/jwS4NCFu0xCqyeJKpcPglZvrxCgw
+	 r8SUZZU76OI3VxdUrrPnI7j3IEUC8O9J/ZC1/zCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGJWgu (ORCPT
+        id S1727021AbgGJWe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:36:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:29444 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726476AbgGJWgt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:36:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594420609; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=zibTUJTH6MFdxW//DfqanSRTw7aZklvYX/+cHS6yCOw=; b=k5N4r23pwKNLepli9sMvVWonT/NnnptDSe0+6tBl0xMlmUaWw8IaaTH9FNiu8qtm+HmnWDcr
- LzYStwbN1KrKdu93j+zkS38d+060zN2L7GVGRcpdhjkzpYKLcsZEgXa0jZFXdwdYO8sA7EjF
- l2aFgmRFM0cXQqOQWICHydv616Y=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f08ed80d3d6508422f97efc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 22:36:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BDA2C433A0; Fri, 10 Jul 2020 22:36:47 +0000 (UTC)
-Received: from [192.168.1.9] (unknown [117.210.185.108])
+        Fri, 10 Jul 2020 18:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726782AbgGJWec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:34:32 -0400
+Received: from sstabellini-ThinkPad-T480s.hsd1.ca.comcast.net (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B02ABC433C8;
-        Fri, 10 Jul 2020 22:36:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B02ABC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [PATCH v4 3/7] drm: msm: a6xx: set gpu freq through hfi
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>, freedreno@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, saravanak@google.com,
-        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dri-devel@freedesktop.org, viresh.kumar@linaro.org,
-        sibis@codeaurora.org
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
- <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
- <322c921f-7c8f-7052-b191-44f0dade742e@marek.ca>
- <40f6df1d-f524-c612-9215-591fd7f16e3b@codeaurora.org>
-Message-ID: <d9875eae-d7e5-e091-4f3d-b279157ac1c1@codeaurora.org>
-Date:   Sat, 11 Jul 2020 04:06:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <40f6df1d-f524-c612-9215-591fd7f16e3b@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB1E207FB;
+        Fri, 10 Jul 2020 22:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594420472;
+        bh=/MGI6bbpyfeW2PBoCKZ5Cz+tMk9tLtI9QoqYjLImzVc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LgBdVYBgc9RgqvwP366WyyPlA8UgtCJ/fDBUVewj431Q3fqI3qEUCdwjfhqNZSC4q
+         wQSN9eut6WxOj7lthfXxS+fEOCBgtpMtDbQokobURzuL/PwrI51K5viOHPCx9hRVP5
+         735P3IzlseBdexGGPHvpyrwV7szvunail7KEBR60=
+From:   Stefano Stabellini <sstabellini@kernel.org>
+To:     jgross@suse.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: [PATCH v3 07/11] swiotlb-xen: add struct device * parameter to is_xen_swiotlb_buffer
+Date:   Fri, 10 Jul 2020 15:34:23 -0700
+Message-Id: <20200710223427.6897-7-sstabellini@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
+References: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 
-On 7/11/2020 2:43 AM, Akhil P Oommen wrote:
->
-> On 7/10/2020 1:34 AM, Jonathan Marek wrote:
->> On 7/9/20 4:00 PM, Akhil P Oommen wrote:
->>> Newer targets support changing gpu frequency through HFI. So
->>> use that wherever supported instead of the legacy method.
->>>
->>
->> It was already using HFI on newer targets. Don't break it in one 
->> commit then fix it in the next.
->
-> Oops. I somehow got confused. Will fix and resend.
->
-> -Akhil
+No functional changes. The parameter is unused in this patch but will be
+used by next patches.
 
-I broke the pm_runtime_get_if_in_use() check too. Other than that, just 
-squashing this patch with the previous one should be enough.
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+---
+Changes in v3:
+- add whitespace in title
+- improve commit message
+---
+ drivers/xen/swiotlb-xen.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
--Akhil.
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index 8a3a7bcc5ec0..e2c35f45f91e 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -97,7 +97,7 @@ static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+ 	return 0;
+ }
+ 
+-static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
++static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+ {
+ 	unsigned long bfn = XEN_PFN_DOWN(dma_addr);
+ 	unsigned long xen_pfn = bfn_to_local_pfn(bfn);
+@@ -431,7 +431,7 @@ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+ 		xen_dma_sync_for_cpu(hwdev, dev_addr, paddr, size, dir);
+ 
+ 	/* NOTE: We use dev_addr here, not paddr! */
+-	if (is_xen_swiotlb_buffer(dev_addr))
++	if (is_xen_swiotlb_buffer(hwdev, dev_addr))
+ 		swiotlb_tbl_unmap_single(hwdev, paddr, size, size, dir, attrs);
+ }
+ 
+@@ -444,7 +444,7 @@ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+ 	if (!dev_is_dma_coherent(dev))
+ 		xen_dma_sync_for_cpu(dev, dma_addr, paddr, size, dir);
+ 
+-	if (is_xen_swiotlb_buffer(dma_addr))
++	if (is_xen_swiotlb_buffer(dev, dma_addr))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
+ }
+ 
+@@ -454,7 +454,7 @@ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
+ {
+ 	phys_addr_t paddr = xen_bus_to_phys(dev, dma_addr);
+ 
+-	if (is_xen_swiotlb_buffer(dma_addr))
++	if (is_xen_swiotlb_buffer(dev, dma_addr))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
+ 
+ 	if (!dev_is_dma_coherent(dev))
+-- 
+2.17.1
 
->
->>
->>> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->>> ---
->>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 11 +++++++----
->>>   1 file changed, 7 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c 
->>> b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> index 233afea..b547339 100644
->>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> @@ -121,6 +121,12 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, 
->>> struct dev_pm_opp *opp)
->>>           if (gpu_freq == gmu->gpu_freqs[perf_index])
->>>               break;
->>>   +    if (!gmu->legacy) {
->>> +        a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->>> +        icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->>> +        return;
->>> +    }
->>> +
->>>       gmu->current_perf_index = perf_index;
->>>       gmu->freq = gmu->gpu_freqs[perf_index];
->>>   @@ -893,10 +899,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>>       enable_irq(gmu->hfi_irq);
->>>         /* Set the GPU to the current freq */
->>> -    if (gmu->legacy)
->>> -        a6xx_gmu_set_initial_freq(gpu, gmu);
->>> -    else
->>> -        a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->>> +    a6xx_gmu_set_initial_freq(gpu, gmu);
->>>         /*
->>>        * "enable" the GX power domain which won't actually do 
->>> anything but it
->>>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
