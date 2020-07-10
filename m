@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7C3C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD09C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9752065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18272065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgGJPTx (ORCPT
+        id S1728032AbgGJPTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:19:53 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38307 "EHLO mga09.intel.com"
+        Fri, 10 Jul 2020 11:19:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38270 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbgGJPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:12:10 -0400
-IronPort-SDR: l2N3vigUWRBl6eG4Enjt5cOsUFMCorp2Q7NlkYM+b3yLZ/OHz28+T45pXB3i3KgXnH9pcGhsOb
- Eaq9RanB144A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686466"
+        id S1727091AbgGJPL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:11:59 -0400
+IronPort-SDR: +XW8sqGZY66IHmrC5zzAgKLf7xWiaIKkF8jn7DN/nZpOUBDRFGwP3pPdQg+uuXXUSb0GGKur9j
+ O9eNsZTaH2pQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686290"
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="149686466"
+   d="scan'208";a="149686290"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:12:10 -0700
-IronPort-SDR: SVs3RUzcXiYwAPFPqajKfW1FT8riFfuLVwr2IOzYEPUzsfK0ay7kHea8tubB3KTUE2fB6OuBhc
- kaMiO8ojd30w==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:11:56 -0700
+IronPort-SDR: n1SjVceTeR5yH8vaqkz1549J14IAVEBSpdOG/boll0caxAFVyUpHf5XUrSszoIiNz4aXJwlkEi
+ il2ZvxDyDRUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="484675572"
+   d="scan'208";a="484675492"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:12:08 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:11:54 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 12/12] perf intel-pt: Add support for decoding PSB+ only
-Date:   Fri, 10 Jul 2020 18:11:04 +0300
-Message-Id: <20200710151104.15137-13-adrian.hunter@intel.com>
+Subject: [PATCH V2 05/12] perf auxtrace: Add optional error flags to the itrace 'e' option
+Date:   Fri, 10 Jul 2020 18:10:57 +0300
+Message-Id: <20200710151104.15137-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200710151104.15137-1-adrian.hunter@intel.com>
 References: <20200710151104.15137-1-adrian.hunter@intel.com>
@@ -52,126 +52,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A single q option decodes ip from only FUP/TIP packets. Make it so that
-repeating the q option (i.e. qq) decodes only PSB+, getting ip if there is
-a FUP packet within PSB+ (i.e. between PSB and PSBEND).
-
-Example:
-
- $ perf record -e intel_pt//u grep -rI pudding drivers
- [ perf record: Woken up 52 times to write data ]
- [ perf record: Captured and wrote 57.870 MB perf.data ]
- $ time perf script --itrace=bi | wc -l
- 58948289
-
- real    1m23.863s
- user    1m23.251s
- sys     0m7.452s
- $ time perf script --itrace=biq | wc -l
- 3385694
-
- real    0m4.453s
- user    0m4.455s
- sys     0m0.328s
- $ time perf script --itrace=biqq | wc -l
- 1883
-
- real    0m0.047s
- user    0m0.043s
- sys     0m0.009s
+Allow the 'e' option to be followed by flags which will affect what errors
+will or will not be reported. Each flag must be preceded by either '+' or
+'-'. The flags are:
+	o	overflow
+	l	trace data lost
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Documentation/perf-intel-pt.txt     | 15 +++++++++++++++
- .../util/intel-pt-decoder/intel-pt-decoder.c   | 18 ++++++++++++++++++
- 2 files changed, 33 insertions(+)
+ tools/perf/Documentation/itrace.txt |  6 ++++
+ tools/perf/util/auxtrace.c          | 44 +++++++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h          | 12 +++++++-
+ 3 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index f9fe4a4040ba..d5a266d7f15b 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -999,6 +999,21 @@ What *will* be decoded with the (single) q option:
- Note the q option does not specify what events will be synthesized e.g. the p
- option must be used also to show power events.
+diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
+index e817179c5027..114d0544d7c7 100644
+--- a/tools/perf/Documentation/itrace.txt
++++ b/tools/perf/Documentation/itrace.txt
+@@ -47,3 +47,9 @@
+ 	--itrace=i0nss1000000
  
-+Repeating the q option (double-q i.e. qq) results in even faster decoding and even
-+less detail.  The decoder decodes only extended PSB (PSB+) packets, getting the
-+instruction pointer if there is a FUP packet within PSB+ (i.e. between PSB and
-+PSBEND).  Note PSB packets occur regularly in the trace based on the psb_period
-+config term (refer config terms section).  There will be a FUP packet if the
-+PSB+ occurs while control flow is being traced.
+ 	skips the first million instructions.
 +
-+What will *not* be decoded with the qq option:
-+
-+	- everything except instruction pointer associated with PSB packets
-+
-+What *will* be decoded with the qq option:
-+
-+	- instruction pointer associated with PSB packets
-+
++	The 'e' option may be followed by flags which affect what errors will or
++	will not be reported. Each flag must be preceded by either '+' or '-'.
++	The flags are:
++		o	overflow
++		l	trace data lost
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 25c639ac4ad4..f0b0758830ee 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1349,6 +1349,47 @@ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
+ 	synth_opts->initial_skip = 0;
+ }
  
- dump option
- ~~~~~~~~~~~
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index ccb204b1a050..697513f35154 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -113,6 +113,7 @@ struct intel_pt_decoder {
- 	bool in_psb;
- 	bool hop;
- 	bool hop_psb_fup;
-+	bool leap;
- 	enum intel_pt_param_flags flags;
- 	uint64_t pos;
- 	uint64_t last_ip;
-@@ -240,6 +241,7 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
- 	decoder->return_compression = params->return_compression;
- 	decoder->branch_enable      = params->branch_enable;
- 	decoder->hop                = params->quick >= 1;
-+	decoder->leap               = params->quick >= 2;
- 
- 	decoder->flags              = params->flags;
- 
-@@ -1903,9 +1905,18 @@ static int intel_pt_resample(struct intel_pt_decoder *decoder)
- #define HOP_RETURN	2
- #define HOP_AGAIN	3
- 
-+static int intel_pt_scan_for_psb(struct intel_pt_decoder *decoder);
++static int get_flag(const char **ptr, unsigned int *flags)
++{
++	while (1) {
++		char c = **ptr;
 +
- /* Hop mode: Ignore TNT, do not walk code, but get ip from FUPs and TIPs */
- static int intel_pt_hop_trace(struct intel_pt_decoder *decoder, bool *no_tip, int *err)
- {
-+	/* Leap from PSB to PSB, getting ip from FUP within PSB+ */
-+	if (decoder->leap && !decoder->in_psb && decoder->packet.type != INTEL_PT_PSB) {
-+		*err = intel_pt_scan_for_psb(decoder);
-+		if (*err)
-+			return HOP_RETURN;
++		if (c >= 'a' && c <= 'z') {
++			*flags |= 1 << (c - 'a');
++			++*ptr;
++			return 0;
++		} else if (c == ' ') {
++			++*ptr;
++			continue;
++		} else {
++			return -1;
++		}
 +	}
++}
 +
- 	switch (decoder->packet.type) {
- 	case INTEL_PT_TNT:
- 		return HOP_IGNORE;
-@@ -2681,6 +2692,7 @@ static int intel_pt_sync(struct intel_pt_decoder *decoder)
- 	decoder->ip = 0;
- 	intel_pt_clear_stack(&decoder->stack);
++static int get_flags(const char **ptr, unsigned int *plus_flags, unsigned int *minus_flags)
++{
++	while (1) {
++		switch (**ptr) {
++		case '+':
++			++*ptr;
++			if (get_flag(ptr, plus_flags))
++				return -1;
++			break;
++		case '-':
++			++*ptr;
++			if (get_flag(ptr, minus_flags))
++				return -1;
++			break;
++		case ' ':
++			++*ptr;
++			break;
++		default:
++			return 0;
++		}
++	}
++}
++
+ /*
+  * Please check tools/perf/Documentation/perf-script.txt for information
+  * about the options parsed here, which is introduced after this cset,
+@@ -1436,6 +1477,9 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
+ 			break;
+ 		case 'e':
+ 			synth_opts->errors = true;
++			if (get_flags(&p, &synth_opts->error_plus_flags,
++				      &synth_opts->error_minus_flags))
++				goto out_err;
+ 			break;
+ 		case 'd':
+ 			synth_opts->log = true;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index e3ce5fb03ca0..cfe6d00d8624 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -55,6 +55,9 @@ enum itrace_period_type {
+ 	PERF_ITRACE_PERIOD_NANOSECS,
+ };
  
-+leap:
- 	err = intel_pt_scan_for_psb(decoder);
- 	if (err)
- 		return err;
-@@ -2702,6 +2714,12 @@ static int intel_pt_sync(struct intel_pt_decoder *decoder)
- 			decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
- 		else
- 			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
-+	} else if (decoder->leap) {
-+		/*
-+		 * In leap mode, only PSB+ is decoded, so keeping leaping to the
-+		 * next PSB until there is an ip.
-+		 */
-+		goto leap;
- 	} else {
- 		return intel_pt_sync_ip(decoder);
- 	}
++#define AUXTRACE_ERR_FLG_OVERFLOW	(1 << ('o' - 'a'))
++#define AUXTRACE_ERR_FLG_DATA_LOST	(1 << ('l' - 'a'))
++
+ /**
+  * struct itrace_synth_opts - AUX area tracing synthesis options.
+  * @set: indicates whether or not options have been set
+@@ -91,6 +94,8 @@ enum itrace_period_type {
+  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
+  * @ptime_range: time intervals to trace or NULL
+  * @range_num: number of time intervals to trace
++ * @error_plus_flags: flags to affect what errors are reported
++ * @error_minus_flags: flags to affect what errors are reported
+  */
+ struct itrace_synth_opts {
+ 	bool			set;
+@@ -124,6 +129,8 @@ struct itrace_synth_opts {
+ 	unsigned long		*cpu_bitmap;
+ 	struct perf_time_interval *ptime_range;
+ 	int			range_num;
++	unsigned int		error_plus_flags;
++	unsigned int		error_minus_flags;
+ };
+ 
+ /**
+@@ -613,7 +620,10 @@ bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
+ "				p:	    		synthesize power events\n"			\
+ "				o:			synthesize other events recorded due to the use\n" \
+ "							of aux-output (refer to perf record)\n"	\
+-"				e:	    		synthesize error events\n"			\
++"				e[flags]:		synthesize error events\n" \
++"							each flag must be preceded by + or -\n" \
++"							error flags are: o (overflow)\n" \
++"									 l (data lost)\n" \
+ "				d:	    		create a debug log\n"			\
+ "				f:	    		synthesize first level cache events\n" \
+ "				m:	    		synthesize last level cache events\n" \
 -- 
 2.17.1
 
