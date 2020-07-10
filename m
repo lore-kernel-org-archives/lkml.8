@@ -2,101 +2,107 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88706C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE58C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FE02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC8D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="psuhvaDf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAATVEU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgGJUBn (ORCPT
+        id S1728436AbgGJUDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38776 "EHLO
+        Fri, 10 Jul 2020 16:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgGJUBm (ORCPT
+        with ESMTP id S1726867AbgGJUDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:01:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2588C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gZ14XZU76Moz0JJm/DTbCynhQSKBoFpfiud9XVKdk/0=; b=psuhvaDfJScNec39Soi5BOpt5S
-        Blx+Orwk8ErlcTCSvyahfRbPncIDtWPPHHv4YcfjBNvSRrvJhUPhyKXDOGNAwPnQzXad8jIfANotY
-        zOmi4y0B3bW/igWaJOfDCL58kLNQpk1qYW3jFLaR+uueRxn3onAYSnSHJ+EAAXTffc1ZUf2uw5m6E
-        7ZcWc9n+lFU75t645LTPojJuSJehnVpjSyCc4x9inIyCruXvd4lbbNh/ReodNvltd3e3bP6O3SMno
-        yXn5b7T/ryTNNq7K7CtEt2cs3ugM1G+k9xFeZCU3HgqZgT+D0ToIHV/R+weU32CN8bmmbNJqCfhly
-        lN5Y+7FQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtzDG-00048T-DR; Fri, 10 Jul 2020 20:01:38 +0000
-Date:   Fri, 10 Jul 2020 21:01:38 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1] mm/vmalloc.c: Add an error message if two areas
- overlap
-Message-ID: <20200710200138.GQ12769@casper.infradead.org>
-References: <20200710194042.2510-1-urezki@gmail.com>
- <20200710194406.GP12769@casper.infradead.org>
- <20200710200030.GB19487@pc636>
+        Fri, 10 Jul 2020 16:03:16 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8120FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:03:16 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id lx13so7357110ejb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 13:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=Jqzgq/n7wZOMhEb7Tg22T6QZFTnibrfQPhy0seMwny8=;
+        b=mAATVEU/9s9QTVzCtRmel63BGpFvAbckGZX8DQs98U4Ed/wGKOM2IHiyTcfpDy6bV0
+         kqjGwe1Qbc7vtfM8U+iAw9fgfzRTuOgFlcorbwVvc3AHIK+Dp4ct99soP3eEFinfbYYD
+         No07MUNe+SqZVN5EdesnxKx009fHbQ1Uqk8LKQm3Z+Za5/CKnpHDNdSe+3JM86kGZuTo
+         jF36VoG93bouykU8phSakCazF+jtFAyelOBrj8HH0Y0bPu5fBKQ+g9YdiHpc/FOCl+xL
+         Mj6EThe3tze7s7r22nPzRifnYp57dAwQTgEIp016nR8LWBvD6KjzMGe7tr2ppvddc5ZX
+         0UrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Jqzgq/n7wZOMhEb7Tg22T6QZFTnibrfQPhy0seMwny8=;
+        b=e7UBnEiqXfXjzT1tGE7Wq3j56ePG+0tjJFmuMAPSWdAFQs/qSBWrWohju+bx8hzzuS
+         1yGB61g25KZ9lWYdDB4eOVoJJy1MJPzn7yK/RnHydO/vj69U5FXZDdJbArSFpcKarcmC
+         U7YDdO6Z6vyyYh0IKbqQ+DdwJVpYtSgiyGhNmPSsv3qZs4Ed72XFOnnzmNLoRAgCfwtz
+         rSw3wJtcTG2QLSlCU2Sauh3mmbpIBAkYc40iORAnc2jGdGYt9G1j1slTfHLlegsYA/37
+         qFUP+YYAj+/D8tzbLZryI9TYL+Ojqlcur6nNNT2EKseGzg8GODDI04epN4GBE3x0w7bZ
+         kPJg==
+X-Gm-Message-State: AOAM533X42RvbDu0a9uh9FWyoxcogttERZ7X2slNoYd2RRTWoGeQbo2O
+        w84bDZRzKCcyZF3vlXaWvCiiNH8=
+X-Google-Smtp-Source: ABdhPJx6sV2JvLYwqvkGcTbdtJPOTPhaC5RFA+2jMQ2CZb3bOzHoYlAGduULrtwziUqeCtEGFzylPA==
+X-Received: by 2002:a17:906:1414:: with SMTP id p20mr61470353ejc.247.1594411395239;
+        Fri, 10 Jul 2020 13:03:15 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.249.22])
+        by smtp.gmail.com with ESMTPSA id ce19sm4236133ejb.24.2020.07.10.13.03.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 13:03:14 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 23:03:12 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ipc: uninline functions
+Message-ID: <20200710200312.GA960353@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200710200030.GB19487@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:00:30PM +0200, Uladzislau Rezki wrote:
-> On Fri, Jul 10, 2020 at 08:44:06PM +0100, Matthew Wilcox wrote:
-> > On Fri, Jul 10, 2020 at 09:40:42PM +0200, Uladzislau Rezki (Sony) wrote:
-> > > Before triggering a BUG() it would be useful to understand
-> > > how two areas overlap between each other. Print information
-> > > about start/end addresses of both VAs and their addresses.
-> > > 
-> > > For example if both are identical it could mean double free.
-> > > 
-> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > ---
-> > >  mm/vmalloc.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > index 5a2b55c8dd9a..1679b01febcd 100644
-> > > --- a/mm/vmalloc.c
-> > > +++ b/mm/vmalloc.c
-> > > @@ -549,8 +549,13 @@ find_va_links(struct vmap_area *va,
-> > >  		else if (va->va_end > tmp_va->va_start &&
-> > >  				va->va_start >= tmp_va->va_end)
-> > >  			link = &(*link)->rb_right;
-> > > -		else
-> > > +		else {
-> > > +			pr_err("Overlaps: 0x%px(0x%lx-0x%lx), 0x%px(0x%lx-0x%lx)\n",
-> > > +				va, va->va_start, va->va_end, tmp_va,
-> > > +				tmp_va->va_start, tmp_va->va_end);
-> > 
-> > It might be helpful to have a "vmalloc:" prefix to that string to indicate
-> > where to start searching.  And I don't think we're supposed to use %px
-> > without a really good justification these days.
-> >
-> That makes sense, i will add such prefix for sure. As for %px i can just
-> use a casting to (unsigned long) and 0x%lx prefix.
+Two functions are only called via function pointers, don't bother
+inlining them.
 
-That's not the point.  Linus wants us to not display actual pointers to
-the user.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
+ ipc/sem.c |    3 +--
+ ipc/shm.c |    3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+--- a/ipc/sem.c
++++ b/ipc/sem.c
+@@ -585,8 +585,7 @@ static int newary(struct ipc_namespace *ns, struct ipc_params *params)
+ /*
+  * Called with sem_ids.rwsem and ipcp locked.
+  */
+-static inline int sem_more_checks(struct kern_ipc_perm *ipcp,
+-				struct ipc_params *params)
++static int sem_more_checks(struct kern_ipc_perm *ipcp, struct ipc_params *params)
+ {
+ 	struct sem_array *sma;
+ 
+--- a/ipc/shm.c
++++ b/ipc/shm.c
+@@ -711,8 +711,7 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
+ /*
+  * Called with shm_ids.rwsem and ipcp locked.
+  */
+-static inline int shm_more_checks(struct kern_ipc_perm *ipcp,
+-				struct ipc_params *params)
++static int shm_more_checks(struct kern_ipc_perm *ipcp, struct ipc_params *params)
+ {
+ 	struct shmid_kernel *shp;
+ 
