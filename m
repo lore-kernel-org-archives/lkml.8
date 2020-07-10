@@ -2,142 +2,184 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52853C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8B82063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jV50f32Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tWKhw0vl"
+	by mail.kernel.org (Postfix) with ESMTP id 24ABC2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594391405;
+	bh=v6jWQfg7AVdgko7MHe6n01vyyAjPXldfWvJrsUb+1pA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hXVPGLPTH6TVBqbkIwT4ml6eh+zs5S+QSuoZtAb/C3BQ+3OdqyCjYfoapQ2OAXcrQ
+	 efjUNh5sgvGxaGZVwKx72h4koncngLnK9NeST9lt44Y9G5Q7v0B1acl/KA+xgzXER3
+	 ZAFvL6Juf7GhSOuIURSy4y3zd4WIq4gCnbBLyED4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgGJO2v (ORCPT
+        id S1728089AbgGJOaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:28:51 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:42259 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbgGJO2u (ORCPT
+        Fri, 10 Jul 2020 10:30:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34028 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728040AbgGJOaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:28:50 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 7221E845;
-        Fri, 10 Jul 2020 10:28:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 10 Jul 2020 10:28:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=H
-        dz4DLRipzbxKr7xR0rS1IxGPTkOR/aymG5+qu4SFKM=; b=jV50f32ZMRdGcju76
-        xcs/nSGrdpE4sQCUUYddJx+6vd3QI+FpCNHseVhWJenXZoTOWJMiYs/YUNAQTNNW
-        PU55R+LwHyRxfw256L7LIIq3Q2BnW2YQcYNnsH1GwO4F7/rdyMUXVk3NDUe4Y3t1
-        eO71ZXvnNzThn1D+LrGlcd8YvW+5E4lHSj17KJItj7TgcM36ebwE5EbfZrGaBL2l
-        dXej30v/9U+QZ4kEs1TA7Fi6tvsVZBqg+I3m6QDVxcZTZkaVmgEkvIQ4aBsex8iK
-        Jnhg9TqzP5U9No3sggCzsC93f0iFX//nBalF5zXJeUac+qQKehnw5ojyiQ1i4Mum
-        HElYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=Hdz4DLRipzbxKr7xR0rS1IxGPTkOR/aymG5+qu4SF
-        KM=; b=tWKhw0vlIYAWv/vnpEOC1/V1izkAJhSsxvOd8t1hnSOetf7YrD91FY92t
-        7EtKZxvzWKhvPD+iHya/YIDJHLZq6EQKmOMIFvYwRpinOLecRV11LaNaLCvn/9z2
-        5NBpIH+BfTslNdKaK/ZHPLMPLS5XF2RfMUhs4b/L1npO6XHVXgBVgNAeyz8Hb8i4
-        QrmZnOSiPPzU6YsheC/2ue54Cg3pJR013mEyiKr8Js49lUd/B7+Thn4khI/O/bVc
-        SUvXmz1c3FEoDg50MA1UpPTh0VzmhB7MfBPqUM365vBHLwkQhiTJVUyWbThhQV0j
-        j7XjmzDlmAT0v1vpy4GpQ351uQBWg==
-X-ME-Sender: <xms:G3sIX1j919aLyVbZGlsNUWj6vR7vsR79oT4U1QOaDVJWSVllp1Ncgg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdektdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
-    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:G3sIX6AKqqw4oIjXblUZJxow5lSiJ1xp5zMy_WasLxuR-CrJp3t6Xw>
-    <xmx:G3sIX1Ge0sxNOXKYSnkdK3ZqxYgdQW9-cvkHcb7WAh3NaCxvXlIj-A>
-    <xmx:G3sIX6SaeeXypihV_rnGMCvvoehNkBb8beRw62slq9K7H4gONHnS3w>
-    <xmx:H3sIX6cBl607v9CFjrFgJw6pOcZr-BlnLHwaY9VCXOP8HYBseBZp9HGd4R0>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8389E3280064;
-        Fri, 10 Jul 2020 10:28:43 -0400 (EDT)
-Date:   Fri, 10 Jul 2020 16:28:41 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
-        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
-        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
-        bage@linutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
-Subject: Re: [PATCH v3 00/16] Allwinner A100 Initial support
-Message-ID: <20200710142841.7ue3xtracowexjct@gilmour.lan>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
+        Fri, 10 Jul 2020 10:30:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g10so8592549wmc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:30:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pdnUnHtfirlekhrwzQjF1FZ328y4VuucsToB4ssq670=;
+        b=kemD2Anqae6DdE1oBkwiALzvnLyufMoRvtwCRFju5x9GmzSh9vFyDbZ6iFwGkuvJMS
+         GYH2pfa4wLBxtOe2pUtX/+DqYidxBPKu6KPuCi0THFACZPEMjw+Ty14DaVR18jFlYo8y
+         Ae9McW8m8Nlu3+o6M2m8uL6PPI7B0CIYaYlXYjJyTNj7Mq7GeGeainn6U2VTgPS0Q36x
+         Fg0XVdZB/J3m4KWt8N1IZu7vuGrMq/JlSbD/jrmfEUoBovGkhWYLV+GeDGvVEfNlEmxU
+         SqOECn1wZW0fjgaGRvo/MZy6bNbkIM6hm3x/FRciergwNzWLunKoh+z+UXUr+eLH1up8
+         yEhg==
+X-Gm-Message-State: AOAM530W1Zrxe1wF6wbG2TI8Ri2FaxNohtf9HO+buTCUZkKRn/aeg4Kx
+        ENO6jUjjkXv+ImYPZ4vxz4sdBiHUKpXtnEBJ4/Y=
+X-Google-Smtp-Source: ABdhPJx7o/4fuIKxLBJlGbWRT2svGYEOYlxVPewgmFKC6C2Men9crlVhgitabn+mmHPK7fWCDJlDfexoTOq9ZIMW9Bg=
+X-Received: by 2002:a1c:6308:: with SMTP id x8mr5708081wmb.92.1594391400604;
+ Fri, 10 Jul 2020 07:30:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com> <20200710134322.15400-9-changbin.du@gmail.com>
+In-Reply-To: <20200710134322.15400-9-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 10 Jul 2020 23:29:49 +0900
+Message-ID: <CAM9d7ciuzqbBb+POeuiFh-KOFKKzi7LOC6r2vu=WiQ_5tMe7Zw@mail.gmail.com>
+Subject: Re: [PATCH v4 08/17] perf: util: add general function to parse
+ sublevel options
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jul 10, 2020 at 10:44 PM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> This factors out a general function perf_parse_sublevel_options() to parse
+> sublevel options. The 'sublevel' options is something like the '--debug'
+> options which allow more sublevel options.
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>
+> ---
+> v2: add util/parse-sublevel-options.c
+> ---
+[snip]
+> diff --git a/tools/perf/util/parse-sublevel-options.c b/tools/perf/util/parse-sublevel-options.c
+> new file mode 100644
+> index 000000000000..39798568547c
+> --- /dev/null
+> +++ b/tools/perf/util/parse-sublevel-options.c
+> @@ -0,0 +1,63 @@
+> +#include <stdlib.h>
+> +#include <stdint.h>
+> +#include <string.h>
+> +#include <stdio.h>
+> +
+> +#include "util/debug.h"
+> +#include "util/parse-sublevel-options.h"
+> +
+> +static int parse_one_sublevel_option(const char *str,
+> +                                    struct sublevel_option *opts)
+> +{
+> +       struct sublevel_option *opt = &opts[0];
+> +       char *vstr, *s = strdup(str);
+> +       int v = 1;
 
-On Wed, Jul 08, 2020 at 03:19:26PM +0800, Frank Lee wrote:
-> This patch set adds initial support for allwinner a100 soc,
-> which is a 64-bit tablet chip.
->=20
-> v3:
-> -Add pmu and nmi support
-> -Add read data mask for calibration
-> -Code style
-> -Some trivial things in yaml files
->=20
-> v2:
-> -Some naming consistency
-> -Repair email address
-> -Fix mmc clock
-> -Don't export system clock
-> -Fix checkpatch warning
-> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
->=20
-> Frank Lee (16):
->   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
->     R-CCU
->   clk: sunxi-ng: add support for the Allwinner A100 CCU
->   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
->   dt-bindings: pinctrl: sunxi: make gpio banks supplies required
->   pinctrl: sunxi: add support for the Allwinner A100 pin controller
->   dt-bindings: nvmem: SID: add binding for A100's SID controller
->   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
->   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
->     sun50i_h6_ths_calibrate
->   thermal: sun8i: Add A100's THS controller support
->   mfd: axp20x: Allow the AXP803 to be probed by I2C
->   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
->   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+I know you just copied the code, but let's add a check for
+the return value of strdup().
 
-it doesn't look like those patches went through?
+Also I think you can just use the opts pointer..
 
->   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
->   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
->   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
->   arm64: allwinner: A100: add support for Allwinner Perf1 board
 
-On a more general topic, which bootloader have you used to test this?
-The one from Allwinner's BSP I assume?
+> +
+> +       vstr = strchr(s, '=');
+> +       if (vstr)
+> +               *vstr++ = 0;
+> +
+> +       while (opt->name) {
+> +               if (!strcmp(s, opt->name))
+> +                       break;
+> +               opt++;
+> +       }
+> +
+> +       if (!opt->name) {
+> +               pr_err("Unknown option name '%s'\n", s);
+> +               free(s);
+> +               return -1;
+> +       }
+> +
+> +       if (vstr)
+> +               v = atoi(vstr);
+> +
+> +       *opt->value_ptr = v;
+> +       free(s);
+> +       return 0;
+> +}
+> +
+> +/* parse options like --foo a=<n>,b,c... */
+> +int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts)
+> +{
+> +       char *s = strdup(str);
+> +       char *p = NULL;
+> +       int ret;
+> +
+> +       if (!s)
+> +               return -1;
+> +
+> +       p = strtok(s, ",");
+> +       while (p) {
+> +               ret = parse_one_sublevel_option(p, opts);
+> +               if (ret) {
+> +                       free(s);
+> +                       return ret;
+> +               }
+> +
+> +               p = strtok(NULL, ",");
+> +       }
+> +
+> +       free(s);
+> +       return 0;
+> +}
+> diff --git a/tools/perf/util/parse-sublevel-options.h b/tools/perf/util/parse-sublevel-options.h
+> new file mode 100644
+> index 000000000000..9b9efcc2aaad
+> --- /dev/null
+> +++ b/tools/perf/util/parse-sublevel-options.h
+> @@ -0,0 +1,11 @@
+> +#ifndef _PERF_PARSE_SUBLEVEL_OPTIONS_H
+> +#define _PERF_PARSE_SUBLEVEL_OPTIONS_H
+> +
+> +struct sublevel_option {
+> +       const char *name;
+> +       int *value_ptr;
+> +};
+> +
+> +int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts);
+> +
+> +#endif
+> \ No newline at end of file
 
-Maxime
+Please add a newline at the end.
+
+Thanks
+Namhyung
+
+
+> --
+> 2.25.1
+>
