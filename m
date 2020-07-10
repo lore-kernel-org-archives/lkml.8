@@ -2,53 +2,96 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD98C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09BC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34B0206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F9C207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ucDfWFoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgGJNun (ORCPT
+        id S1728169AbgGJNv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:50:43 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57274 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgGJNun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:50:43 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jttQG-004TJ6-HH; Fri, 10 Jul 2020 15:50:40 +0200
-Date:   Fri, 10 Jul 2020 15:50:40 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH net-next v1 4/5] net: phy: micrel: ksz8081 add MDI-X
- support
-Message-ID: <20200710135040.GJ1014141@lunn.ch>
-References: <20200710120851.28984-1-o.rempel@pengutronix.de>
- <20200710120851.28984-5-o.rempel@pengutronix.de>
+        Fri, 10 Jul 2020 09:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgGJNv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:51:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB2CC08C5DC;
+        Fri, 10 Jul 2020 06:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GzHj4CEVr0oUdolRmXviOzvrbW+eqpTTu5OyjK0tKsE=; b=ucDfWFoRjeYNSOVqTXosnNhriM
+        WQDGoFaij3+kJn+YGVd1wlY2XgK6k0T07jwYz6xR2Cwm07yXp582rbktduPDkqzjvj2vdc1STGGQW
+        HxTfEAXSByu1MasCJdFWlWpm5udkli+OVbbzf9WZTHYFzQoYcbLOWTr5nVMwzMWBgm76vo85KXF/o
+        WHGt5JglwzU/rFb4ba2riO/WODj0BEZtk583pZMP4JlTY1wuCHGknNxhtW3tojtsdRGdt/ebMrFbM
+        lu+RLZ8XjbW1K9OPfIJgO1fel7KpbhdIpsInu++IcroKbkYqDBs6y0B3CLzJkLWXZylTo7HmBhCDo
+        XOJePRvQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jttQt-0004Pi-Cf; Fri, 10 Jul 2020 13:51:19 +0000
+Date:   Fri, 10 Jul 2020 14:51:19 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, Matias Bj??rling <mb@lightnvm.io>,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200710135119.GL12769@casper.infradead.org>
+References: <20200709085501.GA64935@infradead.org>
+ <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
+ <20200709140053.GA7528@infradead.org>
+ <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
+ <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
+ <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk>
+ <CA+1E3rLna6VVuwMSHVVEFmrgsTyJN=U4CcZtxSGWYr_UYV7AmQ@mail.gmail.com>
+ <20200710131054.GB7491@infradead.org>
+ <20200710134824.GK12769@casper.infradead.org>
+ <20200710134932.GA16257@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710120851.28984-5-o.rempel@pengutronix.de>
+In-Reply-To: <20200710134932.GA16257@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:08:50PM +0200, Oleksij Rempel wrote:
-> Add support for MDI-X status and configuration
+On Fri, Jul 10, 2020 at 02:49:32PM +0100, Christoph Hellwig wrote:
+> On Fri, Jul 10, 2020 at 02:48:24PM +0100, Matthew Wilcox wrote:
+> > If we're going to go the route of changing the CQE, how about:
+> > 
+> >  struct io_uring_cqe {
+> >          __u64   user_data;      /* sqe->data submission passed back */
+> > -        __s32   res;            /* result code for this event */
+> > -        __u32   flags;
+> > +	union {
+> > +		struct {
+> > +		        __s32   res;            /* result code for this event */
+> > +		        __u32   flags;
+> > +		};
+> > +		__s64	res64;
+> > +	};
+> >  };
+> > 
+> > then we don't need to change the CQE size and it just depends on the SQE
+> > whether the CQE for it uses res+flags or res64.
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> How do you return a status code or short write when you just have
+> a u64 that is needed for the offset?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+it's an s64 not a u64 so you can return a negative errno.  i didn't
+think we allowed short writes for objects-which-have-a-pos.
