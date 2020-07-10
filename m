@@ -2,179 +2,126 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F157DC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F52C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCDE2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NB+lilOV"
+	by mail.kernel.org (Postfix) with ESMTP id 9608E2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594404296;
+	bh=BuGVKM7rrsUCZjTvAdy2HByYM2r2OiEDWrLNJoH0UjU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZswqGMm1Bbu3d//W5XoBuQQY4z4bedMXo52SgVT3LY3972qyIYILbWk8khTDiv46w
+	 HWaBChOFEDKEYTBq9vGwgQafyvvknfyTMfZmeLewCJTIf8GQislkwsTBbLtD1QNJr4
+	 POCfPbVON2kV42BXkqfgkOlUYzjUS1Bj/kiPg4OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGJSDz (ORCPT
+        id S1728053AbgGJSEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:03:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12352 "EHLO m43-7.mailgun.net"
+        Fri, 10 Jul 2020 14:04:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgGJSDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:03:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594404234; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=ZQQMH0O09IKSJFL8FajJSP1V0zPU96pA8pCKynU0tJI=; b=NB+lilOVEJrDk7kNDFEn7A+ra5xCLFhDtbhXrqy9NHEbFC7zAjQI0mBZFZG9B1twmY3ZQDsd
- dhAnKCAW+4bNJpPYH/xnym9rwBP9J4Bhi8eGX65+bqBBxLle1n+eXh7rP7Vv3igG5U97qHXI
- P0QAMxle/bcTaS4eeEKXv9BVyEA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f08ad5f512812c0706cbf6e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 18:03:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39A6AC43391; Fri, 10 Jul 2020 18:03:11 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727059AbgGJSEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:04:54 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1456EC433C8;
-        Fri, 10 Jul 2020 18:03:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1456EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 10 Jul 2020 12:03:04 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Eric Anholt <eric@anholt.net>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [Freedreno] [PATCH 2/2] drm/msm/adreno: un-open-code some packets
-Message-ID: <20200710180304.GG21059@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
-        Jonathan Marek <jonathan@marek.ca>, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Eric Anholt <eric@anholt.net>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200707203529.2098979-1-robdclark@gmail.com>
- <20200707203529.2098979-3-robdclark@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1490A2076A;
+        Fri, 10 Jul 2020 18:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594404294;
+        bh=BuGVKM7rrsUCZjTvAdy2HByYM2r2OiEDWrLNJoH0UjU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EAhxjKT01Wmfvs25rU5P5FvNC5R7IdOhaemCWQm7R9286cKrGR/bFaj13K3G80UEw
+         WH2C6X4jk4fO1A6XYy4AxgoiAlYBWKci/8sYV1zJm5Au8ZOUJJE1Ge+7toUM0LXTx1
+         J62tU8gILHTkJjqlc//RCL1JqyAKA9LcbUgZ3meM=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] seccomp.2: Improve x32 and nr truncation notes
+Date:   Fri, 10 Jul 2020 11:04:51 -0700
+Message-Id: <4c7e1cfa3978de83713b71a3f29c8c5f250cf0c6.1594404029.git.luto@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707203529.2098979-3-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:35:00PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ man2/seccomp.2 | 44 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
 
-Might need a commit log here, but otherwise makes sense.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a5xx_gpu.c |  5 +++--
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 11 +++++++----
->  2 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> index d95970a73fb4..7f4526b3283d 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> @@ -186,7 +186,8 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->  	 * timestamp is written to the memory and then triggers the interrupt
->  	 */
->  	OUT_PKT7(ring, CP_EVENT_WRITE, 4);
-> -	OUT_RING(ring, CACHE_FLUSH_TS | (1 << 31));
-> +	OUT_RING(ring, CP_EVENT_WRITE_0_EVENT(CACHE_FLUSH_TS) |
-> +		CP_EVENT_WRITE_0_IRQ);
->  	OUT_RING(ring, lower_32_bits(rbmemptr(ring, fence)));
->  	OUT_RING(ring, upper_32_bits(rbmemptr(ring, fence)));
->  	OUT_RING(ring, submit->seqno);
-> @@ -730,7 +731,7 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
->  	 */
->  	if (adreno_is_a530(adreno_gpu)) {
->  		OUT_PKT7(gpu->rb[0], CP_EVENT_WRITE, 1);
-> -		OUT_RING(gpu->rb[0], 0x0F);
-> +		OUT_RING(gpu->rb[0], CP_EVENT_WRITE_0_EVENT(STAT_EVENT));
->  
->  		gpu->funcs->flush(gpu, gpu->rb[0]);
->  		if (!a5xx_idle(gpu, gpu->rb[0]))
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index 7768557cdfb2..1ed325bea430 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -74,7 +74,9 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
->  		u64 iova)
->  {
->  	OUT_PKT7(ring, CP_REG_TO_MEM, 3);
-> -	OUT_RING(ring, counter | (1 << 30) | (2 << 18));
-> +	OUT_RING(ring, CP_REG_TO_MEM_0_REG(counter) |
-> +		CP_REG_TO_MEM_0_CNT(2) |
-> +		CP_REG_TO_MEM_0_64B);
->  	OUT_RING(ring, lower_32_bits(iova));
->  	OUT_RING(ring, upper_32_bits(iova));
->  }
-> @@ -102,10 +104,10 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->  
->  	/* Invalidate CCU depth and color */
->  	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-> -	OUT_RING(ring, PC_CCU_INVALIDATE_DEPTH);
-> +	OUT_RING(ring, CP_EVENT_WRITE_0_EVENT(PC_CCU_INVALIDATE_DEPTH));
->  
->  	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-> -	OUT_RING(ring, PC_CCU_INVALIDATE_COLOR);
-> +	OUT_RING(ring, CP_EVENT_WRITE_0_EVENT(PC_CCU_INVALIDATE_COLOR));
->  
->  	/* Submit the commands */
->  	for (i = 0; i < submit->nr_cmds; i++) {
-> @@ -139,7 +141,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->  	 * timestamp is written to the memory and then triggers the interrupt
->  	 */
->  	OUT_PKT7(ring, CP_EVENT_WRITE, 4);
-> -	OUT_RING(ring, CACHE_FLUSH_TS | (1 << 31));
-> +	OUT_RING(ring, CP_EVENT_WRITE_0_EVENT(CACHE_FLUSH_TS) |
-> +		CP_EVENT_WRITE_0_IRQ);
->  	OUT_RING(ring, lower_32_bits(rbmemptr(ring, fence)));
->  	OUT_RING(ring, upper_32_bits(rbmemptr(ring, fence)));
->  	OUT_RING(ring, submit->seqno);
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-
+diff --git a/man2/seccomp.2 b/man2/seccomp.2
+index a1b1a28db9bf..e491825600e8 100644
+--- a/man2/seccomp.2
++++ b/man2/seccomp.2
+@@ -342,16 +342,38 @@ is used on the system call number to tell the two ABIs apart.
+ .\"     an extra instruction in system_call to mask off the extra bit,
+ .\"     so that the syscall table indexing still works.
+ .PP
+-This means that in order to create a seccomp-based
+-deny-list for system calls performed through the x86-64 ABI,
+-it is necessary to not only check that
+-.IR arch
+-equals
+-.BR AUDIT_ARCH_X86_64 ,
+-but also to explicitly reject all system calls that contain
++This means that a policy must either deny all syscalls with
+ .BR __X32_SYSCALL_BIT
+-in
+-.IR nr .
++or it must recognize syscalls with and without
++.BR __X32_SYSCALL_BIT
++set.  A list of syscalls to be denied based on
++.IR nr
++that does not also contain
++.IR nr
++values with
++.BR __X32_SYSCALL_BIT
++set can be bypassed by a malicious program that sets
++.BR __X32_SYSCALL_BIT .
++.PP
++Additionally, kernels prior to 5.4 incorrectly permitted
++.IR nr
++in the ranges 512-547 as well as the corresponding non-x32 syscalls ored
++with
++.BR __X32_SYSCALL_BIT .
++For example,
++.IR nr
++== 521 and
++.IR nr
++== (101 |
++.BR __X32_SYSCALL_BIT )
++would result in invocations of
++.BR ptrace (2)
++with potentially confused x32-vs-x86_64 semantics in the kernel.
++Policies intended to work on kernels before 5.4 must ensure that they
++deny or otherwise correctly handle these system calls.  On kernels
++5.4 and newer, such system calls will return -ENOSYS without doing
++anything.
++.\" commit 6365b842aae4490ebfafadfc6bb27a6d3cc54757
+ .PP
+ The
+ .I instruction_pointer
+@@ -368,8 +390,8 @@ and
+ system calls to prevent the program from subverting such checks.)
+ .PP
+ When checking values from
+-.IR args
+-against a deny-list, keep in mind that arguments are often
++.IR args,
++keep in mind that arguments are often
+ silently truncated before being processed, but after the seccomp check.
+ For example, this happens if the i386 ABI is used on an
+ x86-64 kernel: although the kernel will normally not look beyond
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.4
+
