@@ -2,127 +2,158 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE2C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D852C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2D120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75002065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594394401;
+	bh=vby8T28Zhsl7qDBYQZOZlfnWOqlS6FqV3/U4aqAHwfk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FjfYBvVvspuc9yhrIXE7mPXxqSZafmDHp5E6FT4YygLHhmawgHDY9FBavTV++Z4/4
+	 X6Okzo+P13Zpgx949gpQxSiL5q2UziZ1mbioDtUO0ejQ/dqU/DTTaRCy7SqkqFmGgx
+	 8nejPykoO0YRrNQoAsRFHkHVt6ya6sh8+KDlIfZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgGJPSI (ORCPT
+        id S1728114AbgGJPUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:18:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38267 "EHLO mga09.intel.com"
+        Fri, 10 Jul 2020 11:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbgGJPME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:12:04 -0400
-IronPort-SDR: WYkjGxM5hHPLZV4YJq6qF0TxbePVTETW1lJip9Fp3/I6f30lPLCjGYQ1uslwU+JgsvPj9bVn9n
- 1/cDxBz7smcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686384"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="149686384"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:12:03 -0700
-IronPort-SDR: veqy4n/Rj54j8x8wW7EBJaiXpsujaC/fZiCHwe5yyxCwPDDso1d/Xg0UIRudnW8fn48dn+wJbR
- cqEdtmfV+Zhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="484675532"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:11:59 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 08/12] perf intel-pt: Use itrace debug log flags to suppress some messages
-Date:   Fri, 10 Jul 2020 18:11:00 +0300
-Message-Id: <20200710151104.15137-9-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200710151104.15137-1-adrian.hunter@intel.com>
-References: <20200710151104.15137-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        id S1728042AbgGJPRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:17:33 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050F22065D;
+        Fri, 10 Jul 2020 15:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594394230;
+        bh=vby8T28Zhsl7qDBYQZOZlfnWOqlS6FqV3/U4aqAHwfk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=G8UF7jm/7Yy6MTG60kiv3FaSOhzrW9E2hKByIHWg7PY+naOKMMkKyxvJQCQG3zSpU
+         EHLfsan0j8gi6a/j50zOrREv9c/aE102NUgnvEesyBJCtOxv0nbJ0ZmRNmtre87x/t
+         UyfmFZN3VaMLqX8vmFOjTOnjq425a3F6cVMn+8jE=
+Received: by mail-ot1-f54.google.com with SMTP id 95so4424605otw.10;
+        Fri, 10 Jul 2020 08:17:09 -0700 (PDT)
+X-Gm-Message-State: AOAM532tnJuqNeRhCHFPqEOVKXbeTAa9OQ5vgqiQuOUS/MB4ZuIGRHQq
+        70sge2WZLo09IoNF6R9P9FMM37c++J4hiD/Uvg==
+X-Google-Smtp-Source: ABdhPJxZk1EF5sd2MNgTb5L8u1KvVR6QeY8YIQeDuM4HdEwDtdmx29dRwXbBaEwnBV7tWkgFm1gHZDWiIFzbsBYuOoY=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59467283ots.192.1594394229410;
+ Fri, 10 Jul 2020 08:17:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com> <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 Jul 2020 09:16:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "d" option may be followed by flags which affect what debug messages
-will or will not be logged. Each flag must be preceded by either '+' or
-'-'. The flags support by Intel PT are:
-		-a	Suppress logging of perf events
+On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
+<bharat.kumar.gogada@xilinx.com> wrote:
+>
+> - Add support for Versal CPM as Root Port.
+> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+>   block for CPM along with the integrated bridge can function
+>   as PCIe Root Port.
+> - Bridge error and legacy interrupts in Versal CPM are handled using
+>   Versal CPM specific interrupt line.
+>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  drivers/pci/controller/Kconfig           |   8 +
+>  drivers/pci/controller/Makefile          |   1 +
+>  drivers/pci/controller/pcie-xilinx-cpm.c | 617 +++++++++++++++++++++++++++++++
+>  3 files changed, 626 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 
-Suppressing perf events is useful for decreasing the size of the log.
+[...]
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Documentation/perf-intel-pt.txt |  5 ++++-
- tools/perf/util/intel-pt.c                 | 17 ++++++++++-------
- 2 files changed, 14 insertions(+), 8 deletions(-)
+> +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+> +{
+> +       struct xilinx_cpm_pcie_port *port;
+> +       struct device *dev = &pdev->dev;
+> +       struct pci_host_bridge *bridge;
+> +       struct resource *bus_range;
+> +       int err;
+> +
+> +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+> +       if (!bridge)
+> +               return -ENODEV;
+> +
+> +       port = pci_host_bridge_priv(bridge);
+> +
+> +       port->dev = dev;
+> +
+> +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+> +                                             &bridge->dma_ranges, &bus_range);
+> +       if (err) {
+> +               dev_err(dev, "Getting bridge resources failed\n");
+> +               return err;
+> +       }
+> +
+> +       err = xilinx_cpm_pcie_init_irq_domain(port);
+> +       if (err)
+> +               return err;
+> +
+> +       err = xilinx_cpm_pcie_parse_dt(port, bus_range);
+> +       if (err) {
+> +               dev_err(dev, "Parsing DT failed\n");
+> +               goto err_parse_dt;
+> +       }
+> +
+> +       xilinx_cpm_pcie_init_port(port);
+> +
+> +       err = xilinx_cpm_setup_irq(port);
+> +       if (err) {
+> +               dev_err(dev, "Failed to set up interrupts\n");
+> +               goto err_setup_irq;
+> +       }
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 20ac592a2641..d22dead7bbe0 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -882,7 +882,10 @@ For example, for errors but not overflow or data lost errors:
- 
- The "d" option will cause the creation of a file "intel_pt.log" containing all
- decoded packets and instructions.  Note that this option slows down the decoder
--and that the resulting file may be very large.
-+and that the resulting file may be very large.  The "d" option may be followed
-+by flags which affect what debug messages will or will not be logged. Each flag
-+must be preceded by either '+' or '-'. The flags support by Intel PT are:
-+		-a	Suppress logging of perf events
- 
- In addition, the period of the "instructions" event can be specified. e.g.
- 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index a1cb6a284a2b..34caf24998dd 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -249,6 +249,11 @@ static void intel_pt_dump_sample(struct perf_session *session,
- 	intel_pt_dump(pt, sample->aux_sample.data, sample->aux_sample.size);
- }
- 
-+static bool intel_pt_log_events(struct intel_pt *pt)
-+{
-+	return !(pt->synth_opts.log_minus_flags & AUXTRACE_LOG_FLG_ALL_PERF_EVTS);
-+}
-+
- static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *a,
- 				   struct auxtrace_buffer *b)
- {
-@@ -2585,10 +2590,6 @@ static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
- 		return -EINVAL;
- 	}
- 
--	intel_pt_log("context_switch: cpu %d pid %d tid %d time %"PRIu64" tsc %#"PRIx64"\n",
--		     cpu, pid, tid, sample->time, perf_time_to_tsc(sample->time,
--		     &pt->tc));
--
- 	ret = intel_pt_sync_switch(pt, cpu, tid, sample->time);
- 	if (ret <= 0)
- 		return ret;
-@@ -2745,9 +2746,11 @@ static int intel_pt_process_event(struct perf_session *session,
- 	if (!err && event->header.type == PERF_RECORD_TEXT_POKE)
- 		err = intel_pt_text_poke(pt, event);
- 
--	intel_pt_log("event %u: cpu %d time %"PRIu64" tsc %#"PRIx64" ",
--		     event->header.type, sample->cpu, sample->time, timestamp);
--	intel_pt_log_event(event);
-+	if (intel_pt_enable_logging && intel_pt_log_events(pt)) {
-+		intel_pt_log("event %u: cpu %d time %"PRIu64" tsc %#"PRIx64" ",
-+			     event->header.type, sample->cpu, sample->time, timestamp);
-+		intel_pt_log_event(event);
-+	}
- 
- 	return err;
- }
--- 
-2.17.1
+All the h/w init here can be moved to an .init() function in ecam ops
+and then use pci_host_common_probe. Given this is v9, that can be a
+follow-up I guess.
 
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +       bridge->dev.parent = dev;
+> +       bridge->sysdata = port->cfg;
+> +       bridge->busnr = port->cfg->busr.start;
+> +       bridge->ops = &pci_generic_ecam_ops.pci_ops;
+> +       bridge->map_irq = of_irq_parse_and_map_pci;
+> +       bridge->swizzle_irq = pci_common_swizzle;
+> +
+> +       err = pci_host_probe(bridge);
+> +       if (err < 0)
+> +               goto err_host_bridge;
+> +
+> +       return 0;
+> +
+> +err_host_bridge:
+> +       xilinx_cpm_free_interrupts(port);
+> +err_setup_irq:
+> +       pci_ecam_free(port->cfg);
+> +err_parse_dt:
+> +       xilinx_cpm_free_irq_domains(port);
+> +       return err;
+> +}
