@@ -2,117 +2,101 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4296EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E76B2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61C82065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W/lnnY3W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XoMxyh6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgGJDcF (ORCPT
+        id S1727931AbgGJDdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
+        Thu, 9 Jul 2020 23:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgGJDcE (ORCPT
+        with ESMTP id S1727908AbgGJDdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:32:04 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A954C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:32:04 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m22so1895162pgv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6M9I0N+ITvQl9xLS8Krk1EyTKkYlOBKb0aLEeu36Cv8=;
-        b=W/lnnY3WTAA7T9J1NuelxckKknOIoZXKKbX/36nao31ESoCDBAuZ+OW+30GViwVfd8
-         5z+0iEl48c4xcxnb5XJilpOu3XLYs6AWNo8D2ckZNgIU8Xkz/LZICnbM7OmeLdBYAfwE
-         Mu12ew52Bep212m3xFB2cYiLBQpdr8qxuTeoUXi6m9TtnpD/srLkIUnaDdpzgliIupTF
-         6B8WF6wprssPLXrKtgQ4aOTDu+7J6QxZmmpULDLsikCwBGME4BC/HG1W53UVTVCR+kJp
-         b1dERd7Jqf/Gvg/fy6IYHXaVY+ooxDd+15OinfaHrBmqNe1s6P0x74b/Cw3b8nc/naiW
-         4oWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6M9I0N+ITvQl9xLS8Krk1EyTKkYlOBKb0aLEeu36Cv8=;
-        b=XPR2hfIVDIUqatLmTkZln/X2dPQwibN1Kj0tIh/aXRA6EuRfJphRX/1hc4nQVus+F/
-         NJYrPCJCBGXZdSnuF90AJMtSfb/DRMlLwR3eNz8p9RQSNxGX0ICOiUvgsWsGKKQbHE0z
-         vMs4MhJTfDtB3iPeP+bNfnc7mMFOhkS202EK7SrQGKx8rDL4Obbf2WPm3ADOLIqi/hsA
-         6pOLmcqpSu9wF/r3BfMkqmpe86wmaHOY/qzXi27zLS3hUY5mVR44y1o7ixdpTooeKlLb
-         0t/Ai68KyYu4mVmEXY3JdTERE+3BWNmyial5G21lhoFYDZzup1nGmxVXp3BrlMP1d3/0
-         wNGQ==
-X-Gm-Message-State: AOAM532RQhLbUBlXlk3jSbSL65ekQv+xEfx+l0HtW0J/fLdhRmk125L8
-        K+/cq56PHe8JrZS1V4e1+AY4ZHoPLN0=
-X-Google-Smtp-Source: ABdhPJxWp7W3tDSKZHDWvomOrjvvu5VENBEUeF62wqgfTC+Phjp6QzIdRtIQ5UxiD+hL8FDDrsZcZg==
-X-Received: by 2002:a62:195:: with SMTP id 143mr52866988pfb.226.1594351923564;
-        Thu, 09 Jul 2020 20:32:03 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id b82sm4212684pfb.215.2020.07.09.20.32.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 20:32:02 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 09:02:01 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.carpenter@oracle.com,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: intel_pstate: Fix static checker warning for
- epp variable
-Message-ID: <20200710033201.batyrrr7lgqchw4j@vireshk-i7>
-References: <20200709200522.3566181-1-srinivas.pandruvada@linux.intel.com>
+        Thu, 9 Jul 2020 23:33:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F4CC08C5CE;
+        Thu,  9 Jul 2020 20:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=OsNunWJ9eGAHX4ut8rpPqYEAeOB8ig5CVeRR1qqQlX0=; b=XoMxyh6ZlnoqzIreMr9ki7lnEw
+        Vcz+XOCRndPiRKQm02UDDvlBmsMgI96U/21D75cn3yDmd/aTdFRyF7xLo2+KivMAQvuwMbhG08BVL
+        nm1P66zCf1Kb0HHdL4833/IrYHYnW72HJ+DaFTyyKP9i3ujJqdlPnJzY4rMKQL4U+OkgFm5KO8z0Y
+        LS/OFX5BSs2zJKgwNeQ5ghBRrdTS0dhWG3RoLhtTPbsQFHkKS23AmLDCFuL7o4IcPMPmDE+D0RsID
+        AkjYJ/VZxi0Mve+JC1X/g3wUf46mfVbWYe5uL9h47UJ1q1M8/HbLBydUL2kElnbPb5b1DV11pxudJ
+        HxcOso8w==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtjmb-0001Nb-7g; Fri, 10 Jul 2020 03:33:05 +0000
+Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
+ <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
+ <50cc0a0d-e04e-9e5d-26a6-73a91944ba8c@arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f360b009-e7b2-db5c-6d46-1daca76bea24@infradead.org>
+Date:   Thu, 9 Jul 2020 20:33:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709200522.3566181-1-srinivas.pandruvada@linux.intel.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <50cc0a0d-e04e-9e5d-26a6-73a91944ba8c@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-07-20, 13:05, Srinivas Pandruvada wrote:
-> Fix warning for:
-> drivers/cpufreq/intel_pstate.c:731 store_energy_performance_preference()
-> error: uninitialized symbol 'epp'.
+On 7/9/20 8:30 PM, Anshuman Khandual wrote:
 > 
-> This warning is for a case, when energy_performance_preference attribute
-> matches pre defined strings. In this case the value of raw epp will not
-> be used to set EPP bits in MSR_HWP_REQUEST. So initializing with any
-> value is fine.
+> On 07/09/2020 09:04 PM, Randy Dunlap wrote:
+>> Hi,
+>>
+>> I have a few comments on this.
+>>
+>> a. I reported it very early and should have been Cc-ed.
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> This patch is on top of bleed-edge branch at
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/rafael/linux-pm
+> I should have Cc-ed you on this V4 patch, sorry about that.
 > 
->  drivers/cpufreq/intel_pstate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> b. A patch that applies to mmotm or linux-next would have been better
+>> than a full replacement patch.
+> I have followed that (i.e patch on mmotm/next as fix) only when the
+> required change is smaller as compared to the series on mmotm/next.
+> But for others a new patch should be better which can be replaced
+> on mmotm and next. At least that is my understanding and would like
+> to be corrected otherwise.
 > 
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index 44c7b4677675..94cd07678ee3 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -709,7 +709,7 @@ static ssize_t store_energy_performance_preference(
->  	struct cpudata *cpu_data = all_cpu_data[policy->cpu];
->  	char str_preference[21];
->  	bool raw = false;
-> -	u32 epp;
-> +	u32 epp = 0;
->  	int ret;
->  
->  	ret = sscanf(buf, "%20s", str_preference);
+>>
+>> c. I tried replacing what I believe is the correct/same patch file in mmotm
+>> and still have build errors.
+> 
+> That should not have happened, all new THP migration events are with
+> CONFIG_MIGRATION rather than CONFIG_TRANSPARENT_HUGEPAGE previously.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Yes, I could have been mistaken about that last part.  Sorry about that.
 
 -- 
-viresh
+~Randy
+
