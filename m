@@ -2,137 +2,87 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5E2C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86842C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5E9207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594395904;
-	bh=aZgrSQGTi/bQbYJefPXIilrLr45TJZVsRzp7BllPX7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OV2kHlp1cXT0A4AZCkBlxJ1Q6iGzugQWJjWTMQSWcddmrw9hQ6rqxa1Lr2jASrYHz
-	 Z4hFn06WxBcvdagpDmsMCwKInH7kARPneZqGRPyn+6gCquxeENrUjJSi7giK69i4+5
-	 8UV93zqLY3XtO6xztg+phJ7HsFGQdDcgx1D3e7SA=
+	by mail.kernel.org (Postfix) with ESMTP id 6F0D720725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgGJPpC (ORCPT
+        id S1727990AbgGJPpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:45:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57988 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 11:45:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:53414 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGJPpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:45:01 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C39A9207BB;
-        Fri, 10 Jul 2020 15:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594395900;
-        bh=aZgrSQGTi/bQbYJefPXIilrLr45TJZVsRzp7BllPX7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ch7jbZ/QZp6L1XHiRFzuIY/1k/SJDSCGA6fhAI4zb+wgUdVtpwHhSo/Yo3S7s0JT5
-         zTzNmvXIpR2XUQJlg07dtnhDpdYPxpz23diAvmQbfAUNpq+0SGka5LcqyEXj9VRbUX
-         2GoGYb3ZT30G4dOASxK104ejlEBdLB2vpKjlThRA=
-Received: by pali.im (Postfix)
-        id 882DA1514; Fri, 10 Jul 2020 17:44:58 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 17:44:58 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200710154458.bntk7cgewvxmubf4@pali>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+        id S1726820AbgGJPpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:45:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EA7C1FB;
+        Fri, 10 Jul 2020 08:45:29 -0700 (PDT)
+Received: from [10.37.12.58] (unknown [10.37.12.58])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BBB63F8F8;
+        Fri, 10 Jul 2020 08:45:26 -0700 (PDT)
+Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+ <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
+ <20200708153420.29484-2-lukasz.luba@arm.com>
+ <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
+ <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
+ <c016e256-65a6-8075-d88d-c3fad4815b4d@samsung.com>
+ <20200710131921.GA23039@pi3> <4bfa227e-3a6b-dfe2-140b-b402dea52231@arm.com>
+ <20200710144947.GB23140@pi3>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <df121ab9-a84e-41ac-057a-e7e9d0cbab48@arm.com>
+Date:   Fri, 10 Jul 2020 16:45:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200710144947.GB23140@pi3>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
-> I would be very grateful if you could describe what happens in HW
-> when these conditions trigger - I would like to understand if this
-> issue is aardvark specific or it isn't.
 
-Hello Lorenzo! We are not sure what is the problem and where it happens.
 
-There are more issues which happens randomly or under some specific
-conditions.
+On 7/10/20 3:49 PM, Krzysztof Kozlowski wrote:
+> On Fri, Jul 10, 2020 at 02:41:28PM +0100, Lukasz Luba wrote:
+>>
+>>
+>> On 7/10/20 2:19 PM, Krzysztof Kozlowski wrote:
+>>> On Fri, Jul 10, 2020 at 03:13:18PM +0200, Marek Szyprowski wrote:
+>   > In such case, maybe as you said, let's switch to polling mode
+>>> unconditionally?
+>>
+>> I can make happen that the polling mode will be unconditionally
+>> set as default.
+>>
+>> Do you think that the interrupt mode code can still stay in the
+>> driver, because maybe in future could be fixed?
+> 
+> How interrupt mode would exist in such case? Or rather: how would it be
+> used? There is no point to keep dead code and code once removed, can be
+> easily brought back.
 
-I can reproduce following issue: Connect Compex WLE900VX card, configure
-aardvark to gen2 mode. And then card is detected only after the first
-link training. If kernel tries to retrain link again (e.g. via ASPM
-code) then card is not detected anymore. To detect it again it is needed
-to reset card via PERST# signal (assert PERST#, wait, de-assert PERST#).
-PCI warm, hot or function reset does not help. When aardvark is
-configured in gen1 mode then card is detected fine also after multiple
-link training.
+I can make a module param i.e. irq-mode=1, while in default where
+the user don't provide param, we use polling mode. Then I don't have to
+remove DT interrupts and the related code from the driver.
 
-Above problem does not happen with Compex WLE200VX (ath9k) or Compex
-WLE1216V5-20 cards.
-
-Sometimes WLE900VX card disappear from the bus during usage. It just
-stop communicates with ath10k driver and aardvark does not see link.
-
-Another issue which happens for WLE900VX, WLE600VX and WLE1216VS-20 (but
-not for WLE200VX): Linux kernel can detect these cards only if it issues
-card reset via PERST# signal and start link training (via standard pcie
-endpoint register PCI_EXP_LNKCTL/PCI_EXP_LNKCTL_RL) immediately after
-enable link training in aardvark (via aardvark specific LINK_TRAINING_EN
-bit). If there is e.g. 100ms delay between enabling link training and
-setting PCI_EXP_LNKCTL_RL bit then these cards are not detected.
-
-Also issuing reset via PERST# signal is required to detect these cards
-if either board was rebooted (not started from cold power off state) or
-if U-Boot touched/initialized PCIe aardvark.
-
-WLE200VX works fine also after doing second or third link training and
-also works without need to issue reset via PERST# signal.
-
-And WLE900VX card is not detected even after resetting it via PERST#
-signal if aardvark link training (LINK_TRAINING_EN bit) was enabled
-prior toggling PERST#. PERST# signal is controlled via GPIO.
-
-When I put WLE900VX card into board with uses mvebu PCI driver (not
-aardvak) then card is working fine, there is no need to issue card reset
-via PERST#, no need to explicitly set gen mode and card is also working
-after more link training.
-
-So basically I have no idea why it happens or where is the problem,
-either in aardvark or in cards or on both places. As you can see each of
-tested card has different set problems.
-
-Today I tested card from different vendor but with same Qualcomm chip as
-is in WLE900VX and I observe same behavior as from Compex WLE900VX. So
-it looks like that card vendor does not have to matter, important is
-wifi chip inside.
-
-I read in kernel bugzilla that WLE600VX and WLE900VX cards are buggy and
-more people have problems with them. But issues described in kernel
-bugzilla (like card is reporting incorrect PCI device id) I'm not
-observing.
-
-If you have any idea how to either debug these problems or come up with
-idea where could be the problem, please let me know.
+Regards,
+Lukasz
