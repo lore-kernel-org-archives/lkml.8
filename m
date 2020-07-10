@@ -2,118 +2,124 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30913C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55D82077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kf35N59M"
+	by mail.kernel.org (Postfix) with ESMTP id 0C6442077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 07:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594367662;
+	bh=+CLcnOoiP11vbaLWEE7x8Qo9XjfxI8bf98D7jhYvsTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kuVDVcZ+SF1ZoEgNDy7NdxcZqy4M5JuLhij4rxMzqGHyA+HMqRWDKvwfcDpbcQ4Ji
+	 /wEwjFjoCAFyuli4WG+3aOaEmVRy33CSIXCgxUbDsrb60B/AJc3e1MaFOvQdMfEh7v
+	 TG44OKrkgN5d2hTAvlX4m87BLt+4B3qQvQGoW26Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGJHwj (ORCPT
+        id S1726828AbgGJHyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGJHwi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:52:38 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D549FC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 00:52:37 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s9so5355671ljm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 00:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+oFIrmZGV+ZEuN3a4UzFRY4jDqpbgwIVGMqqY/aPagw=;
-        b=Kf35N59M9qiHElyqYUKFB+j6ySnjXJey2z9LT5MipIrL6XBCtUfYeNKYQfO5Maukte
-         VWc9VzwDDDJLSwgx48gy0dwBvAA9dEx/MstTHNASWFjMKtfgVmg7xqipD3DkAhzNCYZp
-         qw1CIj7mQWwCBLe0FI8xBrkXDbVw7tHhRFDm2GAj4ap/2L2M/ee5nXQ1llWmWEINzlVE
-         mDvrgVQn/ckEpSKxumS7CI1bfyiNa0jwf7/DwudEdtmrrT7ituMyalLelmH5wPp/GEMf
-         fUi20hvfC5kjxVUz41Nua9nRU+RGlWJnHaNdalpHPotlRuSFCH0Fd0NG6eOQlg3ytPtI
-         Ra6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+oFIrmZGV+ZEuN3a4UzFRY4jDqpbgwIVGMqqY/aPagw=;
-        b=WBt44cD6/+pg5OQgfPLotToAJcMOtcdXj01oP4NC2kfflDHWKGkkoMuS/iHF9/nBwH
-         nlFh/1IbBKgJXkC+F+gxlxDOvcZJdRzjAxjDlV/smzX/Hteb+Hpas2SF0Oydt2e3jsgo
-         WPYiRmEnYk201c3NDTrYW8fM0Q1Zfmcp5VBgJR2ZUW+Zk7/fgFH2SjE+eKE4qduC0nCT
-         9KzHTEJyR37Jc7dhFRABt0G/vPhGmLTqjtOmCKjRv2IeJ8B+sGFhzy9qE6kXLj26Uyqi
-         pvlQQ7rcYNBmJXN1MtpSJ6eJyxqKho3F8ymffUMEE66s7As3B1yDPEHX6gW1hcT7lfb0
-         IzGg==
-X-Gm-Message-State: AOAM531XTk4Emt23VnRphJyxjFb1+M2qLWiodiZ5gUb/2R6gR9jv6dR3
-        8xCReciAzkfWiFXn0Ddf/ssHyg==
-X-Google-Smtp-Source: ABdhPJxSos7J5sZ8wIpuqp/f0cczF3c92h0YoRJNJrQCv5ckuVMprrqgF7XztA8wxvvCASff49ocjw==
-X-Received: by 2002:a2e:730c:: with SMTP id o12mr33201055ljc.165.1594367556217;
-        Fri, 10 Jul 2020 00:52:36 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
-        by smtp.gmail.com with ESMTPSA id v3sm1629478ljj.110.2020.07.10.00.52.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 00:52:35 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.8-rc5
-Date:   Fri, 10 Jul 2020 09:52:34 +0200
-Message-Id: <20200710075234.24987-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 Jul 2020 03:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgGJHyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 03:54:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A68C2077D;
+        Fri, 10 Jul 2020 07:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594367658;
+        bh=+CLcnOoiP11vbaLWEE7x8Qo9XjfxI8bf98D7jhYvsTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sUWC9jE9AeBrFenvWyUJ08C2OMyYdCth41lSdl+CQ2V8fdS58LUZAE5I1XadKMOEA
+         keKID3B78XHkVhh2GKuELnZE3cw3xCKznbwgYEWS5MBQv6Uy9xrKR+Pp2oPgoouL2v
+         gC+YoTwxB9rnjYdo2Ut08PPTzS7aCibv0NhI0Xe8=
+Date:   Fri, 10 Jul 2020 08:54:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+Message-ID: <20200710075411.GA30011@willie-the-truck>
+References: <20200625001039.56174-1-john.stultz@linaro.org>
+ <20200625001039.56174-6-john.stultz@linaro.org>
+ <20200702141825.GA16941@willie-the-truck>
+ <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
+> On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
+> > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
+> > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > index b510f67dfa49..714893535dd2 100644
+> > > --- a/drivers/iommu/Kconfig
+> > > +++ b/drivers/iommu/Kconfig
+> > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
+> > >  config ARM_SMMU
+> > >       tristate "ARM Ltd. System MMU (SMMU) Support"
+> > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
+> > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> > >       select IOMMU_API
+> > >       select IOMMU_IO_PGTABLE_LPAE
+> > >       select ARM_DMA_USE_IOMMU if ARM
+> >
+> > This looks like a giant hack. Is there another way to handle this?
+> 
+> Sorry for the slow response here.
+> 
+> So, I agree the syntax looks strange (requiring a comment obviously
+> isn't a good sign), but it's a fairly common way to ensure drivers
+> don't get built in if they optionally depend on another driver that
+> can be built as a module.
+>   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
+> !USB_GADGET" in various Kconfig files.
+> 
+> I'm open to using a different method, and in a different thread you
+> suggested using something like symbol_get(). I need to look into it
+> more, but that approach looks even more messy and prone to runtime
+> failures. Blocking the unwanted case at build time seems a bit cleaner
+> to me, even if the syntax is odd.
 
-Here's a PR with a couple of MMC fixes intended for v5.8-rc5. Details about the
-highlights are as usual found in the signed tag.
+Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
+as that driver _really_ doesn't care about SoC details like this. In other
+words, add a new entry along the lines of:
 
-Please pull this in!
+	config ARM_SMMU_QCOM_IMPL
+	default y
+	#if QCOM_SCM=m this can't be =y
+	depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
 
-Kind regards
-Ulf Hansson
+and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
+which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
+so that we don't bother to compile arm-smmu-qcom.o in that case.
 
+Would that work?
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.8-rc1
-
-for you to fetch changes up to 3ec2d5113ea5e182b759b613dc1f7108ba7aac9e:
-
-  mmc: sdhci-msm: Override DLL_CONFIG only if the valid value is supplied (2020-07-08 15:30:35 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - sdhci-msm: Override DLL_CONFIG only with valid values
- - owl-mmc: Get rid of of_match_ptr() macro to fix warning
- - meson-gx: Limit segments to 1 to fix G12A/G12B SoCs
-
-----------------------------------------------------------------
-Manivannan Sadhasivam (1):
-      mmc: owl-mmc: Get rid of of_match_ptr() macro
-
-Neil Armstrong (1):
-      mmc: meson-gx: limit segments to 1 when dram-access-quirk is needed
-
-Veerabhadrarao Badiganti (1):
-      mmc: sdhci-msm: Override DLL_CONFIG only if the valid value is supplied
-
- drivers/mmc/host/meson-gx-mmc.c | 6 ++++--
- drivers/mmc/host/owl-mmc.c      | 2 +-
- drivers/mmc/host/sdhci-msm.c    | 5 +++--
- 3 files changed, 8 insertions(+), 5 deletions(-)
+Will
