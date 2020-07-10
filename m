@@ -2,130 +2,122 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEA4C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552EC20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A64B206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CsSiPpre"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjp2xMlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGJQUF (ORCPT
+        id S1728121AbgGJQUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:20:05 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2162 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJQUE (ORCPT
+        Fri, 10 Jul 2020 12:20:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54486 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727916AbgGJQU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:20:04 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0894c70000>; Fri, 10 Jul 2020 09:18:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 09:20:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 10 Jul 2020 09:20:04 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 16:19:57 +0000
-Subject: Re: [PATCH 1/2] mm/migrate: optimize migrate_vma_setup() for holes
-To:     <bharata@linux.ibm.com>
-CC:     <linux-mm@kvack.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200709165711.26584-1-rcampbell@nvidia.com>
- <20200709165711.26584-2-rcampbell@nvidia.com>
- <20200710063509.GE7902@in.ibm.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <72557537-3d64-7082-11f7-d70b41f7d0e6@nvidia.com>
-Date:   Fri, 10 Jul 2020 09:19:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jul 2020 12:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594398025;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=q9OBXiOBnT1mGmZ2eGcWLsQs9qpaRL+ZvL1+d8k1S8o=;
+        b=gjp2xMlL82kham00+fOQkIMod7p8PBnHK0dIXP36vxyx2N+jYVuesM1mjX0XgTvxUIVYJv
+        j54Q6p0aqCtl0hzNp1ufhV9dOIo+9lFvFJhsybVZwkb/63E5o0RmEbD5hpOxZzxufNn8QB
+        NamVTrLHbt96WQYWB5LJwNrRUboK0vY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-gD70DAuDMf2a5hi_mlHx4A-1; Fri, 10 Jul 2020 12:20:24 -0400
+X-MC-Unique: gD70DAuDMf2a5hi_mlHx4A-1
+Received: by mail-wr1-f71.google.com with SMTP id e11so6537105wrs.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:20:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q9OBXiOBnT1mGmZ2eGcWLsQs9qpaRL+ZvL1+d8k1S8o=;
+        b=CotTY/DBldwepIRYs2wn7zhDEZA9FbQr5Z9dPKXoUeMePMSvrcV5RBLkcqwa2antL0
+         SLg/WcSAUD5m/MR86ti1seNh5DRIafrTfuGXedgKSPaZwaPETfEtv7vnuSav7AmP/9KS
+         SrCk8OkZawFS6yQXOjzLr9gYXE7WwARB5m/QhR90kDsEqlK8ax/Bkm34esjIvO64sGtr
+         2+HZh9bYwUSOS09bWPQIEmBLdu5+kyIpO9UdQ7ZityYsEvbV13hwp68GSCM9EUmKq2O0
+         AQ5IntwLKk9BYbGRHuFaESpNT9fqd4WPSpwHCj9Cgj0YSCf7xtu3Ps7i5i0IbLMm0+EE
+         kZVA==
+X-Gm-Message-State: AOAM5322PjUcAs88sPUABpH8OY2DPWKHK7WXK0wztApw8y7RprDKcI+4
+        fY7bsiYhtWdT8/duQDjf1VcdWlKSD+uxry/GdRPoOQiSkqWkH/m/WmQ0ENMe7q+MgDsSQ8MIHpb
+        pdKjOQ2NST89q9JVxM+5xhxrA
+X-Received: by 2002:a5d:630c:: with SMTP id i12mr75515899wru.158.1594398022819;
+        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNg29SHEj/1kCIq20X+QBQi6Vi8ell7jTihmuv4S0/ilMJ558e1BkioaTjMsJllIACTM1T8A==
+X-Received: by 2002:a5d:630c:: with SMTP id i12mr75515878wru.158.1594398022605;
+        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id 129sm10475853wmd.48.2020.07.10.09.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:20:22 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 18:20:17 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <20200710162017.qdu34ermtxh3rfgl@steredhat>
+References: <20200710141945.129329-1-sgarzare@redhat.com>
+ <20200710153309.GA4699@char.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710063509.GE7902@in.ibm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594397895; bh=Ue/frzFxUQ5xNe2FlvXb4r/DHKPE3j0pZwT+2iMRx4s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CsSiPpre9qxK1jS02numnr4cfl7QmxJ0/oYmekUMhjtq34QymiInNuhlkiCDn0E7p
-         Bl+cgS3sGUonpda8dBJFP7ibbOFONADHdtgHtgcRKvXQArVDB0uEePCFyqO8B5UHlb
-         KR1pBKdSmVPdg062vI5u3K6IVK2DExOIGzrUf2dX5pQySstXbXRvhrXpWDd6xWF+c8
-         TMjfbHedmpP4pZt21f75Zm+hj4lVqe8Ny94gFMGjxbEqdutYx1QT/u3g8DBXsjb5a0
-         DtGKN67dVzTn8mziAEBNJI/0nEz200XIpALyu/RdCHrI+Df8RJivh9s4L720y+2BV3
-         M0oTYVkJHwS9g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710153309.GA4699@char.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Konrad,
 
-On 7/9/20 11:35 PM, Bharata B Rao wrote:
-> On Thu, Jul 09, 2020 at 09:57:10AM -0700, Ralph Campbell wrote:
->> When migrating system memory to device private memory, if the source
->> address range is a valid VMA range and there is no memory or a zero page,
->> the source PFN array is marked as valid but with no PFN. This lets the
->> device driver allocate private memory and clear it, then insert the new
->> device private struct page into the CPU's page tables when
->> migrate_vma_pages() is called. migrate_vma_pages() only inserts the
->> new page if the VMA is an anonymous range. There is no point in telling
->> the device driver to allocate device private memory and then not migrate
->> the page. Instead, mark the source PFN array entries as not migrating to
->> avoid this overhead.
->>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> ---
->>   mm/migrate.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index b0125c082549..8aa434691577 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -2204,9 +2204,13 @@ static int migrate_vma_collect_hole(unsigned long start,
->>   {
->>   	struct migrate_vma *migrate = walk->private;
->>   	unsigned long addr;
->> +	unsigned long flags;
->> +
->> +	/* Only allow populating anonymous memory. */
->> +	flags = vma_is_anonymous(walk->vma) ? MIGRATE_PFN_MIGRATE : 0;
->>   
->>   	for (addr = start; addr < end; addr += PAGE_SIZE) {
->> -		migrate->src[migrate->npages] = MIGRATE_PFN_MIGRATE;
->> +		migrate->src[migrate->npages] = flags;
+On Fri, Jul 10, 2020 at 11:33:09AM -0400, Konrad Rzeszutek Wilk wrote:
+> .snip..
+> > Just to recap the proposal, the idea is to add some restrictions to the
+> > operations (sqe, register, fixed file) to safely allow untrusted applications
+> > or guests to use io_uring queues.
 > 
-> I see a few other such cases where we directly populate MIGRATE_PFN_MIGRATE
-> w/o a pfn in migrate_vma_collect_pmd() and wonder why the vma_is_anonymous()
-> check can't help there as well?
+> Hi!
 > 
-> 1. pte_none() check in migrate_vma_collect_pmd()
-> 2. is_zero_pfn() check in migrate_vma_collect_pmd()
-> 
-> Regards,
-> Bharata.
+> This is neat and quite cool - but one thing that keeps nagging me is
+> what how much overhead does this cut from the existing setup when you use
+> virtio (with guests obviously)?
 
-For case 1, this seems like a useful addition.
-For case 2, the zero page is only inserted if the VMA is marked read-only and
-anonymous so I don't think the check is needed.
-I'll post a v2 with the change.
+I need to do more tests, but the preliminary results that I reported on
+the original proposal [1] show an overhead of ~ 4.17 uS (with iodepth=1)
+when I'm using virtio ring processed in a dedicated iothread:
 
-Thanks for the suggestions!
+  - 73 kIOPS using virtio-blk + QEMU iothread + io_uring backend
+  - 104 kIOPS using io_uring passthrough
+
+>                                 That is from a high level view the
+> beaty of io_uring being passed in the guest is you don't have the
+> virtio ring -> io_uring processing, right?
+
+Right, and potentially we can share the io_uring queues directly to the
+guest userspace applications, cutting down the cost of Linux block
+layer in the guest.
+
+Thanks for your feedback,
+Stefano
+
+[1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredhat/
+
