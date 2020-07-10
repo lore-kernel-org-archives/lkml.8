@@ -2,62 +2,61 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CE4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0171C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFC82065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC8E20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N5bk7v7G"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sIhsjpID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgGJPa3 (ORCPT
+        id S1728162AbgGJPah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:30:29 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54098 "EHLO
+        Fri, 10 Jul 2020 11:30:37 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54155 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgGJPa1 (ORCPT
+        with ESMTP id S1728100AbgGJPa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:30:27 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710153024euoutp0290c7573538e81aeac960192d7d231ad3~gbdPmvK4e1342013420euoutp02X
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:30:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710153024euoutp0290c7573538e81aeac960192d7d231ad3~gbdPmvK4e1342013420euoutp02X
+        Fri, 10 Jul 2020 11:30:29 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710153028euoutp02a62c791ea70d63725329f2e001c26c62~gbdSoE-H71342013420euoutp02g
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:30:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710153028euoutp02a62c791ea70d63725329f2e001c26c62~gbdSoE-H71342013420euoutp02g
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594395025;
-        bh=l2lxSqoqhRbb4X9ynL2i6rkNRlCJlfLxzfEp8Lhp6UE=;
+        s=mail20170921; t=1594395028;
+        bh=/GuB4fVLrH0EVz7PTsFzmWXh5JX3KwLVO+RWvFi1gMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5bk7v7GY2Zxs/ljfZ/ZzdNoxjAfqZVf7Wf1OJO6PHkGcT1y473LzY1hupQPAkPQJ
-         S4MIl3LHc3I97RThhHzemNB4ByLb+2vsTQI/uSBaCeMNr+OkF/n5bwH2+GXOGX70to
-         4ZTLMuX4q84DDy2xMuyZd2J8O8fGI4JpKhPWPdEg=
+        b=sIhsjpIDa+BYbAWCH2LHQt1wkGFufh6Od5H0PJPlCyj+OcV/mrNPxSf1uVkwM6vI9
+         LcXgWHw+GVHVco11us42UCmCSkb5sPaft+krKXjIoubMqrej69jtJqJF6d9RbzU656
+         0MPgjTeb059ZSS0ccESHiv3XiaEtM00jMJE+8SSQ=
 Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200710153024eucas1p2400dd1dde4c0ab042dd6c1ccb4710ac4~gbdPHE2I52487224872eucas1p24;
-        Fri, 10 Jul 2020 15:30:24 +0000 (GMT)
+        20200710153027eucas1p2d0cab0e693a1a0fbc69852bf6bcbc98c~gbdSF-3jT2486824868eucas1p2v;
+        Fri, 10 Jul 2020 15:30:27 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 29.64.06456.099880F5; Fri, 10
-        Jul 2020 16:30:24 +0100 (BST)
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id DB.64.06456.399880F5; Fri, 10
+        Jul 2020 16:30:27 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710153023eucas1p1564ece8b49581616a5bfed978a5164f0~gbdOmfAr-1062710627eucas1p1T;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        20200710153027eucas1p1c893327b918e99a9b0cbd7b0a00af96b~gbdRjCRmP1062810628eucas1p1E;
+        Fri, 10 Jul 2020 15:30:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200710153023eusmtrp1e1f685ab06673404ac89b20505dc379f~gbdOluId52243522435eusmtrp1q;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-dd-5f088990be0b
+        20200710153027eusmtrp1a432c1479ae923017dc8ba9ba83267fd~gbdRiYGjr2243522435eusmtrp1v;
+        Fri, 10 Jul 2020 15:30:27 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-e5-5f088993e039
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6C.38.06017.F89880F5; Fri, 10
-        Jul 2020 16:30:23 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 23.D8.06314.299880F5; Fri, 10
+        Jul 2020 16:30:27 +0100 (BST)
 Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710153023eusmtip1b455300e49a61e0ba238580d832232ea~gbdN1dLdH0686906869eusmtip1M;
-        Fri, 10 Jul 2020 15:30:23 +0000 (GMT)
+        20200710153026eusmtip19a1e45e8ac77cd6755cf6598008ec3e2~gbdQzdtzI0686906869eusmtip1N;
+        Fri, 10 Jul 2020 15:30:26 +0000 (GMT)
 From:   Andrzej Hajda <a.hajda@samsung.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
@@ -73,142 +72,316 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-Subject: [PATCH v8 1/5] driver core: add device probe log helper
-Date:   Fri, 10 Jul 2020 17:30:14 +0200
-Message-Id: <20200710153018.12226-2-a.hajda@samsung.com>
+Subject: [PATCH v8 5/5] coccinelle: add script looking for cases where
+ probe__err can be used
+Date:   Fri, 10 Jul 2020 17:30:18 +0200
+Message-Id: <20200710153018.12226-6-a.hajda@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200710153018.12226-1-a.hajda@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSWUwTURTN60ynA1oyFiJPUYk1xGhkS/l4BELQqJkYjSZKNBqWKhNAWUyH
-        /UcIyC4UERCQWKEoQaW0IMgmUGUtoIIQFBuCyAcooEAhRUUpU/Xv3PPOuefk5pGYaJC/kwwJ
-        j2Rk4dJQMWGJ13cZXzvK00l/l/JEa/ShepCPZuQvAVLfVfFR/uRnAv2uz8XQO8MCgZLKVQQa
-        WZ3BUO/XERyl5yoFSDM1ykfDTfcIpM1vBejpK70AabMvodLlfMyboodH32L0wthNAd26osDp
-        xmK9gC5JK+LTmqp0gu6RD/HottInAnois5tH1ypv0Nl1VYBuv5WH00uaPWeEFy09A5nQkGhG
-        5uwVYBncpkrjXW/aHvtT8QJPAM2iDGBBQsoNNqzfwTKAJSmiKgHU9H8TcMMygJ+61Dg3LAG4
-        oFbify19NR1myyMA9fcX+f8sPVk5wKQiqAPwV+17woRtKAnMGSje3ItRazgcSU3ZcJCkNeUN
-        s3SeJg1OOUDjZNumXkgh2HtrGuPS7OHjmvZNbEG5w/n8TMK0B1JzAji1UAA40VFYMN5irmcN
-        Z7vrBBzeBXV5WWb+BpyoTMY4cxqAz2oazQke8OPgGmEqhG20VjU5c/RhuKjXABMNKSs4NrfN
-        RGMb8HZ9IcbRQpiWYr7jXjgx8My80BZWvDEQnISGCUmx3HmyAOysaAFyYF/8P0sBQBWwZaLY
-        sCCGdQ1nYpxYaRgbFR7kdCUiTAM2fpluvXvxOTAMXdYCigTirUKFlPQX8aXRbFyYFkASE9sI
-        jwzo/ETCQGlcPCOL8JdFhTKsFtiRuNhWKCmb8RVRQdJI5hrDXGdkf195pMXOBIB/6Zya7Zro
-        1bnE7dD5676f31Lh4x01VFTHzp8MKLDY52Gl5zUed/MYaDb49ROJNonV6pgT8XFvwEFl0Qp+
-        wXjudKFbH5DEXj2mVDXUqgfH46m2Q3kOCr38wWrk0kyJlfGHl3H3ft/6Mq1dh3vkqWkJnska
-        Cs5K+nweJhenOopxNljqehCTsdI/e7rCpmEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xu7r9nRzxBv8/GlrcWneO1eLlhMOM
-        FhtnrGe1mPrwCZvF/20TmS2ufH3PZtG8eD2bxdXvL5ktTr65ymLROXEJu8Wmx9dYLS7vmsNm
-        cWjqXkaLtUfuslsc6ou2mPtlKrODgMflaxeZPd7faGX32PttAYvHzll32T1md8xk9di0qpPN
-        48SES0we++euYfe4332cyWPzknqPvi2rGD0O9E5m8fi8SS6AN0rPpii/tCRVISO/uMRWKdrQ
-        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY//6DqaCXWIVfxbsY2lg3C3UxcjJ
-        ISFgInFqw0HmLkYuDiGBpYwSt6/PZIRIiEvsnv+WGcIWlvhzrYsNougTo8SO7xPBEmwCmhJ/
-        N99kA7FFBIwl+s/OYgcpYhZoY5WYe/4JkMPBISzgINFz2gakhkVAVeLnw/1g9bwCFhIne59C
-        LZCXWL3hAJjNKWAp8W5qN1iNEFDN7WXfWScw8i1gZFjFKJJaWpybnltspFecmFtcmpeul5yf
-        u4kRGFvbjv3csoOx613wIUYBDkYlHt4FiRzxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEot
-        yo8vKs1JLT7EaAp01ERmKdHkfGDc55XEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0t
-        SC2C6WPi4JRqYDzJE8xYzVlwLvityIFn7ZPyXG89O/pvd3aQkubk89JMitnvJxwxnVn++4Xz
-        jcIU1+k3XHmcvS9PvbZ4umH7oXN3P3UELE1W0Jbd9sH81POep7uMyzTX6zfNX7zn3LaHb13S
-        7vw9ctHaMGjekjsHcv6U1V7z+2G8j1nvvMOb9DvHfe9cmmL3vZ1TiaU4I9FQi7moOBEA4Jmr
-        XMMCAAA=
-X-CMS-MailID: 20200710153023eucas1p1564ece8b49581616a5bfed978a5164f0
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHe3euWrPjNHyxyJr0wUpNK3hD6SIRJwgqCqLC1tLjlNy0TUvr
+        g1pmmpc0sUwTLGeKVpr3C16a0tQ1y3kpxQtdKCea5VyRkebxKH37Pc//+T/Pn5eXxiRGwpkO
+        UUVwapU8VEra4jWvfr9xz0yiZTv0BZvQ0PNuApnT2wB6kV1GoKwPn0m0UJOBoT7rNIluFJSR
+        qP+XGUOdk/04SsrQUqji0wCBehsekkiX1QTQs/YRCunSzqK82SxsP8P2DvRg7PT7mxTb9DMf
+        Z+tzRig2N/EBwVaUJJFsR7pJxLbkPaXYsWS9iK3UxrBpVSWAbU3NxFlLxcZj4jO2voFcaMhl
+        Tu2597xtsKG5mQzPdo8a/1MsigVW19vAhobMLphQOS+6DWxpCVMMYIbBRAjFLIDWxAekUFgA
+        zCzrwlcs5t47y5YiAGdyWyheWLK8HlLxTDJu8G/lIMmzI7MT3jHmULwBY+Zw2H8rgeAFB0YG
+        40e7FjfRNM5sgTnNq3kUMwi21fsIt1xgaXkrxrMNswd+y0peCgSZKQoWpdYtBzoIrxdqRQI7
+        wAl9FSXwBmjITFmeiYFjxfGYYE4EsLq8HhMEHzjcPUfyh7HF0GUNnkL7AGxI+7oUDTJ28P2U
+        Pd/GFvFuzX1MaIthYoJEmN4Mx4zVywudYOFbKykwC5909ODCU6UA+HnyJZYOXHL+H8sHoAQ4
+        cZEapYLTeKm4Kx4auVITqVJ4BIQpK8DiJzPM62fqgNV0QQcYGkjXiPPltExCyC9ropU6AGlM
+        6ij2MxrOScSB8uirnDpMpo4M5TQ6sJ7GpU7inY/N/hJGIY/gLnJcOKdeUUW0jXMsOBYw/Kgx
+        4vjue6fsneeCUqJcfUs3mr60pXuXfPewBLUXu1EujfnlVWluE+9Gj544fbgAizO2PbZh4gZ9
+        Lmk7C4jpVZuc1YoFB+DXbZk4cnKgs9N7Xuu6ruraUf9D6urtJ744DWfIPD6uzf4xPt+3bbBW
+        quravK/WLiasO+GRdcFLL8U1wXKvrZhaI/8HkVXfb2ADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xu7qTOzniDW4UWNxad47V4uWEw4wW
+        G2esZ7WY+vAJm8X/bROZLa58fc9m0bx4PZvF1e8vmS1OvrnKYtE5cQm7xabH11gtLu+aw2Zx
+        aOpeRou1R+6yWxzqi7aY+2Uqs4OAx+VrF5k93t9oZffY+20Bi8fOWXfZPWZ3zGT12LSqk83j
+        xIRLTB77565h97jffZzJY/OSeo++LasYPQ70Tmbx+LxJLoA3Ss+mKL+0JFUhI7+4xFYp2tDC
+        SM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/j9L59bAUzdCte/F7B1MD4VbmLkZND
+        QsBE4uXlfqYuRi4OIYGljBIfH7YwQyTEJXbPfwtlC0v8udbFBlH0iVFi6tJ/YAk2AU2Jv5tv
+        soHYIgLGEv1nZ7GDFDELtLFKzD3/hB0kISwQK9Ewax9rFyMHB4uAqsSsfdwgJq+AhcThndYQ
+        8+UlVm84ADaSU8BS4t3UbrCRQkAlt5d9Z53AyLeAkWEVo0hqaXFuem6xoV5xYm5xaV66XnJ+
+        7iZGYFxtO/Zz8w7GSxuDDzEKcDAq8fAuSOSIF2JNLCuuzD3EKMHBrCTC63T2dJwQb0piZVVq
+        UX58UWlOavEhRlOgkyYyS4km5wNjPq8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6Yklqdmpq
+        QWoRTB8TB6dUA6Pd46o30UXs09n3h7oaxLGc2habtMXN/y13SO7VaYa/ApLnte7ff6GKrS3q
+        f/Xk/C4z5jvVZ6ZGP+S3DWf6+K72/OaWN18UF/jw989efFvybmDlc0XLbVYtoVf6l100SDr+
+        MON1RNfbrMv/fjOv/MWsw/xoWbKKn8WPazH7V/Ku93hYKZJ1pVmJpTgj0VCLuag4EQAeZ83F
+        wQIAAA==
+X-CMS-MailID: 20200710153027eucas1p1c893327b918e99a9b0cbd7b0a00af96b
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200710153023eucas1p1564ece8b49581616a5bfed978a5164f0
+X-RootMTR: 20200710153027eucas1p1c893327b918e99a9b0cbd7b0a00af96b
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200710153023eucas1p1564ece8b49581616a5bfed978a5164f0
+X-CMS-RootMailID: 20200710153027eucas1p1c893327b918e99a9b0cbd7b0a00af96b
 References: <20200710153018.12226-1-a.hajda@samsung.com>
-        <CGME20200710153023eucas1p1564ece8b49581616a5bfed978a5164f0@eucas1p1.samsung.com>
+        <CGME20200710153027eucas1p1c893327b918e99a9b0cbd7b0a00af96b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During probe every time driver gets resource it should usually check for
-error printk some message if it is not -EPROBE_DEFER and return the error.
-This pattern is simple but requires adding few lines after any resource
-acquisition code, as a result it is often omitted or implemented only
-partially.
-dev_err_probe helps to replace such code sequences with simple call,
-so code:
-	if (err != -EPROBE_DEFER)
-		dev_err(dev, ...);
-	return err;
-becomes:
-	return dev_err_probe(dev, err, ...);
+This is AD-HOC script, it should nt be merged.
 
 Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/base/core.c    | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h |  3 +++
- 2 files changed, 45 insertions(+)
+ probe_err.cocci | 247 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 247 insertions(+)
+ create mode 100644 probe_err.cocci
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 67d39a90b45c..3a827c82933f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3953,6 +3953,48 @@ define_dev_printk_level(_dev_info, KERN_INFO);
- 
- #endif
- 
-+/**
-+ * dev_err_probe - probe error check and log helper
-+ * @dev: the pointer to the struct device
-+ * @err: error value to test
-+ * @fmt: printf-style format string
-+ * @...: arguments as specified in the format string
-+ *
-+ * This helper implements common pattern present in probe functions for error
-+ * checking: print debug or error message depending if the error value is
-+ * -EPROBE_DEFER and propagate error upwards.
-+ * It replaces code sequence:
-+ * 	if (err != -EPROBE_DEFER)
-+ * 		dev_err(dev, ...);
-+ * 	else
-+ * 		dev_dbg(dev, ...);
-+ * 	return err;
-+ * with
-+ * 	return dev_err_probe(dev, err, ...);
-+ *
-+ * Returns @err.
-+ *
-+ */
-+int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
-+{
-+	struct va_format vaf;
-+	va_list args;
+diff --git a/probe_err.cocci b/probe_err.cocci
+new file mode 100644
+index 000000000000..0ef9a9b4c9bc
+--- /dev/null
++++ b/probe_err.cocci
+@@ -0,0 +1,247 @@
++virtual context
++virtual patch
 +
-+	va_start(args, fmt);
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
++@initialize:python@
++@@
 +
-+	if (err != -EPROBE_DEFER)
-+		dev_err(dev, "error %d: %pV", err, &vaf);
-+	else
-+		dev_dbg(dev, "error %d: %pV", err, &vaf);
++import re
 +
-+	va_end(args);
++@@
++expression err, dev;
++constant char [] fmt;
++expression list args;
++@@
 +
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(dev_err_probe);
++-   if (err != -EPROBE_DEFER) { dev_err(dev, fmt, args); }
+++   dev_err_probe(dev, err, fmt, args);
 +
- static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
- {
- 	return fwnode && !IS_ERR(fwnode->secondary);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 15460a5ac024..6b2272ae9af8 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -964,6 +964,9 @@ void device_link_remove(void *consumer, struct device *supplier);
- void device_links_supplier_sync_state_pause(void);
- void device_links_supplier_sync_state_resume(void);
- 
-+extern __printf(3, 4)
-+int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
++@@
++expression ptr, dev;
++constant char [] fmt;
++expression list args;
++@@
 +
- /* Create alias, so I can be autoloaded. */
- #define MODULE_ALIAS_CHARDEV(major,minor) \
- 	MODULE_ALIAS("char-major-" __stringify(major) "-" __stringify(minor))
++-   if (ptr != ERR_PTR(-EPROBE_DEFER)) { dev_err(dev, fmt, args); }
+++   dev_err_probe(dev, PTR_ERR(ptr), fmt, args);
++
++@@
++expression e, dev;
++identifier err;
++identifier fget =~ "^(devm_)?(clk_get|gpiod_get|gpiod_get_optional|gpiod_get_index|gpiod_get_index_optional|regulator_get|regulator_get_optional|reset_control_get|reset_control_get_exclusive|reset_control_get_shared|phy_get|pinctrl_get|iio_channel_get|pwm_get)$";
++identifier flog =~ "^(dev_err|dev_warn|dev_info)$";
++expression list args;
++@@
++    e = fget(...);
++    if (IS_ERR(e)) {
++(
++	err = PTR_ERR(e);
++-	flog(dev, args);
+++	dev_err_probe(dev, err, args);
++|
++-	flog(dev, args);
+++	dev_err_probe(dev, PTR_ERR(e), args);
++)
++	...
++    }
++
++@@
++expression dev;
++identifier err;
++identifier fget =~ "^(devm_)?(request_irq|request_threaded_irq|regulator_bulk_get)$";
++identifier flog =~ "^(dev_err|dev_warn|dev_info)$";
++expression list args;
++@@
++    err = fget(...);
++    if ( \( err \| err < 0 \) ) {
++	...
++-	flog(dev, args);
+++	dev_err_probe(dev, err, args);
++	...
++    }
++
++@catch_no_nl@
++expression dev, err;
++constant char [] fmt !~ "\\n$";
++@@
++    dev_err_probe(dev, err, fmt, ...)
++
++@script:python add_nl depends on catch_no_nl@
++fmt << catch_no_nl.fmt;
++nfmt;
++@@
++print "add_nl " + fmt
++coccinelle.nfmt = fmt[:-1] + '\\n"';
++
++@fix_no_nl depends on catch_no_nl@
++constant char [] catch_no_nl.fmt;
++identifier add_nl.nfmt;
++@@
++-  fmt
+++  nfmt
++
++@catch_fmt@
++expression err, dev;
++expression fmt;
++position p;
++@@
++
++    dev_err_probe@p(dev, err, fmt, ..., \( (int)err \| err \) )
++
++@script:python trim_fmt@
++fmt << catch_fmt.fmt;
++new_fmt;
++@@
++
++tmp = fmt
++tmp = re.sub('failed: irq request (IRQ: %d, error :%d)', 'irq request %d', tmp)
++tmp = re.sub('Error %l?[di] ', 'Error ', tmp)
++tmp = re.sub(' as irq = %d\\\\n', ', bad irq\\\\n', tmp)
++tmp = re.sub('[:,]? ?((ret|err|with|error)[ =]?)?%l?[di]\.?\\\\n', '\\\\n', tmp)
++tmp = re.sub(' ?\(((err|ret|error)\s*=?\s*)?%l?[diu]\)[!.]?\\\\n', '\\\\n', tmp)
++
++assert tmp != fmt, "cannot trim_fmt in: " + fmt
++print "trim_fmt " + fmt + " " + tmp
++coccinelle.new_fmt = tmp
++
++@fix_fmt@
++expression err, err1, dev;
++expression fmt;
++expression list l;
++identifier trim_fmt.new_fmt;
++position catch_fmt.p;
++@@
++
++-   dev_err_probe@p(dev, err, fmt, l, err1)
+++   dev_err_probe(dev, err, new_fmt, l)
++
++@err_ass1@
++identifier err;
++expression dev, ptr;
++expression list args;
++@@
++
++-   err = PTR_ERR(ptr);
++-   dev_err_probe(dev, err, args);
++-   return ERR_PTR(err);
+++   dev_err_probe(dev, PTR_ERR(ptr), args);
+++   return ERR_CAST(ptr);
++
++@err_ass2@
++identifier err, f1, f2;
++expression dev, e;
++expression list args;
++@@
++-   err = PTR_ERR(e);
++-   dev_err_probe(dev, err, args);
++(
++|
++    f1(...);
++|
++    f1(...);
++    f2(...);
++)
++-   return err;
+++   return dev_err_probe(dev, PTR_ERR(e), args);
++
++@@
++identifier err;
++expression dev, e;
++expression list args;
++@@
++
++-   int err = e;
++-   dev_err_probe(dev, err, args);
++-   return err;
+++   return dev_err_probe(dev, e, args);
++
++@@
++expression err, dev;
++expression list args;
++@@
++
++-   dev_err_probe(dev, err, args);
++-   return err;
+++   return dev_err_probe(dev, err, args);
++
++@@
++expression err, dev, ptr;
++expression list args;
++@@
++
++-   dev_err_probe(dev, PTR_ERR(ptr), args);
++    err = PTR_ERR(ptr);
+++   dev_err_probe(dev, err, args);
++
++@@
++expression e;
++expression list args;
++statement s, s1;
++@@
++
++// without s1 spatch generates extra empty line after s
++-   if (e) { return dev_err_probe(args); } else s s1
+++   if (e) return dev_err_probe(args); s s1
++
++@@
++expression e;
++expression list args;
++@@
++
++-   if (e) { return dev_err_probe(args); }
+++   if (e) return dev_err_probe(args);
++
++@@
++expression e, s, v;
++expression list args;
++@@
++
++-   if (e == v) { s; } else { return dev_err_probe(args); }
+++   if (e != v) return dev_err_probe(args); s;
++
++@err_ass3@
++identifier err;
++expression dev, ptr;
++expression list args;
++@@
++
++-   err = PTR_ERR_OR_ZERO(ptr);
++-   if (err) return dev_err_probe(dev, err, args);
+++   if (IS_ERR(ptr)) return dev_err_probe(dev, PTR_ERR(ptr), args);
++
++@@
++expression dev, ptr;
++expression list args;
++@@
++
++-   DROP_probe_err(dev, PTR_ERR(ptr), args)
+++   probe_err(dev, ptr, args)
++
++@@
++identifier err_ass1.err;
++expression e;
++identifier f =~ "^(dev_err_probe|probe_err_ptr)$";
++@@
++-    \( int err; \| int err = e; \)
++    <+... when != err
++    f
++    ...+>
++
++@@
++identifier err_ass2.err;
++expression e;
++identifier f =~ "^(dev_err_probe|probe_err_ptr)$";
++@@
++-    \( int err; \| int err = e; \)
++    <+... when != err
++    f
++    ...+>
++
++@@
++identifier err_ass3.err;
++expression e;
++identifier f =~ "^(dev_err_probe|probe_err_ptr)$";
++@@
++-    \( int err; \| int err = e; \)
++    <+... when != err
++    f
++    ...+>
 -- 
 2.17.1
 
