@@ -2,130 +2,101 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E783C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E32C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2E32073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594342426;
-	bh=reFQJi1XKgmgNcqGOKHw+14/THKDf3slVwdFWIaTLWw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v9J1+s0YopSPCi94M4gtPRQvsHfPIMmrPVQKrA4RX/v1Mtrf3M7gH3raYkcLLV7pC
-	 VxpEPAKU+vkb5HFq6DGVIFbduD783TGdEeHpF/qKgfH0XbpN6gY7tTd6BRfjT1rZtb
-	 K89pYSMfLO0GyflOyEFPQTJZX2HgElMR4ShFpo08=
+	by mail.kernel.org (Postfix) with ESMTP id C9FF12073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgGJAxo (ORCPT
+        id S1726863AbgGJAyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgGJAxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:53:44 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB88DC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:53:43 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id k17so2235731lfg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MFh3SaPo/ZFXaZidxF67lCWnAMjqlEvCBJ64cvHaUrY=;
-        b=NT4TzoavA8XuxEdHVVxEKPvDs3nmncFob4PBzrwmPVHTSJRRctMxc6oSaNN7BF0xsT
-         i/UGzXG4LWriSd9Bu28syC4R7ie6so4SQ4Epa01FDTqcTOmm7z2nDQQmUMSTl4oC8vCG
-         Khzd6HT2LkjjViT/d/cWTEiVFWO5HfzBpZ3aQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MFh3SaPo/ZFXaZidxF67lCWnAMjqlEvCBJ64cvHaUrY=;
-        b=AUHRCgE5USthnPFfjJBW1alBlX3YinVjhD9UtZ5RgYOh0J+aKvSJ+63Yfk9NCw+DT5
-         ltX5PuNVP7+G39Brmno1J3CUq6n/SBk5uhDPicJq06sleUybfHFSotgQD4j3tp1xRft+
-         GZO+an4uPKPQs9GSLDgZSDy2GM2wXwAApVO0q4bXRPy/+QJ+phrEow2OnUi+lfL1FtrE
-         8b8UbabQZGj/6J2EiJZd8KvBZkZqiAzGgEDJMS26jQ9F6/M4ZxE3myf20FtmJqTyt3IW
-         +EnEze0ZwGjG/8MT3DKfngZYDR/BUBnsw7bUBYIbvdai5oMbhU8C0C3NSgutCflx+f7E
-         g9Sw==
-X-Gm-Message-State: AOAM532qSUfhElKkAuEw6gAgS7XkZVTIuZF838UAk7vOznCHl0MQFxbi
-        b/Hp8/i4GBYMOKmDD8xP5njYS/1RqVg=
-X-Google-Smtp-Source: ABdhPJwiQ76YuzgSdgr6zOpg8CKAukpZ8U4pVVCSzzPyXEQJDoe9gYTTPt3eB/swOKmB7OmCk0v9aw==
-X-Received: by 2002:a19:4cd:: with SMTP id 196mr41570342lfe.136.1594342422129;
-        Thu, 09 Jul 2020 17:53:42 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id z84sm2160327lfa.54.2020.07.09.17.53.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 17:53:41 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id j11so4463673ljo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 17:53:41 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr37491111ljj.102.1594342420759;
- Thu, 09 Jul 2020 17:53:40 -0700 (PDT)
+        Thu, 9 Jul 2020 20:54:15 -0400
+Received: from mx.socionext.com ([202.248.49.38]:39525 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbgGJAyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 20:54:14 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 10 Jul 2020 09:54:13 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4A74D180C09;
+        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 10 Jul 2020 09:54:13 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2EDCD1A0507;
+        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
+Received: from [10.213.31.123] (unknown [10.213.31.123])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 847BE12012F;
+        Fri, 10 Jul 2020 09:54:12 +0900 (JST)
+Subject: Re: [PATCH v5 6/6] PCI: uniphier: Use
+ devm_platform_ioremap_resource_byname()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
+Date:   Fri, 10 Jul 2020 09:54:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200709221102.323356-1-cesarb@cesarb.eti.br>
-In-Reply-To: <20200709221102.323356-1-cesarb@cesarb.eti.br>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jul 2020 17:53:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjUEmO4GiC9mCyzZ8_WS=ZWgfg6CnpxPSLq=uoF1F3Xyw@mail.gmail.com>
-Message-ID: <CAHk-=wjUEmO4GiC9mCyzZ8_WS=ZWgfg6CnpxPSLq=uoF1F3Xyw@mail.gmail.com>
-Subject: Re: [PATCH] Restore gcc check in mips asm/unroll.h
-To:     Cesar Eduardo Barros <cesarb@cesarb.eti.br>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 3:11 PM Cesar Eduardo Barros
-<cesarb@cesarb.eti.br> wrote:
->
-> While raising the gcc version requirement to 4.9, the compile-time check
-> in the unroll macro was accidentally changed from being used on gcc and
-> clang to being used on clang only.
->
-> Restore the gcc check, changing it from "gcc >= 4.7" to "all gcc".
+Hi Lorenzo,
 
-This is clearly a thinko on my side: the old
+This 6/6 patch has just been covered with the following patch:
+https://patchwork.ozlabs.org/project/linux-pci/patch/20200708164013.5076-1-zhengdejin5@gmail.com/
 
-    CONFIG_GCC_VERSION >= 40700
+As a result, my other patches conflict with this patch.
+I'd like your comments in the patch 2/6, though,
+should I rebase to pci/dwc and resend this series without 6/6?
 
-became pointless, so I removed, it, but it was mixed with an "||" so
-we actually wanted to make it unconditional on gcc, and instead now it
-checks for CLANG version even when it shouldn't.
+Thank you,
 
-My bad, and your patch is obviously correct.
+On 2020/06/18 17:38, Kunihiko Hayashi wrote:
+> Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>f
+> ---
+>   drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 8356dd3..233d624 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -456,8 +456,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>   	if (IS_ERR(priv->pci.atu_base))
+>   		priv->pci.atu_base = NULL;
+>   
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> -	priv->base = devm_ioremap_resource(dev, res);
+> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+>   	if (IS_ERR(priv->base))
+>   		return PTR_ERR(priv->base);
+>   
+> 
 
-At the same time, I do wonder if  we could just remove the check for
-CLANG_VERSION >= 80000 too, and just remove all the compiler check
-hackery entirely?
-
-Older versions of clang weren't very good at compiling the Linux
-kernel in the first place. Do people actually use old clang versions?
-That sounds like a really bad idea.
-
-People who used to build the kernel with clang tended to actually get
-their clang version from the clang git sources afaik (I still do, but
-that's because I test experimental new features that aren't released
-yet), exactly because back in the bad old days there were so many
-problems.
-
-These days you can use release versions, but they'd presumably not be
-older than clang-8.
-
-Adding Nick - is it really reasonable to build any kernel with any
-clang version before 8.0.0?
-
-It turns out that the arm side also has a check for clang < 8 because
-of -mcmodel=tiny, so raising the minimum required clang version to
-that would solve that issue too.
-
-Right now we don't mention minimum clang/llvm versions in our docs at
-all, because we only mention gcc. Mayeb this would be good to clarify.
-
-               Linus
+---
+Best Regards
+Kunihiko Hayashi
