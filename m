@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3426C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0572C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5EEE20725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B1720725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpA+e9fl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iyzHRZfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgGJPso (ORCPT
+        id S1726962AbgGJPsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:48:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39933 "EHLO
+        Fri, 10 Jul 2020 11:48:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20969 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728188AbgGJPsh (ORCPT
+        with ESMTP id S1728115AbgGJPsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:48:37 -0400
+        Fri, 10 Jul 2020 11:48:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594396116;
+        s=mimecast20190719; t=1594396110;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=We5wJ84o/aljkxoB41joXofmlMWZ48vbTILISgRltrw=;
-        b=hpA+e9fld7MUKyQJwX3Yv9T0CO97KMCb9RP9iJh6elZY6Dp23AR834NwWln6fNmqKu/UMW
-        2HEhU5w5robCrot3tcpE9s1JCwLiJuCEX1vvX/MB9jXGPVWNldhr8TbJfcM9+FTm3jTog4
-        YCtu+aZM6gFS0c45Z+l39G/dO/vGx98=
+        bh=ysp4pgGf28/Rv6t1JVehGYmHl2LaKg10kElk18AGj/A=;
+        b=iyzHRZfzrgSIYkzF6zV+yzAVszehIXSwqPSg1Ud37epfLiIm7XS0lajNDhXyl7aREOK0VH
+        p5JsECOfRdoLQlLMORaO2Qw3xRkjkziLAw1+F+bN05Q9U+KZd9pIfDcrUAinH0eSQXjgwu
+        t6HE4aJCTIDq9VWGVISTSQkNo4BPWFs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-SmA5nucdOz2_qG-395OCUw-1; Fri, 10 Jul 2020 11:48:34 -0400
-X-MC-Unique: SmA5nucdOz2_qG-395OCUw-1
+ us-mta-270-Q3lgybjmN6-wDuq7YU7rBg-1; Fri, 10 Jul 2020 11:48:29 -0400
+X-MC-Unique: Q3lgybjmN6-wDuq7YU7rBg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D6A1800C64;
-        Fri, 10 Jul 2020 15:48:33 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F40ED1083;
+        Fri, 10 Jul 2020 15:48:27 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-114-235.ams2.redhat.com [10.36.114.235])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A66447EF8E;
-        Fri, 10 Jul 2020 15:48:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBDD27EFA1;
+        Fri, 10 Jul 2020 15:48:25 +0000 (UTC)
 From:   Mohammed Gamal <mgamal@redhat.com>
 To:     kvm@vger.kernel.org, pbonzini@redhat.com
 Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
         sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org
-Subject: [PATCH v3 5/9] KVM: x86: update exception bitmap on CPUID changes
-Date:   Fri, 10 Jul 2020 17:48:07 +0200
-Message-Id: <20200710154811.418214-6-mgamal@redhat.com>
+        jmattson@google.com, joro@8bytes.org,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH v3 3/9] KVM: x86: mmu: Add guest physical address check in translate_gpa()
+Date:   Fri, 10 Jul 2020 17:48:05 +0200
+Message-Id: <20200710154811.418214-4-mgamal@redhat.com>
 In-Reply-To: <20200710154811.418214-1-mgamal@redhat.com>
 References: <20200710154811.418214-1-mgamal@redhat.com>
 MIME-Version: 1.0
@@ -63,27 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+In case of running a guest with 4-level page tables on a 5-level page
+table host, it might happen that a guest might have a physical address
+with reserved bits set, but the host won't see that and trap it.
 
-Allow vendor code to observe changes to MAXPHYADDR and start/stop
-intercepting page faults.
+Hence, we need to check page faults' physical addresses against the guest's
+maximum physical memory and if it's exceeded, we need to add
+the PFERR_RSVD_MASK bits to the PF's error code.
 
+Also make sure the error code isn't overwritten by the page table walker.
+
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/cpuid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/mmu/mmu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 8a294f9747aa..ea5bbf2153bb 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -128,6 +128,8 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 	kvm_mmu_reset_context(vcpu);
- 
- 	kvm_pmu_refresh(vcpu);
-+	kvm_x86_ops.update_exception_bitmap(vcpu);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index f8b3c5181466..e03e85b21cda 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -518,6 +518,12 @@ static bool check_mmio_spte(struct kvm_vcpu *vcpu, u64 spte)
+ static gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
+                                   struct x86_exception *exception)
+ {
++	/* Check if guest physical address doesn't exceed guest maximum */
++	if (kvm_mmu_is_illegal_gpa(vcpu, gpa)) {
++		exception->error_code |= PFERR_RSVD_MASK;
++		return UNMAPPED_GVA;
++	}
 +
- 	return 0;
+         return gpa;
  }
  
 -- 
