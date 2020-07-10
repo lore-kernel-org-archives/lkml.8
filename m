@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7195C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386C0C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83CE7207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089AE2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WlS9liMJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aRcgCgjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgGJNol (ORCPT
+        id S1727110AbgGJNop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
+        Fri, 10 Jul 2020 09:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbgGJNoi (ORCPT
+        with ESMTP id S1727098AbgGJNoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 09:44:38 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E0AC08E876
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:35 -0700 (PDT)
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FDFC08E8A9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=KFkNLGKnCZIPYfDCYZliBUs674rrJ6vlBRa3qnykRNg=; b=WlS9liMJKwRWumkSb+rtmV2vge
-        fd+ggDvNfUwSyB8MfHEwad60aO5Uz53QxQB6N/wHZK1Hzo0gMl4r+++UyYQ/XIt5IDKGcxwv+DF4f
-        NI8dJplz45gfZyeoShw4rpeG/8erBLMq7j/Z+W3lYyc5l1M23n08mm7blPHGQrG2FOqPi1nyfNIVy
-        yE1P0sO/CneA3vS/pyTtJ+gUjosBn8bnpV9GOBCib8DnBZSDZodJbHxgbd+yrywfh00y/AXBqaWJA
-        ZilhTRBvm+SvBNW9EVtz2jWovqUPLpBdx2Un78fZvwpY/kgyrQIjL16Zge4tQ2pWwXbDbgQs4oaUh
-        kIrMsTIw==;
+        bh=2Qsfk0HOB3x9nc2pqsOJnCHVpv340CkHcue6gSdP15s=; b=aRcgCgjH0DlMSBaIu3OhM995pN
+        5TSmKw4I1MxBQ2jBlaHOO33IZKsHliFrX6XOBdlIlQIUNqj1fDb19XPH+DcDEWfEPNDIABcJUWAVe
+        wYPaBvcCJRZd6Uff2yxkpSUUuijaUrjt2TQga1xVXyCuv7TeAQYrb5velm9Sh/PAKgSEEopD6eCp/
+        BqsJHAuOKqacBhLvlmHNssFbB3I4Pf/1AEwYe680bZV0X+mB9+BUlG7bCVq91QhQrenqwAcKaSQ8H
+        EA3OP2PpNwNAS+QzhqZ0k2lqcIf1PK6Law5iEC5lnvC8UU0csV3eONTYQMeHxhJ5B7H6c/Vsxmbxm
+        k6NfZQMA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jttK1-00017d-ET; Fri, 10 Jul 2020 13:44:14 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jttJz-0003ss-MQ; Fri, 10 Jul 2020 13:44:12 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CF17230785A;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E816306099;
         Fri, 10 Jul 2020 15:44:10 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E43572B7A7335; Fri, 10 Jul 2020 15:44:09 +0200 (CEST)
-Message-ID: <20200710134336.439735640@infradead.org>
+        id DF7382B7A7334; Fri, 10 Jul 2020 15:44:09 +0200 (CEST)
+Message-ID: <20200710134336.380692290@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 10 Jul 2020 15:38:36 +0200
+Date:   Fri, 10 Jul 2020 15:38:35 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -58,7 +58,7 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
         jpoimboe@redhat.com, pbonzini@redhat.com,
         mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: [PATCH v6 05/17] compiler.h: Make __ADDRESSABLE() symbol truly unique
+Subject: [PATCH v6 04/17] jump_label,module: Fix module lifetime for __jump_label_mod_text_reserved
 References: <20200710133831.943894387@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,33 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+Nothing ensures the module exists while we're iterating
+mod->jump_entries in __jump_label_mod_text_reserved(), take a module
+reference to ensure the module sticks around.
 
-The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
-symbol which has a unique name.  However, if the macro is used multiple
-times from within another macro, the line number will always be the
-same, resulting in duplicate symbols.
-
-Make the temporary symbols truly unique by using __UNIQUE_ID instead of
-__LINE__.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/compiler.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/jump_label.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -299,7 +299,7 @@ unsigned long read_word_at_a_time(const
-  */
- #define __ADDRESSABLE(sym) \
- 	static void * __section(.discard.addressable) __used \
--		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
-+		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -539,19 +539,25 @@ static void static_key_set_mod(struct st
+ static int __jump_label_mod_text_reserved(void *start, void *end)
+ {
+ 	struct module *mod;
++	int ret;
  
- /**
-  * offset_to_ptr - convert a relative memory offset to an absolute pointer
+ 	preempt_disable();
+ 	mod = __module_text_address((unsigned long)start);
+ 	WARN_ON_ONCE(__module_text_address((unsigned long)end) != mod);
++	if (!try_module_get(mod))
++		mod = NULL;
+ 	preempt_enable();
+ 
+ 	if (!mod)
+ 		return 0;
+ 
+-
+-	return __jump_label_text_reserved(mod->jump_entries,
++	ret = __jump_label_text_reserved(mod->jump_entries,
+ 				mod->jump_entries + mod->num_jump_entries,
+ 				start, end);
++
++	module_put(mod);
++
++	return ret;
+ }
+ 
+ static void __jump_label_mod_update(struct static_key *key)
 
 
