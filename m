@@ -2,110 +2,91 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D714BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12960C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B045E20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594381422;
-	bh=5jcdvmxdzuS8au/dYCdnb38PExsciucKDn1UmbzwNlA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QhE8XKyv9wS+NR1IFXTWUyReSdUFaVh2QjLA2waPIYiR/UJaLGCC8bQQ686UnoSix
-	 xhVFy/Nb3CnmI69bM56p8PnrWzOlfWdVvFxNMQe+AMs0Gkau15A+AxGyHMxwXpnS8N
-	 MSmp2ZGXwmpvkZtwte1PAQfhCcmvEUhFi1LnQWdw=
+	by mail.kernel.org (Postfix) with ESMTP id DEA5E20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 11:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGJLnl (ORCPT
+        id S1727031AbgGJLjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:43:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 07:39:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38773 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgGJLnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 07:43:41 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.179.81.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4388A20748;
-        Fri, 10 Jul 2020 11:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594381420;
-        bh=5jcdvmxdzuS8au/dYCdnb38PExsciucKDn1UmbzwNlA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I2kHl9POXKnZPeHMbMfXjnnyYAZsq5aS8WrmhXttAKJ+H2GYCK5g4Whl3vojm51Q0
-         +gfvP1Bq8RfpN5KWs/uX4Mvikl9mmjqxvQ5/oDguf/I6Ep5i25i27W5gQEVDtwfmFo
-         op9jInWewhfdPKVGhDYxqg1tBtPNtk8D1uiOIUns=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 01953405FF; Fri, 10 Jul 2020 08:43:37 -0300 (-03)
-Date:   Fri, 10 Jul 2020 08:43:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 00/15] perf/x86: Add perf text poke events
-Message-ID: <20200710114337.GB22500@kernel.org>
+        id S1726828AbgGJLjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:39:41 -0400
+IronPort-SDR: U020MTDseJVQP2XmF3sdgYuIT45t9U2H627FiVBWE2KZZMWYdh7kSyTjnM/DkvjGHJUi4OmyMu
+ gcsoDJ900PpA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="213069824"
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="213069824"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 04:39:39 -0700
+IronPort-SDR: nmSW/1qXDTwTPG2HtnjUC5giB701dq8DaNbi0+MuCjvYRGMVvUPWhPFBnfJ2XrBXNNKJbRtV1r
+ LKiX2geot3Lw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="389502671"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2020 04:39:35 -0700
+Subject: Re: [PATCH V7 15/15] perf script: Show text poke address symbol
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
 References: <20200512121922.8997-1-adrian.hunter@intel.com>
- <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
- <20200520014001.GF28228@kernel.org>
- <20200520155634.GQ317569@hirez.programming.kicks-ass.net>
- <20200527154716.GC16490@kernel.org>
- <20200527155436.GA706460@hirez.programming.kicks-ass.net>
- <79ca46d6-5d7c-7729-b51e-f9a447abe2a2@intel.com>
- <20200708123423.GL1320@kernel.org>
+ <20200512121922.8997-16-adrian.hunter@intel.com>
+ <20200710113415.GA22500@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <b68c6133-6079-43ef-fd98-9d0054ecc1c8@intel.com>
+Date:   Fri, 10 Jul 2020 14:38:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708123423.GL1320@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200710113415.GA22500@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 08, 2020 at 09:34:23AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Jul 08, 2020 at 02:55:36PM +0300, Adrian Hunter escreveu:
-> > On 27/05/20 6:54 pm, Peter Zijlstra wrote:
-> > > On Wed, May 27, 2020 at 12:47:16PM -0300, Arnaldo Carvalho de Melo wrote:
-> > >> Em Wed, May 20, 2020 at 05:56:34PM +0200, Peter Zijlstra escreveu:
-> > >>> On Tue, May 19, 2020 at 10:40:01PM -0300, Arnaldo Carvalho de Melo wrote:
-> > >>>> PeterZ, from what we discussed for the next merge Window, perhaps we
-> > >>>> should route the kernel bits via the tip tree while I will push the
-> > >>>> tooling bits on my 5.8 merge request to Linus, Ok?
-> > >>>
-> > >>> Sure, I can take the kernel bits. Thanks!
-> > >>
-> > >> So, I'm going thru the userpace bits and stopped at the patch copying
-> > >> include/uapi/linux/perf_events.h to
-> > >> tools/include/uapi/linux/perf_events.h to get the text_poke
-> > >> perf_event_attr bit, looked at tip/ and this hasn't landed there yet,
-> > >> any issues with the kernel bits?
-> > > 
-> > > Nah, I was waiting on the 0day robot, but its broken *again* :-(
-> > > 
-> > > Let me go move things along manually.
-> > > 
-> > 
-> > Hi
-> > 
-> > The kernel patches are in tip and the remaining tools patches still apply.
-> > Remaining patches 11-15 are:
-> > 
-> >       perf tools: Add support for PERF_RECORD_TEXT_POKE
-> >       perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
-> >       perf intel-pt: Add support for text poke events
-> >       perf script: Add option --show-text-poke-events
-> >       perf script: Show text poke address symbol
+On 10/07/20 2:34 pm, Arnaldo Carvalho de Melo wrote:
+> Em Tue, May 12, 2020 at 03:19:22PM +0300, Adrian Hunter escreveu:
+>> It is generally more useful to show the symbol with an address. In this
+>> case, the print function requires the 'machine' which means changing
+>> callers to provide it as a parameter. It is optional because most events
+>> do not need it and the callers that matter can provide it.
 > 
-> Sure, I'll merge those now that the kernel support is in tip, thanks for
-> the reminder,
+> I'm just inverting the order of the parameters for
+> perf_event__fprintf(), to keep as the first arg the pointer to the type
+> that is the prefix for the function, i.e. instead of:
+> 
+> size_t perf_event__fprintf_text_poke(struct machine *machine,
+> 				     union perf_event *event, FILE *fp)
+> 
+> I'll make it be:
+> 
+> size_t perf_event__fprintf_text_poke(union perf_event *event,
+> 				     struct machine *machine,FILE *fp)
+> 
+> Ok?
 
-Done, now I need to build a kernel from tip/perf/core and test with the
-tooling from acme/perf/core, will do later today.
-
-So far what I have is in my repo at the tmp.perf/core branch, if anyone
-wants to test before I do test it with the kernel with these features
-and the usual container build tests.
-
-- Arnaldo
+Yup! Thank you!
