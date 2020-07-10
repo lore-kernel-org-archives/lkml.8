@@ -2,131 +2,71 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF654C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0CE20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69ACB2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 18:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGJSKN (ORCPT
+        id S1727976AbgGJSMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:10:13 -0400
-Received: from vps-vb.mhejs.net ([37.28.154.113]:58232 "EHLO vps-vb.mhejs.net"
+        Fri, 10 Jul 2020 14:12:30 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:41474 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgGJSKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 14:10:13 -0400
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.93.0.4)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1jtxTN-0003CC-Ct; Fri, 10 Jul 2020 20:10:09 +0200
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (drivetemp) Avoid SCT usage on Toshiba DT01ACA family drives
-Date:   Fri, 10 Jul 2020 20:10:03 +0200
-Message-Id: <42108b47d0e3d64c6d36618425c9f920ff469600.1594404501.git.mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.27.0
+        id S1726962AbgGJSMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 14:12:30 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 368E2BC070;
+        Fri, 10 Jul 2020 18:12:27 +0000 (UTC)
+Subject: Re: [PATCH] SCSI RDMA PROTOCOL (SRP) TARGET: Replace HTTP links with
+ HTTPS ones
+To:     Bart Van Assche <bvanassche@acm.org>, dledford@redhat.com,
+        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200709194820.27032-1-grandmaster@al2klimov.de>
+ <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
+Date:   Fri, 10 Jul 2020 20:12:26 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been observed that Toshiba DT01ACA family drives have
-WRITE FPDMA QUEUED command timeouts and sometimes just freeze until
-power-cycled under heavy write loads when their temperature is getting
-polled in SCT mode. The SMART mode seems to be fine, though.
 
-Let's make sure we don't use SCT mode for these drives then.
 
-While only the 3 TB model was actually caught exhibiting the problem let's
-play safe here to avoid data corruption and extend the ban to the whole
-family.
+Am 10.07.20 um 16:22 schrieb Bart Van Assche:
+> On 2020-07-09 12:48, Alexander A. Klimov wrote:
+>> diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
+>> index 4b5d9b792cfa..f63b34d9ae32 100644
+>> --- a/drivers/infiniband/ulp/srpt/Kconfig
+>> +++ b/drivers/infiniband/ulp/srpt/Kconfig
+>> @@ -10,4 +10,4 @@ config INFINIBAND_SRPT
+>>   	  that supports the RDMA protocol. Currently the RDMA protocol is
+>>   	  supported by InfiniBand and by iWarp network hardware. More
+>>   	  information about the SRP protocol can be found on the website
+>> -	  of the INCITS T10 technical committee (http://www.t10.org/).
+>> +	  of the INCITS T10 technical committee (https://www.t10.org/).
+> 
+> It is not clear to me how modifying an URL in a Kconfig file helps to
+> reduce the attack surface on kernel devs?
+Not on all, just on the ones who open it.
 
-Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
-Cc: stable@vger.kernel.org
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
-Sending again since the previous message bounced for most recipients.
-
-Notes:
-    This behavior was observed on two different DT01ACA3 drives.
-    
-    Usually, a series of queued WRITE FPDMA QUEUED commands just time out,
-    but sometimes the whole drive freezes. Merely disconnecting and
-    reconnecting SATA interface cable then does not unfreeze the drive.
-    
-    One has to disconnect and reconnect the drive power connector for the
-    drive to be detected again (suggesting the drive firmware itself has
-    crashed).
-    
-    This only happens when the drive temperature is polled very often (like
-    every second), so occasional SCT usage via smartmontools is probably
-    safe.
-
- drivers/hwmon/drivetemp.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
-index 0d4f3d97ffc6..4fd51fa8c6e3 100644
---- a/drivers/hwmon/drivetemp.c
-+++ b/drivers/hwmon/drivetemp.c
-@@ -285,6 +285,36 @@ static int drivetemp_get_scttemp(struct drivetemp_data *st, u32 attr, long *val)
- 	return err;
- }
- 
-+static const char * const sct_blacklist_models[] = {
-+/*
-+ * These drives will have WRITE FPDMA QUEUED command timeouts and sometimes just
-+ * freeze until power-cycled under heavy write loads when their temperature is
-+ * getting polled in SCT mode. The SMART mode seems to be fine, though.
-+ *
-+ * While only the 3 TB model was actually caught exhibiting the problem
-+ * let's play safe here to avoid data corruption and ban the whole family.
-+ */
-+	"TOSHIBA DT01ACA0",
-+	"TOSHIBA DT01ACA1",
-+	"TOSHIBA DT01ACA2",
-+	"TOSHIBA DT01ACA3",
-+};
-+
-+static bool drivetemp_sct_blacklisted(struct drivetemp_data *st)
-+{
-+	struct scsi_device *sdev = st->sdev;
-+	unsigned int ctr;
-+
-+	if (!sdev->model)
-+		return false;
-+
-+	for (ctr = 0; ctr < ARRAY_SIZE(sct_blacklist_models); ctr++)
-+		if (strncmp(sdev->model, sct_blacklist_models[ctr], 16) == 0)
-+			return true;
-+
-+	return false;
-+}
-+
- static int drivetemp_identify_sata(struct drivetemp_data *st)
- {
- 	struct scsi_device *sdev = st->sdev;
-@@ -326,6 +356,13 @@ static int drivetemp_identify_sata(struct drivetemp_data *st)
- 	/* bail out if this is not a SATA device */
- 	if (!is_ata || !is_sata)
- 		return -ENODEV;
-+
-+	if (have_sct && drivetemp_sct_blacklisted(st)) {
-+		dev_notice(&sdev->sdev_gendev,
-+			   "will avoid using SCT for temperature monitoring\n");
-+		have_sct = false;
-+	}
-+
- 	if (!have_sct)
- 		goto skip_sct;
- 
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
