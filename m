@@ -2,135 +2,118 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60E1C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC062065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1285920720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IiyV/6kj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NAeMY/d+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgGJPVP (ORCPT
+        id S1727107AbgGJPXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:21:15 -0400
-Received: from mout.gmx.net ([212.227.15.15]:36177 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgGJPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1594394445;
-        bh=IwTd6axjUykRPNOqnxq1T8INyLFtH4Grahn4QNilSIY=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=IiyV/6kjkH3p89Vqdcea131zUdn9e34AvyYLqul29i8n3OewYzMUQPSaAYq+mKx0g
-         qRT7h8fpEin/AOQKIM1D81dhUL1jo3orZvfF5ny395Xfn2hNnYZZqtdUsmAXakBUYM
-         Ta9mDhOuebH3gbKq09HFuzthzrJxp5O/9dmSEC9A=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MmlT2-1kdSCA3C6Q-00juVa; Fri, 10
- Jul 2020 17:20:44 +0200
-Date:   Fri, 10 Jul 2020 17:20:24 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] firewire: Remove function callback casts
-Message-ID: <20200710152024.GA3305@ubuntu>
-References: <20200530090839.7895-1-oscar.carter@gmx.com>
- <20200708130628.GA21753@workstation>
+        Fri, 10 Jul 2020 11:23:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45597 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726977AbgGJPXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:23:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594394586;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hVCnQ8dSz5bzqPfVKUA5yGVKNr0A/IBOxZrAZfXjfV4=;
+        b=NAeMY/d+jJ5JqEy0p6riS+7XhmmTJcxWSUxdWP4rwrzLJbi3NJ4PdU61Xmh2mLtp/fjGMY
+        PA6vQbiT9gOV/7uBfC575Ntt7oTiXuvFh8J6gKCUDlVf/Xxb1lNSWcaIne8JS1bMqQJTh7
+        6rzi9GJXB2Z7RhFQSs8CiyG4/Pl3KWs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-492-EpfglaWmOZSuOehCwgwQEA-1; Fri, 10 Jul 2020 11:23:05 -0400
+X-MC-Unique: EpfglaWmOZSuOehCwgwQEA-1
+Received: by mail-wr1-f69.google.com with SMTP id e11so6386967wrs.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:23:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hVCnQ8dSz5bzqPfVKUA5yGVKNr0A/IBOxZrAZfXjfV4=;
+        b=neohbLCwyhg85AZwmVuhwnKmDo+HA6bll2ck6D31lclOcSx0URFhueMPtfCE2tvPWv
+         n/72jVx9NDjNlVbPLh+UtxxDXwVny/1XxuzhdUgyMY+v0xCxeRRxZEMHKP7IpdcgnEOl
+         cxZ2ZgIm4OSmb7eSbcZ2pcRSdU/4TmEVRyNDRWeCV0pcYJ5ALzTpeWBY108Y4wYxn263
+         JMu/VL7ezuxsdkcMo43tLR/wwFzWcGIZx8QvqA1DKox+Vuym/BWkYT7RYP+ggcyQ+zwk
+         D2MCYq/MrTClDORe+O5BB4eQPFsjPoYkdThaGQJT3TqWhKXbqaqD8aBP/meK7uHLo+c7
+         CbWw==
+X-Gm-Message-State: AOAM5331D7GuKNf9UeiXGJtSWUi75AsAR/vepYUQJQjx1NTILumm2RFz
+        Z2tXXIIgNU2of3NYBTwDwWLE7rTe+VVDQoatJ8fr80ZenLrJO15DqaPYbX1L/HyWAz44R5r8P9t
+        EcYucJ14EXONi5RMtRS88kkVt
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr68529933wrv.21.1594394583423;
+        Fri, 10 Jul 2020 08:23:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw9ptpqdTBcz0hnt0FWLyQCyrYqXHcZfxjoO54Ukv+e5iAty/J9EaAh2L7CGpLawRB/P9R/Hw==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr68529912wrv.21.1594394583169;
+        Fri, 10 Jul 2020 08:23:03 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 69sm10490303wma.16.2020.07.10.08.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 08:23:02 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Like Xu <like.xu@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: SVM: emulate MSR_IA32_PERF_CAPABILITIES
+In-Reply-To: <8e3b2eef-b4f1-01cc-e033-c1ece70bd7db@redhat.com>
+References: <20200618111328.429931-1-vkuznets@redhat.com> <adc8b307-4ec4-575f-ff94-c9b820189fb1@redhat.com> <87ftash6ui.fsf@vitty.brq.redhat.com> <8e3b2eef-b4f1-01cc-e033-c1ece70bd7db@redhat.com>
+Date:   Fri, 10 Jul 2020 17:23:01 +0200
+Message-ID: <875zavv1gq.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708130628.GA21753@workstation>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:NXOytpk85GGVi2EnBsjBjoJRKIjmWxRVO9BFlQb88DJo4bolwEQ
- vJlfsHetbkUzntLVvbSdJ7BPm7lucP7k88RrGtbyKFzirFQlLkGPcAgOq2jED7UYt3CZKgV
- QWJo8yzPSrWfqjp3wjSixQi6aHWnWKy0qgIauL2EZb4V8wME7v6/t2kvM4GEsVNsPL7RVxI
- mOOGIm1/q555Wckac+/xg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cprC2WU1qiE=:g5jM+UtJlALXvgDapZSWJW
- y2Vg03TXGW8JcjxyvkncCzBEjctPVHWdf7QJxWOmMGjPLwpy8hBTpzZuLk9d9cHzMb9mq6v/+
- yIOb1Hlz3Eof2ItGQju+EWGUv/R4WkD1xC54pa7hkQm+dTFM/bGYz7Z6gDVsDhlpNCgX5p3Pm
- rGVw2r9Ug/WxrnWW0cuyMf6UP1BFpkhX8Qn+X2QZhqECj3cUW9bcIVfKKqFS0YYMtTRt0iuq+
- SvncdleCVJMHmng7n668wfGIQDrA6LVA7+E+z5JSjsWpZ6iZDDKpxIgSh8C5UQS0my4Ycdtla
- /cwNW7iVtvSJ2fgny+CRAr0WaU7Je6KEmJ28nvWdOWzV97D4ryksdbUJouZohvQ0tHg4ROx1i
- cn2ZEPlfgJmSzDYCp1G2ZEeikjHfOoT3QMFNjYulQicUNiNIuZ4llXeDVOr8QK33P7pTKQTbS
- ppApIZu1Ev1PLIDrCr55gES7r/kv6k0Gd7rrDVhsfIYcg2yCNsVpUlZl+kSgN0WnWnxda2oVM
- 9VqOK3ZR9I/jC1Ih7VOSEfIWJKm+3yn+39ZTI8hHk8Uu9YAsm2rz1nnO/p3P0sEG+ud/9vkUd
- ijYrb9wiuy1ogJ5BR7CH1Upud2xvLD121FuCMYhUTHAPZTivwyE+eGplJBBFuZCOOi9cAelO7
- LRuXGgHcW17FMVz5rj2W04G44WXsEWXfy72vPPl1sE1A3HlsGl7ktP3ySKhd+OOrx+O5BoXwc
- auoI95ZP6L6FWmeO0QMH4e88HuFxNYWCDKUV4f8c7W5LIhKLHBCGr4vdW0hC9sltiOU5iODMn
- sWpVPR/XZKMmqMXzOG5kMllrRUp4DoNgOz10GRWrfAgGB+u0tUxsoKzDKcN+3Sxm6Vjwk7Iu2
- d8vvZARPL0fuPn1pRPrvj2wJOLk9WPSTSp2KnWEDuFWjxRMPQNflAjXP2M1dBuq/yuoyNd/FT
- mtgRi9gsvSzYMAs4k9oJbOTQGEyLJq6nCQqEKGN+KKbwijMRKReoCE6x4JYUSEmSIQXDecopH
- aQbue1p/3V0tXxMI1UyXGkL+nuZAhlo6+XlP2PFdMHAcFpkSPql1l+bD1ZAOS7/7R5PcXz4AL
- C+1DeW2nZNf+l3tWAoepmD5b/Yr4mDQsIx2sW3ijyHg17nA+0zWyYQ/H78RgifNTO3DpGGVsE
- WmINZ0mM4XBMTQnbwYtWIS6Ub2bB5VPgzsk+w2rJNpLBzQF1z1kX03yX+SN1iLvxfu7h1O07s
- 66DlNnCNC5yb2iySX1vISn9b/X8KRhEaFyoH36g==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Takashi,
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-On Wed, Jul 08, 2020 at 10:06:28PM +0900, Takashi Sakamoto wrote:
-> Hi,
+> On 18/06/20 14:54, Vitaly Kuznetsov wrote:
+>> Paolo Bonzini <pbonzini@redhat.com> writes:
+>> 
+>>> On 18/06/20 13:13, Vitaly Kuznetsov wrote:
+>>>> state_test/smm_test selftests are failing on AMD with:
+>>>> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+>>>>
+>>>> MSR_IA32_PERF_CAPABILITIES is an emulated MSR on Intel but it is not
+>>>> known to AMD code, emulate it there too (by returning 0 and allowing
+>>>> userspace to write 0). This way the code is better prepared to the
+>>>> eventual appearance of the feature in AMD hardware.
+>>>>
+>>>> Fixes: 27461da31089 ("KVM: x86/pmu: Support full width counting")
+>>>> Suggested-by: Jim Mattson <jmattson@google.com>
+>>>> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+>>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>>> ---
+>>>>  arch/x86/kvm/svm/pmu.c | 29 ++++++++++++++++++++++++++++-
+>>>>  1 file changed, 28 insertions(+), 1 deletion(-)
+>>> This is okay and I'll apply it, but it would be even better to move the
+>>> whole handling of the MSR to common x86 code.
+>> I thought about that but intel_pmu_set_msr() looks at
+>> vmx_get_perf_capabilities(), we'll need to abstract this somehow.
 >
-> I'm sorry to be late but I was stuck at my work for ALSA control
-> service programs for audio and music units on IEEE 1394 bus[1].
+> Indeed, you could use kvm_get_msr_feature for that.
 >
-> On Sat, May 30, 2020 at 11:08:39AM +0200, Oscar Carter wrote:
-> > [...]
-> > Hi,
-> >
-> > this is another proposal to achieved the goal of remove function callb=
-ack
-> > cast start by me with the first [1] and second [2] versions, and follo=
-wed
-> > by the work of Takashi Sakamoto with his first [3] and second [4] vers=
-ions,
-> > and the code of Stefan Richter [5].
-> >
-> > The purpose of this third version is to put together all the work done
-> > until now following the comments of all reviewed patches.
-> >
-> > I've added the "Co-developed-by" and "Signed-off-by" tags to give cred=
-it to
-> > Takashi Sakamoto and Stefan Richter if there are no objections.
->
-> In my opinion, it's no need to add my and Stefan's sign-off tag to patch
-> in which you firstly wrote even if it includes ideas from the others ;)
 
-I would like to leave it as is because most of the work is based on your c=
-ode
-(Takashi and Stefan).
+Turns out I completely forgot about this patch and just stumbled about
+the same issue again. The suggestion to move this to common x86 code
+makes perfect sense, I'll be sending v3 shortly.
 
-> > [...]
->
-> Anyway this patch looks good to me. I test this patch with libhinoko and
-> find no regression.
->
-> Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> Testeb-by: Takashi Sakamoto<o-takashi@sakamocchi.jp>
->
->
-> [1] [RFT] ALSA control service programs for Digidesign Digi 002/003 fami=
-ly
-> and Tascam FireWire series
-> https://mailman.alsa-project.org/pipermail/alsa-devel/2020-July/170331.h=
-tml
->
-> Thanks
->
-> Takashi Sakamoto
+Thanks!
 
-Regards,
-Oscar Carter
+-- 
+Vitaly
+
