@@ -2,122 +2,100 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0E5C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B2C206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8524520720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMbg0eTO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PHEEFw8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgGJQKK (ORCPT
+        id S1728172AbgGJQLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59532 "EHLO
+        Fri, 10 Jul 2020 12:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJQKJ (ORCPT
+        with ESMTP id S1727943AbgGJQLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:10:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31366C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:10:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q17so2431521pls.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:10:09 -0700 (PDT)
+        Fri, 10 Jul 2020 12:11:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DBB3C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:11:06 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so2818575pje.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=zmW8ec5Dt+lImhfBII8mb3lOzcmhvKNb+zPkMO/QQ5Q=;
-        b=eMbg0eTOumM5whjWlh4jJJ2moWaLNrdk7fajRjcV0NUxfmgQdadlIMcveXpHNJ3BeI
-         1KPfI8EJiyYo9QvAvd/oFk0RcejN7Jb8P79mFtROpbyUDCWnIwwJtshcMQDuxEwadmdY
-         JV4N9nCePXytoVXO4Bl8RkQ6aGHwPkZ8NsLBA=
+        bh=3EszjAuKdLbRnLB9pftKo+oJnCDcBS1AwarADCNsweE=;
+        b=PHEEFw8FOundyfqG7JLa9MXMuK6G9bG7jR0cukBcJ09z6qm4KnexC3gg/iT6blS98N
+         mkC3YbIW/7Pmzw2t14kgOnIQD+8e0dDhCPfGLjCARjpogHk+qsgU0f2fKSladHEfzbCY
+         7+Uy/5bRQPCKIawnMf4jcUp1vQQ9aTTrBhYtQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=zmW8ec5Dt+lImhfBII8mb3lOzcmhvKNb+zPkMO/QQ5Q=;
-        b=SX6DskIu+matL1exGEcOCvMmHvmEl78d7DTvmym+SwxyVZVzVe42oAlZUyeFqV9CFT
-         UJR13tMFtVkon44xD/xZdk6qTIl/M9PFYI7h1lolVnoKlMvyyQuMbWFwrzBwqet2EAjz
-         Sm7V7yisPyRFCkj2RDL2YolUD0mvMD1gWTyYF034YjKAEmFGAsjMx49bnwqdcQDImvZO
-         ckQMFvWB4cVJULtwVpKIgWLKFjc963cSUiMxTzVROfM1hxGaqp69X880ZVJUQDLvSr84
-         50IrNxox6HNjOksK+4xkXPdspUIYpCFW9I6zUtgUKySgcQu5HlQSjGp/No+eOBi5hEKw
-         Mz9g==
-X-Gm-Message-State: AOAM533Ax/Cbs5BgRqjtTHNQSJiipxkmDbAuAAVRbEf25acMcpynrieJ
-        W3S6IcJbetTuoVbMY5/o36LVlQ==
-X-Google-Smtp-Source: ABdhPJw4yMztQBG9o5biOtOd11XxFqhNJMYreXhVKUHho/zJskPlZr2UflkydhW/fZLZNTKXqRjZSg==
-X-Received: by 2002:a17:902:9f96:: with SMTP id g22mr15261428plq.306.1594397408754;
-        Fri, 10 Jul 2020 09:10:08 -0700 (PDT)
+        bh=3EszjAuKdLbRnLB9pftKo+oJnCDcBS1AwarADCNsweE=;
+        b=WQ750Lyaa4PteNYiMrFQhr7ee/KlPW9l5eKIMZPmfIvuDPpXh3iP6xqNpGBQ6cEe45
+         XkJ0drzrLQQze1Ni0t6GRSEfSFL4bl2BQLIWOrXNmaF1NiFgtTbT+qZlbNIj9my+qBFl
+         XF8FZPqLo2eMEXG/QjocvQ9Va4Pj5NHUTV84tpvooamH91LpnS4G6chxVd6eMJTMTJNS
+         Qa/2NkPO1A3asHEVeSe2f0FIM9dYnp9NDbqUbf8Oljlb/XJfQVqx/jWBshvG+B2754SD
+         GxMdwi1koAN4TkejcBLjDvm2hBgRNNbYlU+muSmPM42a7JX2WpckKGTx8I5+2XlpmUOA
+         BhdQ==
+X-Gm-Message-State: AOAM531U33c+OcSsE/U75W6C7kYZ2QnqxixvqwfegF45ERmi5+zABxqk
+        LUMri5msddRR8wVB20JsJGdkhD1kG0o=
+X-Google-Smtp-Source: ABdhPJwBZWBRUiVm74i+SNKREYZliBSAgKh8do9o20x4bZ5qPhfKMpuRyev1GYSUF/IyzDwxG+x0Dw==
+X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr22554817plr.329.1594397465470;
+        Fri, 10 Jul 2020 09:11:05 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id lx9sm1412890pjb.52.2020.07.10.09.10.07
+        by smtp.gmail.com with ESMTPSA id q24sm6669112pfg.34.2020.07.10.09.11.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:10:07 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 09:10:06 -0700
+        Fri, 10 Jul 2020 09:11:04 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 09:11:03 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
-        Greg KH <gregkh@linuxfoundation.org>, geofft@ldpreload.com,
-        jbaublitz@redhat.com, Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Linux kernel in-tree Rust support
-Message-ID: <202007100905.94A79A7A76@keescook>
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
- <20200710062803.GA1071395@kroah.com>
- <20200710125022.alry7wkymalmv3ge@wittgenstein>
+To:     Will Deacon <will@kernel.org>
+Cc:     Keno Fischer <keno@juliacomputing.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for-next/seccomp 0/3] Check ENOSYS under tracing
+Message-ID: <202007100910.79661A4@keescook>
+References: <20200705061232.4151319-1-keescook@chromium.org>
+ <20200710124033.GA30458@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710125022.alry7wkymalmv3ge@wittgenstein>
+In-Reply-To: <20200710124033.GA30458@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:50:22PM +0200, Christian Brauner wrote:
-> On Fri, Jul 10, 2020 at 08:28:03AM +0200, Greg KH wrote:
-> > On Thu, Jul 09, 2020 at 11:41:47AM -0700, Nick Desaulniers wrote:
-> > > Hello folks,
-> > > I'm working on putting together an LLVM "Micro Conference" for the
-> > > upcoming Linux Plumbers Conf
-> > > (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
-> > > solidified yet, but I would really like to run a session on support
-> > > for Rust "in tree."  I suspect we could cover technical aspects of
-> > > what that might look like (I have a prototype of that, was trivial to
-> > > wire up KBuild support), but also a larger question of "should we do
-> > > this?" or "how might we place limits on where this can be used?"
-> > > 
-> > > Question to folks explicitly in To:, are you planning on attending plumbers?
-> > > 
-> > > If so, would this be an interesting topic that you'd participate in?
+On Fri, Jul 10, 2020 at 01:40:33PM +0100, Will Deacon wrote:
+> On Sat, Jul 04, 2020 at 11:12:29PM -0700, Kees Cook wrote:
+> > This expands the seccomp selftest to poke a architectural behavior corner
+> > that Keno Fischer noticed[1]. In the process, I took the opportunity
+> > to do the kselftest harness variant refactoring I'd been meaning to do,
+> > which made adding this test much nicer.
 > > 
-> > Yes, I'll be there.
+> > I'd prefer this went via the seccomp tree, as it builds on top of the
+> > other recent seccomp feature addition tests. Testing and reviews are
+> > welcome! :)
 > 
-> We actually had this dicussion a while back and there were some more
-> people interested in this. I'd be interested to attend this and I've
-> spoken with Kees and a few others about this topic at last Plumbers (I
-> think Greg might have been around for this informal discussion as well.
-> But I might be imagining things.).
+> Thanks! I tested these on arm64 (qemu) and they helped me to find a bug
+> in some patches I was writing.
 
-I'm quite interested in this topic still, yes. :) (And will be attending
-Plumbers.)
+Hurray for tests! :)
 
-We had interesting discussions with the LSS 2019 "Rust in the kernel"[1]
-speakers, and I know Nick has reviewed their work[2] too. Perhaps we should
-reach out to them as well?
+> Tested-by: Will Deacon <will@kernel.org>
 
--Kees
-
-[1] https://ldpreload.com/p/kernel-modules-in-rust-lssna2019.pdf
-[2] https://github.com/fishinabarrel/linux-kernel-module-rust
+Thanks!
 
 -- 
 Kees Cook
