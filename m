@@ -2,104 +2,91 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E6CC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8F3C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3E620720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1268220720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ndH1QMbD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VMGo3Bn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgGJQPE (ORCPT
+        id S1728353AbgGJQPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
+        Fri, 10 Jul 2020 12:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgGJQO7 (ORCPT
+        with ESMTP id S1727782AbgGJQPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:14:59 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0143C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:14:59 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id z3so2718879pfn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:14:59 -0700 (PDT)
+        Fri, 10 Jul 2020 12:15:14 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB25C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:14 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id a12so6565741ion.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:15:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9lBY9pYp9JUzVayxMXqZuU4yWSRYAwmBQ//oKA6K0hs=;
-        b=ndH1QMbDsgnY7oGL35UIxrr6Yv+cubgdgMU/sFroEyDe6PkWDrrWYZwvxrezSTUhJt
-         UEkzPjM4+UyPJRZ73fmcwybl2J1IKxEazZum0WPyQ8pb/wm66/f+zlRJbE1oXc1lou0o
-         j6jKFsM6dR7G56+xqF99DdSoST0PP4g0GqSKA=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jy29C0jNBJlzPOntslbWG5zVMkbK/yCb3aOwp+ZNwYQ=;
+        b=VMGo3Bn8jtrCU+jVB8BPfXtWepk5wI4UguXdxtGp2vCwmkxmxlCWOLXYgkD4/HeoGp
+         hx8nINnh2BamY0kE6CXrytvTzUpOfx4QD4f7FMQDXJKJKhieUAuCghzenALmHYBx7SvV
+         zEAY9CIpiNItp9oosFkXO5UGq6T9p0aywHfzHIT2oN+mSij6BlkQ4dPop6stX+sgY5ZQ
+         JQxB/9wkf/pes7TBL18mq4uepSSntWvSuS7KcjLSJ7BHGVLkCUYVaPT4Ir0Oe/+AZlYK
+         quhIm+JVra13JhtSc5g8MHQDxebmlfi/Ft9rm+PGclPYBbbss7UQoEypVCPhLRqQpFx1
+         QoGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9lBY9pYp9JUzVayxMXqZuU4yWSRYAwmBQ//oKA6K0hs=;
-        b=Uy+gafKWeWy8hwskN7101FdudAYXAG7sVbj/e3eT3kK1O6cfnBA20IUhqgZVfjLoVG
-         6nLD290HcsZCiG/kvHYTu2owHvgoJfkTe+neQsmeRoDRkf+N2hRR+O5CwVdOBnUHW4OS
-         Uidoe6HTd4eftzsZummsd8VHpPPQQTyxGg2E1vomTx3vZlGakDLq7CnoXnMKGFMbT3Xq
-         p8LawcIbXLFJAY0KwnAe2q4B7tjmp64gikLoWsVGX1lFVv1jMCgXaHYsZHmges+R1UQY
-         oUf0fTms27aqXu+qutYrgW5O/bIhQNZht8Zr7m2lgO9PWyavMh3lIf2GqkPd/XYD7Oh/
-         +1Og==
-X-Gm-Message-State: AOAM533goYjIx02i75RMk8zee6t2n777KYt2s+o5voSTe8TzhcN3aKQ1
-        lVBQvIrKb2Xjq58LS+mu/bGIEA==
-X-Google-Smtp-Source: ABdhPJx9/WxZqBjaUOJ6z/UGh38dhUYKTMjcadx8P0uQFcix5pNXoxF4vIwwcjtrPiTmDYWwnzIW4g==
-X-Received: by 2002:aa7:94bc:: with SMTP id a28mr63725969pfl.94.1594397699224;
-        Fri, 10 Jul 2020 09:14:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v10sm6710589pfc.118.2020.07.10.09.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:14:58 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 09:14:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: ptrace: seccomp: Return value when the call was already invalid
-Message-ID: <202007100913.B43F8EE371@keescook>
-References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
- <20200703083914.GA18516@willie-the-truck>
- <202007030815.744AAB35D@keescook>
- <20200703154426.GA19406@willie-the-truck>
- <202007030851.D11F1EFA@keescook>
- <20200704123355.GA21185@willie-the-truck>
- <202007042132.DAFA2C2@keescook>
- <20200710124253.GB30458@willie-the-truck>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jy29C0jNBJlzPOntslbWG5zVMkbK/yCb3aOwp+ZNwYQ=;
+        b=ktQ3aPIRaC8ohR3L2W4v6wasEqcbIAi+/ey0eMzey1kjTBkHVQ60hpy06n4Ctldlhx
+         iICXOanftJCffrv2YL1gAcgM2A9nCKlYx/BpYH81ERcv3ZVwHJY71V5NRnfZmhAcCAzE
+         0xR+RHutd2GytvgazBdO8vhgU6yAC7mAQylbzmxR2xmPGgdobZ4kiUqe6n72nHAu8S0i
+         fB8jvw2n/YzGt7PLvsNsjefTVvUa0WniSJ8af+2wwCmiAVW+lSLv25qBQRxJJTsh/YGY
+         9Q6UAay64L0ryrvGWbT4XPmr7LQ8GlMIS1jNupQklHfazCsargqeD3ikrTQYN+GWwJFZ
+         u1Dw==
+X-Gm-Message-State: AOAM5309XtDQGgyPp/ViavxfBLcikj1mN2cfboSbC8L17VkRpyr5R+RC
+        ynBTQGDNThe9wDMs5sgE+jbvDx1UG+DhF+KKaGErBw==
+X-Google-Smtp-Source: ABdhPJxQKn3C8Viy7cFZE/IciSW+3FlyvnpS95Jsc7xj299u1lHgLuAwhOWErmRh70KTECwiY6wtsPiTkjoRQuOMLDA=
+X-Received: by 2002:a05:6602:2e0e:: with SMTP id o14mr47771057iow.164.1594397713805;
+ Fri, 10 Jul 2020 09:15:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710124253.GB30458@willie-the-truck>
+References: <20200710154811.418214-1-mgamal@redhat.com> <20200710154811.418214-5-mgamal@redhat.com>
+In-Reply-To: <20200710154811.418214-5-mgamal@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 10 Jul 2020 09:15:02 -0700
+Message-ID: <CALMp9eS7MmS7G0YfXA7Wxwwxbx67LVWZ57z_ZCbpJv4euiNnAw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] KVM: x86: rename update_bp_intercept to update_exception_bitmap
+To:     Mohammed Gamal <mgamal@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:42:54PM +0100, Will Deacon wrote:
-> On Sat, Jul 04, 2020 at 09:56:50PM -0700, Kees Cook wrote:
-> > (What doesn't pass for you? I tried to go find kernelci.org test output,
-> > but it doesn't appear to actually run selftests yet?)
-> 
-> Sorry, realised I forgot to reply to this point. I was seeing assertion
-> failures in 'global.user_notification_with_tsync' and
-> 'user_notification_sibling_pid_ns'. I started looking into the first one,
-> saw an -EACCESS kicking around, re-ran the tests as root and now they all
-> pass.
-> 
-> Are they expected to pass as a normal user?
-
-Oh right, I still have that on my TODO list. Right now the tests are a
-mix of root and normal, but since there are some root tests, it needs to
-be run as root. I've been meaning to do the appropriate permission tests
-and issue SKIPs for the ones needing root..
-
--- 
-Kees Cook
+On Fri, Jul 10, 2020 at 8:48 AM Mohammed Gamal <mgamal@redhat.com> wrote:
+>
+> From: Paolo Bonzini <pbonzini@redhat.com>
+>
+> We would like to introduce a callback to update the #PF intercept
+> when CPUID changes.  Just reuse update_bp_intercept since VMX is
+> already using update_exception_bitmap instead of a bespoke function.
+>
+> While at it, remove an unnecessary assignment in the SVM version,
+> which is already done in the caller (kvm_arch_vcpu_ioctl_set_guest_debug)
+> and has nothing to do with the exception bitmap.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
