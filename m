@@ -2,134 +2,176 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A34FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7C3C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 641892065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=secretlab.ca header.i=@secretlab.ca header.b="ZRVe/ibO"
+	by mail.kernel.org (Postfix) with ESMTP id 9E9752065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgGJPUL (ORCPT
+        id S1727935AbgGJPTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgGJPTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:19:52 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBE7C08E763
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:19:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 22so6563742wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=secretlab.ca; s=google;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kxnyGnMwxTRwHtpgKXQFv4Sp6EsduZoxQF9xvlfrbr8=;
-        b=ZRVe/ibOcbNKEM/ckw2d45EAviU8Pdos52byPUPcHAF0KcH9B9qASluESjw4KaH4Yg
-         gBkMUVeA1w+53smdKc/n0mMXp8ja0j3tKCB99dT5ELfcmTBVz/0PIEcqwf9AD2yrL8er
-         PY1kyYvl0PYqsDEk51ZVOmlJCnfONwb34Yym1ASVdaVRgYExPRp2Y3zXG/wT4X8+Nosi
-         WXeFcMTadVk1AeJs7OmMT/m29gdv4Ev/PzKgJYP1/nA0q7mFScCBEyass+jmBB4cgKJE
-         iMAW7Rj1l5WQ57KkxmxPz2NC3QjhP/w9B1s0khMrEXmosFgOecRkp0W0udq1Wt4sttst
-         fihQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=kxnyGnMwxTRwHtpgKXQFv4Sp6EsduZoxQF9xvlfrbr8=;
-        b=WWlryurFRfrvvp+d39fmqiiQlcyAMMbcouj62pZLJQixlrWhDkWxFTd7RzcyNeBWmZ
-         L876D9xUDV0FgcUOdJTTZQMa2+fkl6VsrVoYpp26Bn9fw7U+cQUcmRsZl659xcLpmO7s
-         xOCS4z6fkGdmPGWhCIEAcTWAKqqjyAoCjLGTE5CN8E3SH3ZKs2ospTisHUvmX7EWbgHF
-         WThpZD7Jw7ko0vWuLRalAJvV64W46Dyn52hIuiA8EF1D7dn9iZq5KCgs1Arlw3N4ZuUC
-         kTxWqoVl8XS8NoK9XYYS9vsmAGtkQ4WXEii/PTtfV1/0FtSKtKZcXNZ4wlrx07HX6btk
-         kFmQ==
-X-Gm-Message-State: AOAM531Be8R/pBgbTOml+bVupd7HxIkPA812Chz/x7kD8oAwrmgcQR6Q
-        /77hquuXC7e/b7QoR93ECw8s/YNIbYuJIyz6
-X-Google-Smtp-Source: ABdhPJzXzqIMMMApQjKWDU1z5QkbzF8CAES3zC4qQ+Oqh5yRVV9kfEvVTZWzmZDin+QTicbt2ad4Cw==
-X-Received: by 2002:a1c:790e:: with SMTP id l14mr5587090wme.65.1594394389624;
-        Fri, 10 Jul 2020 08:19:49 -0700 (PDT)
-Received: from moist.secretlab.ca (188.28.146.46.threembb.co.uk. [188.28.146.46])
-        by smtp.gmail.com with ESMTPSA id d13sm10400297wrn.61.2020.07.10.08.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 08:19:49 -0700 (PDT)
-From:   Grant Likely <grant.likely@secretlab.ca>
-X-Google-Original-From: Grant Likely <grant.likely@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Grant Likely <grant.likely@arm.com>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Darren Hart <darren@dvhart.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] hid-input: Fix devices that return multiple bytes in battery report
-Date:   Fri, 10 Jul 2020 16:19:39 +0100
-Message-Id: <20200710151939.4894-1-grant.likely@arm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 10 Jul 2020 11:19:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38307 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727910AbgGJPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:12:10 -0400
+IronPort-SDR: l2N3vigUWRBl6eG4Enjt5cOsUFMCorp2Q7NlkYM+b3yLZ/OHz28+T45pXB3i3KgXnH9pcGhsOb
+ Eaq9RanB144A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="149686466"
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="149686466"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 08:12:10 -0700
+IronPort-SDR: SVs3RUzcXiYwAPFPqajKfW1FT8riFfuLVwr2IOzYEPUzsfK0ay7kHea8tubB3KTUE2fB6OuBhc
+ kaMiO8ojd30w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="484675572"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2020 08:12:08 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 12/12] perf intel-pt: Add support for decoding PSB+ only
+Date:   Fri, 10 Jul 2020 18:11:04 +0300
+Message-Id: <20200710151104.15137-13-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200710151104.15137-1-adrian.hunter@intel.com>
+References: <20200710151104.15137-1-adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices, particularly the 3DConnexion Spacemouse wireless 3D
-controllers, return more than just the battery capacity in the battery
-report. The Spacemouse devices return an additional byte with a device
-specific field. However, hidinput_query_battery_capacity() only
-requests a 2 byte transfer.
+A single q option decodes ip from only FUP/TIP packets. Make it so that
+repeating the q option (i.e. qq) decodes only PSB+, getting ip if there is
+a FUP packet within PSB+ (i.e. between PSB and PSBEND).
 
-When a spacemouse is connected via USB (direct wire, no wireless dongle)
-and it returns a 3 byte report instead of the assumed 2 byte battery
-report the larger transfer confuses and frightens the USB subsystem
-which chooses to ignore the transfer. Then after 2 seconds assume the
-device has stopped responding and reset it. This can be reproduced
-easily by using a wired connection with a wireless spacemouse. The
-Spacemouse will enter a loop of resetting every 2 seconds which can be
-observed in dmesg.
+Example:
 
-This patch solves the problem by increasing the transfer request to 4
-bytes instead of 2. The fix isn't particularly elegant, but it is simple
-and safe to backport to stable kernels. A further patch will follow to
-more elegantly handle battery reports that contain additional data.
+ $ perf record -e intel_pt//u grep -rI pudding drivers
+ [ perf record: Woken up 52 times to write data ]
+ [ perf record: Captured and wrote 57.870 MB perf.data ]
+ $ time perf script --itrace=bi | wc -l
+ 58948289
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Darren Hart <darren@dvhart.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: stable@vger.kernel.org
+ real    1m23.863s
+ user    1m23.251s
+ sys     0m7.452s
+ $ time perf script --itrace=biq | wc -l
+ 3385694
+
+ real    0m4.453s
+ user    0m4.455s
+ sys     0m0.328s
+ $ time perf script --itrace=biqq | wc -l
+ 1883
+
+ real    0m0.047s
+ user    0m0.043s
+ sys     0m0.009s
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/hid/hid-input.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-intel-pt.txt     | 15 +++++++++++++++
+ .../util/intel-pt-decoder/intel-pt-decoder.c   | 18 ++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index dea9cc65bf80..e8641ce677e4 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -350,13 +350,13 @@ static int hidinput_query_battery_capacity(struct hid_device *dev)
- 	u8 *buf;
- 	int ret;
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index f9fe4a4040ba..d5a266d7f15b 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -999,6 +999,21 @@ What *will* be decoded with the (single) q option:
+ Note the q option does not specify what events will be synthesized e.g. the p
+ option must be used also to show power events.
  
--	buf = kmalloc(2, GFP_KERNEL);
-+	buf = kmalloc(4, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
++Repeating the q option (double-q i.e. qq) results in even faster decoding and even
++less detail.  The decoder decodes only extended PSB (PSB+) packets, getting the
++instruction pointer if there is a FUP packet within PSB+ (i.e. between PSB and
++PSBEND).  Note PSB packets occur regularly in the trace based on the psb_period
++config term (refer config terms section).  There will be a FUP packet if the
++PSB+ occurs while control flow is being traced.
++
++What will *not* be decoded with the qq option:
++
++	- everything except instruction pointer associated with PSB packets
++
++What *will* be decoded with the qq option:
++
++	- instruction pointer associated with PSB packets
++
  
--	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 2,
-+	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 4,
- 				 dev->battery_report_type, HID_REQ_GET_REPORT);
--	if (ret != 2) {
-+	if (ret < 2) {
- 		kfree(buf);
- 		return -ENODATA;
+ dump option
+ ~~~~~~~~~~~
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index ccb204b1a050..697513f35154 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -113,6 +113,7 @@ struct intel_pt_decoder {
+ 	bool in_psb;
+ 	bool hop;
+ 	bool hop_psb_fup;
++	bool leap;
+ 	enum intel_pt_param_flags flags;
+ 	uint64_t pos;
+ 	uint64_t last_ip;
+@@ -240,6 +241,7 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
+ 	decoder->return_compression = params->return_compression;
+ 	decoder->branch_enable      = params->branch_enable;
+ 	decoder->hop                = params->quick >= 1;
++	decoder->leap               = params->quick >= 2;
+ 
+ 	decoder->flags              = params->flags;
+ 
+@@ -1903,9 +1905,18 @@ static int intel_pt_resample(struct intel_pt_decoder *decoder)
+ #define HOP_RETURN	2
+ #define HOP_AGAIN	3
+ 
++static int intel_pt_scan_for_psb(struct intel_pt_decoder *decoder);
++
+ /* Hop mode: Ignore TNT, do not walk code, but get ip from FUPs and TIPs */
+ static int intel_pt_hop_trace(struct intel_pt_decoder *decoder, bool *no_tip, int *err)
+ {
++	/* Leap from PSB to PSB, getting ip from FUP within PSB+ */
++	if (decoder->leap && !decoder->in_psb && decoder->packet.type != INTEL_PT_PSB) {
++		*err = intel_pt_scan_for_psb(decoder);
++		if (*err)
++			return HOP_RETURN;
++	}
++
+ 	switch (decoder->packet.type) {
+ 	case INTEL_PT_TNT:
+ 		return HOP_IGNORE;
+@@ -2681,6 +2692,7 @@ static int intel_pt_sync(struct intel_pt_decoder *decoder)
+ 	decoder->ip = 0;
+ 	intel_pt_clear_stack(&decoder->stack);
+ 
++leap:
+ 	err = intel_pt_scan_for_psb(decoder);
+ 	if (err)
+ 		return err;
+@@ -2702,6 +2714,12 @@ static int intel_pt_sync(struct intel_pt_decoder *decoder)
+ 			decoder->pkt_state = INTEL_PT_STATE_RESAMPLE;
+ 		else
+ 			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
++	} else if (decoder->leap) {
++		/*
++		 * In leap mode, only PSB+ is decoded, so keeping leaping to the
++		 * next PSB until there is an ip.
++		 */
++		goto leap;
+ 	} else {
+ 		return intel_pt_sync_ip(decoder);
  	}
 -- 
-2.20.1
+2.17.1
 
