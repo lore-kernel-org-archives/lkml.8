@@ -2,151 +2,88 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C9C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE9DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EF920657
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594398424;
-	bh=G62e77LR67dR+lm/TnNE6A3hF198oh9rXctGlor0fAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rcSPDRjWBOLkUWQhKKFvvedi6UQsar/Ut5ma7yO6VktfHDIWDuPFhMScEGmV2iaB1
-	 i4w67KQUICOQ8L6OiPiKYSZu/2lS09irJKU5z0Vzw6lA2R29WUkieRPJu73G8NJVr7
-	 gjnYLFliqRDfjr1QOKLCLFDVQE8ZYTH0UeiP5ql8=
+	by mail.kernel.org (Postfix) with ESMTP id 77C7120725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hSeVqI6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgGJQ1D (ORCPT
+        id S1728166AbgGJQ1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:27:03 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39303 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgGJQ1C (ORCPT
+        Fri, 10 Jul 2020 12:27:15 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10930 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQ1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:27:02 -0400
-Received: by mail-io1-f68.google.com with SMTP id f23so6644748iof.6;
-        Fri, 10 Jul 2020 09:27:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i9iYWjE4vBb1BFZdyqk4e90udcdzqPWgpMUqV/BqKm0=;
-        b=PaQsDr2zitTWZVsEl53VuqN4WUK/l3uTsqKHOm4LQ3QtXNnDdWvShDYu2przpkxBl+
-         01YS1Ovf0N3tI1QK877u/oPNdAgp44/8FTN8ckfERMZIRuI1RfgLLiRrv7UHV95oG9XK
-         r1TP2csgaTXOiRf0vb3dDa1pqPHDmWOXnWE1H/AVNS8oZjPjikFzA69SG5QBGC1UDTjE
-         m9pel7fovqBrflZdN0OGefQHyroZcrDrhgP2eG1b5RRMXBXtpZfiZu4yKiH8VchgP6mm
-         5OHXGDiIPWaie0lBORK7R2+ZfGvqbumoq9Ael8wT2gnRWYf+WAwIyUc9UrjnyRRKem5t
-         C4kg==
-X-Gm-Message-State: AOAM530vMXMOUMVqVVgvTjkk5O/DaQphE27HcWCLG7AQKT2Cs51yzkDe
-        NSxSHmrpnI728KtXLTjmy1qghW81ZQHx
-X-Google-Smtp-Source: ABdhPJzjBcfMgGclNycTfkDjb4tT2Ho3eooPCrDhSSTj1zZ0i+J6mqv3fllk1gsBGADFLtAPqsbb6g==
-X-Received: by 2002:a02:cd28:: with SMTP id h8mr65748586jaq.40.1594398421046;
-        Fri, 10 Jul 2020 09:27:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id k3sm3873588iot.42.2020.07.10.09.26.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:27:00 -0700 (PDT)
-Received: (nullmailer pid 2750605 invoked by uid 1000);
-        Fri, 10 Jul 2020 16:26:57 -0000
-Date:   Fri, 10 Jul 2020 10:26:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] dt-bindings: thermal: tsens: document ipq8064
- bindings
-Message-ID: <20200710162657.GB2743639@bogus>
-References: <20200709215136.28044-1-ansuelsmth@gmail.com>
- <20200709215136.28044-4-ansuelsmth@gmail.com>
+        Fri, 10 Jul 2020 12:27:15 -0400
+X-UUID: 6ffed618707b4e7aa031b5ec3f6c0469-20200711
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=mSnY8KhqyWrchwEP6pw4hG/od6FJgo3wLIYoRyPzhfE=;
+        b=hSeVqI6PadELoLlG5BeHqIhdOzkzKjZSYXdLrp948hDofWgIodMbPxDicJVb3xuhALP565wO/uEy2V7zXAtsTRrXxu/K30NaPToHxyBVZfzfwo9ybU9dp6qLFq10vH1/ChdPYuq29K2pOWWiltIn2P+ZfpMJyVvZIANp/ZgqNpw=;
+X-UUID: 6ffed618707b4e7aa031b5ec3f6c0469-20200711
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1116848982; Sat, 11 Jul 2020 00:27:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 11 Jul 2020 00:27:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 11 Jul 2020 00:27:11 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v8 4/4] kasan: update documentation for generic kasan
+Date:   Sat, 11 Jul 2020 00:27:09 +0800
+Message-ID: <20200710162709.24036-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709215136.28044-4-ansuelsmth@gmail.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 1D429FF004A8500DDEC8ED82E419484BBC3BFE9A6426DEFF51455182C9CDFA7C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:51:33PM +0200, Ansuel Smith wrote:
-> Document the use of regmap phandle for ipq8064 SoCs
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/thermal/qcom-tsens.yaml          | 51 ++++++++++++++++---
->  1 file changed, 44 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index d7be931b42d2..5ceb5d720e16 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -24,6 +24,7 @@ properties:
->            - enum:
->                - qcom,msm8916-tsens
->                - qcom,msm8974-tsens
-> +              - qcom,ipq8064-tsens
->            - const: qcom,tsens-v0_1
->  
->        - description: v1 of TSENS
-> @@ -47,6 +48,11 @@ properties:
->        - description: TM registers
->        - description: SROT registers
->  
-> +  regmap:
-> +    description:
-> +      Phandle to the gcc. On ipq8064 SoCs gcc and tsense share the same regs.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+R2VuZXJpYyBLQVNBTiB3aWxsIHN1cHBvcnQgdG8gcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3Jj
+dSgpIGNhbGwgc3RhY2tzDQphbmQgcHJpbnQgdGhlbSBpbiBLQVNBTiByZXBvcnQuIFNvIHRoYXQg
+bmVlZCB0byB1cGRhdGUgZG9jdW1lbnRhdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
+IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYW5kLXRlc3RlZC1ieTogRG1p
+dHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KUmV2aWV3ZWQtYnk6IEFuZHJleSBLb25v
+dmFsb3YgPGFuZHJleWtudmxAZ29vZ2xlLmNvbT4NCkNjOiBBbmRyZXkgUnlhYmluaW4gPGFyeWFi
+aW5pbkB2aXJ0dW96em8uY29tPg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29n
+bGUuY29tPg0KQ2M6IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQotLS0NCiBEb2N1
+bWVudGF0aW9uL2Rldi10b29scy9rYXNhbi5yc3QgfCAzICsrKw0KIDEgZmlsZSBjaGFuZ2VkLCAz
+IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2th
+c2FuLnJzdCBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdA0KaW5kZXggYzY1MmQ3
+NDA3MzVkLi5mZWRlNDJlNjUzNmIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldi10b29s
+cy9rYXNhbi5yc3QNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdA0KQEAg
+LTE5Myw2ICsxOTMsOSBAQCBmdW5jdGlvbiBjYWxscyBHQ0MgZGlyZWN0bHkgaW5zZXJ0cyB0aGUg
+Y29kZSB0byBjaGVjayB0aGUgc2hhZG93IG1lbW9yeS4NCiBUaGlzIG9wdGlvbiBzaWduaWZpY2Fu
+dGx5IGVubGFyZ2VzIGtlcm5lbCBidXQgaXQgZ2l2ZXMgeDEuMS14MiBwZXJmb3JtYW5jZQ0KIGJv
+b3N0IG92ZXIgb3V0bGluZSBpbnN0cnVtZW50ZWQga2VybmVsLg0KIA0KK0dlbmVyaWMgS0FTQU4g
+cHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiByZXBvcnRzLCB0aGUgbGFz
+dCBvbmUNCithbmQgdGhlIHNlY29uZCB0byBsYXN0Lg0KKw0KIFNvZnR3YXJlIHRhZy1iYXNlZCBL
+QVNBTg0KIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KIA0KLS0gDQoyLjE4LjANCg==
 
-Can't you make this a child of the gcc and drop this property?
-
-> +
->    interrupts:
->      minItems: 1
->      items:
-> @@ -111,17 +117,48 @@ allOf:
->          interrupt-names:
->            minItems: 2
->  
-> -required:
-> -  - compatible
-> -  - reg
-> -  - "#qcom,sensors"
-> -  - interrupts
-> -  - interrupt-names
-> -  - "#thermal-sensor-cells"
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,ipq8064-tsens
-> +    then:
-> +      required:
-> +        - compatible
-> +        - regmap
-> +        - "#qcom,sensors"
-> +        - interrupts
-> +        - interrupt-names
-> +        - "#thermal-sensor-cells"
-> +
-> +    else:
-> +      required:
-> +        - compatible
-> +        - reg
-> +        - "#qcom,sensors"
-> +        - interrupts
-> +        - interrupt-names
-> +        - "#thermal-sensor-cells"
-
-Keep all the common required properties and just put reg/regmap in the 
-if/then if this ends up staying.
-
-Rob
