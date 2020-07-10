@@ -7,91 +7,80 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C0EC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA70C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6614F20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F2120720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594394958;
-	bh=A+5H0viLCweISXKhZ8vukjCT/YthyI0T6G22a0E9wP0=;
+	s=default; t=1594394996;
+	bh=a0/T1AKOzSuMCEceEuEQxM/B0IMqnV9YaAtTzrlJlns=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bgwrKgfy7eSviQocOjN3LUYjJ/f855kyPI9dLynNCgLTPzgAbgROWfiCA1qTaJSqy
-	 u3a8dECGyucHvKA11eGM2h/TPt5HJekxLVnkRlE9yt3HJYD+fjxA2NddymoIwCma25
-	 WPobUOE1mOt78bqm//+ZdHt6B/lshlGFRRWGsT5w=
+	b=ZSNpKfPvpnteRBAuP56n1XapJWBFEXcKXhQnH2gy04a9o1F/qR2JZFSNkPXl0WQ2w
+	 bhS6hVCWEWyLt+BtqoCE9/HZiNRqUt+csXsIzAJxrltXTD1kZA/D39DfcaYqP8xxhx
+	 0i9JP6BM9cCj2bvAtSfwcTV9S4K2s/mos6izZXq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGJP3R (ORCPT
+        id S1728094AbgGJP3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52136 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 11:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgGJP3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:29:13 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        id S1726832AbgGJP3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:29:55 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DABB2078B;
-        Fri, 10 Jul 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB462083B
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594394952;
-        bh=A+5H0viLCweISXKhZ8vukjCT/YthyI0T6G22a0E9wP0=;
+        s=default; t=1594394994;
+        bh=a0/T1AKOzSuMCEceEuEQxM/B0IMqnV9YaAtTzrlJlns=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mJsAbAS7bLMR4MIKisf/3VlNypxyehVH+9BwAL4A4vgISOkEiO6mGXdKX087waoJM
-         fyUO+PMEDS/T576yL6+oEmzLMT21Vq1DkfIV7JjxQFNTP3kaUzxAWsgrpi1PQNmyPC
-         jsxswVgDNeMI9i5IR6BIIRWOGeip8p5Yl6Flv5Os=
-Received: by mail-ot1-f49.google.com with SMTP id w17so4484408otl.4;
-        Fri, 10 Jul 2020 08:29:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533Aq/iK9eQH0XZXrhV8qwP7QjNqV2XkdVEMpAeHXBi50pNdC2aV
-        ae/T9hr6SlPvkQans2HoeSRhMxYVu8y3upULtA==
-X-Google-Smtp-Source: ABdhPJxgp0IgRa0RKnSG7bJrUjnRw1wt0F8ZA2+d85ACmCNg+Fh7mRY7d4DZzaL2DFznGG81bchkn3CjCx5gorcXI3Y=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59510659ots.192.1594394951793;
- Fri, 10 Jul 2020 08:29:11 -0700 (PDT)
+        b=zEP5PXx8jeump1kOB1NmkNFEOezLxdjjXtV1rxPOkDq1IAKcNPYCzz2tBKZ5hTgT4
+         2edQlOitD9D1M9TBDOEeAcsmGodOMUn7xsVRafF3CfWBIu0ip5JaMzZAfDFgyU474E
+         ABoYSRda0wx4j30SrM5rEOjNJXfIHjuZwzjQMv7Y=
+Received: by mail-ot1-f53.google.com with SMTP id a21so4457352otq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:29:54 -0700 (PDT)
+X-Gm-Message-State: AOAM531mrEJo6WGuNoCCayfP4hBGB6AJCHsLoB6Paz1ylHu+vESjrtlg
+        gQor8hdSSzPoGgfzFexL+N+p2z++BqGLKQPU+w==
+X-Google-Smtp-Source: ABdhPJx48r7S6iGwaE/Ld3SXFZT/cPpT/4A5xKQgPidcviKig/k1brHa/paWBNqloBLAnlESElt4zz9Hi6nmUtm1R1E=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr55279246otb.107.1594394994157;
+ Fri, 10 Jul 2020 08:29:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
-In-Reply-To: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+References: <1594369172-27278-1-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <1594369172-27278-1-git-send-email-akashast@codeaurora.org>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 10 Jul 2020 09:28:59 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-Message-ID: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
- fix qcom build error
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Date:   Fri, 10 Jul 2020 09:29:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMM+k+9OMJ8UBN-RsC4ortgtqtf+PWrcw0nFTda4MtuQ@mail.gmail.com>
+Message-ID: <CAL_JsqLMM+k+9OMJ8UBN-RsC4ortgtqtf+PWrcw0nFTda4MtuQ@mail.gmail.com>
+Subject: Re: [PATCH] of: Add stub for of_get_next_parent
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        saipraka@codeaurora.org, msavaliy@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:43 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, Jul 10, 2020 at 2:19 AM Akash Asthana <akashast@codeaurora.org> wrote:
 >
-> From: Randy Dunlap <rdunlap@infradead.org>
+> Fixes compilation error reported on x86 platform:
 >
-> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
-> by adding a stub for of_get_next_parent().
+> drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of
+> function 'of_get_next_parent'.
 >
-> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
-> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+> drivers/soc/qcom/qcom-geni-se.c:819:9: warning: incompatible integer to
+> pointer conversion assigning to 'struct device_node *' from 'int'
 >
-
-Fixes tag?
-
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
+> Fixes: 048eb908a1f2 ("soc: qcom-geni-se: Add interconnect support to fix
+>                         earlycon crash")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  include/linux/of.h |    5 +++++
->  1 file changed, 5 insertions(+)
+>  include/linux/of.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-I'm assuming this will be applied to the tree that introduced the problem.
-
-Acked-by: Rob Herring <robh@kernel.org>
+Already have a similar patch.
