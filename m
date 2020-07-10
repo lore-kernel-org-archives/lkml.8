@@ -2,158 +2,566 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D16C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AC720720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBFF20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgGJQOb (ORCPT
+        id S1728291AbgGJQOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:14:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:54820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgGJQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:14:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E06931B;
-        Fri, 10 Jul 2020 09:14:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C05113F8F8;
-        Fri, 10 Jul 2020 09:14:25 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 17:14:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-Message-ID: <20200710161420.GA9019@e121166-lin.cambridge.arm.com>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <87v9jcet5h.wl-maz@kernel.org>
- <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
- <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
- <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
+        Fri, 10 Jul 2020 12:14:23 -0400
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:47036 "EHLO
+        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbgGJQOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:14:23 -0400
+X-Greylist: delayed 1944 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jul 2020 12:14:21 EDT
+Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 06AFYSj6031844;
+        Fri, 10 Jul 2020 11:41:55 -0400
+Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
+        by pbmsgap02.intersil.com with ESMTP id 325k328snd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 11:41:55 -0400
+Received: from pbmxdp03.intersil.corp (132.158.200.224) by
+ pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1979.3; Fri, 10 Jul 2020 11:41:54 -0400
+Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
+ (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 10 Jul 2020 11:41:53 -0400
+From:   <min.li.xe@renesas.com>
+To:     <richardcochran@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net-next] ptp: add debugfs support for IDT family of timing devices
+Date:   Fri, 10 Jul 2020 11:41:25 -0400
+Message-ID: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_10:2020-07-10,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2006250000 definitions=main-2007100106
+X-Proofpoint-Spam-Reason: mlx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:18:29AM +0900, Kunihiko Hayashi wrote:
+From: Min Li <min.li.xe@renesas.com>
 
-[...]
+This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
+It will create a debugfs directory called idtptp{x} and x is the ptp index.
+Three inerfaces are present, which are cmd, help and regs. help is read
+only and will display a brief help message. regs is read only amd will show
+all register values. cmd is write only and will accept certain commands.
+Currently, the accepted commands are combomode to set comobo mode and write
+to write up to 4 registers.
 
-> > > > >   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> > > > > +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
-> > > > >   {
-> > > > > -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
-> > > > >       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > >       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> > > > > -    struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > > > -    unsigned long reg;
-> > > > > -    u32 val, bit, virq;
-> > > > > +    u32 val, virq;
-> > > > >   -    /* INT for debug */
-> > > > >       val = readl(priv->base + PCL_RCV_INT);
-> > > > >         if (val & PCL_CFG_BW_MGT_STATUS)
-> > > > >           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-> > > > > +
-> > > > >       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
-> > > > >           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
-> > > > > -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> > > > > -        dev_dbg(pci->dev, "Root Error\n");
-> > > > > -    if (val & PCL_CFG_PME_MSI_STATUS)
-> > > > > -        dev_dbg(pci->dev, "PME Interrupt\n");
-> > > > > +
-> > > > > +    if (is_msi) {
-> > > > > +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> > > > > +            dev_dbg(pci->dev, "Root Error Status\n");
-> > > > > +
-> > > > > +        if (val & PCL_CFG_PME_MSI_STATUS)
-> > > > > +            dev_dbg(pci->dev, "PME Interrupt\n");
-> > > > > +
-> > > > > +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
-> > > > > +               PCL_CFG_PME_MSI_STATUS)) {
-> > > > > +            virq = irq_linear_revmap(pp->irq_domain, 0);
-> > > > > +            generic_handle_irq(virq);
-> > > > > +        }
-> > > > > +    }
-> > > > 
-> > > > Please have two handlers: one for interrupts that are from the RC,
-> > > > another for interrupts coming from the endpoints.
-> > > I assume that this handler treats interrupts from the RC only and
-> > > this is set on the member ".msi_host_isr" added in the patch 1/6.
-> > > I think that the handler for interrupts coming from endpoints should be
-> > > treated as a normal case (after calling .msi_host_isr in
-> > > dw_handle_msi_irq()).
-> > 
-> > It looks pretty odd that you end-up dealing with both from the
-> > same "parent" interrupt. I guess this is in keeping with the
-> > rest of the DW PCIe hacks... :-/
-> 
-> It might be odd, however, in case of UniPhier SoC,
-> both MSI interrupts from endpoints and PME/AER interrupts from RC are
-> asserted by same "parent" interrupt. In other words, PME/AER interrupts
-> are notified using the parent interrupt for MSI.
-> 
-> MSI interrupts are treated as child interrupts with reference to
-> the status register in DW core. This is handled in a for-loop in
-> dw_handle_msi_irq().
-> 
-> PME/AER interrupts are treated with reference to the status register
-> in UniPhier glue layer, however, this couldn't be handled in the same way
-> directly.
-> 
-> So I'm trying to add .msi_host_isr function to handle this
-> with reference to the SoC-specific registers.
-> 
-> This exported function asserts MSI-0 as a shared child interrupt.
-> As a result, PME/AER are registered like the followings in dmesg:
-> 
->    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
->    pcieport 0000:00:00.0: AER: enabled with IRQ 25
-> 
-> And these interrupts are shared as MSI-0:
-> 
->    # cat /proc/interrupts | grep 25:
->     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
-> 
-> This might be a special case, though, I think that this is needed to handle
-> interrupts from RC sharing MSI parent.
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ drivers/ptp/Kconfig           |   2 +
+ drivers/ptp/Makefile          |   4 +-
+ drivers/ptp/ptp_idt_debugfs.c | 354 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/ptp/ptp_idt_debugfs.h |  83 ++++++++++
+ 4 files changed, 442 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/ptp/ptp_idt_debugfs.c
+ create mode 100644 drivers/ptp/ptp_idt_debugfs.h
 
-Can you please send me (with this series *applied* of course and if
-possible with an endpoint MSI/MSI-X capable enabled):
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index 942f72d..25b74a2 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -118,6 +118,7 @@ config PTP_1588_CLOCK_KVM
+ config PTP_1588_CLOCK_IDT82P33
+ 	tristate "IDT 82P33xxx PTP clock"
+ 	depends on PTP_1588_CLOCK && I2C
++	select DEBUG_FS
+ 	default n
+ 	help
+ 	  This driver adds support for using the IDT 82P33xxx as a PTP
+@@ -130,6 +131,7 @@ config PTP_1588_CLOCK_IDT82P33
+ config PTP_1588_CLOCK_IDTCM
+ 	tristate "IDT CLOCKMATRIX as PTP clock"
+ 	depends on PTP_1588_CLOCK && I2C
++	select DEBUG_FS
+ 	default n
+ 	help
+ 	  This driver adds support for using IDT CLOCKMATRIX(TM) as a PTP
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 7aff75f..a4a9e35 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -12,6 +12,8 @@ obj-$(CONFIG_PTP_1588_CLOCK_KVM)	+= ptp_kvm.o
+ obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp-qoriq.o
+ ptp-qoriq-y				+= ptp_qoriq.o
+ ptp-qoriq-$(CONFIG_DEBUG_FS)		+= ptp_qoriq_debugfs.o
+-obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_clockmatrix.o
++obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_idtcm.o
+ obj-$(CONFIG_PTP_1588_CLOCK_IDT82P33)	+= ptp_idt82p33.o
+ obj-$(CONFIG_PTP_1588_CLOCK_VMW)	+= ptp_vmw.o
++
++ptp_idtcm-objs += ptp_clockmatrix.o ptp_idt_debugfs.o
+diff --git a/drivers/ptp/ptp_idt_debugfs.c b/drivers/ptp/ptp_idt_debugfs.c
+new file mode 100644
+index 0000000..0ae02f7
+--- /dev/null
++++ b/drivers/ptp/ptp_idt_debugfs.c
+@@ -0,0 +1,354 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * PTP debugfs interface for the IDT family of timing and
++ * synchronization devices.
++ *
++ * Copyright (C) 2019 Integrated Device Technology, Inc., a Renesas Company.
++ */
++#include <linux/debugfs.h>
++#include <linux/module.h>
++#include <linux/seq_file.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
++
++#include "ptp_idt_debugfs.h"
++
++MODULE_LICENSE("GPL");
++
++#define DEBUGFS_CMD_MAX_WRITE_SIZE (4)
++#define DEBUGFS_CMD_MENU_SIZE (4)
++#define DEBUGFS_CMD_MAX_SIZE (64)
++#define DEBUGFS_CMD_HELP \
++	"1) set combomode:\n" \
++	"echo -n \"combomode:mode[current/fast/slow/hold]\" > cmd\n" \
++	"2) write up to 4 registers:\n" \
++	"echo -n \"write:addr[hex]:value[hex]:num of bytes[max 4]\" > cmd\n" \
++	"3) show all registers:\n" \
++	"cat regs"
++
++struct idtptp_debugfs {
++	idtptp_debugfs_handle handle;
++	struct ptp_clock_info *info;
++	debugfs_cmd_handler handler;
++	struct idtptp_debugfs_regs space;
++	struct dentry *root;
++	struct dentry *cmd;
++	struct dentry *regs;
++	struct dentry *help;
++};
++
++struct idtptp_debugfs_menu {
++	const char *input[DEBUGFS_CMD_MENU_SIZE];
++	const int output[DEBUGFS_CMD_MENU_SIZE];
++	const int size;
++};
++
++static struct idtptp_debugfs_menu cmdmenu = {
++	.input = {"combomode", "write", "read"},
++	.output = {IDTPTP_DEBUGFS_COMBOMODE,
++		   IDTPTP_DEBUGFS_WRITE_REG,
++		   IDTPTP_DEBUGFS_READ_REG},
++	.size = 3,
++};
++
++static struct idtptp_debugfs_menu combomodemenu = {
++	.input = {"current", "fast", "slow", "hold"},
++	.output = {E_COMBOMODE_CURRENT,
++		   E_COMBOMODE_FASTAVG,
++		   E_COMBOMODE_SLOWAVG,
++		   E_COMBOMODE_HOLDOVER},
++	.size = 4,
++};
++
++static inline int
++idtptp_debugfs_parse_menu(char *input,
++			  struct idtptp_debugfs_menu *menu)
++{
++	int i;
++
++	for (i = 0; i < menu->size; i++) {
++		if (strcmp(input, menu->input[i]) == 0)
++			return menu->output[i];
++	}
++
++	return -EINVAL;
++}
++
++static inline int
++idtptp_debugfs_parse_combomode(char *param,
++			       struct idtptp_debugfs_data *data)
++{
++	char **strp = &param;
++	char *modein;
++
++	modein = strsep(strp, ":");
++	if (modein == NULL)
++		return -EINVAL;
++
++	data->combomode = idtptp_debugfs_parse_menu(modein, &combomodemenu);
++
++	return data->combomode;
++}
++
++static inline int
++idtptp_debugfs_parse_write(char *param,
++			   struct idtptp_debugfs_regs space,
++			   struct idtptp_debugfs_data *data)
++{
++	struct idtptp_debugfs_wr *wr = &data->wr;
++	char *addrin, *valuein, *bytesin;
++	unsigned int addr, value, bytes;
++	char **strp = &param;
++	int ret, i;
++
++	addrin = strsep(strp, ":");
++	if (addrin == NULL)
++		return -EINVAL;
++
++	ret = kstrtouint(addrin, 16, &addr);
++	if (ret < 0)
++		return ret;
++
++	if (addr < space.addr || addr > space.addr + space.length - 1)
++		return -EINVAL;
++
++	valuein = strsep(strp, ":");
++	if (valuein == NULL)
++		return -EINVAL;
++
++	ret = kstrtouint(valuein, 16, &value);
++	if (ret < 0)
++		return ret;
++
++	bytesin = strsep(strp, ":");
++	if (bytesin == NULL)
++		return -EINVAL;
++
++	ret = kstrtouint(bytesin, 16, &bytes);
++	if (ret < 0)
++		return ret;
++
++	if (bytes > DEBUGFS_CMD_MAX_WRITE_SIZE)
++		return -EINVAL;
++
++	wr->addr = (u16)addr;
++	wr->length = bytes;
++
++	for (i = 0; i < bytes; i++) {
++		wr->buf[i] = value & 0xff;
++		value >>= 8;
++	}
++
++	return 0;
++}
++
++
++static int idtptp_debugfs_help_show(struct seq_file *m, void *data)
++{
++	seq_printf(m, "%s\n", DEBUGFS_CMD_HELP);
++
++	return 0;
++}
++
++static int idtptp_debugfs_help_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, idtptp_debugfs_help_show, inode->i_private);
++}
++
++static const struct file_operations fops_help = {
++	.owner = THIS_MODULE,
++	.open = idtptp_debugfs_help_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static int idtptp_debugfs_reg_show(struct seq_file *m, void *data)
++{
++	struct idtptp_debugfs *dbg = m->private;
++	struct idtptp_debugfs_data wrdata;
++	u16 regaddr = dbg->space.addr;
++	u8 buf[8] = {0};
++	int i, err;
++
++	wrdata.wr.buf = buf;
++	wrdata.wr.length = 8;
++
++	for (i = 0; i < dbg->space.length; i += 8, regaddr += 8) {
++		wrdata.wr.addr = regaddr;
++
++		err = dbg->handler(dbg->info, IDTPTP_DEBUGFS_READ_REG, &wrdata);
++
++		if (err)
++			return err;
++
++		seq_printf(m,
++			   "%04x %03x: %02x %02x %02x %02x %02x %02x %02x %02x\n",
++			   regaddr, i,
++			   buf[0], buf[1], buf[2], buf[3],
++			   buf[4], buf[5], buf[6], buf[7]);
++	}
++
++	return err;
++}
++
++static int idtptp_debugfs_reg_r_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, idtptp_debugfs_reg_show, inode->i_private);
++}
++
++static const struct file_operations fops_reg_r = {
++	.owner = THIS_MODULE,
++	.open = idtptp_debugfs_reg_r_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static int idtptp_debugfs_parse(struct idtptp_debugfs *dbg,
++				char *cmdstr,
++				struct idtptp_debugfs_data *data)
++{
++	char **strp = &cmdstr;
++	int cmd, ret;
++	char *cmdin;
++
++	cmdin = strsep(strp, ":");
++	if (cmdin == NULL)
++		return -EINVAL;
++
++	cmd = idtptp_debugfs_parse_menu(cmdin, &cmdmenu);
++
++	switch (cmd) {
++	case IDTPTP_DEBUGFS_COMBOMODE:
++		ret = idtptp_debugfs_parse_combomode(cmdstr, data);
++		break;
++	case IDTPTP_DEBUGFS_WRITE_REG:
++		ret = idtptp_debugfs_parse_write(cmdstr, dbg->space, data);
++		break;
++	case IDTPTP_DEBUGFS_READ_REG:
++	default:
++		ret = -EINVAL;
++	}
++
++	if (ret < 0)
++		return ret;
++
++	return cmd;
++}
++
++static ssize_t idtptp_debugfs_cmd(struct file *file,
++				  const char __user *ptr,
++				  size_t len, loff_t *off)
++{
++	struct idtptp_debugfs *dbg = file->private_data;
++
++	struct idtptp_debugfs_data data;
++	char cmdstr[DEBUGFS_CMD_MAX_SIZE];
++	int cmd, err;
++	u8 wr_buf[DEBUGFS_CMD_MAX_WRITE_SIZE] = {0};
++
++	if (*off != 0)
++		return 0;
++
++	if (len > DEBUGFS_CMD_MAX_SIZE - 1)
++		len = DEBUGFS_CMD_MAX_SIZE - 1;
++
++	err = strncpy_from_user(cmdstr, ptr, len);
++	if (err < 0)
++		return err;
++	cmdstr[len] = '\0';
++
++	data.wr.buf = wr_buf;
++	data.wr.length = sizeof(wr_buf);
++
++	cmd = idtptp_debugfs_parse(dbg, cmdstr, &data);
++	if (cmd < 0)
++		return cmd;
++
++	err = dbg->handler(dbg->info, cmd, &data);
++	if (err < 0)
++		return err;
++
++	return len;
++}
++
++static const struct file_operations fops_cmd = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.write = idtptp_debugfs_cmd,
++	.llseek = noop_llseek,
++};
++
++idtptp_debugfs_handle *
++idtptp_debugfs_init(int index, struct ptp_clock_info *info,
++		    debugfs_cmd_handler handler,
++		    struct idtptp_debugfs_regs space)
++{
++	struct idtptp_debugfs *dbg;
++	char name[16];
++	int err = 0;
++
++	dbg = kzalloc(sizeof(struct idtptp_debugfs), GFP_KERNEL);
++	if (dbg == NULL)
++		return ERR_PTR(-ENOMEM);
++
++	dbg->info = info;
++	dbg->handle = index;
++	dbg->handler = handler;
++	dbg->space = space;
++
++	snprintf(name, sizeof(name), "idtptp%u", index);
++
++	dbg->root = debugfs_create_dir(name, NULL);
++	if (!dbg->root) {
++		err = -ENOMEM;
++		goto ret;
++	}
++
++	dbg->help = debugfs_create_file("help", S_IFREG | S_IRUSR,
++					dbg->root, dbg, &fops_help);
++	if (!dbg->help) {
++		err = -ENOMEM;
++		goto ret;
++	}
++
++	dbg->regs = debugfs_create_file("regs", S_IFREG | S_IRUSR,
++					dbg->root, dbg, &fops_reg_r);
++	if (!dbg->regs) {
++		err = -ENOMEM;
++		goto ret;
++	}
++
++	dbg->cmd = debugfs_create_file("cmd", S_IFREG | S_IWUSR,
++					dbg->root, dbg, &fops_cmd);
++	if (!dbg->cmd) {
++		err = -ENOMEM;
++		goto ret;
++	}
++
++ret:
++	if (err < 0) {
++		idtptp_debugfs_exit(&dbg->handle);
++		return ERR_PTR(err);
++	}
++	return &dbg->handle;
++}
++EXPORT_SYMBOL(idtptp_debugfs_init);
++
++void idtptp_debugfs_exit(idtptp_debugfs_handle *handle)
++{
++	struct idtptp_debugfs *dbg =
++		container_of(handle, struct idtptp_debugfs, handle);
++
++	if (dbg == NULL)
++		return;
++
++	debugfs_remove(dbg->help);
++	debugfs_remove(dbg->regs);
++	debugfs_remove(dbg->cmd);
++	debugfs_remove(dbg->root);
++
++	kfree(dbg);
++}
++EXPORT_SYMBOL(idtptp_debugfs_exit);
+diff --git a/drivers/ptp/ptp_idt_debugfs.h b/drivers/ptp/ptp_idt_debugfs.h
+new file mode 100644
+index 0000000..3c5e670
+--- /dev/null
++++ b/drivers/ptp/ptp_idt_debugfs.h
+@@ -0,0 +1,83 @@
++/* SPDX-License-Identifier: GPL-2.0+
++ *
++ * PTP debugfs interface for the IDT family of timing and
++ * synchronization devices.
++ *
++ * Copyright (C) 2019 Integrated Device Technology, Inc., a Renesas Company.
++ */
++#ifndef PTP_IDT_DEBUGFS_H
++#define PTP_IDT_DEBUGFS_H
++
++enum idtptp_debugfs_cmd {
++	IDTPTP_DEBUGFS_READ_REG = 0, /* read registers */
++	IDTPTP_DEBUGFS_WRITE_REG,    /* write registers */
++	IDTPTP_DEBUGFS_COMBOMODE,    /* set combo mode */
++	IDTPTP_DEBUGFS_MAX,
++};
++
++/**
++ * @brief Enumerated type listing DPLL combination modes
++ */
++enum idtdpll_combomode {
++	E_COMBOMODE_CURRENT = 0,   /* CURRENT/INSTANEOUS HOLDOVER OFFSET */
++	E_COMBOMODE_FASTAVG,       /* FAST AVERAGED HOLDOVER OFFSET */
++	E_COMBOMODE_SLOWAVG,       /* SLOW AVERAGED HOLDOVER OFFSET */
++	E_COMBOMODE_HOLDOVER,      /* HOLDER OVER OFFSET REGISTER VALUE USED */
++	E_COMBOMODE_MAX,
++};
++
++/* for register read/write */
++struct idtptp_debugfs_wr {
++	u16 addr;
++	u8 *buf;
++	u16 length;
++};
++
++/* device register space */
++struct idtptp_debugfs_regs {
++	u16 addr;
++	u16 length;
++};
++
++/* data passing to phc driver */
++struct idtptp_debugfs_data {
++	union {
++		enum idtdpll_combomode combomode;
++		struct idtptp_debugfs_wr wr;
++	};
++};
++
++struct ptp_clock_info;
++
++/* command handler provided by phc driver to handle idtptp_debugfs_cmd */
++typedef int (*debugfs_cmd_handler)(struct ptp_clock_info *info,
++				   enum idtptp_debugfs_cmd cmd,
++				   struct idtptp_debugfs_data *data);
++
++typedef int idtptp_debugfs_handle;
++
++/**
++ * idtptp_debugfs_init() - initialize idtptp debugfs interface
++ *
++ * @index   idtptp${index} as debugfs dir name
++ * @info    phc registered ptp_clock_info
++ * @handler handle idtptp_debugfs_cmd
++ * @space   device register space
++ *
++ * Returns a valid handle pointer on success or PTR_ERR on failure.
++ */
++idtptp_debugfs_handle *
++idtptp_debugfs_init(int index, struct ptp_clock_info *info,
++		    debugfs_cmd_handler handler,
++		    struct idtptp_debugfs_regs space);
++
++/**
++ * idtptp_debugfs_exit() - delete idtptp debugfs interface
++ *
++ * @handle  handle pointer from idtptp_debugfs_init
++ *
++ */
++void idtptp_debugfs_exit(idtptp_debugfs_handle *handle);
++
++#endif/* PTP_IDT_DEBUGFS_H */
++
+-- 
+2.7.4
 
-- full dmesg log
-- lspci -vv output
-- cat /proc/interrupts
-
-I need to understand how this system HW works before commenting any
-further.
-
-> > It is for Lorenzo to make up his mind about this anyway.
-> 
-> I'd like to Lorenzo's opinion, too.
-
-I am trying to understand how the HW is wired up (and that's what Marc
-asked as well) so first things first, please send the logs.
-
-Lorenzo
