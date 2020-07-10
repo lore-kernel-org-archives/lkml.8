@@ -2,165 +2,141 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF46C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BECFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A456A2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4E22077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="plnuMrsu"
+	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="yljIXpRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGJKRD (ORCPT
+        id S1727777AbgGJKRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:17:03 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55837 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJKRC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:17:02 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200710101701euoutp01c2245a6cc3efa06ea129266204dfe727~gXLnQ4Q182213322133euoutp01N
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:17:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200710101701euoutp01c2245a6cc3efa06ea129266204dfe727~gXLnQ4Q182213322133euoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594376221;
-        bh=zuImCTUG8KB0maKe8qkWKgOT1mxGOgJZkICKt5oGbeI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=plnuMrsuGMEkycrAG8jAYl+NYTqyivgLb9gVuse4XXicaMM9PDEyMfw5nB5QoSfJm
-         P1aQT6TW0KjabHQlpjLuvOfJMNx0eAQjIwyi7eBAgZXTdBaZyXsq6PVX9p622yLKya
-         6tgQ+p2keFGMAmWTZwwfp05CEFWjmdO4ZfAR6TnY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200710101701eucas1p2b25fdf4c5eb5debe392ff1ff0530324e~gXLnD4l0R0954409544eucas1p2H;
-        Fri, 10 Jul 2020 10:17:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B5.6D.06318.C10480F5; Fri, 10
-        Jul 2020 11:17:00 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200710101700eucas1p27a9b4f0c67d6b5af361ad3085c830d39~gXLmrr0ra0940409404eucas1p23;
-        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200710101700eusmtrp20bdf7cf974e4798332791a5c06de0237~gXLmq972P2032920329eusmtrp2m;
-        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-fc-5f08401c4f46
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F2.C0.06314.C10480F5; Fri, 10
-        Jul 2020 11:17:00 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200710101700eusmtip20235ca730843f772b9729ddb9037521d~gXLmM2BMQ2026820268eusmtip2O;
-        Fri, 10 Jul 2020 10:17:00 +0000 (GMT)
-Subject: Re: [PATCH] efi: avoid error message when booting under Xen
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Peter Jones <pjones@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
-Date:   Fri, 10 Jul 2020 12:16:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUYRjG+XZmx3Fx5XM1fHGlYjEhI80UGUzESmrznyL6I+3QNSePPHe8
-        KzDMI8uwJMxVWNsgS0HNPNI8QMuzNPNITUjzlszFEyMtZ0fJ/57vfd4f3/PASxOyCrEVHRwe
-        zarDVaEKSkJWtax3Hbb2oH2PNPa4MuvLC4jpW1mgmPyho0zq2DBi2h7qxUxvbT7FZDwbNGLW
-        KrJFHrSyvOgepfx+v1WkbNb3kcqFhn5KWVrRTyqXyveeo3wkbgFsaHAsq3Zw95METXWsiiPL
-        TOP1uTlUEnpgkoGMacDOMPttgMxAElqGXyJY0BSTvCHDywjG33sLxhKC1cWP1A7RkdlBCEYh
-        glJtOxIe8whKJuoNuDn2hNXiJBGvLbALzC1lGvFLBP6BoLhx3LBEYVd4lFa0RdO0FLtDn/YC
-        PybxAShImSN4vQdfhMXRZjGvpdgM2nMnDKgxdoPxJ3WI1wS2hOEJrUjQ+yC5Ms+QDnCLETTO
-        lm3H9oSprDEjQZvDXGvFtraGvzU8zAMlCDbSZ7bpagSF2Zvb9DEY6fpN8UkJfBBKax2E8XH4
-        UJ1sKADYFAbnzYQQpvC4KocQxlJIT5UJ27ZQ9mInjjVk1LwispBCs6uaZlcdza46mv//FiCy
-        CFmyMVxYIMs5hbNx9pwqjIsJD7S/FhFWjrZuqXOzdeUtavjj34QwjRQmUr8NylcmVsVyCWFN
-        CGhCYSE98anzqkwaoEpIZNURvuqYUJZrQnKaVFhKnXSzV2Q4UBXN3mDZSFa944poY6sk9LUu
-        1Gf1zc8v85cHCup69mfapMTrrp91jopZ0TGFcSaH9FG3ck9falv08u093xCy0p3f6lhf7yS/
-        wznOhLSfqdv4dXugyNiuPOBUopP3kLQwOE3u9U5fEhdyT+v//GSSfHptWj5qox3pUz59nSUp
-        q/zsZ4vEkzqXie6beXfdHNcnFSQXpHK0I9Sc6h+lhHiIRwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7oyDhzxBru/yFr8/PKe0eLK1/ds
-        FnNuGlm0PbzFaHGi7wOrxeVdc9gsuhbeYLf4vmUykwOHx6ZVnWwe97uPM3kc/nCFxeP9vqts
-        Huu3XGXx+LxJLoAtSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
-        syy1SN8uQS/j2alvrAUb+Co+zJzO1sDYw9PFyMkhIWAicar3FHMXIxeHkMBSRokZK5sYuxg5
-        gBIyEsfXl0HUCEv8udbFBlHzmlHi3KpLjCAJYQEXiW+rG5hAbBEBM4lXn3vZQYqYBR4xSnT9
-        XcYE0fEGaGrbYRaQKjYBK4mJ7avANvAK2ElcmR8CEmYRUJVY0PqKGcQWFYiQOLxjFtgCXgFB
-        iZMzn4C1cgrYSDyeugcsziygLvFn3iVmCFtc4taT+UwQtrxE89bZzBMYhWYhaZ+FpGUWkpZZ
-        SFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzDbcd+bt7BeGlj8CFGAQ5GJR7eHf/Z
-        4oVYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAFJFXEm9o
-        amhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRb92WuV5/fNYZH7OQEeEs
-        1LlrHL9SQy3SLE5/7zqVJ3U7H7R+CBFw2V8k+vr8M7WoDfpMocp+seJ/ulZHKGX1RXi+6mxK
-        zPFR5rM/eOm+c0dOIEc8s5DCc4N9Vx5tjO+d5SjyKl4j/cnF36cMtp2Kazo3hV89ec6JO1/9
-        r2/4L9h6P5nBuU+JpTgj0VCLuag4EQDuYox+2QIAAA==
-X-CMS-MailID: 20200710101700eucas1p27a9b4f0c67d6b5af361ad3085c830d39
-X-Msg-Generator: CA
+        Fri, 10 Jul 2020 06:17:09 -0400
+Received: from mail-eopbgr1310044.outbound.protection.outlook.com ([40.107.131.44]:52592
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726955AbgGJKRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 06:17:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b+wqaUvtJloU4sDYukIJk5ezSa7SQ0acM2LJ+Yud/4Lyaxk8+E2aRNot3W8kS5D9VQK2wtCwYyTiPTCOWG3mHNgPdgVT2ApZMIo9zwpj6m0rMPjfvR6Ik/oTL4jegmstLywRX2jB/Hk2c3k768JtkKe8i2N508GRCEGA1W45IfgPVYUJyKVa6uCD97GqJYvX4cOO09qASemjdlH73pkL1h9n5JwCBxlqXaN97mZxssu1jh1CqebQyOLO4ssDAuECtU4jkN0pQRub6sAONTY5nQHBkfJVyDUlpDcV6od2hfT/9ksIVwrn+Gx1X6AXGJTor4uHa5ENM43nEMcoHDN7eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVKOCT+dI4v0T1xaUP4JnYuygX8fE7YkFq7ywfv2yyA=;
+ b=GlyoRQoyrZfEF6pL2zgL4DxKvf4wio2RcaNKvprdQ6T/4Ao9ASo7Gy1w2iV5YqeitpiI5xs3c+HNVz0o+8Dhw465th8YAyPVEsDtisWEWn+b92p+AZcxyG/kUWFdBKHr4ipjN9pP9yVezOKBHtLLcxQldKFHUI+xEZZjTecXzS8O50IHJXPahDm7wkevWSJ5OEjGUmHJ6gfJAPr3Y8JEZzUknXNMtgpjC9+UwWQ8rXQK4cyQMjWlX9tpcIuTgDAqqhenLb8NbEid+sfXVbCj9llzoVcNsQ6zW+3jtBoBNkx+n/X2sZ7Bo97Yi9py44FXtbeadR1GmEH5tt3GLC0yxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVKOCT+dI4v0T1xaUP4JnYuygX8fE7YkFq7ywfv2yyA=;
+ b=yljIXpRGVGCXAq7gp49VtQnw2eXmu5a/4qteiOiFEKf7VIWo/tqmaehyuPT60e3iKq7dUwtYaCl518moVNh6xZSqaHPmvYyilqe6gRed6EoDJ17Yg77Q/Xcwp1XiVH1f4/lFRPiVpuUjQoDOH5jfqmTaYEWq0lFon1ocpevjMl0=
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com (2603:1096:203:d3::12)
+ by HKAPR02MB4387.apcprd02.prod.outlook.com (2603:1096:203:c6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 10 Jul
+ 2020 10:17:03 +0000
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::d4d8:820c:6e00:69d2]) by HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::d4d8:820c:6e00:69d2%8]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
+ 10:17:03 +0000
+From:   =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
+To:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+Thread-Topic: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+Thread-Index: AdZVxomlyXL2KYiRQzS3gTED+d01Tw==
+Date:   Fri, 10 Jul 2020 10:17:03 +0000
+Message-ID: <HKAPR02MB4291B9C45F1411607620575CE0650@HKAPR02MB4291.apcprd02.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oppo.com;
+x-originating-ip: [58.252.5.70]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4bde3113-4e18-4150-c936-08d824ba63fb
+x-ms-traffictypediagnostic: HKAPR02MB4387:
+x-microsoft-antispam-prvs: <HKAPR02MB4387BA1FB9D4242D235465E4E0650@HKAPR02MB4387.apcprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ryr7ODXf1DQfIzAqrlelUiZS8x1DC8UQHSiVQV+Cs1T70fo714gieEAJWhSiwYpgC9l9FV6eXJudWjCUAg88F7LgqItmvYlRAlfij4tFOeY11ddmBkGEPWOT4hiZCH4C0SiKRK2X9LWX7LcqhWUMlnMY3DC3uMJAPfT1q3a3cvdwqhYn4OJYoX9wUgDxbLBMKF3pzdlx9mpDbBPDLSUJVLbx9U7CAa03xdSGl0XwbaFzgulZNfD81uHtEx2ezoq217weDk2YMBZXrneUgTu3VjsFWmqHCLRhI8FzkI0fT8Tr0gluaILty2O3pvk1vtBaR54kEiO7hUo/H9YqTZUK7CbG0lQoU9bGnHGipJ8hkBQFdENkDtvn4YMGA2TwgaGX
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HKAPR02MB4291.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(396003)(366004)(346002)(136003)(66446008)(64756008)(6506007)(66556008)(85182001)(186003)(66476007)(26005)(71200400001)(9686003)(33656002)(316002)(8676002)(86362001)(2906002)(478600001)(83380400001)(110136005)(55016002)(76116006)(52536014)(66946007)(4326008)(5660300002)(8936002)(7696005)(54906003)(11606004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: T0YjH3qSUr/bBvN+hGcF1njcpMLmGHpO21xZ8SBOIqvcBhtKaS1y7dq2JZW8tP9E86dghSS/RhqugFs7ezfoopFyJCJ2xQHSUBrMvu+tpUiKfSeL6GYe0FrPpioQdpJv8rskb4JvX7G/oFubup2hZuSV+aARkpexVssfoJmafp8knZ8dqOBw5aSiiyD9LHj/SLIaw96EFG6KwjOqVB5d1ajoMTzjITf/f+ccwGwtv4dPB4xv7q4n8QzSQVE4IIpYR1gFMXO0tiJijJ2aARvEF2DbUAZ3v+C55wb2sBdDPXB8dQbeX1rPCUdDkQvaOjWzM+1TmxaOjR79u+iWvG5U2w2WU5gpchnqAWaoOvVPNBW2fd5HNJkIBq+C5d1KvpeP+xMgPKhST2WpbvsF0ajwlwEwor8LfeYdFcEF6X18+epKEEq68BWHZpeHROcgT2eHfJ4m7TMx0NSblOntzXVPY5sTyLq69SEBdJa0+A5nAHg=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200709091750eucas1p18003b0c8127600369485c62c1e587c22
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200709091750eucas1p18003b0c8127600369485c62c1e587c22
-References: <20200610141052.13258-1-jgross@suse.com>
-        <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
-        <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
-        <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HKAPR02MB4291.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bde3113-4e18-4150-c936-08d824ba63fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 10:17:03.0727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WcknUF4fKSsptVRKhAW6zYVE08g3243Nkjb4I+VOaEUVP2Q7VEdIAzYRVBsufn+w+xy7a2zxpGle9NWVdaXzaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR02MB4387
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-[ added EFI Maintainer & ML to Cc: ]
-
-Hi,
-
-On 7/9/20 11:17 AM, Jürgen Groß wrote:
-> On 28.06.20 10:50, Jürgen Groß wrote:
->> Ping?
->>
->> On 10.06.20 16:10, Juergen Gross wrote:
->>> efifb_probe() will issue an error message in case the kernel is booted
->>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
->>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
->>> isn't set.
->>>
->>> Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
->>> Signed-off-by: Juergen Gross <jgross@suse.com>
->>> ---
->>>   drivers/video/fbdev/efifb.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
->>> index 65491ae74808..f5eccd1373e9 100644
->>> --- a/drivers/video/fbdev/efifb.c
->>> +++ b/drivers/video/fbdev/efifb.c
->>> @@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
->>>       info->apertures->ranges[0].base = efifb_fix.smem_start;
->>>       info->apertures->ranges[0].size = size_remap;
->>> -    if (efi_enabled(EFI_BOOT) &&
->>> +    if (efi_enabled(EFI_BOOT) && !efi_enabled(EFI_PARAVIRT) &&
->>>           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
->>>           if ((efifb_fix.smem_start + efifb_fix.smem_len) >
->>>               (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
->>>
->>
-> 
-> In case I see no reaction from the maintainer for another week I'll take
-> this patch through the Xen tree.
-
-From fbdev POV this change looks fine to me and I'm OK with merging it
-through Xen or EFI tree:
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+T24gVGh1LCBKdWwgMDksIDIwMjAgYXQgMDc6MTg6MDFBTSArMDAwMCwgUGVuZyBIYW8oUmljaGFy
+ZCkgd3JvdGU6DQo+PiBPbiBUaHUsIDkgSnVsIDIwMjAgYXQgMDk6NTAsIFBlbmcgSGFvIChSaWNo
+YXJkKSA8cmljaGFyZC5wZW5nQG9wcG8uY29tPiB3cm90ZToNCj4+ID4+ID5BcHBhcmVudGx5LCB5
+b3UgYXJlIGhpdHRpbmcgYSBSX0FBUkNINjRfSlVNUDI2IG9yIFJfQUFSQ0g2NF9DQUxMMjYNCj4+
+ID4+ID5yZWxvY2F0aW9uIHRoYXQgb3BlcmF0ZXMgb24gYSBiIG9yIGJsIGluc3RydWN0aW9uIHRo
+YXQgaXMgbW9yZSB0aGFuDQo+PiA+PiA+MTI4IG1lZ2FieXRlcyBhd2F5IGZyb20gaXRzIHRhcmdl
+dC4NCj4+ID4+ID4NCj4+ID4+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBhIG1vZHVsZSB0aGF0
+IGNhbGxzIGZ1bmN0aW9ucyB0aGF0IGFyZSBub3QgcGFydCBvZiB0aGUgbW9kdWxlIHdpbGwgdXNl
+IFBMVC4NCj4+ID4+IFBsdF9tYXhfZW50cmllcyA9MCBNYXkgb2NjdXIgaWYgYSBtb2R1bGUgZG9l
+cyBub3QgZGVwZW5kIG9uIG90aGVyIG1vZHVsZSBmdW5jdGlvbnMuDQo+PiA+Pg0KPj4gPg0KPj4g
+PkEgUExUIHNsb3QgaXMgYWxsb2NhdGVkIGZvciBlYWNoIGIgb3IgYmwgaW5zdHJ1Y3Rpb24gdGhh
+dCByZWZlcnMgdG8gYQ0KPj4gPnN5bWJvbCB0aGF0IGxpdmVzIGluIGEgZGlmZmVyZW50IHNlY3Rp
+b24sIGVpdGhlciBvZiB0aGUgc2FtZSBtb2R1bGUNCj4+ID4gKGUuZy4sIGJsIGluIC5pbml0IGNh
+bGxpbmcgaW50byAudGV4dCksIG9mIGFub3RoZXIgbW9kdWxlLCBvciBvZiB0aGUNCj4+ID5jb3Jl
+IGtlcm5lbC4NCj4+ID4NCj4+ID5JIGRvbid0IHNlZSBob3cgeW91IGVuZCB1cCB3aXRoIHBsdF9t
+YXhfZW50cmllcyBpbiB0aGlzIGNhc2UsIHRob3VnaC4NCj4+IGlmIGEgbW9kdWxlIGRvZXMgbm90
+IGRlcGVuZCBvbiBvdGhlciBtb2R1bGUgZnVuY3Rpb25zLCBQTFQgZW50cmllcyBpbiB0aGUgbW9k
+dWxlIGlzIGVxdWFsIHRvIDAuDQo+DQo+VGhpcyBicmluZ3MgbWUgYmFjayB0byBteSBlYXJsaWVy
+IHF1ZXN0aW9uOiBpZiB0aGVyZSBhcmUgbm8gUExUIGVudHJpZXMgaW4NCj50aGUgbW9kdWxlLCB0
+aGVuIGNvdW50X3BsdHMoKSB3aWxsIG5vdCBmaW5kIGFueSBSX0FBUkNINjRfSlVNUDI2IG9yDQo+
+Ul9BQVJDSDY0X0NBTEwyNiByZWxvY2F0aW9ucyB0aGF0IHJlcXVpcmUgUExUcyBhbmQgd2lsbCB0
+aGVyZWZvcmUgcmV0dXJuIDAuDQo+VGhlIGFic2VuY2Ugb2YgdGhlc2UgcmVsb2NhdGlvbnMgbWVh
+bnMgdGhhdCBtb2R1bGVfZW1pdF9wbHRfZW50cnkoKSB3aWxsIG5vdA0KPmJlIGNhbGxlZCBieSBh
+cHBseV9yZWxvY2F0ZV9hZGQoKSwgYW5kIHNvIHlvdXIgcGF0Y2ggc2hvdWxkIGhhdmUgbm8gZWZm
+ZWN0Lg0KPg0KPllvdSBzZWVtIHRvIGJlIHNheWluZyB0aGF0IG1vZHVsZV9lbWl0X3BsdF9lbnRy
+eSgpIF9pc18gYmVpbmcgY2FsbGVkLA0KPmRlc3BpdGUgY291bnRfcGx0cygpIHJldHVybmluZyAw
+LiBPbmUgd2F5IHRoYXQgY2FuIGhhcHBlbiBpcyBpZiBQTFRzIGFyZQ0KPm5lZWRlZCBmb3IgYnJh
+bmNoZXMgd2l0aGluIGEgc2luZ2xlLCB2ZXJ5IGxhcmdlIHRleHQgc2VjdGlvbiwgYnV0IHlvdSBh
+bHNvDQo+c2F5IHRoYXQncyBub3QgdGhlIGNhc2UuDQo+DQpPbmUgb2YgeWVzdGVyZGF5J3MgcmVw
+bHkgd2FzIHdyb25nLiBXYXJuaW5nIGFwcGVhcnMgb24gdGhlIHR3byBzZXJ2ZXJzIHdob3NlIENP
+TkZJR19SQU5ET01JWkVfQkFTRSBpcyBuLg0KdGhlcmUgaXMgYSBzZXJ2ZXIgaXMgc29tZW9uZSBj
+b3BpZWQgYSBuZXcgY29uZmlnLCB3aGljaCBjYW4gZW5hYmxlIENPTkZJR19SQU5ET01JWkVfQkFT
+RSwNCiBjb21waWxlZCB0aGUga2VybmVsLCBidXQgaGFzIG5vdCByZXN0YXJ0ZWQgdGhlIGhvc3Qu
+IEBBcmQNCg0KPlNvIEkgdGhpbmsgd2UgbmVlZCBtb3JlIGluZm9ybWF0aW9uIGZyb20geW91IHNv
+IHRoYXQgd2UgY2FuIGVpdGhlciByZXByb2R1Y2UNCj50aGlzIG91cnNlbHZlcywgb3IgYmV0dGVy
+IHVuZGVyc3RhbmQgd2hlcmUgdGhpbmdzIGFyZSBnb2luZyB3cm9uZy4NCj4NCkFmdGVyIEkgYWRk
+IHRoZSBwcmludCBpbmZvcm1hdGlvbiwgdGhlIG1vZHVsZSB0aGF0IHRyaWdnZXJlZCB0aGUgd2Fy
+bmluZyBkaWZmZXJzIGVhY2ggdGltZSBJIHJlc3RhcnQgdGhlIGhvc3QuDQo+RmluYWxseSwgeW91
+IHNhaWQgdGhhdCB5b3VyIGtlcm5lbCBpcyAiNS42LjAtcmMzKyIuIEFyZSB5b3UgYWJsZSB0bw0K
+PnJlcHJvZHVjZSB3aXRoIG1haW5saW5lICg1LjgtcmM0KT8NCj4NCkkgd2lsbCB0cnkgaXQuDQo+
+V2lsbA0KPg0KPlAuUy4gd2hlbmV2ZXIgeW91IHJlcGx5LCB0aGUgbWFpbCB0aHJlYWRpbmcgYnJl
+YWtzIDooDQpNYXliZSB0aGUgbWFpbGJveCBjbGllbnQgYXV0b21hdGljYWxseSBhcHBlbmRzIENo
+aW5lc2UgY2hhcmFjdGVycy4NCkknbGwgYWRqdXN0IGl0IGFuZCBzZWUgaWYgSSBjYW4gZml4IGl0
+Lg0K
