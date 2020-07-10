@@ -2,189 +2,206 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83884C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA82065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:28:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbBPbcBO"
+	by mail.kernel.org (Postfix) with ESMTP id 5D70220786
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 23:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594423953;
+	bh=qZFv1CX9d18PwooaFPG3Jn4rphAd/kDDIDOqrn0KUvE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=meJV0Fdk4IxwTxa93NG80uoRJmY7CD7nFWWTrW6IGFQMRI921vZrUS6GzRP5eUvLx
+	 CHrIR+ooN5qRO32H7i5P00B/X5ttUrnKM6WBc/xDu1CmyLxHwdSsMp/4V4LWbaHRtH
+	 8CSYe5LmCQ6yoat10KoPzY8GjX60tn4fXb1R05lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGJX2n (ORCPT
+        id S1727070AbgGJXcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:28:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgGJX2m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 19:28:42 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39895C08C5DC;
-        Fri, 10 Jul 2020 16:28:42 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so7759762ejc.3;
-        Fri, 10 Jul 2020 16:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OzVgodV2044NdM/Krgytwhtop4ouw4FLMMvBYFt+YIQ=;
-        b=BbBPbcBOOhPXg2G6ZW+NeOzdbInLdxQD0SpviWDEwzFEUtOBoUYVmsdkZxabAh9AY8
-         0PKDTY88rzgWDsYxQdUh2BSSHWpwYLZiWY4F50Ktxmq9BBSPcIXTAhkrjT9GXmJURzJr
-         24oscTpEFyGJomz0OxWsZx0/4VPfrNFU9oYHoaCXZ/FSJUfz0KZGUcuW5ulXv3ISKu2z
-         A/1Y+ESka0YbFLWbjKu5z+H/XWAGQeZdQMXKXIwwFdDpXDbHsNrarZoYibQSLRn3dNmN
-         euGc4l8TwFLVZaW+A5VkqRP2DvJQ0tqRTV1GMXObjpVgA0jX0V+6+dxP3378cafjJK5k
-         te6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OzVgodV2044NdM/Krgytwhtop4ouw4FLMMvBYFt+YIQ=;
-        b=WXzPchlcoOhXx93bQdHQdUkEFjcxmceXgxxvyITYvZmJkp4mzfDfRlbS5gqqH8xaj1
-         pmtU5CJ6LtC9F2hFog00gW2za55FlLfhqmFPDBZy0MBVAZApMgTcFXVYT5Ddh8OQl623
-         2zVSQGQv0FdNKAlVz3r8h4maLNsgLIrb/pLh73I+rFWOGb5M9l4bmMZHZyJEZqvzt01i
-         NuiaviCM1YEhb+VM8iaWpn/Wkg7uI7Mu8qEervYKmSFfuJv4LxbxdC7uDdked4jsD8NO
-         HPH7TQaqU31ybIE9Iubn2Tzi5v0iRFMRCUZetln9GScKQmjkVssIHBUSRvvmHJ8VBTtd
-         YGtA==
-X-Gm-Message-State: AOAM532Uke5fvN5uEQ5WwRBPuQosxEemH+e86e2ywn380QWjCjh9znzA
-        Pt7V5Xlc13KgtTBuSqyhZlarMJYrnWycFwSSDiJx0IPo
-X-Google-Smtp-Source: ABdhPJxWsXEH4BLy9e7jPFQ1m1LEibFY6E59Se1fE5uCBG4Bt1OTlLlcEPD1O1ydQK/fTFLyaIRv99ZVVV3B1ivPqKs=
-X-Received: by 2002:a17:906:4d4c:: with SMTP id b12mr61930508ejv.506.1594423720898;
- Fri, 10 Jul 2020 16:28:40 -0700 (PDT)
+        Fri, 10 Jul 2020 19:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbgGJXcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 19:32:31 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC232077D;
+        Fri, 10 Jul 2020 23:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594423950;
+        bh=qZFv1CX9d18PwooaFPG3Jn4rphAd/kDDIDOqrn0KUvE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0gruNDRG210kwjnDK21/f2TTB84PP+1SoJzPn2oHQjCi5tKSmk9riPN1Myy0i3I5S
+         YWdS/bxoFGEx24/CerkDpFJtz6mgMM5kk328PHgXMiZWCtcCUR3yjvCF34MA8YJhpj
+         C8GLha9a3p03gOkAEoDi5hHNz3yANGR8dPMazz7Q=
+Date:   Fri, 10 Jul 2020 18:32:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for
+ untrusted/external-facing devices
+Message-ID: <20200710233229.GA92058@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200709143404.11876-1-jonathan@marek.ca> <CAF6AEGsQFVptXi2wgx_JipyK0AOSUBHOHaDmRF_gG+hSH8mF5A@mail.gmail.com>
- <3729cda9-2d02-c213-c31a-d3e1316798f8@marek.ca>
-In-Reply-To: <3729cda9-2d02-c213-c31a-d3e1316798f8@marek.ca>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 10 Jul 2020 16:29:11 -0700
-Message-ID: <CAF6AEGuPfgeGBPv=H4xYDiRj3eXUvF+zGC4U8RPTSca_sNeAUQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/msm: handle for EPROBE_DEFER for of_icc_get
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACK8Z6F-8OZNJU8wqWuZq=moCaOi+3W=CzBeppfO31VZnkqBrg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 4:11 PM Jonathan Marek <jonathan@marek.ca> wrote:
->
-> On 7/9/20 11:15 AM, Rob Clark wrote:
-> > On Thu, Jul 9, 2020 at 7:35 AM Jonathan Marek <jonathan@marek.ca> wrote:
-> >>
-> >> Check for errors instead of silently not using icc if the msm driver
-> >> probes before the interconnect driver.
-> >>
-> >> Allow ENODATA for ocmem path, as it is optional and this error
-> >> is returned when "gfx-mem" path is provided but not "ocmem".
-> >>
-> >> Remove the WARN_ON in msm_gpu_cleanup because INIT_LIST_HEAD won't have
-> >> been called on the list yet when going through the defer error path.
-> >>
-> >> Changes in v2:
-> >> * Changed to not only check for EPROBE_DEFER
-> >>
-> >> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> >> ---
-> >>   drivers/gpu/drm/msm/adreno/adreno_gpu.c | 17 ++++++++++++++---
-> >>   drivers/gpu/drm/msm/msm_gpu.c           |  2 --
-> >>   2 files changed, 14 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> >> index 89673c7ed473..0f5217202eb5 100644
-> >> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> >> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> >> @@ -940,12 +940,20 @@ static int adreno_get_pwrlevels(struct device *dev,
-> >>                   */
-> >>                  gpu->icc_path = of_icc_get(dev, NULL);
-> >>          }
-> >> -       if (IS_ERR(gpu->icc_path))
-> >> +       if (IS_ERR(gpu->icc_path)) {
-> >> +               ret = PTR_ERR(gpu->icc_path);
-> >>                  gpu->icc_path = NULL;
-> >> +               return ret;
-> >> +       }
-> >>
-> >>          gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> >> -       if (IS_ERR(gpu->ocmem_icc_path))
-> >> +       if (IS_ERR(gpu->ocmem_icc_path)) {
-> >> +               ret = PTR_ERR(gpu->ocmem_icc_path);
-> >>                  gpu->ocmem_icc_path = NULL;
-> >> +               /* allow -ENODATA, ocmem icc is optional */
-> >> +               if (ret != -ENODATA)
-> >> +                       return ret;
-> >> +       }
-> >>
-> >>          return 0;
-> >>   }
-> >> @@ -996,6 +1004,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> >>          struct adreno_platform_config *config = pdev->dev.platform_data;
-> >>          struct msm_gpu_config adreno_gpu_config  = { 0 };
-> >>          struct msm_gpu *gpu = &adreno_gpu->base;
-> >> +       int ret;
-> >>
-> >>          adreno_gpu->funcs = funcs;
-> >>          adreno_gpu->info = adreno_info(config->rev);
-> >> @@ -1007,7 +1016,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> >>
-> >>          adreno_gpu_config.nr_rings = nr_rings;
-> >>
-> >> -       adreno_get_pwrlevels(&pdev->dev, gpu);
-> >> +       ret = adreno_get_pwrlevels(&pdev->dev, gpu);
-> >> +       if (ret)
-> >> +               return ret;
-> >>
-> >>          pm_runtime_set_autosuspend_delay(&pdev->dev,
-> >>                  adreno_gpu->info->inactive_period);
-> >> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> >> index a22d30622306..ccf9a0dd9706 100644
-> >> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> >> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> >> @@ -959,8 +959,6 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
-> >>
-> >>          DBG("%s", gpu->name);
-> >>
-> >> -       WARN_ON(!list_empty(&gpu->active_list));
-> >> -
-> >
-> > hmm, not a huge fan of removing the WARN_ON().. can we just init the
-> > list head earlier?
-> >
->
-> There doesn't seem to be a nice way of doing that. Would it be
-> reasonable to instead detect that msm_gpu_init wasn't called (checking
-> if gpu->dev is NULL?), and just skip the msm_gpu_cleanup() call in
-> adreno_gpu_cleanup() in that case?
+On Fri, Jul 10, 2020 at 03:53:59PM -0700, Rajat Jain wrote:
+> On Fri, Jul 10, 2020 at 2:29 PM Raj, Ashok <ashok.raj@intel.com> wrote:
+> > On Fri, Jul 10, 2020 at 03:29:22PM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Jul 07, 2020 at 03:46:04PM -0700, Rajat Jain wrote:
+> > > > When enabling ACS, enable translation blocking for external facing ports
+> > > > and untrusted devices.
+> > > >
+> > > > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > > > ---
+> > > > v4: Add braces to avoid warning from kernel robot
+> > > >     print warning for only external-facing devices.
+> > > > v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
+> > > >     Minor code comments fixes.
+> > > > v2: Commit log change
+> > > >
+> > > >  drivers/pci/pci.c    |  8 ++++++++
+> > > >  drivers/pci/quirks.c | 15 +++++++++++++++
+> > > >  2 files changed, 23 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index 73a8627822140..a5a6bea7af7ce 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+> > > >     /* Upstream Forwarding */
+> > > >     ctrl |= (cap & PCI_ACS_UF);
+> > > >
+> > > > +   /* Enable Translation Blocking for external devices */
+> > > > +   if (dev->external_facing || dev->untrusted) {
+> > > > +           if (cap & PCI_ACS_TB)
+> > > > +                   ctrl |= PCI_ACS_TB;
+> > > > +           else if (dev->external_facing)
+> > > > +                   pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
+> > > > +   }
+> > >
+> > > IIUC, this means that external devices can *never* use ATS
+> > and can
+> > > never cache translations.
+> 
+> Yes, but it already exists today (and this patch doesn't change that):
+> 521376741b2c2 "PCI/ATS: Only enable ATS for trusted devices"
 
-Hmm, you can't just call msm_gpu_init() before looking up the icc path
-in adreno_gpu_init()?
+If you get in the habit of using the commit reference style from
+Documentation/process/submitting-patches.rst it saves me the trouble
+of fixing them.  I use this:
 
-BR,
--R
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
 
->
-> > BR,
-> > -R
+> IMHO any external device trying to send ATS traffic despite having
+> ATS disabled should count as a bad intent. And this patch is trying
+> to plug that loophole, by blocking the AT traffic from devices that
+> we do not expect to see AT from anyway.
+
+That's exactly the sort of assertion I was looking for.  If we can get
+something like this explanation into the commit log, and if Ashok and
+Alex are OK with this, we'll be much closer.
+
+It sounds like this is just enforcing a restriction we already have,
+i.e., enabling PCI_ACS_TB blocks translated requests from devices that
+aren't supposed to be generating them.
+
+> Do you see any case where this is not true?
+> 
+> >  And (I guess, I'm not an expert) it can
+> > > also never use the Page Request Services?
 > >
-> >>          for (i = 0; i < ARRAY_SIZE(gpu->rb); i++) {
-> >>                  msm_ringbuffer_destroy(gpu->rb[i]);
-> >>                  gpu->rb[i] = NULL;
-> >> --
-> >> 2.26.1
-> >>
+> > Yep, sounds like it.
+> 
+> Yes, from spec "Address Translation Services" Rev 1.1:
+> "...a device that supports ATS need not support PRI, but PRI is
+> dependent on ATS’s capabilities."
+> (So no ATS = No PRI).
+> 
+> > > Is this what we want?  Do we have any idea how many external
+> > > devices this will affect or how much of a performance impact
+> > > they will see?
+> > >
+> > > Do we need some kind of override or mechanism to authenticate
+> > > certain devices so they can use ATS and PRI?
+> >
+> > Sounds like we would need some form of an allow-list to start with
+> > so we can have something in the interim.
+> 
+> I assume what is being referred to, is an escape hatch to enable ATS
+> on certain given "external-facing" ports (and devices downstream on
+> that port). Do we really think a *per-port* control for ATS may be
+> needed? I can add if there is consensus about this.
+> 
+> > I suppose a future platform might have a facilty to ensure ATS is
+> > secure and authenticated we could enable for all of devices in the
+> > system, in addition to PCI CMA/IDE.
+> >
+> > I think having a global override to enable all devices so platform
+> > can switch to current behavior, or maybe via a cmdline switch.. as
+> > much as we have a billion of those, it still gives an option in
+> > case someone needs it.
+> 
+> Currently:
+> 
+> pci.noats => No ATS on all PCI devices.
+> (Absense of pci.noats): ATS on all PCI devices, EXCEPT external devices.
+
+You mean the "pci=noats" kernel command line parameter, right?
+
+> I can look to add another parameter that is synonymous to
+> "trust-external-pci-devices" that can keep ATS enabled on external
+> ports as well. I think this is better than an allow-list of only
+> certain ports, because most likely an admin will trust all its
+> external ports, or not. Also, we can add this global override and
+> may be add a more granular control later, if and when really needed.
+
+I think this would be new functionality that we don't have today, and
+we don't have anything that actually *needs* it AFAIK, so I wouldn't
+bother.
+
+Bjorn
