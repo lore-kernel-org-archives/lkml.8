@@ -2,170 +2,189 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D25C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C15207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594412966;
-	bh=DiQoR/qIH6L3RLjeyhUKDGJQxa1UAOogxnzXV3WwyYM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rXtXhzTVlaI0kXZTpu7hEM5KOQEWNBuX/2pmn1S4Bnzf8liV9KBEaKfBvfesEuii2
-	 K+3/4MOwa0etexcAtYKLKzab1MnXwgDhWbZlf7Aq8x4nvx6DU7Q3pVhUgP9jIscVO0
-	 4Z2BT5UMEbLe8f1H/+4PP3bWgvpNJN9u3xlJ19DU=
+	by mail.kernel.org (Postfix) with ESMTP id 06A0C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Smcoh1p/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgGJU3Z (ORCPT
+        id S1728025AbgGJUaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 16:30:03 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:6554 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgGJU3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:29:24 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EEA20748;
-        Fri, 10 Jul 2020 20:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594412964;
-        bh=DiQoR/qIH6L3RLjeyhUKDGJQxa1UAOogxnzXV3WwyYM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Mg98WBUBOpphkDnIHW8UWq9hjz21UEVfEZUm2hCYj4fI3Z3Pd0mvcodlBgh3hPfQR
-         8i6qn/ymwX6+Hwn75+YwG8EoV/evuOSi7qZEpRc4q3e858ej7z4C76bhgqNhGmxHlC
-         v0NqnH5iKyuPe4eCHax/Um6J0l3evRwJGkibQ3jg=
-Date:   Fri, 10 Jul 2020 15:29:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for
- untrusted/external-facing devices
-Message-ID: <20200710202922.GA77140@bjorn-Precision-5520>
+        id S1727916AbgGJUaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:30:01 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f08cfc60000>; Sat, 11 Jul 2020 04:29:58 +0800
+Received: from HKMAIL104.nvidia.com ([10.18.16.13])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 10 Jul 2020 13:29:58 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Fri, 10 Jul 2020 13:29:58 -0700
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL104.nvidia.com
+ (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
+ 2020 20:29:57 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 10 Jul 2020 20:29:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aw5hhF1MW1UL5B8uvRxHhqLGnarVOzVesa10V+HSZcYXakwqfNtj0fnwm7OMvAdmGKqYaLDxOr4zS46YDFT8nP0XnL9tgU4hGKWz1JupBFYVzatPN5xGuhP7i8uzBs15UwfZZ5RTspZYB9GzheH6SpRicYOQV+rhJHSW+Q5XyPXA/pZjCfci7sydMcOat/3ozWlj+s9BuNdMSwdkCMw8LQRJOyHzrpWFLrqDRXuDnb/vmBeeY6G16VXEuZYTUHpZUTM5/XBqfVrVwsnWfZYai7XdmVB7OxZEIAbxiE4tjwHDe2IwvBxrDXBRZS3mewhawGzXEpCgYXiq+SdC1Znm0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EmV8bfmQ8MFo4bzA2Q41Ohx9MfS0VJSqHj698eSkUmo=;
+ b=IGM8th0vDvb0hcdrfG3Guj75eLR+lK3FG2jMw48eyxlGaMWdyZCvrrtKid1ABlCySOCrFHw+ZUWL+m0ZdI87/S8kCGuZnZvRMFza71OOJtODhzIzheoyQokMEAaG38pmDFqg3v2EWbQpr2rxaKYmsxxv+plmdjTXJgh4bvu/uvtyVF6Vq5NRbIvhLOOD7Jg52TFIiEHNXdwIjwP1jLa/r+l4LNMVEjAK+OOnwbNKLrZhOoDa/tyHH/G4lhmE4o8fkF7T7E8ywxSE7bTA8OofHaMh/+EtzvPq06XBbtvprLykK/wncarZxFVHDh6zAGCXFshAqUYCtY6flQ33GpUU0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
+ by BYAPR12MB2984.namprd12.prod.outlook.com (2603:10b6:a03:da::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
+ 2020 20:29:55 +0000
+Received: from BYAPR12MB2822.namprd12.prod.outlook.com
+ ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
+ ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3174.021; Fri, 10 Jul 2020
+ 20:29:55 +0000
+From:   Krishna Reddy <vdumpa@nvidia.com>
+To:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Yu-Huan Hsu <YHsu@nvidia.com>,
+        Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Subject: RE: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
+ SMMU
+Thread-Topic: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
+ SMMU
+Thread-Index: AQHWVOS3zMIxJUroL0+UAGESja2lEaj/sR8AgAGTnSA=
+Date:   Fri, 10 Jul 2020 20:29:55 +0000
+Message-ID: <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200708050017.31563-5-vdumpa@nvidia.com> <20200709201348.GA808454@bogus>
+In-Reply-To: <20200709201348.GA808454@bogus>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-07-10T20:29:53.5607832Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=23cc9e9f-01f6-44f5-8d5a-b542cf46bcbb;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [216.228.112.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2b4df9d0-2f6a-4aff-4194-08d8251001da
+x-ms-traffictypediagnostic: BYAPR12MB2984:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB2984D7E03CA683FC0F61CE7BB3650@BYAPR12MB2984.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ui6Aca/1DauNO4+g7LOV5k3iXJ/ZI6bAv+4kpP/pO/9iGZ/cpzQkeMCYsLQ/tpK9NXznUwE2jG/ZzYCl5y57X6Fz4A0YaH3hcC9Pf38XVRQ0ZxXGQua+PGWLMDsVt1nWUBzhIj/kTI302DGPpgoNahAC8FlYNPnI7clnBZpSSlNadPp4AXZTNTNAaSI5GuqwUUwQYXgrLmOZPXUZirbEt2+W6aiWvx7ywzMqmJW67TmtJ/fbt3G/eVGOpRJk69e9WjHX2LgDhNuSvwGMBaDV1logX0TAxTdG48SdVtkknnbCWrq59qGjusuxsHr/8EeLJQptrEi+MjwgLACqPZm3MA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(33656002)(66476007)(66556008)(66446008)(186003)(64756008)(7416002)(8936002)(26005)(54906003)(316002)(110136005)(66946007)(2906002)(52536014)(86362001)(55016002)(7696005)(5660300002)(4744005)(4326008)(6506007)(9686003)(478600001)(76116006)(71200400001)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: BlzVI7A2I+2R7bY/sKk4p6BqG4YHIqwSmYX7GcDadXz45h69LrdL5NjkY0pN3R9G0mwMozflB44C/hV4L91tGdusrWnpsE6ZyO5909EMx6cvZDeaEn6N13vb+3vsOH1AZHP7jTTQPG4c6x4FU4Xob+0EST1FhXQ70yg5eiXVpdkJLBl+oZ588+CLAMiBLT1AZS+6KuEBzP5Ye2VdW51ryW6L6+ufEILAs7UXXXNPJG/aEu5GntIYs0NqIbsp+gjRvjD+CsqNtVKh1sXPBMSkaFVIEpGs3XkqIkRZ0WUZ1BeUpGrlGmXJXY1wVzXNu1zV4fRJU2J8aIWgexpNd5JRaCcUGsnxDbIQGe5jMIGLmfhN4r8vZ2PNXdOwCEfK3v7S40viRyng/HkWQYsIV2ZmeflkAWa1+6XveG/iMdvqr32LuEPwKJ9tRe/zNxL1qASXOTbtECYYOxoDm6HSMt15ILNLn7wqURASHJJxYI8rerF14x82RiCwI4CubMcUrSyB
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707224604.3737893-4-rajatja@google.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b4df9d0-2f6a-4aff-4194-08d8251001da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 20:29:55.1431
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iSB5184FiW0ez3CQRcv4/OMWuSS/Lc6NCXceU5Kt+sYA79zQcGI4IAY+D3cdb+OGIGUumSl06rk4dDjGRnAX6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2984
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594412998; bh=EmV8bfmQ8MFo4bzA2Q41Ohx9MfS0VJSqHj698eSkUmo=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
+         x-microsoft-antispam:x-microsoft-antispam-message-info:
+         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
+         MIME-Version:X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=Smcoh1p/Qe0iB9mVdM7x+GFNPHk/7d7z4fb4F1pERMyAEkzEZ554ycZRSkZjYVSpB
+         hSA/JLxTTiSsqaX9esjloPx5SG01bvjVq5xNhzCivVfcTFy9D00IoX2gsIhV5h7Muu
+         QsQR6YxUNM4LN3wI1KOWkOMO8euxUoyIbLsHgNOIy9K2mR6eWdoX0zpxOXUPN6q6FI
+         6owwum0vPOtHISMXUjBsDLHzBTDCANB6ZnNLX3J3og0XG9DgaFiAUxofZ2B0zJa4gD
+         2EswYE8bLLSzY67Q8HuAsyqa0xj1CkZxDfEoPad9xACnL0Gi4996L7fZmIqbEAIaTX
+         HVBPBNA/AHevg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 03:46:04PM -0700, Rajat Jain wrote:
-> When enabling ACS, enable translation blocking for external facing ports
-> and untrusted devices.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v4: Add braces to avoid warning from kernel robot
->     print warning for only external-facing devices.
-> v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
->     Minor code comments fixes.
-> v2: Commit log change
-> 
->  drivers/pci/pci.c    |  8 ++++++++
->  drivers/pci/quirks.c | 15 +++++++++++++++
->  2 files changed, 23 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 73a8627822140..a5a6bea7af7ce 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	/* Upstream Forwarding */
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> +	/* Enable Translation Blocking for external devices */
-> +	if (dev->external_facing || dev->untrusted) {
-> +		if (cap & PCI_ACS_TB)
-> +			ctrl |= PCI_ACS_TB;
-> +		else if (dev->external_facing)
-> +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-> +	}
+Thanks Rob. One question on setting "minItems: ". Please see below.
 
-IIUC, this means that external devices can *never* use ATS and can
-never cache translations.  And (I guess, I'm not an expert) it can
-also never use the Page Request Services?
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - nvidia,tegra194-smmu
+>> +    then:
+>> +      properties:
+>> +        reg:
+>> +          minItems: 2
+>> +          maxItems: 2
 
-Is this what we want?  Do we have any idea how many external devices
-this will affect or how much of a performance impact they will see?
+>This doesn't work. The main part of the schema already said there's only
+>1 reg region. This part is ANDed with that, not an override. You need to a=
+dd an else clause with 'maxItems: 1' and change the base schema to
+>{minItems: 1, maxItems: 2}.
 
-Do we need some kind of override or mechanism to authenticate certain
-devices so they can use ATS and PRI?
+As the earlier version of base schema doesn't have "minItems: " set, should=
+ it be set to 0 for backward compatibility?  Or can it just be omitted sett=
+ing in base schema as before?
 
-If we do decide this is the right thing to do, I think we need to
-expand the commit log a bit, because this is potentially a significant
-user-visible change.
+"else" part to set "maxItems: 1" and setting "maxItems: 2" in base schema i=
+s clear to me.
 
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
->  }
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b341628e47527..bb22b46c1d719 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
->  	}
->  }
->  
-> +/*
-> + * Currently this quirk does the equivalent of
-> + * PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
-> + *
-> + * TODO: This quirk also needs to do equivalent of PCI_ACS_TB,
-> + * if dev->external_facing || dev->untrusted
-> + */
->  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
->  {
->  	if (!pci_quirk_intel_pch_acs_match(dev))
-> @@ -4973,6 +4980,14 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
->  	ctrl |= (cap & PCI_ACS_CR);
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> +	/* Enable Translation Blocking for external devices */
-> +	if (dev->external_facing || dev->untrusted) {
-> +		if (cap & PCI_ACS_TB)
-> +			ctrl |= PCI_ACS_TB;
-> +		else if (dev->external_facing)
-> +			pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-> +	}
-> +
->  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
->  
->  	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+
+-KR
