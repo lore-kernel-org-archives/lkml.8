@@ -2,157 +2,203 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56323C433FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA86C4345D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E402082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A7220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BCYLSUAK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DpcBSikV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgGJOXz (ORCPT
+        id S1728607AbgGJOYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:23:55 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55123 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgGJOXw (ORCPT
+        Fri, 10 Jul 2020 10:24:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58426 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbgGJOYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:23:52 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142350euoutp01005e0c5dd1880fa3dfc480e06f4f5781~gajHcL03r3141431414euoutp01B
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:23:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200710142350euoutp01005e0c5dd1880fa3dfc480e06f4f5781~gajHcL03r3141431414euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594391030;
-        bh=wcpS6k1Ykt1y3vnMIGbauUhd3FyRkq8edvSKpMqac04=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=BCYLSUAKMBuCMWrwAMpQMyHDawNMKi2TMthPqhWzVQ1McvzHpMQjRPAMXiLEa8Wng
-         EuiQ7y4kp/HHkNFBZ/NTeHhBDFo4sEVSCoGXBnyj7N/c+Xp/1tWrF8tJxcqc0lroox
-         HdX4G+mESgJ5/MF0A9DffZHZ55cI6k5XD14uTtG0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200710142350eucas1p22dd75b74c7b7bb7dd538746b11f5f728~gajHIPpTw0258502585eucas1p2y;
-        Fri, 10 Jul 2020 14:23:50 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E7.DE.06318.5F9780F5; Fri, 10
-        Jul 2020 15:23:50 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142349eucas1p2647e00300bd484a6a9ed420edd413cec~gajGvOVPI2124221242eucas1p2m;
-        Fri, 10 Jul 2020 14:23:49 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200710142349eusmtrp18952350534ee1fdde875ed88396fccf9~gajGunFG21135411354eusmtrp1R;
-        Fri, 10 Jul 2020 14:23:49 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-34-5f0879f5cf4b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id C9.D1.06314.5F9780F5; Fri, 10
-        Jul 2020 15:23:49 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142349eusmtip2c3083710e4fe2af3f9ed9e208a861761~gajGNqE-z1081610816eusmtip2J;
-        Fri, 10 Jul 2020 14:23:49 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: fbdev: neofb: fix memory leak in
- neo_scan_monitor()
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Message-ID: <c07a27c2-3171-3f3a-6029-ef523cf889c4@samsung.com>
-Date:   Fri, 10 Jul 2020 16:23:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200630195451.18675-1-novikov@ispras.ru>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUYRjG+XZmZ8elsc/V8M0sYSEhQU0MHFKkw2r/iqygEkrXHFbLqx2P
-        NogWytTdCNPy2Cw3tSwLNS0vTPMoL1TUSo1NU0xSsSJTyGPJcZT87/me9/e8B3w0oWiWOtER
-        0XGcNlodqaTkZOX7v93u8zo6eHdRrYTNLX1BsY9GvxDsh7mfFFtnmUZskdFAsm23f0nZ/tpc
-        ii2o18vYwbt6ap+N6s28mVQV1E1KVNnWe0jVlr1IqtLy3yKVZXpZqhoxtkpUs+U7jtFBcr8w
-        LjIigdN6+ofIw18PVKDYVvnlVGumTI/6aAOyoQHvgaUUK2VAclqBnyIY6CuVio8/CHIqCimB
-        UuBZBMPXA9YTnekWiQgVIXjQnSQToRkEc1kaQVN4L9xJLkaCtseBUGh6uNrIAbuCPqmdFMIE
-        Nksgo/HxKsRgf2iobFiFSLwTJgaMUkFvwafh99dmqcjYQXvO+EqYpm2wDww9txNsAjvC5/E8
-        iahdoGomlxD6Ax6WQc90tlTcOgAm9GZK1PYw1fpKJmpn6My4RYqBEgTLKd/X0lUIijKsawlf
-        sHQvUMJkAu+C0lpP0d4PN4xjMsEGbAuDM2sL2UJ6ZRYh2gyk3FSItCuUPSmj1scaap4RaUhp
-        2nCZacM5pg3nmP7PNSOyGDly8XyUhuO9o7lED14dxcdHazzOx0SVo5Wv1WltnatG9UuhTQjT
-        SLmJMavpYIVUncDropoQ0ITSgTnQ1XlOwYSpdVc4bUywNj6S45vQNppUOjLe+ZNnFVijjuMu
-        clwsp12vSmgbJz1K3dpiVz7geyRzsWWwbsqbeXmNmp9PPGNf3TPqd7j+eFqw+7fGCz+4g85O
-        y4E+HcmBhG+SrlgSmlMc4eE+cvSdf8l076c8VmYJKRgzgEui/ONmI0OMBnVphzoOufG6wK6l
-        q5cYL/l215qJE3R/04zXfU3Lyd7eheEea/ijU2MKJcmHq73cCC2v/gezN+VwVgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xe7pfKzniDZ5NVrGYs34Nm8XCh3eZ
-        La58fc9msefOa0aL5d1dLBYn+j6wWlzeNYfNYvG+BnaLG1Ma2Bw4PfZ+W8DisXjPSyaPGf+m
-        MnqcmPGbxWPCogOMHnde/2X1uN99nMnj8ya5AI4oPZui/NKSVIWM/OISW6VoQwsjPUNLCz0j
-        E0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyt1zczFhznquj8N429gfESRxcjJ4eEgInE6Ul3
-        mLoYuTiEBJYySqz/dp+9i5EDKCEjcXx9GUSNsMSfa11sEDWvGSWmvF7OCpJgE7CSmNi+ihHE
-        FhYIlFgyax4biC0ioCbR0HqSBaSBWWABk8SBjyuhursYJfY92AVWxStgJ7F/234wm0VAVeLZ
-        9W6wqaICERKHd8xihKgRlDg58wkLyEWcAuYSN1cLgoSZBdQl/sy7xAxhi0vcejKfCcKWl9j+
-        dg7zBEahWUi6ZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzEC43TbsZ+b
-        dzBe2hh8iFGAg1GJh3dBIke8EGtiWXFl7iFGCQ5mJRFep7On44R4UxIrq1KL8uOLSnNSiw8x
-        mgL9NpFZSjQ5H5hC8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1
-        MHq9M726e2raUeHNeiKZmfb6n/W/cMbnMn591b3u/G2tt73bAn9e2tYotWDuo9c+Xod7soxl
-        eTWXNbktyE+UZF14P2z+DLOHMX5f6hRPrt9412ka5zuv65xNzxwnc63foHVxe0Z9VUnFpXP/
-        2RalawXHvdgQnfTtx+otYhtauHqZt92plP1+8L4SS3FGoqEWc1FxIgBb5kyh6QIAAA==
-X-CMS-MailID: 20200710142349eucas1p2647e00300bd484a6a9ed420edd413cec
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200630195458eucas1p2fc508a96f648c8af44d5ed5ff906a103
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200630195458eucas1p2fc508a96f648c8af44d5ed5ff906a103
-References: <CGME20200630195458eucas1p2fc508a96f648c8af44d5ed5ff906a103@eucas1p2.samsung.com>
-        <20200630195451.18675-1-novikov@ispras.ru>
+        Fri, 10 Jul 2020 10:24:11 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AELumT028561;
+        Fri, 10 Jul 2020 14:23:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=VC3kOgFikop4jtNAHQvE25/L4vJ4XvWGd6htnn5j8jE=;
+ b=DpcBSikVSvhoG5rFISMuyhcGInAvBWV/IOOWLx909J3x26RI2wrvLndtydCxKHERdryX
+ aRYsaXjLGURL0/zwpzL7KTymiOTourc6FWjpKKHM1WnsUYoE2T+EQUfQEkn28pnEXLlK
+ CrRKgjwPOaprtH+nvRKQjGZvf7gjj8iwUSXj4Y0qKB4vznyeNzwwKRaXM/S6uwW/OxA+
+ zyyS92UPvOy2HnYh1ZVJaf/ApCDFT24ThsmXonoCuFCI0JSpsiHv15XtlEGjNbtcvihB
+ zbZN30RFFM/Qod6bUj76qLnScKw1YzeosrlVLzqRbLxy7pW16zT9DAYA1M3Hs3UMnYeK EA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 325y0aqrpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 14:23:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AENOj2115128;
+        Fri, 10 Jul 2020 14:23:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 325k3kdsuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 14:23:26 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06AENOgZ002545;
+        Fri, 10 Jul 2020 14:23:24 GMT
+Received: from localhost.uk.oracle.com (/10.175.190.31)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 Jul 2020 07:23:24 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
+        daniel@iogearbox.net, andriin@fb.com
+Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v2 bpf-next 2/2] selftests/bpf: add selftests verifying bpf_trace_printk() behaviour
+Date:   Fri, 10 Jul 2020 15:22:33 +0100
+Message-Id: <1594390953-31757-3-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com>
+References: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007100101
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ adultscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007100101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Simple selftests that verifies bpf_trace_printk() returns a sensible
+value and tracing messages appear.
 
-On 6/30/20 9:54 PM, Evgeny Novikov wrote:
-> neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-> memory for info->monspecs.modedb and proceed to case 0x03. There it does
-> not free the memory and returns -1. neofb_probe() goes to label
-> err_scan_monitor, thus, it does not free this memory through calling
-> fb_destroy_modedb() as well. We can not go to label err_init_hw since
-> neo_scan_monitor() can fail during memory allocation. So, the patch frees
-> the memory directly for case 0x03.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ .../selftests/bpf/prog_tests/trace_printk.c        | 74 ++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/trace_printk.c   | 21 ++++++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk.c
+ create mode 100644 tools/testing/selftests/bpf/progs/trace_printk.c
 
-Applied to drm-misc-next tree, thanks.
+diff --git a/tools/testing/selftests/bpf/prog_tests/trace_printk.c b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
+new file mode 100644
+index 0000000..25dd0f47
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2020, Oracle and/or its affiliates. */
++
++#include <test_progs.h>
++
++#include "trace_printk.skel.h"
++
++#define TRACEBUF	"/sys/kernel/debug/tracing/trace_pipe"
++#define SEARCHMSG	"testing,testing"
++
++void test_trace_printk(void)
++{
++	int err, iter = 0, duration = 0, found = 0, fd = -1;
++	struct trace_printk__bss *bss;
++	struct trace_printk *skel;
++	char buf[1024];
++
++	skel = trace_printk__open();
++	if (CHECK(!skel, "skel_open", "failed to open skeleton\n"))
++		return;
++
++	err = trace_printk__load(skel);
++	if (CHECK(err, "skel_load", "failed to load skeleton: %d\n", err))
++		goto cleanup;
++
++	bss = skel->bss;
++
++	err = trace_printk__attach(skel);
++	if (CHECK(err, "skel_attach", "skeleton attach failed: %d\n", err))
++		goto cleanup;
++
++	fd = open(TRACEBUF, O_RDONLY);
++	if (CHECK(fd < 0, "could not open trace buffer",
++		  "error %d opening %s", errno, TRACEBUF))
++		goto cleanup;
++
++	/* We do not want to wait forever if this test fails... */
++	fcntl(fd, F_SETFL, O_NONBLOCK);
++
++	/* wait for tracepoint to trigger */
++	usleep(1);
++	trace_printk__detach(skel);
++
++	if (CHECK(bss->trace_printk_ran == 0,
++		  "bpf_trace_printk never ran",
++		  "ran == %d", bss->trace_printk_ran))
++		goto cleanup;
++
++	if (CHECK(bss->trace_printk_ret <= 0,
++		  "bpf_trace_printk returned <= 0 value",
++		  "got %d", bss->trace_printk_ret))
++		goto cleanup;
++
++	/* verify our search string is in the trace buffer */
++	while (read(fd, buf, sizeof(buf)) >= 0 || errno == EAGAIN) {
++		if (strstr(buf, SEARCHMSG) != NULL)
++			found++;
++		if (found == bss->trace_printk_ran)
++			break;
++		if (++iter > 1000)
++			break;
++	}
++
++	if (CHECK(!found, "message from bpf_trace_printk not found",
++		  "no instance of %s in %s", SEARCHMSG, TRACEBUF))
++		goto cleanup;
++
++	printf("ran %d times; last return value %d, with %d instances of msg\n",
++	       bss->trace_printk_ran, bss->trace_printk_ret, found);
++cleanup:
++	trace_printk__destroy(skel);
++	if (fd != -1)
++		close(fd);
++}
+diff --git a/tools/testing/selftests/bpf/progs/trace_printk.c b/tools/testing/selftests/bpf/progs/trace_printk.c
+new file mode 100644
+index 0000000..8ca7f39
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/trace_printk.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2020, Oracle and/or its affiliates.
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++
++char _license[] SEC("license") = "GPL";
++
++int trace_printk_ret = 0;
++int trace_printk_ran = 0;
++
++SEC("tp/raw_syscalls/sys_enter")
++int sys_enter(void *ctx)
++{
++	static const char fmt[] = "testing,testing %d\n";
++
++	trace_printk_ret = bpf_trace_printk(fmt, sizeof(fmt),
++					    ++trace_printk_ran);
++	return 0;
++}
+-- 
+1.8.3.1
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> ---
->  drivers/video/fbdev/neofb.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-> index f5a676bfd67a..09a20d4ab35f 100644
-> --- a/drivers/video/fbdev/neofb.c
-> +++ b/drivers/video/fbdev/neofb.c
-> @@ -1819,6 +1819,7 @@ static int neo_scan_monitor(struct fb_info *info)
->  #else
->  		printk(KERN_ERR
->  		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-> +		kfree(info->monspecs.modedb);
->  		return -1;
->  #endif
->  	default:
-> 
