@@ -2,76 +2,80 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB91C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD38206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B637A20772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594384842;
-	bh=G1Zd3fMwHC2mB8xQeDxKb6Q+dLmT3gD13gUrA5sfzVo=;
+	s=default; t=1594384909;
+	bh=J7PYdEtW5cpEgdBRUgOkkFdJLaOCK3sIQx6WpLZpPww=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S7rwGKfceZIE8D7UbxlMGV67sSimxAZyXVMaXnmjyYyG8RbEIA5GyT5ryMA5kA2rf
-	 1oexRUsOSgKl9NUR1ccseStVwG9a7GkryWDAmiH/hJwBEfjFVne0LitH+OYfE1lc+a
-	 sBbzS5lOwgUA7nUI5TIzsGd+93zk7ogWTx+WME2U=
+	b=OlQeCEnSj31z0i0c9GRQN7oMJfaK7mTjTaGJHhV+903VPTg6FiLvGBcy1sIYF76tP
+	 YtIRNqR+BjImVvg34h+9NWVCr3mUDxdlrTQJ4sf64U+I1Zd20rHw3NmafTXa39FhCw
+	 xPWjs9+Fh+hTGsUr7AbDE4tHtB2HGWVeMyvJ343k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGJMkl (ORCPT
+        id S1727819AbgGJMls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37328 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 08:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgGJMkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:40:39 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726828AbgGJMls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:41:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF28F206F4;
-        Fri, 10 Jul 2020 12:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3133820772;
+        Fri, 10 Jul 2020 12:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594384839;
-        bh=G1Zd3fMwHC2mB8xQeDxKb6Q+dLmT3gD13gUrA5sfzVo=;
+        s=default; t=1594384907;
+        bh=J7PYdEtW5cpEgdBRUgOkkFdJLaOCK3sIQx6WpLZpPww=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CvNThnL+5RDXewbvg33s7F+uhgBepJ+qyyyW1ObQDEo3nuQ3Ty1ei8UAc8ag6KywE
-         iWpdLH6EnJcuBnfq416UxpCWVQ+2B8AwBh2tZMd5+wasVKh7wne6+CCB23hhqmmjDv
-         eOLRvXJsktcPK2etc+gadLc6yZPNNSEJYYkmVECM=
-Date:   Fri, 10 Jul 2020 13:40:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for-next/seccomp 0/3] Check ENOSYS under tracing
-Message-ID: <20200710124033.GA30458@willie-the-truck>
-References: <20200705061232.4151319-1-keescook@chromium.org>
+        b=IKo6ct7sQo7OWQepRz+ge14SnAYJkCnMP2XE4ID2wT03XwXQYbNkYWhfmeWwrScaV
+         NxxvGj9lblXwEaPpQY2V+EcLlH1pbvAhy112xzNr91H7dxP+D4v+OUZWpvWDCNpAhm
+         /laQ9vJj1duoLpuJfNxL/0VW1WbIl6lkGFSzHEbA=
+Date:   Fri, 10 Jul 2020 14:41:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        georgi.djakov@linaro.org, akashast@codeaurora.org,
+        mka@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        dianders@chromium.org, swboyd@chromium.org
+Subject: Re: [PATCH] tty: serial: qcom-geni-serial: Drop the icc bw votes in
+ suspend for console
+Message-ID: <20200710124152.GC1567243@kroah.com>
+References: <1594287420-24141-1-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705061232.4151319-1-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1594287420-24141-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 11:12:29PM -0700, Kees Cook wrote:
-> This expands the seccomp selftest to poke a architectural behavior corner
-> that Keno Fischer noticed[1]. In the process, I took the opportunity
-> to do the kselftest harness variant refactoring I'd been meaning to do,
-> which made adding this test much nicer.
+On Thu, Jul 09, 2020 at 03:07:00PM +0530, Rajendra Nayak wrote:
+> When using the geni-serial as console, its important to be
+> able to hit the lowest possible power state in suspend,
+> even with no_console_suspend.
+> The only thing that prevents it today on platforms like the sc7180
+> is the interconnect BW votes, which we certainly don't need when
+> the system is in suspend. So in the suspend handler mark them as
+> ACTIVE_ONLY (0x3) and on resume switch them back to the ALWAYS tag (0x7)
 > 
-> I'd prefer this went via the seccomp tree, as it builds on top of the
-> other recent seccomp feature addition tests. Testing and reviews are
-> welcome! :)
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+> Note: Patch applies on qcom for-next, which has the ICC support patches.
+> The tag macros are currently not exported and hence the hardcoded values.
+> Perhaps if and when https://patchwork.kernel.org/patch/11619705/ lands I
+> can refresh this patch to use the macros.
 
-Thanks! I tested these on arm64 (qemu) and they helped me to find a bug
-in some patches I was writing.
+Feel free to take this patch through that tree.
 
-Tested-by: Will Deacon <will@kernel.org>
-
-Will
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
