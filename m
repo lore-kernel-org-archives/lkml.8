@@ -2,159 +2,94 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B63C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A05DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E3620674
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594401181;
-	bh=D34QGhVyRFu8Zf5JdTUNPdd+yHAT1ehJ1P5X5ASJ+0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XrcW1bEqcSwe/80VyS/C6rcyY1w0zcSaNinhUmNQ5phP4yjghEeqvpkSg2OjbmfK8
-	 ydUdDtQHpelTNWP7STz7yDbVt1aJS85yVNnoL0/2t6GC+FwMSkTbdli1247A3cCYfp
-	 5quBZbGEixlsm0Mn8fhUVpYF2AH6ymp0lv0NnNGM=
+	by mail.kernel.org (Postfix) with ESMTP id 0D6F920674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:13:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uXRgs8RX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGJRM7 (ORCPT
+        id S1728049AbgGJRNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgGJRM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:12:58 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7D6206F4;
-        Fri, 10 Jul 2020 17:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594401177;
-        bh=D34QGhVyRFu8Zf5JdTUNPdd+yHAT1ehJ1P5X5ASJ+0Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i0TSrts/DvZ7fDUKtv84PXSOO90AWm9K5IjwtG41xrIgrzLPePWBvOe5FPFBg98o/
-         QAAZjIr4tdO6YLQLDMRmJhiXaTcd5JSukiWksC3LLr0o51D/HYhfOzK2e95Ru5EAKc
-         cP7kHeBCZL9NtUHr2XZPwGuK/TaPw34L/eWZfat4=
-Date:   Fri, 10 Jul 2020 20:12:46 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-        Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Idan Yaniv <idan.yaniv@ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
- available
-Message-ID: <20200710171246.GA1944577@kernel.org>
-References: <20200706172051.19465-1-rppt@kernel.org>
- <20200706172051.19465-2-rppt@kernel.org>
- <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
- <20200710164037.GA11749@redhat.com>
- <20200710165746.GO12769@casper.infradead.org>
+        Fri, 10 Jul 2020 13:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgGJRNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:13:19 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2778FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:13:19 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a6so5651801ilq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=84ZXCV8hDQ+R5ezHGlVeKRrDnq+BIKMBqF4O35I2mAU=;
+        b=uXRgs8RXS68b0Quf5QIP7lY7g8JASh2hxqEYYRrQeMoIGtj9erXk5JTXrFVc6cFhyr
+         bG1/VNQVX9SeKZvwO0E5XiApXK7A5wmbjBDhXvBFfah+DKBdg1KxeAeS5ihfy8M6F+Uj
+         Oj/Ax225XjIZ+NeX7sgaKdlOYfov+ZZh+RHNd71U6LWc6Ysql3GrCDci50+q3cnR4Xa9
+         6QKuV7m2//VmHl/sZ7UYy0YYpZZtmUFNMVLwZ0I0WQfROWKprUXb0gtaeFvUyV5wIZrx
+         v4OjT3xJta1onx8eUwTX7N9vq0bJwF/RoYaP6As9k7AhiYr6YgcBn2Gb9Z3GYtbeS5Qs
+         leLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=84ZXCV8hDQ+R5ezHGlVeKRrDnq+BIKMBqF4O35I2mAU=;
+        b=sZwozw9D241oJ7c+/940LFvzfDFaRfBm51aG3NvXFCk31Frrn/jvKD4OnfHBW5Cn06
+         JGyJdOtkl1JDdlkxeteOlStI/jNiUgaz5LIKUog6Lm6dSG0w4kiloSRJxDptJpgsBNQ8
+         exH7JpI6iLPxKlQBhEs00/LcxKwhtFBJ0pZC4EJXDFbZG5l5fMZFWza8XvL1LuUmGxA7
+         BIPQ3g5WrD6Szoj/Mgy6MkHQHEsCOIh13NBEF+6V9TIIWspnB5BsRRFDAbQQ2pGPS/4E
+         mVKHEu6AbaoKDjd5215RiYw1zvN16dFon9KTeGlzqVqymK9nU3T/B6yMcbkmKYPtUVSR
+         56eA==
+X-Gm-Message-State: AOAM5339f0hWP4xPIGuSAN5UUCP/isxhc4KAL4ohxUDWp2SAV3DdfX7S
+        +w20ChESWAxV8WHbeUiOrNvduMPi+sYlzIlaWchcmw==
+X-Google-Smtp-Source: ABdhPJwBA5AirBckpFqBud4uPWIU+hnJlSHn3ByjqzmJ47BokabuqeNOCy1OQrj33SMvU88+SIo9y9H1TzuxucnwE7o=
+X-Received: by 2002:a92:b60a:: with SMTP id s10mr49715934ili.119.1594401198223;
+ Fri, 10 Jul 2020 10:13:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710165746.GO12769@casper.infradead.org>
+References: <20200710154811.418214-1-mgamal@redhat.com> <CALMp9eRfZ50iyrED0-LU75VWhHu_kVoB2Qw55VzEFzZ=0QCGow@mail.gmail.com>
+ <0c892b1e-6fe6-2aa7-602e-f5fadc54c257@redhat.com>
+In-Reply-To: <0c892b1e-6fe6-2aa7-602e-f5fadc54c257@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 10 Jul 2020 10:13:07 -0700
+Message-ID: <CALMp9eQXHGnXo4ACX2-qYww4XdRODMn-O6CAvhupib67Li9S2w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 05:57:46PM +0100, Matthew Wilcox wrote:
-> On Fri, Jul 10, 2020 at 12:40:37PM -0400, Andrea Arcangeli wrote:
-> > Hello Hugh and Mike,
-> > 
-> > On Mon, Jul 06, 2020 at 10:07:34PM -0700, Hugh Dickins wrote:
-> > > Adding Andrea to Cc, he's the one who structured it that way,
-> > > and should be consulted.
-> > >
-> > > I'm ambivalent myself.  Many's the time I've been irritated by the
-> > > BUILD_BUG() in HPAGE_etc, and it's responsible for very many #ifdef
-> > > CONFIG_TRANSPARENT_HUGEPAGEs or IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)s
-> > > that you find uglily scattered around the source.
-> > > 
-> > > But that's the point of it: it's warning when you write code peculiar
-> > > to THP, that is going to bloat the build of kernels without any THP.
-> > > 
-> > > So although I've often been tempted to do as you suggest, I've always
-> > > ended up respecting Andrea's intention, and worked around it instead
-> > > (sometimes with #ifdef or IS_ENABLED(), sometimes with
-> > > PMD_{SHIFT,MASK_SIZE}, sometimes with a local definition).
-> > 
-> > The only other reasons that comes to mind in addition of optimizing
-> > the bloat away at build time is to make it easier to identify the THP
-> > code and to make it explicit that hugetlbfs shouldn't us it or it
-> > could be wrong on some arches.
-> > 
-> > However for this case the BUILD_BUG() looks right and this doesn't
-> > look like a false positive.
-> > 
-> > This patchset has nothing to do THP, so it'd be more correct to use
-> > MAX_ORDER whenever the fragmentation is about the buddy (doesn't look
-> > the case here) or PUD_SIZE/ORDER/PMD_SIZE/ORDER if the objective is
-> > not to unnecessarily split extra and unrelated hugepud/hugepmds in the
-> > direct mapping (as in this case).
-> > 
-> > The real issue exposed by the BUILD_BUG is the lack of PMD_ORDER
-> > definition and fs/dax.c already run into and it solved it locally in the
-> > dax.c file:
-> > 
-> > /* The order of a PMD entry */
-> > #define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
-> > 
-> > The fact it's not just this patch but also dax.c that run into the
-> > same issue, makes me think PMD_ORDER should be defined and then you
-> > can use PMD_* and PUD_* for this non-THP purpose.
-> 
-> We'll run into some namespace issues.
-> 
-> arch/arm/kernel/head.S:#define PMD_ORDER        3
-> arch/arm/kernel/head.S:#define PMD_ORDER        2
-> arch/mips/include/asm/pgtable-32.h:#define PMD_ORDER    aieeee_attempt_to_allocate_pmd
-> arch/mips/include/asm/pgtable-64.h:#define PMD_ORDER            0
-> arch/parisc/include/asm/pgtable.h:#define PMD_ORDER     1 /* Number of pages per pmd */
+On Fri, Jul 10, 2020 at 10:06 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 10/07/20 18:30, Jim Mattson wrote:
+> >>
+> >> This can be problem when having a mixed setup of machines with 5-level page
+> >> tables and machines with 4-level page tables, as live migration can change
+> >> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
+> >
+> > Huh? Changing MAXPHYADDR while the guest runs should be illegal. Or
+> > have I missed some peculiarity of LA57 that makes MAXPHYADDR a dynamic
+> > CPUID information field?
+>
+> Changing _host_ MAXPHYADDR while the guest runs, such as if you migrate
+> from a host-maxphyaddr==46 to a host-maxphyaddr==52 machine (while
+> keeping guest-maxphyaddr==46).
 
-This can be easily solved with, e.g.
-
-#define PMD_PAGE_ORDER (PMD_SHIFT - PAGE_SHIFT)
-
-or by renaming the current defines to PMD_ALLOC_ORDER.
-
-
-> > Then the question if to remove the BUILD_BUG becomes orthogonal to
-> > this patchset, but I don't see much value in retaining HPAGE_PMD/PUD_*
-> > unless the BUILD_BUG is retained too, because this patchset already
-> > hints that without the BUILD_BUG() the HPAGE_PMD_* definitions would
-> > likely spill into non THP paths and they would lose also the only
-> > value left (the ability to localize the THP code paths). So I wouldn't
-> > be against removing the BUILD_BUG if it's causing maintenance
-> > overhead, but then I would drop HPAGE_PMD_* too along with it or it
-> > may just cause confusion.
-> 
-> btw, using the hpage_ prefix already caused one problem in the hugetlb
-> code:
-> 
-> https://lore.kernel.org/linux-mm/20200629185003.97202-1-mike.kravetz@oracle.com/
-> 
-> I'd suggest we rename these to THP_PMD_* and THP_PUD_* to make it clear
-> they're only for the THP case.
-
-I agree that THP_PMD_* and THP_PUD_* would be less confusing if we are
-to differentiate THP and non-THP usage of 2nd and 3rd level leaf pages.
-
--- 
-Sincerely yours,
-Mike.
+Ah, but what does that have to do with LA57?
