@@ -2,156 +2,166 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DCFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A93C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E838820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D824B2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="k2C+RrmN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6Fbp+qQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgGJNnM (ORCPT
+        id S1727866AbgGJNnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:43:12 -0400
-Received: from mail-db8eur05on2133.outbound.protection.outlook.com ([40.107.20.133]:25746
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726828AbgGJNnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:43:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oLkSf07iTADbM2j2TmfwHQ6f1aOB1Ngd+fWZRZ1R0IBc5d6aLc4LNA6gqyp7kQkP7OzsrzvG46CYoPzFmy797F1eG4ieraBn+4SGzt1JRjZXsq0yHoE5NBL/cDv6EBZtAGg71MFZJ5+p0GtYmxQIfjE2WqjyXcNMAVhTdzmn2d6/0WpyTYdFEN9ok7BjP1FUmiC8i34lMMTjFLoMoR9uDz/tNtSgMTbBSs0Z1yKQOFxkqMxk0ZsFKQ2cPM2s7LKkyQTF4UT7ZqYzYVBKj/2w6Ijlkk9/sbb8tEqgqFFj2rpVNaxz0vUL4rNHEdFkO8Htm6JlCEh2ng443evdhmo3Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MgNJNdBRgkUGxrFCBtamX5vo/Gxg61CUU0FWWvS5tQs=;
- b=gvWhaEyg9518eFKKPcVnR1hl9V2EJnVJlQTeE0C19QSWJQhP0dosj1GajRBNw8WXk7KMkoz/WSuNoo6iepqXn0AsmbrIdOeWJHejOjNekS7YkM+GTJ6EgPGyHO3vxyAl1ENM3mV1vFFtVwY8HmGanwMVbMm9uA5vPpOPCxHqQK6I13PQhYAwWuf+6CDTeOULyLOj0q2qixuJGDLGSf9uZoR6KTcEyAFOzRAi0qIPEIQQ1BWOjkXgRUWUhepSE8ixBV/WsLZiqvPvAPqHNzUPr5zH2PV5Cru7Pv+QffLs/IZ592x5xVkQaS5REhhRWFB2TjhRu4cYGzbGkVlO7o2V1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MgNJNdBRgkUGxrFCBtamX5vo/Gxg61CUU0FWWvS5tQs=;
- b=k2C+RrmNu/zpeU3NIvIPFyVtIRJIx73YPAFfUnc1snPuogHj8N542wP0Glad2VdaduR7KMx5/MQzBMVdcrx1Op3EVVwQ0kZBw2OvdDGXVGMULLnOOuI75xc/oTr6Zkn/dDdaqK8C4W/MfXt1VSQqQJijmnzVroGJ+VRE17xAr4E=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=toradex.com;
-Received: from AM0PR05MB6002.eurprd05.prod.outlook.com (2603:10a6:208:129::19)
- by AM4PR0501MB2833.eurprd05.prod.outlook.com (2603:10a6:200:5b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
- 2020 13:43:09 +0000
-Received: from AM0PR05MB6002.eurprd05.prod.outlook.com
- ([fe80::343d:a818:80a7:3e6]) by AM0PR05MB6002.eurprd05.prod.outlook.com
- ([fe80::343d:a818:80a7:3e6%7]) with mapi id 15.20.3174.022; Fri, 10 Jul 2020
- 13:43:08 +0000
-X-Gm-Message-State: AOAM5333a748V4LQXpEit9B0t9I/A1gEYooQ3To08piw79eH+6sJuXPM
-        kQULlh7kzzBz0mPKMTsSgEJrgm943IXOSE/+gRI=
-X-Google-Smtp-Source: ABdhPJzNf0IJcF6AyZgQjPPpDtjsZEtOJqHtbO7eitfoyLlOorLzswO7yF6iIACo/O2GM6qhAYwzKY2FZVeRccj52bs=
-X-Received: by 2002:a37:a18f:: with SMTP id k137mr68956359qke.249.1594388584261;
- Fri, 10 Jul 2020 06:43:04 -0700 (PDT)
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
-In-Reply-To: <20200710132423.497230-1-philippe.schenker@toradex.com>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Fri, 10 Jul 2020 16:42:52 +0300
-X-Gmail-Original-Message-ID: <CAGgjyvGrNPgg3uKGSyvQ=CC1DaHJCTLxeW+GHY0GT7+pG2JuEw@mail.gmail.com>
-Message-ID: <CAGgjyvGrNPgg3uKGSyvQ=CC1DaHJCTLxeW+GHY0GT7+pG2JuEw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: colibri-imx6: remove pinctrl-names orphan
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: BL0PR0102CA0069.prod.exchangelabs.com
- (2603:10b6:208:25::46) To AM0PR05MB6002.eurprd05.prod.outlook.com
- (2603:10a6:208:129::19)
+        Fri, 10 Jul 2020 09:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgGJNnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:43:50 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B88C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id f16so2638805pjt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xlL+dOHETChI19feaNn5OZODjfzHvkpc+NvYB/39YL0=;
+        b=f6Fbp+qQiGRfG3hVNWwP4AvCgyrWn2xbrX7SkAerV9jHFukKWZLr8+jEztiUfaGtrs
+         rjUFFpbeu8LFpTFNfJyrUqdgk/a/w9O8wCjSFrJnb4TX4pvHc7iwYfUmNGq+8f1w3zLA
+         +klKV+bD9UCY13Zafk+yrtcCmGsYAuBW7IiFyhS82rY+xKnt9T/aIeI76xh0G4S/UuK0
+         5fBwatwHoIMsg2u7oQaUKB187tbXH5Lm0ge22FpiPAZF7Qm3qjmSEM7Un/WsfLzXckF+
+         m+AvA+QrBjqXkHnwrxppwQZX0DnlIqbkW1JVnlqgZpNp6dzbrVSz7nxFVA1Zk6Hyllec
+         SNfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xlL+dOHETChI19feaNn5OZODjfzHvkpc+NvYB/39YL0=;
+        b=fEqwFL1wbVxiD1AcQQ6Vbv4OEz8bXGMcQzfy4/5X3j3tesuYo6T4MQV/3mGb8GDfE+
+         hqFiqxI3RrQGgYXqC9rjS3vCoqdsDPKM4gvQfFa93Jz6b9W0EoqaBiC+F4gklaS+uCWY
+         wnT//kDRPPbdPNSFl6zKuxnIHc1rFoaMpoSB/nCXVy4UuK7Be5ntSaNjKMnIcajo0TE3
+         oYgX7rIfzUEhVGNlXXmD/H76NmcOyGSUtRxL9SvLtsDlSQRmnxPtmUcGsNThuqYvntSm
+         5E5EJwBH3z30RukdPXOb4itXWopMETGDpZYsQ/9TiPWGr5ieSiOT5mq8n9zBFYRoYA9k
+         7hLg==
+X-Gm-Message-State: AOAM533O9S2P17g1HpcLxUMDxu25wXHVGVe+6Qnk1gqJlAk0inPv9c1F
+        dvKvAnj3iQDpG8I+IRzjWTM=
+X-Google-Smtp-Source: ABdhPJxvtyYyS9lv3+uWjI6ghN3u9/w5KInwnSEp2LfzyGeoC4Tgq0cXDaLYjtXnCkROrVxHnNUqCA==
+X-Received: by 2002:a17:90a:db8a:: with SMTP id h10mr5930005pjv.197.1594388630223;
+        Fri, 10 Jul 2020 06:43:50 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id 198sm6297363pfb.27.2020.07.10.06.43.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 06:43:49 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v4 00/17] perf: ftrace enhancement
+Date:   Fri, 10 Jul 2020 21:43:05 +0800
+Message-Id: <20200710134322.15400-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qk1-f171.google.com (209.85.222.171) by BL0PR0102CA0069.prod.exchangelabs.com (2603:10b6:208:25::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Fri, 10 Jul 2020 13:43:08 +0000
-Received: by mail-qk1-f171.google.com with SMTP id b4so5168835qkn.11;        Fri, 10 Jul 2020 06:43:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5333a748V4LQXpEit9B0t9I/A1gEYooQ3To08piw79eH+6sJuXPM
-        kQULlh7kzzBz0mPKMTsSgEJrgm943IXOSE/+gRI=
-X-Google-Smtp-Source: ABdhPJzNf0IJcF6AyZgQjPPpDtjsZEtOJqHtbO7eitfoyLlOorLzswO7yF6iIACo/O2GM6qhAYwzKY2FZVeRccj52bs=
-X-Received: by 2002:a37:a18f:: with SMTP id
- k137mr68956359qke.249.1594388584261; Fri, 10 Jul 2020 06:43:04 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvGrNPgg3uKGSyvQ=CC1DaHJCTLxeW+GHY0GT7+pG2JuEw@mail.gmail.com>
-X-Originating-IP: [209.85.222.171]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 789b47fb-d9d2-4bbc-ada2-08d824d72e0e
-X-MS-TrafficTypeDiagnostic: AM4PR0501MB2833:
-X-Microsoft-Antispam-PRVS: <AM4PR0501MB2833B36A1841E2BBBE87817DF9650@AM4PR0501MB2833.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3yEyqB6nTObZ5LI347jvPc95jEbt0Vb/5nimTqYOPEyo9zwKiObFHCUzo8h0GjoLpuIRQaBsdjb73IOZ3VkzbwdfyeuPzL2JzsGmjo9fY6TNOZtPXYkJ9XkDuNRTdZJsrehuvbzfKkgT0/IpBzcSoBxlj01YCA4D4SzDViMC9FNN6SC0t3FBPSkl33y/6mLMihoYrMdRXnmM3Vazc5STbJnoBM/CZNR+2AXafw8h6psSI9/CJhyOCy900xTG2qq9MYMo6yTSFfBSeUJR6vTRnmQ/eNRd2iLF8bQKyabv6AOcrbipqoxBEg5ysRQijVqG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB6002.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39850400004)(346002)(376002)(136003)(2906002)(4326008)(86362001)(6862004)(54906003)(55446002)(52116002)(316002)(42186006)(4744005)(450100002)(478600001)(5660300002)(6636002)(6666004)(9686003)(53546011)(26005)(186003)(44832011)(66946007)(83380400001)(8936002)(8676002)(66556008)(66476007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: kHYYm1ZLK3w73X+/34jY7MZaOE1iwnWMwcZzn4gtlMgWKOMy2wqNNesV36/pW7aJ3M044T10lwC+2N73FH/jX2GI5Jge8iS/O2K78dFLbG664Ipac5vqVkHMiLrjPfR+qr/3hA7/QOM4R++WY+oAiZ+O6WKbU+oIqdqtTu5JHeYFCebMzQ0wvWUrgC13697M08EoVl9m5dLSNdq4dJSCogqx95VqBBpW0Tnakk37p/04Of/lDNh76+RLb+Fk4KYojIrHdBkztRXZF5Bxz/sU3vy4PrtvVS7PBvFwNKhsAvaZ5KneYXvhFiDgnrFLxPTDbhzfbawyQuQrK2nwjD/XMYTxIEBvQYp/ijRqTzpxxFS2p9cDUWSdB370fIJzb4iwIrsKb4JIJCusSmjgPiBwPaGrKUMUbnMRZ4ppwe5xIz3LfNxxHLR4rGCznbTOZArPfh+8vg9+mOhpqdqrD089qZpR57cH8HKSVbUwxK6rodQ=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 789b47fb-d9d2-4bbc-ada2-08d824d72e0e
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB6002.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 13:43:08.3716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lBE9mh+hRSbSwK5vcU1+0UK/uE6hRWqL/cwNuQRnuhP1y4fLH/5CUt7qY2Meppn2V06ZXvxlYu8LpXheq8/0SrQdIojOU5+s90DI5XnwFQ4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2833
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 4:25 PM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> This is not necessary without a pinctrl-0 statement. Remove this
-> orphan.
->
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+The perf has basic kernel ftrace support but lack support of most tracing
+options. This serias is target to enhance the perf ftrace functionality so
+that we can make full use of kernel ftrace with perf.
 
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+In general, this serias be cataloged into two main changes:
+  1) Improve usability of existing functions. For example, we don't need to type
+     extra option to select the tracer.
+  2) Add new options to support all other ftrace functions.
 
-> ---
->
->  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> index 240b86d2eb71..a4a54c82e28f 100644
-> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> @@ -362,7 +362,6 @@ &uart3 {
->  };
->
->  &usbotg {
-> -       pinctrl-names = "default";
->         disable-over-current;
->         dr_mode = "peripheral";
->         status = "disabled";
-> --
-> 2.27.0
->
+Here is a glance of all ftrace functions with this serias:
 
+$ sudo perf ftrace -h
+
+ Usage: perf ftrace [<options>] [<command>]
+    or: perf ftrace [<options>] -- <command> [<options>]
+
+    -a, --all-cpus        system-wide collection from all CPUs
+    -C, --cpu <cpu>       list of cpus to monitor
+    -D, --delay <n>       ms to wait before starting tracing after program start
+    -F, --funcs           Show available functions to filter
+    -G, --graph-funcs <func>
+                          trace given functions using function_graph tracer
+    -g, --nograph-funcs <func>
+                          Set nograph filter on given functions
+    -m, --buffer-size <size>
+                          size of per cpu buffer
+    -N, --notrace-funcs <func>
+                          do not trace given functions
+    -p, --pid <pid>       trace on existing process id
+    -t, --tid <tid>       trace on existing thread id (exclusive to --pid)
+    -T, --trace-funcs <func>
+                          trace given functions using function tracer
+    -t, --tracer <tracer>
+                          tracer to use: function or function_graph (This option is deprecated)
+    -v, --verbose         be more verbose
+        --func-opts <options>
+                          function tracer options, available options: call-graph,irq-info
+        --graph-opts <options>
+                          graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
+        --inherit         trace children processes
+
+v4:
+  o add util/parse-sublevel-options.c
+  O remove -D/--graph-depth
+v3:
+  o add --func-opts and --graph-opts to set tracer specific options.
+  o support units as a suffix for option '-m/--buffer-size'.
+v2:
+  o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
+  o update all related perf documentation.
+  o rename some options. Now all funcgraph tracer options are prefixed with
+    '--graph-', while all function tracer options are prefixed with '--func-'.
+  o mark old options deprecated instead of removing them.
+
+Changbin Du (17):
+  perf ftrace: select function/function_graph tracer automatically
+  perf ftrace: add option '-F/--funcs' to list available functions
+  perf ftrace: add option -t/--tid to filter by thread id
+  perf ftrace: factor out function write_tracing_file_int()
+  perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
+  perf ftrace: show trace column header
+  perf ftrace: add option '--inherit' to trace children processes
+  perf: util: add general function to parse sublevel options
+  perf ftrace: add support for tracing option 'func_stack_trace'
+  perf ftrace: add support for trace option sleep-time
+  perf ftrace: add support for trace option funcgraph-irqs
+  perf ftrace: add support for tracing option 'irq-info'
+  perf ftrace: add option 'verbose' to show more info for graph tracer
+  perf ftrace: add support for trace option tracing_thresh
+  perf: ftrace: allow set graph depth by '--graph-opts'
+  perf ftrace: add option -D/--delay to delay tracing
+  perf ftrace: add change log
+
+ tools/perf/Documentation/perf-config.txt |   5 -
+ tools/perf/Documentation/perf-ftrace.txt |  37 ++-
+ tools/perf/builtin-ftrace.c              | 367 ++++++++++++++++++++++-
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/debug.c                  |  61 ++--
+ tools/perf/util/parse-sublevel-options.c |  63 ++++
+ tools/perf/util/parse-sublevel-options.h |  11 +
+ 7 files changed, 477 insertions(+), 68 deletions(-)
+ create mode 100644 tools/perf/util/parse-sublevel-options.c
+ create mode 100644 tools/perf/util/parse-sublevel-options.h
 
 -- 
-Best regards
+2.25.1
 
-Oleksandr Suvorov
-cryosay@gmail.com
-
--- 
-Best regards
-Oleksandr Suvorov
-
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
