@@ -2,103 +2,98 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C8EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B5020725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594401936;
-	bh=mYF3i+Aso6vKO6oMEhaGo5MTSDPuOCcJZr8/ZrUf5aQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NuaPNILQTW/2ndE/WaQdjxIPLfT2CgkCM4NiZMdm2nTGjka0uA/Qvo4hfxJ1xfJ/t
-	 URK0u9NA7AyfI0vHWTkPlwNJ4ENA/TbtX390dH/PpT5rcGscBq+P1n3dQbCsibnts6
-	 i7BK+R0425XHbmuRNz6FyhWTXwKu6RpImAEPpSbI=
+	by mail.kernel.org (Postfix) with ESMTP id 3FF7E20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGJRZe (ORCPT
+        id S1728089AbgGJR0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 13:26:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:55820 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgGJRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:25:33 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9318020720;
-        Fri, 10 Jul 2020 17:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594401933;
-        bh=mYF3i+Aso6vKO6oMEhaGo5MTSDPuOCcJZr8/ZrUf5aQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xIK2kRfA/hQZEQbB52IvWCiiEF4uMgIqnPsW9BpXzRe8IB8+JQ5F6CbH38wNSLKl6
-         9sN3ks+YuhSoWx1ygRdZ/BdDfUI2QbVcSD+GMvKIdYOZiuPA0JLHAQE9hqozfQgnBG
-         Vv0iWgjdmCL7EtIu3MMtIHyK39ozpAoH32ZLLi8o=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 01445405FF; Fri, 10 Jul 2020 14:25:29 -0300 (-03)
-Date:   Fri, 10 Jul 2020 14:25:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
-        Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v2 4/4] perf-probe: Warn if the target function is GNU
- Indirect function
-Message-ID: <20200710172529.GE7487@kernel.org>
-References: <159438665389.62703.13848613271334658629.stgit@devnote2>
- <159438669349.62703.5978345670436126948.stgit@devnote2>
- <20200710135712.GO874@linux.vnet.ibm.com>
+        id S1726872AbgGJR03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:26:29 -0400
+IronPort-SDR: sBMxgZXQ7/HlO/Vgn5B8vc0vfmbcMF6ghsKuO+dPjcyKVIy9yfCYHHOtILSq24g25RsUz3Y3Ek
+ qUoyWerRXEcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="166344401"
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="166344401"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 10:26:29 -0700
+IronPort-SDR: U2wWVGzF2bxDUqpiBke8rVdzvyD32ZflqGnpjfRh/e1i84exrqHBiLoaYeob2jrZHndhW4TMpQ
+ +0052cJ5dJuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
+   d="scan'208";a="306613436"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Jul 2020 10:26:28 -0700
+Date:   Fri, 10 Jul 2020 10:26:28 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Mohammed Gamal <mgamal@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v3 0/9] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+Message-ID: <20200710172628.GH1749@linux.intel.com>
+References: <20200710154811.418214-1-mgamal@redhat.com>
+ <CALMp9eRfZ50iyrED0-LU75VWhHu_kVoB2Qw55VzEFzZ=0QCGow@mail.gmail.com>
+ <0c892b1e-6fe6-2aa7-602e-f5fadc54c257@redhat.com>
+ <CALMp9eQXHGnXo4ACX2-qYww4XdRODMn-O6CAvhupib67Li9S2w@mail.gmail.com>
+ <9e784c62-15ee-63b7-4942-474493bac536@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710135712.GO874@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <9e784c62-15ee-63b7-4942-474493bac536@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 10, 2020 at 07:27:12PM +0530, Srikar Dronamraju escreveu:
-> * Masami Hiramatsu <mhiramat@kernel.org> [2020-07-10 22:11:33]:
+On Fri, Jul 10, 2020 at 07:16:14PM +0200, Paolo Bonzini wrote:
+> On 10/07/20 19:13, Jim Mattson wrote:
+> > On Fri, Jul 10, 2020 at 10:06 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 10/07/20 18:30, Jim Mattson wrote:
+> >>>>
+> >>>> This can be problem when having a mixed setup of machines with 5-level page
+> >>>> tables and machines with 4-level page tables, as live migration can change
+> >>>> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
+> >>>
+> >>> Huh? Changing MAXPHYADDR while the guest runs should be illegal. Or
+> >>> have I missed some peculiarity of LA57 that makes MAXPHYADDR a dynamic
+> >>> CPUID information field?
+> >>
+> >> Changing _host_ MAXPHYADDR while the guest runs, such as if you migrate
+> >> from a host-maxphyaddr==46 to a host-maxphyaddr==52 machine (while
+> >> keeping guest-maxphyaddr==46).
+> > 
+> > Ah, but what does that have to do with LA57?
 > 
-> > Warn if the probe target function is GNU indirect function (GNU_IFUNC)
-> > because it may not what the user want to probe.
-> > 
-> > The GNU indirect function ( https://sourceware.org/glibc/wiki/GNU_IFUNC )
-> > is the dynamic solved symbol at runtime. IFUNC function is a selector
-> > which is invoked from the elf loader, but the symbol address of the
-> > function which will be modified by the IFUNC is same as the IFUNC in
-> > the symbol table. This can confuse users who is trying to probe on
-> > such functions.
-> > 
-> > For example, the memcpy is one of IFUNC.
-> > 
-> > # perf probe -x /lib64/libc-2.30.so -a memcpy
-> > # perf probe -l
-> >   probe_libc:memcpy    (on __new_memcpy_ifunc@x86_64/multiarch/memcpy.c in /usr/lib64/libc-2.30.so)
-> > 
-> > the probe is put on a IFUNC.
-> > 
-> > # perf record -e probe_libc:memcpy --call-graph dwarf -aR ./perf
-> > 
-> > Thus, I decided to warn user when the perf probe detects the probe point
-> > is on the GNU IFUNC symbol. Someone who wants to probe an IFUNC symbol to
-> > debug the IFUNC function, they can ignore this warning.
-> > 
-> > Reported-by: Andi Kleen <andi@firstfloor.org>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Intel only has MAXPHYADDR > 46 on LA57 machines (because in general OSes
+> like to have a physical 1:1 map into the kernel part of the virtual
+> address space, so having a higher MAXPHYADDR would be of limited use
+> with 48-bit linear addresses).
 > 
-> Looks good to me.
-> 
-> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> In other words, while this issue has existed forever it could be ignored
+> until IceLake introduced MAXPHYADDR==52 machines.  I'll introduce
+> something like this in a commit message.
 
-Thanks, applied.
+Yeah, the whole 5-level vs. 4-level thing needs clarification.  Using 5-level
+doesn't magically change the host's MAXPA.  But using 5-level vs. 4-level EPT
+does change the guest's effective MAXPA.
 
-- Arnaldo
+If the changelog is referring purely to host MAXPA, then just explicitly
+state that and don't even mention 5-level vs. 4-level.
