@@ -2,91 +2,142 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99531C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A572C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E6E207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADE2206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 20:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XSbRjJiZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnOw1ejX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGJUvL (ORCPT
+        id S1728117AbgGJUzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:51:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35594 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726832AbgGJUvL (ORCPT
+        Fri, 10 Jul 2020 16:55:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgGJUzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 16:51:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594414270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nYaxZ7g1kLsIpQ2YHr1Z0FbzS/d7X/Lb2qWm2o336oM=;
-        b=XSbRjJiZ19WXfpf+1JO7wsUP2JXy+KYMqKYIrqE3RWu2jiQjqvYSQ5cUpln6aUd02ALAwa
-        XXwLjJZ7MHKZf2UQ/tYTo7rGTQLRkHf/EYVxY3F7mp2jvvqfJaa6TFNfCFawGx54KCpS0p
-        XjiDsZt3tdmS4i+UkGuhRoRy8EBv6+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-n35QQoVkMbqzxCc70t8gaA-1; Fri, 10 Jul 2020 16:51:08 -0400
-X-MC-Unique: n35QQoVkMbqzxCc70t8gaA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B56280183C;
-        Fri, 10 Jul 2020 20:51:07 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5C7B10013C4;
-        Fri, 10 Jul 2020 20:51:06 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Nadav Amit <namit@vmware.com>
-Subject: [PATCH] KVM: nSVM: remove nonsensical EXITINFO1 adjustment on nested NPF
-Date:   Fri, 10 Jul 2020 16:51:06 -0400
-Message-Id: <20200710205106.941151-1-pbonzini@redhat.com>
+        Fri, 10 Jul 2020 16:55:22 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA6FC08C5DC;
+        Fri, 10 Jul 2020 13:55:22 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id q198so6649807qka.2;
+        Fri, 10 Jul 2020 13:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pmcDlrw4meZJFYWX3EhmB3yugEQBs6tKcBmf6yeQHvQ=;
+        b=WnOw1ejXVtSEmc0a/5XFQfNAbtJXvGUudGY5lnwPZf2AeHXAk2y7EYAGND69nYtczt
+         QVFWnZl3wmOUzZqqqIFXFxNf/Ifi+U7xmHUU++nwJ1Q/WyqxwRhgczrYFxRk5W7EO6q1
+         wxNvtnhOAJB6RBPB+Ns2xrYOGAz4qdZtZI5dOts5a1fnfSodSjsQuEL7v29hTf4/cqxc
+         sZTlSu/cGHtxh0ewQQo2o5Pg26oOsIccjfApZLhyzrx6i5PFHahBWIsvWbUrqZnxD4tF
+         YTpAbpN/qiTMOduTmwdXTeNUsWZdACs1765rTR8jbqyoieKE1AJJtQlezBe0lnv+/tOm
+         dwzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pmcDlrw4meZJFYWX3EhmB3yugEQBs6tKcBmf6yeQHvQ=;
+        b=cTYZ9JvnM0a5sVXpmh+7LKENnae703fE/f93xVSOJxaJrZBR1ACs7ijfhv1aV0nM0D
+         1/9k2jL8TRjP4Jcy9c6nJ2P9gZV2Ie8LOXOiAtZqfLMeEcmNUR/B8Cclnu2zPBJ987Dq
+         R6dV+QGHyvEiTQBES30J6RRDg4nhzC1Z3QIZX6GbazThrk4deZ/J9wzgzJ95ECY62/mV
+         sERB5tLbVRZ9/J51kOfH+trfdeIZ7ojFRBisTacEPSkesA2KoVHfwQuvuG+RswDGxgYq
+         x6oVJvWuDewiNpkbkbWSLAU74UqNy6R9d22w9hNFMM8qD6S6YXgtQcq+2EbP5ydP9wGp
+         Lhcg==
+X-Gm-Message-State: AOAM5336+Tbq5+l5y2DXDK43Gb0uuwFaQJy6nxTZxjx83w1/fRlARsP9
+        ybgOFvrk0H2m/QXGFN/cg8VYn/SGbiQTzRjYODQ=
+X-Google-Smtp-Source: ABdhPJzFvrDqynOy0aH+oFH6/6mPgh59gkw370MYYW2U+aV4cG+M1arimhQoEW5JcEPzj3BSsAp7rrSaKInRMZKMaqs=
+X-Received: by 2002:ae9:f002:: with SMTP id l2mr61156551qkg.437.1594414521627;
+ Fri, 10 Jul 2020 13:55:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1594390953-31757-1-git-send-email-alan.maguire@oracle.com> <1594390953-31757-3-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1594390953-31757-3-git-send-email-alan.maguire@oracle.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 10 Jul 2020 13:55:10 -0700
+Message-ID: <CAEf4BzZ4X67E7dxWA8sdiBpuyFfeWZ4yNAagQpwho+FncJv=GQ@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 2/2] selftests/bpf: add selftests verifying
+ bpf_trace_printk() behaviour
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "if" that drops the present bit from the page structure fauls makes no sense.
-It was added by yours truly in order to be bug-compatible with pre-existing code
-and in order to make the tests pass; however, the tests are wrong.  The behavior
-after this patch matches bare metal.
+On Fri, Jul 10, 2020 at 7:25 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> Simple selftests that verifies bpf_trace_printk() returns a sensible
+> value and tracing messages appear.
+>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
 
-Reported-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c | 7 -------
- 1 file changed, 7 deletions(-)
+see pedantic note below, but I don't think that's an issue in practice
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 7b331e3da3eb..61378a3c2ce4 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -48,13 +48,6 @@ static void nested_svm_inject_npf_exit(struct kvm_vcpu *vcpu,
- 	svm->vmcb->control.exit_info_1 &= ~0xffffffffULL;
- 	svm->vmcb->control.exit_info_1 |= fault->error_code;
- 
--	/*
--	 * The present bit is always zero for page structure faults on real
--	 * hardware.
--	 */
--	if (svm->vmcb->control.exit_info_1 & (2ULL << 32))
--		svm->vmcb->control.exit_info_1 &= ~1;
--
- 	nested_svm_vmexit(svm);
- }
- 
--- 
-2.26.2
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
+>  .../selftests/bpf/prog_tests/trace_printk.c        | 74 ++++++++++++++++++++++
+>  tools/testing/selftests/bpf/progs/trace_printk.c   | 21 ++++++
+>  2 files changed, 95 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/trace_printk.c
+>
+
+[...]
+
+> +
+> +       /* verify our search string is in the trace buffer */
+> +       while (read(fd, buf, sizeof(buf)) >= 0 || errno == EAGAIN) {
+
+There is a minor chance that "testing,testing" won't be found, if it
+so happened that the first part is in the first read buffer, and the
+second is in the second. I don't think it's ever the case for our CI
+and for my local testing setup, but could be a cause of some
+instability if there is something else emitting data to trace_pipe,
+right?
+
+Maybe line-based reading would be more reliable (unless printk can
+intermix, not sure about that, in which case there is simply no way to
+solve this 100% reliably).
+
+
+> +               if (strstr(buf, SEARCHMSG) != NULL)
+> +                       found++;
+> +               if (found == bss->trace_printk_ran)
+> +                       break;
+> +               if (++iter > 1000)
+> +                       break;
+> +       }
+> +
+> +       if (CHECK(!found, "message from bpf_trace_printk not found",
+> +                 "no instance of %s in %s", SEARCHMSG, TRACEBUF))
+> +               goto cleanup;
+> +
+> +       printf("ran %d times; last return value %d, with %d instances of msg\n",
+> +              bss->trace_printk_ran, bss->trace_printk_ret, found);
+
+Is this needed or it's some debug leftover?
+
+> +cleanup:
+> +       trace_printk__destroy(skel);
+> +       if (fd != -1)
+> +               close(fd);
+> +}
+
+[...]
