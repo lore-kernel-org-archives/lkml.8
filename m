@@ -2,241 +2,95 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A04EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61379C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 777332065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4B620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gf95zy8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgGJWAS (ORCPT
+        id S1726465AbgGJWE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgGJWAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:00:17 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B6F12075D;
-        Fri, 10 Jul 2020 22:00:15 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 18:00:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
-        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 08/17] static_call: Avoid kprobes on inline
- static_call()s
-Message-ID: <20200710180014.08803c91@oasis.local.home>
-In-Reply-To: <20200710134336.619632370@infradead.org>
-References: <20200710133831.943894387@infradead.org>
-        <20200710134336.619632370@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 10 Jul 2020 18:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgGJWE7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:04:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A84C08C5DC;
+        Fri, 10 Jul 2020 15:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Sm08KILQrIhAFoGlCB+I5zhmi1eIMEDSey/M3AAwvrU=; b=Gf95zy8J04apBo9wUZ1mnOjWys
+        Q3E03aUJHod0cOCoGZfdB++6r3mBBHEKatQ07qkf93nEwhMrFMsQ2Ca/R1uwDGBQtByztdqV22DbK
+        MbowX9JA/4O7y2NTMT32X7ukvtTKvL4/tDSchahf7/ARoWtxtGK3tAyFycxBMjF07h2aGRzNfDyBF
+        896zhV0TFTjt1H9YL00Om/6oR87oi92+QAYOnGSnDR68RuREB5bOdQ0YbsY7JcalooY6BII+0YORf
+        A/9yXRmMifrzgpx+7GSxIYeCBTW8H9j9HVFaCoB1CvgXqNlUuS9P0V4JDL+gHl0AwbpanQyn4Gw33
+        z3h2bHmQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ju17r-0000Yi-Ej; Fri, 10 Jul 2020 22:04:11 +0000
+Date:   Fri, 10 Jul 2020 23:04:11 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from
+ kernel_read_file() enums
+Message-ID: <20200710220411.GR12769@casper.infradead.org>
+References: <20200707081926.3688096-1-keescook@chromium.org>
+ <20200707081926.3688096-3-keescook@chromium.org>
+ <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 15:38:39 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jul 10, 2020 at 02:00:32PM -0700, Scott Branden wrote:
+> > @@ -950,8 +951,8 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> >   		goto out;
+> >   	}
+> > -	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
+> > -		*buf = vmalloc(i_size);
+> > +	if (!*buf)
+> The assumption that *buf is always NULL when id !=
+> READING_FIRMWARE_PREALLOC_BUFFER doesn't appear to be correct.
+> I get unhandled page faults due to this change on boot.
 
-> Similar to how we disallow kprobes on any other dynamic text
-> (ftrace/jump_label) also disallow kprobes on inline static_call()s.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-I'd like to have Masami review this patch too.
-
-> ---
->  arch/x86/kernel/kprobes/opt.c |    4 +-
->  include/linux/static_call.h   |   11 +++++++
->  kernel/kprobes.c              |    2 +
->  kernel/static_call.c          |   64 ++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 80 insertions(+), 1 deletion(-)
-> 
-> --- a/arch/x86/kernel/kprobes/opt.c
-> +++ b/arch/x86/kernel/kprobes/opt.c
-> @@ -17,6 +17,7 @@
->  #include <linux/ftrace.h>
->  #include <linux/frame.h>
->  #include <linux/pgtable.h>
-> +#include <linux/static_call.h>
->  
->  #include <asm/text-patching.h>
->  #include <asm/cacheflush.h>
-> @@ -209,7 +210,8 @@ static int copy_optimized_instructions(u
->  	/* Check whether the address range is reserved */
->  	if (ftrace_text_reserved(src, src + len - 1) ||
->  	    alternatives_text_reserved(src, src + len - 1) ||
-> -	    jump_label_text_reserved(src, src + len - 1))
-> +	    jump_label_text_reserved(src, src + len - 1) ||
-> +	    static_call_text_reserved(src, src + len - 1))
->  		return -EBUSY;
->  
->  	return len;
-> --- a/include/linux/static_call.h
-> +++ b/include/linux/static_call.h
-> @@ -110,6 +110,7 @@ struct static_call_key {
->  
->  extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
->  extern int static_call_mod_init(struct module *mod);
-> +extern int static_call_text_reserved(void *start, void *end);
->  
->  #define DEFINE_STATIC_CALL(name, _func)					\
->  	DECLARE_STATIC_CALL(name, _func);				\
-> @@ -153,6 +154,11 @@ void __static_call_update(struct static_
->  	cpus_read_unlock();
->  }
->  
-> +static inline int static_call_text_reserved(void *start, void *end)
-> +{
-> +	return 0;
-> +}
-> +
->  #define EXPORT_STATIC_CALL(name)					\
->  	EXPORT_SYMBOL(STATIC_CALL_KEY(name));				\
->  	EXPORT_SYMBOL(STATIC_CALL_TRAMP(name))
-> @@ -182,6 +188,11 @@ void __static_call_update(struct static_
->  	WRITE_ONCE(key->func, func);
->  }
->  
-> +static inline int static_call_text_reserved(void *start, void *end)
-> +{
-> +	return 0;
-> +}
-> +
->  #define EXPORT_STATIC_CALL(name)	EXPORT_SYMBOL(STATIC_CALL_KEY(name))
->  #define EXPORT_STATIC_CALL_GPL(name)	EXPORT_SYMBOL_GPL(STATIC_CALL_KEY(name))
->  
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -35,6 +35,7 @@
->  #include <linux/ftrace.h>
->  #include <linux/cpu.h>
->  #include <linux/jump_label.h>
-> +#include <linux/static_call.h>
->  
->  #include <asm/sections.h>
->  #include <asm/cacheflush.h>
-> @@ -1591,6 +1592,7 @@ static int check_kprobe_address_safe(str
->  	if (!kernel_text_address((unsigned long) p->addr) ||
->  	    within_kprobe_blacklist((unsigned long) p->addr) ||
->  	    jump_label_text_reserved(p->addr, p->addr) ||
-> +	    static_call_text_reserved(p->addr, p->addr) ||
->  	    find_bug((unsigned long)p->addr)) {
->  		ret = -EINVAL;
->  		goto out;
-> --- a/kernel/static_call.c
-> +++ b/kernel/static_call.c
-> @@ -204,8 +204,58 @@ static int __static_call_init(struct mod
->  	return 0;
->  }
->  
-> +static int addr_conflict(struct static_call_site *site, void *start, void *end)
-> +{
-> +	unsigned long addr = (unsigned long)static_call_addr(site);
-> +
-> +	if (addr <= (unsigned long)end &&
-> +	    addr + CALL_INSN_SIZE > (unsigned long)start)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __static_call_text_reserved(struct static_call_site *iter_start,
-> +				       struct static_call_site *iter_stop,
-> +				       void *start, void *end)
-> +{
-> +	struct static_call_site *iter = iter_start;
-> +
-> +	while (iter < iter_stop) {
-> +		if (addr_conflict(iter, start, end))
-> +			return 1;
-> +		iter++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  #ifdef CONFIG_MODULES
->  
-> +static int __static_call_mod_text_reserved(void *start, void *end)
-> +{
-> +	struct module *mod;
-> +	int ret;
-> +
-> +	preempt_disable();
-> +	mod = __module_text_address((unsigned long)start);
-> +	WARN_ON_ONCE(__module_text_address((unsigned long)end) != mod);
-> +	if (!try_module_get(mod))
-> +		mod = NULL;
-> +	preempt_enable();
-> +
-> +	if (!mod)
-> +		return 0;
-> +
-> +	ret = __static_call_text_reserved(mod->static_call_sites,
-> +			mod->static_call_sites + mod->num_static_call_sites,
-> +			start, end);
-> +
-> +	module_put(mod);
-> +
-> +	return ret;
-> +}
-> +
->  static int static_call_add_module(struct module *mod)
->  {
->  	return __static_call_init(mod, mod->static_call_sites,
-> @@ -275,6 +325,20 @@ static struct notifier_block static_call
->  
->  #endif /* CONFIG_MODULES */
->  
-> +int static_call_text_reserved(void *start, void *end)
-> +{
-> +	int ret = __static_call_text_reserved(__start_static_call_sites,
-> +			__stop_static_call_sites, start, end);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +#ifdef CONFIG_MODULES
-> +	ret = __static_call_mod_text_reserved(start, end);
-> +#endif
-
-Nit, but why not have a #else /* !CONFIG_MODULE */ above and just:
-
-static inline int __static_call_mod_text_reserve(..)
-{
-	return 0;
-}
-#endif
-
-?
-
-Then you don't need the extra #ifdef above, and just end it with:
-
-	return __static_call_mod_next_reserved(start, end);
-
--- Steve
-
-
-> +	return ret;
-> +}
-> +
->  static void __init static_call_init(void)
->  {
->  	int ret;
-> 
+Did it give you a stack backtrace?
 
