@@ -2,188 +2,172 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF273C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7231C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C4920772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A512075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 21:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FY0ruNi4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgGJVSi (ORCPT
+        id S1726342AbgGJVT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:18:38 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:37376 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbgGJVSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:18:38 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B093EBC070;
-        Fri, 10 Jul 2020 21:18:33 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: USB MASS STORAGE
- DRIVER
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200708095500.13694-1-grandmaster@al2klimov.de>
- <20200708103928.GC585606@kroah.com>
- <6b78a3fd-04b9-fc8e-b5c6-f03372a4cd31@al2klimov.de>
- <20200709061409.GA130260@kroah.com>
- <20200710103621.GA437393@lianli.shorne-pla.net>
- <53342e1a-8430-2557-94c7-1da979a79e68@al2klimov.de>
- <20200710205530.GC437393@lianli.shorne-pla.net>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <893675cd-e909-6520-1201-873168e04d7d@al2klimov.de>
-Date:   Fri, 10 Jul 2020 23:18:32 +0200
+        Fri, 10 Jul 2020 17:19:59 -0400
+Received: from npdgs.com ([192.185.145.12]:47166 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726223AbgGJVT6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 17:19:58 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id B441235E19
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 16:19:55 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id u0R1j9Jp3SxZVu0R1j0TcJ; Fri, 10 Jul 2020 16:19:55 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=s9e8j/XbEhGXPoz+/d0HZQwrpnEXHLKsoBFKj8A0bLE=; b=FY0ruNi4cBX8KJPYDNFKxM8kBw
+        zrCVRcepO90cwWvBr74Ng9vx0hWbANi9zvWeIz0EHpguDy/6CEZsIicLi6w+58VI+jk1CdgYr5EQS
+        nnJzKyuxGiIuvN3ugDpwuOmM9CTfVRCT1GcnvdRurq3emUVO/V9SIiW6zvxc2eu1kzoH4ueBDhag+
+        ybYi2gSkA+Vx84r7Aj8abv+XMXYpEHENC/H/ZaWYQJqoGS4jQZHAi7TWoTHA3YM3C5PDCJcErxVmO
+        uoh8nWhC/diY0ciNj49WdWBT8TJzyxv/Gr6iPTNnbKxIe8Lgtju1wsNZPzeRKjjUY+3abX9a0+HDO
+        roxnKcEg==;
+Received: from [200.39.25.189] (port=16052 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1ju0R1-003M5d-5n; Fri, 10 Jul 2020 16:19:55 -0500
+Subject: Re: [PATCH][next] reiserfs: bitmap: Assign array_size() to a variable
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200616184118.GA1917@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <c62de6b5-a70d-4cfb-90ee-dbd7ad54c440@embeddedor.com>
+Date:   Fri, 10 Jul 2020 16:25:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200710205530.GC437393@lianli.shorne-pla.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200616184118.GA1917@embeddedor>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.39.25.189
+X-Source-L: No
+X-Exim-ID: 1ju0R1-003M5d-5n
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [200.39.25.189]:16052
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
+Friendly ping: who can take this?
 
-Am 10.07.20 um 22:55 schrieb Stafford Horne:
-> On Fri, Jul 10, 2020 at 09:36:03PM +0200, Alexander A. Klimov wrote:
->>
->>
->> Am 10.07.20 um 12:36 schrieb Stafford Horne:
->>> On Thu, Jul 09, 2020 at 08:14:09AM +0200, Greg KH wrote:
->>>> On Wed, Jul 08, 2020 at 08:41:54PM +0200, Alexander A. Klimov wrote:
->>>>>
->>>>>
->>>>> Am 08.07.20 um 12:39 schrieb Greg KH:
->>>>>> On Wed, Jul 08, 2020 at 11:55:00AM +0200, Alexander A. Klimov wrote:
->>>>>>> Rationale:
->>>>>>> Reduces attack surface on kernel devs opening the links for MITM
->>>>>>> as HTTPS traffic is much harder to manipulate.
->>>>>>>
->>>>>>> Deterministic algorithm:
->>>>>>> For each file:
->>>>>>>      If not .svg:
->>>>>>>        For each line:
->>>>>>>          If doesn't contain `\bxmlns\b`:
->>>>>>>            For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>>>>>> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->>>>>>>                If both the HTTP and HTTPS versions
->>>>>>>                return 200 OK and serve the same content:
->>>>>>>                  Replace HTTP with HTTPS.
->>>>>>>
->>>>>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->>>>>>
->>>>>> Your subject lines are very odd compared to all patches for this
->>>>>> subsystem, as well as all other kernel subsystems.  Any reason you are
->>>>>> doing it this way and not the normal and standard method of:
->>>>>> 	USB: storage: replace http links with https
->>>>>>
->>>>>> That would look more uniform as well as not shout at anyone.
->>>
->>> I would agree.  The OpenRISC patch for this series says:
->>>     "OPENRISC ARCHITECTURE:..."
->>>
->>> Here it would just be "openrisc:..." I think fixing the whole series is needed.
->>> Greg is not the only on complaining.
->>>
->>> Ideally, I think, it would be good to have this sent out as a series i.e [PATCH 3/55]
->>> rather than individual patches so this could be discussed as a whole.
->> 1) To who? As right now? As right now plus Torvalds, KH, Miller, etc.?
->>     As right now, but all-to-all?
-> 
-> Make sure you have a cover letter explaining what you expect.
-> 
-> You can ask maintainers to pick up individual patches by mentioning that in the
-> cover letter.
-> 
-> You can use `git send-email --cc-cmd` so each patch goes only to the
-> maintainers, for example:
-> 
->    send-email --to linux-kernel@vger.kernel.org --cc-cmd scripts/get_maintainers.pl`
-> 
->> 2) Apropos "series" and "as whole"... I stumbled over
-> 
-> I stumble over "apropos". :)
-> 
->>     `git log --oneline |grep -Fwe treewide`
->>     and am wondering:
->>     *Shouldn't all of these patches even begin with "treewide: "?*
->>     E.g.: "treewide: Replace HTTP links with HTTPS ones: GCC PLUGINS"
-> 
-> As Greg said that is not what patch subjects loo like.
-> 
->    - GCC PLUGINS: is not correct, remove it.
->    - treewide: may work, but as you want individual maintainers to pick up the patches put
->      a subsystem in the subject as maintainers like.
-No, I don't "want" to have this or that particular recipient.
-I'd just like to get my changes in master.
+Thanks
+--
+Gustavo
 
-You say like if I send to individual maintainers, I have to take their 
-subject likes. OK...
-
-But if I use "treewide:" – who do I send to (if not to individual 
-maintainers per patch)?
-
->    - The rest of the text should be lowercase "replace http links with https"
+On 6/16/20 13:41, Gustavo A. R. Silva wrote:
+> Assign array_size() to variable _size_ and use it in both vmalloc()
+> and memset(). These sorts of multiplication factors need to be wrapped
+> in array_size().
 > 
-> Have a look at other patch subject lines based on the file you are editing.  For example:
+> This issue was found with the help of Coccinelle and, audited and fixed
+> manually.
 > 
->    $ git log --oneline -- Documentation/kbuild/gcc-plugins.rst
->    2020-03-10 2b4cbd5c9505 Jonathan Corbet  docs: move gcc-plugins to the kbuild manual
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/reiserfs/bitmap.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
->    $ git log --oneline -- scripts/Makefile.gcc-plugins
->    2019-03-04 81a56f6dcd20 Kees Cook        gcc-plugins: structleak: Generalize to all variable types
->    2018-12-29 668c35f69cc7 Linus Torvalds   Merge tag 'kbuild-v4.21' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
->    2018-12-12 189af4657186 Ard Biesheuvel   ARM: smp: add support for per-task stack canaries
->    2018-12-01 ce2fd53a10c7 Masahiro Yamada  kbuild: descend into scripts/gcc-plugins/ via scripts/Makefile
->    2018-09-04 10e9ae9fabaf Alexander Popov  gcc-plugins: Add STACKLEAK plugin for tracking the kernel stack
->    2018-07-24 7ccb95e8fe91 Kees Cook        gcc-plugins: Regularize Makefile.gcc-plugins
->    2018-07-02 c17d6179ad5a Masahiro Yamada  gcc-plugins: remove unused GCC_PLUGIN_SUBDIR
->    2018-06-11 59f53855babf Masahiro Yamada  gcc-plugins: test plugin support in Kconfig and clean up Makefile
->    2018-06-11 8034c2fb1225 Masahiro Yamada  gcc-plugins: move GCC version check for PowerPC to Kconfig
->    2018-06-11 5aadfdeb8de0 Masahiro Yamada  kcov: test compiler capability in Kconfig and correct dependency
+> diff --git a/fs/reiserfs/bitmap.c b/fs/reiserfs/bitmap.c
+> index bf708ac287b4..3ca601893d2e 100644
+> --- a/fs/reiserfs/bitmap.c
+> +++ b/fs/reiserfs/bitmap.c
+> @@ -1455,12 +1455,13 @@ int reiserfs_init_bitmap_cache(struct super_block *sb)
+>  {
+>  	struct reiserfs_bitmap_info *bitmap;
+>  	unsigned int bmap_nr = reiserfs_bmap_count(sb);
+> +	size_t size = array_size(bmap_nr, sizeof(*bitmap));
+>  
+> -	bitmap = vmalloc(array_size(bmap_nr, sizeof(*bitmap)));
+> +	bitmap = vmalloc(size);
+>  	if (bitmap == NULL)
+>  		return -ENOMEM;
+>  
+> -	memset(bitmap, 0xff, sizeof(*bitmap) * bmap_nr);
+> +	memset(bitmap, 0xff, size);
+>  
+>  	SB_AP_BITMAP(sb) = bitmap;
+>  
 > 
-> 
-> So you will have:
-> 
->    docs: replace http links with https
->    gcc-plugins: replace http links with https
-> 
-> -Stafford
-> 
->>>
->>> -Stafford
->>>
->>>>>> thanks,
->>>>>>
->>>>>> greg k-h
->>>>>>
->>>>> Hi,
->>>>>
->>>>> I'm very sorry.
->>>>>
->>>>> As Torvalds has merged 93431e0607e5 and many of you devs (including big
->>>>> maintainers like David Miller) just applied this stuff, I assumed that's OK.
->>>>>
->>>>> And now I've rolled out tens of patches via shell loop... *sigh*
->>>>>
->>>>> As this is the third (I think) change request like this, I assume this rule
->>>>> applies to all subsystems – right?
->>>>
->>>> Yes, you should try to emulate what the subsystem does, look at other
->>>> patches for the same files, but the format I suggested is almost always
->>>> the correct one.  If not, I'm sure maintainers will be glad to tell you
->>>> otherwise :)
->>>
->>>
