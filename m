@@ -2,368 +2,403 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A76DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCCE20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7xEK9JV"
+	by mail.kernel.org (Postfix) with ESMTP id E9A2320767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594353651;
+	bh=Dq7O6ZkW5iZqo5/JE9+z59ZBATAGfwJwl4VQZUebI1c=;
+	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
+	b=FhwbQMJOQAWjjsAnFfAmwTmAqrw0a1CreR8g3/QPqMofCZK/ihxe0qp3h17Nnd6A9
+	 FUKREPxemE1Q9ZXcLCuTFiiQrc5O8jiClDl6HqEDB3AB3mS9we13zjWdP8Ijy3eiwl
+	 5HwVv7XCvqhPz2/X4rOwWSHTzAu3ruEmn8ZvCG/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgGJD41 (ORCPT
+        id S1726391AbgGJEAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:56:27 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33599 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgGJD41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:56:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594353385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z5Aam00hbFoeDn6hLT4U9FDxk2d5+qUKm44Nb7A7gvc=;
-        b=Q7xEK9JVyh+YMPVGXmu3dV8xG2btKKEofuyq+cEzyTD8DesnY82hHHVMFIulqaBPdCWg0S
-        kngvAJi9Zl2lCBBVfwm0wshWMz0pWhW1bgXW10nziRhfrqO6uSojaJ71V1XKe6roS1rwVC
-        kg5E5NhZMKcbu9gtGaPCrc18aJZFJrY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-09iyMhobPbm7zdTyaQFi8w-1; Thu, 09 Jul 2020 23:56:22 -0400
-X-MC-Unique: 09iyMhobPbm7zdTyaQFi8w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 10 Jul 2020 00:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbgGJEAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:00:49 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 260D5100AA22;
-        Fri, 10 Jul 2020 03:56:21 +0000 (UTC)
-Received: from [10.72.13.228] (ovpn-13-228.pek2.redhat.com [10.72.13.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6797B6FEF4;
-        Fri, 10 Jul 2020 03:56:12 +0000 (UTC)
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org>
- <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
- <20200622122546-mutt-send-email-mst@kernel.org>
- <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
- <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
- <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
-Date:   Fri, 10 Jul 2020 11:56:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200709133438-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        by mail.kernel.org (Postfix) with ESMTPSA id EBFEE20720;
+        Fri, 10 Jul 2020 04:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594353648;
+        bh=Dq7O6ZkW5iZqo5/JE9+z59ZBATAGfwJwl4VQZUebI1c=;
+        h=Date:From:To:Subject:In-Reply-To:From;
+        b=ly2GqFVpUVRMpSUtupQQHjTf8+/jcS4zTgBvmOtUSdxdx1yjmxoBAuF6JMRujOCfb
+         rCiVhavFVZqFxnMRRwK/kbTyLF5yunpEb1Wi2itSJ/KjTtR6my3Wbiz7iQo4pQzex+
+         5zxAzrhj/17e8XdlFREEcrBsyCQGrIi2uFxp0XxA=
+Date:   Thu, 09 Jul 2020 21:00:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2020-07-09-21-00 uploaded
+Message-ID: <20200710040047.md-jEb0TK%akpm@linux-foundation.org>
+In-Reply-To: <20200703151445.b6a0cfee402c7c5c4651f1b1@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The mm-of-the-moment snapshot 2020-07-09-21-00 has been uploaded to
 
-On 2020/7/10 上午1:37, Michael S. Tsirkin wrote:
-> On Thu, Jul 09, 2020 at 06:46:13PM +0200, Eugenio Perez Martin wrote:
->> On Wed, Jul 1, 2020 at 4:10 PM Jason Wang <jasowang@redhat.com> wrote:
->>>
->>> On 2020/7/1 下午9:04, Eugenio Perez Martin wrote:
->>>> On Wed, Jul 1, 2020 at 2:40 PM Jason Wang <jasowang@redhat.com> wrote:
->>>>> On 2020/7/1 下午6:43, Eugenio Perez Martin wrote:
->>>>>> On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
->>>>>> <eperezma@redhat.com> wrote:
->>>>>>> On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->>>>>>>> On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
->>>>>>>>> On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->>>>>>>>>> On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
->>>>>>>>>>> On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
->>>>>>>>>>> <eperezma@redhat.com> wrote:
->>>>>>>>>>>> On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
->>>>>>>>>>>> <konrad.wilk@oracle.com> wrote:
->>>>>>>>>>>>> On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
->>>>>>>>>>>>>> As testing shows no performance change, switch to that now.
->>>>>>>>>>>>> What kind of testing? 100GiB? Low latency?
->>>>>>>>>>>>>
->>>>>>>>>>>> Hi Konrad.
->>>>>>>>>>>>
->>>>>>>>>>>> I tested this version of the patch:
->>>>>>>>>>>> https://lkml.org/lkml/2019/10/13/42
->>>>>>>>>>>>
->>>>>>>>>>>> It was tested for throughput with DPDK's testpmd (as described in
->>>>>>>>>>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
->>>>>>>>>>>> and kernel pktgen. No latency tests were performed by me. Maybe it is
->>>>>>>>>>>> interesting to perform a latency test or just a different set of tests
->>>>>>>>>>>> over a recent version.
->>>>>>>>>>>>
->>>>>>>>>>>> Thanks!
->>>>>>>>>>> I have repeated the tests with v9, and results are a little bit different:
->>>>>>>>>>> * If I test opening it with testpmd, I see no change between versions
->>>>>>>>>> OK that is testpmd on guest, right? And vhost-net on the host?
->>>>>>>>>>
->>>>>>>>> Hi Michael.
->>>>>>>>>
->>>>>>>>> No, sorry, as described in
->>>>>>>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
->>>>>>>>> But I could add to test it in the guest too.
->>>>>>>>>
->>>>>>>>> These kinds of raw packets "bursts" do not show performance
->>>>>>>>> differences, but I could test deeper if you think it would be worth
->>>>>>>>> it.
->>>>>>>> Oh ok, so this is without guest, with virtio-user.
->>>>>>>> It might be worth checking dpdk within guest too just
->>>>>>>> as another data point.
->>>>>>>>
->>>>>>> Ok, I will do it!
->>>>>>>
->>>>>>>>>>> * If I forward packets between two vhost-net interfaces in the guest
->>>>>>>>>>> using a linux bridge in the host:
->>>>>>>>>> And here I guess you mean virtio-net in the guest kernel?
->>>>>>>>> Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
->>>>>>>>> the host. More precisely:
->>>>>>>>> * Adding one of the interfaces to another namespace, assigning it an
->>>>>>>>> IP, and starting netserver there.
->>>>>>>>> * Assign another IP in the range manually to the other virtual net
->>>>>>>>> interface, and start the desired test there.
->>>>>>>>>
->>>>>>>>> If you think it would be better to perform then differently please let me know.
->>>>>>>> Not sure why you bother with namespaces since you said you are
->>>>>>>> using L2 bridging. I guess it's unimportant.
->>>>>>>>
->>>>>>> Sorry, I think I should have provided more context about that.
->>>>>>>
->>>>>>> The only reason to use namespaces is to force the traffic of these
->>>>>>> netperf tests to go through the external bridge. To test netperf
->>>>>>> different possibilities than the testpmd (or pktgen or others "blast
->>>>>>> of frames unconditionally" tests).
->>>>>>>
->>>>>>> This way, I make sure that is the same version of everything in the
->>>>>>> guest, and is a little bit easier to manage cpu affinity, start and
->>>>>>> stop testing...
->>>>>>>
->>>>>>> I could use a different VM for sending and receiving, but I find this
->>>>>>> way a faster one and it should not introduce a lot of noise. I can
->>>>>>> test with two VM if you think that this use of network namespace
->>>>>>> introduces too much noise.
->>>>>>>
->>>>>>> Thanks!
->>>>>>>
->>>>>>>>>>>      - netperf UDP_STREAM shows a performance increase of 1.8, almost
->>>>>>>>>>> doubling performance. This gets lower as frame size increase.
->>>>>> Regarding UDP_STREAM:
->>>>>> * with event_idx=on: The performance difference is reduced a lot if
->>>>>> applied affinity properly (manually assigning CPU on host/guest and
->>>>>> setting IRQs on guest), making them perform equally with and without
->>>>>> the patch again. Maybe the batching makes the scheduler perform
->>>>>> better.
->>>>> Note that for UDP_STREAM, the result is pretty trick to be analyzed. E.g
->>>>> setting a sndbuf for TAP may help for the performance (reduce the drop).
->>>>>
->>>> Ok, will add that to the test. Thanks!
->>>
->>> Actually, it's better to skip the UDP_STREAM test since:
->>>
->>> - My understanding is very few application is using raw UDP stream
->>> - It's hard to analyze (usually you need to count the drop ratio etc)
->>>
->>>
->>>>>>>>>>>      - rests of the test goes noticeably worse: UDP_RR goes from ~6347
->>>>>>>>>>> transactions/sec to 5830
->>>>>> * Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning makes
->>>>>> them perform similarly again, only a very small performance drop
->>>>>> observed. It could be just noise.
->>>>>> ** All of them perform better than vanilla if event_idx=off, not sure
->>>>>> why. I can try to repeat them if you suspect that can be a test
->>>>>> failure.
->>>>>>
->>>>>> * With testpmd and event_idx=off, if I send from the VM to host, I see
->>>>>> a performance increment especially in small packets. The buf api also
->>>>>> increases performance compared with only batching: Sending the minimum
->>>>>> packet size in testpmd makes pps go from 356kpps to 473 kpps.
->>>>> What's your setup for this. The number looks rather low. I'd expected
->>>>> 1-2 Mpps at least.
->>>>>
->>>> Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, 2 NUMA nodes of 16G memory
->>>> each, and no device assigned to the NUMA node I'm testing in. Too low
->>>> for testpmd AF_PACKET driver too?
->>>
->>> I don't test AF_PACKET, I guess it should use the V3 which mmap based
->>> zerocopy interface.
->>>
->>> And it might worth to check the cpu utilization of vhost thread. It's
->>> required to stress it as 100% otherwise there could be a bottleneck
->>> somewhere.
->>>
->>>
->>>>>> Sending
->>>>>> 1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
->>>>>>
->>>>>> Something strange I observe in these tests: I get more pps the bigger
->>>>>> the transmitted buffer size is. Not sure why.
->>>>>>
->>>>>> ** Sending from the host to the VM does not make a big change with the
->>>>>> patches in small packets scenario (minimum, 64 bytes, about 645
->>>>>> without the patch, ~625 with batch and batch+buf api). If the packets
->>>>>> are bigger, I can see a performance increase: with 256 bits,
->>>>> I think you meant bytes?
->>>>>
->>>> Yes, sorry.
->>>>
->>>>>>     it goes
->>>>>> from 590kpps to about 600kpps, and in case of 1500 bytes payload it
->>>>>> gets from 348kpps to 528kpps, so it is clearly an improvement.
->>>>>>
->>>>>> * with testpmd and event_idx=on, batching+buf api perform similarly in
->>>>>> both directions.
->>>>>>
->>>>>> All of testpmd tests were performed with no linux bridge, just a
->>>>>> host's tap interface (<interface type='ethernet'> in xml),
->>>>> What DPDK driver did you use in the test (AF_PACKET?).
->>>>>
->>>> Yes, both testpmd are using AF_PACKET driver.
->>>
->>> I see, using AF_PACKET means extra layers of issues need to be analyzed
->>> which is probably not good.
->>>
->>>
->>>>>> with a
->>>>>> testpmd txonly and another in rxonly forward mode, and using the
->>>>>> receiving side packets/bytes data. Guest's rps, xps and interrupts,
->>>>>> and host's vhost threads affinity were also tuned in each test to
->>>>>> schedule both testpmd and vhost in different processors.
->>>>> My feeling is that if we start from simple setup, it would be more
->>>>> easier as a start. E.g start without an VM.
->>>>>
->>>>> 1) TX: testpmd(txonly) -> virtio-user -> vhost_net -> XDP_DROP on TAP
->>>>> 2) RX: pkgetn -> TAP -> vhost_net -> testpmd(rxonly)
->>>>>
->>>> Got it. Is there a reason to prefer pktgen over testpmd?
->>>
->>> I think the reason is using testpmd you must use a userspace kernel
->>> interface (AF_PACKET), and it could not be as fast as pktgen since:
->>>
->>> - it talks directly to xmit of TAP
->>> - skb can be cloned
->>>
->> Hi!
->>
->> Here it is the result of the tests. Details on [1].
->>
->> Tx:
->> ===
->>
->> For tx packets it seems that the batching patch makes things a little
->> bit worse, but the buf_api outperforms baseline by a 7%:
->>
->> * We start with a baseline of 4208772.571 pps and 269361444.6 bytes/s [2].
->> * When we add the batching, I see a small performance decrease:
->> 4133292.308 and 264530707.7 bytes/s.
->> * However, the buf api it outperform the baseline: 4551319.631pps,
->> 291205178.1 bytes/s
->>
->> I don't have numbers on the receiver side since it is just a XDP_DROP.
->> I think it would be interesting to see them.
->>
->> Rx:
->> ===
->>
->> Regarding Rx, the reverse is observed: a small performance increase is
->> observed with batching (~2%), but buf_api makes tests perform equally
->> to baseline.
->>
->> pktgen was called using pktgen_sample01_simple.sh, with the environment:
->> DEV="$tap_name" F_THREAD=1 DST_MAC=$MAC_ADDR COUNT=$((2500000*25))
->> SKB_CLONE=$((2**31))
->>
->> And testpmd is the same as Tx but with forward-mode=rxonly.
->>
->> Pktgen reports:
->> Baseline: 1853025pps 622Mb/sec (622616400bps) errors: 7915231
->> Batch: 1891404pps 635Mb/sec (635511744bps) errors: 4926093
->> Buf_api: 1844008pps 619Mb/sec (619586688bps) errors: 47766692
->>
->> Testpmd reports:
->> Baseline: 1854448pps, 860464156 bps. [3]
->> Batch: 1892844.25pps, 878280070bps.
->> Buf_api: 1846139.75pps, 856609120bps.
->>
->> Any thoughts?
->>
->> Thanks!
->>
->> [1]
->> Testpmd options: -l 1,3
->> --vdev=virtio_user0,mac=01:02:03:04:05:06,path=/dev/vhost-net,queue_size=1024
->> -- --auto-start --stats-period 5 --tx-offloads="$TX_OFFLOADS"
->> --rx-offloads="$RX_OFFLOADS" --txd=4096 --rxd=4096 --burst=512
->> --forward-mode=txonly
->>
->> Where offloads were obtained manually running with
->> --[tr]x-offloads=0x8fff and examining testpmd response:
->> declare -r RX_OFFLOADS=0x81d
->> declare -r TX_OFFLOADS=0x802d
->>
->> All of the tests results are an average of at least 3 samples of
->> testpmd, discarding the obvious deviations at start/end (like warming
->> up or waiting for pktgen to start). The result of pktgen is directly
->> c&p from its output.
->>
->> The numbers do not change very much from one stats printing to another
->> of testpmd.
->>
->> [2] Obtained subtracting each accumulated tx-packets from one stats
->> print to the previous one. If we attend testpmd output about Tx-pps,
->> it counts a little bit less performance, but it follows the same
->> pattern:
->>
->> Testpmd pps/bps stats:
->> Baseline: 3510826.25 pps, 1797887912bps = 224735989bytes/sec
->> Batch: 3448515.571pps, 1765640226bps = 220705028.3bytes/sec
->> Buf api: 3794115.333pps, 1942587286bps = 242823410.8bytes/sec
->>
->> [3] This is obtained using the rx-pps/rx-bps report of testpmd.
->>
->> Seems strange to me that the relation between pps/bps is ~336 this
->> time, and between accumulated pkts/accumulated bytes is ~58. Also, the
->> relation between them is not even close to 8.
->>
->> However, testpmd shows a lot of absolute packets received. If we see
->> the received packets in a period subtracting from the previous one,
->> testpmd tells that receive more pps than pktgen tx-pps:
->> Baseline: ~2222668.667pps 128914784.3bps.
->> Batch: 2269260.933pps, 131617134.9bps
->> Buf_api: 2213226.467pps, 128367135.9bp
-> How about playing with the batch size? Make it a mod parameter instead
-> of the hard coded 64, and measure for all values 1 to 64 ...
+   http://www.ozlabs.org/~akpm/mmotm/
+
+mmotm-readme.txt says
+
+README for mm-of-the-moment:
+
+http://www.ozlabs.org/~akpm/mmotm/
+
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
+
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
+
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
+
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
 
 
-Right, according to the test result, 64 seems to be too aggressive in 
-the case of TX.
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
 
-And it might also be worth to check:
+	https://github.com/hnaz/linux-mm
 
-1) Whether vhost thread is stressed as 100% CPU utilization, if not, 
-there's bottleneck elsewhere
-2) For RX test, make sure pktgen kthread is running in the same NUMA 
-node with virtio-user
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
 
-Thanks
+A git copy of this tree is also available at
+
+	https://github.com/hnaz/linux-mm
 
 
->
 
+This mmotm tree contains the following patches against 5.8-rc4:
+(patches marked "*" will be included in linux-next)
+
+  origin.patch
+* mm-shuffle-dont-move-pages-between-zones-and-dont-read-garbage-memmaps.patch
+* mm-avoid-access-flag-update-tlb-flush-for-retried-page-fault.patch
+* mm-close-race-between-munmap-and-expand_upwards-downwards.patch
+* mm-close-race-between-munmap-and-expand_upwards-downwards-fix.patch
+* vfs-xattr-mm-shmem-kernfs-release-simple-xattr-entry-in-a-right-way.patch
+* mm-initialize-return-of-vm_insert_pages.patch
+* mm-memcontrol-fix-oops-inside-mem_cgroup_get_nr_swap_pages.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-memcg-fix-refcount-error-while-moving-and-swapping.patch
+* mm-hugetlb-avoid-hardcoding-while-checking-if-cma-is-enable.patch
+* mailmap-add-entry-for-mike-rapoport.patch
+* checkpatch-test-git_dir-changes.patch
+* kthread-remove-incorrect-comment-in-kthread_create_on_cpu.patch
+* kbuild-move-wtype-limits-to-w=2.patch
+* scripts-tagssh-collect-compiled-source-precisely.patch
+* scripts-tagssh-collect-compiled-source-precisely-v2.patch
+* bloat-o-meter-support-comparing-library-archives.patch
+* scripts-decode_stacktrace-skip-missing-symbols.patch
+* scripts-decode_stacktrace-guess-basepath-if-not-specified.patch
+* scripts-decode_stacktrace-guess-path-to-modules.patch
+* scripts-decode_stacktrace-guess-path-to-vmlinux-by-release-name.patch
+* ocfs2-clear-links-count-in-ocfs2_mknod-if-an-error-occurs.patch
+* ocfs2-fix-ocfs2-corrupt-when-iputting-an-inode.patch
+* ocfs2-change-slot-number-type-s16-to-u16.patch
+* ramfs-support-o_tmpfile.patch
+* kernel-watchdog-flush-all-printk-nmi-buffers-when-hardlockup-detected.patch
+  mm.patch
+* mm-treewide-rename-kzfree-to-kfree_sensitive.patch
+* mm-ksize-should-silently-accept-a-null-pointer.patch
+* mm-expand-config_slab_freelist_hardened-to-include-slab.patch
+* slab-add-naive-detection-of-double-free.patch
+* slab-add-naive-detection-of-double-free-fix.patch
+* mm-slab-check-gfp_slab_bug_mask-before-alloc_pages-in-kmalloc_order.patch
+* mm-slub-extend-slub_debug-syntax-for-multiple-blocks.patch
+* mm-slub-extend-slub_debug-syntax-for-multiple-blocks-fix.patch
+* mm-slub-make-some-slub_debug-related-attributes-read-only.patch
+* mm-slub-remove-runtime-allocation-order-changes.patch
+* mm-slub-make-remaining-slub_debug-related-attributes-read-only.patch
+* mm-slub-make-reclaim_account-attribute-read-only.patch
+* mm-slub-introduce-static-key-for-slub_debug.patch
+* mm-slub-introduce-kmem_cache_debug_flags.patch
+* mm-slub-introduce-kmem_cache_debug_flags-fix.patch
+* mm-slub-extend-checks-guarded-by-slub_debug-static-key.patch
+* mm-slab-slub-move-and-improve-cache_from_obj.patch
+* mm-slab-slub-improve-error-reporting-and-overhead-of-cache_from_obj.patch
+* mm-slab-slub-improve-error-reporting-and-overhead-of-cache_from_obj-fix.patch
+* slub-drop-lockdep_assert_held-from-put_map.patch
+* mm-kcsan-instrument-slab-slub-free-with-assert_exclusive_access.patch
+* mm-debug_vm_pgtable-add-tests-validating-arch-helpers-for-core-mm-features.patch
+* mm-debug_vm_pgtable-add-tests-validating-advanced-arch-page-table-helpers.patch
+* mm-debug_vm_pgtable-add-debug-prints-for-individual-tests.patch
+* documentation-mm-add-descriptions-for-arch-page-table-helpers.patch
+* mm-handle-page-mapping-better-in-dump_page.patch
+* mm-dump-compound-page-information-on-a-second-line.patch
+* mm-print-head-flags-in-dump_page.patch
+* mm-switch-dump_page-to-get_kernel_nofault.patch
+* mm-print-the-inode-number-in-dump_page.patch
+* mm-print-hashed-address-of-struct-page.patch
+* mm-filemap-clear-idle-flag-for-writes.patch
+* mm-filemap-add-missing-fgp_-flags-in-kerneldoc-comment-for-pagecache_get_page.patch
+* mm-swap-simplify-alloc_swap_slot_cache.patch
+* mm-swap-simplify-enable_swap_slots_cache.patch
+* mm-swap-remove-redundant-check-for-swap_slot_cache_initialized.patch
+* mm-kmem-make-memcg_kmem_enabled-irreversible.patch
+* mm-memcg-factor-out-memcg-and-lruvec-level-changes-out-of-__mod_lruvec_state.patch
+* mm-memcg-prepare-for-byte-sized-vmstat-items.patch
+* mm-memcg-convert-vmstat-slab-counters-to-bytes.patch
+* mm-slub-implement-slub-version-of-obj_to_index.patch
+* mm-memcontrol-decouple-reference-counting-from-page-accounting.patch
+* mm-memcg-slab-obj_cgroup-api.patch
+* mm-memcg-slab-allocate-obj_cgroups-for-non-root-slab-pages.patch
+* mm-memcg-slab-save-obj_cgroup-for-non-root-slab-objects.patch
+* mm-memcg-slab-charge-individual-slab-objects-instead-of-pages.patch
+* mm-memcg-slab-deprecate-memorykmemslabinfo.patch
+* mm-memcg-slab-move-memcg_kmem_bypass-to-memcontrolh.patch
+* mm-memcg-slab-use-a-single-set-of-kmem_caches-for-all-accounted-allocations.patch
+* mm-memcg-slab-simplify-memcg-cache-creation.patch
+* mm-memcg-slab-remove-memcg_kmem_get_cache.patch
+* mm-memcg-slab-deprecate-slab_root_caches.patch
+* mm-memcg-slab-remove-redundant-check-in-memcg_accumulate_slabinfo.patch
+* mm-memcg-slab-use-a-single-set-of-kmem_caches-for-all-allocations.patch
+* kselftests-cgroup-add-kernel-memory-accounting-tests.patch
+* tools-cgroup-add-memcg_slabinfopy-tool.patch
+* percpu-return-number-of-released-bytes-from-pcpu_free_area.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix-fix.patch
+* mm-memcg-percpu-per-memcg-percpu-memory-statistics.patch
+* mm-memcg-percpu-per-memcg-percpu-memory-statistics-v3.patch
+* mm-memcg-charge-memcg-percpu-memory-to-the-parent-cgroup.patch
+* kselftests-cgroup-add-perpcu-memory-accounting-test.patch
+* mm-memcontrol-account-kernel-stack-per-node.patch
+* mm-memcg-slab-remove-unused-argument-by-charge_slab_page.patch
+* mm-slab-rename-uncharge_slab_page-to-unaccount_slab_page.patch
+* mm-kmem-switch-to-static_branch_likely-in-memcg_kmem_enabled.patch
+* mm-memcontrol-avoid-workload-stalls-when-lowering-memoryhigh.patch
+* mm-remove-redundant-check-non_swap_entry.patch
+* mm-memoryc-make-remap_pfn_range-reject-unaligned-addr.patch
+* mm-remove-unneeded-includes-of-asm-pgalloch.patch
+* mm-remove-unneeded-includes-of-asm-pgalloch-fix.patch
+* opeinrisc-switch-to-generic-version-of-pte-allocation.patch
+* xtensa-switch-to-generic-version-of-pte-allocation.patch
+* asm-generic-pgalloc-provide-generic-pmd_alloc_one-and-pmd_free_one.patch
+* asm-generic-pgalloc-provide-generic-pud_alloc_one-and-pud_free_one.patch
+* asm-generic-pgalloc-provide-generic-pgd_free.patch
+* mm-move-lib-ioremapc-to-mm.patch
+* mm-move-pd_alloc_track-to-separate-header-file.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* mm-mmap-optimize-a-branch-judgment-in-ksys_mmap_pgoff.patch
+* mm-do-page-fault-accounting-in-handle_mm_fault.patch
+* mm-alpha-use-general-page-fault-accounting.patch
+* mm-arc-use-general-page-fault-accounting.patch
+* mm-arm-use-general-page-fault-accounting.patch
+* mm-arm64-use-general-page-fault-accounting.patch
+* mm-csky-use-general-page-fault-accounting.patch
+* mm-hexagon-use-general-page-fault-accounting.patch
+* mm-ia64-use-general-page-fault-accounting.patch
+* mm-m68k-use-general-page-fault-accounting.patch
+* mm-microblaze-use-general-page-fault-accounting.patch
+* mm-mips-use-general-page-fault-accounting.patch
+* mm-nds32-use-general-page-fault-accounting.patch
+* mm-nios2-use-general-page-fault-accounting.patch
+* mm-openrisc-use-general-page-fault-accounting.patch
+* mm-parisc-use-general-page-fault-accounting.patch
+* mm-powerpc-use-general-page-fault-accounting.patch
+* mm-riscv-use-general-page-fault-accounting.patch
+* mm-s390-use-general-page-fault-accounting.patch
+* mm-sh-use-general-page-fault-accounting.patch
+* mm-sparc32-use-general-page-fault-accounting.patch
+* mm-sparc64-use-general-page-fault-accounting.patch
+* mm-x86-use-general-page-fault-accounting.patch
+* mm-xtensa-use-general-page-fault-accounting.patch
+* mm-clean-up-the-last-pieces-of-page-fault-accountings.patch
+* mm-gup-remove-task_struct-pointer-for-all-gup-code.patch
+* mm-sparse-never-partially-remove-memmap-for-early-section.patch
+* mm-sparse-only-sub-section-aligned-range-would-be-populated.patch
+* vmalloc-convert-to-xarray.patch
+* mm-vmalloc-simplify-merge_or_add_vmap_area-func.patch
+* mm-vmalloc-simplify-augment_tree_propagate_check-func.patch
+* mm-vmalloc-switch-to-propagate-callback.patch
+* mm-vmalloc-update-the-header-about-kva-rework.patch
+* mm-vmalloc-remove-redundant-asignmnet-in-unmap_kernel_range_noflush.patch
+* kasan-improve-and-simplify-kconfigkasan.patch
+* kasan-update-required-compiler-versions-in-documentation.patch
+* rcu-kasan-record-and-print-call_rcu-call-stack.patch
+* kasan-record-and-print-the-free-track.patch
+* kasan-add-tests-for-call_rcu-stack-recording.patch
+* kasan-update-documentation-for-generic-kasan.patch
+* kasan-remove-kasan_unpoison_stack_above_sp_to.patch
+* kasan-fix-kasan-unit-tests-for-tag-based-kasan.patch
+* kasan-fix-kasan-unit-tests-for-tag-based-kasan-v4.patch
+* mm-page_alloc-use-unlikely-in-task_capc.patch
+* page_alloc-consider-highatomic-reserve-in-watermark-fast.patch
+* page_alloc-consider-highatomic-reserve-in-watermark-fast-v5.patch
+* mm-page_alloc-skip-waternark_boost-for-atomic-order-0-allocations.patch
+* mm-page_alloc-skip-watermark_boost-for-atomic-order-0-allocations-fix.patch
+* mm-drop-vm_total_pages.patch
+* mm-page_alloc-drop-nr_free_pagecache_pages.patch
+* mm-memory_hotplug-document-why-shuffle_zone-is-relevant.patch
+* mm-shuffle-remove-dynamic-reconfiguration.patch
+* powerpc-numa-set-numa_node-for-all-possible-cpus.patch
+* powerpc-numa-prefer-node-id-queried-from-vphn.patch
+* mm-page_alloc-keep-memoryless-cpuless-node-0-offline.patch
+* mm-page_allocc-replace-the-definition-of-nr_migratetype_bits-with-pb_migratetype_bits.patch
+* mm-page_allocc-extract-the-common-part-in-pfn_to_bitidx.patch
+* mm-page_allocc-simplify-pageblock-bitmap-access.patch
+* mm-page_allocc-remove-unnecessary-end_bitidx-for-_pfnblock_flags_mask.patch
+* mm-page_alloc-silence-a-kasan-false-positive.patch
+* mm-page_alloc-fallbacks-at-most-has-3-elements.patch
+* mm-page_alloc-skip-setting-nodemask-when-we-are-in-interrupt.patch
+* mm-huge_memoryc-update-tlb-entry-if-pmd-is-changed.patch
+* mips-do-not-call-flush_tlb_all-when-setting-pmd-entry.patch
+* mm-vmscanc-fixed-typo.patch
+* mm-proactive-compaction.patch
+* mm-proactive-compaction-fix.patch
+* mm-use-unsigned-types-for-fragmentation-score.patch
+* mm-oom-make-the-calculation-of-oom-badness-more-accurate.patch
+* doc-mm-sync-up-oom_score_adj-documentation.patch
+* doc-mm-clarify-proc-pid-oom_score-value-range.patch
+* hugetlbfs-prevent-filesystem-stacking-of-hugetlbfs.patch
+* mm-migrate-optimize-migrate_vma_setup-for-holes.patch
+* mm-migrate-add-migrate-shared-test-for-migrate_vma_.patch
+* mm-thp-remove-debug_cow-switch.patch
+* mm-store-compound_nr-as-well-as-compound_order.patch
+* mm-move-page-flags-include-to-top-of-file.patch
+* mm-add-thp_order.patch
+* mm-add-thp_size.patch
+* mm-replace-hpage_nr_pages-with-thp_nr_pages.patch
+* mm-add-thp_head.patch
+* mm-introduce-offset_in_thp.patch
+* mm-vmstat-add-events-for-thp-migration-without-split.patch
+* mm-vmstat-add-events-for-thp-migration-without-split-fix.patch
+* mm-vmstat-add-events-for-thp-migration-without-split-fix-2.patch
+* mm-cma-fix-null-pointer-dereference-when-cma-could-not-be-activated.patch
+* mm-cma-fix-the-name-of-cma-areas.patch
+* mm-cma-fix-the-name-of-cma-areas-fix.patch
+* mm-hugetlb-fix-the-name-of-hugetlb-cma.patch
+* mmhwpoison-cleanup-unused-pagehuge-check.patch
+* mm-hwpoison-remove-recalculating-hpage.patch
+* mmmadvise-call-soft_offline_page-without-mf_count_increased.patch
+* mmmadvise-refactor-madvise_inject_error.patch
+* mmhwpoison-inject-dont-pin-for-hwpoison_filter.patch
+* mmhwpoison-un-export-get_hwpoison_page-and-make-it-static.patch
+* mmhwpoison-kill-put_hwpoison_page.patch
+* mmhwpoison-remove-mf_count_increased.patch
+* mmhwpoison-remove-flag-argument-from-soft-offline-functions.patch
+* mmhwpoison-unify-thp-handling-for-hard-and-soft-offline.patch
+* mmhwpoison-rework-soft-offline-for-free-pages.patch
+* mmhwpoison-rework-soft-offline-for-free-pages-fix.patch
+* mmhwpoison-rework-soft-offline-for-in-use-pages.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page-fix.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page-fix-fix.patch
+* mmhwpoison-return-0-if-the-page-is-already-poisoned-in-soft-offline.patch
+* mmhwpoison-introduce-mf_msg_unsplit_thp.patch
+* sched-mm-optimize-current_gfp_context.patch
+* x86-mm-use-max-memory-block-size-on-bare-metal.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* fix-annotation-of-ioreadwrite1632be.patch
+* sparse-group-the-defines-by-functionality.patch
+* bitmap-fix-bitmap_cut-for-partial-overlapping-case.patch
+* bitmap-add-test-for-bitmap_cut.patch
+* lib-generic-radix-treec-remove-unneeded-__rcu.patch
+* lib-test_bitops-do-the-full-test-during-module-init.patch
+* lib-optimize-cpumask_local_spread.patch
+* lib-test_lockupc-make-symbol-test_works-static.patch
+* iomap-constify-ioreadx-iomem-argument-as-in-generic-implementation.patch
+* rtl818x-constify-ioreadx-iomem-argument-as-in-generic-implementation.patch
+* ntb-intel-constify-ioreadx-iomem-argument-as-in-generic-implementation.patch
+* virtio-pci-constify-ioreadx-iomem-argument-as-in-generic-implementation.patch
+* bits-add-tests-of-genmask.patch
+* bits-add-tests-of-genmask-fix.patch
+* bits-add-tests-of-genmask-fix-2.patch
+* checkpatch-add-test-for-possible-misuse-of-is_enabled-without-config_.patch
+* checkpatch-support-deprecated-terms-checking.patch
+* scripts-deprecated_terms-recommend-denylist-allowlist-instead-of-blacklist-whitelist.patch
+* checkpatch-add-fix-option-for-assign_in_if.patch
+* checkpatch-fix-const_struct-when-const_structscheckpatch-is-missing.patch
+* fs-minix-check-return-value-of-sb_getblk.patch
+* fs-minix-dont-allow-getting-deleted-inodes.patch
+* fs-minix-reject-too-large-maximum-file-size.patch
+* fs-minix-set-s_maxbytes-correctly.patch
+* fs-minix-fix-block-limit-check-for-v1-filesystems.patch
+* fs-minix-remove-expected-error-message-in-block_to_path.patch
+* fatfs-switch-write_lock-to-read_lock-in-fat_ioctl_get_attributes.patch
+* vfat-fat-msdos-filesystem-replace-http-links-with-https-ones.patch
+* fs-signalfdc-fix-inconsistent-return-codes-for-signalfd4.patch
+* selftests-kmod-use-variable-name-in-kmod_test_0001.patch
+* kmod-remove-redundant-be-an-in-the-comment.patch
+* test_kmod-avoid-potential-double-free-in-trigger_config_run_type.patch
+* coredump-add-%f-for-executable-filename.patch
+* exec-change-uselib2-is_sreg-failure-to-eacces.patch
+* exec-move-s_isreg-check-earlier.patch
+* exec-move-path_noexec-check-earlier.patch
+* kdump-append-kernel-build-id-string-to-vmcoreinfo.patch
+* rapidio-rio_mport_cdev-use-struct_size-helper.patch
+* rapidio-use-struct_size-helper.patch
+* kernel-panicc-make-oops_may_print-return-bool.patch
+* lib-kconfigdebug-fix-typo-in-the-help-text-of-config_panic_timeout.patch
+* aio-simplify-read_events.patch
+* kcov-unconditionally-add-fno-stack-protector-to-compiler-options.patch
+* kcov-make-some-symbols-static.patch
+  linux-next.patch
+  linux-next-rejects.patch
+* mm-madvise-pass-task-and-mm-to-do_madvise.patch
+* pid-move-pidfd_get_pid-to-pidc.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api-fix.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api-fix-2.patch
+* mm-madvise-check-fatal-signal-pending-of-target-process.patch
+* all-arch-remove-system-call-sys_sysctl.patch
+* all-arch-remove-system-call-sys_sysctl-fix.patch
+* mm-kmemleak-silence-kcsan-splats-in-checksum.patch
+* mm-frontswap-mark-various-intentional-data-races.patch
+* mm-page_io-mark-various-intentional-data-races.patch
+* mm-page_io-mark-various-intentional-data-races-v2.patch
+* mm-swap_state-mark-various-intentional-data-races.patch
+* mm-filemap-fix-a-data-race-in-filemap_fault.patch
+* mm-swapfile-fix-and-annotate-various-data-races.patch
+* mm-swapfile-fix-and-annotate-various-data-races-v2.patch
+* mm-page_counter-fix-various-data-races-at-memsw.patch
+* mm-memcontrol-fix-a-data-race-in-scan-count.patch
+* mm-list_lru-fix-a-data-race-in-list_lru_count_one.patch
+* mm-mempool-fix-a-data-race-in-mempool_free.patch
+* mm-rmap-annotate-a-data-race-at-tlb_flush_batched.patch
+* mm-swap-annotate-data-races-for-lru_rotate_pvecs.patch
+* mm-annotate-a-data-race-in-page_zonenum.patch
+* include-asm-generic-vmlinuxldsh-align-ro_after_init.patch
+* sh-clkfwk-remove-r8-r16-r32.patch
+* sh-use-generic-strncpy.patch
+* sh-add-missing-export_symbol-for-__delay.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
