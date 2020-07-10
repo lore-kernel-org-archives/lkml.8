@@ -2,128 +2,106 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509ECC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CDDC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE302065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF82E2065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmyiYNAE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vP7ocyP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGJPcZ (ORCPT
+        id S1728025AbgGJPcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJPcY (ORCPT
+        Fri, 10 Jul 2020 11:32:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55504 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGJPcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:32:24 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E927C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:32:24 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y13so3439069lfe.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=h+EzuyaG7pqe9JQFDp2JY1TKII7Efe64alDCy7sZwNA=;
-        b=mmyiYNAE5+Dzrrg9N9DsL/C7eKT/PwN/EEkkKv5lFBUmrqlZi453hlRHJv9vJQEZOR
-         3dTaLuvC5VnCdU3/P7OvM3kDeovLrxAvC/fK85WKtX0/Yp8jQdbQGpR9D9jCX0wapeml
-         p2ozANbpXetzS41XnXHyys456g65HnRhnd1eF7FPNjbBCV4R4qEqD6o/qeZ5JuAVYdi1
-         jLr2lFi/7uyjofT785xsYHrC3GRXlaqrnxl9B5gYYR1FJexWZWU2IcVb9AIgbmPwpIYR
-         gXAfaZTMkXxST4a73YUF7R5RF5GzvbkizGMVJYNfgHjesEaw1ZRvxCfpnKwn0XEVlsjI
-         rbVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=h+EzuyaG7pqe9JQFDp2JY1TKII7Efe64alDCy7sZwNA=;
-        b=fXR5tL14jeg0haw0fY9vvKCOBRtG9ObQ6BNKFYI3zGxMphLS9fMn8AosHLE4kkyFAO
-         oI4ZWU5MEcdNqeyIdx5+YKxR872+61KgBuzIls4KSBY5O1RMzTFiGo6Qkdjk0Wo0I/eZ
-         DoX8gqMlAHE4FtFH/wsMvjAXO8NooV3cuSnmiUERzVuXTC6i7qQgkr2fD/lw4Sj8MG2i
-         LrDwl4jC5qT0Lru/KnZJFYQ12vUuvFtGCq2qoRmkR1Npu1yRL5Lnt6VVJwroJDPiBmrr
-         3P6OoT5e2hoWgC5ZkLYrKrzFnJoH5pzAU4qcYUEoPGNCLX/w1RqDcZXR7JNu8FqJFtgb
-         GaEg==
-X-Gm-Message-State: AOAM532XpGxXrKFNFblbb3RvJi7jTcEgguNE4voSANi+laZZ3RxWe++B
-        rVG9apj1F2YBSZ7VJwH6cMnIuL+6RZmquyJEcT1vtQ==
-X-Google-Smtp-Source: ABdhPJwWJ/GqfjO3jgAb65+33v8YXOeL4TD/Q06YlTj9xs51biXiB4VqrEvFR3M/HV4H3xdMYCZscB0G+yfgcGPitQ4=
-X-Received: by 2002:a19:f20a:: with SMTP id q10mr44374178lfh.89.1594395142579;
- Fri, 10 Jul 2020 08:32:22 -0700 (PDT)
+        Fri, 10 Jul 2020 11:32:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AFGfbR091218;
+        Fri, 10 Jul 2020 15:32:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=noRFkj+OQDbBA2VGp4VYO7xlUC6XPPINL2vE+AEdyMs=;
+ b=vP7ocyP6G8yyQHxRakpibhyM1nz+c9fv0HuXARINt0xwJGXnneDkHMx3/I9UqlGe0CDP
+ a0c+6nMpavkOsyuS6N4K9cIu548k77Y6U9ObDCmG20VB/170q6aRnsMcG6RUGknHH8+r
+ gL78ARsbKlZWOO088PwfuNNLnqotvlsP5YvtRQJxhu7FeUTuznVOMKzuBjhEsmUA6par
+ mSbZ6IlrmXcxxdg05cm4SVb2jZhgvAcpfeTaGBpmpkOaSxijP2Ub+hrjs8eVFN3bAZY+
+ l6reAtwEC+XXnRCO4zxYIo4Q+OIOn2eb8IUP/uHGiLO3288Gxmm5oKDZYPQCs+3Iq53c FQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 325y0ar568-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 15:32:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AFHMZH146270;
+        Fri, 10 Jul 2020 15:32:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 325k3k25k2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jul 2020 15:32:17 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06AFWDQx014888;
+        Fri, 10 Jul 2020 15:32:13 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 Jul 2020 08:32:13 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 58EB86A00F1; Fri, 10 Jul 2020 11:33:09 -0400 (EDT)
+Date:   Fri, 10 Jul 2020 11:33:09 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <20200710153309.GA4699@char.us.oracle.com>
+References: <20200710141945.129329-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Jul 2020 17:32:11 +0200
-Message-ID: <CACRpkdYXcvN_Sqk=Am_r3uyNEfcnta7ZQuYEmBO8g=Wsp4y27w@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for the v5.8 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710141945.129329-1-sgarzare@redhat.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9678 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007100105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9678 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007100105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+.snip..
+> Just to recap the proposal, the idea is to add some restrictions to the
+> operations (sqe, register, fixed file) to safely allow untrusted applications
+> or guests to use io_uring queues.
 
-here are some GPIO fixes, most of them for the PCA953x
-that Andy worked hard to fix up.
+Hi!
 
-Please pull them in!
+This is neat and quite cool - but one thing that keeps nagging me is
+what how much overhead does this cut from the existing setup when you use
+virtio (with guests obviously)? That is from a high level view the
+beaty of io_uring being passed in the guest is you don't have the
+virtio ring -> io_uring processing, right?
 
-Yours,
-Linus Walleij
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.8-2
-
-for you to fetch changes up to 93e0272a4395819d51c7501b3cde771863ccecd2:
-
-  Merge tag 'gpio-fixes-for-v5.8-rc3' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
-(2020-06-26 23:53:25 +0200)
-
-----------------------------------------------------------------
-GPIO fixes for the v5.8 series:
-
-- Fix two runtime PM errorpath problems in the Arizona
-  GPIO driver.
-
-- Fix three interrupt issues in the PCA953x driver.
-
-- Fix the automatic address increment handling in the
-  PCA953x driver again.
-
-- Add a quirk to the PCA953x that fixes a problem in
-  the Intel Galileo Gen 2.
-
-----------------------------------------------------------------
-Andy Shevchenko (5):
-      gpio: pca953x: Synchronize interrupt handler properly
-      gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2
-      gpio: pca953x: Fix direction setting when configure an IRQ
-      gpio: pca953x: disable regmap locking for automatic address incrementing
-      gpio: pca953x: Fix GPIO resource leak on Intel Galileo Gen 2
-
-Linus Walleij (1):
-      Merge tag 'gpio-fixes-for-v5.8-rc3' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Navid Emamdoost (2):
-      gpio: arizona: handle pm_runtime_get_sync failure case
-      gpio: arizona: put pm_runtime in case of failure
-
- drivers/gpio/gpio-arizona.c |  7 +++-
- drivers/gpio/gpio-pca953x.c | 99 ++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 100 insertions(+), 6 deletions(-)
+Thanks!
