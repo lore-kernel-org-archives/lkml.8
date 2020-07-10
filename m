@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA0C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171A6C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E034F207D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCABC20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5cw7rCE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBecEFbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgGJWUS (ORCPT
+        id S1726763AbgGJWUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
+        Fri, 10 Jul 2020 18:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbgGJWUQ (ORCPT
+        with ESMTP id S1726693AbgGJWUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:20:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEE5C08C5DC;
-        Fri, 10 Jul 2020 15:20:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so7350274wrv.9;
-        Fri, 10 Jul 2020 15:20:15 -0700 (PDT)
+        Fri, 10 Jul 2020 18:20:18 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2DDC08C5DC;
+        Fri, 10 Jul 2020 15:20:18 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so7333253wmh.2;
+        Fri, 10 Jul 2020 15:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4W35ujYJlxKgHmJjOxh/l83E+9wVDyy9zXN8EsZkeBk=;
-        b=s5cw7rCE0EWbF55kNa6MNaVUq9gxiw+DyerLx6J8txZcNXN19MIjAyBDqnoBlEoP1h
-         OV4Jf4zPg4eoXxh6lRNIg//4gI/0L4lpCXVaKg5TBN6L/9m+NiW8BwXmYlbEzuabJ0te
-         jLOZiyK1vLPR9AiJmAiEZeCWWxf8niZ1CEI90IICoBeecmKquzqhTb1PltP2NHM98Sob
-         iIIlbZMhMCt3Ylsgi/MEpQujQAYKFP49Dk7kQkX//ko9E6xQs24vUmNBF397HgFDKadZ
-         g9eVCpQO3O6FhhbMsdJrFi1Ufvy7Mfr1Xbev5QW4v2Y1ZBAWUEP5gqmyE9qse3fqBdfQ
-         zCgg==
+        bh=zBfQN+vRaGSFliSIC9sUYYBlJBWdf+Mc3nVjYABa6uc=;
+        b=vBecEFbh/d0jSef2GGDkawA1rYeo7al4di1WqcRGBfvnRrTP2sQxtQ0PJwcAgiO5qe
+         MGsc06bJHFGxcuKxJEQnwXXsbhVhwXOIFkM7N/BdSw7KytVkbUqwRgCgR0jvV4AXKVCM
+         mNRjwHqEUbOHu7JVc+2DOTngEfZFUvsXnoFl99OezVwXeJ+rXwhReatDgo1Ck2JO/kxY
+         UZ11NYvdsJyVUZJKJSsdFaD8sfkVHxddqoSvWwfDuAQZt6rXeBv1fUkNJRmaR3d9rvUQ
+         1wa5IR6Xo1ZY7GKo7UgBdWpgkGe3f+hZpgf596QE3g6SXnBHKtk8tP0bakSwc4saynAE
+         fqdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4W35ujYJlxKgHmJjOxh/l83E+9wVDyy9zXN8EsZkeBk=;
-        b=TxOfyD0zDrt/dMQyrKkj2McBX9/9m+VOBtxNOdk24fiZc2A8dMt8oNdNQIMr3rg/A4
-         Nk5oP1HNkPoPqGuhtOlyykW77voK170kDa/fBexSVOC0DWP0BzX95QZ+EpJ8DTyMDPDD
-         av3RNuydhWti1KJwnIuUh5dhTCjbo6dc/XUNJE1zoFobvVhHj4P0G5QeULr3TpiYPsYK
-         XyrBM47dZhYGhhVG8cRWph84UnllZFKsprQytJ+3W3Q1ohvjftKQPp+j3lzTEfojw4uL
-         PnAytchskRKvJ3TMn8pzcELktOm7VBUFDI7dVDuMsWVt/I4up3zNwOF0hj2bhrVFaTCY
-         TvmQ==
-X-Gm-Message-State: AOAM5332iffJetQlB0hlJvORA8nWP1p2YWt/vgmZZ34PzNqFTbmae14a
-        UR/Pbkaj8VAObFV417H8kuk=
-X-Google-Smtp-Source: ABdhPJzPwatony6Cjt8uiw1I+bb2q4igHjoQj2S+/ZwwO9vnHpqlg5m64LJZADjKjjMfX4mcscdugQ==
-X-Received: by 2002:a5d:464e:: with SMTP id j14mr69427633wrs.393.1594419614348;
-        Fri, 10 Jul 2020 15:20:14 -0700 (PDT)
+        bh=zBfQN+vRaGSFliSIC9sUYYBlJBWdf+Mc3nVjYABa6uc=;
+        b=RCAB86vdOv/lJ+qq7BPvtI8I7JSdMKXabcuog0MgKtqLWDv0zIyW7aKLHUKdHe5Fc1
+         mT8bVfelxZDm3fEzdZl9Krkus1SeZAjH/lGXSAaaKocn25Ct5yVwQh6m2uORxPdA4dH0
+         6syb8pN5MDBzjtkhysRfOb5LV6Tne6nT+zn1dUbhaJAqSWJzIUw94OGbPdCaTh1nA4jz
+         u3nKr3UayS3ZJc7CElaAqGU/hxwZPkQ/y8kbeCn+uBEqPFV+hVGHG54Xe0pWKlHfXzJx
+         tjq7n7du0St4OVfV15uKqjnHdNlfi0EiVKI6liUnuzq0tR+cbyAZaabifDOLJKBIQxk6
+         S9Og==
+X-Gm-Message-State: AOAM530kIlzH+7q8FtL5sWrWPwbZlNas8jH27yonhjJgaky6F9+sq0OA
+        4c2FR28AyxqjuGErIQF/Pj0=
+X-Google-Smtp-Source: ABdhPJyfeh9pQCHsK+AR0ZiTfubZZSMON0PFLNp3rQLm4JcDpLNUMt2j2BpVH5xqfzX/lX304gQmIg==
+X-Received: by 2002:a1c:4086:: with SMTP id n128mr7445658wma.118.1594419616792;
+        Fri, 10 Jul 2020 15:20:16 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id l18sm12170281wrm.52.2020.07.10.15.20.13
+        by smtp.gmail.com with ESMTPSA id l18sm12170281wrm.52.2020.07.10.15.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 15:20:13 -0700 (PDT)
+        Fri, 10 Jul 2020 15:20:16 -0700 (PDT)
 From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Lukas Wunner <lukas@wunner.de>,
-        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/14 v3] PCI: pciehp: Check the return value of pcie_capability_read_*()
-Date:   Fri, 10 Jul 2020 23:20:17 +0200
-Message-Id: <20200710212026.27136-6-refactormyself@gmail.com>
+Subject: [PATCH 7/14 v3] PCI: pciehp: Check the return value of pcie_capability_read_*()
+Date:   Fri, 10 Jul 2020 23:20:19 +0200
+Message-Id: <20200710212026.27136-8-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200710212026.27136-1-refactormyself@gmail.com>
 References: <20200710212026.27136-1-refactormyself@gmail.com>
@@ -79,82 +79,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-On any failure pcie_capability_read_word() sets it's last parameter,
-*val to 0, this value may have be earlier set by pci_config_read_word()
-to ~0. So, any function which check only for a frabricated ~0 will fail
-in this case.
+If pcie_capability_read_word() fail, slot_ctrl will be 0 and the switch
+expression evaluates to 0. So *status = 1 "ON". However, with Patch 14/14
+it is possible that slot_ctrl is set to ~0 on failure. This would 
+introduce a bug because (x & x) == (~0 & x), so the switch expression
+evaluates to PCI_EXP_SLTCTL_PCC. This means that on failure *status = 1
+"OFF", since PCI_EXP_SLTCTL_PCC = PCI_EXP_SLTCTL_PWR_OFF.
 
-Checking for the return value of pcie_capability_read_dword() will help
-assert failure or success of this function. But more checks may be needed
-to assure the validity of the value.
-
-Include a check on the return value of pcie_capability_read_word() to
-confirm success or failure.
+Use an if-statement and include a check on the return value of
+pcie_capability_read_word() to confirm success or failure.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 53433b37e181..5af281d97d4f 100644
+index b89c9ee4a3b5..f5ef3fbace69 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -86,10 +86,11 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+@@ -394,20 +394,16 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
  {
  	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 slot_status;
+ 	u16 slot_ctrl;
 +	int ret;
- 
- 	do {
--		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
--		if (slot_status == (u16) ~0) {
-+		ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-+		if (ret || (slot_status == (u16) ~0)) {
- 			ctrl_info(ctrl, "%s: no response from device\n",
- 				  __func__);
- 			return 0;
-@@ -156,6 +157,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
- {
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 slot_ctrl_orig, slot_ctrl;
-+	int ret;
- 
- 	mutex_lock(&ctrl->ctrl_lock);
- 
-@@ -164,8 +166,8 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
- 	 */
- 	pcie_wait_cmd(ctrl);
  
 -	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
--	if (slot_ctrl == (u16) ~0) {
++	*status = 1;	/* On */
 +	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-+	if (ret || (slot_ctrl == (u16) ~0)) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
- 		goto out;
- 	}
-@@ -430,7 +432,7 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
-  * removed immediately after the check so the caller may need to take
-  * this into account.
-  *
-- * It the hotplug controller itself is not available anymore returns
-+ * If the hotplug controller itself is not available anymore returns
-  * %-ENODEV.
-  */
- int pciehp_card_present(struct controller *ctrl)
-@@ -591,8 +593,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	}
+ 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x value read %x\n", __func__,
+ 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
  
- read_status:
--	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
--	if (status == (u16) ~0) {
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
-+	if (ret || (status == (u16) ~0)) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
- 		if (parent)
- 			pm_runtime_put(parent);
+-	switch (slot_ctrl & PCI_EXP_SLTCTL_PCC) {
+-	case PCI_EXP_SLTCTL_PWR_OFF:
++	if (!ret &&
++		((slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF))
+ 		*status = 0;	/* Off */
+-		break;
+-	case PCI_EXP_SLTCTL_PWR_ON:
+-	default:
+-		*status = 1;	/* On */
+-		break;
+-	}
+ }
+ 
+ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
 -- 
 2.18.2
 
