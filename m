@@ -2,248 +2,139 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0275BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1BD52078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49908207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4hbIimD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgGJIT7 (ORCPT
+        id S1726962AbgGJIVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
+        Fri, 10 Jul 2020 04:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgGJIT6 (ORCPT
+        with ESMTP id S1726004AbgGJIVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:19:58 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029C2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:19:58 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jtoGB-0008Kp-Uh; Fri, 10 Jul 2020 10:19:56 +0200
-Message-ID: <6098f2549eb96348af0ba062d87a716f20d1af1c.camel@pengutronix.de>
-Subject: Re: [PATCH 2/4] drm/etnaviv: add loadavg accounting
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     cphealy@gmail.com, Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Date:   Fri, 10 Jul 2020 10:19:54 +0200
-In-Reply-To: <20200710074143.306787-3-christian.gmeiner@gmail.com>
-References: <20200710074143.306787-1-christian.gmeiner@gmail.com>
-         <20200710074143.306787-3-christian.gmeiner@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 10 Jul 2020 04:21:14 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D700C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:21:14 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so4974213wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ynM2bWxeTn3B4stC5l/mKdyKaAKd6qyXtb9n0JAnXl4=;
+        b=M4hbIimDWHDxIoruPmVjldouGQ0JTd7k2pZVcvJqCY8mySTjJ5pjjutdN2Ii65L4uN
+         Kr12V8DVUvNSPBeDsNCkpeI0NfUWGtZ6CCOj2h53ons0CGCJn5kZXuUbgwx8Qku5oYE+
+         Oo+ER0fV4J0DB0Lkd/SiZnXUiBmYZ9z505Ln+5+7tosaaPf9cwHD9WwsXhEi/dYhM0Mo
+         2NdSx+evdM/1bkqNdeV0qPvKIhi0tfQbmDVK4Eh+HfMleM8eoBg4+kARnj8qzOYwjrEI
+         DMS+tV1eAYdvwi5v9Q+UC3i7K0b9jwOXLdDRB4ZHbkdE36mJ+k01jJ/VrEmMwIlV735p
+         lRyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ynM2bWxeTn3B4stC5l/mKdyKaAKd6qyXtb9n0JAnXl4=;
+        b=kMyzKpDEVVImmnjmxLDjsMKFZH1InFx4k7VJUdzFVRg6XSWxNs4Ofn4cCPjRNDSLKq
+         RQngDmQ823TULTVOn5PYtx5i+D7bMWJMZH4vJVvwztDB1TGWoY+5sOBId0KSDFXhAPtf
+         bmMhfXGRg6ReU+mNrZxzrGXKxC2noUdxZf3OBRXze5zmnfWJf9nZRywKp8owv9W01Zbl
+         AVexNnNIAVUoj9s7qQXMAXltZ5eYCAYE9J7u3wHvnVZWz6S2OHTW5hBjCOo89v7e3YUH
+         ShaiH1kh8RRY9OYgx35pjb5geC9LuiLXMPFtQLHLceelbiEN3+73xrumc15LtoJycXK0
+         kHsg==
+X-Gm-Message-State: AOAM530V3C4Hkxl00w2JDabw52V5BJnSGU9VO8XLMJGKR6HA9hyYrPpA
+        VMlsU2vO90LBS/SMQbb9x79QPg==
+X-Google-Smtp-Source: ABdhPJzZLZzBvSRLSRAJRsB3jQELprbOVOua3kFEM8pXN4wt4he7YoHxeiwH0kL7aV6pdF08UEO8/g==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr71994886wrm.390.1594369272647;
+        Fri, 10 Jul 2020 01:21:12 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:5569:1070:a96a:6ac])
+        by smtp.gmail.com with ESMTPSA id q3sm7939260wmq.22.2020.07.10.01.21.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 01:21:11 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     valentin.schneider@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] sched/fair: handle case of task_h_load() returning 0
+Date:   Fri, 10 Jul 2020 10:21:05 +0200
+Message-Id: <20200710082105.3809-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+task_h_load() can return 0 in some situations like running stress-ng
+mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+system. The load balance doesn't handle this correctly because
+env->imbalance never decreases and it will stop pulling tasks only after
+reaching loop_max, which can be equal to the number of running tasks of
+the cfs. Make sure that imbalance will be decreased by at least 1.
 
-Am Freitag, den 10.07.2020, 09:41 +0200 schrieb Christian Gmeiner:
-> The GPU has an idle state register where each bit represents the idle
-> state of a sub-GPU component like FE or TX. Sample this register
-> every 10ms and calculate a simple moving average over the sub-GPU
-> component idle states with a total observation time frame of 1s.
-> 
-> This provides us with a percentage based load of each sub-GPU
-> component.
-> 
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 14 ++++++++++++
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 32 +++++++++++++++++++++++++++
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.h | 29 ++++++++++++++++++++++++
->  3 files changed, 75 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> index f9afe11c50f0..b31920241c86 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> @@ -46,6 +46,19 @@ static void load_gpu(struct drm_device *dev)
->  	}
->  }
->  
-> +static void unload_gpu(struct drm_device *dev)
-> +{
-> +	struct etnaviv_drm_private *priv = dev->dev_private;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ETNA_MAX_PIPES; i++) {
-> +		struct etnaviv_gpu *g = priv->gpu[i];
-> +
-> +		if (g)
-> +			etnaviv_gpu_shutdown(g);
-> +	}
-> +}
-> +
->  static int etnaviv_open(struct drm_device *dev, struct drm_file *file)
->  {
->  	struct etnaviv_drm_private *priv = dev->dev_private;
-> @@ -581,6 +594,7 @@ static void etnaviv_unbind(struct device *dev)
->  	struct drm_device *drm = dev_get_drvdata(dev);
->  	struct etnaviv_drm_private *priv = drm->dev_private;
->  
-> +	unload_gpu(drm);
->  	drm_dev_unregister(drm);
->  
->  	component_unbind_all(dev, drm);
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> index a31eeff2b297..1f0eb7e00657 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -714,6 +714,28 @@ static void etnaviv_gpu_hw_init(struct etnaviv_gpu *gpu)
->  	gpu_write(gpu, VIVS_HI_INTR_ENBL, ~0U);
->  }
->  
-> +static void etnaviv_loadavg_function(struct timer_list *t)
-> +{
-> +	struct etnaviv_gpu *gpu = from_timer(gpu, t, loadavg_timer);
-> +	const u32 idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
+misfit task is the other feature that doesn't handle correctly such
+situation although it's probably more difficult to face the problem
+because of the smaller number of CPUs and running tasks on heterogenous
+system.
 
-This isn't guaranteed to work on a clock/power gated GPU. Also we
-surely don't want to wake a idle system every 10ms just to sample a "no
-load" value, so this needs some integration with runtime PM, to disable
-the sampling when the GPU is powered down and enable when powered up.
-The loadavg must be able to adapt to jumps in the sampling interval
-while idle.
+We can't simply ensure that task_h_load() returns at least one because it
+would imply to handle underflow in other places.
 
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(etna_idle_module_names); i++)
-> +		if ((idle & etna_idle_module_names[i].bit))
-> +			sma_loadavg_add(&gpu->loadavg_value[i], 0);
-> +		else
-> +			sma_loadavg_add(&gpu->loadavg_value[i], 100);
-> +
-> +	spin_lock_bh(&gpu->loadavg_spinlock);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(etna_idle_module_names); i++)
-> +		gpu->loadavg_percentage[i] = sma_loadavg_read(&gpu->loadavg_value[i]);
-> +
-> +	spin_unlock_bh(&gpu->loadavg_spinlock);
-> +
-> +	mod_timer(t, jiffies + msecs_to_jiffies(10));
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+---
 
-A jiffies based timer is much too coarse for a regular 10ms sampling.
-On a typical 100Hz system 10ms is a single jiffy, so your timer will
-fire anywhere in the range of ~0ms...~20ms. This won't get us a usable
-measurement.
+Changes v2:
+- use max() instead of adding 1
+- add review and tested tag
 
-Regards,
-Lucas
+ kernel/sched/fair.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-> +}
-> +
->  int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
->  {
->  	struct etnaviv_drm_private *priv = gpu->drm->dev_private;
-> @@ -804,6 +826,10 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
->  	for (i = 0; i < ARRAY_SIZE(gpu->event); i++)
->  		complete(&gpu->event_free);
->  
-> +	/* Setup loadavg timer */
-> +	timer_setup(&gpu->loadavg_timer, etnaviv_loadavg_function, 0);
-> +	mod_timer(&gpu->loadavg_timer, jiffies + msecs_to_jiffies(10));
-> +
->  	/* Now program the hardware */
->  	mutex_lock(&gpu->lock);
->  	etnaviv_gpu_hw_init(gpu);
-> @@ -824,6 +850,11 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
->  	return ret;
->  }
->  
-> +void etnaviv_gpu_shutdown(struct etnaviv_gpu *gpu)
-> +{
-> +	del_timer(&gpu->loadavg_timer);
-> +}
-> +
->  #ifdef CONFIG_DEBUG_FS
->  struct dma_debug {
->  	u32 address[2];
-> @@ -1762,6 +1793,7 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
->  	gpu->dev = &pdev->dev;
->  	mutex_init(&gpu->lock);
->  	mutex_init(&gpu->fence_lock);
-> +	spin_lock_init(&gpu->loadavg_spinlock);
->  
->  	/* Map registers: */
->  	gpu->mmio = devm_platform_ioremap_resource(pdev, 0);
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> index 8ea48697d132..a5b9c89c6744 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> @@ -10,6 +10,8 @@
->  #include "etnaviv_gem.h"
->  #include "etnaviv_mmu.h"
->  #include "etnaviv_drv.h"
-> +#include "etnaviv_sma.h"
-> +#include "state_hi.xml.h"
->  
->  struct etnaviv_gem_submit;
->  struct etnaviv_vram_mapping;
-> @@ -91,6 +93,26 @@ struct clk;
->  
->  #define ETNA_NR_EVENTS 30
->  
-> +DECLARE_SMA(loadavg, 100)
-> +
-> +static const struct {
-> +    const char *name;
-> +    u32 bit;
-> +} etna_idle_module_names[] = {
-> +    { "FE", VIVS_HI_IDLE_STATE_FE },
-> +    { "DE", VIVS_HI_IDLE_STATE_DE },
-> +    { "PE", VIVS_HI_IDLE_STATE_PE },
-> +    { "SH", VIVS_HI_IDLE_STATE_SH },
-> +    { "PA", VIVS_HI_IDLE_STATE_PA },
-> +    { "SE", VIVS_HI_IDLE_STATE_SE },
-> +    { "RA", VIVS_HI_IDLE_STATE_RA },
-> +    { "TX", VIVS_HI_IDLE_STATE_TX },
-> +    { "VG", VIVS_HI_IDLE_STATE_VG },
-> +    { "IM", VIVS_HI_IDLE_STATE_IM },
-> +    { "FP", VIVS_HI_IDLE_STATE_FP },
-> +    { "TS", VIVS_HI_IDLE_STATE_TS },
-> +};
-> +
->  struct etnaviv_gpu {
->  	struct drm_device *drm;
->  	struct thermal_cooling_device *cooling;
-> @@ -145,6 +167,12 @@ struct etnaviv_gpu {
->  	unsigned int freq_scale;
->  	unsigned long base_rate_core;
->  	unsigned long base_rate_shader;
-> +
-> +	/* Loadavg: */
-> +	struct timer_list loadavg_timer;
-> +	spinlock_t loadavg_spinlock;
-> +	struct sma_loadavg loadavg_value[ARRAY_SIZE(etna_idle_module_names)];
-> +	unsigned int loadavg_percentage[ARRAY_SIZE(etna_idle_module_names)];
->  };
->  
->  static inline void gpu_write(struct etnaviv_gpu *gpu, u32 reg, u32 data)
-> @@ -160,6 +188,7 @@ static inline u32 gpu_read(struct etnaviv_gpu *gpu, u32 reg)
->  int etnaviv_gpu_get_param(struct etnaviv_gpu *gpu, u32 param, u64 *value);
->  
->  int etnaviv_gpu_init(struct etnaviv_gpu *gpu);
-> +void etnaviv_gpu_shutdown(struct etnaviv_gpu *gpu);
->  bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu);
->  
->  #ifdef CONFIG_DEBUG_FS
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b9b9f19e80c1..ffd23caa5799 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4049,7 +4049,11 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ 		return;
+ 	}
+ 
+-	rq->misfit_task_load = task_h_load(p);
++	/*
++	 * Make sure that misfit_task_load will not be null even if
++	 * task_h_load() returns 0.
++	 */
++	rq->misfit_task_load = max(task_h_load(p), 1);
+ }
+ 
+ #else /* CONFIG_SMP */
+@@ -7648,7 +7652,14 @@ static int detach_tasks(struct lb_env *env)
+ 
+ 		switch (env->migration_type) {
+ 		case migrate_load:
+-			load = task_h_load(p);
++			/*
++			 * Depending of the number of CPUs and tasks and the
++			 * cgroup hierarchy, task_h_load() can return a null
++			 * value. Make sure that env->imbalance decreases
++			 * otherwise detach_tasks() will stop only after
++			 * detaching up to loop_max tasks.
++			 */
++			load = max(task_h_load(p), 1);
+ 
+ 			if (sched_feat(LB_MIN) &&
+ 			    load < 16 && !env->sd->nr_balance_failed)
+-- 
+2.17.1
 
