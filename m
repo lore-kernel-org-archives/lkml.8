@@ -2,141 +2,66 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA21DC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B350D2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgVJrxlU"
+	by mail.kernel.org (Postfix) with ESMTP id 58B422078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgGJQ5x (ORCPT
+        id S1728246AbgGJRDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgGJQ5x (ORCPT
+        Fri, 10 Jul 2020 13:03:17 -0400
+Received: from out28-2.mail.aliyun.com ([115.124.28.2]:49407 "EHLO
+        out28-2.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgGJRDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:57:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305A2C08C5DC;
-        Fri, 10 Jul 2020 09:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=REVCDakwgDG+DYRws7LZzQi4QLzZc//D1GvkmuJe/WI=; b=dgVJrxlUyxMQ21th+aRn2MrSte
-        FdbzjRbZu8cLN84tlxqHdpFUtzI8O95wTMXQ/rcd+AaWG72Fv2A7dITBe7ZOMYqOkJkP5Wl2RDVQI
-        PrmqKB+qfPCs2PhwcxeQZndW25BDLWlRghD4B9Re6xZnguBBMY+GfbMomE2r+5y9IDCsfAeIH/DmH
-        C9EnZqB7WqxgWix+ggL/mp49WUS29EzpgQePI53Ku3ta6GNOlTwRLtiwQ46aA8MwI0KaYXr5V8FDZ
-        QO3Rc9Rco4kbnB4D8KC0p+ua5rvu7TpfJ+SFN8HchKD8BAzsrCCyjPu/Ro1bimWM5UAQlpTmOh6dY
-        AZQhWk4A==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtwLK-0005Nl-8U; Fri, 10 Jul 2020 16:57:46 +0000
-Date:   Fri, 10 Jul 2020 17:57:46 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
-        linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Idan Yaniv <idan.yaniv@ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
- available
-Message-ID: <20200710165746.GO12769@casper.infradead.org>
-References: <20200706172051.19465-1-rppt@kernel.org>
- <20200706172051.19465-2-rppt@kernel.org>
- <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
- <20200710164037.GA11749@redhat.com>
+        Fri, 10 Jul 2020 13:03:16 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.411383|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00903296-0.000207816-0.990759;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I.khRXN_1594400587;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I.khRXN_1594400587)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Sat, 11 Jul 2020 01:03:13 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v6 0/2] Add support for the OST in Ingenic X1000.
+Date:   Sat, 11 Jul 2020 01:02:57 +0800
+Message-Id: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710164037.GA11749@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:40:37PM -0400, Andrea Arcangeli wrote:
-> Hello Hugh and Mike,
-> 
-> On Mon, Jul 06, 2020 at 10:07:34PM -0700, Hugh Dickins wrote:
-> > Adding Andrea to Cc, he's the one who structured it that way,
-> > and should be consulted.
-> >
-> > I'm ambivalent myself.  Many's the time I've been irritated by the
-> > BUILD_BUG() in HPAGE_etc, and it's responsible for very many #ifdef
-> > CONFIG_TRANSPARENT_HUGEPAGEs or IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)s
-> > that you find uglily scattered around the source.
-> > 
-> > But that's the point of it: it's warning when you write code peculiar
-> > to THP, that is going to bloat the build of kernels without any THP.
-> > 
-> > So although I've often been tempted to do as you suggest, I've always
-> > ended up respecting Andrea's intention, and worked around it instead
-> > (sometimes with #ifdef or IS_ENABLED(), sometimes with
-> > PMD_{SHIFT,MASK_SIZE}, sometimes with a local definition).
-> 
-> The only other reasons that comes to mind in addition of optimizing
-> the bloat away at build time is to make it easier to identify the THP
-> code and to make it explicit that hugetlbfs shouldn't us it or it
-> could be wrong on some arches.
-> 
-> However for this case the BUILD_BUG() looks right and this doesn't
-> look like a false positive.
-> 
-> This patchset has nothing to do THP, so it'd be more correct to use
-> MAX_ORDER whenever the fragmentation is about the buddy (doesn't look
-> the case here) or PUD_SIZE/ORDER/PMD_SIZE/ORDER if the objective is
-> not to unnecessarily split extra and unrelated hugepud/hugepmds in the
-> direct mapping (as in this case).
-> 
-> The real issue exposed by the BUILD_BUG is the lack of PMD_ORDER
-> definition and fs/dax.c already run into and it solved it locally in the
-> dax.c file:
-> 
-> /* The order of a PMD entry */
-> #define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
-> 
-> The fact it's not just this patch but also dax.c that run into the
-> same issue, makes me think PMD_ORDER should be defined and then you
-> can use PMD_* and PUD_* for this non-THP purpose.
+v5->v6:
+1.Drop "oneOf" and the blank line in "ingenic,sysost.yaml".
+2.Add "additionalProperties: false" in "ingenic,sysost.yaml".
 
-We'll run into some namespace issues.
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: timer: Add Ingenic X1000 OST bindings.
+  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
 
-arch/arm/kernel/head.S:#define PMD_ORDER        3
-arch/arm/kernel/head.S:#define PMD_ORDER        2
-arch/mips/include/asm/pgtable-32.h:#define PMD_ORDER    aieeee_attempt_to_allocate_pmd
-arch/mips/include/asm/pgtable-64.h:#define PMD_ORDER            0
-arch/parisc/include/asm/pgtable.h:#define PMD_ORDER     1 /* Number of pages per pmd */
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+ drivers/clocksource/Kconfig                        |  11 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
+ include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+ 5 files changed, 626 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+ create mode 100644 drivers/clocksource/ingenic-sysost.c
+ create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
 
-> Then the question if to remove the BUILD_BUG becomes orthogonal to
-> this patchset, but I don't see much value in retaining HPAGE_PMD/PUD_*
-> unless the BUILD_BUG is retained too, because this patchset already
-> hints that without the BUILD_BUG() the HPAGE_PMD_* definitions would
-> likely spill into non THP paths and they would lose also the only
-> value left (the ability to localize the THP code paths). So I wouldn't
-> be against removing the BUILD_BUG if it's causing maintenance
-> overhead, but then I would drop HPAGE_PMD_* too along with it or it
-> may just cause confusion.
+-- 
+2.11.0
 
-btw, using the hpage_ prefix already caused one problem in the hugetlb
-code:
-
-https://lore.kernel.org/linux-mm/20200629185003.97202-1-mike.kravetz@oracle.com/
-
-I'd suggest we rename these to THP_PMD_* and THP_PUD_* to make it clear
-they're only for the THP case.
