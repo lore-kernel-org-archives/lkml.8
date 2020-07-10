@@ -2,99 +2,117 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7633C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C948C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8874620853
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594383908;
-	bh=8EsGM1/sIwTVcpAQe7TEUsY+6kH9ifOWJML/Kic2iSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TFYF+5hy2hasmQvQxFgPd6DCB1p0oEefDfOZC4jDbpfOPpvWCxadfGsCKHpSgd2BH
-	 lstEr+lL4iRNaGk0n5n70acZCJvcMets7SwgFbTavR+aFs3cZI+t9INO1jYC2eJkZT
-	 wc9PAGV+PN747nUqr5EYum0Ho37pCypB8ZnQSyH8=
+	by mail.kernel.org (Postfix) with ESMTP id 02B8D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgGJMZG (ORCPT
+        id S1727844AbgGJMZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgGJMZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:25:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C45C20748;
-        Fri, 10 Jul 2020 12:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594383905;
-        bh=8EsGM1/sIwTVcpAQe7TEUsY+6kH9ifOWJML/Kic2iSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qs3++11iHmi6cHhyL2ddXR+69yYnAcSTUfjvJ0rEtCPSGwhGnwMmyN0ilbN3gnaU0
-         i6VQCxj+JDFg728QUQ0q3xK7n6OGn+C34qjRXj6KxaDzROxXluUTyUKPzDlqLAgxh5
-         7q/yuFywcbrbpJuSzMwQ3V00QRO8tP2uo6Y4a17Y=
-Date:   Fri, 10 Jul 2020 13:24:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: sound/soc/codecs/zl38060.c:614:34: warning: unused variable
- 'zl38_dt_ids'
-Message-ID: <20200710122459.GE5653@sirena.org.uk>
-References: <20200710024100.GA2055744@ubuntu-n2-xlarge-x86>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EgVrEAR5UttbsTXg"
-Content-Disposition: inline
-In-Reply-To: <20200710024100.GA2055744@ubuntu-n2-xlarge-x86>
-X-Cookie: Use only in a well-ventilated area.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 Jul 2020 08:25:50 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:51754 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726725AbgGJMZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:25:50 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
+        with SMTP; 10 Jul 2020 15:25:47 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06ACPlqV012364;
+        Fri, 10 Jul 2020 15:25:47 +0300
+Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06ACPlHg003367;
+        Fri, 10 Jul 2020 15:25:47 +0300
+Received: (from moshe@localhost)
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06ACPlYU003366;
+        Fri, 10 Jul 2020 15:25:47 +0300
+From:   Moshe Shemesh <moshe@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
+Subject: [PATCH net-next v3 0/7] Add devlink-health support for devlink ports
+Date:   Fri, 10 Jul 2020 15:25:06 +0300
+Message-Id: <1594383913-3295-1-git-send-email-moshe@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Implement support for devlink health reporters on per-port basis.
 
---EgVrEAR5UttbsTXg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patchset comes to fix a design issue as some health reporters report
+on errors and run recovery on device level while the actual functionality
+is on port level. As for the current implemented devlink health reporters
+it is relevant only to Tx and Rx reporters of mlx5, which has only one
+port, so no real effect on functionality, but this should be fixed before
+more drivers will use devlink health reporters.
 
-On Thu, Jul 09, 2020 at 07:41:00PM -0700, Nathan Chancellor wrote:
+First part in the series prepares common functions parts for health
+reporter implementation. Second introduces required API to devlink-health
+and mlx5e ones demonstrate its usage and implement the feature for mlx5
+driver.
 
-> When CONFIG_SND_SOC_ZL38060 is y, MODULE_DEVICE_TABLE expands to nothing
-> so zl38_dt_ids will be unused. This is a pretty common construct in the
-> kernel and the only way I can think of to resolve this through the code
-> is by adding __used annotations to all of these variables, which I think
-> is overkill for this.
+The per-port reporter functionality is achieved by adding a list of
+devlink_health_reporters to devlink_port struct in a manner similar to
+existing device infrastructure. This is the only major difference and
+it makes possible to fully reuse device reporters operations.
+The effect will be seen in conjunction with iproute2 additions and
+will affect all devlink health commands. User can distinguish between
+device and port reporters by looking at a devlink handle. Port reporters
+have a port index at the end of the address and such addresses can be
+provided as a parameter in every place where devlink-health accepted it.
+These can be obtained from devlink port show command.
+For example:
+$ devlink health show
+pci/0000:00:0a.0:
+  reporter fw
+    state healthy error 0 recover 0 auto_dump true
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 500 auto_recover true auto_dump true
+$ devlink health set pci/0000:00:0a.0/1 reporter tx grace_period 1000 \
+auto_recover false auto_dump false
+$ devlink health show pci/0000:00:0a.0/1 reporter tx
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 1000 auto_recover flase auto_dump false
 
-> Personally, I think this warning should be downgraded to W=2, thoughts?
+Note: User can use the same devlink health uAPI commands can get now either
+port health reporter or device health reporter.
+For example, the recover command:
+Before this patchset: devlink health recover DEV reporter REPORTER_NAME
+After this patchset: devlink health recover { DEV | DEV/PORT_INDEX } reporter REPORTER_NAME
 
-We've had that warning available for ever, we shouldn't need to disable
-it now.  I had thought there was supposed to be magic which caused
-of_match_ptr() to make things look referenced when !OF but don't seem to
-actually see any sign of it.  The other thing is to just have ifdefs
-around the table.
+Changes v1 -> v2:
+Fixed functions comment to match parameters list.
 
---EgVrEAR5UttbsTXg
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes v2 -> v3:
+Added motivation to cover letter and note on uAPI.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8IXhsACgkQJNaLcl1U
-h9DSGwf+MlJ4XSqif2TolBc5SBPYppVlodlEgCHk63vcT2C70y5Ddq4UJ3FrWKTQ
-qWkFsOf+ACwdiYjrJAD91zKvpMimbnvSzUdMg3hkLTieIrAv7OAmvG3eyXP1pYpX
-5lYunnsdyrIgikmN2pZZDwi8gXkIerPjyYmI1P353ZnPS2MG/B79F8VQmFyxzqdm
-bx9wJ12Xd23mMm22I3UI816P2U8kAwph9kfio1OEgTjGspflwgWOjib4zGkeABJT
-e39lX81b4/vUg420RgSnKVRQ8OOn3SN1mumsQzGD4scsJw+iVXEpgCLUu+lv6VvU
-8hptWqRd09bWQneLsD7Qy15R1/+4HQ==
-=5G8g
------END PGP SIGNATURE-----
+Vladyslav Tarasiuk (7):
+  devlink: Refactor devlink health reporter constructor
+  devlink: Rework devlink health reporter destructor
+  devlink: Create generic devlink health reporter search function
+  devlink: Implement devlink health reporters on per-port basis
+  devlink: Add devlink health port reporters API
+  net/mlx5e: Move devlink port register and unregister calls
+  net/mlx5e: Move devlink-health rx and tx reporters to devlink port
 
---EgVrEAR5UttbsTXg--
+ .../ethernet/mellanox/mlx5/core/en/reporter_rx.c   |   9 +-
+ .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |  13 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  15 +-
+ include/net/devlink.h                              |  11 +
+ net/core/devlink.c                                 | 244 ++++++++++++++++-----
+ 5 files changed, 216 insertions(+), 76 deletions(-)
+
+-- 
+1.8.3.1
+
