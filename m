@@ -2,86 +2,205 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32213C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18095C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 119222070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3552070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="dsH+4T8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgGJBVO (ORCPT
+        id S1726802AbgGJBXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:21:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726265AbgGJBVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:21:14 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5C638CEB53E9A7DF348C;
-        Fri, 10 Jul 2020 09:21:09 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.75) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Jul 2020
- 09:21:02 +0800
-Subject: Re: [RESEND PATCH v5 3/6] arm64: Add tlbi_user_level TLB invalidation
- helper
-To:     Catalin Marinas <catalin.marinas@arm.com>
-CC:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
-        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200625080314.230-1-yezhenyu2@huawei.com>
- <20200625080314.230-4-yezhenyu2@huawei.com> <20200709164845.GB6579@gaia>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <33a5dc75-8209-e198-bb41-8b4ab82c000e@huawei.com>
-Date:   Fri, 10 Jul 2020 09:20:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 9 Jul 2020 21:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgGJBXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 21:23:20 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15DDC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 18:23:20 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so3236664qtm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 18:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=acA/igAo30a/uCl3cBz3U/y5y8AevyEKVy7UxGUUYxc=;
+        b=dsH+4T8BdhSWefYHYWFQ/u1HiVUNOYQ+O//Un1N+lVHzfeFNnFH767VXY0rcfFs/Y5
+         xVbfaksx9r/gHe9XO0ZRNkwjH2D1yjQVguFR15valzovyT2ZcH5THOE9pw+DKW1+Uk+/
+         dCUJQ6+DkeSEKNdjpRnitubWIfLqPTfeSXUYQczqYgxmkmXaz8apdKEh/pOqdsubJoun
+         VN6AaVX9OVVz7a7it4/WpPR/SpkarCbW6Q0skMZQAxf/iYzgwKx1kFdxc6qSOmX0QauV
+         yDN91ApmSSvug9uGn/w2xX9fSpSzxBksAkH8Lmlqr8k4YkyD8YfRCACjEe5bPKZjN5zx
+         /IZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=acA/igAo30a/uCl3cBz3U/y5y8AevyEKVy7UxGUUYxc=;
+        b=VF6E/eVrcFlf+pe+7hPDrUYTPLcw5/i3epi0+yvWp/HllV7UDW+8HmH3YLjsB7A6iJ
+         7bdaBp+vmOSQd+QcmhrsYcyllKflrynEhKviCSYDQTKDvaM1T8GA9K12KNIW9x9VDEhS
+         zejlV8gttKjsXe6OCJYBmgQnNUiinYOuneqcz0SRwSsrqR66jtQTHyk40noQXb4blOC+
+         zTx2SMxgP55KQbkjd1K3DbZ3gNhRdfAa0D0kh0bSCn7spklUFNvGKS9LhzjlUAkptyMR
+         Ywfo9rgi2C4fw8xDhcZaamJb8t2VoPyeybYi8lByzcMh2khZv6NTuENqVpQ8Pbfm8RU3
+         +/AA==
+X-Gm-Message-State: AOAM532Lu0ytx1KN7lcCM/XgGGw9JgkFiNyO7194lWu3dogkw7xJo6aT
+        X9vsQBtr12f1C4YGKhGuq507A4rOKBYpBw==
+X-Google-Smtp-Source: ABdhPJzyBx+Q8CjazSRtYPQ6mgsBu8OB3HQQqNudAi5K/TmkVJJblFNOnB941nSlHFDCnPP68N7ojg==
+X-Received: by 2002:ac8:178b:: with SMTP id o11mr33358453qtj.320.1594344199613;
+        Thu, 09 Jul 2020 18:23:19 -0700 (PDT)
+Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id j24sm5379680qkl.79.2020.07.09.18.23.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 18:23:18 -0700 (PDT)
+Subject: Re: [PATCH] btrfs: fix mount failure caused by race with umount
+To:     Boris Burkov <boris@bur.io>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+References: <20200710004408.1246282-1-boris@bur.io>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <e2857658-230e-48e6-d6cf-587be4a8a0bc@toxicpanda.com>
+Date:   Thu, 9 Jul 2020 21:23:17 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200709164845.GB6579@gaia>
-Content-Type: text/plain; charset="gbk"
+In-Reply-To: <20200710004408.1246282-1-boris@bur.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
-
-On 2020/7/10 0:48, Catalin Marinas wrote:
-> On Thu, Jun 25, 2020 at 04:03:11PM +0800, Zhenyu Ye wrote:
->> @@ -189,8 +195,9 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
->>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
->>  
->>  	dsb(ishst);
->> -	__tlbi(vale1is, addr);
->> -	__tlbi_user(vale1is, addr);
->> +	/* This function is only called on a small page */
->> +	__tlbi_level(vale1is, addr, 3);
->> +	__tlbi_user_level(vale1is, addr, 3);
->>  }
+On 7/9/20 8:44 PM, Boris Burkov wrote:
+> It is possible to cause a btrfs mount to fail by racing it with a slow
+> umount. The crux of the sequence is generic_shutdown_super not yet
+> calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
+> If that occurs, btrfs_open_devices will decide the opened counter is
+> non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
+> 0. From here, mount will call sget which will result in grab_super
+> trying to take the super block umount semaphore. That semaphore will be
+> held by the slow umount, so mount will block. Before up-ing the
+> semaphore, umount will delete the super block, resulting in mount's sget
+> reliably allocating a new one, which causes the mount path to dutifully
+> fill it out, and increment total_rw_bytes a second time, which causes
+> the mount to fail, as we see double the expected bytes.
 > 
-> Actually, that's incorrect. It was ok in v2 of your patches when I
-> suggested to drop level 0, just leave the function unchanged but I
-> missed that you updated it to pass level 3.
+> Here is the sequence laid out in greater detail:
 > 
-> pmdp_set_access_flags -> ptep_set_access_flags ->
-> flush_tlb_fix_spurious_fault -> flush_tlb_page -> flush_tlb_page_nosync.
+> CPU0                                                    CPU1
+> down_write sb->s_umount
+> btrfs_kill_super
+>    kill_anon_super(sb)
+>      generic_shutdown_super(sb);
+>        shrink_dcache_for_umount(sb);
+>        sync_filesystem(sb);
+>        evict_inodes(sb); // SLOW
+> 
+>                                                btrfs_mount_root
+>                                                  btrfs_scan_one_device
+>                                                  fs_devices = device->fs_devices
+>                                                  fs_info->fs_devices = fs_devices
+>                                                  // fs_devices-opened makes this a no-op
+>                                                  btrfs_open_devices(fs_devices, mode, fs_type)
+>                                                  s = sget(fs_type, test, set, flags, fs_info);
+>                                                    find sb in s_instances
+>                                                    grab_super(sb);
+>                                                      down_write(&s->s_umount); // blocks
+> 
+>        sop->put_super(sb)
+>          // sb->fs_devices->opened == 2; no-op
+>        spin_lock(&sb_lock);
+>        hlist_del_init(&sb->s_instances);
+>        spin_unlock(&sb_lock);
+>        up_write(&sb->s_umount);
+>                                                      return 0;
+>                                                    retry lookup
+>                                                    don't find sb in s_instances (deleted by CPU0)
+>                                                    s = alloc_super
+>                                                    return s;
+>                                                  btrfs_fill_super(s, fs_devices, data)
+>                                                    open_ctree // fs_devices total_rw_bytes improperly set!
+>                                                      btrfs_read_chunk_tree
+>                                                        read_one_dev // increment total_rw_bytes again!!
+>                                                        super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+> 
+> To fix this, we observe that if we have already filled the device, the
+> state bit BTRFS_DEV_STATE_IN_FS_METADATA will be set on it, and we can
+> use that to avoid filling it a second time for no reason and,
+> critically, avoid double counting in total_rw_bytes. One gotcha is that
+> read_one_chunk also sets this bit, which happens before read_one_dev (in
+> read_sys_array), so we must remove that setting of the bit as well, for
+> the state bit to truly correspond to the device struct being filled from
+> disk.
+> 
+> To reproduce, it is sufficient to dirty a decent number of inodes, then
+> quickly umount and mount.
+> 
+> for i in $(seq 0 500)
+> do
+>    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
+> done
+> umount /mnt/foo&
+> mount /mnt/foo
+> 
+> does the trick for me.
+> 
+> A final note is that this fix actually breaks the fstest btrfs/163, but
+> having investigated it, I believe that is due to a subtle flaw in how
+> btrfs replace works when used on a seed device. The replace target device
+> never gets a correct dev_item with the sprout fsid written out. This
+> causes several problems, but for the sake of btrfs/163, read_one_chunk
+> marking the device with IN_FS_METADATA was wallpapering over it, which
+> this patch breaks. I will be sending a subsequent fix for the seed replace
+> issue which will also fix btrfs/163.
+> 
+> Signed-off-by: Boris Burkov <boris@bur.io>
+> ---
+>   fs/btrfs/volumes.c | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> index c7a3d4d730a3..1d9bd1bbf893 100644
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -6633,9 +6633,6 @@ static int read_one_chunk(struct btrfs_key *key, struct extent_buffer *leaf,
+>   			}
+>   			btrfs_report_missing_device(fs_info, devid, uuid, false);
+>   		}
+> -		set_bit(BTRFS_DEV_STATE_IN_FS_METADATA,
+> -				&(map->stripes[i].dev->dev_state));
+> -
+>   	}
+>   
+>   	write_lock(&map_tree->lock);
+> @@ -6815,6 +6812,15 @@ static int read_one_dev(struct extent_buffer *leaf,
+>   			return -EINVAL;
+>   	}
+>   
+> +	/*
+> +	 * It is possible for mount and umount to race in such a way that
+> +	 * we execute this code path, but the device is still in metadata.
+> +	 * If so, we don't need to call fill_device_from_item again and we
+> +	 * especially don't want to spuriously increment total_rw_bytes.
+> +	 */
+> +	if (test_bit(BTRFS_DEV_STATE_IN_FS_METADATA, &device->dev_state)) {
+> +		return 0;
+> +	}
 
-How do you want to fix this error? I notice that this series have been applied
-to arm64 (for-next/tlbi).  Should I send a new series based on arm64 (for-next/tlbi)?
+Lets kill the set_bit below, and changes this to
 
-Thanks,
-Zhenyu
+if (test_and_set_bit())
 
+also you don't need {} for single line if statements.  Thanks,
+
+Josef
