@@ -2,91 +2,124 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7694C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA8720720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8D320720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qHk3nOy8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CFMG762A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGJElk (ORCPT
+        id S1726816AbgGJEn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:41:40 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:34087 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725851AbgGJElj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:41:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594356099; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=OVjdWKa1KuoweAYyp7yqaqBQuL2K9SPqsc9S8yXQW08=; b=qHk3nOy8fqYNkmRKDvY9alyunxSNRhpHZFWdxJwIJLq90nwe4mplY/uMdxQrWAGAZ86bo/5L
- sxnIWNipb8HHFC1utLTiNbhFCIB+4jZCpDpudoJI/xirHZGiDCQNpRViMy8+4gsd+Pgc8IaT
- 4QFr+6+295iFrx4tfymzMOrXD4w=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f07f17ed8ca07a5739d5751 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:41:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5BC7DC43387; Fri, 10 Jul 2020 04:41:34 +0000 (UTC)
-Received: from [192.168.0.7] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 10 Jul 2020 00:43:57 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47681 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbgGJEn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:43:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0925C433CA;
-        Fri, 10 Jul 2020 04:41:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0925C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH v2] spi: spi-geni-qcom: Set the clock properly at runtime
- resume
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mkshah@codeaurora.org, georgi.djakov@linaro.org,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        mka@chromium.org, ctheegal@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <35e1b2de-b3ee-95f4-c7ab-dfa8544b744c@codeaurora.org>
-Date:   Fri, 10 Jul 2020 10:11:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B30mm0JJ9z9sRN;
+        Fri, 10 Jul 2020 14:43:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594356234;
+        bh=POJ600ZaL0vR6HFdOG+eyDix9lK7DSBclDi3v+T0T5I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CFMG762AlX2r72WFWIk+QPH/sFqbcP+aM1EoydHkr5/sdhIKrveq0WrPp3vP+pv8Q
+         XcAbOwTs5s9la3txT7R20p8BkPTjznZ96hXEToad0IGofcO6/oZy+hciu2hm7YAFxj
+         jvnywcCibQMuqqIjOeFlnZ1Gh29W4u+sOsT+NZwKDQsdSVyE/Rj/LT3qIqrmvgsaNj
+         OWc9K3Dp8lHPWPRDW1c7bjl1MuxfwJ7VJT02ljz4m3ixRQubpkU29zgDMUhLYXzN/+
+         n+G1GGc3Vxyp9ku9eikA993hd1VTXJ+cy80KXaVisBEIldED4joV24NbAHQncozQ6h
+         677aBOO/pt5kw==
+Date:   Fri, 10 Jul 2020 14:43:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: linux-next: manual merge of the tip tree with the spi tree
+Message-ID: <20200710144349.516fdeca@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/yTtRCGx=CJcYTAFCwfz7yY+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/yTtRCGx=CJcYTAFCwfz7yY+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/9/2020 8:10 PM, Douglas Anderson wrote:
-> In the patch ("spi: spi-geni-qcom: Avoid clock setting if not needed")
-> we avoid a whole pile of clock code.  As part of that, we should have
-> restored the clock at runtime resume.  Do that.
->
-> It turns out that, at least with today's configurations, this doesn't
-> actually matter.  That's because none of the current device trees have
-> an OPP table for geni SPI yet.  That makes dev_pm_opp_set_rate(dev, 0)
-> a no-op.  This is why it wasn't noticed in the testing of the original
-> patch.  It's still a good idea to fix, though.
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+Hi all,
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Today's linux-next merge of the tip tree got a conflict in:
 
+  drivers/spi/spi.c
+
+between commit:
+
+  60a883d119ab ("spi: use kthread_create_worker() helper")
+
+from the spi tree and commit:
+
+  3070da33400c ("sched,spi: Convert to sched_set_fifo*()")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/spi/spi.c
+index 1d7bba434225,5a4f0bfce474..000000000000
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@@ -1614,11 -1592,9 +1614,9 @@@ EXPORT_SYMBOL_GPL(spi_take_timestamp_po
+   */
+  static void spi_set_thread_rt(struct spi_controller *ctlr)
+  {
+- 	struct sched_param param =3D { .sched_priority =3D MAX_RT_PRIO / 2 };
+-=20
+  	dev_info(&ctlr->dev,
+  		"will run message pump with realtime priority\n");
+- 	sched_setscheduler(ctlr->kworker->task, SCHED_FIFO, &param);
+ -	sched_set_fifo(ctlr->kworker_task);
+++	sched_set_fifo(ctlr->kworker->task);
+  }
+ =20
+  static int spi_init_queue(struct spi_controller *ctlr)
+
+--Sig_/yTtRCGx=CJcYTAFCwfz7yY+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8H8gUACgkQAVBC80lX
+0GwkiAgAgGdyaleocCsJP/PXIFVmxv/3Tb+hfYulC2Ldx2ys6S91TGjTXqn9ITiD
+n74S9ztQ9HCcNnReZ5zuqhNjTHmo46kUBIpCtrAavxnbpWXTZVGFBvzcJWK429Fy
+d7xwaud80AyrT6AFZSyIYKHSdovziEs6sJF4Raz5UwXcElAsxCikwOLl9SX1IrzO
+yibjWSEbe2swleUm+y0yBkDqwoQBsHc91d6yEP+ypRWad+vEV8QtImvjSRRokO4+
+E1SaXffHXgzOGJeHFepceAT00MTsXsCfkKfrNINXlSPXXc9JKnlwgclzN+9OmGVV
+Uzd65w6fdK6Iw5sTd/wsEZOnTuZ5tQ==
+=2sl+
+-----END PGP SIGNATURE-----
+
+--Sig_/yTtRCGx=CJcYTAFCwfz7yY+--
