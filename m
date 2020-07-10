@@ -2,124 +2,107 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B049EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8D320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1BE20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CFMG762A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jx0RR1A7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgGJEn5 (ORCPT
+        id S1726843AbgGJEpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:43:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47681 "EHLO ozlabs.org"
+        Fri, 10 Jul 2020 00:45:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:18337 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgGJEn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:43:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725995AbgGJEpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:45:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594356348; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ioolGlSOdMyvePP6UJ8Y4ZlHaR7JnX0cp6/PAPPg0WI=; b=jx0RR1A77Cm5zlrcFdbUpq95mHjHobzLxm4acfdezAq+xjNFX2L/3LqjUIuPCAVi1gjEUYHG
+ lCdeDLh3PnN3O+5lnFHD7uu/SORiY3F6sG9mf+qaGV3zxkerivStqUifXctSJn1X/C80NmWh
+ I6/vOJFOTocwBVbqWLROyQtTzmU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5f07f26d9b7f1f3df7c639b5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:45:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 589B3C43387; Fri, 10 Jul 2020 04:45:33 +0000 (UTC)
+Received: from [192.168.0.7] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B30mm0JJ9z9sRN;
-        Fri, 10 Jul 2020 14:43:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594356234;
-        bh=POJ600ZaL0vR6HFdOG+eyDix9lK7DSBclDi3v+T0T5I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CFMG762AlX2r72WFWIk+QPH/sFqbcP+aM1EoydHkr5/sdhIKrveq0WrPp3vP+pv8Q
-         XcAbOwTs5s9la3txT7R20p8BkPTjznZ96hXEToad0IGofcO6/oZy+hciu2hm7YAFxj
-         jvnywcCibQMuqqIjOeFlnZ1Gh29W4u+sOsT+NZwKDQsdSVyE/Rj/LT3qIqrmvgsaNj
-         OWc9K3Dp8lHPWPRDW1c7bjl1MuxfwJ7VJT02ljz4m3ixRQubpkU29zgDMUhLYXzN/+
-         n+G1GGc3Vxyp9ku9eikA993hd1VTXJ+cy80KXaVisBEIldED4joV24NbAHQncozQ6h
-         677aBOO/pt5kw==
-Date:   Fri, 10 Jul 2020 14:43:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: linux-next: manual merge of the tip tree with the spi tree
-Message-ID: <20200710144349.516fdeca@canb.auug.org.au>
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30D2AC433C8;
+        Fri, 10 Jul 2020 04:45:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30D2AC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH v2 0/2] spi: spi-qcom-qspi: Avoid some per-transfer
+ overhead
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        ctheegal@codeaurora.org, mkshah@codeaurora.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+References: <20200709145145.4055619-1-dianders@chromium.org>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <9fcbed05-de8f-9794-6cd5-2623fd79dbb5@codeaurora.org>
+Date:   Fri, 10 Jul 2020 10:15:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yTtRCGx=CJcYTAFCwfz7yY+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200709145145.4055619-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yTtRCGx=CJcYTAFCwfz7yY+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 7/9/2020 8:21 PM, Douglas Anderson wrote:
+> Not to be confused with the similar series I posed for the _other_
+> Qualcomm SPI controller (spi-geni-qcom) [1], this one avoids the
+> overhead on the Quad SPI controller.
+>
+> It's based atop the current Qualcomm tree including Rajendra's ("spi:
+> spi-qcom-qspi: Use OPP API to set clk/perf state").  As discussed in
+> individual patches, these could ideally land through the Qualcomm tree
+> with Mark's Ack.
+>
+> Measuring:
+> * Before OPP / Interconnect patches reading all flash takes: ~3.4 seconds
+> * After OPP / Interconnect patches reading all flash takes: ~4.7 seconds
+> * After this patch reading all flash takes: ~3.3 seconds
+>
+> [1] https://lore.kernel.org/r/20200702004509.2333554-1-dianders@chromium.org
+> [2] https://lore.kernel.org/r/1593769293-6354-2-git-send-email-rnayak@codeaurora.org
+>
+> Changes in v2:
+> - Return error from runtime resume if dev_pm_opp_set_rate() fails.
+>
+> Douglas Anderson (2):
+>    spi: spi-qcom-qspi: Avoid clock setting if not needed
+>    spi: spi-qcom-qspi: Set an autosuspend delay of 250 ms
+>
+>   drivers/spi/spi-qcom-qspi.c | 43 ++++++++++++++++++++++++++++---------
+>   1 file changed, 33 insertions(+), 10 deletions(-)
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 
-Today's linux-next merge of the tip tree got a conflict in:
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
-  drivers/spi/spi.c
-
-between commit:
-
-  60a883d119ab ("spi: use kthread_create_worker() helper")
-
-from the spi tree and commit:
-
-  3070da33400c ("sched,spi: Convert to sched_set_fifo*()")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/spi/spi.c
-index 1d7bba434225,5a4f0bfce474..000000000000
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@@ -1614,11 -1592,9 +1614,9 @@@ EXPORT_SYMBOL_GPL(spi_take_timestamp_po
-   */
-  static void spi_set_thread_rt(struct spi_controller *ctlr)
-  {
-- 	struct sched_param param =3D { .sched_priority =3D MAX_RT_PRIO / 2 };
--=20
-  	dev_info(&ctlr->dev,
-  		"will run message pump with realtime priority\n");
-- 	sched_setscheduler(ctlr->kworker->task, SCHED_FIFO, &param);
- -	sched_set_fifo(ctlr->kworker_task);
-++	sched_set_fifo(ctlr->kworker->task);
-  }
- =20
-  static int spi_init_queue(struct spi_controller *ctlr)
-
---Sig_/yTtRCGx=CJcYTAFCwfz7yY+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8H8gUACgkQAVBC80lX
-0GwkiAgAgGdyaleocCsJP/PXIFVmxv/3Tb+hfYulC2Ldx2ys6S91TGjTXqn9ITiD
-n74S9ztQ9HCcNnReZ5zuqhNjTHmo46kUBIpCtrAavxnbpWXTZVGFBvzcJWK429Fy
-d7xwaud80AyrT6AFZSyIYKHSdovziEs6sJF4Raz5UwXcElAsxCikwOLl9SX1IrzO
-yibjWSEbe2swleUm+y0yBkDqwoQBsHc91d6yEP+ypRWad+vEV8QtImvjSRRokO4+
-E1SaXffHXgzOGJeHFepceAT00MTsXsCfkKfrNINXlSPXXc9JKnlwgclzN+9OmGVV
-Uzd65w6fdK6Iw5sTd/wsEZOnTuZ5tQ==
-=2sl+
------END PGP SIGNATURE-----
-
---Sig_/yTtRCGx=CJcYTAFCwfz7yY+--
