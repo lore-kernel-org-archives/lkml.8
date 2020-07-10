@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA37C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D131C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5481920772
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122D520772
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkAG+JzI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ax7KLwYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgGJJyf (ORCPT
+        id S1728009AbgGJJyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57862 "EHLO
+        Fri, 10 Jul 2020 05:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgGJJya (ORCPT
+        with ESMTP id S1727947AbgGJJy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:54:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A524BC08E6DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so5320041wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:30 -0700 (PDT)
+        Fri, 10 Jul 2020 05:54:29 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540C6C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:29 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so5263327wmo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 02:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DFfhRB3CIFp7+b9HYaYFBTlz+H/vZeZ2FswijDgFipc=;
-        b=LkAG+JzIcrjWk6wsbbvoJiQ+Dhzfbf1ff68EZ4/MAk9dKnXdHGf5arbiMI5gEIKidJ
-         jVLBKwoToirkaWTw8Gymu76RGj5XKW7rDwOKBs9QNf06BqMfOEjBw1kvsOElM+nBV4o2
-         9tnPETwBjUFaMKuv4fkTS28qs3Z2qNp4EwUdt/k5gb+/o7aCikBb88sDGxc5aVaGQdvQ
-         qSP07OBrupatkzVU+UukYqu2O1THtQAZEg2KKpuXBBLaDjKLWFoZEw/ugKH4jxf3mZ8h
-         7XN+0HflMjzoV0c87Bg35XLqlJeC8Hjngypjmw5TzjavELK5bDrnoEPZJQD4RiATXL5l
-         BniA==
+        bh=gRxnrLEUrSrlK3zy1+2PoRYSjZZZ/aiOGCPYzvHmseE=;
+        b=Ax7KLwYXMudeWTKZWMZoKaIdW+41vP/yk5pKH7JXbzOuY//U/J7sWJOgQoweFB5Ge9
+         i4UMNN5Bx4cGkLa2CxA4RqLCNSvWnYhsCw2zSO29HftQPD5xgwhUHAO4F0PbX9OxoYMD
+         CFefLJyFKjoAuLUpFy3t1adPxhdIMid6vBhO508c7MHFf9Oa8l//+W9N1o3b9VGSAYBD
+         XVoHj3+ynKTaAxRf8jfbHf6d+xDig9Aqf1bHV8S6+NPG8yIuTl4qOsCeA8VUXhZlqsor
+         Fb35cQkYy/XLpb6YSDbVcBzP7/5lizIBiBeBaVtJTmtTH16hmim7CWoTdF07NL1yORe5
+         tdvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DFfhRB3CIFp7+b9HYaYFBTlz+H/vZeZ2FswijDgFipc=;
-        b=j5Azg9WnnbvsSjQ7IygpXsLmGgdwdoSQa0KzD0kWqHKoW7+Et61BxcdANoET8VK9sO
-         0YPFqD1ej2sAJiUD14uleSvhF2PhJqjkvzVBRS0YU+fF8CuZr8848O24W5c76f/4ca7M
-         61xSIn24o6x3L3N9Gs+sMeDm0tGHtiuUsGJJ+jHf+0TJorbXS+VVKK+WA0koL8QPzQ0F
-         w2e9nCxml+Vni6DQ5/BvBx8fnJ0muOgAmy02BrLbaGEgKNvtY+AWCpN0nh9WQEYh1Ko2
-         3dWc80bxAbPFtH6yagGNXtIaOUMOV/9/xRM5yIn8lqnVy1dCBk3w4laLfRKQXMaNrzIb
-         W6FQ==
-X-Gm-Message-State: AOAM5335VqgmLvhxifO4MP87Uf4btjSkfUxEAkrwYSU5SHTa8Q0iCnbW
-        wlh+Rw0oNTlPtk8FayA9NxY=
-X-Google-Smtp-Source: ABdhPJweU8vHChcfF7n6zCNGPvYpioyH/JYFNiQfISKnR8gO0ao1GlphavbGVRCAyGh9bV0XTNYxKg==
-X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr64201904wrx.332.1594374869330;
-        Fri, 10 Jul 2020 02:54:29 -0700 (PDT)
+        bh=gRxnrLEUrSrlK3zy1+2PoRYSjZZZ/aiOGCPYzvHmseE=;
+        b=HyjznK/ujE2UN0C0WYoFayjCepaQ6MJAWJECueX92HvEorLduurKpDaj3ydLBdY3gO
+         Mj/kTJlccFIGLu9LHq3jj99tzvOaTSQ02mY5INh5y+z06GEE//rqxc+X2EM0xqo/DfUz
+         avTMff4OI6fKxsP8jr+EwKBOchtBBoDruRgmSRtflIRqllOA/Dn5roqu+C9JYo93Z0IA
+         JIBJsEgcOP97fGWJoTuWXl4XwU2EViNhSjQcj697DSTfWjxvmfIq2kVeDArTorA0jx0d
+         yPnzD/NtBXXSwnlCGX5UaNmdECSN2amK6J6pLfBSWsn2vSBCjxUpYFOGTuUwEIYE7SHP
+         A89A==
+X-Gm-Message-State: AOAM533qJJXOSlxULfUO5OT03JYTZGFnwXjuGvqvfpKzi+HvHV9Ntdod
+        qNC4+cz23Fm8Gsmr92De7e7LfYH+y3s=
+X-Google-Smtp-Source: ABdhPJwTns1K8KXgCQ0MyV0FMjZlV8NiWamZDQPmHqlyMxrvB7J87elQSbKPOX8421NQ1QnrEw4/rA==
+X-Received: by 2002:a1c:3504:: with SMTP id c4mr4326573wma.177.1594374867967;
+        Fri, 10 Jul 2020 02:54:27 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id u23sm10176092wru.94.2020.07.10.02.54.28
+        by smtp.gmail.com with ESMTPSA id u23sm10176092wru.94.2020.07.10.02.54.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 02:54:28 -0700 (PDT)
+        Fri, 10 Jul 2020 02:54:27 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 14/14] [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be always
-Date:   Fri, 10 Jul 2020 11:54:09 +0200
-Message-Id: <20200710095409.407087-15-peron.clem@gmail.com>
+Subject: [PATCH v5 13/14] [DO NOT MERGE] arm64: dts: allwinner: h6: Add GPU OPP table
+Date:   Fri, 10 Jul 2020 11:54:08 +0200
+Message-Id: <20200710095409.407087-14-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200710095409.407087-1-peron.clem@gmail.com>
 References: <20200710095409.407087-1-peron.clem@gmail.com>
@@ -85,23 +85,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add an Operating Performance Points table for the GPU to
+enable Dynamic Voltage & Frequency Scaling on the H6.
+
+The voltage range is set with minival voltage set to the target
+and the maximal voltage set to 1.2V. This allow DVFS framework to
+work properly on board with fixed regulator.
+
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 3f7ceeb1a767..14257f7476b8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -245,6 +245,7 @@ reg_dcdca: dcdca {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 1c939c55aaea..16c3ad8abd9d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -175,6 +175,7 @@ gpu: gpu@1800000 {
+ 			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
+ 			clock-names = "core", "bus";
+ 			resets = <&ccu RST_BUS_GPU>;
++			operating-points-v2 = <&gpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 			status = "disabled";
+ 		};
+@@ -1037,4 +1038,83 @@ map0 {
  			};
- 
- 			reg_dcdcc: dcdcc {
-+				regulator-always-on;
- 				regulator-enable-ramp-delay = <32000>;
- 				regulator-min-microvolt = <810000>;
- 				regulator-max-microvolt = <1080000>;
+ 		};
+ 	};
++
++	gpu_opp_table: gpu-opp-table {
++		compatible = "operating-points-v2";
++
++		opp@216000000 {
++			opp-hz = /bits/ 64 <216000000>;
++			opp-microvolt = <810000 810000 1200000>;
++		};
++
++		opp@264000000 {
++			opp-hz = /bits/ 64 <264000000>;
++			opp-microvolt = <810000 810000 1200000>;
++		};
++
++		opp@312000000 {
++			opp-hz = /bits/ 64 <312000000>;
++			opp-microvolt = <810000 810000 1200000>;
++		};
++
++		opp@336000000 {
++			opp-hz = /bits/ 64 <336000000>;
++			opp-microvolt = <810000 810000 1200000>;
++		};
++
++		opp@360000000 {
++			opp-hz = /bits/ 64 <360000000>;
++			opp-microvolt = <820000 820000 1200000>;
++		};
++
++		opp@384000000 {
++			opp-hz = /bits/ 64 <384000000>;
++			opp-microvolt = <830000 830000 1200000>;
++		};
++
++		opp@408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <840000 840000 1200000>;
++		};
++
++		opp@420000000 {
++			opp-hz = /bits/ 64 <420000000>;
++			opp-microvolt = <850000 850000 1200000>;
++		};
++
++		opp@432000000 {
++			opp-hz = /bits/ 64 <432000000>;
++			opp-microvolt = <860000 860000 1200000>;
++		};
++
++		opp@456000000 {
++			opp-hz = /bits/ 64 <456000000>;
++			opp-microvolt = <870000 870000 1200000>;
++		};
++
++		opp@504000000 {
++			opp-hz = /bits/ 64 <504000000>;
++			opp-microvolt = <890000 890000 1200000>;
++		};
++
++		opp@540000000 {
++			opp-hz = /bits/ 64 <540000000>;
++			opp-microvolt = <910000 910000 1200000>;
++		};
++
++		opp@576000000 {
++			opp-hz = /bits/ 64 <576000000>;
++			opp-microvolt = <930000 930000 1200000>;
++		};
++
++		opp@624000000 {
++			opp-hz = /bits/ 64 <624000000>;
++			opp-microvolt = <950000 950000 1200000>;
++		};
++
++		opp@756000000 {
++			opp-hz = /bits/ 64 <756000000>;
++			opp-microvolt = <1040000 1040000 1200000>;
++		};
++	};
+ };
 -- 
 2.25.1
 
