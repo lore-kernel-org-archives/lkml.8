@@ -2,48 +2,49 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6BEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44889C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD31207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEC7207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vlpha8W+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPC8oScV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgGJOUG (ORCPT
+        id S1728278AbgGJOUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:20:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48412 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727110AbgGJOUC (ORCPT
+        Fri, 10 Jul 2020 10:20:11 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56972 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728182AbgGJOUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:20:02 -0400
+        Fri, 10 Jul 2020 10:20:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594390801;
+        s=mimecast20190719; t=1594390806;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=S/hfdY2jn078JPQClgP6PouoRBDjiWkYV+fASuPUqJA=;
-        b=Vlpha8W+gfVSUDC8sJdYzNMYLSJbDGwtrnPJ1dIvei+SFgUNTxb/9rQJ7/2dDegtVprlf6
-        Cn9TVwZF+8TgvegnCilmVTSlqK9NxdGE/1QUt2EDDlSLbGeZRHvzpEeMvRAX+Xgib02tdR
-        XO8q0aTjWi+KGitg8Bt04X1daD5hBjA=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iINrqTduzdzlg8cDRyIDlpEwPnwdLZ0XaojMAYpWNSc=;
+        b=UPC8oScVqHBaSk/KZqX3sH8wje2UhDrbYfetI/2Zhr+fIt6XgcqxgOtGpUMb8Z2RYrAOPg
+        I8qnqLtu+b+PAGQAh0lmMWjQZLd+vk+YUUu6yQntSAP7wjrO85s3t2B6nA4BUMxR/g6ECO
+        ZEGXfNyQvw5l+ZXZrR55ARGeBPjopYg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-Ur_35eYIO8ykayRn1yNGQw-1; Fri, 10 Jul 2020 10:19:57 -0400
-X-MC-Unique: Ur_35eYIO8ykayRn1yNGQw-1
+ us-mta-219-h_9ogIOyOk-t4fP_p4hujw-1; Fri, 10 Jul 2020 10:20:00 -0400
+X-MC-Unique: h_9ogIOyOk-t4fP_p4hujw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 128B11B18BC0;
-        Fri, 10 Jul 2020 14:19:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 435AF1B18BC7;
+        Fri, 10 Jul 2020 14:19:59 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-112-4.ams2.redhat.com [10.36.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF67B5C1D6;
-        Fri, 10 Jul 2020 14:19:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 787C55C5B7;
+        Fri, 10 Jul 2020 14:19:55 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Sargun Dhillon <sargun@sargun.me>,
@@ -55,11 +56,11 @@ Cc:     Sargun Dhillon <sargun@sargun.me>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
         Jeff Moyer <jmoyer@redhat.com>
-Subject: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Date:   Fri, 10 Jul 2020 16:19:42 +0200
-Message-Id: <20200710141945.129329-1-sgarzare@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Subject: [PATCH RFC 1/3] io_uring: use an enumeration for io_uring_register(2) opcodes
+Date:   Fri, 10 Jul 2020 16:19:43 +0200
+Message-Id: <20200710141945.129329-2-sgarzare@redhat.com>
+In-Reply-To: <20200710141945.129329-1-sgarzare@redhat.com>
+References: <20200710141945.129329-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -68,56 +69,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the proposal that I send about restrictions [1], I wrote a PoC with
-the main changes. It is still WiP so I left some TODO in the code.
+The enumeration allows us to keep track of the last
+io_uring_register(2) opcode available.
 
-I also wrote helpers in liburing and a test case (test/register-restrictions.c)
-available in this repository:
-https://github.com/stefano-garzarella/liburing (branch: io_uring_restrictions)
+Behaviour and opcodes names don't change.
 
-Just to recap the proposal, the idea is to add some restrictions to the
-operations (sqe, register, fixed file) to safely allow untrusted applications
-or guests to use io_uring queues.
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-The first patch changes io_uring_register(2) opcodes into an enumeration to
-keep track of the last opcode available.
-
-The second patch adds IOURING_REGISTER_RESTRICTIONS opcode and the code to
-handle restrictions.
-
-The third patch adds IORING_SETUP_R_DISABLED flag to start the rings disabled,
-allowing the user to register restrictions, buffers, files, before to start
-processing SQEs.
-I'm not sure if this could help seccomp. An alternative pointed out by Jann
-Horn could be to register restrictions during io_uring_setup(2), but this
-requires some intrusive changes (there is no space in the struct
-io_uring_params to pass a pointer to restriction arrays, maybe we can add a
-flag and add the pointer at the end of the struct io_uring_params).
-
-Another limitation now is that I need to enable every time
-IORING_REGISTER_ENABLE_RINGS in the restrictions to be able to start the rings,
-I'm not sure if we should treat it as an exception.
-
-Maybe registering restrictions during io_uring_setup(2) could solve both issues
-(seccomp integration and IORING_REGISTER_ENABLE_RINGS registration), but I need
-some suggestions to properly extend the io_uring_setup(2).
-
-Comments and suggestions are very welcome.
-
-Thank you in advance,
-Stefano
-
-[1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredhat/
-
-Stefano Garzarella (3):
-  io_uring: use an enumeration for io_uring_register(2) opcodes
-  io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
-  io_uring: allow disabling rings during the creation
-
- fs/io_uring.c                 | 155 ++++++++++++++++++++++++++++++++--
- include/uapi/linux/io_uring.h |  59 ++++++++++---
- 2 files changed, 194 insertions(+), 20 deletions(-)
-
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 92c22699a5a7..2d18f1d0b5df 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -252,17 +252,22 @@ struct io_uring_params {
+ /*
+  * io_uring_register(2) opcodes and arguments
+  */
+-#define IORING_REGISTER_BUFFERS		0
+-#define IORING_UNREGISTER_BUFFERS	1
+-#define IORING_REGISTER_FILES		2
+-#define IORING_UNREGISTER_FILES		3
+-#define IORING_REGISTER_EVENTFD		4
+-#define IORING_UNREGISTER_EVENTFD	5
+-#define IORING_REGISTER_FILES_UPDATE	6
+-#define IORING_REGISTER_EVENTFD_ASYNC	7
+-#define IORING_REGISTER_PROBE		8
+-#define IORING_REGISTER_PERSONALITY	9
+-#define IORING_UNREGISTER_PERSONALITY	10
++enum {
++	IORING_REGISTER_BUFFERS,
++	IORING_UNREGISTER_BUFFERS,
++	IORING_REGISTER_FILES,
++	IORING_UNREGISTER_FILES,
++	IORING_REGISTER_EVENTFD,
++	IORING_UNREGISTER_EVENTFD,
++	IORING_REGISTER_FILES_UPDATE,
++	IORING_REGISTER_EVENTFD_ASYNC,
++	IORING_REGISTER_PROBE,
++	IORING_REGISTER_PERSONALITY,
++	IORING_UNREGISTER_PERSONALITY,
++
++	/* this goes last */
++	IORING_REGISTER_LAST
++};
+ 
+ struct io_uring_files_update {
+ 	__u32 offset;
 -- 
 2.26.2
 
