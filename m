@@ -2,92 +2,80 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F75C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFCDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0491220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594351814;
-	bh=bemyJMruDfG7EqbloAkBTt8qYNZGMcKOiBWcS6RcoCY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rcFOZ78hnn7i65kMyXYXnLroAs7zGMxZnwj5uMExf1F3QOFRMMFXyD9nDYjfc+ZNx
-	 C1kPjzKoNho71+YezfExCjfEHxR8K+tBFIlwa53T+I1MWABrw12idX43uf+8Jkai+0
-	 s23Gp0FQuI+uF51wpdjxlnoVDU6/hFXHoEcOusHo=
+	by mail.kernel.org (Postfix) with ESMTP id 2EDAE2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgGJDaN (ORCPT
+        id S1727065AbgGJDap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 23:30:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:44876 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgGJDaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:30:12 -0400
-Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F8B2065C;
-        Fri, 10 Jul 2020 03:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594351811;
-        bh=bemyJMruDfG7EqbloAkBTt8qYNZGMcKOiBWcS6RcoCY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Dy1ecCxeXdRwgg2h+vLymmUHJXBt1j3UsYd0f74Pa/2QUn1cx8o3sNKLB8HqcqEsf
-         2cUXlvkTp0GxNSx+X6IeGCgCcm02bYYVTnjj+Sw4Rf5Epm9hw56FHokQ7CM9KObx7o
-         y+dt0CC9LYVT5e3BkqduvPU89MUVhDdWx2EPfJtU=
-Date:   Fri, 10 Jul 2020 12:30:08 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 4/4] perf-probe: Warn if the target function is GNU
- Indirect function
-Message-Id: <20200710123008.3af0e5ea78a9ff95d36a29d8@kernel.org>
-In-Reply-To: <20200709143654.pw2maoxivsjho6op@two.firstfloor.org>
-References: <159428201109.56570.3802208017109058146.stgit@devnote2>
-        <159428205174.56570.17588311835868886287.stgit@devnote2>
-        <20200709143654.pw2maoxivsjho6op@two.firstfloor.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726495AbgGJDan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:30:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4103831B;
+        Thu,  9 Jul 2020 20:30:43 -0700 (PDT)
+Received: from [10.163.87.77] (unknown [10.163.87.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BA903F9AB;
+        Thu,  9 Jul 2020 20:30:38 -0700 (PDT)
+Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
+ <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <50cc0a0d-e04e-9e5d-26a6-73a91944ba8c@arm.com>
+Date:   Fri, 10 Jul 2020 09:00:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 07:36:54 -0700
-Andi Kleen <andi@firstfloor.org> wrote:
 
-> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> > index 1e95a336862c..671176d39569 100644
-> > --- a/tools/perf/util/probe-event.c
-> > +++ b/tools/perf/util/probe-event.c
-> > @@ -379,6 +379,11 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
-> >  			address = sym->start;
-> >  		else
-> >  			address = map->unmap_ip(map, sym->start) - map->reloc;
-> > +		if (sym->type == STT_GNU_IFUNC) {
-> > +			pr_warning("Warning: The probe address (0x%lx) is in a GNU indirect function.\n"
-> > +				"This may not work as you expected unless you intend to probe the indirect function.\n",
+On 07/09/2020 09:04 PM, Randy Dunlap wrote:
+> Hi,
 > 
-> I would say something like this.
+> I have a few comments on this.
 > 
-> Consider identifying the final function used at run time and set the
-> probe directly on that.
+> a. I reported it very early and should have been Cc-ed.
+
+I should have Cc-ed you on this V4 patch, sorry about that.
+
 > 
-> I think that's more useful to the user.
+> b. A patch that applies to mmotm or linux-next would have been better
+> than a full replacement patch.
+I have followed that (i.e patch on mmotm/next as fix) only when the
+required change is smaller as compared to the series on mmotm/next.
+But for others a new patch should be better which can be replaced
+on mmotm and next. At least that is my understanding and would like
+to be corrected otherwise.
 
-Hmm, would you mean the default function which may be used for the symbol?
-Let me check how we can find it.
+> 
+> c. I tried replacing what I believe is the correct/same patch file in mmotm
+> and still have build errors.
 
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+That should not have happened, all new THP migration events are with
+CONFIG_MIGRATION rather than CONFIG_TRANSPARENT_HUGEPAGE previously.
