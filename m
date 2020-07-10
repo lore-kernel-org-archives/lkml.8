@@ -2,127 +2,179 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB25C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29E12072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984512072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:17:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="BbmOQTRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGJDQ7 (ORCPT
+        id S1727098AbgGJDRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:16:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:44194 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgGJDQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:16:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C604D113E;
-        Thu,  9 Jul 2020 20:16:57 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 43D383F9AB;
-        Thu,  9 Jul 2020 20:16:48 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Hildenbrand <david@redhat.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 2/2] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
-Date:   Fri, 10 Jul 2020 11:16:19 +0800
-Message-Id: <20200710031619.18762-3-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200710031619.18762-1-justin.he@arm.com>
-References: <20200710031619.18762-1-justin.he@arm.com>
+        Thu, 9 Jul 2020 23:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgGJDRT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:17:19 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C9EC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 20:17:17 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id h13so3240831otr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 20:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kali.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=j0wwhr1/T/vy9n1+otmduXmzQCUiGkNtjh79hw1bxv4=;
+        b=BbmOQTRp6gYkwQqXj3JMZ3m0Tqr0EIu9qZrevvaVT+MMCS/1fSHpqZLGJfeAU8puZy
+         9RcjYup96/Cv7z5UP21se4Jg17+/9cQF39itTwIYmb3+k5ojm4IHmdtmCnd0FYxwv7o/
+         4F0LZ2pAtf9q8WpVEUg5A+svER1CDsSU08jrknSpL7/Z5xPz/URGGp2MaIoeBGzQphIS
+         5zdxdg44kQyrTEyNsxhy6Mo7Ig36nIcNVAgQSS5YehxC4DjMzkC40goTy4lsxyL1bBSO
+         IqgFmV3UgI1u/2nCvd0NRCxtnvYzJZFyyVPaj01JfrUQX6ctJFyhIOpP/MKL6WANMXOQ
+         YQTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=j0wwhr1/T/vy9n1+otmduXmzQCUiGkNtjh79hw1bxv4=;
+        b=JpoeMpdoRZ/wnnpy8uiYuAqiSvyLGYI4WTbDbKdiG2cmgKO0IGHmnSmsbmTFPNk0zT
+         gY8342fGYgFEK1OQ6xxvQ4QPe8mdLMZYUY8a6kDH1ZWQWrmtPIfD1HOd9iQIl7ZD7Djr
+         9uZXAS4IOjInnxemGgfRl9vWJcAnIWJuVB9A3UL/bcUjvOamgTJeYNsaXidGU0rN8Zdi
+         orFYKpJfD4Yo4B6RTbuoCWVspib0uCNe/1xRxVXR4N7SmAOHUTRFC/UkluOLUkwoYO5/
+         Cj1gH5IQlP3WJIVCDka7Y62+TKaxQ2RxnpCgGnZFXOl5ZKQt2ta1tF9Eoe5qu897Xnix
+         ZxFw==
+X-Gm-Message-State: AOAM531pzlnVxe3KCkHgKoBkbllUC2xWlNk2U78XeWf/qpGpbR6Cmenc
+        uwy2tPItOxBwhHooSeEEU2O7Qg==
+X-Google-Smtp-Source: ABdhPJwpau8NTYn5wFg7gaMaXNs5CJF3bRoXICXIT+qLYysVXc/ruiVyQgs+tjrcp0KQC8fmsrEGCw==
+X-Received: by 2002:a05:6830:1e03:: with SMTP id s3mr29365301otr.306.1594351036655;
+        Thu, 09 Jul 2020 20:17:16 -0700 (PDT)
+Received: from [192.168.11.9] (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
+        by smtp.gmail.com with ESMTPSA id f26sm942554oop.46.2020.07.09.20.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 20:17:15 -0700 (PDT)
+Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
+From:   Steev Klimaszewski <steev@kali.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Steev Klimaszewski <steev@gentoo.org>
+References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
+ <20200710011935.GA7056@gentoo.org>
+ <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
+ <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
+ <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
+Message-ID: <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
+Date:   Thu, 9 Jul 2020 22:17:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
-online at that time), mem_hotplug_begin/done is unpaired in such case.
 
-Therefore a warning:
- Call Trace:
-  percpu_up_write+0x33/0x40
-  try_remove_memory+0x66/0x120
-  ? _cond_resched+0x19/0x30
-  remove_memory+0x2b/0x40
-  dev_dax_kmem_remove+0x36/0x72 [kmem]
-  device_release_driver_internal+0xf0/0x1c0
-  device_release_driver+0x12/0x20
-  bus_remove_device+0xe1/0x150
-  device_del+0x17b/0x3e0
-  unregister_dev_dax+0x29/0x60
-  devm_action_release+0x15/0x20
-  release_nodes+0x19a/0x1e0
-  devres_release_all+0x3f/0x50
-  device_release_driver_internal+0x100/0x1c0
-  driver_detach+0x4c/0x8f
-  bus_remove_driver+0x5c/0xd0
-  driver_unregister+0x31/0x50
-  dax_pmem_exit+0x10/0xfe0 [dax_pmem]
-
-Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
-Cc: stable@vger.kernel.org # v5.6+
-Signed-off-by: Jia He <justin.he@arm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
----
- mm/memory_hotplug.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index b49ab743d914..3e0645387daf 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1752,7 +1752,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 	 */
- 	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
- 	if (rc)
--		goto done;
-+		return rc;
- 
- 	/* remove memmap entry */
- 	firmware_map_remove(start, start + size, "System RAM");
-@@ -1776,9 +1776,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 
- 	try_offline_node(nid);
- 
--done:
- 	mem_hotplug_done();
--	return rc;
-+	return 0;
- }
- 
- /**
--- 
-2.17.1
-
+On 7/9/20 10:12 PM, Steev Klimaszewski wrote:
+>
+> On 7/9/20 9:14 PM, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Thu, Jul 9, 2020 at 6:38 PM Doug Anderson <dianders@chromium.org> 
+>> wrote:
+>>> Hi,
+>>>
+>>> On Thu, Jul 9, 2020 at 6:19 PM Steev Klimaszewski <steev@gentoo.org> 
+>>> wrote:
+>>>> Hi Doug,
+>>>>
+>>>> I've been testing 5.8 and linux-next on the Lenovo Yoga C630, and 
+>>>> with this patch applied, there is really bad banding on the display.
+>>>>
+>>>> I'm really bad at explaining it, but you can see the differences in 
+>>>> the following:
+>>>>
+>>>> 24bit (pre-5.8) - https://dev.gentoo.org/~steev/files/image0.jpg
+>>>>
+>>>> 18bit (5.8/linux-next) - 
+>>>> https://dev.gentoo.org/~steev/files/image1.jpg
+>>> Presumably this means that your panel is defined improperly? If the
+>>> panel reports that it's a 6 bits per pixel panel but it's actually an
+>>> 8 bits per pixel panel then you'll run into this problem.
+>>>
+>>> I would have to assume you have a bunch of out of tree patches to
+>>> support your hardware since I don't see any device trees in linuxnext
+>>> (other than cheza) that use this bridge chip.  Otherwise I could try
+>>> to check and confirm that was the problem.
+>> Ah, interesting.  Maybe you have the panel:
+>>
+>> boe,nv133fhm-n61
+>>
+>> As far as I can tell from the datasheet (I have the similar
+>> boe,nv133fhm-n62) this is a 6bpp panel.  ...but if you feed it 8bpp
+>> the banding goes away!  Maybe the panel itself knows how to dither???
+>> ...or maybe the datasheet / edid are wrong and this is actually an
+>> 8bpp panel.  Seems unlikely...
+>>
+>> In any case, one fix is to pick
+>> <https://lore.kernel.org/dri-devel/1593087419-903-1-git-send-email-kalyan_t@codeaurora.org/>, 
+>>
+>> though right now that patch is only enabled for sc7180.  Maybe you
+>> could figure out how to apply it to your hardware?
+>>
+>> ...another fix would be to pretend that your panel is 8bpp even though
+>> it's actually 6bpp.  Ironically if anyone ever tried to configure BPP
+>> from the EDID they'd go back to 6bpp.  You can read the EDID of your
+>> panel with this:
+>>
+>> bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
+>> i2cdump ${bus} 0x50 i
+>>
+>> When I do that and then decode it on the "boe,nv133fhm-n62" panel, I 
+>> find:
+>>
+>> 6 bits per primary color channel
+>>
+>> -Doug
+>
+>
+> Hi Doug,
+>
+> Decoding it does show be to boe,nv133fhm-n61 - and yeah it does say 
+> it's 6-bit according to panelook's specs for it.
+>
+>
+> I'll take a look at the patch and see what I can come up with... at 
+> the moment, I'm forcing it to be 8bit and that does "work fine" but 
+> I'd like it to be fixed properly instead of my hack.
+>
+> Thanks for your time and work!
+>
+> -- Steev
+>
+For what it's worth - the 5.8 that I'm testing is at 
+https://github.com/steev/linux/commits/c630-5.8-rc4-inline-encryption
