@@ -6,43 +6,41 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5164C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1712064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4B22064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgGJDgu (ORCPT
+        id S1726802AbgGJDli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:36:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7286 "EHLO huawei.com"
+        Thu, 9 Jul 2020 23:41:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44348 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbgGJDgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:36:49 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9BB6E95B9EC143D28AEE;
-        Fri, 10 Jul 2020 11:36:46 +0800 (CST)
+        id S1726495AbgGJDli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:41:38 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D1C9AD50D3901E4563EC;
+        Fri, 10 Jul 2020 11:41:36 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 10 Jul
- 2020 11:36:44 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: change the way of handling range.len in
- F2FS_IOC_SEC_TRIM_FILE
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 10 Jul
+ 2020 11:41:32 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
 To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Daeho Jeong <daeho43@gmail.com>,
-        Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200710021505.2405872-1-daeho43@gmail.com>
- <20200710030246.GA545837@google.com>
- <62c9dd7a-5d18-8bb6-8e43-c055fcff51cc@huawei.com>
- <20200710033100.GE545837@google.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+References: <20200709053027.351974-1-jaegeuk@kernel.org>
+ <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
+ <20200709190545.GA3001066@google.com>
+ <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
+ <20200710032616.GC545837@google.com>
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <ede6620c-6fc9-797d-e3ea-e630eb76b309@huawei.com>
-Date:   Fri, 10 Jul 2020 11:36:42 +0800
+Message-ID: <01d0db54-eee1-f6cd-76c3-ebe59a7abae4@huawei.com>
+Date:   Fri, 10 Jul 2020 11:41:31 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200710033100.GE545837@google.com>
+In-Reply-To: <20200710032616.GC545837@google.com>
 Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,96 +51,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/10 11:31, Jaegeuk Kim wrote:
+On 2020/7/10 11:26, Jaegeuk Kim wrote:
 > On 07/10, Chao Yu wrote:
->> On 2020/7/10 11:02, Jaegeuk Kim wrote:
->>> On 07/10, Daeho Jeong wrote:
->>>> From: Daeho Jeong <daehojeong@google.com>
+>> On 2020/7/10 3:05, Jaegeuk Kim wrote:
+>>> On 07/09, Chao Yu wrote:
+>>>> On 2020/7/9 13:30, Jaegeuk Kim wrote:
+>>>>> It doesn't need to bypass flushing quota data in background.
 >>>>
->>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
->>>>  1. Added -1 value support for range.len to signify the end of file.
->>>>  2. If the end of the range passes over the end of file, it means until
->>>>     the end of file.
->>>>  3. ignored the case of that range.len is zero to prevent the function
->>>>     from making end_addr zero and triggering different behaviour of
->>>>     the function.
->>>>
->>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>>> ---
->>>>  fs/f2fs/file.c | 16 +++++++---------
->>>>  1 file changed, 7 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>> index 368c80f8e2a1..1c4601f99326 100644
->>>> --- a/fs/f2fs/file.c
->>>> +++ b/fs/f2fs/file.c
->>>> @@ -3813,21 +3813,19 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->>>>  	file_start_write(filp);
->>>>  	inode_lock(inode);
->>>>  
->>>> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
->>>> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
->>>> +			range.start >= inode->i_size) {
->>>>  		ret = -EINVAL;
->>>>  		goto err;
->>>>  	}
->>>>  
->>>> -	if (range.start >= inode->i_size) {
->>>> -		ret = -EINVAL;
->>>> +	if (range.len == 0)
->>>>  		goto err;
->>>> -	}
->>>>  
->>>> -	if (inode->i_size - range.start < range.len) {
->>>> -		ret = -E2BIG;
->>>> -		goto err;
->>>> -	}
->>>> -	end_addr = range.start + range.len;
->>>> +	if (range.len == (u64)-1 || inode->i_size - range.start < range.len)
->>>> +		end_addr = inode->i_size;
->>
->> We can remove 'range.len == (u64)-1' condition since later condition can cover
->> this?
->>
+>>>> The condition is used to flush quota data in batch to avoid random
+>>>> small-sized udpate, did you hit any problem here?
 >>>
->>> Hmm, what if there are blocks beyond i_size? Do we need to check i_blocks for
+>>> I suspect this causes fault injection test being stuck by waiting for inode
+>>> writeback completion. With this patch, it has been running w/o any issue so far.
+>>> I keep an eye on this.
 >>
->> The blocks beyond i_size will never be written, there won't be any valid message
->> there, so we don't need to worry about that.
+>> Hmmm.. so that this patch may not fix the root cause, and it may hiding the
+>> issue deeper.
+>>
+>> How about just keeping this patch in our private branch to let fault injection
+>> test not be stuck? until we find the root cause in upstream codes.
 > 
-> I don't think we have a way to guarantee the order of i_size and block
-> allocation in f2fs. See f2fs_write_begin and f2fs_write_end.
+> Well, I don't think this hides something. When the issue happens, I saw inodes
+> being stuck due to writeback while only quota has some dirty data. At that time,
+> there was no dirty data page from other inodes.
 
-However, write_begin & write_end are covered by inode_lock, it could not be
-racy with inode size check in f2fs_sec_trim_file() as it hold inode_lock as
-well?
+Okay,
+
+> 
+> More specifically, I suspect __writeback_inodes_sb_nr() gives WB_SYNC_NONE and
+> waits for wb_wait_for_completion().
+
+Did you record any callstack after the issue happened?
+
+Still I'm confused that why directory's data written could be skipped, but
+quota's data couldn't, what's the difference?
 
 > 
 >>
 >> Thanks,
 >>
->>> ending criteria?
 >>>
->>>> +	else
->>>> +		end_addr = range.start + range.len;
->>>>  
->>>>  	to_end = (end_addr == inode->i_size);
->>>>  	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
->>>> -- 
->>>> 2.27.0.383.g050319c2ae-goog
->>>>
->>>>
->>>>
->>>> _______________________________________________
->>>> Linux-f2fs-devel mailing list
->>>> Linux-f2fs-devel@lists.sourceforge.net
->>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>> Thanks,
 >>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>> ---
+>>>>>  fs/f2fs/data.c | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>>>> index 44645f4f914b6..72e8b50e588c1 100644
+>>>>> --- a/fs/f2fs/data.c
+>>>>> +++ b/fs/f2fs/data.c
+>>>>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
+>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+>>>>>  		goto skip_write;
+>>>>>  
+>>>>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
+>>>>> +	if (S_ISDIR(inode->i_mode) &&
+>>>>>  			wbc->sync_mode == WB_SYNC_NONE &&
+>>>>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
+>>>>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
+>>>>>
 >>> .
 >>>
 > .
