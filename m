@@ -2,100 +2,111 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D252C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3733B2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF26207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYvO2CeR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UYFps1qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGJGoT (ORCPT
+        id S1727899AbgGJGpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:44:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48644 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726201AbgGJGoT (ORCPT
+        Fri, 10 Jul 2020 02:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgGJGph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:44:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594363458;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MzGyARVdJCOFDOhVSOMVsmLn0aigNSts0XTYJa817V4=;
-        b=bYvO2CeRc5VMgOoFQEauPf+lyXE69zqL1wbKy4PgfqGJJ1ij8sQ1erw26iaaoXrUkY6onE
-        EnXUx7gz81IfmsKEJRpNM+SqyrHPMx9mIA5M5cIv+7pr92m1iK+OhISQDxr8AMDX9UCTr3
-        0/CCrdOTlZPUAUfbsNaxrMhUsCBhtLc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-KQOJWU4-NHmNmPCiOqvlnQ-1; Fri, 10 Jul 2020 02:44:16 -0400
-X-MC-Unique: KQOJWU4-NHmNmPCiOqvlnQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5459B8015CB;
-        Fri, 10 Jul 2020 06:44:15 +0000 (UTC)
-Received: from [10.72.13.228] (ovpn-13-228.pek2.redhat.com [10.72.13.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 167F419D7D;
-        Fri, 10 Jul 2020 06:44:09 +0000 (UTC)
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org>
- <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
- <20200622122546-mutt-send-email-mst@kernel.org>
- <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
- <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
- <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
- <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
- <0a83aa03-8e3c-1271-82f5-4c07931edea3@redhat.com>
- <CAJaqyWeqF-KjFnXDWXJ2M3Hw3eQeCEE2-7p1KMLmMetMTm22DQ@mail.gmail.com>
- <20200709133438-mutt-send-email-mst@kernel.org>
- <7dec8cc2-152c-83f4-aa45-8ef9c6aca56d@redhat.com>
- <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6282b6d5-4d2b-a996-c090-6bc7ae6043ce@redhat.com>
-Date:   Fri, 10 Jul 2020 14:44:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 02:45:37 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24558C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:45:37 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so2125705pfu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HJUQ2Pd7TJkImq79MbbmeRR4vOSl3IUThdPOJ2RuPkM=;
+        b=UYFps1qc9r4yUJciGWoc6eYA8p17nl0cKxmW5fNy55sBoKDNEy6mttr1/iezNHu2Ys
+         dSGM2vNXaEB60P3PSceO79MgqvVFSqlobE0EDna6S4jfOtTYszpaGxN02R2NLo08RF94
+         PCoq8LXIptWbC/T89YXodZjGubAkTp1PapvIY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HJUQ2Pd7TJkImq79MbbmeRR4vOSl3IUThdPOJ2RuPkM=;
+        b=j32AwgaD+CMerXM4KDCGRnZK7YTaipk/0NeJhuqkgStUHgSPv6zhhv1YIekgo2uswU
+         D3JkSJ7Hs06dWZ8R57qQNouids2VIcmc/tVaGBRK+dgtFxQ/N+9wsCV+rS+pO7iD0BQw
+         vAvvl8SLxp3N1kXzcYQbs+e55XmwRpGLlsD47rr5LpyHxUviOsLRNkeNLwZRJ+lEbw81
+         KZoyAMWeSa9bMdQb1JGGFHtulvWn7ZUvrkOdAjHq7Ecl8AzjVQKYw/S83kzNmq4qVa+U
+         gErX3ckhhPY06XAyCGLMwu13BAkbuiVWmIRhG68Ap+1IeVG+mQGAKDEWUJE8tSHboIAZ
+         leUw==
+X-Gm-Message-State: AOAM531rsES81K0hk+fLgQ3XfpDIM4oq8HSR9+2Z6Z07mkRuyNxpKlxt
+        zgGTjpljB8VYl5BJd7J51zx7SQ==
+X-Google-Smtp-Source: ABdhPJzM+mh9VDZS1ApjNT2oXZNIWcf2wPn7lRZ1OaFiAESlm/XJ5L+agLdQ2nCEk/plUCh78OX1oA==
+X-Received: by 2002:a62:5bc5:: with SMTP id p188mr64279447pfb.56.1594363536634;
+        Thu, 09 Jul 2020 23:45:36 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:7220:84ff:fe09:41dc])
+        by smtp.gmail.com with ESMTPSA id e8sm4955029pfl.125.2020.07.09.23.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 23:45:36 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: [RESEND PATCH] media: atomisp: Replace trace_printk by pr_info
+Date:   Fri, 10 Jul 2020 14:45:29 +0800
+Message-Id: <20200710144520.RESEND.1.Id0f52f486e277b5af30babac8ba6b09589962a68@changeid>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
-In-Reply-To: <CAJaqyWdLOH2EceTUduKYXCQUUNo1XQ1tLgjYHTBGhtdhBPHn_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+trace_printk should not be used in production code, replace it
+call with pr_info.
 
-On 2020/7/10 下午1:39, Eugenio Perez Martin wrote:
-> It is allocated 1 thread in lcore 1 (F_THREAD=1) which belongs to the
-> same NUMA as testpmd. Actually, it is the testpmd master core, so it
-> should be a good idea to move it to another lcore of the same NUMA
-> node.
->
-> Is this enough for pktgen to allocate the memory in that numa node?
-> Since the script only write parameters to /proc, I assume that it has
-> no effect to run it under numactl/taskset, and pktgen will allocate
-> memory based on the lcore is running. Am I right?
->
-> Thanks!
->
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+Sent this before as part of a series (whose 4th patch was a
+change that allows to detect such trace_printk), but maybe it's
+easier to get individual maintainer attention by splitting it.
 
-I think you're right.
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index 42fef17798622f1..2bd39b4939f16d2 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -735,11 +735,11 @@ ia_css_ptr hmm_host_vaddr_to_hrt_vaddr(const void *ptr)
+ 
+ void hmm_show_mem_stat(const char *func, const int line)
+ {
+-	trace_printk("tol_cnt=%d usr_size=%d res_size=%d res_cnt=%d sys_size=%d  dyc_thr=%d dyc_size=%d.\n",
+-		     hmm_mem_stat.tol_cnt,
+-		     hmm_mem_stat.usr_size, hmm_mem_stat.res_size,
+-		     hmm_mem_stat.res_cnt, hmm_mem_stat.sys_size,
+-		     hmm_mem_stat.dyc_thr, hmm_mem_stat.dyc_size);
++	pr_info("tol_cnt=%d usr_size=%d res_size=%d res_cnt=%d sys_size=%d  dyc_thr=%d dyc_size=%d.\n",
++		hmm_mem_stat.tol_cnt,
++		hmm_mem_stat.usr_size, hmm_mem_stat.res_size,
++		hmm_mem_stat.res_cnt, hmm_mem_stat.sys_size,
++		hmm_mem_stat.dyc_thr, hmm_mem_stat.dyc_size);
+ }
+ 
+ void hmm_init_mem_stat(int res_pgnr, int dyc_en, int dyc_pgnr)
+-- 
+2.27.0.383.g050319c2ae-goog
 
