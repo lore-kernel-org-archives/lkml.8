@@ -2,140 +2,81 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E821CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051E8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40ED206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YiZrqZhw"
+	by mail.kernel.org (Postfix) with ESMTP id DDDCD206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGJJiX (ORCPT
+        id S1727822AbgGJJii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:38:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54072 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726288AbgGJJiW (ORCPT
+        Fri, 10 Jul 2020 05:38:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49904 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgGJJii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:38:22 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A9V1sg031341;
-        Fri, 10 Jul 2020 11:37:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=TdO/QId43zO1OJNo5MpmTUM7DAp5Luky5pxs0JsWi0I=;
- b=YiZrqZhwdFv/DANckpIXL+ISrrXCT7DT441u8ltqPXaOVWED/6+Orqb59R8IZoyvBXDV
- cf916W17upvyT+ueoRJ9x4IGYEVljTTthXoqkytH3AQ+tz7ymYh8WoFjj7IXN6FYojxB
- zzk78b+aHTWPDbIqMypycCSQM1cxWwL8pL1HqadtCmg+EVOh9d6f6S85y19A4NcbDleK
- qYAps7bquR1g4KtBSXI/oBVjxPwd94pOQ1EVRCHyu+NczBClmIUb/INVy0hFFzJXKrUM
- M6hU2wznb5qwpeCPiTJXleWJc85BfTdGQmB7JHwu9c5n5xfrPZFuoD/JQxZipcxVbpHB cw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 325k4d2fcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 11:37:50 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 55A8D10002A;
-        Fri, 10 Jul 2020 11:37:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 234172AE6DF;
-        Fri, 10 Jul 2020 11:37:49 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 Jul
- 2020 11:37:48 +0200
-Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
-To:     Marc Zyngier <maz@kernel.org>, kernel test robot <lkp@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
-References: <20200706081106.25125-1-alexandre.torgue@st.com>
- <202007081232.bA2RH80f%lkp@intel.com> <87imevemwg.wl-maz@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com>
-Date:   Fri, 10 Jul 2020 11:37:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 05:38:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D2ABA803202B;
+        Fri, 10 Jul 2020 09:38:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id S5HEgB7Js0P8; Fri, 10 Jul 2020 12:38:35 +0300 (MSK)
+Date:   Fri, 10 Jul 2020 12:38:34 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200710093834.su3nsjesnhntpd6d@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <87imevemwg.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_03:2020-07-10,2020-07-10 signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200710084503.GE3703480@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 7/10/20 11:31 AM, Marc Zyngier wrote:
-> Alexandre,
+On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > DMA capabilities non-uniformly redistributed between the device channels.
+> > In order to provide a way of exposing the channel-specific parameters to
+> > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > if provided it gets called from the dma_get_slave_caps() method and is
+> > able to override the generic DMA-device capabilities.
 > 
-> On Wed, 08 Jul 2020 05:57:24 +0100,
-> kernel test robot <lkp@intel.com> wrote:
->>
->> [1  <text/plain; us-ascii (7bit)>]
->> Hi Alexandre,
->>
->> I love your patch! Perhaps something to improve:
->>
->> [auto build test WARNING on stm32/stm32-next]
->> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
->> [If your patch is applied to the wrong git tree, kindly drop us a note.
->> And when submitting patch, we suggest to use  as documented in
->> https://git-scm.com/docs/git-format-patch]
->>
->> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
->> config: arm-randconfig-s031-20200707 (attached as .config)
->> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
->> reproduce:
->>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # apt-get install sparse
->>          # sparse version: v0.6.2-31-gabbfd661-dirty
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All warnings (new ones prefixed by >>):
->>
->>     In file included from include/linux/build_bug.h:5,
->>                      from include/linux/bits.h:23,
->>                      from include/linux/bitops.h:5,
->>                      from drivers/irqchip/irq-stm32-exti.c:8:
->>     drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
->>     drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
->>       683 |  if (desc->irq_parent >= 0) {
->>           |                       ^~
->>     include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
->>        58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->>           |                                                    ^~~~
->>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
->>       683 |  if (desc->irq_parent >= 0) {
-> 
-> Do you plan to address this? Looks like an actual bug to me.
 
-I'll fix it in v2, I was just waiting for other comments before sending 
-a v2. Do you prefer I send a v2 with this fix, and you'll do your review 
-on this v2 ?
+> In light of recent developments consider not to add 'slave' and a such words to the kernel.
 
-regards
-alex
+As long as the 'slave' word is used in the name of the dma_slave_caps
+structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+to use some else terminology. If renaming needs to be done, then it should be
+done synchronously for the whole subsystem.
+
+-Sergey
 
 > 
-> 	M.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
 > 
