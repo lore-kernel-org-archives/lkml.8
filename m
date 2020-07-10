@@ -2,99 +2,100 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A65C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC2B206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF2E20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iLrQCvjy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6/Y2AU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgGJQZg (ORCPT
+        id S1728282AbgGJQbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:25:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:2871 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727097AbgGJQZf (ORCPT
+        Fri, 10 Jul 2020 12:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:25:35 -0400
-X-UUID: 449741279a264ec09dd6c8f9f91b75e2-20200711
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yDR7fBW0w3Clej91Pw1AhT0fTfnOfzcSfnAFnKMCDeY=;
-        b=iLrQCvjyGvEjMTYqheHbgD1/iWQeaJjmtdaYfzkSM+68kMJDSXIj9Bri/MQGY5dW88nbe2G6iPS3Ym0YfdyZpTyS4lufqeVBMFDxrJfQh/sJPmMn/ZinhJjg6CuQUZc1w64u/Sbgj4f6FhD6iqhDMRHuCXur1ipILlrGpA02q1A=;
-X-UUID: 449741279a264ec09dd6c8f9f91b75e2-20200711
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1693831338; Sat, 11 Jul 2020 00:25:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 11 Jul 2020 00:25:30 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 11 Jul 2020 00:25:31 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v8 3/4] kasan: add tests for call_rcu stack recording
-Date:   Sat, 11 Jul 2020 00:25:30 +0800
-Message-ID: <20200710162530.23946-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 10 Jul 2020 12:31:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24006C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:31:07 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id e64so6632879iof.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L5x+RXQcTKt3brgLCNXmzu/Q4sL3Ui6tQW0Y7yTVLkY=;
+        b=B6/Y2AU3K+d29kPJXoL4LW3xcHmtRXC6hGouqLD94eTzfrcaV3Fglva7FhbL4FBWcn
+         7CNit1lq96RQZfb339mk7OObuhLv9SvsOopZ5KKDqxtyUP5OkUl3So/xWJuSYxFPAnD0
+         M+cC9gw93b5yvVZkCiPNJBcka2dTkqqMjjpN1B8/fJ/d2uYNUOhQbv2l2wjmIHMZJiV7
+         JKgQOz8OPcH4mfjfFUrRPX+wgE/dFIBA7R+ynDnnOb99sDUc/8fY2mu0lZJMQGXNi5SM
+         mdf35MSYI92URNmkPnr9bRMUTfCVa5SC6EUlRv+V61BsDiSWajXEiDX+k1gstuu/tsOB
+         p2hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L5x+RXQcTKt3brgLCNXmzu/Q4sL3Ui6tQW0Y7yTVLkY=;
+        b=QPwBIma8SuHGY/0Y/nU19x+U56gYBqg9gXOPCF7uZzxT1xwkDmFAKhCUYHjyxuKY+s
+         CMQhajcOkGLMgmpVBdiv8CSi9OGVkRst2AA/+otUkWNfTsEy9iwbSdFMRMKmRyWoi91n
+         HuJ6d4iD03GalScophooIBoMJLpvLE/BIu1cdJwzXB3L5Voeqq75+wQdAHPGOnhU+bNy
+         wCu5XQHUY6hgZqT5CU3q72CN/u0785ArL9XwMaPA0VcNM11XNQqpcl7iu12qyIH5aQbg
+         GJesM/Xfi61Yh0OXnbvjn5zUzhI4rysLtUTxYsZuRR0H8IbrGlvdOvddnrHQYaNhmrHv
+         l2aw==
+X-Gm-Message-State: AOAM5324SZuJ36ABayv/FJ7grnZLxYqCNz/sNEcmnV8dd+9X4JC0OJfK
+        FgE8vwsEtljDyqkmk2v6iGYQZwJmIe/XUrqRXsrc2KZs
+X-Google-Smtp-Source: ABdhPJz4f+wmTdCN8HsvGt2xu/V0GtBoahjoaJjauggHLbwoRMsmtNf5nAOu00p52lQl8ZVL2r2qaIf0UU+lXGLR09U=
+X-Received: by 2002:a5e:c311:: with SMTP id a17mr18924402iok.12.1594398666301;
+ Fri, 10 Jul 2020 09:31:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 53B2DD615C83A942F010BB7AB01C3816F92969F87FE2014CDD6135BC1A8E54872000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200710154811.418214-1-mgamal@redhat.com>
+In-Reply-To: <20200710154811.418214-1-mgamal@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 10 Jul 2020 09:30:55 -0700
+Message-ID: <CALMp9eRfZ50iyrED0-LU75VWhHu_kVoB2Qw55VzEFzZ=0QCGow@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Mohammed Gamal <mgamal@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGVzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgcmVjb3JkaW5nIGFuZCB2ZXJpZnkgd2hldGhlciBp
-dCBjb3JyZWN0bHkNCmlzIHByaW50ZWQgaW4gS0FTQU4gcmVwb3J0Lg0KDQpTaWduZWQtb2ZmLWJ5
-OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1hbmQtdGVz
-dGVkLWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpSZXZpZXdlZC1ieTog
-QW5kcmV5IEtvbm92YWxvdiA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KQ2M6IEFuZHJleSBSeWFi
-aW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQpDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8
-Z2xpZGVyQGdvb2dsZS5jb20+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdt
-YWlsLmNvbT4NCi0tLQ0KDQpDaGFuZ2VzIHNpbmNlIHY2Og0KLSByZW5hbWVkIHRoZSB2YXJpYWJs
-ZSBuYW1lIGluIHRlc3RjYXNlDQoNCi0tLQ0KIGxpYi90ZXN0X2thc2FuLmMgfCAzMCArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygr
-KQ0KDQpkaWZmIC0tZ2l0IGEvbGliL3Rlc3Rfa2FzYW4uYyBiL2xpYi90ZXN0X2thc2FuLmMNCmlu
-ZGV4IGUzMDg3ZDkwZTAwZC4uMTljNzJjMTUwMWVmIDEwMDY0NA0KLS0tIGEvbGliL3Rlc3Rfa2Fz
-YW4uYw0KKysrIGIvbGliL3Rlc3Rfa2FzYW4uYw0KQEAgLTc5Miw2ICs3OTIsMzUgQEAgc3RhdGlj
-IG5vaW5saW5lIHZvaWQgX19pbml0IHZtYWxsb2Nfb29iKHZvaWQpDQogc3RhdGljIHZvaWQgX19p
-bml0IHZtYWxsb2Nfb29iKHZvaWQpIHt9DQogI2VuZGlmDQogDQorc3RhdGljIHN0cnVjdCBrYXNh
-bl9yY3VfaW5mbyB7DQorCWludCBpOw0KKwlzdHJ1Y3QgcmN1X2hlYWQgcmN1Ow0KK30gKmdsb2Jh
-bF9yY3VfcHRyOw0KKw0KK3N0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrYXNhbl9yY3VfcmVj
-bGFpbShzdHJ1Y3QgcmN1X2hlYWQgKnJwKQ0KK3sNCisJc3RydWN0IGthc2FuX3JjdV9pbmZvICpm
-cCA9IGNvbnRhaW5lcl9vZihycCwNCisJCQkJCQlzdHJ1Y3Qga2FzYW5fcmN1X2luZm8sIHJjdSk7
-DQorDQorCWtmcmVlKGZwKTsNCisJZnAtPmkgPSAxOw0KK30NCisNCitzdGF0aWMgbm9pbmxpbmUg
-dm9pZCBfX2luaXQga2FzYW5fcmN1X3VhZih2b2lkKQ0KK3sNCisJc3RydWN0IGthc2FuX3JjdV9p
-bmZvICpwdHI7DQorDQorCXByX2luZm8oInVzZS1hZnRlci1mcmVlIGluIGthc2FuX3JjdV9yZWNs
-YWltXG4iKTsNCisJcHRyID0ga21hbGxvYyhzaXplb2Yoc3RydWN0IGthc2FuX3JjdV9pbmZvKSwg
-R0ZQX0tFUk5FTCk7DQorCWlmICghcHRyKSB7DQorCQlwcl9lcnIoIkFsbG9jYXRpb24gZmFpbGVk
-XG4iKTsNCisJCXJldHVybjsNCisJfQ0KKw0KKwlnbG9iYWxfcmN1X3B0ciA9IHJjdV9kZXJlZmVy
-ZW5jZV9wcm90ZWN0ZWQocHRyLCBOVUxMKTsNCisJY2FsbF9yY3UoJmdsb2JhbF9yY3VfcHRyLT5y
-Y3UsIGthc2FuX3JjdV9yZWNsYWltKTsNCit9DQorDQogc3RhdGljIGludCBfX2luaXQga21hbGxv
-Y190ZXN0c19pbml0KHZvaWQpDQogew0KIAkvKg0KQEAgLTgzOSw2ICs4NjgsNyBAQCBzdGF0aWMg
-aW50IF9faW5pdCBrbWFsbG9jX3Rlc3RzX2luaXQodm9pZCkNCiAJa2FzYW5fYml0b3BzKCk7DQog
-CWttYWxsb2NfZG91YmxlX2t6ZnJlZSgpOw0KIAl2bWFsbG9jX29vYigpOw0KKwlrYXNhbl9yY3Vf
-dWFmKCk7DQogDQogCWthc2FuX3Jlc3RvcmVfbXVsdGlfc2hvdChtdWx0aXNob3QpOw0KIA0KLS0g
-DQoyLjE4LjANCg==
+On Fri, Jul 10, 2020 at 8:48 AM Mohammed Gamal <mgamal@redhat.com> wrote:
+>
+> When EPT is enabled, KVM does not really look at guest physical
+> address size. Address bits above maximum physical memory size are reserved.
+> Because KVM does not look at these guest physical addresses, it currently
+> effectively supports guest physical address sizes equal to the host.
+>
+> This can be problem when having a mixed setup of machines with 5-level page
+> tables and machines with 4-level page tables, as live migration can change
+> MAXPHYADDR while the guest runs, which can theoretically introduce bugs.
 
+Huh? Changing MAXPHYADDR while the guest runs should be illegal. Or
+have I missed some peculiarity of LA57 that makes MAXPHYADDR a dynamic
+CPUID information field?
+
+> In this patch series we add checks on guest physical addresses in EPT
+> violation/misconfig and NPF vmexits and if needed inject the proper
+> page faults in the guest.
+>
+> A more subtle issue is when the host MAXPHYADDR is larger than that of the
+> guest. Page faults caused by reserved bits on the guest won't cause an EPT
+> violation/NPF and hence we also check guest MAXPHYADDR and add PFERR_RSVD_MASK
+> error code to the page fault if needed.
