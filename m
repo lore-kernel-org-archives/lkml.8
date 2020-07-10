@@ -2,117 +2,168 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C948C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7939C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B8D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A894F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGJMZu (ORCPT
+        id S1727780AbgGJMZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:25:50 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:51754 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726725AbgGJMZu (ORCPT
+        Fri, 10 Jul 2020 08:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgGJMZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:25:50 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 10 Jul 2020 15:25:47 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06ACPlqV012364;
-        Fri, 10 Jul 2020 15:25:47 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06ACPlHg003367;
-        Fri, 10 Jul 2020 15:25:47 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06ACPlYU003366;
-        Fri, 10 Jul 2020 15:25:47 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next v3 0/7] Add devlink-health support for devlink ports
-Date:   Fri, 10 Jul 2020 15:25:06 +0300
-Message-Id: <1594383913-3295-1-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
+        Fri, 10 Jul 2020 08:25:41 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABCEC08C5CE;
+        Fri, 10 Jul 2020 05:25:41 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4DAE42A698B
+Message-ID: <05b6cff6ba230c0ab6a562e17926d8503e2dfadd.camel@collabora.com>
+Subject: Re: [RFC 07/12] media: uapi: h264: Add DPB entry field reference
+ flags
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        nicolas.dufresne@collabora.com
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 10 Jul 2020 09:25:29 -0300
+In-Reply-To: <20200710140502.627b2b54@collabora.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB4011559BF2447047C66285D2ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <233509924f72d69824920d9312373eced68674c0.camel@collabora.com>
+         <20200710101333.05077f18@collabora.com>
+         <6232d8475e169ee53b5864959af21d14bf0fc620.camel@collabora.com>
+         <20200710140502.627b2b54@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement support for devlink health reporters on per-port basis.
++Nicolas
 
-This patchset comes to fix a design issue as some health reporters report
-on errors and run recovery on device level while the actual functionality
-is on port level. As for the current implemented devlink health reporters
-it is relevant only to Tx and Rx reporters of mlx5, which has only one
-port, so no real effect on functionality, but this should be fixed before
-more drivers will use devlink health reporters.
+On Fri, 2020-07-10 at 14:05 +0200, Boris Brezillon wrote:
+> On Fri, 10 Jul 2020 08:50:28 -0300
+> Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> 
+> > On Fri, 2020-07-10 at 10:13 +0200, Boris Brezillon wrote:
+> > > On Fri, 10 Jul 2020 01:21:07 -0300
+> > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > >   
+> > > > Hello Jonas,
+> > > > 
+> > > > In the context of the uAPI cleanup,
+> > > > I'm revisiting this patch.
+> > > > 
+> > > > On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:  
+> > > > > Add DPB entry flags to help indicate when a reference frame is a field picture
+> > > > > and how the DPB entry is referenced, top or bottom field or full frame.
+> > > > > 
+> > > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > > > ---
+> > > > >  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
+> > > > >  include/media/h264-ctrls.h                       |  4 ++++
+> > > > >  2 files changed, 16 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > > index bc5dd8e76567..eb6c32668ad7 100644
+> > > > > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > > > > @@ -2022,6 +2022,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> > > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
+> > > > >        - 0x00000004
+> > > > >        - The DPB entry is a long term reference frame
+> > > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
+> > > > > +      - 0x00000008
+> > > > > +      - The DPB entry is a field picture
+> > > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
+> > > > > +      - 0x00000010
+> > > > > +      - The DPB entry is a top field reference
+> > > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
+> > > > > +      - 0x00000020
+> > > > > +      - The DPB entry is a bottom field reference
+> > > > > +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
+> > > > > +      - 0x00000030
+> > > > > +      - The DPB entry is a reference frame
+> > > > >  
+> > > > >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
+> > > > >      Specifies the decoding mode to use. Currently exposes slice-based and
+> > > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > > > > index e877bf1d537c..76020ebd1e6c 100644
+> > > > > --- a/include/media/h264-ctrls.h
+> > > > > +++ b/include/media/h264-ctrls.h
+> > > > > @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
+> > > > >  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
+> > > > >  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
+> > > > >  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
+> > > > > +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
+> > > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
+> > > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
+> > > > > +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
+> > > > >      
+> > > > 
+> > > > I've been going thru the H264 spec and I'm unsure,
+> > > > are all these flags semantically needed?
+> > > > 
+> > > > For instance, if one of REF_BOTTOM or REF_TOP (or both)
+> > > > are set, doesn't that indicate it's a field picture?
+> > > > 
+> > > > Or conversely, if neither REF_BOTTOM or REF_TOP are set,
+> > > > then it's a frame picture?  
+> > > 
+> > > I think that's what I was trying to do here [1]
+> > > 
+> > > [1]https://patchwork.kernel.org/patch/11392095/  
+> > 
+> > Right. Aren't we missing a DPB_ENTRY_FLAG_TOP_FIELD?
+> > 
+> > If I understand correctly, the DPB can contain:
+> > 
+> > * frames (FLAG_FIELD not set)
+> > * a field pair, with a single field (FLAG_FIELD and either TOP or BOTTOM).
+> > * a field pair, with boths fields (FLAG_FIELD and both TOP or BOTTOM).
+> 
+> Well, my understand is that, if the buffer contains both a TOP and
+> BOTTOM field, it actually becomes a full frame, so you actually have
+> those cases:
+> 
+> * FLAG_FIELD not set: this a frame (note that a TOP/BOTTOM field
+>   decoded buffer can become of frame if it's complemented with the
+>   missing field later during the decoding)
+> * FLAG_FIELD set + BOTTOM_FIELD not set: this is a TOP field
+> * FLAG_FIELD set + BOTTOM_FIELD set: this is a BOTTOM field
+> * FLAG_FIELD not set + BOTTOM_FIELD set: invalid combination
+> 
+> but I might be wrong.
 
-First part in the series prepares common functions parts for health
-reporter implementation. Second introduces required API to devlink-health
-and mlx5e ones demonstrate its usage and implement the feature for mlx5
-driver.
+Yes, perhaps that's correct. I was trying to think strictly
+in terms of the H264 semantics, to define a clean interface.
 
-The per-port reporter functionality is achieved by adding a list of
-devlink_health_reporters to devlink_port struct in a manner similar to
-existing device infrastructure. This is the only major difference and
-it makes possible to fully reuse device reporters operations.
-The effect will be seen in conjunction with iproute2 additions and
-will affect all devlink health commands. User can distinguish between
-device and port reporters by looking at a devlink handle. Port reporters
-have a port index at the end of the address and such addresses can be
-provided as a parameter in every place where devlink-health accepted it.
-These can be obtained from devlink port show command.
-For example:
-$ devlink health show
-pci/0000:00:0a.0:
-  reporter fw
-    state healthy error 0 recover 0 auto_dump true
-pci/0000:00:0a.0/1:
-  reporter tx
-    state healthy error 0 recover 0 grace_period 500 auto_recover true auto_dump true
-$ devlink health set pci/0000:00:0a.0/1 reporter tx grace_period 1000 \
-auto_recover false auto_dump false
-$ devlink health show pci/0000:00:0a.0/1 reporter tx
-pci/0000:00:0a.0/1:
-  reporter tx
-    state healthy error 0 recover 0 grace_period 1000 auto_recover flase auto_dump false
+From the mpp code, looks like the above is enough for rkvdec
+(although I haven't done any tests).
 
-Note: User can use the same devlink health uAPI commands can get now either
-port health reporter or device health reporter.
-For example, the recover command:
-Before this patchset: devlink health recover DEV reporter REPORTER_NAME
-After this patchset: devlink health recover { DEV | DEV/PORT_INDEX } reporter REPORTER_NAME
-
-Changes v1 -> v2:
-Fixed functions comment to match parameters list.
-
-Changes v2 -> v3:
-Added motivation to cover letter and note on uAPI.
+Ezequiel
 
 
-Vladyslav Tarasiuk (7):
-  devlink: Refactor devlink health reporter constructor
-  devlink: Rework devlink health reporter destructor
-  devlink: Create generic devlink health reporter search function
-  devlink: Implement devlink health reporters on per-port basis
-  devlink: Add devlink health port reporters API
-  net/mlx5e: Move devlink port register and unregister calls
-  net/mlx5e: Move devlink-health rx and tx reporters to devlink port
-
- .../ethernet/mellanox/mlx5/core/en/reporter_rx.c   |   9 +-
- .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |  13 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  15 +-
- include/net/devlink.h                              |  11 +
- net/core/devlink.c                                 | 244 ++++++++++++++++-----
- 5 files changed, 216 insertions(+), 76 deletions(-)
-
--- 
-1.8.3.1
 
