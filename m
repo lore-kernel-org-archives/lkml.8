@@ -2,100 +2,490 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475EEC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14136C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC4420748
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE32206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bgegfdXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgGJOfv (ORCPT
+        id S1728024AbgGJOfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:35:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48386 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgGJOfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 10:35:48 -0400
-IronPort-SDR: PW4+0tFsmVEEFTCWe//jRB175Uahgbsqz5wIsSVeBp4oDjbB6FqhpfDvtRqbOiliMbjJ4UzpD1
- w2XZV8d02QvQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="233069546"
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="233069546"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 07:35:30 -0700
-IronPort-SDR: ECrrrkzvxc1YOLs1Tb1e4wtm6FjeWPUDFojMs/DsVc0DN6EH988x/HW76rC0HZqsRYezxxIYJh
- UOfNiwB0J9YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,336,1589266800"; 
-   d="scan'208";a="316620225"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jul 2020 07:35:28 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtu7d-0014Ir-O8; Fri, 10 Jul 2020 17:35:29 +0300
-Date:   Fri, 10 Jul 2020 17:35:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v1] regmap: Switch to use fwnode instead of OF one
-Message-ID: <20200710143529.GR3703480@smile.fi.intel.com>
-References: <20200708161232.17914-1-andriy.shevchenko@linux.intel.com>
- <20200708162117.GV4655@sirena.org.uk>
- <20200710100558.GI3703480@smile.fi.intel.com>
- <20200710110132.GA5653@sirena.org.uk>
- <20200710114622.GJ3703480@smile.fi.intel.com>
- <20200710120856.GD5653@sirena.org.uk>
- <20200710133233.GF5653@sirena.org.uk>
- <CAHp75VeWmWU6=ybDmQmv7ymwaHG+FxNBzZM9eBxp2Oie6MrZQw@mail.gmail.com>
- <CAHp75VcKSRem-eHi2FY89Y0yZcJrMVX_p_-OnF8+NuCrBSZfuA@mail.gmail.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbgGJOfp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:35:45 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD5CC08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:45 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so4595139pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 07:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fm1h5XUWv3Diq08it1jmFpLZPl229tCjgPS7ijCajHM=;
+        b=bgegfdXX42V+2myZUci7HFjznbp+EQybgo0dHx2fo1dNaFvO1vbHoshZqP+3LSeusa
+         M5BduoaOo/YHIbokmL/ruQxQ6x9iTh1LGhs4gjn9sizKE/rhYQ67jzraJbU+QFazXKzP
+         yzkyRSVi/yD5iFUYI5Dy2TVNYreAJge4pSawc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fm1h5XUWv3Diq08it1jmFpLZPl229tCjgPS7ijCajHM=;
+        b=Bo1GxzaZnbHYhAXpHNg2UYfsPmN0oR6tt+V+CPBf0v4mE/1X+AKaE37lC7UWpFvedR
+         S5A3g6Ku7TqnhVP3g4/XUicTwutz//LAF1hJZ6anhyhF6OuiKq/SF0m7KPBiLkAh3su5
+         KgK2PpPHLsQMT3aWNK3ao3BdZEg6iQvjYA9+koog0jRQVFkxWb5TQAx+GP0UidjotsFa
+         523+zDHBq/rBozqJNhF17XksWXYITdvcajUjjsSb/6g0Xc1YJMC0P6uMK+IIX0r8i+CF
+         nBcayfeEN61n7NKR8cPZqQzXAzYefYJopVM3HJjlbQRE/XKHzGAnSGZn/zhOMIWC9BHR
+         eTnA==
+X-Gm-Message-State: AOAM530lPcGOs1Gatzr0hgacf87ZVVNU6YnskSVhs8pRd2JUMlFFtgSM
+        Ue+bJQ/q9TyCs0ttFN0/ov+ExA==
+X-Google-Smtp-Source: ABdhPJx5FIC6EfwMbZ2dyMJB9/4fhMSvdd3SbYDNe//2f8UTCN7gjU+oqCDDzZESTtdV98TE2upi1A==
+X-Received: by 2002:a17:90a:d507:: with SMTP id t7mr6155083pju.193.1594391744512;
+        Fri, 10 Jul 2020 07:35:44 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id gn5sm5951284pjb.23.2020.07.10.07.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 07:35:43 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        mturney@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>, dhavalp@codeaurora.org,
+        rnayak@codeaurora.org, mkurumel@codeaurora.org,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 3/4] nvmem: qfprom: Add fuse blowing support
+Date:   Fri, 10 Jul 2020 07:35:19 -0700
+Message-Id: <20200710073439.v5.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+In-Reply-To: <20200710143520.1206846-1-dianders@chromium.org>
+References: <20200710143520.1206846-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcKSRem-eHi2FY89Y0yZcJrMVX_p_-OnF8+NuCrBSZfuA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 05:15:27PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 5:13 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 4:36 PM Mark Brown <broonie@kernel.org> wrote:
-> > >
-> > > On Fri, Jul 10, 2020 at 01:08:56PM +0100, Mark Brown wrote:
-> > > > On Fri, Jul 10, 2020 at 02:46:22PM +0300, Andy Shevchenko wrote:
-> > >
-> > > > > You mean it's being synchronised with git.kernel.org, but not yet contains that
-> > > > > patch? Okay, I will monitor the regmap tree (as of now I didn't see any update).
-> > >
-> > > > 5cc2013bfeee756a1ee6da9bfbe42e52b4695035
-> > >
-> > > Oh, I see your patch covered a different bit of code without covering
-> > > the stuff in regmap-irq (which I'd just handled when your patch came in)
-> > > for some reason so the changelog made it sound like the same code, and
-> > > at the time you submitted it the patch was incomplete.
-> >
-> > Should I do anything to improve it?
-> 
-> Actually I think we can completely get rid of fwnode by switching to
-> device properties.
-> I'll send v2 soon.
+From: Ravi Kumar Bokka <rbokka@codeaurora.org>
 
-Oops, I have looked into this and see that either way we would need an
-additional conditional and fwnode approach looks better. So, if you agree with
-v1, please apply.
+This patch adds support for blowing fuses to the qfprom driver if the
+required properties are defined in the device tree.
 
+Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v5:
+- QFPROM_FUSE_BLOW_POLL_US 10 => 100
+- QFPROM_FUSE_BLOW_TIMEOUT_US 100 => 1000
+
+Changes in v4:
+- Only get clock/regulator if all address ranges are provided.
+- Don't use optional version of clk_get now.
+- Clock name is "core", not "sec".
+- Cleaned up error message if couldn't get clock.
+- Fixed up minor version mask.
+- Use GENMASK to generate masks.
+
+Changes in v3:
+- Don't provide "reset" value for things; just save/restore.
+- Use the major/minor version read from 0x6000.
+- Reading should still read "corrected", not "raw".
+- Added a sysfs knob to allow you to read "raw" instead of "corrected"
+- Simplified the SoC data structure.
+- No need for quite so many levels of abstraction for clocks/regulator.
+- Don't set regulator voltage.  Rely on device tree to make sure it's right.
+- Properly undo things in the case of failure.
+- Don't just keep enabling the regulator over and over again.
+- Enable / disable the clock each time
+- Polling every 100 us but timing out in 10 us didn't make sense; swap.
+- No reason for 100 us to be SoC specific.
+- No need for reg-names.
+- We shouldn't be creating two separate nvmem devices.
+
+ drivers/nvmem/qfprom.c | 314 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 303 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
+index 8a91717600be..546c34666747 100644
+--- a/drivers/nvmem/qfprom.c
++++ b/drivers/nvmem/qfprom.c
+@@ -3,57 +3,349 @@
+  * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/device.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+-#include <linux/io.h>
+ #include <linux/nvmem-provider.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++
++/* Blow timer clock frequency in Mhz */
++#define QFPROM_BLOW_TIMER_OFFSET 0x03c
++
++/* Amount of time required to hold charge to blow fuse in micro-seconds */
++#define QFPROM_FUSE_BLOW_POLL_US	100
++#define QFPROM_FUSE_BLOW_TIMEOUT_US	1000
++
++#define QFPROM_BLOW_STATUS_OFFSET	0x048
++#define QFPROM_BLOW_STATUS_BUSY		0x1
++#define QFPROM_BLOW_STATUS_READY	0x0
++
++#define QFPROM_ACCEL_OFFSET		0x044
++
++#define QFPROM_VERSION_OFFSET		0x0
++#define QFPROM_MAJOR_VERSION_SHIFT	28
++#define QFPROM_MAJOR_VERSION_MASK	GENMASK(31, QFPROM_MAJOR_VERSION_SHIFT)
++#define QFPROM_MINOR_VERSION_SHIFT	16
++#define QFPROM_MINOR_VERSION_MASK	GENMASK(27, QFPROM_MINOR_VERSION_SHIFT)
++
++static bool read_raw_data;
++module_param(read_raw_data, bool, 0644);
++MODULE_PARM_DESC(read_raw_data, "Read raw instead of corrected data");
+ 
++/**
++ * struct qfprom_soc_data - config that varies from SoC to SoC.
++ *
++ * @accel_value:             Should contain qfprom accel value.
++ * @qfprom_blow_timer_value: The timer value of qfprom when doing efuse blow.
++ * @qfprom_blow_set_freq:    The frequency required to set when we start the
++ *                           fuse blowing.
++ */
++struct qfprom_soc_data {
++	u32 accel_value;
++	u32 qfprom_blow_timer_value;
++	u32 qfprom_blow_set_freq;
++};
++
++/**
++ * struct qfprom_priv - structure holding qfprom attributes
++ *
++ * @qfpraw:       iomapped memory space for qfprom-efuse raw address space.
++ * @qfpconf:      iomapped memory space for qfprom-efuse configuration address
++ *                space.
++ * @qfpcorrected: iomapped memory space for qfprom corrected address space.
++ * @qfpsecurity:  iomapped memory space for qfprom security control space.
++ * @dev:          qfprom device structure.
++ * @secclk:       Clock supply.
++ * @vcc:          Regulator supply.
++ * @soc_data:     Data that for things that varies from SoC to SoC.
++ */
+ struct qfprom_priv {
+-	void __iomem *base;
++	void __iomem *qfpraw;
++	void __iomem *qfpconf;
++	void __iomem *qfpcorrected;
++	void __iomem *qfpsecurity;
++	struct device *dev;
++	struct clk *secclk;
++	struct regulator *vcc;
++	const struct qfprom_soc_data *soc_data;
++};
++
++/**
++ * struct qfprom_touched_values - saved values to restore after blowing
++ *
++ * @clk_rate: The rate the clock was at before blowing.
++ * @accel_val: The value of the accel reg before blowing.
++ * @timer_val: The value of the timer before blowing.
++ */
++struct qfprom_touched_values {
++	unsigned long clk_rate;
++	u32 accel_val;
++	u32 timer_val;
+ };
+ 
++/**
++ * qfprom_disable_fuse_blowing() - Undo enabling of fuse blowing.
++ * @priv: Our driver data.
++ * @old:  The data that was stashed from before fuse blowing.
++ *
++ * Resets the value of the blow timer, accel register and the clock
++ * and voltage settings.
++ *
++ * Prints messages if there are errors but doesn't return an error code
++ * since there's not much we can do upon failure.
++ */
++static void qfprom_disable_fuse_blowing(const struct qfprom_priv *priv,
++					const struct qfprom_touched_values *old)
++{
++	int ret;
++
++	ret = regulator_disable(priv->vcc);
++	if (ret)
++		dev_warn(priv->dev, "Failed to disable regulator (ignoring)\n");
++
++	ret = clk_set_rate(priv->secclk, old->clk_rate);
++	if (ret)
++		dev_warn(priv->dev,
++			 "Failed to set clock rate for disable (ignoring)\n");
++
++	clk_disable_unprepare(priv->secclk);
++
++	writel(old->timer_val, priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
++	writel(old->accel_val, priv->qfpconf + QFPROM_ACCEL_OFFSET);
++}
++
++/**
++ * qfprom_enable_fuse_blowing() - Enable fuse blowing.
++ * @priv: Our driver data.
++ * @old:  We'll stash stuff here to use when disabling.
++ *
++ * Sets the value of the blow timer, accel register and the clock
++ * and voltage settings.
++ *
++ * Prints messages if there are errors so caller doesn't need to.
++ *
++ * Return: 0 or -err.
++ */
++static int qfprom_enable_fuse_blowing(const struct qfprom_priv *priv,
++				      struct qfprom_touched_values *old)
++{
++	int ret;
++
++	ret = clk_prepare_enable(priv->secclk);
++	if (ret) {
++		dev_err(priv->dev, "Failed to enable clock\n");
++		return ret;
++	}
++
++	old->clk_rate = clk_get_rate(priv->secclk);
++	ret = clk_set_rate(priv->secclk, priv->soc_data->qfprom_blow_set_freq);
++	if (ret) {
++		dev_err(priv->dev, "Failed to set clock rate for enable\n");
++		goto err_clk_prepared;
++	}
++
++	ret = regulator_enable(priv->vcc);
++	if (ret) {
++		dev_err(priv->dev, "Failed to enable regulator\n");
++		goto err_clk_rate_set;
++	}
++
++	old->timer_val = readl(priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
++	old->accel_val = readl(priv->qfpconf + QFPROM_ACCEL_OFFSET);
++	writel(priv->soc_data->qfprom_blow_timer_value,
++	       priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
++	writel(priv->soc_data->accel_value,
++	       priv->qfpconf + QFPROM_ACCEL_OFFSET);
++
++	return 0;
++
++err_clk_rate_set:
++	clk_set_rate(priv->secclk, old->clk_rate);
++err_clk_prepared:
++	clk_disable_unprepare(priv->secclk);
++	return ret;
++}
++
++/**
++ * qfprom_efuse_reg_write() - Write to fuses.
++ * @context: Our driver data.
++ * @reg:     The offset to write at.
++ * @_val:    Pointer to data to write.
++ * @bytes:   The number of bytes to write.
++ *
++ * Writes to fuses.  WARNING: THIS IS PERMANENT.
++ *
++ * Return: 0 or -err.
++ */
++static int qfprom_reg_write(void *context, unsigned int reg, void *_val,
++			    size_t bytes)
++{
++	struct qfprom_priv *priv = context;
++	struct qfprom_touched_values old;
++	int words = bytes / 4;
++	u32 *value = _val;
++	u32 blow_status;
++	int ret;
++	int i;
++
++	dev_dbg(priv->dev,
++		"Writing to raw qfprom region : %#010x of size: %zu\n",
++		reg, bytes);
++
++	/*
++	 * The hardware only allows us to write word at a time, but we can
++	 * read byte at a time.  Until the nvmem framework allows a separate
++	 * word_size and stride for reading vs. writing, we'll enforce here.
++	 */
++	if (bytes % 4) {
++		dev_err(priv->dev,
++			"%zu is not an integral number of words\n", bytes);
++		return -EINVAL;
++	}
++	if (reg % 4) {
++		dev_err(priv->dev,
++			"Invalid offset: %#x.  Must be word aligned\n", reg);
++		return -EINVAL;
++	}
++
++	ret = qfprom_enable_fuse_blowing(priv, &old);
++	if (ret)
++		return ret;
++
++	ret = readl_relaxed_poll_timeout(
++		priv->qfpconf + QFPROM_BLOW_STATUS_OFFSET,
++		blow_status, blow_status == QFPROM_BLOW_STATUS_READY,
++		QFPROM_FUSE_BLOW_POLL_US, QFPROM_FUSE_BLOW_TIMEOUT_US);
++
++	if (ret) {
++		dev_err(priv->dev,
++			"Timeout waiting for initial ready; aborting.\n");
++		goto exit_enabled_fuse_blowing;
++	}
++
++	for (i = 0; i < words; i++)
++		writel(value[i], priv->qfpraw + reg + (i * 4));
++
++	ret = readl_relaxed_poll_timeout(
++		priv->qfpconf + QFPROM_BLOW_STATUS_OFFSET,
++		blow_status, blow_status == QFPROM_BLOW_STATUS_READY,
++		QFPROM_FUSE_BLOW_POLL_US, QFPROM_FUSE_BLOW_TIMEOUT_US);
++
++	/* Give an error, but not much we can do in this case */
++	if (ret)
++		dev_err(priv->dev, "Timeout waiting for finish.\n");
++
++exit_enabled_fuse_blowing:
++	qfprom_disable_fuse_blowing(priv, &old);
++
++	return ret;
++}
++
+ static int qfprom_reg_read(void *context,
+ 			unsigned int reg, void *_val, size_t bytes)
+ {
+ 	struct qfprom_priv *priv = context;
+ 	u8 *val = _val;
+ 	int i = 0, words = bytes;
++	void __iomem *base = priv->qfpcorrected;
++
++	if (read_raw_data && priv->qfpraw)
++		base = priv->qfpraw;
+ 
+ 	while (words--)
+-		*val++ = readb(priv->base + reg + i++);
++		*val++ = readb(base + reg + i++);
+ 
+ 	return 0;
+ }
+ 
+-static struct nvmem_config econfig = {
+-	.name = "qfprom",
+-	.stride = 1,
+-	.word_size = 1,
+-	.reg_read = qfprom_reg_read,
++static const struct qfprom_soc_data qfprom_7_8_data = {
++	.accel_value = 0xD10,
++	.qfprom_blow_timer_value = 25,
++	.qfprom_blow_set_freq = 4800000,
+ };
+ 
+ static int qfprom_probe(struct platform_device *pdev)
+ {
++	struct nvmem_config econfig = {
++		.name = "qfprom",
++		.stride = 1,
++		.word_size = 1,
++		.reg_read = qfprom_reg_read,
++	};
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+ 	struct nvmem_device *nvmem;
+ 	struct qfprom_priv *priv;
++	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	/* The corrected section is always provided */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(priv->base))
+-		return PTR_ERR(priv->base);
++	priv->qfpcorrected = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->qfpcorrected))
++		return PTR_ERR(priv->qfpcorrected);
+ 
+ 	econfig.size = resource_size(res);
+ 	econfig.dev = dev;
+ 	econfig.priv = priv;
+ 
++	priv->dev = dev;
++
++	/*
++	 * If more than one region is provided then the OS has the ability
++	 * to write.
++	 */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (res) {
++		u32 version;
++		int major_version, minor_version;
++
++		priv->qfpraw = devm_ioremap_resource(dev, res);
++		if (IS_ERR(priv->qfpraw))
++			return PTR_ERR(priv->qfpraw);
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
++		priv->qfpconf = devm_ioremap_resource(dev, res);
++		if (IS_ERR(priv->qfpconf))
++			return PTR_ERR(priv->qfpconf);
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
++		priv->qfpsecurity = devm_ioremap_resource(dev, res);
++		if (IS_ERR(priv->qfpsecurity))
++			return PTR_ERR(priv->qfpsecurity);
++
++		version = readl(priv->qfpsecurity + QFPROM_VERSION_OFFSET);
++		major_version = (version & QFPROM_MAJOR_VERSION_MASK) >>
++				QFPROM_MAJOR_VERSION_SHIFT;
++		minor_version = (version & QFPROM_MINOR_VERSION_MASK) >>
++				QFPROM_MINOR_VERSION_SHIFT;
++
++		if (major_version == 7 && minor_version == 8)
++			priv->soc_data = &qfprom_7_8_data;
++
++		priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
++		if (IS_ERR(priv->vcc))
++			return PTR_ERR(priv->vcc);
++
++		priv->secclk = devm_clk_get(dev, "core");
++		if (IS_ERR(priv->secclk)) {
++			ret = PTR_ERR(priv->secclk);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "Error getting clock: %d\n", ret);
++			return ret;
++		}
++
++		/* Only enable writing if we have SoC data. */
++		if (priv->soc_data)
++			econfig.reg_write = qfprom_reg_write;
++	}
++
+ 	nvmem = devm_nvmem_register(dev, &econfig);
+ 
+ 	return PTR_ERR_OR_ZERO(nvmem);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.27.0.383.g050319c2ae-goog
 
