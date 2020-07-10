@@ -2,258 +2,167 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A29C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146BAC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84BC92068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB8120786
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ed5gwn4T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CGWgrEwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGJWUp (ORCPT
+        id S1726903AbgGJWWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60174 "EHLO
+        Fri, 10 Jul 2020 18:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgGJWUX (ORCPT
+        with ESMTP id S1726806AbgGJWWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:20:23 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B08C08C5DC;
-        Fri, 10 Jul 2020 15:20:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so9340992wmm.0;
-        Fri, 10 Jul 2020 15:20:22 -0700 (PDT)
+        Fri, 10 Jul 2020 18:22:07 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B98BC08E6DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:22:07 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 12so6062177oir.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 15:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/DGPoUKfitACThlLV4LP7NGjasXKQ1tYflzyCbCjHy8=;
-        b=ed5gwn4TL9l6C2hiNge5RZpFsA3eH8Iphd/yN7KO/OEDmm0/OSkvJI4TCYu/rzQnYy
-         0hyFq0ogXey3cZKxUvgeTPTs/hHUXW9/Vra3kb4T7oqh4Rq0PKSYLKAZZVD7N0/YdZri
-         o4pY0AafSoWv/ld1mPCMM40Ysb1qqNrorEylEsXqfbi8jrrBBvpZkgioI+UbW+pX3KOy
-         UGp1uGHS+r5gJJ9cvYLS5usc37+cPk7luqVtbwn9usBa+1oGAAyG+JHvt8mx1q71xuS5
-         Qf7uWVrXkrai9JcSXa2KhvDd2u1heIIhby4m4sVfaqwry1ZxAw9wUIQmnDzShMn0ukX3
-         PFKQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sfPk1+u61DN4Dz/z2Pu4rTndUdKhPwDaWZtZBaUU1jg=;
+        b=CGWgrEwlpWSxGS28p+B9aKE3dWl38zgj4StlTqSCg3W9KgUJXjeDSaY6Jwx8i9lwRi
+         9UpvDUF7JWYl638DQLAuqEazgzf8DbZZ9YxsBc+6s4pA0JeV/ASd0IAshGRT8qT4BX0S
+         xxqg9moE+lu34pnF6PLPa3mQs1nK4VYFyAzoCRitXkydtj0aNPoPsnzkeIETzFjSHGPb
+         shBuYBhaTugM1OgtxES7TxTi/SzCN3mS/hMPilaBmHk0TAg8MoF64kvJ+n7z+8WllDhx
+         AAW0+zB1xhT0lObKRKFabhrxJAJ+RjvomcYh6bFq6juanWOudCq7LiXglEaxQI7fxDia
+         slHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/DGPoUKfitACThlLV4LP7NGjasXKQ1tYflzyCbCjHy8=;
-        b=mrn68kyFKAIue/UbqL6a5WdLNuXSkhCKj94MYL8voZ5X4JxelyD9G2jmlt42wYSiZi
-         O0DUGr5x8pnnHTtR+rXCyvQo5c9Ptl5F1q4MXs4uN6O90mV6xlKv6P387jRavRyOF2Dl
-         AKjBblQmI+ghwq9KgoP1NcG+AxRn7tO0ANGoyI8TFWBEq9Nlc5e2gE2CwXm/J9BbqmsY
-         uu9Or1/hgBiHP/Y6R+5A6Bkwj4PGzxwvjj4MTNJySvrraYuRESG2QgPfDcMiSLXZlZpS
-         G1Z3t/lSDShwvCDogr7pKaJVWNvlp38cWqLJI4cfH5HYV++gGpVoZXzIUbUzSghEnS9N
-         jSBA==
-X-Gm-Message-State: AOAM531FOcYvmkzTTT+7c/z3K+jvNVlefXInaIIOLz9Ac3/OKVP+aJQb
-        UjoYxOefR1qHKnzOQTaBpdk=
-X-Google-Smtp-Source: ABdhPJx1ZcaQfkFJ2dxuru9m9ZjdAi9ZYjp4N9+6ITauNzxYltGNvZLsptAH6OhVGB2ky+/up1DUQQ==
-X-Received: by 2002:a1c:6706:: with SMTP id b6mr6726758wmc.167.1594419621287;
-        Fri, 10 Jul 2020 15:20:21 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id l18sm12170281wrm.52.2020.07.10.15.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 15:20:20 -0700 (PDT)
-From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-To:     helgaas@kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/14 v3] PCI/PM: Check return value of pcie_capability_read_*()
-Date:   Fri, 10 Jul 2020 23:20:23 +0200
-Message-Id: <20200710212026.27136-12-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200710212026.27136-1-refactormyself@gmail.com>
-References: <20200710212026.27136-1-refactormyself@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sfPk1+u61DN4Dz/z2Pu4rTndUdKhPwDaWZtZBaUU1jg=;
+        b=nagIrDsWbkHsM40/7lEb+lBlqELHS+8vzG9zreHWL23ktVatTtEi4L4jnGk+RVCnta
+         0ErqQtwR8HJ4ZC49vF0YIuRXoG9D4IJW22gKifNngHj0LBtHGPNllinHD88qReJEXK0e
+         edsYch1vbefSZvh0QEI1tLPIkVOsZ8Z03F6/ClRfhuvYFy211IUkCPELIGSjX/zhrYrR
+         he3MyqXJMVYrfYKiNvqZuGIbIVFhFIsIVr+xlyGHepAEfopj/iWlLd7XuKqzo9vJRTMq
+         ExF/feLuhFphd8dqZTxoQhPuFeHmTzbeirZmZ0KHF3LLvaJ7E+5uLNIPm4CZphXCNHQy
+         VVEg==
+X-Gm-Message-State: AOAM530J9YV9d6weoZUuTDrYPVBdRJQr+98IGvW5Mv+FETkBBH5i7PNL
+        3GNLxOGEV2ZPXN1bzdmUQHJpuDwL9NJ3XBw2heK+8wZrNJY=
+X-Google-Smtp-Source: ABdhPJxLt4Cehy4m7wD0RYUwN5jq18bgpscixR8K5qySY9mHffzEWL0hF8baUYqT7R4HfV0LqTJoVtMk95ufKZmESKg=
+X-Received: by 2002:aca:b5c3:: with SMTP id e186mr5976661oif.10.1594419726479;
+ Fri, 10 Jul 2020 15:22:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200625001039.56174-1-john.stultz@linaro.org>
+ <20200625001039.56174-6-john.stultz@linaro.org> <20200702141825.GA16941@willie-the-truck>
+ <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com> <20200710075411.GA30011@willie-the-truck>
+In-Reply-To: <20200710075411.GA30011@willie-the-truck>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 10 Jul 2020 15:21:53 -0700
+Message-ID: <CALAqxLWadLrxckRHRAR0Q417RnFKquQJbRfO_DLEVH56cykRow@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+To:     Will Deacon <will@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Fri, Jul 10, 2020 at 12:54 AM Will Deacon <will@kernel.org> wrote:
+> On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
+> > On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
+> > > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
+> > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > > index b510f67dfa49..714893535dd2 100644
+> > > > --- a/drivers/iommu/Kconfig
+> > > > +++ b/drivers/iommu/Kconfig
+> > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
+> > > >  config ARM_SMMU
+> > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
+> > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
+> > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> > > >       select IOMMU_API
+> > > >       select IOMMU_IO_PGTABLE_LPAE
+> > > >       select ARM_DMA_USE_IOMMU if ARM
+> > >
+> > > This looks like a giant hack. Is there another way to handle this?
+> >
+> > Sorry for the slow response here.
+> >
+> > So, I agree the syntax looks strange (requiring a comment obviously
+> > isn't a good sign), but it's a fairly common way to ensure drivers
+> > don't get built in if they optionally depend on another driver that
+> > can be built as a module.
+> >   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
+> > !USB_GADGET" in various Kconfig files.
+> >
+> > I'm open to using a different method, and in a different thread you
+> > suggested using something like symbol_get(). I need to look into it
+> > more, but that approach looks even more messy and prone to runtime
+> > failures. Blocking the unwanted case at build time seems a bit cleaner
+> > to me, even if the syntax is odd.
+>
+> Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
+> as that driver _really_ doesn't care about SoC details like this. In other
+> words, add a new entry along the lines of:
+>
+>         config ARM_SMMU_QCOM_IMPL
+>         default y
+>         #if QCOM_SCM=m this can't be =y
+>         depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
+>
+> and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
+> which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
+> so that we don't bother to compile arm-smmu-qcom.o in that case.
+>
+> Would that work?
 
-On failure pcie_capability_read_dword() sets it's last parameter,
-val to 0.
-However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+I think this proposal still has problems with the directionality of the call.
 
-This bug can be avoided if the return value of pcie_capability_read_dword
-is checked to confirm success.
+The arm-smmu-impl.o calls to arm-smmu-qcom.o which calls qcom_scm.o
+So if qcom_scm.o is part of a module, the calling code in
+arm-smmu-qcom.o also needs to be a module, which means CONFIG_ARM_SMMU
+needs to be a module.
 
-Check the return value of pcie_capability_read_dword() to ensure success.
+I know you said the arm-smmu driver doesn't care about SoC details,
+but the trouble is that currently the arm-smmu driver does directly
+call the qcom-scm code. So it is a real dependency. However, if
+QCOM_SCM is not configured, it calls stubs and that's ok.  In that
+way, the "depends on QCOM_SCM || !QCOM_SCM" line actually makes sense.
+It looks terrible because we're used to boolean logic, but it's
+ternary.
 
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
----
- drivers/pci/pci.c | 52 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 19 deletions(-)
+Maybe can have the ARM_SMMU_QCOM_IMPL approach you suggest above, but
+that just holds the issue out at arms length, because we're still
+going to need to have:
+  depends on ARM_SMMU_QCOM_IMPL || !ARM_SMMU_QCOM_IMPL
+in the ARM_SMMU definition, which I suspect you're wanting to avoid.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b..9f18ffbf7bd4 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3207,6 +3207,7 @@ void pci_configure_ari(struct pci_dev *dev)
- {
- 	u32 cap;
- 	struct pci_dev *bridge;
-+	int ret;
- 
- 	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
- 		return;
-@@ -3215,8 +3216,8 @@ void pci_configure_ari(struct pci_dev *dev)
- 	if (!bridge)
- 		return;
- 
--	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
--	if (!(cap & PCI_EXP_DEVCAP2_ARI))
-+	ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-+	if (ret || !(cap & PCI_EXP_DEVCAP2_ARI))
- 		return;
- 
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
-@@ -3606,6 +3607,7 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 	struct pci_bus *bus = dev->bus;
- 	struct pci_dev *bridge;
- 	u32 cap, ctl2;
-+	int ret;
- 
- 	if (!pci_is_pcie(dev))
- 		return -EINVAL;
-@@ -3629,28 +3631,29 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 	while (bus->parent) {
- 		bridge = bus->self;
- 
--		pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-+		ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2,
-+								&cap);
- 
- 		switch (pci_pcie_type(bridge)) {
- 		/* Ensure switch ports support AtomicOp routing */
- 		case PCI_EXP_TYPE_UPSTREAM:
- 		case PCI_EXP_TYPE_DOWNSTREAM:
--			if (!(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
-+			if (ret || !(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
- 				return -EINVAL;
- 			break;
- 
- 		/* Ensure root port supports all the sizes we care about */
- 		case PCI_EXP_TYPE_ROOT_PORT:
--			if ((cap & cap_mask) != cap_mask)
-+			if (ret || ((cap & cap_mask) != cap_mask))
- 				return -EINVAL;
- 			break;
- 		}
- 
- 		/* Ensure upstream ports don't block AtomicOps on egress */
- 		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_UPSTREAM) {
--			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2,
--						   &ctl2);
--			if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
-+			ret = pcie_capability_read_dword(bridge,
-+						PCI_EXP_DEVCTL2, &ctl2);
-+			if (!ret && (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
- 				return -EINVAL;
- 		}
- 
-@@ -4507,12 +4510,13 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
- bool pcie_has_flr(struct pci_dev *dev)
- {
- 	u32 cap;
-+	int ret;
- 
- 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
- 		return false;
- 
--	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
--	return cap & PCI_EXP_DEVCAP_FLR;
-+	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
-+	return (!ret && !!(cap & PCI_EXP_DEVCAP_FLR));
- }
- EXPORT_SYMBOL_GPL(pcie_has_flr);
- 
-@@ -4672,7 +4676,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(20);
- 	for (;;) {
- 		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
--		ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-+		ret = !!(!ret && (lnk_status & PCI_EXP_LNKSTA_DLLLA));
- 		if (ret == active)
- 			break;
- 		if (timeout <= 0)
-@@ -5774,6 +5778,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 	enum pci_bus_speed next_speed;
- 	enum pcie_link_width next_width;
- 	u32 bw, next_bw;
-+	int ret;
- 
- 	if (speed)
- 		*speed = PCI_SPEED_UNKNOWN;
-@@ -5783,7 +5788,12 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 	bw = 0;
- 
- 	while (dev) {
--		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-+		ret = pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-+
-+		if (ret) {
-+			dev = pci_upstream_bridge(dev);
-+			continue;
-+		}
- 
- 		next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
- 		next_width = (lnksta & PCI_EXP_LNKSTA_NLW) >>
-@@ -5820,6 +5830,7 @@ EXPORT_SYMBOL(pcie_bandwidth_available);
- enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
- {
- 	u32 lnkcap2, lnkcap;
-+	int ret;
- 
- 	/*
- 	 * Link Capabilities 2 was added in PCIe r3.0, sec 7.8.18.  The
-@@ -5830,16 +5841,18 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
- 	 * should use the Supported Link Speeds field in Link Capabilities,
- 	 * where only 2.5 GT/s and 5.0 GT/s speeds were defined.
- 	 */
--	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
-+	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
- 
- 	/* PCIe r3.0-compliant */
--	if (lnkcap2)
-+	if (!ret && lnkcap2)
- 		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
- 
--	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
--	if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
-+	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-+	if (!ret &&
-+		((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB))
- 		return PCIE_SPEED_5_0GT;
--	else if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_2_5GB)
-+	else if (!ret &&
-+		((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_2_5GB))
- 		return PCIE_SPEED_2_5GT;
- 
- 	return PCI_SPEED_UNKNOWN;
-@@ -5856,9 +5869,10 @@ EXPORT_SYMBOL(pcie_get_speed_cap);
- enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev)
- {
- 	u32 lnkcap;
-+	int ret;
- 
--	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
--	if (lnkcap)
-+	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-+	if (!ret && lnkcap)
- 		return (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
- 
- 	return PCIE_LNK_WIDTH_UNKNOWN;
--- 
-2.18.2
+Otherwise the only thing I can think of is a deeper reworking of the
+arm-smmu-impl code so that the arm-smmu-qcom code probes itself and
+registers its hooks with the arm-smmu core.
+That way the arm-smmu driver would not directly call any SoC specific
+code (and thus have no dependencies outward). But it's probably a fair
+amount of churn vs the extra depends string.
 
+thanks
+-john
