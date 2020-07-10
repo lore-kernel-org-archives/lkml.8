@@ -2,99 +2,142 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5C7C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329DDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6801A2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594391247;
-	bh=z5GS7bzW3vt89ODcDbxTwcqTDUKbrhtLbUgZN/aPJks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l+f1ztYIkXWlxCfAMo7QFTPDWWlPmHHyZX6a3lYSPTt3EqhrLafg16oXwb2+h8PPg
-	 6+AV2qqu0OY0LkGhAbo5s+rQBgrqB5aXHzj9KTVmP9ipu8/BC9nazDF1O+uTTjfdVd
-	 c1SsU8nszv+QUzNFmpM1TXSmDpkg5cDX9hqOQRLI=
+	by mail.kernel.org (Postfix) with ESMTP id 0D8B82063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jV50f32Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tWKhw0vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgGJO10 (ORCPT
+        id S1728022AbgGJO2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:27:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgGJO1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:27:25 -0400
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB264206E2;
-        Fri, 10 Jul 2020 14:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594391245;
-        bh=z5GS7bzW3vt89ODcDbxTwcqTDUKbrhtLbUgZN/aPJks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=udoNZF8P0ADm4fqn4Qy5x9C2vHCV2p9r+Ns+aU2CoUVQCPkWqe/5EBJWiz/+wZ+cB
-         ex+pS3L2z+DH2RCdK6ZdxCS5z+5yAfPJTi10+K61d8UR22uyLQCnmMaVnZGFU6P9C/
-         uuafWvzXw3P/2xm2EvwMJq+xrmLFHHZ/dRnwr/yQ=
-Received: by mail-oo1-f43.google.com with SMTP id t12so1024069ooc.10;
-        Fri, 10 Jul 2020 07:27:24 -0700 (PDT)
-X-Gm-Message-State: AOAM531jNgohfFBhdc7i2YIe5CYkagWdUJcejRmyIG9X5sxFRNDbFGz4
-        Zgtg9wwMmYEgZP2vb91GsIR4ywWoy02g6cXOBe8=
-X-Google-Smtp-Source: ABdhPJz6+EdbHPDvR54y8i1lkJirNkR+7jQgNft2XWsMwOMmyjZqITES3V6nwxYUU7/dFIw3al47o4ejMuE4Cv4kjXk=
-X-Received: by 2002:a4a:b34b:: with SMTP id n11mr59771293ooo.41.1594391244224;
- Fri, 10 Jul 2020 07:27:24 -0700 (PDT)
+        Fri, 10 Jul 2020 10:28:51 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:42259 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbgGJO2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:28:50 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 7221E845;
+        Fri, 10 Jul 2020 10:28:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 10 Jul 2020 10:28:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=H
+        dz4DLRipzbxKr7xR0rS1IxGPTkOR/aymG5+qu4SFKM=; b=jV50f32ZMRdGcju76
+        xcs/nSGrdpE4sQCUUYddJx+6vd3QI+FpCNHseVhWJenXZoTOWJMiYs/YUNAQTNNW
+        PU55R+LwHyRxfw256L7LIIq3Q2BnW2YQcYNnsH1GwO4F7/rdyMUXVk3NDUe4Y3t1
+        eO71ZXvnNzThn1D+LrGlcd8YvW+5E4lHSj17KJItj7TgcM36ebwE5EbfZrGaBL2l
+        dXej30v/9U+QZ4kEs1TA7Fi6tvsVZBqg+I3m6QDVxcZTZkaVmgEkvIQ4aBsex8iK
+        Jnhg9TqzP5U9No3sggCzsC93f0iFX//nBalF5zXJeUac+qQKehnw5ojyiQ1i4Mum
+        HElYQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Hdz4DLRipzbxKr7xR0rS1IxGPTkOR/aymG5+qu4SF
+        KM=; b=tWKhw0vlIYAWv/vnpEOC1/V1izkAJhSsxvOd8t1hnSOetf7YrD91FY92t
+        7EtKZxvzWKhvPD+iHya/YIDJHLZq6EQKmOMIFvYwRpinOLecRV11LaNaLCvn/9z2
+        5NBpIH+BfTslNdKaK/ZHPLMPLS5XF2RfMUhs4b/L1npO6XHVXgBVgNAeyz8Hb8i4
+        QrmZnOSiPPzU6YsheC/2ue54Cg3pJR013mEyiKr8Js49lUd/B7+Thn4khI/O/bVc
+        SUvXmz1c3FEoDg50MA1UpPTh0VzmhB7MfBPqUM365vBHLwkQhiTJVUyWbThhQV0j
+        j7XjmzDlmAT0v1vpy4GpQ351uQBWg==
+X-ME-Sender: <xms:G3sIX1j919aLyVbZGlsNUWj6vR7vsR79oT4U1QOaDVJWSVllp1Ncgg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdektdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
+    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:G3sIX6AKqqw4oIjXblUZJxow5lSiJ1xp5zMy_WasLxuR-CrJp3t6Xw>
+    <xmx:G3sIX1Ge0sxNOXKYSnkdK3ZqxYgdQW9-cvkHcb7WAh3NaCxvXlIj-A>
+    <xmx:G3sIX6SaeeXypihV_rnGMCvvoehNkBb8beRw62slq9K7H4gONHnS3w>
+    <xmx:H3sIX6cBl607v9CFjrFgJw6pOcZr-BlnLHwaY9VCXOP8HYBseBZp9HGd4R0>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8389E3280064;
+        Fri, 10 Jul 2020 10:28:43 -0400 (EDT)
+Date:   Fri, 10 Jul 2020 16:28:41 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
+        bage@linutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+Subject: Re: [PATCH v3 00/16] Allwinner A100 Initial support
+Message-ID: <20200710142841.7ue3xtracowexjct@gilmour.lan>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <20200710142253.28070-1-jgross@suse.com>
-In-Reply-To: <20200710142253.28070-1-jgross@suse.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Jul 2020 17:27:13 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXEdm8MrdWVLO0w_-LJLvpiUURHhazv4-B39L1Bbk8kqFw@mail.gmail.com>
-Message-ID: <CAMj1kXEdm8MrdWVLO0w_-LJLvpiUURHhazv4-B39L1Bbk8kqFw@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: avoid error message when booting under Xen
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 at 17:24, Juergen Gross <jgross@suse.com> wrote:
->
-> efifb_probe() will issue an error message in case the kernel is booted
-> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
-> that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
->
-> Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+Hi,
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+On Wed, Jul 08, 2020 at 03:19:26PM +0800, Frank Lee wrote:
+> This patch set adds initial support for allwinner a100 soc,
+> which is a 64-bit tablet chip.
+>=20
+> v3:
+> -Add pmu and nmi support
+> -Add read data mask for calibration
+> -Code style
+> -Some trivial things in yaml files
+>=20
+> v2:
+> -Some naming consistency
+> -Repair email address
+> -Fix mmc clock
+> -Don't export system clock
+> -Fix checkpatch warning
+> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
+>=20
+> Frank Lee (16):
+>   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
+>     R-CCU
+>   clk: sunxi-ng: add support for the Allwinner A100 CCU
+>   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+>   dt-bindings: pinctrl: sunxi: make gpio banks supplies required
+>   pinctrl: sunxi: add support for the Allwinner A100 pin controller
+>   dt-bindings: nvmem: SID: add binding for A100's SID controller
+>   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
+>   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
+>     sun50i_h6_ths_calibrate
+>   thermal: sun8i: Add A100's THS controller support
+>   mfd: axp20x: Allow the AXP803 to be probed by I2C
+>   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+>   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
 
-> ---
->  drivers/video/fbdev/efifb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-> index 65491ae74808..e57c00824965 100644
-> --- a/drivers/video/fbdev/efifb.c
-> +++ b/drivers/video/fbdev/efifb.c
-> @@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
->         info->apertures->ranges[0].base = efifb_fix.smem_start;
->         info->apertures->ranges[0].size = size_remap;
->
-> -       if (efi_enabled(EFI_BOOT) &&
-> +       if (efi_enabled(EFI_MEMMAP) &&
->             !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
->                 if ((efifb_fix.smem_start + efifb_fix.smem_len) >
->                     (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
-> --
-> 2.26.2
->
+it doesn't look like those patches went through?
+
+>   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+>   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+>   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+>   arm64: allwinner: A100: add support for Allwinner Perf1 board
+
+On a more general topic, which bootloader have you used to test this?
+The one from Allwinner's BSP I assume?
+
+Maxime
