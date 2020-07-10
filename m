@@ -2,161 +2,128 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40180C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 645E3206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E064206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tbMmZy3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgGJFLv (ORCPT
+        id S1726644AbgGJFMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:11:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbgGJFLk (ORCPT
+        Fri, 10 Jul 2020 01:12:45 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:24367 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgGJFM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:11:40 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A51nP2107497;
-        Fri, 10 Jul 2020 01:11:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpqqpfj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 01:10:59 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06A52F7F108851;
-        Fri, 10 Jul 2020 01:10:59 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpqqpeh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 01:10:59 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06A55FfG018835;
-        Fri, 10 Jul 2020 05:10:56 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 326bch84q0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 05:10:56 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06A5Ari353018686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 05:10:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBB9B52057;
-        Fri, 10 Jul 2020 05:10:53 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com.com (unknown [9.199.48.201])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C4E205205A;
-        Fri, 10 Jul 2020 05:10:51 +0000 (GMT)
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/livepatch: adopt to newer sysctl error format
-Date:   Fri, 10 Jul 2020 10:40:43 +0530
-Message-Id: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 10 Jul 2020 01:12:28 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200710051226epoutp042804be20dc27c1a3fee96cb9adc2a75b~gTBrO5ZIn0315503155epoutp04h
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 05:12:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200710051226epoutp042804be20dc27c1a3fee96cb9adc2a75b~gTBrO5ZIn0315503155epoutp04h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594357946;
+        bh=rNNX9b6tZ6S7AUB3rkF2clKx3XwI8G65y+6UE3xRA1s=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=tbMmZy3AIWbjjF+W5FCiAq8J+xAV91WKdR8yflCWH2Qoi6G3OgtQrn8gfPolD0mmY
+         dDGpbATo1fTMLJZr066MFwv/B/0BE8vuPYV+U61nY0l/QgD/ZcFeNZ6i1MhqUsl45w
+         AgU+5gRR8/obk4VcwkBNstSJW4M/sktRP34alNfU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200710051225epcas1p2d7d019eca37d4f786f547ce77d1aaeae~gTBq5yA7Y2125421254epcas1p2h;
+        Fri, 10 Jul 2020 05:12:25 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4B31Ph5q2ZzMqYm0; Fri, 10 Jul
+        2020 05:12:24 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        86.79.29173.8B8F70F5; Fri, 10 Jul 2020 14:12:24 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200710051224epcas1p3c534126a5da8e1ca0fbb1ac8d6a009e8~gTBpaF6-i1355613556epcas1p3L;
+        Fri, 10 Jul 2020 05:12:24 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200710051224epsmtrp27c1d60f434e879dfe2ce9b9a62ca85fb~gTBpZeJqN0586905869epsmtrp2E;
+        Fri, 10 Jul 2020 05:12:24 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-0c-5f07f8b8f5fd
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        51.91.08303.8B8F70F5; Fri, 10 Jul 2020 14:12:24 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200710051223epsmtip1c42b64b665e657d1b4ff051f1616bdde~gTBpO6GpQ2279322793epsmtip1i;
+        Fri, 10 Jul 2020 05:12:23 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Hyeongseok Kim'" <hyeongseok@gmail.com>, <sj1557.seo@samsung.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200708095233.56131-1-hyeongseok@gmail.com>
+Subject: RE: [PATCH] exfat: fix wrong size update of stream entry by typo
+Date:   Fri, 10 Jul 2020 14:12:24 +0900
+Message-ID: <00b301d65678$b268b880$173a2980$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_01:2020-07-09,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 mlxlogscore=999
- malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007100029
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIwFQOcuNwl5jhs2AXwhm4KWh7FlAF9CkZPqEDe0zA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmge6OH+zxBv9/aFn8nfiJyWLP3pMs
+        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5KscmIzUxJbVIITUvOT8lMy/dVsk7ON45
+        3tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB2ibkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRW
+        KbUgJafA0KBArzgxt7g0L10vOT/XytDAwMgUqDIhJ+PdhKesBReZKpbd/c3SwDiFqYuRk0NC
+        wERi4of5LF2MXBxCAjsYJTZe2MUK4XxilDi6bwk7hPOZUeLskyXMMC0Hb86BatnFKLFi+S4m
+        COclo8T5ndtZQKrYBHQl/v3ZzwZiiwi4S+x618MIYjMLOEscvnEKbBKngJXEt8fLwWxhAU+g
+        3dPAbBYBVYmHrz+D1fMKWErc3XiIDcIWlDg58wkLxBx5ie1v50BdpCDx8+kyVohdVhIrD0xg
+        hqgRkZjd2cYMcpyEwFd2idcrzrJANLhI/L6+GMoWlnh1fAs7hC0l8fndXqBlHEB2tcTH/VDz
+        OxglXny3hbCNJW6u38AKUsIsoCmxfpc+RFhRYufvuVAv8km8+9rDCjGFV6KjTQiiRFWi79Jh
+        aLBLS3S1f2CfwKg0C8ljs5A8NgvJA7MQli1gZFnFKJZaUJybnlpsWGCMHNmbGMEpUct8B+O0
+        tx/0DjEycTAeYpTgYFYS4TVQZI0X4k1JrKxKLcqPLyrNSS0+xGgKDOqJzFKiyfnApJxXEm9o
+        amRsbGxhYmZuZmqsJM777yx7vJBAemJJanZqakFqEUwfEwenVAOT1pJQRy3z6OkOLWv36DEs
+        tpTm7P/91HBjYAjvvYzzNobPKh7ez0pmN085565+/Rbn59li7W7yz85vnLa9ir1n9ZaXVzpX
+        LVyiyzW9XNqCu+ofX/D8fTfvWV+ZvX1qjNg53uyrwuZs5hH/7X6/SWxveLLp93WDFfdW3Emr
+        6r/z5muQ3aVL5WlzX8v69xkp2295OPO599KQCsXVy9dm5r1aqP7RIFxMW1jWt/Ca9N2VofFF
+        h4MF3gavCFucarUg4uirlOWyB1rldmd8PBizxWJ69aRiD811XvukMvY3C2z2rXJaeyzI5oDo
+        YRePA0p2QXdkjY9erlb/6ZdQxJYXt2P9oVVPlWO4f8VNWnnKOm6LEktxRqKhFnNRcSIA5KU3
+        9hIEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsWy7bCSnO6OH+zxBh8fsVr8nfiJyWLP3pMs
+        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5issmJTUnsyy1SN8ugSvj3YSnrAUXmSqW
+        3f3N0sA4hamLkZNDQsBE4uDNOSxdjFwcQgI7GCVOHbnBDpGQljh24gxzFyMHkC0scfhwMUhY
+        SOA5o8ThTi8Qm01AV+Lfn/1sILaIgKfEioMrwGYyC7hKzH++mg1iZjejRPurZ2AzOQWsJL49
+        Xs4MYgsDNWy8MA3MZhFQlXj4+jMjiM0rYClxd+MhNghbUOLkzCcsIDcwC+hJtG1khJgvL7H9
+        7RxmiDMVJH4+XcYKcYOVxMoDE5ghakQkZne2MU9gFJ6FZNIshEmzkEyahaRjASPLKkbJ1ILi
+        3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4LjQ0trBuGfVB71DjEwcjIcYJTiYlUR4DRRZ44V4
+        UxIrq1KL8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXAZLik7z3T2+1B
+        tqc3eHd+On530ubzd7lFGmImfyt+Z3uOv5f71+w1+s1/xUMcPi5+vFU7XOvit/uHVp61NNLP
+        tnDbsN7o+JGILK7NG6QY/Ex+ubyWvM6iq3K+ua/c52TERMkGZZcfd38/fTz9prj9ce+0W7US
+        Fc4b763d7Hkmj735lu2J+fJZrdIiih+CX55kyFnT5bKlbW72fd3T3kXHXjzJCvviJ2DxkVld
+        Y+XCXTkWcaeXFb6xF1ARrfnx5vubU/IZtZpaVvd5T6kHBEos8KkKfCiykSdm8Z/MigN17oWt
+        kw/vbeGYPUW9qqEsPOHZhS/xNhXLHv+5Zr1IIqVRyk3+Xlpqg83vw4f38p21VWIpzkg01GIu
+        Kk4EAOgVh4H6AgAA
+X-CMS-MailID: 20200710051224epcas1p3c534126a5da8e1ca0fbb1ac8d6a009e8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200708095242epcas1p2a106825fa23003abb184739703c594cc
+References: <CGME20200708095242epcas1p2a106825fa23003abb184739703c594cc@epcas1p2.samsung.com>
+        <20200708095233.56131-1-hyeongseok@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With procfs v3.3.16, the sysctl command doesn't prints the set key and
-value on error.  This change breaks livepatch selftest test-ftrace.sh,
-that tests the interaction of sysctl ftrace_enabled:
-
- # selftests: livepatch: test-ftrace.sh
- # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
- #
- # --- expected
- # +++ result
- # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
- #  livepatch: 'test_klp_livepatch': starting patching transition
- #  livepatch: 'test_klp_livepatch': completing patching transition
- #  livepatch: 'test_klp_livepatch': patching complete
- # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
-    resource busy kernel.ftrace_enabled = 0
- # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
-    resource busy
- #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
- #  livepatch: 'test_klp_livepatch': initializing unpatching transition
- #  livepatch: 'test_klp_livepatch': starting unpatching transition
- #
- # ERROR: livepatch kselftest(s) failed
-
-on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
-set key and value is displayed.
-
-This patch fixes it by limiting the output from both the cases to eight
-words, that includes the error message or set key and value on failure
-and success. The upper bound of eight words is enough to display the
-only tracked error message. Also, adjust the check_result string in
-test-ftrace.sh to match the expected output.
-
-With the patch, the test-ftrace.sh passes on v3.3.15, v3.3.16 versions
-of sysctl:
- ...
- # selftests: livepatch: test-ftrace.sh
- # TEST: livepatch interaction with ftrace_enabled sysctl ... ok
- ok 5 selftests: livepatch: test-ftrace.sh
-
-Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
----
-Based on livepatching/for-5.9/selftests-cleanup, to be merged
-through livepatching.git
-
- tools/testing/selftests/livepatch/functions.sh   | 3 ++-
- tools/testing/selftests/livepatch/test-ftrace.sh | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index 36648ca367c2..e3c0490d5a45 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -75,7 +75,8 @@ function set_dynamic_debug() {
- }
- 
- function set_ftrace_enabled() {
--	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
-+	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ' | \
-+		 cut -d" " -f1-8)
- 	echo "livepatch: $result" > /dev/kmsg
- }
- 
-diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
-index 9160c9ec3b6f..552e165512f4 100755
---- a/tools/testing/selftests/livepatch/test-ftrace.sh
-+++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-@@ -51,7 +51,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
- livepatch: '$MOD_LIVEPATCH': starting patching transition
- livepatch: '$MOD_LIVEPATCH': completing patching transition
- livepatch: '$MOD_LIVEPATCH': patching complete
--livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
-+livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
- % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
- livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
- livepatch: '$MOD_LIVEPATCH': starting unpatching transition
-
-base-commit: 3fd9bd8b7e41a1908bf8bc0cd06606f2b787cd39
--- 
-2.26.2
+> The stream.size field is updated to the value of create timestamp of the file entry. Fix this to use
+> correct stream entry pointer.
+> 
+> Fixes: 29bbb14bfc80 ("exfat: fix incorrect update of stream entry in __exfat_truncate()")
+> Signed-off-by: Hyeongseok Kim <hyeongseok@gmail.com>
+My bad, Pushed it into exfat #dev.
+Thanks!
 
