@@ -2,102 +2,150 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17BA2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED3E20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 10:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mII+P3go"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejIuwuJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGJKdV (ORCPT
+        id S1727110AbgGJKgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
+        Fri, 10 Jul 2020 06:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgGJKdT (ORCPT
+        with ESMTP id S1726820AbgGJKg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 06:33:19 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814A4C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:33:19 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id q7so5903770ljm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 03:33:19 -0700 (PDT)
+        Fri, 10 Jul 2020 06:36:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E4DC08C5CE;
+        Fri, 10 Jul 2020 03:36:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z3so2347636pfn.12;
+        Fri, 10 Jul 2020 03:36:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7wcSEVgyD5Y3dugrOjCqv9VAWTaRIiDXcxelGf3UV2M=;
-        b=mII+P3goT2djho8sZLapqR2ZO0BzJs7VFIU+jKjyv8cANY5LcCi7pvATB+/EZ2IDEp
-         BAGAbApnVctDKvjDeXMHHf0J20Cv0BvvBVsaQPMQZ2fDEqfW2N8waquGalnNPdiH61el
-         5J6CLC9m0fRyfkLIEGDf3fICqmx6muoWdrLLee7Cm3LOVtlMSfCgA9lq7qlHW1Gr4dre
-         wlJQb8eFXXT8Y0CU0X8BGIO8Pu1ooM5zs5+cxzlVe1WeF21XDi3s+Xh+LFWJ7PGBCYa9
-         kbMVXtbkphRNg7DNQtJ0Xw90E36pD5J3JQBLPRR5m5ZVtgPlXK+IXrDTZUzjKqtZP4Sh
-         I/QA==
+        bh=k6E7LH2Rsa+GnrRcP6ifXPuNeY+Ay8cfhxue4cHFp+Y=;
+        b=ejIuwuJ5q/l4SAyTZ676rI/EUXdB+Ulto0KXt0SF9qVV5BbhRNTZ640UK+ZjcFqiCw
+         lvYtAKQogEsJYqeqDlU8XbNzKFlWwYeABtU0sxsM4qy/NfbGEK70m1G0ZSSRVj85yGxi
+         oH8feGoAPTI0+mFzkr5hPGC5xpaBsXRavV5VPyydGheAbsiMM8ZMCNpYgNljruG0kM6K
+         2YuW5d5frWq1weZHjQKdVMLffSmb0cbSZxt0Baxzh/avmqvSFUZm7MuIbiTZEcU3b2D+
+         PRGMzMANKjY+TBPAjFxn8/KgSauqUvuzYyjoKyoR8LqLu42QjTKpB6692RVJzjkqx1DM
+         GwWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=7wcSEVgyD5Y3dugrOjCqv9VAWTaRIiDXcxelGf3UV2M=;
-        b=b/9eTlqbI2uv1ZYaDHrPTnH/dRHsLG9BTpdTUZnikrQImLnktOwBkkaEhR1ZkUYnl2
-         0AAfhV79yNpDpwu5BNl0Ck6XAVJjXaAZsMJ6qrBAvT5/jJ3n437G8LoweZuCd3K3p1IT
-         LGCv+qDT/4I3ggcvJ4zrOE9o8/9khNKdVOfHmbErr7r4NKd7W9nmRH+HyugcNmw+EgvJ
-         jz8v67r/Sg7J2XJ0v1yFhGFxTLbHHJjHlZq4MSwMNodPGDOGc3hoMp6tiRFii6D3aqRg
-         3LliDV3ZlGwdTxebvRq+11pfaZo3Qi6UqTl8uedXw4/eZUXr/QtKQXGUu8huvIUhS091
-         Gz1A==
-X-Gm-Message-State: AOAM531R89wr55wpJEjrit5gTT07Gx8W4ST/LRsZF+ZJrGmL41zGjm5a
-        qHDwD3rP5BUp3Ksd6/efOEtVLIzRwdI=
-X-Google-Smtp-Source: ABdhPJzIvkfX42cr5qxUwq/2hylNYWi1DXtCGvHf/btnFUlSfBwrWlICTxh9aCET97yOK8KhpJuTvA==
-X-Received: by 2002:a2e:b4d3:: with SMTP id r19mr24308257ljm.150.1594377196920;
-        Fri, 10 Jul 2020 03:33:16 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w2sm1780387lji.41.2020.07.10.03.33.16
+        bh=k6E7LH2Rsa+GnrRcP6ifXPuNeY+Ay8cfhxue4cHFp+Y=;
+        b=G/quU/jUkBQYvsEVzE2niuXbi2FRq2bJLC3QggHFPNLtmqnniaklAhme6jzftmob9d
+         3V4t0vJa8Rm/9Mo6V2n4jRe57cszH5q9wBu0rL0adOrTlF1l/wrR8umshC7qZxdvjqeT
+         cJayJzbUIzPF65brxqrGJJBGiCDiguuMvrh+YGYPfS+NbPXr89KRH4TR6lFtQitk48ji
+         snOJ/2ER4OZxTdjAF9/7NcS6lNieXLRkViyTPnHMDRPLFfUdIMa+RCTZL2DUvZ9vbXnG
+         SSo7QVbOZdwwkUDwmG8koQ3cmKi8iMjTte7BUzdmcF2pazdjGP4GuRTz70gjNAEbJ+lx
+         Y2Cg==
+X-Gm-Message-State: AOAM53185RmfN+4mVTlMnXBtHIcbxwpwV6P0kLhYg0lT6E3VAhlLqUYN
+        H1HZGfNKHoRRS3FHd2MOoVzfTNkR
+X-Google-Smtp-Source: ABdhPJz6YyFV5tdcLS7lWZkNeBtZMvUFzkAfW8iEzo9m0Dw6sn8TUbjyhWIYFgcbO0LZha78s2iOgw==
+X-Received: by 2002:a63:6ec2:: with SMTP id j185mr26610040pgc.176.1594377384965;
+        Fri, 10 Jul 2020 03:36:24 -0700 (PDT)
+Received: from localhost (g175.219-103-161.ppp.wakwak.ne.jp. [219.103.161.175])
+        by smtp.gmail.com with ESMTPSA id 66sm5486863pfg.63.2020.07.10.03.36.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 03:33:16 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7095110222B; Fri, 10 Jul 2020 13:33:18 +0300 (+03)
-Date:   Fri, 10 Jul 2020 13:33:18 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: a question of split_huge_page
-Message-ID: <20200710103318.bm2gp743lagiajao@box>
-References: <df2597f6-af21-5547-d39c-94c02ad17adb@linux.alibaba.com>
- <20200709155002.GF12769@casper.infradead.org>
- <20200709160750.utl46xvavceuvnom@box>
- <f761007f-4663-f72e-b0da-fc3ce9486b4b@linux.alibaba.com>
+        Fri, 10 Jul 2020 03:36:24 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 19:36:21 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: USB MASS STORAGE
+ DRIVER
+Message-ID: <20200710103621.GA437393@lianli.shorne-pla.net>
+References: <20200708095500.13694-1-grandmaster@al2klimov.de>
+ <20200708103928.GC585606@kroah.com>
+ <6b78a3fd-04b9-fc8e-b5c6-f03372a4cd31@al2klimov.de>
+ <20200709061409.GA130260@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f761007f-4663-f72e-b0da-fc3ce9486b4b@linux.alibaba.com>
+In-Reply-To: <20200709061409.GA130260@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:51:58PM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2020/7/10 上午12:07, Kirill A. Shutemov 写道:
-> > Right, and it's never got removed from LRU during the split. The tail
-> > pages have to be added to LRU because they now separate from the tail
-> > page.
+On Thu, Jul 09, 2020 at 08:14:09AM +0200, Greg KH wrote:
+> On Wed, Jul 08, 2020 at 08:41:54PM +0200, Alexander A. Klimov wrote:
 > > 
-> According to the explaination, looks like we could remove the code path,
-> since it's never got into. (base on my v15 patchset). Any comments?
+> > 
+> > Am 08.07.20 um 12:39 schrieb Greg KH:
+> > > On Wed, Jul 08, 2020 at 11:55:00AM +0200, Alexander A. Klimov wrote:
+> > > > Rationale:
+> > > > Reduces attack surface on kernel devs opening the links for MITM
+> > > > as HTTPS traffic is much harder to manipulate.
+> > > > 
+> > > > Deterministic algorithm:
+> > > > For each file:
+> > > >    If not .svg:
+> > > >      For each line:
+> > > >        If doesn't contain `\bxmlns\b`:
+> > > >          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> > > > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+> > > >              If both the HTTP and HTTPS versions
+> > > >              return 200 OK and serve the same content:
+> > > >                Replace HTTP with HTTPS.
+> > > >
+> > > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > > 
+> > > Your subject lines are very odd compared to all patches for this
+> > > subsystem, as well as all other kernel subsystems.  Any reason you are
+> > > doing it this way and not the normal and standard method of:
+> > > 	USB: storage: replace http links with https
+> > > 
+> > > That would look more uniform as well as not shout at anyone.
 
-Yes. But why? It's reasonable failsafe that gives chance to recover if
-something goes wrong.
+I would agree.  The OpenRISC patch for this series says:
+  "OPENRISC ARCHITECTURE:..."
 
--- 
- Kirill A. Shutemov
+Here it would just be "openrisc:..." I think fixing the whole series is needed.
+Greg is not the only on complaining.
+
+Ideally, I think, it would be good to have this sent out as a series i.e [PATCH 3/55]
+rather than individual patches so this could be discussed as a whole.
+
+-Stafford
+
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > Hi,
+> > 
+> > I'm very sorry.
+> > 
+> > As Torvalds has merged 93431e0607e5 and many of you devs (including big
+> > maintainers like David Miller) just applied this stuff, I assumed that's OK.
+> > 
+> > And now I've rolled out tens of patches via shell loop... *sigh*
+> > 
+> > As this is the third (I think) change request like this, I assume this rule
+> > applies to all subsystems – right?
+> 
+> Yes, you should try to emulate what the subsystem does, look at other
+> patches for the same files, but the format I suggested is almost always
+> the correct one.  If not, I'm sure maintainers will be glad to tell you
+> otherwise :)
+
+
