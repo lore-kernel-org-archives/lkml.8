@@ -2,130 +2,91 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4039A20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+zGGnHn"
+	by mail.kernel.org (Postfix) with ESMTP id 34C0D2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgGJGTl (ORCPT
+        id S1727861AbgGJGU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJGTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:19:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3ABC08C5CE;
-        Thu,  9 Jul 2020 23:19:39 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j20so2092064pfe.5;
-        Thu, 09 Jul 2020 23:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=z3152dqnSlWeiXq3wOBUus0ULGBKw90/q/Q1d/LB/HE=;
-        b=r+zGGnHnYmRgFFIAyQZNMQ8Uw6o+GY6iA7ubBKJNBoVMjKWQIPSXm0F4Ud9Zh1X07c
-         IT3cZjVwb88qqtZgZOGamepW4yyBni47O34Lmvdae7Q/MWpFf+M3/CzCmeuhozTT/1gy
-         xw7YhB6mnHKePJHGnMHHiHbL0KGFcZLVD0R2FjNjU1gp9YOosnwTIjgyKu+ftHazB3Cc
-         qH5WzIeIsuY59QCR9A0/Ug5KDg0fjnex/vJeFypP6/BIZutdFpYLv8NNKyqRXjlf7XTC
-         a4BeHkyC//WmbUFrB+Xmj4GO4oL8olLp98N+S7GFG9RWQZrXSXnO0fuYR/slkwqiC+Vp
-         hLqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=z3152dqnSlWeiXq3wOBUus0ULGBKw90/q/Q1d/LB/HE=;
-        b=BPX+w6WVruzFinz67E+ToY/rzY7SaeJloIurgrWX2gQjxUcY8RImbONXi2SXpMwosq
-         APYM53RqU9i5tOe07qO4pHEmTyA0iuzPcb3OUhQnX3cKdm44Kd82470eEr5d49SpDQg6
-         H2KF6UDRQbbHEJmVdjAzTwMD6+IbASNYLRk3jsKC/HoD8uP7pAGBYyGYAGz5oq9+edB9
-         tYFfC7Nu22fI8OZ+oqy2wcO0aF6vRYurvT3EBOKVAfhUJx1hBaw22NaBCk0VxFnsvI/s
-         074GMPEWkLRlTDIj2sSH7DxHM5o2chXeGzUCVCewwnVTewsCdFr6nG663NBi05e2hSMM
-         tJiw==
-X-Gm-Message-State: AOAM533DuYrPs/EAcrPlQS+ntoSjNSXnjYdEKTDK24WV6/PMjiub3wqE
-        SthmzFVEogmGJtrIwr3RPUs=
-X-Google-Smtp-Source: ABdhPJwk1O0qjcabIuGkCbS6P0zOopiQEbwplyknGnMwjadxi2LOYOAkQZimFuhs7J6PJBkLi06Utw==
-X-Received: by 2002:a65:56cc:: with SMTP id w12mr56044215pgs.399.1594361979107;
-        Thu, 09 Jul 2020 23:19:39 -0700 (PDT)
-Received: from intel-CCE-SH.Home (x-plane.vip. [104.238.153.221])
-        by smtp.googlemail.com with ESMTPSA id m9sm4431132pjs.18.2020.07.09.23.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 23:19:38 -0700 (PDT)
-From:   Wei Shuai <cpuwolf@gmail.com>
-Cc:     cpuwolf@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Erwan Velu <e.velu@criteo.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN)...)
-Subject: [PATCH] break joystick limitation of maxmium 80 buttons
-Date:   Fri, 10 Jul 2020 14:19:17 +0800
-Message-Id: <20200710061919.13108-1-cpuwolf@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 10 Jul 2020 02:20:29 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:41122 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbgGJGU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:20:29 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 78888BC0D1;
+        Fri, 10 Jul 2020 06:20:25 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, corbet@lwn.net, openrisc@lists.librecores.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
+Date:   Fri, 10 Jul 2020 08:20:19 +0200
+Message-Id: <20200710062019.28755-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 80 limitation comes from
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-include/uapi/linux/input-event-codes.h
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-according to function hidinput_configure_usage() in file drivers/hid/hid-input.c
-
-the joystick button mapping is not a continues space, generally speak the mapping space is from
-
-1. BTN_JOYSTICK~BTN_DEAD
-2. BTN_TRIGGER_HAPPY~KEY_MAX
-
-Finally I got the max limitation is 80.
-
-Signed-off-by: Wei Shuai <cpuwolf@gmail.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 8d764aab29de..35eb59ae1f19 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -311,7 +311,7 @@ struct pcmcia_device_id {
- /* Input */
- #define INPUT_DEVICE_ID_EV_MAX		0x1f
- #define INPUT_DEVICE_ID_KEY_MIN_INTERESTING	0x71
--#define INPUT_DEVICE_ID_KEY_MAX		0x2ff
-+#define INPUT_DEVICE_ID_KEY_MAX		0x4ff
- #define INPUT_DEVICE_ID_REL_MAX		0x0f
- #define INPUT_DEVICE_ID_ABS_MAX		0x3f
- #define INPUT_DEVICE_ID_MSC_MAX		0x07
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index b6a835d37826..ad1b9bed3828 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -774,7 +774,7 @@
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ Documentation/openrisc/openrisc_port.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/openrisc/openrisc_port.rst b/Documentation/openrisc/openrisc_port.rst
+index 4b2c437942a0..657ac4af7be6 100644
+--- a/Documentation/openrisc/openrisc_port.rst
++++ b/Documentation/openrisc/openrisc_port.rst
+@@ -8,7 +8,7 @@ target architecture, specifically, is the 32-bit OpenRISC 1000 family (or1k).
+ For information about OpenRISC processors and ongoing development:
  
- /* We avoid low common keys in module aliases so they don't get huge. */
- #define KEY_MIN_INTERESTING	KEY_MUTE
--#define KEY_MAX			0x2ff
-+#define KEY_MAX			0x4ff
- #define KEY_CNT			(KEY_MAX+1)
+ 	=======		=============================
+-	website		http://openrisc.io
++	website		https://openrisc.io
+ 	email		openrisc@lists.librecores.org
+ 	=======		=============================
  
- /*
 -- 
-2.17.1
+2.27.0
 
