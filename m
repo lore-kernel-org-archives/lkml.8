@@ -2,95 +2,70 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61379C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50593C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4B620674
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gf95zy8J"
+	by mail.kernel.org (Postfix) with ESMTP id 2E1A82068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 22:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594419007;
+	bh=DXUdo8CRGnVX/RDYtjZ/JAgmkzNGabAQlQmalQpqyNk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mAgVjABgGAHK50yjvlR8lvjsHV1m4TRt0ffPkIXdLPHFvBKwzycfJd1rH/rHxG/u5
+	 FGyCpM0Q55Se9tXN/AB4DytyNVATaxx/hddlX3BmtxCldb7VN1PSTvYzgXOyFnp5D9
+	 GEiZp8DtydExevw3kj1z+Q8O9ySGP+e8lCARJ6dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGJWE7 (ORCPT
+        id S1726510AbgGJWKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 18:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGJWE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 18:04:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A84C08C5DC;
-        Fri, 10 Jul 2020 15:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Sm08KILQrIhAFoGlCB+I5zhmi1eIMEDSey/M3AAwvrU=; b=Gf95zy8J04apBo9wUZ1mnOjWys
-        Q3E03aUJHod0cOCoGZfdB++6r3mBBHEKatQ07qkf93nEwhMrFMsQ2Ca/R1uwDGBQtByztdqV22DbK
-        MbowX9JA/4O7y2NTMT32X7ukvtTKvL4/tDSchahf7/ARoWtxtGK3tAyFycxBMjF07h2aGRzNfDyBF
-        896zhV0TFTjt1H9YL00Om/6oR87oi92+QAYOnGSnDR68RuREB5bOdQ0YbsY7JcalooY6BII+0YORf
-        A/9yXRmMifrzgpx+7GSxIYeCBTW8H9j9HVFaCoB1CvgXqNlUuS9P0V4JDL+gHl0AwbpanQyn4Gw33
-        z3h2bHmQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ju17r-0000Yi-Ej; Fri, 10 Jul 2020 22:04:11 +0000
-Date:   Fri, 10 Jul 2020 23:04:11 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from
- kernel_read_file() enums
-Message-ID: <20200710220411.GR12769@casper.infradead.org>
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <20200707081926.3688096-3-keescook@chromium.org>
- <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
+        Fri, 10 Jul 2020 18:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbgGJWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 18:10:04 -0400
+Subject: Re: [GIT PULL] Kselftest fixes update for Linux 5.8-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594419003;
+        bh=DXUdo8CRGnVX/RDYtjZ/JAgmkzNGabAQlQmalQpqyNk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=zZ3nm5aaezj567WZkMx5SQOOXIiXemRkTy0Eb/KwR6wlUsJTQ26wjmZaKJgyss3tR
+         Ze7/aIg8z2r9Eb51mM+VRS1q69Agqc03sSq76p2FsqnczKQIIJTBzaPd5SlDwIqkwS
+         htAyL05zBkBq39ObbIxdAWptj3kNOMg2BHS3jZLg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
+References: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+ tags/linux-kselftest-fixes-5.8-rc5
+X-PR-Tracked-Commit-Id: 3c01655ac82eb6d1cc2cfe9507031f1b5e0a6df1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0f318cba1e08a2e18494eec847f6caf94f13129b
+Message-Id: <159441900372.20268.2729613587724365084.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Jul 2020 22:10:03 +0000
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:00:32PM -0700, Scott Branden wrote:
-> > @@ -950,8 +951,8 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> >   		goto out;
-> >   	}
-> > -	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
-> > -		*buf = vmalloc(i_size);
-> > +	if (!*buf)
-> The assumption that *buf is always NULL when id !=
-> READING_FIRMWARE_PREALLOC_BUFFER doesn't appear to be correct.
-> I get unhandled page faults due to this change on boot.
+The pull request you sent on Fri, 10 Jul 2020 10:39:36 -0600:
 
-Did it give you a stack backtrace?
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-fixes-5.8-rc5
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0f318cba1e08a2e18494eec847f6caf94f13129b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
