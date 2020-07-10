@@ -2,164 +2,69 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9032CC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F6BC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63218206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pBitfaOf"
+	by mail.kernel.org (Postfix) with ESMTP id CAAF9206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgGJOYh (ORCPT
+        id S1728650AbgGJOYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:24:37 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37008 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgGJOYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:24:03 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142402euoutp02a087270e86ffc9645bd85c57a2e1744a~gajSaos5R0760207602euoutp02M
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 14:24:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710142402euoutp02a087270e86ffc9645bd85c57a2e1744a~gajSaos5R0760207602euoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594391042;
-        bh=l4VBuZvttMg9X1rfHnqvoDtZuYsXdOmFYOnhfYffc90=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=pBitfaOfJvFT/H15szQ+oNtjo19lpzxtjAsDxaewp6a9rrG1esC9sIUeMum0odQGN
-         DoqvRgF451nIUaKSJJWTPbpm4Jz1V2jyvDbx9zJxPsV64j+031L0dsVsvIP9IKVhUr
-         PILlyddTLKHgzoC4Zjx3Ulc+wuLJ7zi7nNw/TENQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200710142401eucas1p122911df0f80e22f29983dcb2770ee682~gajSB78Qw0594505945eucas1p1a;
-        Fri, 10 Jul 2020 14:24:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id BE.DE.06318.10A780F5; Fri, 10
-        Jul 2020 15:24:01 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142401eucas1p2e485a1a728dafeee04170cdcdff98402~gajRVrIO62124221242eucas1p2r;
-        Fri, 10 Jul 2020 14:24:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200710142401eusmtrp293ccb06dff50233137963dce4ff2e2e1~gajRVCl_01267512675eusmtrp2A;
-        Fri, 10 Jul 2020 14:24:01 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-50-5f087a01949e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 69.71.06017.00A780F5; Fri, 10
-        Jul 2020 15:24:01 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200710142400eusmtip154c098a924e20c1290d928662ad67b81~gajQzr7663244132441eusmtip1a;
-        Fri, 10 Jul 2020 14:24:00 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] fbdev: da8xx-fb: go to proper label on error handling
- paths in probe
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Message-ID: <8f2d2497-2fd3-f3db-32b6-f74736b1ea2e@samsung.com>
-Date:   Fri, 10 Jul 2020 16:24:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 10 Jul 2020 10:24:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55196 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbgGJOYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:24:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 34ECEAC9F;
+        Fri, 10 Jul 2020 14:24:39 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>, Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v2] efi: avoid error message when booting under Xen
+Date:   Fri, 10 Jul 2020 16:22:53 +0200
+Message-Id: <20200710142253.28070-1-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200702160540.24546-1-novikov@ispras.ru>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjld+/d3d1q8nMafiwxGmkYOAsLLxVSEbh/tAwK6aHNvKmk03bV
-        mkgtSfPRSyU0MZoN1CJ109C0paXUssegspBypfbUJVY+erpq3kn+d75zzsd3DnwMKe8RKZgU
-        bSan02pSlbSUar37wx6Ccpj4laVFIezkhfsUWzPkINm+qXGatQ44EVtXUkyx905/FrFPO6pp
-        1tRpELNdp8zEBol6vD9frL45baTUJusIoa50nUPqAeeMSP26xEaobf1thHqiOWArs1O6PpFL
-        TcnmdKERe6XJNvtLUUbbgsMFTsqAaiTFSMIAXg19hhGyGEkZOa5HMGy6QQnDJILa+8cIYZhA
-        8KXITM2t1BobPCt1CJ4Pv/G4xhDUX/9Gul00XgulJ64gN/bBu8DyzjnL++IgMOT3zt4gsZGA
-        X45psVuQ4QhwlVr/CQxD4UBwOlLd9CIcC18He0SCxRt6z7+dTSHB4WBvqSDcmMR+8OLtRQ9e
-        Am1j1aSQ9JUYqlv3C3gztEwaxAL2gVHbNQ/2hz/tF2cLAG5EMFP4kRSGNgR15S5acK2DAftP
-        2h2OxMHQ1BEq0BuhcLqSdNOAvaB/zFvI4AVlrRUeWgaFBXLBHQTmWjM9d7a4/TJ5Fimr5jWr
-        mtemal6bqv93jYi6gvy4LD4tiePDtNwhFa9J47O0Sap96WnN6N9rPXDZpq6jzt8J3QgzSLlQ
-        ZtQw8XKRJpvXp3UjYEilr2zTowdxclmiRp/D6dLjdVmpHN+NFjOU0k8WdmlkjxwnaTK5AxyX
-        wenmVIKRKAwoPDbg6ERr5LMMxpG3pffy1cC4qRjrp+NJ0fV21eTzHEXU9+3R4zmbRXrVji4x
-        H/lZdicuuONjwrZRMY0VLiJG5dPU+MaUvEbv35A7bfHODZHn1Q5BdGLUsvBbD5uuNR+5bVlO
-        v3zyPqvPUb40UCF5fHD9IcvgmewSbddu35MfypQUn6xZtYLU8Zq/qM740VYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsVy+t/xu7qMVRzxBr+OMVp8mXuKxWLhw7vM
-        Fle+vmez2HPnNaPF8u4uFosTfR9YLS7vmsNmsXhfA7vF/t4NTA6cHu9vtLJ77P22gMVj8Z6X
-        TB4z/k1l9Ljz+i+rx/3u40wex29sZ/L4vEkugCNKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
-        xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+P4udusBdu5K9peszQwLuTsYuTkkBAwkVi2YC1z
-        FyMXh5DAUkaJ53NvMXUxcgAlZCSOry+DqBGW+HOtiw2i5jWjxN8jX9lAEmwCVhIT21cxgtjC
-        AtESG5++ZgaxRQTUJBpaT7KANDALLGCSWLVvKQtEdxejxNUZC8C6eQXsJP5N3MMCso1FQFXi
-        9d0ckLCoQITE4R2zGCFKBCVOznzCAmJzCphLnNs8nQnEZhZQl/gz7xIzhC0ucevJfKi4vMT2
-        t3OYJzAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yfu4kRGKXbjv3c
-        soOx613wIUYBDkYlHt4FiRzxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEotyo8vKs1JLT7E
-        aAr020RmKdHkfGACySuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnV
-        wMjr4qxe8X7m7DydT/dEj+V7XglSvHDu89uicomELQeWSKhvWNs/79627BvXjj4911Tn0N96
-        7Etfs6lU9+YiuRUClqcr4iYeOfEl9Fgu6wvbfOFf7R57f/zf8ruC0cf54kSjjLWchjGnuH66
-        dpv8D11rW341zuqjP+OkzGMzrIPi/E9fjveq3aXEUpyRaKjFXFScCADoZLw96AIAAA==
-X-CMS-MailID: 20200710142401eucas1p2e485a1a728dafeee04170cdcdff98402
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200702160546eucas1p1b722eb071cdab13a7bfd47bd98a7d670
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200702160546eucas1p1b722eb071cdab13a7bfd47bd98a7d670
-References: <CGME20200702160546eucas1p1b722eb071cdab13a7bfd47bd98a7d670@eucas1p1.samsung.com>
-        <20200702160540.24546-1-novikov@ispras.ru>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+efifb_probe() will issue an error message in case the kernel is booted
+as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
 
-On 7/2/20 6:05 PM, Evgeny Novikov wrote:
-> fb_probe() can successfully allocate a new frame buffer, but then fail
-> to perform some operations with regulator. In these cases fb_probe()
-> goes to label err_pm_runtime_disable where the frame buffer is not
-> released. The patch makes fb_probe() to go to label err_release_fb on
-> corresponding error handling paths.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ drivers/video/fbdev/efifb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to drm-misc-next tree, thanks.
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index 65491ae74808..e57c00824965 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
+ 	info->apertures->ranges[0].base = efifb_fix.smem_start;
+ 	info->apertures->ranges[0].size = size_remap;
+ 
+-	if (efi_enabled(EFI_BOOT) &&
++	if (efi_enabled(EFI_MEMMAP) &&
+ 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+ 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+ 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+-- 
+2.26.2
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> ---
->  drivers/video/fbdev/da8xx-fb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/da8xx-fb.c b/drivers/video/fbdev/da8xx-fb.c
-> index 73c3c4c8cc12..e38c0e3f9c61 100644
-> --- a/drivers/video/fbdev/da8xx-fb.c
-> +++ b/drivers/video/fbdev/da8xx-fb.c
-> @@ -1402,14 +1402,14 @@ static int fb_probe(struct platform_device *device)
->  	if (IS_ERR(par->lcd_supply)) {
->  		if (PTR_ERR(par->lcd_supply) == -EPROBE_DEFER) {
->  			ret = -EPROBE_DEFER;
-> -			goto err_pm_runtime_disable;
-> +			goto err_release_fb;
->  		}
->  
->  		par->lcd_supply = NULL;
->  	} else {
->  		ret = regulator_enable(par->lcd_supply);
->  		if (ret)
-> -			goto err_pm_runtime_disable;
-> +			goto err_release_fb;
->  	}
->  
->  	fb_videomode_to_var(&da8xx_fb_var, lcdc_info);
-> 
