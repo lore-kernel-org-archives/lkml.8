@@ -2,115 +2,92 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C5BC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11FDC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E48A207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OpyS5KUS"
+	by mail.kernel.org (Postfix) with ESMTP id B02FE207D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594395877;
+	bh=X8c/R3Qn9kobWNREt9IFObBlN5vW/pJr0E9nZBeLL5c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=VKehd8aOQuRsX+ms/JU2CoSdSc3jtNPo2mRqLnYCwXg2QX1Ug4QkeSN1Mm+oe3Dye
+	 CM1+OJ/rdec8H6hn08XId5kA6jPRZW0kasJTP573cPjfnTQAzhHB4TgPohR1Sf5xpK
+	 fgf9wop5LfLzwUkwDvWXFyV1X3o32b7E8Ae1BDuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGJPku (ORCPT
+        id S1727086AbgGJPog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgGJPkt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:40:49 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2FFC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:40:49 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id g2so3462832lfb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 08:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=p4c4RaUrI+TqMaMS0f5jfDieCGnmujxFfWD54tCErWQ=;
-        b=OpyS5KUSNYXSIZIrtYSYeQlgu/tLNtvlojblx8984l8e5WEC2dkHJocvGoITQHbUKq
-         +BPjXsxelcYuKnCn5xoP1A6xLkWC5lsZEsz5BCMD++lE1is5BHxIhV12k6VyxQNZjjYz
-         xkBN8CE5hUkcFODrgFTBdempmHI+eJljIybsYgPseGnqcGA7vVY20jsV8xwPmsz55KOp
-         n8Db9TddbsaN9V/Jjay5Jt+vlv3S61n1rvHAJjeEd6/bAjGoBqLt6Tu09Jteb5vvhntM
-         rYUqAfTddI2UFmWuvOjPBDh8ty6IRPRmt0E+HNnO5JxgC8wwXN956DRiMB9M3uTu3irp
-         stjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=p4c4RaUrI+TqMaMS0f5jfDieCGnmujxFfWD54tCErWQ=;
-        b=W4phsjjzwi78QgW/UpZHZfpXfE+2li3e9GQJaXQy54g+7u0dNlm877Axu+YwB7x1Px
-         3WpXuQ02Ze2If0G5o+KNVrcInjbGgVMn/Cjaa8AdRodHH3tqqgo6bSTkRg97jp15csgR
-         d9/2SZeSErM+XktLZTqilnbP5Uz6T06wsGmAPX1Kyy+YAmXCdHb2I4vIikIo8R9mb4Xi
-         YYqMG7Ir8+Sbo5xjC/xLhDhMsSGmrBFoUOCLPS+178rBqVZwUG1Z2BYkAdZ224S+tuHT
-         NbKkJhYQRo205mihOQ2aOICGzn8ynwY7alffCeaBQEm9VdhZd++LA3nFc+mXuUJh+HWT
-         uhhA==
-X-Gm-Message-State: AOAM532/MocxLT1625JwJv45hmleuzeH6XuZTAlRz2WRBVuheKzJ7pI+
-        ukmWnCBIwO+4skwrGYldYdXb3jzKb/Bt19/I7i6/4w==
-X-Google-Smtp-Source: ABdhPJxBKln6OW5CUh+p8XVdWCrNFIlmaG0qW/jYrglDw2icgQ+C4/nwExMNw/bBptmH18VPUdtZsJCmxrVwZ2fSK1s=
-X-Received: by 2002:a05:6512:3150:: with SMTP id s16mr32987083lfi.47.1594395647667;
- Fri, 10 Jul 2020 08:40:47 -0700 (PDT)
+        Fri, 10 Jul 2020 11:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgGJPog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:44:36 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175E8207BB;
+        Fri, 10 Jul 2020 15:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594395875;
+        bh=X8c/R3Qn9kobWNREt9IFObBlN5vW/pJr0E9nZBeLL5c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=t+xYKzI/czGn6BDQy40JKkZQWywkgDpu3a4ZCx7PSN6Naq90Jagdi4C8ZH7Loii47
+         Eweef2nPyidMPZ1df+5a7t/C9dLXA8B4o0BoaR3nZ/diQVEMu/QF+d1576F6kMKZ4o
+         mDqP+fhKj2Y685Ph994PFZ07pdcJh2ogNH3MaIag=
+Date:   Fri, 10 Jul 2020 10:44:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
+Message-ID: <20200710154433.GA62583@bjorn-Precision-5520>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Jul 2020 17:40:37 +0200
-Message-ID: <CACRpkda48QqW7P9wKghFTk6T9B74drHLSxjQSANgfEFxmgm=Dw@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for the v5.8 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710153742.GA61966@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 10, 2020 at 10:37:45AM -0500, Bjorn Helgaas wrote:
+> On Fri, Jul 10, 2020 at 04:08:19PM +0100, Giovanni Cabiddu wrote:
+> > On Wed, Jul 01, 2020 at 04:28:12PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
+> > > > The current generation of Intel® QuickAssist Technology devices
+> > > > are not designed to run in an untrusted environment because of the
+> > > > following issues reported in the release notes in
+> > > > https://01.org/intel-quickassist-technology:
+> > > 
+> > > It would be nice if this link were directly clickable, e.g., if there
+> > > were no trailing ":" or something.
+> > > 
+> > > And it would be even better if it went to a specific doc that
+> > > described these issues.  I assume these are errata, and it's not easy
+> > > to figure out which doc mentions them.
+> > Sure. I will fix the commit message in the next revision and point to the
+> > actual document:
+> > https://01.org/sites/default/files/downloads/336211-015-qatsoftwareforlinux-rn-hwv1.7-final.pdf
+> 
+> Since URLs tend to go stale, please also include the Intel document
+> number and title.
 
-here are some two pin control fixes for the v5.8
-series.
+Oh, and is "01.org" really the right place for that?  It looks like an
+Intel document, so I'd expect it to be somewhere on intel.com.
 
-Nothing special about them, please pull them in!
+I'm still a little confused.  That doc seems to be about *software*
+and Linux software in particular.  But when you said these "devices
+are not designed to run in an untrusted environment", I thought you
+meant there was some *hardware* design issue that caused a problem.
 
-Yours,
-Linus Walleij
-
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
-
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.8-3
-
-for you to fetch changes up to f8e99dde21995d185e2379e34ea2b96acf85702b:
-
-  Merge tag 'intel-pinctrl-v5.8-2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
-(2020-06-28 01:08:21 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.8 series:
-
-- Fix an issue in the AMD driver for the UART0 group.
-
-- Fix a glitch issue in the Baytrail pin controller.
-
-----------------------------------------------------------------
-Hans de Goede (1):
-      pinctrl: baytrail: Fix pin being driven low for a while on
-gpiod_get(..., GPIOD_OUT_HIGH)
-
-Jacky Hu (1):
-      pinctrl: amd: fix npins for uart0 in kerncz_groups
-
-Linus Walleij (1):
-      Merge tag 'intel-pinctrl-v5.8-2' of
-git://git.kernel.org/.../pinctrl/intel into fixes
-
- drivers/pinctrl/intel/pinctrl-baytrail.c | 67 +++++++++++++++++++++++++-------
- drivers/pinctrl/pinctrl-amd.h            |  2 +-
- 2 files changed, 54 insertions(+), 15 deletions(-)
+Bjorn
