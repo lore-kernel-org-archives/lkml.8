@@ -2,79 +2,64 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D65C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A9E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D2320774
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bsl6w6DS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fgDuotmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGJB5O (ORCPT
+        id S1726955AbgGJB5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgGJB5M (ORCPT
+        Thu, 9 Jul 2020 21:57:19 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33725 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726789AbgGJB5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:57:12 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A80C08C5CE;
-        Thu,  9 Jul 2020 18:57:12 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so1835248pfm.4;
-        Thu, 09 Jul 2020 18:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lqgdcf4W4nyd4T+76bDWEwAQ0qL2bOb12H7iEQITiag=;
-        b=Bsl6w6DS+UBvKpZoK4wXCmnQGU0ewfOBlQPrDKoCEkWv/2kDrAJwFHbd1SWqVeJdeL
-         CziLht/b/KkM4NPlZlH+XmNB5vqzrMJNIcdyP2BNi9cupfGbeM6x5dM7ZMa5kucXYDM5
-         l4Y9+6wiV8JPWAiCxTH0U1fsTFdcf5uc0fQsJ6G2lln4cMvpEHVB7G6bl7YQlu3OtfJ5
-         cIqtTLtC2u+Va2ORstjbZ8mWnGFoxexPLae5Vz85lo5xBOXzrv1t1d8TLcZ0FWo1gICB
-         jHoDDR1UFjI6izLYc6vvQkk0lFv7w2wW/z7yu9JP1RGuvI/AiQs3+3ACt4BmtlSf6eNX
-         ikOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lqgdcf4W4nyd4T+76bDWEwAQ0qL2bOb12H7iEQITiag=;
-        b=dUryKxzUj4yCVAvMJ5tXOdO6+ZBdv79j01JfnlQuL9F92aiXJj3OCXd0l70Un751fG
-         8FPHUX4qhWdxNVOmvVyQT0aRumg7DP+Zjvx7ncFTi6SVWAd35cR+RA11TKyZ6c044pru
-         afM5O0wAhYqpdoHh1YViySAFiJGwm5OVwx82PNVWGncVW/EGddDF+1AU84EaHNmUutH6
-         K7D/1njwYLu8BKZNGrFmg44ZP/jfhM6Rt7niKYEKul2NvvPVlCLKRhy0jE5Oi63KhGE0
-         M5IJA69g4WsWFsd1riny7zUlnBDGxISumH6UkynpQ3u+LopPqBW4EKPIjuaFOSzGCB1B
-         ZhoQ==
-X-Gm-Message-State: AOAM533DTXyAqKTG4K6y4zcDxjJKFV0VdxS7YLKSY1LY2P8I8mGxnVil
-        1V/QMhSYUycqTm8LU3IpzZoJZvy5
-X-Google-Smtp-Source: ABdhPJw1L2niD/P2jvytdxicFLyx/6l3tljWtgvBgnhSMhEEeF1GCsLRQuoV7KEVgNbXurGjErZj4g==
-X-Received: by 2002:a63:eb55:: with SMTP id b21mr56103283pgk.433.1594346231584;
-        Thu, 09 Jul 2020 18:57:11 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (220-245-19-62.static.tpgi.com.au. [220.245.19.62])
-        by smtp.gmail.com with ESMTPSA id 7sm3912834pgw.85.2020.07.09.18.57.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 18:57:11 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, x86@kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, Anton Blanchard <anton@ozlabs.org>,
-        Remis Lima Baima <remis.developer@googlemail.com>
-Subject: [RFC PATCH 1/7] asm-generic: add generic MMU versions of mmu context functions
-Date:   Fri, 10 Jul 2020 11:56:40 +1000
-Message-Id: <20200710015646.2020871-2-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200710015646.2020871-1-npiggin@gmail.com>
-References: <20200710015646.2020871-1-npiggin@gmail.com>
+        Thu, 9 Jul 2020 21:57:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594346237; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4F33MECp3PLMA5dVQe508bFwLJi13Gd+zPp0VmPVuUU=; b=fgDuotmKBb4w4c8PJEEkZCfp1zlBVE8DJvhkOFgG3bDt+EC2GIp2DfnWrL44EFtjoSkUc3Oe
+ tzyzFXW+JmSyCu/9p2CQzHSWmFIRiZDVT+7tMokPXb9ijxEct/LcXpgaLYO85dilcsZa2oFe
+ cZAyUddaDekrwsv795qpz/2CB14=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5f07caf69f03943e5ca7efe1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 265A8C433CA; Fri, 10 Jul 2020 01:57:09 +0000 (UTC)
+Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA6FBC433CB;
+        Fri, 10 Jul 2020 01:57:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA6FBC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+From:   Mike Tipton <mdtipton@codeaurora.org>
+To:     georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH v2 6/6] interconnect: qcom: Fix small BW votes being truncated to zero
+Date:   Thu,  9 Jul 2020 18:56:52 -0700
+Message-Id: <20200710015652.19206-7-mdtipton@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200710015652.19206-1-mdtipton@codeaurora.org>
+References: <20200710015652.19206-1-mdtipton@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,161 +67,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many of these are no-ops on many architectures, so extend mmu_context.h
-to cover MMU and NOMMU, and split the NOMMU bits out to nommu_context.h
+Small BW votes that translate to less than a single BCM unit are
+currently truncated to zero. Ensure that non-zero BW requests always
+result in at least a vote of 1 to BCM.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Remis Lima Baima <remis.developer@googlemail.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
+Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
 ---
- arch/microblaze/include/asm/mmu_context.h |  2 +-
- arch/sh/include/asm/mmu_context.h         |  2 +-
- include/asm-generic/mmu_context.h         | 57 +++++++++++++++++------
- include/asm-generic/nommu_context.h       | 19 ++++++++
- 4 files changed, 64 insertions(+), 16 deletions(-)
- create mode 100644 include/asm-generic/nommu_context.h
+ drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/mmu_context.h b/arch/microblaze/include/asm/mmu_context.h
-index f74f9da07fdc..34004efb3def 100644
---- a/arch/microblaze/include/asm/mmu_context.h
-+++ b/arch/microblaze/include/asm/mmu_context.h
-@@ -2,5 +2,5 @@
- #ifdef CONFIG_MMU
- # include <asm/mmu_context_mm.h>
- #else
--# include <asm-generic/mmu_context.h>
-+# include <asm-generic/nommu_context.h>
- #endif
-diff --git a/arch/sh/include/asm/mmu_context.h b/arch/sh/include/asm/mmu_context.h
-index 48e67d544d53..9470d17c71c2 100644
---- a/arch/sh/include/asm/mmu_context.h
-+++ b/arch/sh/include/asm/mmu_context.h
-@@ -134,7 +134,7 @@ static inline void switch_mm(struct mm_struct *prev,
- #define set_TTB(pgd)			do { } while (0)
- #define get_TTB()			(0)
- 
--#include <asm-generic/mmu_context.h>
-+#include <asm-generic/nommu_context.h>
- 
- #endif /* CONFIG_MMU */
- 
-diff --git a/include/asm-generic/mmu_context.h b/include/asm-generic/mmu_context.h
-index 6be9106fb6fb..86cea80a50df 100644
---- a/include/asm-generic/mmu_context.h
-+++ b/include/asm-generic/mmu_context.h
-@@ -3,44 +3,73 @@
- #define __ASM_GENERIC_MMU_CONTEXT_H
- 
- /*
-- * Generic hooks for NOMMU architectures, which do not need to do
-- * anything special here.
-+ * Generic hooks to implement no-op functionality.
-  */
- 
--#include <asm-generic/mm_hooks.h>
--
- struct task_struct;
- struct mm_struct;
- 
-+/*
-+ * enter_lazy_tlb - Called when "tsk" is about to enter lazy TLB mode.
-+ *
-+ * @mm:  the currently active mm context which is becoming lazy
-+ * @tsk: task which is entering lazy tlb
-+ *
-+ * tsk->mm will be NULL
-+ */
-+#ifndef enter_lazy_tlb
- static inline void enter_lazy_tlb(struct mm_struct *mm,
- 			struct task_struct *tsk)
- {
+diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+index be7660b95ccc..887d13721e52 100644
+--- a/drivers/interconnect/qcom/bcm-voter.c
++++ b/drivers/interconnect/qcom/bcm-voter.c
+@@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+ 		return 1;
  }
-+#endif
  
-+/**
-+ * init_new_context - Initialize context of a new mm_struct.
-+ * @tsk: task struct for the mm
-+ * @mm:  the new mm struct
-+ */
-+#ifndef init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 			struct mm_struct *mm)
- {
- 	return 0;
- }
-+#endif
- 
-+/**
-+ * destroy_context - Undo init_new_context when the mm is going away
-+ * @mm: old mm struct
-+ */
-+#ifndef destroy_context
- static inline void destroy_context(struct mm_struct *mm)
- {
- }
-+#endif
- 
--static inline void deactivate_mm(struct task_struct *task,
--			struct mm_struct *mm)
--{
--}
--
--static inline void switch_mm(struct mm_struct *prev,
--			struct mm_struct *next,
--			struct task_struct *tsk)
-+/**
-+ * activate_mm - called after exec switches the current task to a new mm, to switch to it
-+ * @prev_mm: previous mm of this task
-+ * @next_mm: new mm
-+ */
-+#ifndef activate_mm
-+static inline void activate_mm(struct mm_struct *prev_mm,
-+			       struct mm_struct *next_mm)
- {
-+	switch_mm(prev_mm, next_mm, current);
- }
-+#endif
- 
--static inline void activate_mm(struct mm_struct *prev_mm,
--			       struct mm_struct *next_mm)
-+/**
-+ * dectivate_mm - called when an mm is released after exit or exec switches away from it
-+ * @tsk: the task
-+ * @mm:  the old mm
-+ */
-+#ifndef deactivate_mm
-+static inline void deactivate_mm(struct task_struct *tsk,
-+			struct mm_struct *mm)
- {
- }
-+#endif
- 
- #endif /* __ASM_GENERIC_MMU_CONTEXT_H */
-diff --git a/include/asm-generic/nommu_context.h b/include/asm-generic/nommu_context.h
-new file mode 100644
-index 000000000000..72b8d8b1d81e
---- /dev/null
-+++ b/include/asm-generic/nommu_context.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_GENERIC_NOMMU_H
-+#define __ASM_GENERIC_NOMMU_H
-+
-+/*
-+ * Generic hooks for NOMMU architectures, which do not need to do
-+ * anything special here.
-+ */
-+
-+#include <asm-generic/mm_hooks.h>
-+#include <asm-generic/mmu_context.h>
-+
-+static inline void switch_mm(struct mm_struct *prev,
-+			struct mm_struct *next,
-+			struct task_struct *tsk)
++static u64 bcm_div(u64 num, u32 base)
 +{
++	/* Ensure that small votes aren't lost. */
++	if (num && num < base)
++		return 1;
++
++	do_div(num, base);
++
++	return num;
 +}
 +
-+#endif /* __ASM_GENERIC_NOMMU_H */
+ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ {
++	struct qcom_icc_node *node;
+ 	size_t i, bucket;
+ 	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
+ 	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+@@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ 
+ 	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
+ 		for (i = 0; i < bcm->num_nodes; i++) {
+-			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
++			node = bcm->nodes[i];
++			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
++				       node->buswidth * node->channels);
+ 			agg_avg[bucket] = max(agg_avg[bucket], temp);
+ 
+-			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth);
++			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
++				       node->buswidth);
+ 			agg_peak[bucket] = max(agg_peak[bucket], temp);
+ 		}
+ 
+ 		temp = agg_avg[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_x[bucket] = temp;
++		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 
+ 		temp = agg_peak[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_y[bucket] = temp;
++		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 	}
+ 
+ 	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
 -- 
-2.23.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
