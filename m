@@ -2,99 +2,86 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C2FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32213C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 828172080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nbX6FxWq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Yitk5wyJ"
+	by mail.kernel.org (Postfix) with ESMTP id 119222070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 01:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgGJBOZ (ORCPT
+        id S1726757AbgGJBVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:14:25 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:53103 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726311AbgGJBOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:14:23 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 4DCFA2E3;
-        Thu,  9 Jul 2020 21:14:22 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 09 Jul 2020 21:14:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=yw9HbxmYVrUStuFGG15xWYmuHOEp4mb
-        rjs7zPres9Ds=; b=nbX6FxWqm7xH1s8bcJ6VKQgvibPNZwzXHk8GeKQam5IJfH3
-        ES5IjDIFHNeB39MXXAKRPDPz3xXczt133heBRVoonQ/A4Due0kGY3Kqj7nejT/1T
-        DmzSz8LOSNuN0LKxdpUoMzLfH8pfXL+3TFTM/YJ+wcQnMtWWsYPtLkbvh9g16Qz6
-        579Zce5dihAC1CZDT2QuEHrdRUSLHp+QI4G8fxfrZvBkuI29vLbDHmrFtL2GFZlX
-        q4QscgnDOSJUifKAGnxNyUTKD/4r4UctcEc+/A9ul+lI6Zwv9WBJfTUL9zIwDxSW
-        rr81A6x1Y4MQhge32sC+Y4vwaXBVkCUxsZIAENQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=yw9Hbx
-        mYVrUStuFGG15xWYmuHOEp4mbrjs7zPres9Ds=; b=Yitk5wyJCWnlKpxOnjf389
-        XMJK0dnGDNDYEBOF7FQ7ScdS7N5jhUxjE0FNoB9V7iTsUbIPlCgBfrkO5duA/s0O
-        /WMeCuYTKM2nYBoQQfxRxjv7y7nEUc2ED/vVbbzT/I0iYNsIiNGSij5DcmIa1kJz
-        6frLO+jGYiSUvpHZi/Omqv1OuabKj1raUQNk6txvr/OMZsngpRHQrskjMK8HYgGg
-        G1evBDieb24xQo1Fs7HaiLIuElFEoQx2hAEcw4MdUUYb8Q7sdcUr74LPy/3mkJKq
-        xxB7oPOR6A5TNV2fFRJR574O4aIW8seyhqRUAG9Anflu3VpFux+AkX345gvxXbTg
-        ==
-X-ME-Sender: <xms:7MAHX3p7Xk6KCv6dP_qJlFhK4jUdkn9BhUN_nSgBL7ccOVNkPRsnFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddtgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
-    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
-    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:7MAHXxpLmClJpfh_ZhbV5ne9AjsSlX2WZQDxmmsookPsNe_j6S1Zaw>
-    <xmx:7MAHX0OuqUgry6xIxGDFQp_Xpm-jHqy1Bb4aUbpM9b-NnkjXaCHgmA>
-    <xmx:7MAHX67Qdmft9mSv_RLQ9YBr_ADv2Ys1pK-UP8ZONFDTcK2akC9Rog>
-    <xmx:7cAHXzuzqQHp5TtKVCGo7e6MnlF71RaqakwCZqFV7Jo0ATosZlopyw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 77FD0E00AA; Thu,  9 Jul 2020 21:14:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-dev0-613-g8a73ad6-fm-20200709.001-g8a73ad6e
-Mime-Version: 1.0
-Message-Id: <4acad452-33c7-4fb2-ba90-19a824558b94@www.fastmail.com>
-In-Reply-To: <20200709195706.12741-3-eajames@linux.ibm.com>
-References: <20200709195706.12741-1-eajames@linux.ibm.com>
- <20200709195706.12741-3-eajames@linux.ibm.com>
-Date:   Fri, 10 Jul 2020 10:43:59 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Michael Turquette" <mturquette@baylibre.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-of-aspeed: Fix clock divider calculation
-Content-Type: text/plain
+        Thu, 9 Jul 2020 21:21:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58348 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726265AbgGJBVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 21:21:14 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5C638CEB53E9A7DF348C;
+        Fri, 10 Jul 2020 09:21:09 +0800 (CST)
+Received: from [127.0.0.1] (10.174.186.75) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Jul 2020
+ 09:21:02 +0800
+Subject: Re: [RESEND PATCH v5 3/6] arm64: Add tlbi_user_level TLB invalidation
+ helper
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200625080314.230-1-yezhenyu2@huawei.com>
+ <20200625080314.230-4-yezhenyu2@huawei.com> <20200709164845.GB6579@gaia>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <33a5dc75-8209-e198-bb41-8b4ab82c000e@huawei.com>
+Date:   Fri, 10 Jul 2020 09:20:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200709164845.GB6579@gaia>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Catalin,
 
-
-On Fri, 10 Jul 2020, at 05:27, Eddie James wrote:
-> When calculating the clock divider, start dividing at 2 instead of 1.
-> The divider is divided by two at the end of the calculation, so starting
-> at 1 may result in a divider of 0, which shouldn't happen.
+On 2020/7/10 0:48, Catalin Marinas wrote:
+> On Thu, Jun 25, 2020 at 04:03:11PM +0800, Zhenyu Ye wrote:
+>> @@ -189,8 +195,9 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+>>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+>>  
+>>  	dsb(ishst);
+>> -	__tlbi(vale1is, addr);
+>> -	__tlbi_user(vale1is, addr);
+>> +	/* This function is only called on a small page */
+>> +	__tlbi_level(vale1is, addr, 3);
+>> +	__tlbi_user_level(vale1is, addr, 3);
+>>  }
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Actually, that's incorrect. It was ok in v2 of your patches when I
+> suggested to drop level 0, just leave the function unchanged but I
+> missed that you updated it to pass level 3.
+> 
+> pmdp_set_access_flags -> ptep_set_access_flags ->
+> flush_tlb_fix_spurious_fault -> flush_tlb_page -> flush_tlb_page_nosync.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+How do you want to fix this error? I notice that this series have been applied
+to arm64 (for-next/tlbi).  Should I send a new series based on arm64 (for-next/tlbi)?
+
+Thanks,
+Zhenyu
+
