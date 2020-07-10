@@ -2,168 +2,145 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDAC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C84AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390FD206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xdTVwUNG"
+	by mail.kernel.org (Postfix) with ESMTP id 25A3420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594391955;
+	bh=QIYHbPSVSGtZDBABBAD04BZAgyeS9ZLXK9NpKGJOnTw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=um7lGGvGtXL9MeU+cvTnMGa8gqlNBAE0QVjacaTHwmuzyzJQ1kw33bLX6TTlJjJyT
+	 GrID2Tq/7nmVlIdigSYne2Ku6chmRBUeg+vqY9ZJ6BOb0ey0XkdJfi9bZkN8baoFJV
+	 OlM00ri92jY7MlYth1OQgD1UeTU869ETi7MbxDhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGJOhw (ORCPT
+        id S1727834AbgGJOjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:37:52 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47194 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJOht (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:37:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbiaG090319;
-        Fri, 10 Jul 2020 09:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594391864;
-        bh=AFRw+WmJ2Q5yfDyMlj5hZGNaBfFtzWmLjk7PZiopxDM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xdTVwUNG9TX76HTYbp71YKxMdwwTmkzqyWMZ3zyurbWj/XdZJZy9HdhGCVlzntTJz
-         VidBUtv3VYPU0+1sBHzU013tLLRKeQdvjVRS9WqM5yi7I+bdVPMld2WIViDdSBU1q7
-         KIPsJU2WcAW3XC7M1BD5yxgXyJN6j0qyvk3CDt38=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AEbicX074914
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 09:37:44 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 09:37:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 09:37:44 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbiO0033780;
-        Fri, 10 Jul 2020 09:37:44 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH net-next v2 1/2] dt-bindings: net: dp83822: Add TI dp83822 phy
-Date:   Fri, 10 Jul 2020 09:37:32 -0500
-Message-ID: <20200710143733.30751-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200710143733.30751-1-dmurphy@ti.com>
-References: <20200710143733.30751-1-dmurphy@ti.com>
+        Fri, 10 Jul 2020 10:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbgGJOjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:39:13 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86FE5206E2;
+        Fri, 10 Jul 2020 14:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594391952;
+        bh=QIYHbPSVSGtZDBABBAD04BZAgyeS9ZLXK9NpKGJOnTw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sqGH+z0PQWSNK7ckUPvuSQQd6/G6LxAKtgxwQhbvZjMaIraD1vYN0wtkzRlJz0r6c
+         +3mGqyqmICylpiseOU2VPBoAj9kqgU59wUskCO+oFIapG6RpDzdZ/xexWxVUKaHRkG
+         JCcMmmgxqm5yVrYTgE2FXeHeaSSTzqswdEdOLDzs=
+Date:   Fri, 10 Jul 2020 15:39:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, kernel-team@android.com
+Subject: [GIT PULL] arm64 fixes for -rc5
+Message-ID: <20200710143908.GB31036@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a dt binding for the TI dp83822 ethernet phy device.
+Hi Linus,
 
-CC: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/net/ti,dp83822.yaml   | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+Please pull this unfortunately large collection of arm64 fixes for -rc5.
+Some of this is absolutely trivial, but the alternatives, vDSO and CPU
+errata workaround fixes are significant. At least people are finding and
+fixing these things, I suppose.
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-new file mode 100644
-index 000000000000..55913534cbc2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI DP83822 ethernet PHY
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
-+  provides all of the physical layer functions needed to transmit and receive
-+  data over standard, twisted-pair cables or to connect to an external,
-+  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
-+  connect to a MAC through a standard MII, RMII, or RGMII interface
-+
-+  Specifications about the Ethernet PHY can be found at:
-+    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
-+
-+allOf:
-+  - $ref: "ethernet-phy.yaml#"
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  ti,link-loss-low:
-+    type: boolean
-+    description: |
-+       DP83822 PHY in Fiber mode only.
-+       Sets the DP83822 to detect a link drop condition when the signal goes
-+       high.  If not set then link drop will occur when the signal goes low.
-+       This property is only applicable if the fiber mode support is strapped
-+       to on.
-+
-+  ti,fiber-mode:
-+    type: boolean
-+    description: |
-+       DP83822 PHY only.
-+       If present the DP83822 PHY is configured to operate in fiber mode
-+       Fiber mode support can also be strapped. If the strap pin is not set
-+       correctly or not set at all then this boolean can be used to enable it.
-+       If the fiber mode is not strapped then signal detection for the PHY
-+       is disabled.
-+       In fiber mode, auto-negotiation is disabled and the PHY can only work in
-+       100base-fx (full and half duplex) modes.
-+
-+  rx-internal-delay-ps:
-+    description: |
-+       DP83822 PHY only.
-+       Setting this property to a non-zero number sets the RX internal delay
-+       for the PHY.  The internal delay for the PHY is fixed to 3.5ns relative
-+       to receive data.
-+
-+  tx-internal-delay-ps:
-+    description: |
-+       DP83822 PHY only.
-+       Setting this property to a non-zero number sets the TX internal delay
-+       for the PHY.  The internal delay for the PHY is fixed to 3.5ns relative
-+       to transmit data.
-+
-+required:
-+  - reg
-+
-+examples:
-+  - |
-+    mdio0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+        rx-internal-delay-ps = <1>;
-+        tx-internal-delay-ps = <1>;
-+      };
-+    };
-+
-+...
--- 
-2.27.0
+Summary in the tag.
 
+Cheers,
+
+Will
+
+--->8
+
+The following changes since commit 9b23d95c539ebc5d6d6b5d6f20d2d7922384e76e:
+
+  arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718 (2020-07-03 16:39:16 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 5679b28142193a62f6af93249c0477be9f0c669b:
+
+  arm64/alternatives: don't patch up internal branches (2020-07-09 14:57:59 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc5
+
+- Fix workaround for CPU erratum #1418040 to disable the compat vDSO
+
+- Fix OOPs when single-stepping with KGDB
+
+- Fix memory attributes for hypervisor device mappings at EL2
+
+- Fix memory leak in PSCI and remove useless variable assignment
+
+- Fix up some comments and asm labels in our entry code
+
+- Fix broken register table formatting in our generated html docs
+
+- Fix missing NULL sentinel in CPU errata workaround list
+
+- Fix patching of branches in alternative instruction sections
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64/alternatives: don't patch up internal branches
+
+Florian Fainelli (1):
+      arm64: Add missing sentinel to erratum_1463225
+
+Gavin Shan (2):
+      drivers/firmware/psci: Fix memory leakage in alloc_init_cpu_groups()
+      drivers/firmware/psci: Assign @err directly in hotplug_tests()
+
+Kevin Hao (1):
+      arm64: entry: Fix the typo in the comment of el1_dbg()
+
+Marc Zyngier (4):
+      arm64: Introduce a way to disable the 32bit vdso
+      arm64: arch_timer: Allow an workaround descriptor to disable compat vdso
+      arm64: arch_timer: Disable the compat vdso for cores affected by ARM64_WORKAROUND_1418040
+      arm64: Rework ARM_ERRATUM_1414080 handling
+
+Suzuki K Poulose (1):
+      arm64: Documentation: Fix broken table in generated HTML
+
+Wei Li (1):
+      arm64: kgdb: Fix single-step exception handling oops
+
+Will Deacon (2):
+      KVM: arm64: Fix definition of PAGE_HYP_DEVICE
+      arm64: entry: Tidy up block comments and label numbers
+
+ Documentation/arm64/cpu-feature-registers.rst     |  2 +
+ arch/arm64/include/asm/arch_timer.h               |  1 +
+ arch/arm64/include/asm/pgtable-prot.h             |  2 +-
+ arch/arm64/include/asm/vdso/clocksource.h         |  7 ++-
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h |  8 +++-
+ arch/arm64/kernel/alternative.c                   | 16 +------
+ arch/arm64/kernel/cpu_errata.c                    |  1 +
+ arch/arm64/kernel/entry-common.c                  |  2 +-
+ arch/arm64/kernel/entry.S                         | 52 ++++++++++++++---------
+ arch/arm64/kernel/kgdb.c                          |  2 +-
+ drivers/clocksource/arm_arch_timer.c              | 11 +++++
+ drivers/firmware/psci/psci_checker.c              |  8 ++--
+ 12 files changed, 68 insertions(+), 44 deletions(-)
