@@ -2,95 +2,81 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31245C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A40206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WDvzP9jY"
+	by mail.kernel.org (Postfix) with ESMTP id 0D02C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 14:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594391881;
+	bh=8g8m8VJ9l5CJBIHP80qLd7TYwA04RcxWEXDKAmSDJFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B8rms06wfZc4mrOYao8o5sY0jNUCy3mhkmEzLDmgtd+ACRUm+UosOHtOhnagebC0m
+	 GroHpDS73W7KckWj75dvvW6Id3plyWDppIdc8KFp4zEtYeW/wCWmLdVzEBySY77C/w
+	 W6yGzXRV03UVEB68T/oEeZf8wr8oZUY2Ol9CIRIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgGJOht (ORCPT
+        id S1728321AbgGJOh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:37:49 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47192 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJOht (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:37:49 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbdOo090306;
-        Fri, 10 Jul 2020 09:37:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594391859;
-        bh=s/Z8V9mGX3gOoutpqf8o4ND8qHAKcSCacNptqGjaKUI=;
-        h=From:To:CC:Subject:Date;
-        b=WDvzP9jYBZUZkzu325ftwGkluhcMqAEvy+t5AUGlcTXz8nf6IwSn1k1iWbVe3McDK
-         xhceuPIyQvRQo+L3ZAvZul8Zfhr24ZyIEUq+cDAeWEedokiaQAIgiEcs7u16oLp0Ux
-         t8ecclIzVMmPtPYSvwHdFQPjXDayhMWQDbYiUiFc=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AEbdYm118635
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 09:37:39 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 09:37:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 09:37:39 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AEbc0S083159;
-        Fri, 10 Jul 2020 09:37:39 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2 0/2] DP83822 Fiber enablement
-Date:   Fri, 10 Jul 2020 09:37:31 -0500
-Message-ID: <20200710143733.30751-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 10 Jul 2020 10:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgGJOh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 10:37:56 -0400
+Received: from willie-the-truck (unknown [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990B4206E2;
+        Fri, 10 Jul 2020 14:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594391876;
+        bh=8g8m8VJ9l5CJBIHP80qLd7TYwA04RcxWEXDKAmSDJFo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0e88udVe84K619h0RTRjVu0LwV3LPmZL1UbJ1n+j+/htQmPtaMjGUJNWydl/Q76/5
+         2MFf+dTdXQ3YPR3lvtdODNoxv0f/PMX3K3q4CtBJhqfn/hzAC3eno8eSVvZgP72lKd
+         oHDAHX9pxFCVDbNJPyeM95zUrrxFahH8+LpRgrNQ=
+Date:   Fri, 10 Jul 2020 15:37:40 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Robin Murphy <robin.murphy@arm.com>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH] iommu: Remove unused IOMMU_SYS_CACHE_ONLY flag
+Message-ID: <20200710143740.GA31036@willie-the-truck>
+References: <20200703162548.19953-1-will@kernel.org>
+ <20200710125831.GI27672@8bytes.org>
+ <20200710130526.GA30578@willie-the-truck>
+ <20200710141532.GK27672@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710141532.GK27672@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Fri, Jul 10, 2020 at 04:15:32PM +0200, Joerg Roedel wrote:
+> On Fri, Jul 10, 2020 at 02:05:27PM +0100, Will Deacon wrote:
+> > Ah, I'd already got this queued for 5.9:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
+> > 
+> > and I've queued a small number of patches on top of it now.
+> > 
+> > Are you planning to send it for 5.8? If so, I suspect I'll have to rebase.
+> 
+> No problem, nothing got pushed yet. I removed it from my branch and wait
+> for your pull-request.
 
-The DP83822 Ethernet PHY has the ability to connect via a Fiber port.  The
-derivative PHYs DP83825 and DP83826 do not have this ability. In fiber mode
-the DP83822 disables auto negotiation and has a fixed 100Mbps speed with
-support for full or half duplex modes.
+Great, thanks Joerg.
 
-A devicetree binding was added to set the signal polarity for the fiber
-connection.  This property is only applicable if the FX_EN strap is set in
-hardware other wise the signal loss detection is disabled on the PHY.
-
-If the FX_EN is not strapped the device can be configured to run in fiber mode
-via the device tree. All be it the PHY will not perfomr signal loss detection.
-
-Dan
-
-Dan Murphy (2):
-  dt-bindings: net: dp83822: Add TI dp83822 phy
-  net: phy: DP83822: Add ability to advertise Fiber connection
-
- .../devicetree/bindings/net/ti,dp83822.yaml   |  80 +++++++++
- drivers/net/phy/dp83822.c                     | 161 ++++++++++++++++++
- 2 files changed, 241 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
-
--- 
-2.27.0
-
+Will
