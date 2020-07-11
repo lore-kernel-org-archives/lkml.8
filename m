@@ -2,142 +2,111 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D963AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD302078B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:27:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aOL1heFQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4D7FD2078B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgGKR1y (ORCPT
+        id S1728693AbgGKRYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 13:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbgGKR1x (ORCPT
+        Sat, 11 Jul 2020 13:24:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:50970 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbgGKRYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 13:27:53 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7DCC08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 10:27:53 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k17so5016135lfg.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 10:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WT5If22sLaMPwYvd2aUV89SMReFctlqwpoNyy327+N8=;
-        b=aOL1heFQeqiKinpPUMjMjc9jJYIKtXbUtHLKxfkNHEMtr57W5VoqmqeG4iVDWaOm6m
-         viRFkgNqyVE/8Uxjzpz6FWkO7DvUs9dguymc3cng8XxqvIsndwZtoNtvPIZ7X2NflYP9
-         u+VLfQ4fIU84dJLfEvHh9pb3mWBR3aPdi+zwQLXciITSYcnd1vwbGqhMMxGp2yjFgQDG
-         TkC/neU3A4butD9FHcisZH/z4n0Oae08Q/E2fQb0qJrI13xaPg1PZeQBITxe+6I31ROR
-         K0i3UBnKymFop6u8GnnD799cEhW0EKEwaxE/Fz7Pc93devszFWG4RcJMDemwf59mgWQL
-         LugA==
+        Sat, 11 Jul 2020 13:24:18 -0400
+Received: by mail-il1-f197.google.com with SMTP id l17so6010843ilj.17
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 10:24:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WT5If22sLaMPwYvd2aUV89SMReFctlqwpoNyy327+N8=;
-        b=ae7yHHJsPUK81KqSNvcESd7X5AbQW3Kb9sVQ3vekeWMER67QWmI/BFLF5Gv4Jb6E7b
-         t5rW+5yfIIVnZwoGSYGv2mg6hEBeIbcwJfaVelhB0ivFG84OrzJfKGbiTxX/Bbhv6U9/
-         uJB6v7fXcakhorRottPUhJrtGplqeRPM4u7EkdCygBUADCLnluKbrJqVFRM/UgUK1jML
-         Kln1/KzagOjNfJeY5KuXAGuNpRJJIb56hi4Oq1M6LOdnieE2BIffyU0aCkstaXp3wSDs
-         99r9ga+0hZPtRtPmQVGyRD1OzQj50psB2GYiBYGmTCxiNQD5aD6kqwO8C0fV8hJCAImW
-         GWbg==
-X-Gm-Message-State: AOAM531lJpSAYVr2POA0OjAnIP0YuknUMF5GN0mvL/Gnsbf+19UnT4WX
-        zgadIu9dbTgMbJwT2RVy7wSDZBjB4K+JD7+BWDLvZg==
-X-Google-Smtp-Source: ABdhPJzyuQC9nNuJW74kQTfO9OTzPQaq3SEObRbW8jRoAavJBh0wA61Wit3kCDkbVEL4KIJMrlobAElUlQJjcmk/RcI=
-X-Received: by 2002:ac2:5325:: with SMTP id f5mr47009377lfh.6.1594488470333;
- Sat, 11 Jul 2020 10:27:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=IeGXPwtj2lsocZhYj09imRNrIavWv4B/gviXUgmP6a4=;
+        b=piYJy3WoifS7zsXDx6nKDrM/ji3clNN1yMUZDmmioKDyw+CTsOOz2MdioqCcxbEfh+
+         SuXBx3oTyvkSw4YqvYkgwLHH/yG9z8daF7L5pNc85RBDYfQNH5yioXaFI2sJ8jQiBL2Z
+         8mHtuiZF4Q5g7I3H+Rk01RUEGeiyhIYIoINamD5l/v21zfFIw0rMGILS2JILbdjshYMA
+         PprkXkqH9DRYzO/EXJcudbU1iQEeWULZFCX27DSpk2FSNNpUclFLcqixd0sE657ExlPL
+         G3wWxWl+FDQns1A28FwOODvd5gZVt+7IRjm4dQzcZV4UAY1S57cdrqsT0aEJMGzJTLLY
+         nYEA==
+X-Gm-Message-State: AOAM530qjPf4yA4jf6BQOpotFLj9ef/8tzejt6Vk1t29OvZaGFJVX0C7
+        llR/gxT9wZc2E+OI2LN4xuxGQ7KVDQ4lUuIF+bK9WaFBtZjL
+X-Google-Smtp-Source: ABdhPJxaO1pCSySsaIduXc9iXrSEjRgRRv4V2aSfFjff9Q2pVX2H9MA/gZA7sif7lcNU5fsE2CTGnmSeDJcub/k2Df8CHeVubeIF
 MIME-Version: 1.0
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
- <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
- <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
- <CA+G9fYudT63yZrkWG+mfKHTcn5mP+Ay6hraEQy3G_4jufztrrA@mail.gmail.com> <CAHk-=whPrCRZpXYKois-0t8MibxH9KVXn=+-O1YVvOA016fqhw@mail.gmail.com>
-In-Reply-To: <CAHk-=whPrCRZpXYKois-0t8MibxH9KVXn=+-O1YVvOA016fqhw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 11 Jul 2020 22:57:38 +0530
-Message-ID: <CA+G9fYusSSrc5G_pZV6Lc-LjjkzQcc3EsLMo+ejSzvyRcMgbqw@mail.gmail.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
+X-Received: by 2002:a92:5fc7:: with SMTP id i68mr16491282ill.126.1594488257247;
+ Sat, 11 Jul 2020 10:24:17 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 10:24:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002c01a305aa2dba34@google.com>
+Subject: INFO: trying to register non-static key in addrconf_notify
+From:   syzbot <syzbot+bf9c23e0afdec81d9470@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jul 2020 at 01:35, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Jul 10, 2020 at 10:48 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
+Hello,
 
-I have started bisecting this problem and found the first bad commit
+syzbot found the following crash on:
 
-commit 9f132f7e145506efc0744426cb338b18a54afc3b
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Thu Jan 3 15:28:41 2019 -0800
+HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=102d01a3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=bf9c23e0afdec81d9470
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-    mm: select HAVE_MOVE_PMD on x86 for faster mremap
+Unfortunately, I don't have any reproducer for this crash yet.
 
-    Moving page-tables at the PMD-level on x86 is known to be safe.  Enable
-    this option so that we can do fast mremap when possible.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bf9c23e0afdec81d9470@syzkaller.appspotmail.com
 
-    Link: http://lkml.kernel.org/r/20181108181201.88826-4-joelaf@google.com
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
-    Acked-by: Kirill A. Shutemov <kirill@shutemov.name>
-    Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-    Cc: Michal Hocko <mhocko@kernel.org>
-    Cc: William Kucharski <william.kucharski@oracle.com>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 317 Comm: kworker/u4:6 Not tainted 5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ register_lock_class+0xf06/0x1520 kernel/locking/lockdep.c:893
+ __lock_acquire+0x102/0x2c30 kernel/locking/lockdep.c:4259
+ lock_acquire+0x160/0x720 kernel/locking/lockdep.c:4959
+ __raw_write_lock_bh include/linux/rwlock_api_smp.h:203 [inline]
+ _raw_write_lock_bh+0x31/0x40 kernel/locking/spinlock.c:319
+ addrconf_ifdown+0x5f8/0x1670 net/ipv6/addrconf.c:3734
+ addrconf_notify+0x3f9/0x3a60 net/ipv6/addrconf.c:3602
+ notifier_call_chain kernel/notifier.c:83 [inline]
+ __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+ raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
+ call_netdevice_notifiers_info net/core/dev.c:2027 [inline]
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ rollback_registered_many+0xbe3/0x14a0 net/core/dev.c:8968
+ unregister_netdevice_many+0x46/0x260 net/core/dev.c:10113
+ ip6gre_exit_batch_net+0x435/0x460 net/ipv6/ip6_gre.c:1608
+ ops_exit_list net/core/net_namespace.c:189 [inline]
+ cleanup_net+0x79c/0xba0 net/core/net_namespace.c:603
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index e260460210e1..6185d4f33296 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -172,6 +172,7 @@ config X86
-  select HAVE_MEMBLOCK_NODE_MAP
-  select HAVE_MIXED_BREAKPOINTS_REGS
-  select HAVE_MOD_ARCH_SPECIFIC
-+ select HAVE_MOVE_PMD
-  select HAVE_NMI
-  select HAVE_OPROFILE
-  select HAVE_OPTPROBES
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-After reverting the above patch the reported kernel warning got fixed on
-Linus mainline tree 5.8.0-rc4.
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
