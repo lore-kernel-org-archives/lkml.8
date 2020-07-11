@@ -2,109 +2,159 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B0F2075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9990D206F0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrGcGC/l"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ljmlzhBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgGKDal (ORCPT
+        id S1727847AbgGKDhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 23:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgGKDal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 23:30:41 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18739C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:30:41 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id a11so6833717ilk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1xGtSn3GzgnnxnxHEMkxu4A5bFvBvCATbzs0GEZtET8=;
-        b=mrGcGC/l0RixNmVPT1JtgeSd/s2/az05bb9aOnqtWrfEKdYkAGtyRInDvcykJshFMg
-         B8df7EQ5c5ATVRYIWo6py9ViEZ/c3C/fECBpvukN90WABTHKicbWeG2hLJw2RK1me/Sj
-         FvClA1ssJz+sv3qxycUsjDQjckpzV3OqEN7wEcYyTl9T42VW0sMpxuVVx0k9Qu/qIY1G
-         PFB7RJ01gKqR81ohebqhB+TZ+RmGG2O804JKPcDkNAn3Lypem3oWc2Zn2Fs/dF1nmvh9
-         cGAJk3Y+FZB+9gGSa6RYiDbLCObod+JBFOW3zzwJWcoHRlzaLpee7MyhkesDJQCuMOL9
-         vFVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1xGtSn3GzgnnxnxHEMkxu4A5bFvBvCATbzs0GEZtET8=;
-        b=Aa6DcjjkBtC5fiiAcrEI3YWdz06B5XK1vJNSblRU6rXG6zaJaz7K+YWPDU2X0FI8xd
-         /vusVtgAR+5WDsxQrJCglxNUhA0/XKxB4BIA7Y1SxlF8HFh53EE5NkqsxbZtukZxKXTH
-         chGsm1uHJIwJV9MkrqEcSOa7/LjTZ/lL8s7HEyC+b1uz+9LOsv8XIBB5J02rvwDYXNpJ
-         ei3tu6KErLTPBjwZ7jAvnO9xAwT6/qmj2lxWIDUal9adNWGB1F4M8bcwOCD6BFn9K+WC
-         2NiaDibTePPJU2jWYNAzSWUPVIYtEQODlegrjVEsIfLDEkdwN5q7xZ/F3RBeP2QNiWvG
-         gyCA==
-X-Gm-Message-State: AOAM533/bnee5Nuv3dELBowiB9XZ6e9I2BFDQ/S73UJzMdH+wzKXKlzT
-        h7QAe2+S9qiM5QdXyDMWtvI=
-X-Google-Smtp-Source: ABdhPJx2W29CCiPvn5uJf9cHVpmqBwFUZF7Zl/9tjYANUYzAmy7EHSWaFYfLC7lWWSDqSfSLr7Gb7g==
-X-Received: by 2002:a92:cf42:: with SMTP id c2mr9952649ilr.13.1594438240262;
-        Fri, 10 Jul 2020 20:30:40 -0700 (PDT)
-Received: from Ryzen-9-3900X.localdomain ([107.152.99.41])
-        by smtp.gmail.com with ESMTPSA id v62sm4506808ila.37.2020.07.10.20.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 20:30:39 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 20:30:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: sound/soc/codecs/zl38060.c:614:34: warning: unused variable
- 'zl38_dt_ids'
-Message-ID: <20200711033036.GA4486@Ryzen-9-3900X.localdomain>
-References: <20200710024100.GA2055744@ubuntu-n2-xlarge-x86>
- <20200710122459.GE5653@sirena.org.uk>
+        Fri, 10 Jul 2020 23:37:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53068 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbgGKDhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 23:37:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594438635; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=WYsZHFg0/evTrJYo5esTCdWPLshbWMTRzSMvct1drRA=; b=ljmlzhBPzPu7036pZqKfVGtWIPQHjF3UzEf27Dqy5kndgWwQutJNzw73Bw+AS0wSgSWdN+Ft
+ sV1Ae5Q7t9VDDvAyKJtnLguilNrOxk3SV4Fm8ho05lRaWVFmeKEz2A5j7QzBflTnqyIAPdqQ
+ ib2FI71Xo3mhUnmnPzBoJ6ENBrY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f0933ea427cd55766727867 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 11 Jul 2020 03:37:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2A91AC43387; Sat, 11 Jul 2020 03:37:13 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C9E3C433C6;
+        Sat, 11 Jul 2020 03:37:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C9E3C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Doug Anderson'" <dianders@chromium.org>
+Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
+        <devicetree@vger.kernel.org>,
+        "'Evan Green'" <evgreen@chromium.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Sibi Sankar'" <sibis@codeaurora.org>
+References: <1594286253-32244-1-git-send-email-pillair@codeaurora.org> <CAD=FV=XQy17ZuKdJXPH20uGTrEtPrDacDXAg+rTA96HBm6hVVw@mail.gmail.com>
+In-Reply-To: <CAD=FV=XQy17ZuKdJXPH20uGTrEtPrDacDXAg+rTA96HBm6hVVw@mail.gmail.com>
+Subject: RE: [PATCH] arm64: dts: qcom: sc7180: Add missing properties for Wifi node
+Date:   Sat, 11 Jul 2020 09:07:05 +0530
+Message-ID: <007701d65734$90039c80$b00ad580$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710122459.GE5653@sirena.org.uk>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFjyE5VI4l7cbK/b4BghJEFxZssywLCt6GuqdDCWpA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:24:59PM +0100, Mark Brown wrote:
-> On Thu, Jul 09, 2020 at 07:41:00PM -0700, Nathan Chancellor wrote:
-> 
-> > When CONFIG_SND_SOC_ZL38060 is y, MODULE_DEVICE_TABLE expands to nothing
-> > so zl38_dt_ids will be unused. This is a pretty common construct in the
-> > kernel and the only way I can think of to resolve this through the code
-> > is by adding __used annotations to all of these variables, which I think
-> > is overkill for this.
-> 
-> > Personally, I think this warning should be downgraded to W=2, thoughts?
-> 
-> We've had that warning available for ever, we shouldn't need to disable
-> it now.  I had thought there was supposed to be magic which caused
-> of_match_ptr() to make things look referenced when !OF but don't seem to
-> actually see any sign of it.  The other thing is to just have ifdefs
-> around the table.
 
-While it has been available, it's been hidden behind W=1, which is now
-default on for 0day.
 
-Sure, you could hide it behind an ifdef for either CONFIG_OF or MODULE
-(since you could build this as a module with CONFIG_OF disabled).
+> -----Original Message-----
+> From: Doug Anderson <dianders@chromium.org>
+> Sent: Friday, July 10, 2020 1:36 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> <devicetree@vger.kernel.org>; Evan Green <evgreen@chromium.org>;
+> Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; linux-
+> arm-msm <linux-arm-msm@vger.kernel.org>; LKML <linux-
+> kernel@vger.kernel.org>; Sibi Sankar <sibis@codeaurora.org>
+> Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add missing properties =
+for
+> Wifi node
+>=20
+> Hi,
+>=20
+> On Thu, Jul 9, 2020 at 2:18 AM Rakesh Pillai <pillair@codeaurora.org> =
+wrote:
+> >
+> > The wlan firmware memory is statically mapped in
+> > the Trusted Firmware, hence the wlan driver does
+> > not need to map/unmap this region dynamically.
+> >
+> > Hence add the property to indicate the wlan driver
+> > to not map/unamp the firmware memory region
+> > dynamically.
+> >
+> > Also add the chain1 voltage supply for wlan.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> > This patch is created on top of the change by
+> > Douglas Anderson.
+> > https://lkml.org/lkml/2020/6/25/817
+> >
+> > Also the dt-bindings for the chain1 voltage supply
+> > is added by the below patch series:
+> > =
+https://patchwork.kernel.org/project/linux-wireless/list/?series=3D309137=
 
-I just figured this would be something frowned upon but if that is how
-you would prefer it to be fixed, then I have no objections to it.
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 472f7f4..4c64bc1 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -391,10 +391,12 @@
+> >
+> >  &wifi {
+> >         status =3D "okay";
+> > +       qcom,msa-fixed-perm;
+>=20
+> At one point in time I thought +Sibi said that this wouldn't be needed
+> once the firmware was fixed.  ...afterwards you said that it was
+> needed for SSR (subsystem reset).  Would be good to get confirmation
+> from Sibi that this matches his understanding.
 
-Cheers,
-Nathan
+Hi Doug,
+
+This is now needed as the firmware memory mapping was moved to Trusted =
+firmware.
+This region is now statically mapped to avoid access from driver.
+
+>=20
+>=20
+> >         vdd-0.8-cx-mx-supply =3D <&vreg_l9a_0p6>;
+> >         vdd-1.8-xo-supply =3D <&vreg_l1c_1p8>;
+> >         vdd-1.3-rfa-supply =3D <&vreg_l2c_1p3>;
+> >         vdd-3.3-ch0-supply =3D <&vreg_l10c_3p3>;
+> > +       vdd-3.3-ch1-supply =3D <&vreg_l11c_3p3>;
+> >         wifi-firmware {
+> >                 iommus =3D <&apps_smmu 0xc2 0x1>;
+> >         };
+>=20
+> Other than the one question this looks good to me.
+>=20
+> -Doug
+
