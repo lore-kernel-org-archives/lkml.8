@@ -2,92 +2,284 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DCCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD69C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBD020786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594429837;
-	bh=obkdWl2N6bzEnN0PanxeRIISOXyw6TIbMvNwfoNiaXM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1uCzeKrQ3seuznRaZ6Q5as3uCez0UUmNHyWVlKlIIPhV4taUETYonDFL/XbOcyoHf
-	 7xcvsJ0XVEVSyFTHKEMOFxnDBNtEApNZQBlFxaVjL3RLexGlQhkqnIkenov8ccFIrD
-	 HY69jAEi56SdnKZtK9OACwsIkvK90jyfeeBwTqY0=
+	by mail.kernel.org (Postfix) with ESMTP id C85832076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgGKBKg (ORCPT
+        id S1726736AbgGKBOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 21:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgGKBKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 21:10:36 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
+        id S1726588AbgGKBOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 21:14:30 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B3AD2076A;
-        Sat, 11 Jul 2020 01:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594429835;
-        bh=obkdWl2N6bzEnN0PanxeRIISOXyw6TIbMvNwfoNiaXM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ua2kf3VZjIIkFbHCUgHFuh6yEuyDq5Lg1907l3oLg1B2S8kTEbM8GNOlOIsLFNru8
-         HdjWhP+w9zVzIBZ+9qkky5iZIkotwCgwlSBdtUBbC5HydTgN4D7mlAhGpFhQE01Pp1
-         OSl41PWKckZCFAY6zBd+K1hmuLU8d1VSM+Y5kg14=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 3B2A85FCD1; Sat, 11 Jul 2020 09:10:31 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: sun4i: hdmi: Fix inverted HPD result
-Date:   Sat, 11 Jul 2020 09:10:30 +0800
-Message-Id: <20200711011030.21997-1-wens@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC582077D;
+        Sat, 11 Jul 2020 01:14:27 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 21:14:26 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v6 15/17] static_call: Allow early init
+Message-ID: <20200710211426.298a3d94@oasis.local.home>
+In-Reply-To: <20200710134337.036717190@infradead.org>
+References: <20200710133831.943894387@infradead.org>
+        <20200710134337.036717190@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Fri, 10 Jul 2020 15:38:46 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-When the extra HPD polling in sun4i_hdmi was removed, the result of
-HPD was accidentally inverted.
+> In order to use static_call() to wire up x86_pmu, we need to
+> initialize earlier; copy some of the tricks from jump_label to enable
+> this.
+> 
+> Primarily we overload key->next to store a sites pointer when there
+> are no modules, this avoids having to use kmalloc() to initialize the
+> sites and allows us to run much earlier.
+> 
 
-Fix this by inverting the check.
+I'm confused. What was the need to have key->next store site pointers
+in order to move it up earlier?
 
-Fixes: bda8eaa6dee7 ("drm: sun4i: hdmi: Remove extra HPD polling")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
+-- Steve
 
-Sorry for the screw-up.
 
----
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 557cbe5ab35f..2f2c9f0a1071 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -260,7 +260,7 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	unsigned long reg;
- 
- 	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
--	if (reg & SUN4I_HDMI_HPD_HIGH) {
-+	if (!(reg & SUN4I_HDMI_HPD_HIGH)) {
- 		cec_phys_addr_invalidate(hdmi->cec_adap);
- 		return connector_status_disconnected;
- 	}
--- 
-2.27.0
+> (arguably, this is much much earlier than needed for perf, but it
+> might allow other uses.)
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/kernel/setup.c       |    2 +
+>  arch/x86/kernel/static_call.c |    8 +++++-
+>  include/linux/static_call.h   |   15 +++++++++--
+>  kernel/static_call.c          |   55 +++++++++++++++++++++++++++++++++++++++---
+>  4 files changed, 74 insertions(+), 6 deletions(-)
+> 
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/hugetlb.h>
+>  #include <linux/tboot.h>
+>  #include <linux/usb/xhci-dbgp.h>
+> +#include <linux/static_call.h>
+>  
+>  #include <uapi/linux/mount.h>
+>  
+> @@ -848,6 +849,7 @@ void __init setup_arch(char **cmdline_p)
+>  	early_cpu_init();
+>  	arch_init_ideal_nops();
+>  	jump_label_init();
+> +	static_call_init();
+>  	early_ioremap_init();
+>  
+>  	setup_olpc_ofw_pgd();
+> --- a/arch/x86/kernel/static_call.c
+> +++ b/arch/x86/kernel/static_call.c
+> @@ -11,7 +11,7 @@ enum insn_type {
+>  	RET = 3,  /* tramp / site cond-tail-call */
+>  };
+>  
+> -static void __static_call_transform(void *insn, enum insn_type type, void *func)
+> +static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
+>  {
+>  	int size = CALL_INSN_SIZE;
+>  	const void *code;
+> @@ -33,11 +33,17 @@ static void __static_call_transform(void
+>  		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
+>  		size = RET_INSN_SIZE;
+>  		break;
+> +
+> +	default: /* GCC is a moron -- it figures @code can be uninitialized below */
+> +		BUG();
+>  	}
+>  
+>  	if (memcmp(insn, code, size) == 0)
+>  		return;
+>  
+> +	if (unlikely(system_state == SYSTEM_BOOTING))
+> +		return text_poke_early(insn, code, size);
+> +
+>  	text_poke_bp(insn, code, size, NULL);
+>  }
+>  
+> --- a/include/linux/static_call.h
+> +++ b/include/linux/static_call.h
+> @@ -99,6 +99,8 @@ extern void arch_static_call_transform(v
+>  
+>  #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+>  
+> +extern void __init static_call_init(void);
+> +
+>  struct static_call_mod {
+>  	struct static_call_mod *next;
+>  	struct module *mod; /* for vmlinux, mod == NULL */
+> @@ -107,7 +109,12 @@ struct static_call_mod {
+>  
+>  struct static_call_key {
+>  	void *func;
+> -	struct static_call_mod *mods;
+> +	union {
+> +		/* bit 0: 0 = mods, 1 = sites */
+> +		unsigned long type;
+> +		struct static_call_mod *mods;
+> +		struct static_call_site *sites;
+> +	};
+>  };
+>  
+>  extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
+> @@ -118,7 +125,7 @@ extern int static_call_text_reserved(voi
+>  	DECLARE_STATIC_CALL(name, _func);				\
+>  	struct static_call_key STATIC_CALL_KEY(name) = {		\
+>  		.func = _func,						\
+> -		.mods = NULL,						\
+> +		.type = 1,						\
+>  	};								\
+>  	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+>  
+> @@ -143,6 +150,8 @@ extern int static_call_text_reserved(voi
+>  
+>  #elif defined(CONFIG_HAVE_STATIC_CALL)
+>  
+> +static inline void static_call_init(void) { }
+> +
+>  struct static_call_key {
+>  	void *func;
+>  };
+> @@ -188,6 +197,8 @@ static inline int static_call_text_reser
+>  
+>  #else /* Generic implementation */
+>  
+> +static inline void static_call_init(void) { }
+> +
+>  struct static_call_key {
+>  	void *func;
+>  };
+> --- a/kernel/static_call.c
+> +++ b/kernel/static_call.c
+> @@ -94,10 +94,31 @@ static inline void static_call_sort_entr
+>  	     static_call_site_cmp, static_call_site_swap);
+>  }
+>  
+> +static inline bool static_call_key_has_mods(struct static_call_key *key)
+> +{
+> +	return !(key->type & 1);
+> +}
+> +
+> +static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
+> +{
+> +	if (!static_call_key_has_mods(key))
+> +		return NULL;
+> +
+> +	return key->mods;
+> +}
+> +
+> +static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
+> +{
+> +	if (static_call_key_has_mods(key))
+> +		return NULL;
+> +
+> +	return (struct static_call_site *)(key->type & ~1);
+> +}
+> +
+>  void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+>  {
+>  	struct static_call_site *site, *stop;
+> -	struct static_call_mod *site_mod;
+> +	struct static_call_mod *site_mod, first;
+>  
+>  	cpus_read_lock();
+>  	static_call_lock();
+> @@ -116,13 +137,22 @@ void __static_call_update(struct static_
+>  	if (WARN_ON_ONCE(!static_call_initialized))
+>  		goto done;
+>  
+> -	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
+> +	first = (struct static_call_mod){
+> +		.next = static_call_key_next(key),
+> +		.mod = NULL,
+> +		.sites = static_call_key_sites(key),
+> +	};
+> +
+> +	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
+>  		struct module *mod = site_mod->mod;
+>  
+>  		if (!site_mod->sites) {
+>  			/*
+>  			 * This can happen if the static call key is defined in
+>  			 * a module which doesn't use it.
+> +			 *
+> +			 * It also happens in the has_mods case, where the
+> +			 * 'first' entry has no sites associated with it.
+>  			 */
+>  			continue;
+>  		}
+> @@ -192,16 +222,35 @@ static int __static_call_init(struct mod
+>  		if (key != prev_key) {
+>  			prev_key = key;
+>  
+> +			if (!mod) {
+> +				key->sites = site;
+> +				key->type |= 1;
+> +				goto do_transform;
+> +			}
+> +
+>  			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+>  			if (!site_mod)
+>  				return -ENOMEM;
+>  
+> +			if (!static_call_key_has_mods(key)) {
+> +				site_mod->mod = NULL;
+> +				site_mod->next = NULL;
+> +				site_mod->sites = static_call_key_sites(key);
+> +
+> +				key->mods = site_mod;
+> +
+> +				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+> +				if (!site_mod)
+> +					return -ENOMEM;
+> +			}
+> +
+>  			site_mod->mod = mod;
+>  			site_mod->sites = site;
+>  			site_mod->next = key->mods;
+>  			key->mods = site_mod;
+>  		}
+>  
+> +do_transform:
+>  		arch_static_call_transform(site_addr, NULL, key->func,
+>  				static_call_is_tail(site));
+>  	}
+> @@ -344,7 +393,7 @@ int static_call_text_reserved(void *star
+>  	return ret;
+>  }
+>  
+> -static void __init static_call_init(void)
+> +void __init static_call_init(void)
+>  {
+>  	int ret;
+>  
+> 
 
