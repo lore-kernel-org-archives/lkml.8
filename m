@@ -2,95 +2,108 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCD7C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E135FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652512065D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECC32065D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIq8s8tO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGKNsS (ORCPT
+        id S1728309AbgGKNqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:48:18 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35894 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgGKNsS (ORCPT
+        Sat, 11 Jul 2020 09:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgGKNqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:48:18 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5D1471C0BD2; Sat, 11 Jul 2020 15:48:15 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 15:48:14 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, dmurphy@ti.com,
-        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com
-Subject: Re: [PATCH 1/2] dt-bindings: leds: pca955x: Add IBM implementation
- compatible string
-Message-ID: <20200711134814.GB6407@amd>
-References: <20200709201220.13736-1-eajames@linux.ibm.com>
- <20200709201220.13736-2-eajames@linux.ibm.com>
+        Sat, 11 Jul 2020 09:46:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BF4C08C5DD;
+        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u18so3793666pfk.10;
+        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4QaG2Xnk2TYLlJE8J5iwYhAP5F08MFtwcs7P6RA6aEM=;
+        b=oIq8s8tOLESYixQMi0A4Ssshbv5SYCHZuZ5PSvHfWPrOrLbLv9Te1ACCyR/pElxWhN
+         GdCIUip+aCCtI4u9dvy2hILjNDigjU4q4r1chs2usc2xqVo5lSvSsSeiNyTE7nsyrr0U
+         wpIyuOlNJGuOuCkfzx87aDhRf1BD+/wSfQO0vxv4Dw2wQibdhwDV6yEp8S+dm575YmJu
+         XAZFnzG1Cy3NdYj8fIvFSG/37NLt0nzcAYeXAbzCNkUyBKHSgE0L46+VAv3sZJBMW72I
+         2QHe9mIF4NMAZctQjU+PdWJdItewyOKOeo3/Y5KujMw1mYjtgA27sVSAaveOzFkqxjx7
+         7m9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4QaG2Xnk2TYLlJE8J5iwYhAP5F08MFtwcs7P6RA6aEM=;
+        b=gDjdjrsY/0MlDVT9zpNiNRR63OtXmkZkFb5HEHQQc8lFfJnHsqAr3c2Uso5K1PPzYy
+         SG3KQhz7wTkMs3r7vIwlouow+ZdKu1neLI2QmJtsHxwRP7bWOXwbro1aGaFdJEEJNbBU
+         5KkQuf4NZUjQlVNGNYwRmR4G6T08BV08GkpTy+gX85wRqNX5MCKkEckzpp5Ro41CtmpX
+         J/Tcaw7S6W+CDlSLObjXDWLaRAzdqr4aXq10Bu4eHquKvoPe1PiTmazRBt9lOhcxdkZi
+         F1n+EWvrHlEmt0MLPU5uyAAuN7G9hz6GNE+vxZjw8YlruTxLPTSXtRQcXRjYqJlwYtl5
+         TJSg==
+X-Gm-Message-State: AOAM533CpKM++yTLAoRaaCiDaQwKT+z7jWy470J9pOGAdVDCvR62WfZW
+        VZXK9f+C2iEFLDN36hlwAFGo7XRK
+X-Google-Smtp-Source: ABdhPJzrLGMlYJJj1TmdWoLOIt2CCho9ncVcFQlkYQt4yhPYrDiwtQvaoKTfoFg8YmF/bzy0rAsifg==
+X-Received: by 2002:a63:6c1:: with SMTP id 184mr64354562pgg.262.1594475163475;
+        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id e5sm8525597pjv.18.2020.07.11.06.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 06:46:02 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 06:46:01 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     min.li.xe@renesas.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ptp: add debugfs support for IDT family of
+ timing devices
+Message-ID: <20200711134601.GD20443@hoboy>
+References: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
+ <20200710135844.58d76d44@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709201220.13736-2-eajames@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200710135844.58d76d44@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 01:58:44PM -0700, Jakub Kicinski wrote:
+> On Fri, 10 Jul 2020 11:41:25 -0400 min.li.xe@renesas.com wrote:
+> > From: Min Li <min.li.xe@renesas.com>
+> > 
+> > This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
+> > It will create a debugfs directory called idtptp{x} and x is the ptp index.
+> > Three inerfaces are present, which are cmd, help and regs. help is read
+> > only and will display a brief help message. regs is read only amd will show
+> > all register values. cmd is write only and will accept certain commands.
+> > Currently, the accepted commands are combomode to set comobo mode and write
+> > to write up to 4 registers.
+> > 
+> > Signed-off-by: Min Li <min.li.xe@renesas.com>
+> 
+> No private configuration interfaces in debugfs, please.
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I suggested to Min to use debugfs for device-specific configuration
+that would be out of place in the generic PTP Hardware Clock
+interface.
 
-Hi!
+> If what you're exposing is a useful feature it deserves a proper 
+> uAPI interface.
 
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. Document the new compatible string for this device.
+Can you expand on what you mean by "proper uAPI interface" please?
 
-Is the implementation opensource?
-
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  	"nxp,pca9550"
->  	"nxp,pca9551"
->  	"nxp,pca9552"
-> +	"nxp,pca9552-ibm"
->  	"nxp,pca9553"
-
-Is it good idea to use nxp prefix for something that is
-software-defined and not built by nxp?
-
-Would ibm,pca9552 be better, or maybe even sw,pca9552 to indicate that
-is not real hardware, but software emulation?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8Jwx4ACgkQMOfwapXb+vIgMACgolyJryoAUGrvtZYcbrqprmGv
-rqgAn3oROytMSB/cAB9QLxtzJcFvZc3z
-=tTZV
------END PGP SIGNATURE-----
-
---KFztAG8eRSV9hGtP--
+Thanks,
+Richard
