@@ -2,187 +2,395 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4781C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C36C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8887A20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C7520720
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgGKUqn (ORCPT
+        id S1727947AbgGKUtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:46:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37712 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgGKUqm (ORCPT
+        Sat, 11 Jul 2020 16:49:53 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:50545 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgGKUtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 16:46:42 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F04491C0BD2; Sat, 11 Jul 2020 22:46:38 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 22:46:38 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: thinkpad x60: oops in eb_relocate_dma in next-20200710
-Message-ID: <20200711204638.GA20728@duo.ucw.cz>
+        Sat, 11 Jul 2020 16:49:51 -0400
+Received: from localhost.localdomain ([93.22.151.150])
+        by mwinf5d51 with ME
+        id 1wpm2300E3Ewh7h03wpn2a; Sat, 11 Jul 2020 22:49:47 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Jul 2020 22:49:47 +0200
+X-ME-IP: 93.22.151.150
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     mlindner@marvell.com, stephen@networkplumber.org,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: sky2: switch from 'pci_' to 'dma_' API
+Date:   Sat, 11 Jul 2020 22:49:44 +0200
+Message-Id: <20200711204944.259152-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GPF_ with a correct flag.
+It has been compile tested.
 
-Hi!
+When memory is allocated in 'sky2_alloc_buffers()', GFP_KERNEL can be used
+because some other memory allocations in the same function already use this
+flag.
 
-I attempted to suspend x60, but it did not work well... Machine is too
-messed up to pull more debug info from it :-(.
+When memory is allocated in 'sky2_probe()', GFP_KERNEL can be used
+because another memory allocations in the same function already uses this
+flag.
 
-Best regards,
-								Pavel
 
-[11645.369495] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x411 st=
-atus=3D0 aid=3D2)
-[11645.373180] wlan0: associated
-[12366.990398] BUG: unable to handle page fault for address: f8e01000
-[12366.990406] #PF: supervisor write access in kernel mode
-[12366.990409] #PF: error_code(0x0002) - not-present page
-[12366.990412] *pdpt =3D 000000002a497001 *pde =3D 0000000000000000=20
-[12366.990418] Oops: 0002 [#1] PREEMPT SMP PTI
-[12366.990424] CPU: 0 PID: 3016 Comm: Xorg Not tainted 5.8.0-rc4-next-20200=
-710+ #129
-[12366.990427] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[12366.990436] EIP: eb_relocate_vma+0xdee/0xf50
-[12366.990441] Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4 fd ff ff ff ff ff =
-ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00 00 8b 85 d0 fd ff ff <c7=
-> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89 43 08 e9 2c f6 ff
-[12366.990445] EAX: 01246134 EBX: f8e01000 ECX: 013b9000 EDX: 00000000
-[12366.990448] ESI: eee57cbc EDI: eee57aa4 EBP: eee57c54 ESP: eee579ec
-[12366.990452] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[12366.990456] CR0: 80050033 CR2: f8e01000 CR3: 30230000 CR4: 000006b0
-[12366.990459] Call Trace:
-[12366.990469]  ? shmem_getpage_gfp.isra.0+0x3ba/0x820
-[12366.990477]  i915_gem_do_execbuffer+0xa7b/0x2730
-[12366.990479]  ? intel_runtime_pm_put_unchecked+0xd/0x10
-[12366.990479]  ? i915_gem_gtt_pwrite_fast+0xf6/0x520
-[12366.990479]  ? __lock_acquire.isra.0+0x223/0x500
-[12366.990479]  ? cache_alloc_debugcheck_after+0x151/0x180
-[12366.990479]  ? kvmalloc_node+0x69/0x80
-[12366.990479]  ? __kmalloc+0x92/0x120
-[12366.990479]  ? kvmalloc_node+0x69/0x80
-[12366.990479]  i915_gem_execbuffer2_ioctl+0x1b9/0x3a0
-[12366.990479]  ? drm_dev_exit+0xb/0x40
-[12366.990479]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[12366.990479]  drm_ioctl_kernel+0x91/0xe0
-[12366.990479]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[12366.990479]  drm_ioctl+0x1fd/0x371
-[12366.990479]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[12366.990479]  ? posix_get_monotonic_timespec+0x1d/0x80
-[12366.990479]  ? drm_ioctl_kernel+0xe0/0xe0
-[12366.990479]  ksys_ioctl+0x143/0x7d0
-[12366.990479]  ? ktime_get_ts64+0x77/0x1d0
-[12366.990479]  ? _copy_to_user+0x21/0x30
-[12366.990479]  ? __prepare_exit_to_usermode+0xe5/0x110
-[12366.990479]  __ia32_sys_ioctl+0x10/0x12
-[12366.990479]  do_syscall_32_irqs_on+0x3a/0xf0
-[12366.990479]  do_int80_syscall_32+0x9/0x20
-[12366.990479]  entry_INT80_32+0x116/0x116
-[12366.990479] EIP: 0xb7f94092
-[12366.990479] Code: Bad RIP value.
-[12366.990479] EAX: ffffffda EBX: 0000000a ECX: c0406469 EDX: bf82313c
-[12366.990479] ESI: b7382000 EDI: c0406469 EBP: 0000000a ESP: bf8230b4
-[12366.990479] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00200296
-[12366.990479]  ? dev_proc_net_exit+0x10/0x40
-[12366.990479]  ? asm_exc_nmi+0xcc/0x2bc
-[12366.990479] Modules linked in:
-[12366.990479] CR2: 00000000f8e01000
-[12366.990479] ---[ end trace d1eedfdf3b328098 ]---
-[12366.990479] EIP: eb_relocate_vma+0xdee/0xf50
-[12366.990479] Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4 fd ff ff ff ff ff =
-ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00 00 8b 85 d0 fd ff ff <c7=
-> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89 43 08 e9 2c f6 ff
-[12366.990479] EAX: 01246134 EBX: f8e01000 ECX: 013b9000 EDX: 00000000
-[12366.990479] ESI: eee57cbc EDI: eee57aa4 EBP: eee57c54 ESP: eee579ec
-[12366.990479] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[12366.990479] CR0: 80050033 CR2: f8e01000 CR3: 30230000 CR4: 000006b0
-[12366.996393] BUG: unable to handle page fault for address: f8e03038
-[12366.996399] #PF: supervisor write access in kernel mode
-[12366.996402] #PF: error_code(0x0002) - not-present page
-[12366.996405] *pdpt =3D 00000000339a4001 *pde =3D 0000000000000000=20
-[12366.996411] Oops: 0002 [#2] PREEMPT SMP PTI
-[12366.996417] CPU: 0 PID: 3016 Comm: Xorg Tainted: G      D           5.8.=
-0-rc4-next-20200710+ #129
-[12366.996420] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[12366.996429] EIP: n_tty_open+0x26/0x80
-[12366.996434] Code: 00 00 00 90 55 89 e5 56 53 89 c3 b8 f0 22 00 00 e8 ef =
-68 cb ff 85 c0 74 62 89 c6 a1 00 2d 26 c5 b9 88 e7 6b c5 ba bd 9c 11 c5 <89=
-> 46 38 8d 86 58 22 00 00 e8 9c 5e c0 ff 8d 86 a4 22 00 00 b9 80
-[12366.996438] EAX: 002e07b0 EBX: f4a4bc00 ECX: c56be788 EDX: c5119cbd
-[12366.996441] ESI: f8e03000 EDI: 00000000 EBP: eee57ee4 ESP: eee57edc
-[12366.996444] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210286
-[12366.996448] CR0: 80050033 CR2: f8e03038 CR3: 33b98000 CR4: 000006b0
-[12366.996451] Call Trace:
-[12366.996457]  tty_ldisc_open.isra.0+0x23/0x40
-[12366.996461]  tty_ldisc_reinit+0x99/0xe0
-[12366.996465]  tty_ldisc_hangup+0xc4/0x1e0
-[12366.996470]  __tty_hangup.part.0+0x13f/0x250
-[12366.996476]  tty_vhangup_session+0x11/0x20
-[12366.996481]  disassociate_ctty.part.0+0x34/0x230
-[12366.996484]  disassociate_ctty+0x28/0x30
-[12366.996490]  do_exit+0x456/0x960
-[12366.996496]  ? __ia32_sys_ioctl+0x10/0x12
-[12366.996500]  ? do_syscall_32_irqs_on+0x3a/0xf0
-[12366.996504]  rewind_stack_do_exit+0x11/0x13
-[12366.996507] EIP: 0xb7f94092
-[12366.996510] Code: Bad RIP value.
-[12366.996513] EAX: ffffffda EBX: 0000000a ECX: c0406469 EDX: bf82313c
-[12366.996516] ESI: b7382000 EDI: c0406469 EBP: 0000000a ESP: bf8230b4
-[12366.996520] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00200296
-[12366.996526]  ? dev_proc_net_exit+0x10/0x40
-[12366.996530]  ? asm_exc_nmi+0xcc/0x2bc
-[12366.996533] Modules linked in:
-[12366.996537] CR2: 00000000f8e03038
-[12366.996542] ---[ end trace d1eedfdf3b328099 ]---
-[12366.996549] EIP: eb_relocate_vma+0xdee/0xf50
-[12366.996553] Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4 fd ff ff ff ff ff =
-ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00 00 8b 85 d0 fd ff ff <c7=
-> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89 43 08 e9 2c f6 ff
-[12366.996557] EAX: 01246134 EBX: f8e01000 ECX: 013b9000 EDX: 00000000
-[12366.996560] ESI: eee57cbc EDI: eee57aa4 EBP: eee57c54 ESP: eee579ec
-[12366.996565] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[12366.996569] CR0: 80050033 CR2: f8e03038 CR3: 33b98000 CR4: 000006b0
-[12366.996572] Fixing recursive fault but reboot is needed!
-[12371.669356] i915 0000:00:02.0: [drm] GPU HANG: ecode 3:0:00000000
-[12371.669364] GPU hangs can indicate a bug anywhere in the entire gfx stac=
-k, including userspace.
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
 
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
 
------BEGIN PGP SIGNATURE-----
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXwolLgAKCRAw5/Bqldv6
-8tXKAKCl3OtCQCMgr0dLeWWtdqLpfNQ+EQCghXPj18YsJ7OvyF02mzjT1i6gf3Y=
-=SLbN
------END PGP SIGNATURE-----
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
 
---7AUc2qLy4jB3hD7Z--
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/marvell/sky2.c | 89 +++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index fe54764caea9..adb1a9c19505 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -1209,8 +1209,9 @@ static int sky2_rx_map_skb(struct pci_dev *pdev, struct rx_ring_info *re,
+ 	struct sk_buff *skb = re->skb;
+ 	int i;
+ 
+-	re->data_addr = pci_map_single(pdev, skb->data, size, PCI_DMA_FROMDEVICE);
+-	if (pci_dma_mapping_error(pdev, re->data_addr))
++	re->data_addr = dma_map_single(&pdev->dev, skb->data, size,
++				       DMA_FROM_DEVICE);
++	if (dma_mapping_error(&pdev->dev, re->data_addr))
+ 		goto mapping_error;
+ 
+ 	dma_unmap_len_set(re, data_size, size);
+@@ -1229,13 +1230,13 @@ static int sky2_rx_map_skb(struct pci_dev *pdev, struct rx_ring_info *re,
+ 
+ map_page_error:
+ 	while (--i >= 0) {
+-		pci_unmap_page(pdev, re->frag_addr[i],
++		dma_unmap_page(&pdev->dev, re->frag_addr[i],
+ 			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
+-			       PCI_DMA_FROMDEVICE);
++			       DMA_FROM_DEVICE);
+ 	}
+ 
+-	pci_unmap_single(pdev, re->data_addr, dma_unmap_len(re, data_size),
+-			 PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&pdev->dev, re->data_addr,
++			 dma_unmap_len(re, data_size), DMA_FROM_DEVICE);
+ 
+ mapping_error:
+ 	if (net_ratelimit())
+@@ -1249,13 +1250,13 @@ static void sky2_rx_unmap_skb(struct pci_dev *pdev, struct rx_ring_info *re)
+ 	struct sk_buff *skb = re->skb;
+ 	int i;
+ 
+-	pci_unmap_single(pdev, re->data_addr, dma_unmap_len(re, data_size),
+-			 PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&pdev->dev, re->data_addr,
++			 dma_unmap_len(re, data_size), DMA_FROM_DEVICE);
+ 
+ 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
+-		pci_unmap_page(pdev, re->frag_addr[i],
+-			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
+-			       PCI_DMA_FROMDEVICE);
++		dma_unmap_page(&pdev->dev, re->frag_addr[i],
++			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
++			       DMA_FROM_DEVICE);
+ }
+ 
+ /* Tell chip where to start receive checksum.
+@@ -1592,10 +1593,9 @@ static int sky2_alloc_buffers(struct sky2_port *sky2)
+ 	struct sky2_hw *hw = sky2->hw;
+ 
+ 	/* must be power of 2 */
+-	sky2->tx_le = pci_alloc_consistent(hw->pdev,
+-					   sky2->tx_ring_size *
+-					   sizeof(struct sky2_tx_le),
+-					   &sky2->tx_le_map);
++	sky2->tx_le = dma_alloc_coherent(&hw->pdev->dev,
++					 sky2->tx_ring_size * sizeof(struct sky2_tx_le),
++					 &sky2->tx_le_map, GFP_KERNEL);
+ 	if (!sky2->tx_le)
+ 		goto nomem;
+ 
+@@ -1604,8 +1604,8 @@ static int sky2_alloc_buffers(struct sky2_port *sky2)
+ 	if (!sky2->tx_ring)
+ 		goto nomem;
+ 
+-	sky2->rx_le = pci_zalloc_consistent(hw->pdev, RX_LE_BYTES,
+-					    &sky2->rx_le_map);
++	sky2->rx_le = dma_alloc_coherent(&hw->pdev->dev, RX_LE_BYTES,
++					 &sky2->rx_le_map, GFP_KERNEL);
+ 	if (!sky2->rx_le)
+ 		goto nomem;
+ 
+@@ -1626,14 +1626,14 @@ static void sky2_free_buffers(struct sky2_port *sky2)
+ 	sky2_rx_clean(sky2);
+ 
+ 	if (sky2->rx_le) {
+-		pci_free_consistent(hw->pdev, RX_LE_BYTES,
+-				    sky2->rx_le, sky2->rx_le_map);
++		dma_free_coherent(&hw->pdev->dev, RX_LE_BYTES, sky2->rx_le,
++				  sky2->rx_le_map);
+ 		sky2->rx_le = NULL;
+ 	}
+ 	if (sky2->tx_le) {
+-		pci_free_consistent(hw->pdev,
+-				    sky2->tx_ring_size * sizeof(struct sky2_tx_le),
+-				    sky2->tx_le, sky2->tx_le_map);
++		dma_free_coherent(&hw->pdev->dev,
++				  sky2->tx_ring_size * sizeof(struct sky2_tx_le),
++				  sky2->tx_le, sky2->tx_le_map);
+ 		sky2->tx_le = NULL;
+ 	}
+ 	kfree(sky2->tx_ring);
+@@ -1806,13 +1806,11 @@ static unsigned tx_le_req(const struct sk_buff *skb)
+ static void sky2_tx_unmap(struct pci_dev *pdev, struct tx_ring_info *re)
+ {
+ 	if (re->flags & TX_MAP_SINGLE)
+-		pci_unmap_single(pdev, dma_unmap_addr(re, mapaddr),
+-				 dma_unmap_len(re, maplen),
+-				 PCI_DMA_TODEVICE);
++		dma_unmap_single(&pdev->dev, dma_unmap_addr(re, mapaddr),
++				 dma_unmap_len(re, maplen), DMA_TO_DEVICE);
+ 	else if (re->flags & TX_MAP_PAGE)
+-		pci_unmap_page(pdev, dma_unmap_addr(re, mapaddr),
+-			       dma_unmap_len(re, maplen),
+-			       PCI_DMA_TODEVICE);
++		dma_unmap_page(&pdev->dev, dma_unmap_addr(re, mapaddr),
++			       dma_unmap_len(re, maplen), DMA_TO_DEVICE);
+ 	re->flags = 0;
+ }
+ 
+@@ -1840,9 +1838,10 @@ static netdev_tx_t sky2_xmit_frame(struct sk_buff *skb,
+   		return NETDEV_TX_BUSY;
+ 
+ 	len = skb_headlen(skb);
+-	mapping = pci_map_single(hw->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&hw->pdev->dev, skb->data, len,
++				 DMA_TO_DEVICE);
+ 
+-	if (pci_dma_mapping_error(hw->pdev, mapping))
++	if (dma_mapping_error(&hw->pdev->dev, mapping))
+ 		goto mapping_error;
+ 
+ 	slot = sky2->tx_prod;
+@@ -2464,16 +2463,17 @@ static struct sk_buff *receive_copy(struct sky2_port *sky2,
+ 
+ 	skb = netdev_alloc_skb_ip_align(sky2->netdev, length);
+ 	if (likely(skb)) {
+-		pci_dma_sync_single_for_cpu(sky2->hw->pdev, re->data_addr,
+-					    length, PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_cpu(&sky2->hw->pdev->dev, re->data_addr,
++					length, DMA_FROM_DEVICE);
+ 		skb_copy_from_linear_data(re->skb, skb->data, length);
+ 		skb->ip_summed = re->skb->ip_summed;
+ 		skb->csum = re->skb->csum;
+ 		skb_copy_hash(skb, re->skb);
+ 		__vlan_hwaccel_copy_tag(skb, re->skb);
+ 
+-		pci_dma_sync_single_for_device(sky2->hw->pdev, re->data_addr,
+-					       length, PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_device(&sky2->hw->pdev->dev,
++					   re->data_addr, length,
++					   DMA_FROM_DEVICE);
+ 		__vlan_hwaccel_clear_tag(re->skb);
+ 		skb_clear_hash(re->skb);
+ 		re->skb->ip_summed = CHECKSUM_NONE;
+@@ -4985,16 +4985,16 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	pci_set_master(pdev);
+ 
+ 	if (sizeof(dma_addr_t) > sizeof(u32) &&
+-	    !(err = pci_set_dma_mask(pdev, DMA_BIT_MASK(64)))) {
++	    !(err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)))) {
+ 		using_dac = 1;
+-		err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
++		err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+ 		if (err < 0) {
+ 			dev_err(&pdev->dev, "unable to obtain 64 bit DMA "
+ 				"for consistent allocations\n");
+ 			goto err_out_free_regions;
+ 		}
+ 	} else {
+-		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 		if (err) {
+ 			dev_err(&pdev->dev, "no usable DMA configuration\n");
+ 			goto err_out_free_regions;
+@@ -5038,8 +5038,9 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	/* ring for status responses */
+ 	hw->st_size = hw->ports * roundup_pow_of_two(3*RX_MAX_PENDING + TX_MAX_PENDING);
+-	hw->st_le = pci_alloc_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
+-					 &hw->st_dma);
++	hw->st_le = dma_alloc_coherent(&pdev->dev,
++				       hw->st_size * sizeof(struct sky2_status_le),
++				       &hw->st_dma, GFP_KERNEL);
+ 	if (!hw->st_le) {
+ 		err = -ENOMEM;
+ 		goto err_out_reset;
+@@ -5119,8 +5120,9 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		pci_disable_msi(pdev);
+ 	free_netdev(dev);
+ err_out_free_pci:
+-	pci_free_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
+-			    hw->st_le, hw->st_dma);
++	dma_free_coherent(&pdev->dev,
++			  hw->st_size * sizeof(struct sky2_status_le),
++			  hw->st_le, hw->st_dma);
+ err_out_reset:
+ 	sky2_write8(hw, B0_CTST, CS_RST_SET);
+ err_out_iounmap:
+@@ -5164,8 +5166,9 @@ static void sky2_remove(struct pci_dev *pdev)
+ 
+ 	if (hw->flags & SKY2_HW_USE_MSI)
+ 		pci_disable_msi(pdev);
+-	pci_free_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
+-			    hw->st_le, hw->st_dma);
++	dma_free_coherent(&pdev->dev,
++			  hw->st_size * sizeof(struct sky2_status_le),
++			  hw->st_le, hw->st_dma);
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+ 
+-- 
+2.25.1
+
