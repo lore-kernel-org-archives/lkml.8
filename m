@@ -2,29 +2,29 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5A0C43460
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE2BC43465
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7ADB2078B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DA62076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgGKA7x (ORCPT
+        id S1728049AbgGKBAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 20:59:53 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:52139 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727086AbgGKA7N (ORCPT
+        Fri, 10 Jul 2020 21:00:01 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:51673 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726973AbgGKA7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 20:59:13 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
+        Fri, 10 Jul 2020 20:59:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
 Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2KGAZr_1594429139)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 Jul 2020 08:59:06 +0800
+          Sat, 11 Jul 2020 08:59:04 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -34,9 +34,9 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
         kirill@shutemov.name
-Subject: [PATCH v16 17/22] mm/swap: serialize memcg changes during pagevec_lru_move_fn
-Date:   Sat, 11 Jul 2020 08:58:51 +0800
-Message-Id: <1594429136-20002-18-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH v16 12/22] mm/lru: move lock into lru_note_cost
+Date:   Sat, 11 Jul 2020 08:58:46 +0800
+Message-Id: <1594429136-20002-13-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -45,80 +45,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hugh Dickins' found a memcg change bug on original version:
-If we want to change the pgdat->lru_lock to memcg's lruvec lock, we have
-to serialize mem_cgroup_move_account during pagevec_lru_move_fn. The
-possible bad scenario would like:
+This patch move lru_lock into lru_note_cost. It's a bit ugly and may
+cost more locking, but it's necessary for later per pgdat lru_lock to
+per memcg lru_lock change.
 
-	cpu 0					cpu 1
-lruvec = mem_cgroup_page_lruvec()
-					if (!isolate_lru_page())
-						mem_cgroup_move_account
-
-spin_lock_irqsave(&lruvec->lru_lock <== wrong lock.
-
-So we need the ClearPageLRU to block isolate_lru_page(), then serialize
-the memcg change here.
-
-Reported-by: Hugh Dickins <hughd@google.com>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 ---
- mm/swap.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ mm/swap.c   | 5 +++--
+ mm/vmscan.c | 4 +---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/mm/swap.c b/mm/swap.c
-index 5092fe9c8c47..8488b9b25730 100644
+index b88ca630db70..f645965fde0e 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -221,8 +221,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 			spin_lock_irqsave(&pgdat->lru_lock, flags);
- 		}
- 
-+		/* block memcg migration during page moving between lru */
-+		if (!TestClearPageLRU(page))
-+			continue;
-+
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 		(*move_fn)(page, lruvec);
-+
-+		SetPageLRU(page);
- 	}
- 	if (pgdat)
- 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-@@ -976,7 +982,29 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
-  */
- void __pagevec_lru_add(struct pagevec *pvec)
+@@ -269,7 +269,9 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
  {
--	pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn);
-+	int i;
-+	struct pglist_data *pgdat = NULL;
-+	struct lruvec *lruvec;
-+	unsigned long flags = 0;
-+
-+	for (i = 0; i < pagevec_count(pvec); i++) {
-+		struct page *page = pvec->pages[i];
-+		struct pglist_data *pagepgdat = page_pgdat(page);
-+
-+		if (pagepgdat != pgdat) {
-+			if (pgdat)
-+				spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+			pgdat = pagepgdat;
-+			spin_lock_irqsave(&pgdat->lru_lock, flags);
-+		}
-+
-+		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+		__pagevec_lru_add_fn(page, lruvec);
-+	}
-+	if (pgdat)
-+		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+	release_pages(pvec->pages, pvec->nr);
-+	pagevec_reinit(pvec);
+ 	do {
+ 		unsigned long lrusize;
++		struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+ 
++		spin_lock_irq(&pgdat->lru_lock);
+ 		/* Record cost event */
+ 		if (file)
+ 			lruvec->file_cost += nr_pages;
+@@ -293,15 +295,14 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
+ 			lruvec->file_cost /= 2;
+ 			lruvec->anon_cost /= 2;
+ 		}
++		spin_unlock_irq(&pgdat->lru_lock);
+ 	} while ((lruvec = parent_lruvec(lruvec)));
  }
  
- /**
+ void lru_note_cost_page(struct page *page)
+ {
+-	spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 	lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
+ 		      page_is_file_lru(page), hpage_nr_pages(page));
+-	spin_unlock_irq(&page_pgdat(page)->lru_lock);
+ }
+ 
+ static void __activate_page(struct page *page, struct lruvec *lruvec)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index ddb29d813d77..c1c4259b4de5 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1976,19 +1976,17 @@ static int current_may_throttle(void)
+ 				&stat, false);
+ 
+ 	spin_lock_irq(&pgdat->lru_lock);
+-
+ 	move_pages_to_lru(lruvec, &page_list);
+ 
+ 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
+-	lru_note_cost(lruvec, file, stat.nr_pageout);
+ 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
+ 	if (!cgroup_reclaim(sc))
+ 		__count_vm_events(item, nr_reclaimed);
+ 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
+ 	__count_vm_events(PGSTEAL_ANON + file, nr_reclaimed);
+-
+ 	spin_unlock_irq(&pgdat->lru_lock);
+ 
++	lru_note_cost(lruvec, file, stat.nr_pageout);
+ 	mem_cgroup_uncharge_list(&page_list);
+ 	free_unref_page_list(&page_list);
+ 
 -- 
 1.8.3.1
 
