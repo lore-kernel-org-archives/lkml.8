@@ -2,103 +2,134 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4960C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCEDC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 896B52078D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E75520725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BKPG79Mz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tk4vRva+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgGKB7g (ORCPT
+        id S1727118AbgGKB74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
+        Fri, 10 Jul 2020 21:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgGKB7g (ORCPT
+        with ESMTP id S1726605AbgGKB74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 21:59:36 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFF7C08C5DC;
-        Fri, 10 Jul 2020 18:59:35 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B3Y4f3D85z9sQt;
-        Sat, 11 Jul 2020 11:59:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594432771;
-        bh=l+rJw1Tu2JK+3XbtUHCAR+kbg7O3EQjKjtKhEmGOaxw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BKPG79MzuNL9TNqi3N8II5wdHquXF+7x0aqRhOiBKLuiCNCVjDaeID7F9G0Y5UX4K
-         4yzwaZe2ho1O2AeLdfFBhvXlkrS5E8XOkU+BLQLdZ7GZGNOK8bhPSkhHaePthx2MVx
-         X89Dl6XJfCGvYXCUz9vCl8UEM1pY9XqJqyJm/AMZ/8Ip3XtL0PDpOdGJFQGU5RiN8e
-         /Tw3aNcAcofngii4nHzECuyduUPL/YmNLNQfqjM6SitzeHb52BUGTllqh5sx+VLpak
-         5NFpne+vzI1f/zXD+wO+N7F+CDFs8O4p1AMnUgfuQR/hRoOgCxmJNPNcmIRMMW7avV
-         uxk67gserqf7g==
-Date:   Sat, 11 Jul 2020 11:59:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent()
- to fix qcom build error
-Message-ID: <20200711115929.4636a797@canb.auug.org.au>
-In-Reply-To: <215c3c59-e6f7-1721-76ca-993bbaf91356@infradead.org>
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
-        <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-        <215c3c59-e6f7-1721-76ca-993bbaf91356@infradead.org>
+        Fri, 10 Jul 2020 21:59:56 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420DBC08C5DC;
+        Fri, 10 Jul 2020 18:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:Cc:To:Subject:Message-ID:
+        Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GJ2VXjaXhltgn72DqcDl/jnnOyZmVWOtXKtl2Y057oo=; b=tk4vRva+QY4640r/s8MZLCMbZV
+        cVXZMSneHNkeVaHz5yIRAH4KL12fr02XWi/CmEi+sHYaMqB5j4bD3IWUgchxIaTgXlXeLHbfI7ROE
+        5PY/GS2BxhijpdLfeUR17GFU689anJpACJNXncCMlWv/6nYeyKT4VZf/6Wb3v6WJmB1VbTXhkJ6i+
+        wSjHR5CxUM1DIRVpmJZJzHiKoXs4fEpFXUjaZ+IhIesRMibdUFviWaP0UZsytNK1uAoLZEckoBl+T
+        3y6+BNnbcseJzWZjrFDeaeg4gghcSd/d2WiBMQumxK73PqoqDMX7fqm1m+h2d4hNgUBLo99xhvVSh
+        DMIbde9Q==;
+Received: from mail-pl1-f169.google.com ([209.85.214.169])
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ju4ny-0006nL-8h; Sat, 11 Jul 2020 01:59:54 +0000
+Received: by mail-pl1-f169.google.com with SMTP id x9so2978314plr.2;
+        Fri, 10 Jul 2020 18:59:54 -0700 (PDT)
+X-Gm-Message-State: AOAM5328m+FspgbAyQToMM1XM+K/ID0iRzaSYNgKo44dlY+vz3pe9y3i
+        DOhtLKcKK8f/HEb+g3icCYanQHW8mEaRZQ5ehRU=
+X-Google-Smtp-Source: ABdhPJy9VCFQi6K1gZSN++kbomTkvoCuFXvMgXWCiF21Lt+lovEI91BXTIDGuLt+jC7SpNJ1amw5FQDlw3XP0HqmAiE=
+X-Received: by 2002:a17:902:121:: with SMTP id 30mr62096147plb.44.1594432793558;
+ Fri, 10 Jul 2020 18:59:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.J4ddMQAHs+RvRstUZxfdIB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200710151939.4894-1-grant.likely@arm.com>
+In-Reply-To: <20200710151939.4894-1-grant.likely@arm.com>
+From:   Darren Hart <dvhart@infradead.org>
+Date:   Fri, 10 Jul 2020 18:59:42 -0700
+X-Gmail-Original-Message-ID: <CAJuF2pzvh2G7_2q88a4e=dpB1RATrdF8jsOkpVuuueZLGGbsiQ@mail.gmail.com>
+Message-ID: <CAJuF2pzvh2G7_2q88a4e=dpB1RATrdF8jsOkpVuuueZLGGbsiQ@mail.gmail.com>
+Subject: Re: [PATCH] hid-input: Fix devices that return multiple bytes in
+ battery report
+To:     Grant Likely <grant.likely@secretlab.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
+        Grant Likely <grant.likely@arm.com>,
+        Darren Hart <darren@dvhart.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.J4ddMQAHs+RvRstUZxfdIB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Randy,
-
-On Fri, 10 Jul 2020 16:40:03 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
+On Fri, Jul 10, 2020 at 8:19 AM Grant Likely <grant.likely@secretlab.ca> wrote:
 >
-> Are linux-next hashes/tags stable?
+> Some devices, particularly the 3DConnexion Spacemouse wireless 3D
+> controllers, return more than just the battery capacity in the battery
+> report. The Spacemouse devices return an additional byte with a device
+> specific field. However, hidinput_query_battery_capacity() only
+> requests a 2 byte transfer.
+>
+> When a spacemouse is connected via USB (direct wire, no wireless dongle)
+> and it returns a 3 byte report instead of the assumed 2 byte battery
+> report the larger transfer confuses and frightens the USB subsystem
+> which chooses to ignore the transfer. Then after 2 seconds assume the
+> device has stopped responding and reset it. This can be reproduced
+> easily by using a wired connection with a wireless spacemouse. The
+> Spacemouse will enter a loop of resetting every 2 seconds which can be
+> observed in dmesg.
+>
+> This patch solves the problem by increasing the transfer request to 4
+> bytes instead of 2. The fix isn't particularly elegant, but it is simple
+> and safe to backport to stable kernels. A further patch will follow to
+> more elegantly handle battery reports that contain additional data.
+>
 
-That depends on the maintainer of the tree I fetch ... In this case the
-qcom tree.
---=20
-Cheers,
-Stephen Rothwell
+Applied and tested on 5.8.0-rc4+ (aa0c9086b40c) with a 3Dconnexion
+SpaceMouse Wireless (tested connected via USB). Observed the same
+behavior Grant reports before the patch. After the patch, the device stays
+connected successfully.
 
---Sig_/.J4ddMQAHs+RvRstUZxfdIB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Tested-by: Darren Hart <dvhart@infradead.org>
 
------BEGIN PGP SIGNATURE-----
+Thanks Grant!
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8JHQEACgkQAVBC80lX
-0Gx6kgf+ONvw3RpF1fOX3tBI3cbl2ONfD4C/J9u6TLjgyC/vQHIVpTTW2CHgi7Zl
-Ibg8lsS3KeYJTdHJccOi8VVAB+HKHzN3AsdBtHyxb6vyuuv9sIGx/Tg1TcqJ5TMG
-POhrjwZ7xVcdUHjrMB/yG/3vmfgL8l6v49SetFT9RZ8PfZHVVadsTjjZGgpRB98n
-HZR20fbdkEdmjGWy1XgN87lmBIBMm5jZyLyHNyFw+cD4e1QEGBF6R6lOSr/lOfa3
-a4oAbwgK6j5Me01ln8tx9/hrdSC4cbspX9BK+FQnXuPUPWve2qdiRGsftNs27rD8
-fjrv2Fu9CcsKj+nwBTz9WmczPuoYLA==
-=+wh6
------END PGP SIGNATURE-----
-
---Sig_/.J4ddMQAHs+RvRstUZxfdIB--
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Darren Hart <darren@dvhart.com>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/hid/hid-input.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+> index dea9cc65bf80..e8641ce677e4 100644
+> --- a/drivers/hid/hid-input.c
+> +++ b/drivers/hid/hid-input.c
+> @@ -350,13 +350,13 @@ static int hidinput_query_battery_capacity(struct hid_device *dev)
+>         u8 *buf;
+>         int ret;
+>
+> -       buf = kmalloc(2, GFP_KERNEL);
+> +       buf = kmalloc(4, GFP_KERNEL);
+>         if (!buf)
+>                 return -ENOMEM;
+>
+> -       ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 2,
+> +       ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 4,
+>                                  dev->battery_report_type, HID_REQ_GET_REPORT);
+> -       if (ret != 2) {
+> +       if (ret < 2) {
+>                 kfree(buf);
+>                 return -ENODATA;
+>         }
+> --
+> 2.20.1
+>
