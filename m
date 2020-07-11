@@ -2,96 +2,118 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6ADC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E706C433E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3AE206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08515206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OcB4vLbZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X3EV9Ggv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HMsoc9Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGKKMR (ORCPT
+        id S1728115AbgGKKK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        Sat, 11 Jul 2020 06:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGKKMQ (ORCPT
+        with ESMTP id S1726286AbgGKKJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:12:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50240C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 03:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=/ZZkHjnUQiwzKzc49pjz9+DN0KmiX6rc0tKOJ/e9x7U=; b=OcB4vLbZPsjjDuG3qcTlYR8x3y
-        6Ez4rFtH+E/r+Tpy/oXEQbQDmCvwvC/NT0/FVXHI+03BprdCLd7W/TbIsyCZ9D0lEjeBBOx8Ooov5
-        M3BVcQePcNmuiO0FrG4rgc+q/rumNoRzmgDhcVnotXWYhCFFIOa7CbJ+vJWKFGlREW72wQOIc1UfH
-        rq4vVJMDNOhevGtcBi7CUpN8JB5nxuVnsbcOrUvrUnCPlnMjHbZMBRqdn1PEKW8Np7422sRXJIClp
-        akHSAiE2iYsWova/qayuvdzMJPRl2QztFPs39rvq0Im/NFbKLC3vySdhd1ucHVeA6gebwgg6uLMp5
-        dCV/ZV+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juCTx-0007Aq-8J; Sat, 11 Jul 2020 10:11:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DACAC304D28;
-        Sat, 11 Jul 2020 12:11:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B936A2367CF59; Sat, 11 Jul 2020 12:11:43 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 12:11:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 09/17] x86/static_call: Add out-of-line static call
- implementation
-Message-ID: <20200711101143.GB597537@hirez.programming.kicks-ass.net>
-References: <20200710133831.943894387@infradead.org>
- <20200710134336.679277058@infradead.org>
- <20200710181331.1ad69ef6@oasis.local.home>
+        Sat, 11 Jul 2020 06:09:57 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE39C08C5DE;
+        Sat, 11 Jul 2020 03:09:57 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 10:09:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594462195;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n+YyI4czAkHXKe0alp7zM8EoICAPMSOMyNtMGrUvPUw=;
+        b=X3EV9GgviIJ73sJOA9uEz/TrZxa7JLqXETOOQgN6RBne6CnzF0+hN5544r13k0qCoWgSvD
+        EKsG1saGd/qS3WGFP+lHRIjKhc1Ds/gGYiQr29RY7NJEkkFoa+NeuvHlmFP3bvVL8KLJ8c
+        h32lg5EnQkaBtVayb6oe5l+kCxxsJDWvqrpYSl5/lqMWYbJ2SxgL0HkgvElFgZjeTa/SKI
+        tntIwrFnYNhTcYH7BLOGDVjdBvOpd6tBBJ2ozIihw2Kg4HwGou3GQj9U0WwqQx0ydDacOj
+        6fKP5maeSoR6vdTtk8JN00StlHbokYqaCZzysn6c5rIgENmjOPLXt/kEYkVRGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594462195;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n+YyI4czAkHXKe0alp7zM8EoICAPMSOMyNtMGrUvPUw=;
+        b=HMsoc9XindDC3taqoFqnHFt8AZqOkx4rjbpihgsh9hgjPQYjxjHD3vQJxtOEMu7kwhYd2m
+        +YsiLE+Hf0nQ/hAQ==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] s390: Break cyclic percpu include
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200623083721.396143816@infradead.org>
+References: <20200623083721.396143816@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710181331.1ad69ef6@oasis.local.home>
+Message-ID: <159446219491.4006.10096196387412426349.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 06:13:31PM -0400, Steven Rostedt wrote:
-> On Fri, 10 Jul 2020 15:38:40 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > 
-> > Add the x86 out-of-line static call implementation.  For each key, a
-> > permanent trampoline is created which is the destination for all static
-> > calls for the given key.  The trampoline has a direct jump which gets
-> > patched by static_call_update() when the destination function changes.
-> 
-> FYI, I get the following warnings after applying this patch.
-> 
-> /work/git/linux-test.git/arch/x86/kernel/static_call.c: In function ‘__static_call_transform’:
-> /work/git/linux-test.git/arch/x86/kernel/static_call.c:9:43: warning: passing argument 2 of ‘text_gen_insn’ makes pointer from integer without a cast [-Wint-conversion]
->     9 |  const void *code = text_gen_insn(opcode, (long)insn, (long)func);
->       |                                           ^~~~~~~~~~
->       |                                           |
->       |                                           long int
+The following commit has been merged into the locking/core branch of tip:
 
-Hurmph, shows I haven't build the individual patches in a while I
-suppose. It was fixed in the next patch.
+Commit-ID:     28e5bfd81c8de77504703adf24ceff9301e3c7be
+Gitweb:        https://git.kernel.org/tip/28e5bfd81c8de77504703adf24ceff9301e3c7be
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 29 May 2020 22:41:05 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Fri, 10 Jul 2020 12:00:02 +02:00
 
-Fixed it up, thanks!
+s390: Break cyclic percpu include
+
+In order to use <asm/percpu.h> in irqflags.h, we need to make sure
+asm/percpu.h does not itself depend on irqflags.h
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200623083721.396143816@infradead.org
+---
+ arch/s390/include/asm/smp.h         | 1 +
+ arch/s390/include/asm/thread_info.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/smp.h b/arch/s390/include/asm/smp.h
+index 7326f11..f48a43b 100644
+--- a/arch/s390/include/asm/smp.h
++++ b/arch/s390/include/asm/smp.h
+@@ -10,6 +10,7 @@
+ 
+ #include <asm/sigp.h>
+ #include <asm/lowcore.h>
++#include <asm/processor.h>
+ 
+ #define raw_smp_processor_id()	(S390_lowcore.cpu_nr)
+ 
+diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+index e582fbe..13a04fc 100644
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -24,7 +24,6 @@
+ #ifndef __ASSEMBLY__
+ #include <asm/lowcore.h>
+ #include <asm/page.h>
+-#include <asm/processor.h>
+ 
+ #define STACK_INIT_OFFSET \
+ 	(THREAD_SIZE - STACK_FRAME_OVERHEAD - sizeof(struct pt_regs))
