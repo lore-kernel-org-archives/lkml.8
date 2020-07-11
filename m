@@ -2,151 +2,131 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A73C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A4520725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B8320786
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594491727;
+	bh=AUBBbysgdMeR71Y6xbwcXY/YIVqMzNZkIcPQpyj09H4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P+WVZxFA/uj0am6vokqNqtRtL9XNEr4hLvn/AhYIYAcxw+Ej0jVaG//CJ8Dlm9cdD
+	 zYubHr1AT60dzurBWHHARxHfwBD32vyfMXOjRGc4ElhODTXOJQDZNN+XSKSRIjAfFX
+	 5PQUYb/S8nx3i+RUg2zYbno6KSFMfj+Lqs0SLjdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgGKSVg (ORCPT
+        id S1728777AbgGKSWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 14:21:36 -0400
-Received: from mail-dm6nam11olkn2108.outbound.protection.outlook.com ([40.92.19.108]:19393
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728510AbgGKSVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 14:21:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X4LHSAfm3avZ8Nj2WQij35GiUzmEgl1UJApLY7iXJ/cHDBLJlk9k48Sp2052/8URrWKUCB7W59JhF9GvYS7cbXLM4YU+qC2MN2waCej2DNzKyzEyf3DMBpnH7cLgKSDkfHAuUYBZe5TxXDjbimno3mpunYy4oKsy4mSC63sfnCwXQHDb7wIWxUhulgApZZ+V5Mp2tECAuUCZghVEbnInCaHxPEtohaCI/QFEal+SjjMULw5PaQcIcjjwWLGLERa+BRoBWnwERWsoBytdLpI8eq2/7UBdzJLBgUl/WnLI4dXNNra2gkF22VAkCk9V6CcQq7kkP0n+tr6dG1fnvWaRVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OGriJv95yATnbS4sVrxygR5NyrbkkIytciwkZsldnyQ=;
- b=WI7aJDK0T0N/zQAkBuEm1G4b7ItTuKSDFIKuh+EYOr5BKEwFGjQhx2xZbQjrxx3HJfqaMmtdibnAFUHMc9ffZL2iA2p/kvts4OMgo6eIX0EyUr7l+mqYweaINXn1MItqIHLJeppD6YxMqJhMT5zJVJqecK+KkYmDcyMLg3JXh0G1zpGnUslblG9176NLuL5hs4/sfOGdbHVOZ8uK6Q8AKSVC3/Zbm2o/NVZd3qR89XyrenMdLkWHkaqjhYsLQWJhEAfuy+z/LVT071Kr/x50mjzpbb7Aobxrn4Tk5ubWQ2LSKgMenq9uttULDw3Beif9Xf0dGYwjFp/mVInLDYuW+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::48) by
- DM6NAM11HT091.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::82)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Sat, 11 Jul
- 2020 18:21:33 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::43) by DM6NAM11FT041.mail.protection.outlook.com
- (2a01:111:e400:fc4d::98) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend
- Transport; Sat, 11 Jul 2020 18:21:33 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:5DD35D0466BA08A2D83EE7D50044417D79F1AC63B6B263F490182A05D10C926D;UpperCasedChecksum:AADE9ECD23B29ED177A5FF77E0E4428CB4AB2DBC8A49E0EA70C8F3A234350509;SizeAsReceived:9198;Count:49
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3174.024; Sat, 11 Jul 2020
- 18:21:33 +0000
-Subject: Re: [PATCH 05/11] media: exynos4-is: Improve support for sensors with
- multiple pads
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB06604D29C9F66EB53FB17581A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200707181310.GE2621465@chromium.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660ECFE03B17B96FB3BAC34A3620@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sat, 11 Jul 2020 11:21:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200707181310.GE2621465@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR2101CA0008.namprd21.prod.outlook.com
- (2603:10b6:302:1::21) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <bbaa5e62-2ae6-9e57-b9e9-693c0e0da5a7@live.ca>
+        Sat, 11 Jul 2020 14:22:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgGKSWF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 14:22:05 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40169C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:22:04 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e8so10175740ljb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:22:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qptBZzYQmGUSrB1gYaro4KC86w7xRACt4nGpxA934Lg=;
+        b=MS0M6Jpdfk5BRX9IT/yz435ln8+5sFvRJ5xcVUEVxD5BVgZX9q3pL4EfWbDc3q4Jkr
+         e50VjG3ye4PDFlZy8RDkfbelBtcZP6hNhsexP/JMdK3XJmaM7/ypSusjb8G6D9Qy6xRk
+         mWs+G1YR76GNa9sv/YeWuA+fcLo5auw5Y4kPs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qptBZzYQmGUSrB1gYaro4KC86w7xRACt4nGpxA934Lg=;
+        b=p5nRdnIzuuk8m6biT7cgacrTjmBquH1C8cO+0nkVlWf0AUSRJGdA4dUp9L81IB1M1T
+         eOsvFVbPuhqa0C7nbgzF5E3Dwz6uHN6l5AGATDX1qLPE0ljUbAyCeYMBT8zo9JxV57C0
+         bpQ75d96yBzcGF704rHymNnCVfdlh7z0fpPq8da+waBro09PhKUpBPC+aycJ9RsubVMN
+         eyFegqPAjNmAsahwDgkx4ot/iX5PIkX3NenNMCU1FAsUkcWBx+/reO1c0HvD90LI6Ner
+         nwXXxs0JFPyEiYrWzzb+JXPvlh/ENtgN7FSaCvZFxBkvX9kQc2oazPZaBueOjFLyhgVC
+         d4uw==
+X-Gm-Message-State: AOAM533NPLhvSqLa3d1lhtLCayUG970tFW6UpLqYGdmNV3raq9jp1zTW
+        4GSf+uXMbc0EiLcBoyuW0LJ3ZYJo/5s=
+X-Google-Smtp-Source: ABdhPJxHIQK4z3jC0csP+SyHazF+FgTjkiR41/ytzpWAiWJglEPlHF5st3UhDfweXAOq7ivdLHZpbQ==
+X-Received: by 2002:a2e:5746:: with SMTP id r6mr45780400ljd.205.1594491722340;
+        Sat, 11 Jul 2020 11:22:02 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id s4sm3304312lfc.71.2020.07.11.11.22.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jul 2020 11:22:00 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id f5so10123131ljj.10
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:22:00 -0700 (PDT)
+X-Received: by 2002:a05:651c:1b6:: with SMTP id c22mr38521209ljn.421.1594491719786;
+ Sat, 11 Jul 2020 11:21:59 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MW2PR2101CA0008.namprd21.prod.outlook.com (2603:10b6:302:1::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.4 via Frontend Transport; Sat, 11 Jul 2020 18:21:31 +0000
-X-Microsoft-Original-Message-ID: <bbaa5e62-2ae6-9e57-b9e9-693c0e0da5a7@live.ca>
-X-TMN:  [q/mKHsnjZdljbYxyaYAKYkVav2cdtsDW8y4dWM0Ra+18p+DChneRoElNyr+2jD18]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 49
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: df9210bd-e2b8-49bc-3140-08d825c73d85
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT091:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SEN/cA2rVw4/uaSqCGyfAGsv3GWIj0FD69h4PzP+NuozgK5dDuAXCjjz+AwCWAbB/6bwW+0PfBcZ3K4An0THNT0eRgm/T2uzmAaePxt9O+aBqUZSMWoI+2JAoTuPMO/meFyI1wDJ1jfR3CsKvY5BGPnJIkvH46KXeJFJEMobBLgN8vzPKcDUlmC9C1JxIfnLAmGDdb9wXZWtYQkdq2h5aw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: Zgeg5C4ndLZhm90nEU5CatEExnlI7KEpHOr2AvWkKgdNoxhE+ws+dn5j1bEo4lv92dkQ3BzdXNXEGwTTi4aqv7B9kvEgZxpY+OYSDNNhryJZnYMw9u77YEKmH43iULwbTE8N4E4aJWWDkd+yLXc+FGUFxsu3JlYjwI248G0HaMqlIKyO0L+T/hWC86yjo8XQ+2dJgqI5T19MEzz74QWutg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df9210bd-e2b8-49bc-3140-08d825c73d85
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 18:21:33.7492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT091
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <CA+G9fYudT63yZrkWG+mfKHTcn5mP+Ay6hraEQy3G_4jufztrrA@mail.gmail.com>
+ <CAHk-=whPrCRZpXYKois-0t8MibxH9KVXn=+-O1YVvOA016fqhw@mail.gmail.com>
+ <CA+G9fYusSSrc5G_pZV6Lc-LjjkzQcc3EsLMo+ejSzvyRcMgbqw@mail.gmail.com> <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
+In-Reply-To: <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 11 Jul 2020 11:21:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg6mHH-LwqMNBcrP2nO8_acb_T2CCsweH-p8BvUFeAWtg@mail.gmail.com>
+Message-ID: <CAHk-=wg6mHH-LwqMNBcrP2nO8_acb_T2CCsweH-p8BvUFeAWtg@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+On Sat, Jul 11, 2020 at 11:12 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> The fact that it seems to happen with
+>
+>     https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/thp/thp01.c
+>
+> makes me think it's somehow related to THP mappings, but I don't see
+> why those would matter. All the same pmd freeing should still have
+> happened, afaik.
 
-On 2020-07-07 11:13 a.m., Tomasz Figa wrote:
-> Hi Jonathan,
-> 
-> On Sat, Apr 25, 2020 at 07:26:44PM -0700, Jonathan Bakker wrote:
->> Commit 1c9f5bd7cb8a ("[media] s5p-fimc: Add support for sensors with
->> multiple pads") caught the case where a sensor with multiple pads was
->> connected via CSIS, but missed the case where the sensor was directly
->> connected to the FIMC.
->>
->> This still assumes that the last pad of a sensor is the source.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  drivers/media/platform/exynos4-is/media-dev.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
-> 
-> Thank you for the patch. Please see my comments inline.
-> 
->> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
->> index 5c32abc7251b..b38445219c72 100644
->> --- a/drivers/media/platform/exynos4-is/media-dev.c
->> +++ b/drivers/media/platform/exynos4-is/media-dev.c
->> @@ -991,7 +991,8 @@ static int fimc_md_create_links(struct fimc_md *fmd)
->>  
->>  		case FIMC_BUS_TYPE_ITU_601...FIMC_BUS_TYPE_ITU_656:
->>  			source = &sensor->entity;
->> -			pad = 0;
->> +			/* Assume the last pad is the source */
->> +			pad = sensor->entity.num_pads - 1;
-> 
-> Is 0 really any worse than num_pads - 1? This sounds like quite an ugly
-> hack.
-> 
-> Could you iterate over the pads of the sensor entity and explicitly find
-> a source pad instead?
+No, I think the only reason it happens with that test-case is simply
+because that test-case tests many different argument sizes, and as
+part of that it ends up then hitting the "stack is exactly one pmd in
+size" case when the stack alignment is right too.
 
-Yes, iterating would work better.  This comes from when I was trying to integrate
-video-mux, before I realized I could connect multiple sensors.  I will drop this patch
-from v2 as it's not necessary.
+So the THP part is almost certainly a red herring.
 
-> 
-> Best regards,
-> Tomasz
-> 
+Maybe. Considering that I don't see what's wrong, anything is possible.
 
-Thanks,
-Jonathan
+                Linus
