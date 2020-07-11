@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B481FC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2642C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 929802075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE69820657
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p52kyfBZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3fsNbhrB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RC1iUyU2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kR7WuRsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGKKKG (ORCPT
+        id S1728069AbgGKKKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        Sat, 11 Jul 2020 06:10:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgGKKJ6 (ORCPT
+        with ESMTP id S1726794AbgGKKJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:09:58 -0400
+        Sat, 11 Jul 2020 06:09:59 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF6DC08C5DD;
-        Sat, 11 Jul 2020 03:09:58 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 10:09:56 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D031C08C5DD;
+        Sat, 11 Jul 2020 03:09:59 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 10:09:57 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594462196;
+        s=2020; t=1594462197;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IqU8VwYSibpYg3tWi+UGqKlAPhy4X+KgTLQHOPME3cw=;
-        b=p52kyfBZfmkDP1LukvzMwGr6qnEETnaUUCPJqABW2d388SjuQYhWynqGpygCtQldq7hMk3
-        ogAYNzeq8Ht8xOLjGEeNLkJG6wUovuwF4C1QZyDoO6JrK/wvnbf7YrLB3N8gDmFgCeY/z4
-        Tivi+XMVd/UkIVc71oTG53cqOqEkmJzUDsf88p1h6lImzdkvJ5fXFoZc7nfdwmygmoHgkR
-        n159QZ8uU7eFl4IFVYZPc+unyxXOA+RGenCykkZSILhvMVC1T/Xc7tmDGym4vdZpsaCRkF
-        LV/gjTjxf5F19t4R8QwyTQOKVc/sxJZHuDKj1hXtOBdZDydnGARZyaAeAszpNQ==
+        bh=2kPzi+ITbTYCZPJtdRhWJHTeT+swtWgwzHPf8pU3rAI=;
+        b=RC1iUyU2viz8sS9QneN+p+XqDm1RJayI1i+7CtQrL6Km88qge5rs7ByibK+opX22Se86HC
+        n76IbZtt1UVkrFqD4HAN3hoaEYVD4/0ufzqiX1B7D/v/JKiGxtbaC5tP7Vh90ssnGHUL+v
+        JrEfQfkMR3OQzK0UJaR7aRKEA//jTIHaN2Do9WpklNnQbM/7PJ6a/ysgSQ25SZvjbfxwQX
+        IXsv0/HLQidSbigpIsMghyTBCv/Zx9M3iQ4M5bBsYyh7s9RxU4q4s9ehGFf/bdBHv2tHed
+        jxo1yevFHUYTMxyEtw5Z9SRErf7ksX3AvAO0zuwqOFGEeCGpU6GyDS5fifQb2w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594462196;
+        s=2020e; t=1594462197;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IqU8VwYSibpYg3tWi+UGqKlAPhy4X+KgTLQHOPME3cw=;
-        b=3fsNbhrBnvJ2Yf8RPxsgbwwzVSPRR+ME6lB1YokZeH5RFosI3KF/QZGDXQNIno9grj4TMa
-        WdLioNfdiC4jgGBg==
+        bh=2kPzi+ITbTYCZPJtdRhWJHTeT+swtWgwzHPf8pU3rAI=;
+        b=kR7WuRsIkfh/tCvR3hkrkgs+5RqRyXft6HvOV2k/nrNRK1l3QMNXH/T1j4oZ9mmBsUfWyX
+        Jmv1bH1Hdp1yVZDQ==
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] sparc64: Fix asm/percpu.h build error
+Subject: [tip: locking/core] lockdep: Prepare for NMI IRQ state tracking
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, x86 <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200623083721.277992771@infradead.org>
-References: <20200623083721.277992771@infradead.org>
+In-Reply-To: <20200623083721.155449112@infradead.org>
+References: <20200623083721.155449112@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159446219606.4006.16923768828083285770.tip-bot2@tip-bot2>
+Message-ID: <159446219720.4006.9282048000882212758.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,51 +73,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     48017e5481ce85ba52c4cff082cad5f021c4b413
-Gitweb:        https://git.kernel.org/tip/48017e5481ce85ba52c4cff082cad5f021c4b413
+Commit-ID:     859d069ee1ddd87862e1d6a356a82ed417dbeb67
+Gitweb:        https://git.kernel.org/tip/859d069ee1ddd87862e1d6a356a82ed417dbeb67
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 29 May 2020 22:40:58 +02:00
+AuthorDate:    Wed, 27 May 2020 15:00:57 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Fri, 10 Jul 2020 12:00:01 +02:00
 
-sparc64: Fix asm/percpu.h build error
+lockdep: Prepare for NMI IRQ state tracking
 
-In order to break a header dependency between lockdep and task_struct,
-I need per-cpu stuff from lockdep.
+There is no reason not to always, accurately, track IRQ state.
+
+This change also makes IRQ state tracking ignore lockdep_off().
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: David S. Miller <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/20200623083721.277992771@infradead.org
+Link: https://lkml.kernel.org/r/20200623083721.155449112@infradead.org
 ---
- arch/sparc/include/asm/percpu_64.h  | 2 ++
- arch/sparc/include/asm/trap_block.h | 2 ++
- 2 files changed, 4 insertions(+)
+ kernel/locking/lockdep.c | 46 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 42 insertions(+), 4 deletions(-)
 
-diff --git a/arch/sparc/include/asm/percpu_64.h b/arch/sparc/include/asm/percpu_64.h
-index 32ef6f0..a8786a4 100644
---- a/arch/sparc/include/asm/percpu_64.h
-+++ b/arch/sparc/include/asm/percpu_64.h
-@@ -4,7 +4,9 @@
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 29a8de4..d595623 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -395,7 +395,7 @@ void lockdep_init_task(struct task_struct *task)
  
- #include <linux/compiler.h>
+ static __always_inline void lockdep_recursion_finish(void)
+ {
+-	if (WARN_ON_ONCE(--current->lockdep_recursion))
++	if (WARN_ON_ONCE((--current->lockdep_recursion) & LOCKDEP_RECURSION_MASK))
+ 		current->lockdep_recursion = 0;
+ }
  
-+#ifndef BUILD_VDSO
- register unsigned long __local_per_cpu_offset asm("g5");
-+#endif
- 
- #ifdef CONFIG_SMP
- 
-diff --git a/arch/sparc/include/asm/trap_block.h b/arch/sparc/include/asm/trap_block.h
-index 0f6d0c4..ace0d48 100644
---- a/arch/sparc/include/asm/trap_block.h
-+++ b/arch/sparc/include/asm/trap_block.h
-@@ -2,6 +2,8 @@
- #ifndef _SPARC_TRAP_BLOCK_H
- #define _SPARC_TRAP_BLOCK_H
- 
-+#include <linux/threads.h>
+@@ -3646,7 +3646,16 @@ static void __trace_hardirqs_on_caller(void)
+  */
+ void lockdep_hardirqs_on_prepare(unsigned long ip)
+ {
+-	if (unlikely(!debug_locks || current->lockdep_recursion))
++	if (unlikely(!debug_locks))
++		return;
 +
- #include <asm/hypervisor.h>
- #include <asm/asi.h>
++	/*
++	 * NMIs do not (and cannot) track lock dependencies, nothing to do.
++	 */
++	if (unlikely(in_nmi()))
++		return;
++
++	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
  
+ 	if (unlikely(current->hardirqs_enabled)) {
+@@ -3692,7 +3701,27 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || curr->lockdep_recursion))
++	if (unlikely(!debug_locks))
++		return;
++
++	/*
++	 * NMIs can happen in the middle of local_irq_{en,dis}able() where the
++	 * tracking state and hardware state are out of sync.
++	 *
++	 * NMIs must save lockdep_hardirqs_enabled() to restore IRQ state from,
++	 * and not rely on hardware state like normal interrupts.
++	 */
++	if (unlikely(in_nmi())) {
++		/*
++		 * Skip:
++		 *  - recursion check, because NMI can hit lockdep;
++		 *  - hardware state check, because above;
++		 *  - chain_key check, see lockdep_hardirqs_on_prepare().
++		 */
++		goto skip_checks;
++	}
++
++	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
+ 
+ 	if (curr->hardirqs_enabled) {
+@@ -3720,6 +3749,7 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
+ 	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
+ 			    current->curr_chain_key);
+ 
++skip_checks:
+ 	/* we'll do an OFF -> ON transition: */
+ 	curr->hardirqs_enabled = 1;
+ 	curr->hardirq_enable_ip = ip;
+@@ -3735,7 +3765,15 @@ void noinstr lockdep_hardirqs_off(unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || curr->lockdep_recursion))
++	if (unlikely(!debug_locks))
++		return;
++
++	/*
++	 * Matching lockdep_hardirqs_on(), allow NMIs in the middle of lockdep;
++	 * they will restore the software state. This ensures the software
++	 * state is consistent inside NMIs as well.
++	 */
++	if (unlikely(!in_nmi() && (current->lockdep_recursion & LOCKDEP_RECURSION_MASK)))
+ 		return;
+ 
+ 	/*
