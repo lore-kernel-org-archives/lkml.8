@@ -2,111 +2,117 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39602C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 09:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07173C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 09:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2177820725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 09:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D469820720
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 09:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jM+J7fUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgGKJmW (ORCPT
+        id S1728178AbgGKJ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 05:42:22 -0400
-Received: from outboundhk.mxmail.xiaomi.com ([207.226.244.123]:11898 "EHLO
-        xiaomi.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726262AbgGKJmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 05:42:22 -0400
-Received: from CNBOX05.mioffice.cn (10.237.8.125) by HKBOX1.mioffice.cn
- (10.56.8.141) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
- 2020 19:03:21 +0800
-Received: from CNBOX07.mioffice.cn (10.237.8.127) by cnbox05.mioffice.cn
- (10.237.8.125) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
- 2020 19:03:21 +0800
-Received: from CNBOX07.mioffice.cn ([10.237.8.127]) by CNBOX07.mioffice.cn
- ([10.237.8.127]) with mapi id 15.00.1497.006; Fri, 10 Jul 2020 19:03:21 +0800
-From:   =?gb2312?B?RmVpMSBKaWFuZyC9r7fJ?= <jiangfei1@xiaomi.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Qiwu Huang <yanziily@gmail.com>
-CC:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?gb2312?B?u8bG5M7k?= <huangqiwu@xiaomi.com>
-Subject: =?gb2312?B?tPC4tDogW0V4dGVybmFsIE1haWxdUmU6IFtQQVRDSCAzLzVdIHBvd2VyOiBz?=
- =?gb2312?B?dXBwbHk6IGNvcmU6IGFkZCB3aXJlbGVzcyBzaWduYWwgc3RyZW5ndGggcHJv?=
- =?gb2312?Q?perty?=
-Thread-Topic: [External Mail]Re: [PATCH 3/5] power: supply: core: add wireless
- signal strength property
-Thread-Index: AQHWVqEGcOKSTFylU0y9/k4lIRbmAKkApV9A
-Date:   Fri, 10 Jul 2020 11:03:21 +0000
-Message-ID: <42c16fa4740244a3975bfa84b04d6574@CNBOX07.mioffice.cn>
-References: <20200710084841.1933254-1-yanziily@gmail.com>
- <20200710084841.1933254-3-yanziily@gmail.com>
- <20200710100106.GC1197607@kroah.com>
-In-Reply-To: <20200710100106.GC1197607@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.237.8.11]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sat, 11 Jul 2020 05:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgGKJ5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 05:57:08 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B64C4C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 02:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=niDCXs/S/0K/HhfYJH2N5gZeWdgGAh4gJDBS5G7mzgM=; b=jM+J7fUNV5aS1zyzSw+Pi9rF9f
+        kfsCqKAysJRlEw7XbNUDXneLrthLBgxQayuasgcuTjNOSIk2zulMXTLB2DxdIF7Xq+pQkhkHOkqcR
+        O6oL52u6RKwTLvoG/GhoKugkJKIjTqZBGRe61eApetPLJ84NdEWvR+k6eVUMyaKhpvPe4CKvTY0SF
+        muFMOXV1eJbq6mOUNFcQljoYfWG9T5/atzf7oJXqKSeIZx8q8eK+0hfOcYEYGjhZiAlGe5W6RL40z
+        xTur1aUgZzth7DUj0TJdpCnVUGrke7h8fFeOEWy9yQhvUPL1R4SakK5pj2o6hTb+Z/oNqiacbT8NU
+        ce8O731g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juCFR-0006o6-6z; Sat, 11 Jul 2020 09:56:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D0C26304E03;
+        Sat, 11 Jul 2020 11:56:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 19D7F203C9680; Sat, 11 Jul 2020 11:56:39 +0200 (CEST)
+Date:   Sat, 11 Jul 2020 11:56:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v6 10/17] x86/static_call: Add inline static call
+ implementation for x86-64
+Message-ID: <20200711095639.GA597537@hirez.programming.kicks-ass.net>
+References: <20200710133831.943894387@infradead.org>
+ <20200710134336.739394269@infradead.org>
+ <20200710183155.05eae629@oasis.local.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710183155.05eae629@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3JlZywNCg0KL3N5cy9jbGFzcy9wb3dlcl9zdXBwbHkvPHN1cHBseV9uYW1lPi9zaWduYWxf
-c3RyZW5ndGgNCldoYXQgdW5pdHMgYXJlIHRoaXMgaW4/ICBUaGUgInZhbHVlIiBtZWFucyB3aGF0
-Pw0KDQotLT4gVW5pdCBpcyBLSFosIHRoZSByZXR1cm4gdmFsdWUgaXMgYWxzbyBpbnRlZ2VyLCB0
-aGUgInZhbHVlIiBtZWFucyB0aGUgd29ya2luZyBmcmVxdWVuY3kgb2YgcmVjZWl2ZXIgY2hpcCBv
-ZiB3aXJlbGVzcyBjaGFyZ2luZy4NCg0KQiZSDQpGZWkgSmlhbmcNCg0KLS0tLS3Tyrz+1K28/i0t
-LS0tDQq3orz+yMs6IEdyZWcgS0ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPg0Kt6LLzcqx
-vOQ6IDIwMjDE6jfUwjEwyNUgMTg6MDENCsrVvP7IyzogUWl3dSBIdWFuZyA8eWFuemlpbHlAZ21h
-aWwuY29tPg0Ks63LzTogc3JlQGtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgRmVpMSBKaWFuZyC9r7fJIDxqaWFuZ2ZlaTFA
-eGlhb21pLmNvbT47ILvGxuTO5CA8aHVhbmdxaXd1QHhpYW9taS5jb20+DQrW98ziOiBbRXh0ZXJu
-YWwgTWFpbF1SZTogW1BBVENIIDMvNV0gcG93ZXI6IHN1cHBseTogY29yZTogYWRkIHdpcmVsZXNz
-IHNpZ25hbCBzdHJlbmd0aCBwcm9wZXJ0eQ0KDQpPbiBGcmksIEp1bCAxMCwgMjAyMCBhdCAwNDo0
-ODozOVBNICswODAwLCBRaXd1IEh1YW5nIHdyb3RlOg0KPiBGcm9tOiBRaXd1IEh1YW5nIDxodWFu
-Z3Fpd3VAeGlhb21pLmNvbT4NCj4NCj4gcmVwb3J0cyB3aXJlbGVzcyBzaWduYWwgc3RyZW5ndGgu
-DQo+IFRoZSB2YWx1ZSBzaG93IGRlZ3JlZSBvZiBjb3VwbGluZyBiZXR3ZWVuIHR4IGFuZCByeC4N
-Cj4NCj4gU2lnbmVkLW9mZi1ieTogUWl3dSBIdWFuZyA8aHVhbmdxaXd1QHhpYW9taS5jb20+DQo+
-IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1wb3dlciB8IDkg
-KysrKysrKystDQo+ICBkcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfc3lzZnMuYyAg
-IHwgMSArDQo+ICBpbmNsdWRlL2xpbnV4L3Bvd2VyX3N1cHBseS5oICAgICAgICAgICAgICAgIHwg
-MSArDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
-Cj4NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcvc3lzZnMtY2xhc3Mt
-cG93ZXIgYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNsYXNzLXBvd2VyDQo+IGlu
-ZGV4IDIwOTljZjE5NGE4OS4uMWY0MmFhMGMwNzFlIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0
-aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWNsYXNzLXBvd2VyDQo+ICsrKyBiL0RvY3VtZW50YXRpb24v
-QUJJL3Rlc3Rpbmcvc3lzZnMtY2xhc3MtcG93ZXINCj4gQEAgLTczMCw0ICs3MzAsMTEgQEAgRGVz
-Y3JpcHRpb246DQo+DQo+ICBBY2Nlc3M6IFJlYWQtT25seQ0KPiAgVmFsaWQgdmFsdWVzOiAiQURB
-UFRFUl9OT05FIiwgIkFEQVBURVJfU0RQIiwgIkFEQVBURVJfRENQIiwgIkFEQVBURVJfQ0RQIiwN
-Cj4gLSJBREFQVEVSX1FDMiIsICJBREFQVEVSX1FDMyIsICJBREFQVEVSX1BEIiBvciBvdGhlciBw
-cml2YXRlIGFkYXB0ZXIuDQo+IFwgTm8gbmV3bGluZSBhdCBlbmQgb2YgZmlsZQ0KPiArIkFEQVBU
-RVJfUUMyIiwgIkFEQVBURVJfUUMzIiwgIkFEQVBURVJfUEQiIG9yIG90aGVyIHByaXZhdGUgYWRh
-cHRlci4NCj4gKw0KPiArV2hhdDovc3lzL2NsYXNzL3Bvd2VyX3N1cHBseS88c3VwcGx5X25hbWU+
-L3NpZ25hbF9zdHJlbmd0aA0KPiArRGF0ZTpKdWwgMjAyMA0KPiArQ29udGFjdDpGZWkgSmlhbmcg
-PGppYW5nZmVpMUB4aWFvbWkuY29tPg0KPiArRGVzY3JpcHRpb246DQo+ICtSZXBvcnRzIHdpcmVs
-ZXNzIHNpZ25hbCBzdHJlbmd0aC4NCj4gK1RoZSB2YWx1ZSBzaG93IGRlZ3JlZSBvZiBjb3VwbGlu
-Zy4NCg0KV2hhdCB1bml0cyBhcmUgdGhpcyBpbj8gIFRoZSAidmFsdWUiIG1lYW5zIHdoYXQ/DQoN
-CnRoYW5rcywNCg0KZ3JlZyBrLWgNCiMvKioqKioqsb7Tyrz+vLDG5Li9vP66rNPQ0KHD17mry761
-xLGjw9zQxc+io6y99s/e09q3osvNuPjJz8PmtdjWt9bQwdCz9rXEuPbIy7vyyLrX6aGjvfvWucjO
-us7G5Mv7yMvS1MjOus7Qzsq9yrnTw6OosPzAqLWrsrvP3tPayKuyv7vysr+31rXY0LnCtqGiuLTW
-xqGiu/LJoreio6mxvtPKvP7W0LXE0MXPoqGjyOe5+8T6tO3K1cHLsb7Tyrz+o6zH68T6waK8tLXn
-u7C78tPKvP7NqNaqt6K8/sjLsqLJvrP9sb7Tyrz+o6EgVGhpcyBlLW1haWwgYW5kIGl0cyBhdHRh
-Y2htZW50cyBjb250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBmcm9tIFhJQU9NSSwgd2hp
-Y2ggaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBvciBlbnRpdHkgd2hvc2UgYWRkcmVz
-cyBpcyBsaXN0ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBo
-ZXJlaW4gaW4gYW55IHdheSAoaW5jbHVkaW5nLCBidXQgbm90IGxpbWl0ZWQgdG8sIHRvdGFsIG9y
-IHBhcnRpYWwgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1pbmF0aW9uKSBieSBw
-ZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lwaWVudChzKSBpcyBwcm9oaWJpdGVk
-LiBJZiB5b3UgcmVjZWl2ZSB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUg
-c2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgaXQhKioqKioq
-LyMNCg==
+On Fri, Jul 10, 2020 at 06:31:55PM -0400, Steven Rostedt wrote:
+> On Fri, 10 Jul 2020 15:38:41 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+
+> > +		/* find key symbol */
+> > +		key_name = strdup(insn->call_dest->name);
+> 
+> Should check for failed allocation of strdup().
+
+Rigt, I'll go add the perror and exit.
+
+> > +		if (strncmp(key_name, STATIC_CALL_TRAMP_PREFIX_STR,
+> > +			    strlen(STATIC_CALL_TRAMP_PREFIX_STR))) {
+> > +			WARN("static_call: trampoline name malformed: %s", key_name);
+> > +			return -1;
+> > +		}
+> > +		tmp = key_name + STATIC_CALL_TRAMP_PREFIX_LEN - STATIC_CALL_KEY_PREFIX_LEN;
+> > +		memcpy(tmp, STATIC_CALL_KEY_PREFIX_STR, STATIC_CALL_KEY_PREFIX_LEN);
+> > +
+> > +		key_sym = find_symbol_by_name(file->elf, tmp);
+> > +		if (!key_sym) {
+> > +			WARN("static_call: can't find static_call_key symbol: %s", tmp);
+> > +			return -1;
+> > +		}
+> > +		free(key_name);
+> > +
+> > +		/* populate reloc for 'key' */
+> > +		reloc = malloc(sizeof(*reloc));
+> > +		if (!reloc) {
+> > +			perror("malloc");
+> > +			return -1;
+> > +		}
+> > +		memset(reloc, 0, sizeof(*reloc));
+> > +		reloc->sym = key_sym;
+> > +		reloc->addend = 0;
+> > +		reloc->type = R_X86_64_PC32;
+> 
+> How easy would this be for other architectures to implement this? That
+> is how much of this function is x86 specific?
+
+I'm not sure; I think it's fairly generic except for the reloc types. So
+ARM64 for example might need to use SHT_REL and R_AARCH64_PREL32
+instead. But I suppose we'll see that if/when someone tries to make it
+work.
+
+
