@@ -2,90 +2,139 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5D71206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9D620731
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T7ZBUk4W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHjyPED1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgGKXfa (ORCPT
+        id S1727919AbgGKXzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 19:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37850 "EHLO
+        Sat, 11 Jul 2020 19:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgGKXfa (ORCPT
+        with ESMTP id S1726939AbgGKXzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 19:35:30 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF53C08C5DD;
-        Sat, 11 Jul 2020 16:35:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B45qy5rkSz9sRN;
-        Sun, 12 Jul 2020 09:35:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594510527;
-        bh=fiQmHM987DAmtt5nIvsg2T0RG0TiG4tCM6QP09yl7n0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T7ZBUk4WeEe90jBWuS6WWiXuUbwmto9DFfS0iEAkn5bbojWgX9I2/Xj+vbNQTWUSG
-         iX2TxsvX6p7H4gyDPbnWcyNmHY0o1W2lePSPrSXI7Jjx+yS9hVBXvPImTMoQ2l6fU+
-         Ahs0Qxsy5PRNGwjP+BMuWKz6OcYKlyZhim0dhWImZ90p3lfkFnZ6pINOT0vR1j0Kz8
-         X+x3GnSvwpeqtFpzD8hkjibXQI9Pzw/cfzGlJ9VFyQ653+6Hzg1jjC7xpMAaW7GB5N
-         E8jloJNuyrce6J5Y97BeckS8n7f1I7celrf/cWyVKlKsIdEh8e4fUNtR3qltvL2GSq
-         ucgyij0Whs20w==
-Date:   Sun, 12 Jul 2020 09:35:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the risc-v tree
-Message-ID: <20200712093519.4a3fd9b5@canb.auug.org.au>
+        Sat, 11 Jul 2020 19:55:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF64C08C5DD;
+        Sat, 11 Jul 2020 16:55:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e4so10573824ljn.4;
+        Sat, 11 Jul 2020 16:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E9dH9xs0WOC7kOt2IbwahbmPC33CGD8YY7xKZOFfTBQ=;
+        b=sHjyPED15yrfHyhsVLnPdupQLP3/g8GVPQemwRNJGA6EDHCMR1CO71/o0kZ2Oz8Kav
+         r488SxyoTCtqoTDxMOnAw4Irp285Yny/3CQjl+Tgr8eNPOJRGMR6Bd8WT5qSEHsFqR7S
+         Lv9GIKHOffRTtZgf1ifqVT/fhQN2Fy+edkkHyKEN3n0zVTowj5Qz4xd9Pz4gEfx2714i
+         sVnxzrqJSeaH/h0Dui8s9AFKu7WkbWc1FlhEUwK8RRrx3tFuW+o7CmIyuua+CCyPZTJP
+         2s5igv6p8F2/Rh/jzoajWl2s+yEUyEjUt0zuzmdPJkDS8e85hYwFPtKKV3fmXED7ICXj
+         sFDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E9dH9xs0WOC7kOt2IbwahbmPC33CGD8YY7xKZOFfTBQ=;
+        b=QbnDbCQBfdLY81LIrVUZG4VLtOuQtvOwYkxZpGkOJHblx7P2tfq7IsgDC54L9Z+Cbk
+         rKc06WXDFj0RCrJtRm05jwVsalziW2Cr0EctR05nfqZwhvQVhmvgHGdqaCO2v/8ml/TD
+         5q9ggKDqPgjWv9wnobruY7dXxriGlVMVhgq9vSUmN/eJ63a3wf5jjmiyQLoa7n7ce2Ko
+         QVXGalQE11QRG2msi1d+zucTwvzyE894pU+jgQ22xCHE8S925e80zp3i843PWCreErTP
+         uXWXwUavPYDLIl5r0XXoeCthb4emYCKPYH8WFCeX4e20ym6jZLrHcKh8Th2rqOegiTyC
+         SOlw==
+X-Gm-Message-State: AOAM531jxYL+iWalq4UstVvHvV0yuf1rGPWxDcg9H0PqmG+R6yJnePz3
+        a8BtVqrjmXBfTTyvaUznbMiFRRVYh/3OWRrM7ZhCzR1E7Nw=
+X-Google-Smtp-Source: ABdhPJxjD0K7f0vNG0otnFa0TzRqm8fcm99gbNPJ3m//mFp9ZflKoKVmrPeSmnChE3vkedJvYvRkJK+4D/f8GHWmvpk=
+X-Received: by 2002:a2e:954c:: with SMTP id t12mr43979065ljh.287.1594511705088;
+ Sat, 11 Jul 2020 16:55:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qx68+YcImgCM0qMARJRFs=T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <cpuwolf@gmail.com> <20200710065112.18286-1-cpuwolf@gmail.com>
+In-Reply-To: <20200710065112.18286-1-cpuwolf@gmail.com>
+From:   Wei Shuai <cpuwolf@gmail.com>
+Date:   Sun, 12 Jul 2020 07:54:54 +0800
+Message-ID: <CACa7zykn0q9XJAUvrqnNATr4DUv3Kc7XujF3vm6sfRB5pE6YNQ@mail.gmail.com>
+Subject: [PATCH] Input: break joystick limitation of maximum 80 buttons
+To:     "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     cpuwolf <cpuwolf@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Borislav Petkov <bp@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
+        Mark Gross <mgross@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Erwan Velu <e.velu@criteo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qx68+YcImgCM0qMARJRFs=T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The joystick max buttons 80 limitation comes from
 
-Hi all,
+#define BTN_JOYSTICK 0x120
+#define BTN_DEAD 0x12f
+#define BTN_TRIGGER_HAPPY 0x2c0
+#define KEY_MAX 0x2ff
 
-Commit
+include/uapi/linux/input-event-codes.h
 
-  95ce6c73da3b ("riscv: Enable context tracking")
+according to function hidinput_configure_usage() in file drivers/hid/hid-input.c
 
-is missing a Signed-off-by from its committer.
+the joystick button mapping is not a continues space
+generally speaking, the mapping space is from
 
---=20
-Cheers,
-Stephen Rothwell
+1. BTN_JOYSTICK~BTN_DEAD
+2. BTN_TRIGGER_HAPPY~KEY_MAX
 
---Sig_/qx68+YcImgCM0qMARJRFs=T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Finally, I got the max limitation is 80.
+The patch is expanding KEY_MAX from 0x2ff to 4ff
+and the change has been verified on 104 button USB HID device on Ubuntu
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Wei Shuai <cpuwolf@gmail.com>
+---
+ include/linux/mod_devicetable.h        | 2 +-
+ include/uapi/linux/input-event-codes.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8KTLcACgkQAVBC80lX
-0GxmeQf+OS0n/Lh3C1Owt+JgUK/9cj6Q8n3gZ7b5YkdN5g8VHKoPEwHHsPYGYMlG
-owckSQXl4ZvhsX8bAyf+NSDtzLZpYRVbAjN+x3lzx9OHtCvxrWUtnJsrSY0z9ECP
-G3OoB/SyefpWhF9Bulm/yDsYflLkLMCgzJduvRvSiLePWkeN+PG/xfQ6QbeeEUHM
-X1opFem1eVMy3jtOjBR3dQTV0DjcGSjAhML8irRG8IWMDIE3Y0NgMGwrMoDrJgFY
-h/rCi178N5qFv/NyLbtnOJJZUWV51fG5roJnNAH4OwZ1sfwda435Q3I6onSKef9l
-0d/j6QXRcPotCYig5ykLqBwet3BO+g==
-=iG+Q
------END PGP SIGNATURE-----
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 8d764aab29de..35eb59ae1f19 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -311,7 +311,7 @@ struct pcmcia_device_id {
+ /* Input */
+ #define INPUT_DEVICE_ID_EV_MAX         0x1f
+ #define INPUT_DEVICE_ID_KEY_MIN_INTERESTING    0x71
+-#define INPUT_DEVICE_ID_KEY_MAX                0x2ff
++#define INPUT_DEVICE_ID_KEY_MAX                0x4ff
+ #define INPUT_DEVICE_ID_REL_MAX                0x0f
+ #define INPUT_DEVICE_ID_ABS_MAX                0x3f
+ #define INPUT_DEVICE_ID_MSC_MAX                0x07
+diff --git a/include/uapi/linux/input-event-codes.h
+b/include/uapi/linux/input-event-codes.h
+index b6a835d37826..ad1b9bed3828 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -774,7 +774,7 @@
 
---Sig_/qx68+YcImgCM0qMARJRFs=T--
+ /* We avoid low common keys in module aliases so they don't get huge. */
+ #define KEY_MIN_INTERESTING    KEY_MUTE
+-#define KEY_MAX                        0x2ff
++#define KEY_MAX                        0x4ff
+ #define KEY_CNT                        (KEY_MAX+1)
+
+ /*
+--
+2.17.1
