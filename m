@@ -2,172 +2,144 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE11C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500D620786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2810E207D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgGKQfw (ORCPT
+        id S1728633AbgGKQc0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 12:35:52 -0400
-Received: from mail-dm6nam12olkn2061.outbound.protection.outlook.com ([40.92.22.61]:59744
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728412AbgGKQfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 12:35:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ctnmkzuqWa2ifaVPDrHArRa8SWSOV7DBLaIJaFKCVG0qENpcw1l6emYYe1XGAnk//1SpXVcl+8BHzozXgVn6vFNnqXsWWcqZr0oRXTymJLrd5aQzCM4NfNDvTzAzy3fk10XLjnAuMzSxAe1pHVKGwfc5JiKHEB+Jnim/fLqSMp16S6yVUnTWij7N23CfElCa/L/spY6fXjUa4sS02dOTNk2Ebn08MQxEqeo5ffcSXP9DxMVDdZDkDq7ulcWcjuY7EP502V4EtpyVyMVyApEsqHy0wONHRhqdBS2cgWY63KkiyCIPmDBQmP80H/g1oUjRyVTjNHpw9PBxPAGO4SpSvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qlE0wE0BjPDZXKakuHpbLrKoYSBgfFFm473HxGWgx3k=;
- b=DqrykRH9kawKlZH/Dbn7d01cP3xTwSHKDBKZ7LmKxjLaUGZaRdQLMRTVFJNkhJn4HoH6+TLmJT0tg60T4BhoueUwok90Rl2fdQhWd8Ku5K2T4ZymosqbYxtnPxtioxy23FO1baOkC64XWj5sygojnlLWOrlz1hLlpjuRQsYl/gqrYz5fsct4mkjA8uDwcUGnwbSa+e/45+g1Uk5YD7QtnsTfTqfmGX3JM4m4r988Rj4pE7B5XBs/i9FKtUyOogTzotzwimVDz2nuLfpCwZf5CIQ0WwyLPDSf7Z8azFcItm2hfVIqjDAyFozVM9fzKdLR2wvcAXrJM+jz0KWphvsCZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DM6NAM12FT050.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc64::4f) by
- DM6NAM12HT250.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc64::119)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9; Sat, 11 Jul
- 2020 16:35:49 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc64::43) by DM6NAM12FT050.mail.protection.outlook.com
- (2a01:111:e400:fc64::215) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend
- Transport; Sat, 11 Jul 2020 16:35:49 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:A882560E394E2329D217C52270E425F10E9F1F18CC620652F271CC63B53C2441;UpperCasedChecksum:686A9947B53828CAECA671679C8B7D00CACEED1BFB8ECE50DCB82CF2476DF592;SizeAsReceived:9366;Count:49
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3174.024; Sat, 11 Jul 2020
- 16:35:49 +0000
-Subject: Re: [PATCH 04/11] media: exynos4-is: Correct missing entity function
- initialization
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
-        krzk@kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB0660E680A4F69E3037D87E70A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <CGME20200707180927eucas1p14bedf7f773c5e86c3e3234928ee347a4@eucas1p1.samsung.com>
- <20200707180917.GD2621465@chromium.org>
- <afe50670-2452-2fe6-d0cc-0e1f83497873@samsung.com>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660E85ABB4AFE75FF2CD58BA3620@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sat, 11 Jul 2020 09:35:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <afe50670-2452-2fe6-d0cc-0e1f83497873@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO2PR04CA0010.namprd04.prod.outlook.com
- (2603:10b6:102:1::20) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <5ce0a6cc-9840-afae-83a4-bfec08bd9482@live.ca>
+        Sat, 11 Jul 2020 12:32:26 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:58745 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgGKQcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 12:32:25 -0400
+Received: from 'smile.earth' ([95.89.3.2]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M9Fvl-1k05qK0lp1-006LN8 for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020
+ 18:32:23 +0200
+X-Virus-Scanned: amavisd at 'smile.earth'
+From:   Hans-Peter Jansen <hpj@urpla.net>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: AMD PCI Bridge: Hardware error from APEI
+Date:   Sat, 11 Jul 2020 18:32:21 +0200
+Message-ID: <7789846.exkBBusKcl@xrated>
+In-Reply-To: <10516708.ThPc60jCtT@xrated>
+References: <2559180.cUrjzdZFCD@xrated> <10516708.ThPc60jCtT@xrated>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO2PR04CA0010.namprd04.prod.outlook.com (2603:10b6:102:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22 via Frontend Transport; Sat, 11 Jul 2020 16:35:47 +0000
-X-Microsoft-Original-Message-ID: <5ce0a6cc-9840-afae-83a4-bfec08bd9482@live.ca>
-X-TMN:  [y1FMo+BkqPNhMRyzGFWM+Gu0iaaOAAhie7e9cPdCcHLFACteY9N7SmSGZVJFWDRw]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 49
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 2b182859-05c1-48f6-6986-08d825b877cf
-X-MS-TrafficTypeDiagnostic: DM6NAM12HT250:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dusHB05cEeN27aaeUtACqHHEma0/Y0pzQRAEWUctfNxR19e/abShWj6IECaVKht37hGDrV36KhzPkG57nXA3DiLy5aWLoTdDgtda1QbIId42iyoMxfJbmTAy5vfkEIalmbhQb//ceeM9Gs3WYY0KV5Nr1iS4QbdAwz0xJnClxtqQhcrOGA+jQyugzYv0DX24pkA2J2RB/plGbtWKUAbzXA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: i+BMy8OQS+kCwUvx4r3zMDB9gvecn8vZgV0d8gwStqHQ8vurlOZd4RPFO1A6NTOtodj1OX8sze3Dpv0l+bPnB5+qi5+rIPrHiaX/CWk4SrkqD/TbrWlKSXqpdWdMb/hx4Re7y0o1g5fmPoelCcfLmopyIN/jlwdgOMh5uH0gN0ZyCaUNYqINuDAHbwkgb7GhasJErcC0/yYsJ+o/TcMeSA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b182859-05c1-48f6-6986-08d825b877cf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 16:35:49.0435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT050.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM12HT250
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+X-Provags-ID: V03:K1:cugGNSOaOWClcU/d7rwCl0LiBWwFa3fyEcv6XVjVGswAOnh2Ij/
+ O4tHhE/HnXbj3fgGi4a+R0Nz0VCNJ1+x/Alhrt052a+vTJt500k5MC71gPkZjgYsAXfEwhu
+ WS8ma/mkE1rIBoB9j1e7zh/bdjHs0f6eWHv7u9Z1rNj/IpZ77fqQHq4NJsNE7sCQoKghfEn
+ ZVy+EXzvx6NyZmzJ25f2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NMHQDJRascI=:yVDo1/YMpVBDPVHhmWj/3o
+ sABK4JW3EZlQY2BECKzIeh+w8Bjx2evbZBlb8J1O9PJ6T7h9S92JuxF2tWhUFToLCjrmjrBeg
+ 0XK4srBxIDcX63CYeZqHx6O1K9AqGcsZXKRIwUwnfTiKzj/wZ5RgUxlQaB1Yh/obq4mn6YYJZ
+ c8/pPkUxIoVoAzrfSM692/y7NHEmvgJDwgJJU4MHW3zaWgbIkK3OwylIie+eofJ2McpBcxXpM
+ lp43MtX7WtFRPqYlT3Mv3pRqOhoNWquV5EYLPMsFmoE0Zp85ME/wZgIgrczfhNdFyVTqyU0am
+ MkZlm5n8xUVrpx0VnRFx/efk5Zycr1/TmXs0yOvs3bVldF04/2QDFBAVX/NHeefRYN1l601+m
+ O0bn+++A1EtNwN2E3rz6AVfcIBwWrdOnvW87tz4P5dQTNEVCaefKhSfwY4JCvNM9fXMc1R7hF
+ QKtW56CASBtNN1jnyKkKjQzlDuUvfqIl4e0CMctZUOo6B/F9p8l1xOOKWZliRm2xw2X4WbDVv
+ C/F9rwuYqap0RaH/jqntbPvAvy00wcxFDrHMGieo3mD8RRzvOmDgggV0n79iyoG4ZEykKjc92
+ 15y6cq247fhhwMmdGv2g5cAMbHnEQZu6z7H2yXCmsll3wJ8GvqjDXN2qQhvIlUlq7Q9K6DEh5
+ Oiyw1nkXL4VAoaBg7BsaCPbaUYO6br2nPeXDbUX1Uf04Q/XxvocsYYHBmbPZI+uAFYx0CfDYO
+ /mpl4Lzjhh3eTg59p1x1ginwrsGwJE3rRCIHP+tkNNw4fA6CneOcdP1IUTRHqiK3OA1Wts3Q7
+ PY3T1nQt3PM89AUutID9Jsq+S3MmJUugUpa3o/RRUGCbKb5IEiRts/4HiolBYokXSGzggj7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester and Tomasz,
+Am Dienstag, 7. Juli 2020, 08:56:41 CEST schrieben Sie:
+> Am Samstag, 27. Juni 2020, 20:23:35 CEST schrieben Sie:
+> > Dear hacker from the order of the penguins,
+> > 
+> > we're facing a disturbing issue here after swapping a motherboard of a
+> > mission critical system:
+> > 
+> > Specs:
+> > ASUS KNPA-U16 with an AMD EPYC 7261, 2x32 GB Kingston KSM26RD4/32MEI
+> > (officially supported RAM modules)
+> > 
+> > openSUSE 15.1, Kernel 5.7.5
+> 
+> Not sure, how to proceed with this one?
+> 
+> After 9½ days uptime, it cumulated about 34,000 incidents:
+>
+> [...]
+> 
+> Needless so say, that this is no permanent solution.
+> 
+> Any ideas anybody?
 
-On 2020-07-08 8:34 a.m., Sylwester Nawrocki wrote:
-> Hi,
-> 
-> On 07.07.2020 20:09, Tomasz Figa wrote:
->> On Sat, Apr 25, 2020 at 07:26:43PM -0700, Jonathan Bakker wrote:
->>> Commit bae4500399c4 ("[media] exynos4-is: Add missing entity function
->>> initialization") tried to suppress the warnings such as
->>>
->>> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
->>>
->>> However, this didn't work in all cases.  Correct this by calling the set
->>> function earlier.
->>>
->>> Fixes: bae4500399c4 ("exynos4-is: Add missing entity function initialization")
->>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->>> ---
->>>  drivers/media/platform/exynos4-is/fimc-capture.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
->> Thank you for the patch. Please see my comments inline.
-> 
->>> diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
->>> index 705f182330ca..86c233e2f2c9 100644
->>> --- a/drivers/media/platform/exynos4-is/fimc-capture.c
->>> +++ b/drivers/media/platform/exynos4-is/fimc-capture.c
->>> @@ -1799,7 +1799,6 @@ static int fimc_register_capture_device(struct fimc_dev *fimc,
->>>  	vid_cap->wb_fmt.code = fmt->mbus_code;
->>>  
->>>  	vid_cap->vd_pad.flags = MEDIA_PAD_FL_SINK;
->>> -	vfd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
-> 
-> I think we should leave above line as is, or perhaps change the function
-> to MEDIA_ENT_F_PROC_VIDEO_COMPOSER and...
-> 
->> Isn't vfd->entity above a different entity than sd->entity below? If so,
->> this line must stay.
->>
->>>  	ret = media_entity_pads_init(&vfd->entity, 1, &vid_cap->vd_pad);
->>>  	if (ret)
->>>  		goto err_free_ctx;
->>> @@ -1898,6 +1897,7 @@ int fimc_initialize_capture_subdev(struct fimc_dev *fimc)
->>>  		return ret;
->>>  
->>>  	sd->entity.ops = &fimc_sd_media_ops;
->>> +	sd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
-> 
-> ...also add an assignment like this.
-> 
-> vfd->entity and sd->entity are different entities, vfd->entity corresponds to
-> the capture video node and sd->entity is the capture subdevice media entity. 
-> 
+After swapping the PCIe slot for the Digital Devices Max S8 4/8, the error has 
+moved: 
 
-Whoops, I totally misinterpreted the fact that they are  different entities.  For v2
-I'll remove the removal from vfd and just add MEDIA_ENT_F_PROC_VIDEO_SCALER to the sd
-entity.
+2020-07-11T18:25:34.380002+02:00 tyrex kernel: [  889.223783] {20}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 4
+2020-07-11T18:25:34.380025+02:00 tyrex kernel: [  889.223787] {20}[Hardware Error]: It has been corrected by h/w and requires no further action
+2020-07-11T18:25:34.380028+02:00 tyrex kernel: [  889.223789] {20}[Hardware Error]: event severity: corrected
+2020-07-11T18:25:34.380031+02:00 tyrex kernel: [  889.223791] {20}[Hardware Error]:  Error 0, type: corrected
+2020-07-11T18:25:34.380032+02:00 tyrex kernel: [  889.223793] {20}[Hardware Error]:  fru_text: PcieError
+2020-07-11T18:25:34.380034+02:00 tyrex kernel: [  889.223795] {20}[Hardware Error]:   section_type: PCIe error
+2020-07-11T18:25:34.380577+02:00 tyrex kernel: [  889.223796] {20}[Hardware Error]:   port_type: 4, root port
+2020-07-11T18:25:34.380586+02:00 tyrex kernel: [  889.223798] {20}[Hardware Error]:   version: 0.2
+2020-07-11T18:25:34.380588+02:00 tyrex kernel: [  889.223800] {20}[Hardware Error]:   command: 0x0407, status: 0x0010
+2020-07-11T18:25:34.380590+02:00 tyrex kernel: [  889.223802] {20}[Hardware Error]:   device_id: 0000:40:03.1
+2020-07-11T18:25:34.380591+02:00 tyrex kernel: [  889.223803] {20}[Hardware Error]:   slot: 16
+2020-07-11T18:25:34.380593+02:00 tyrex kernel: [  889.223804] {20}[Hardware Error]:   secondary_bus: 0x41
+2020-07-11T18:25:34.380595+02:00 tyrex kernel: [  889.223806] {20}[Hardware Error]:   vendor_id: 0x1022, device_id: 0x1453
+2020-07-11T18:25:34.380597+02:00 tyrex kernel: [  889.223808] {20}[Hardware Error]:   class_code: 060400
+2020-07-11T18:25:34.380599+02:00 tyrex kernel: [  889.223810] {20}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0012
+2020-07-11T18:25:34.380601+02:00 tyrex kernel: [  889.223908] pcieport 0000:40:03.1: AER: aer_status: 0x00001000, aer_mask: 0x00006000
+2020-07-11T18:25:34.380603+02:00 tyrex kernel: [  889.223912] pcieport 0000:40:03.1: AER:    [12] Timeout               
+2020-07-11T18:25:34.380605+02:00 tyrex kernel: [  889.223915] pcieport 0000:40:03.1: AER: aer_layer=Data Link Layer, aer_agent=Transmitter ID
 
->> My understanding is that this is the capture subdev and not the scaler.
->> Looking at the other drivers, MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER
->> could be the right function to use here.
-> 
-> Scaling can also be configured on that subdev, actually both functions would
-> be valid.
-> 
+It looks like the system is creating such devices on demand:
 
-Thanks,
-Jonathan
+40:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe GPP Bridge (prog-if 00 [Normal decode])
+        Flags: bus master, fast devsel, latency 0, IRQ 39, NUMA node 2
+        Bus: primary=40, secondary=41, subordinate=41, sec-latency=0
+        I/O behind bridge: None
+        Memory behind bridge: e5d00000-e5dfffff [size=1M]
+        Prefetchable memory behind bridge: None
+        Capabilities: [50] Power Management version 3
+        Capabilities: [58] Express Root Port (Slot+), MSI 00
+        Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+        Capabilities: [c0] Subsystem: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe GPP Bridge
+        Capabilities: [c8] HyperTransport: MSI Mapping Enable+ Fixed+
+        Capabilities: [100] Vendor Specific Information: ID=0001 Rev=1 Len=010 <?>
+        Capabilities: [150] Advanced Error Reporting
+        Capabilities: [270] #19
+        Capabilities: [2a0] Access Control Services
+        Capabilities: [370] L1 PM Substates
+        Capabilities: [380] Downstream Port Containment
+        Capabilities: [3c4] #23
+        Kernel driver in use: pcieport
+
+in order to handle:
+
+41:00.0 Multimedia controller: Digital Devices GmbH Max
+        Subsystem: Digital Devices GmbH Max S8 4/8
+        Flags: bus master, fast devsel, latency 0, IRQ 181, NUMA node 2
+        Memory at e5d00000 (64-bit, non-prefetchable) [size=64K]
+        Capabilities: [50] Power Management version 3
+        Capabilities: [70] MSI: Enable- Count=1/2 Maskable- 64bit+
+        Capabilities: [90] Express Endpoint, MSI 00
+        Capabilities: [100] Vendor Specific Information: ID=0000 Rev=0 Len=00c <?>
+        Kernel driver in use: ddbridge
+        Kernel modules: ddbridge
+
+Hrmpf.
+
+Pete
+
+
+
