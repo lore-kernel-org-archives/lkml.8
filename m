@@ -2,120 +2,170 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE6CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2521EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BCA20786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F282820720
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMRj30qE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epAoZmB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGKO77 (ORCPT
+        id S1728516AbgGKPIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 10:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        Sat, 11 Jul 2020 11:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgGKO77 (ORCPT
+        with ESMTP id S1728330AbgGKPIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 10:59:59 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012A5C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 07:59:58 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so8739697wrs.11
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 07:59:58 -0700 (PDT)
+        Sat, 11 Jul 2020 11:08:41 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C328C08C5DD;
+        Sat, 11 Jul 2020 08:08:41 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so3441285plo.7;
+        Sat, 11 Jul 2020 08:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=+5YJ4BXyiVlwCev/UR7kk6fTDXZ3Zt+Tj2RKUuxL+a8=;
-        b=CMRj30qE68pT3/+9gTayn6Oxa3rw+6akAmiovWC9XLMF8VgQXxMOZFuuoGYKLYCp4A
-         K5LlDsduDQhuHIZwqGaPynMi79PC3WUPu3gclwFmgrTl85ceQX9v+T7MUSt3E+Ni4mhR
-         PzHs1OqIoy/MaAUiOsRe1+iljA6ikgK8cPQJTUcQrCvvfx6l0qWxgoSuOVnQo9tj/D9M
-         Zlfg+hfCwLEH1/lAGpTXgdTughYytb6uaYSgdY6sHuQ4z5R3OOxSH+8ejyUXYLdONlGP
-         /sfrrvDytwnnz6o+BL6G4y9T8+q4lGOjVVUvBne3WwPDs404QTJgcFUWkN+pTUtNvDEf
-         1HAQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IQvs3fHvv9Fkjtgdt9Tsxnn3h6ei6m8hcchByCZR5HY=;
+        b=epAoZmB/f07JzI9Yc+QctLwKc0hvk4AvWpFa/BT9ZouzIYPP9i8z2n5NrA65EKv/ce
+         alBjQSbjOiB+jqnI+cxqp1TMFlqAP3VUWEe090EruPIhzL37jfFkvHgBiwL/p5+FJWOt
+         fHp9T37FE1Zcv3RMB9tP8hk692s9V3v4l+1K9BM6Jnjh49lpyaJ3X2qg5Rv813tHQ7Ne
+         xPLVV/UZ6yb8wXsbEWlqKroZNzQrWeUwwpY/DJ5OoURTpxvPvQ+203SexbO8wSW8MaAB
+         0dmn4p42I3uuQotJAAuy5tO4SgYKJmv0VfyHYCUOLINc/h2mWrpDfeJz6vy0rTfUf6GX
+         AtRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=+5YJ4BXyiVlwCev/UR7kk6fTDXZ3Zt+Tj2RKUuxL+a8=;
-        b=Xv1LVzWMRL/efn1Vdqy9Rm8TJcR1/6fL2QD7al6gTMcd9goDQLHlg9yU2S0c+A/Vi5
-         Q5hphy6miNrdaolFUvR+TZcT7KUeLOrqLq3Ul8AWZfZRWMC9sDFqL67s9pE+YfoEZlwT
-         gM9W6spaArPzC5GIuSPc5QSdKQngFukqn8xweCtqGAQXEEFD/OVQqXLeZtSdgq/ye5oP
-         Ox68GHbSsFQwvnItu4eZniuv0CeAf88tFMO/izv5ek1tHr/QD9gP3G9dGe9qLeYv46xX
-         Fu4IX9XdCGSDXzJNMAWlDOVqBcp26m/sG/K17x+Pru81Us2HYDtwqJ7J5GyEG0WT2nD8
-         K6iA==
-X-Gm-Message-State: AOAM531BUJwuj2noEIEfauI/S2aQd9NNd6z8FbBXlvYPG+0UGIfGKDvt
-        GMyPLgCHkhUDP4l0wV1Bd+vWeMo=
-X-Google-Smtp-Source: ABdhPJzTCmgbsceK42zcfVRe0huxYhnfmTSIbqUca//xWYfyNJKm4Tei1PSmOI8Y4d9+upaWrmhyfw==
-X-Received: by 2002:a5d:6802:: with SMTP id w2mr69479724wru.88.1594479597634;
-        Sat, 11 Jul 2020 07:59:57 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.249.169])
-        by smtp.gmail.com with ESMTPSA id p25sm13157545wmg.39.2020.07.11.07.59.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 07:59:56 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 17:59:54 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] rwsem: fix commas in initialisation
-Message-ID: <20200711145954.GA1178171@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IQvs3fHvv9Fkjtgdt9Tsxnn3h6ei6m8hcchByCZR5HY=;
+        b=ao746FefwpbugGw2Hde4Y55rTx81sAwT7SI16UFyioxiqKFCntVokFujToEIbpqw2w
+         juxX3bDlh69xPC0lqdz8LrdjrlFWIdLcpPcSw6Oom6RkX5dPXMdwoGz6x7MnMdKuxBDl
+         OyKnGcR+VK+WAVYZCXecN23Smvv2UWKoSRQ8kfUzd1YWXfevGh/JMAlLqRpKnpy5wN1E
+         UK4TVC2M0igDvhKUUJdCnlS2+fqLBJIEJ63MgkQh0NYLIQJozHt54lTku3ide2x98isa
+         isyBBY65xSemy/0SlWaoDPp7B2xdRuv7IRLJjzJtyDVETMC+U0fbY5RByzssU6Xn7TlP
+         vSgQ==
+X-Gm-Message-State: AOAM532Y9TtHtkxMd/TCrBbgGau53FPjV5jgdQThEZ+F5kx1LPVawVKh
+        NdbX1PtaEQRKfIYDkEPRBxrdI7uMhX/B6ThrmmM=
+X-Google-Smtp-Source: ABdhPJxB7TW81S/w+nmuDCmaMiUAOIzAO7PFV1t2WxYhZWoZCzifxtm649ch0qn1OIqOD+IhxA6yZfMc2omHXRBZCZM=
+X-Received: by 2002:a17:902:7611:: with SMTP id k17mr63884975pll.255.1594480120624;
+ Sat, 11 Jul 2020 08:08:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20200710161516.11625-1-brgl@bgdev.pl> <20200710161516.11625-2-brgl@bgdev.pl>
+In-Reply-To: <20200710161516.11625-2-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 11 Jul 2020 18:08:24 +0300
+Message-ID: <CAHp75VfTDmyWWxAAky-CmuvO2ge0T1q+woJ8MxjdRQqNJwHS4w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] devres: provide devm_krealloc()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leading comma prevents arbitrary reordering of initialisation clauses.
-The whole point of C99 initialisation is to allow any such reordering.
+On Fri, Jul 10, 2020 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Implement the managed variant of krealloc(). This function works with
+> all memory allocated by devm_kmalloc() (or devres functions using it
+> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+>
+> Managed realloc'ed chunks can be manually released with devm_kfree().
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+...
 
- include/linux/rwsem.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+>    devm_kfree()
+>    devm_kmalloc()
+>    devm_kmalloc_array()
+> +  devm_krealloc()
+>    devm_kmemdup()
+>    devm_kstrdup()
+>    devm_kvasprintf()
 
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -66,22 +66,22 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- # define __RWSEM_DEP_MAP_INIT(lockname)			\
--	, .dep_map = {					\
-+	.dep_map = {					\
- 		.name = #lockname,			\
- 		.wait_type_inner = LD_WAIT_SLEEP,	\
--	}
-+	},
- #else
- # define __RWSEM_DEP_MAP_INIT(lockname)
- #endif
- 
- #ifdef CONFIG_DEBUG_RWSEMS
--# define __DEBUG_RWSEM_INITIALIZER(lockname) , .magic = &lockname
-+# define __DEBUG_RWSEM_INITIALIZER(lockname) .magic = &lockname,
- #else
- # define __DEBUG_RWSEM_INITIALIZER(lockname)
- #endif
- 
- #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
-+#define __RWSEM_OPT_INIT(lockname) .osq = OSQ_LOCK_UNLOCKED,
- #else
- #define __RWSEM_OPT_INIT(lockname)
- #endif
-@@ -90,7 +90,7 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
- 	{ __RWSEM_INIT_COUNT(name),				\
- 	  .owner = ATOMIC_LONG_INIT(0),				\
- 	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
--	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
-+	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock),\
- 	  __RWSEM_OPT_INIT(name)				\
- 	  __DEBUG_RWSEM_INITIALIZER(name)			\
- 	  __RWSEM_DEP_MAP_INIT(name) }
+Order?
+
+...
+
+> +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
+
+Do we really need the 'new_' prefix in the parameter?
+
+> +{
+> +       struct devres *old_dr, *new_dr;
+> +       struct list_head old_head;
+> +       unsigned long flags;
+> +       void *ret = NULL;
+> +       size_t tot_size;
+
+tot -> total.
+
+> +
+> +       if (unlikely(!new_size)) {
+> +               devm_kfree(dev, ptr);
+> +               return ZERO_SIZE_PTR;
+> +       }
+
+I guess here we need a comment of the possibilities below to have
+ZERO_SIZE_PTR as input.
+
+> +       if (unlikely(ZERO_OR_NULL_PTR(ptr)))
+> +               return devm_kmalloc(dev, new_size, gfp);
+> +
+> +       if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
+> +               /*
+> +                * We cannot reliably realloc a const string returned by
+> +                * devm_kstrdup_const().
+> +                */
+> +               return NULL;
+> +
+> +       if (!check_dr_size(new_size, &tot_size))
+> +               return NULL;
+> +
+> +       spin_lock_irqsave(&dev->devres_lock, flags);
+> +
+> +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+
+> +       if (WARN_ON(!old_dr))
+
+Under spin lock? I would rather see spin unlock followed by WARN.
+
+> +               /* Memory chunk not managed or managed by a different device. */
+> +               goto out;
+> +
+> +       old_head = old_dr->node.entry;
+> +
+> +       new_dr = krealloc(old_dr, tot_size, gfp);
+> +       if (!new_dr)
+> +               goto out;
+> +
+> +       if (new_dr != old_dr)
+> +               list_replace(&old_head, &new_dr->node.entry);
+> +
+> +       ret = new_dr->data;
+> +
+> +out:
+> +       spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +       return ret;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
