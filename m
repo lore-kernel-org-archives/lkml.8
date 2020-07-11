@@ -2,188 +2,68 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F3F207D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eX3WnpAn"
+	by mail.kernel.org (Postfix) with ESMTP id 9A343207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594484822;
+	bh=QdgmgyHsnWWDRikFOV9j9mPiLF+83cg5Wvfr+sH5Lko=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Rh8ga2YPjTf1RajUIxVtIqD2TFgVP0VqSunxqibaWA2uh8WUdCVw6WZeukTBEVMKy
+	 ZzSOvygjypiEYZvjJQHNVVCp9fdr/Q8u6eT+GR+ZahRJWikBshErRFbPGb2GGjXxc3
+	 ul4p33+9vFWorNj+1ALEUSCmtdI9/Hi0EHkSl8Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgGKQVP (ORCPT
+        id S1728560AbgGKQ1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 12:21:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24719 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728441AbgGKQVO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 12:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594484472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9AlA+cIFYWbndb4gFwhFTCTPyhe+yp/zlSC3gYYxBKw=;
-        b=eX3WnpAnSA1qOQHZg2Rfn2yFfm6d9g2hGjLlmHIyVgjvGBDscFIjrrQpRxuSx5QWDNNEfs
-        GH5SJzW5loBOmxnQYII/Un4O3yFgReHmtnPxTNcxj6RC3aRlglSEl974wmGBCNJl8pVRar
-        GqNaIVpNSpfcVEkPV98pt46GMLQKHt8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-U_haLgaSNMybyxBtfjSAHw-1; Sat, 11 Jul 2020 12:21:11 -0400
-X-MC-Unique: U_haLgaSNMybyxBtfjSAHw-1
-Received: by mail-qk1-f200.google.com with SMTP id 13so6983196qkk.10
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 09:21:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=9AlA+cIFYWbndb4gFwhFTCTPyhe+yp/zlSC3gYYxBKw=;
-        b=kLCNnepQsEJqVCm685CzMbkesDGDW+a83zSgQKWljp9UggQAVLVzUAkK6uGtWJzlTq
-         oDJhnOy425cEBH+5sl0WXv6Ev/yR0Wy+JUDFzSd1G9s7W3K+yU+RSv8YDAFOpAy696ei
-         qPHvXRgeyiuTYgUcRiefE5KSxvJsXP8qZIlWlBWiVtU59BekbCZVCUtAWU0C7NGX0WCp
-         b07IG/DTSQO+TOQ9Dtd0CiVZEOmcr9ZVgEF/gcE8lrmKot8GVwvFeGfPybjdaaECLaXd
-         PpzA2tL8NU/oIvrjoiQviotm1vSUSQs3MNcccp0Js7oKlCN5DNLg22/HTX1rbHmH5hT9
-         h4Vw==
-X-Gm-Message-State: AOAM531SF4qsYZaFa5xQxvbeGo7r+FOAqd1yJxi1nM2uADj7cPVaIlkY
-        hWaMKSKfiWiJTjY71AXEywd4olAFsxuIPk3rUa+MKHH9ackY8s7nRAOK0EnfoAM40w2IsYuPxZb
-        f/WzgCMJBqEcQAOL3t6WBrFtG
-X-Received: by 2002:a37:e217:: with SMTP id g23mr75325307qki.108.1594484470233;
-        Sat, 11 Jul 2020 09:21:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx5DY2i09z0u+FCwttgEkruzUkoO/ggYfkUMxtuYfMOw2/k500kdqt2X/WRJu192QZGWyek8Q==
-X-Received: by 2002:a37:e217:: with SMTP id g23mr75325283qki.108.1594484469913;
-        Sat, 11 Jul 2020 09:21:09 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id d135sm11795610qkg.117.2020.07.11.09.21.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2020 09:21:08 -0700 (PDT)
-Subject: Re: [RESEND PATCH 1/2] fpga: dfl: pci: reduce the scope of variable
- 'ret'
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgoncalv@redhat.com
-References: <1594282337-32125-1-git-send-email-yilun.xu@intel.com>
- <1594282337-32125-2-git-send-email-yilun.xu@intel.com>
- <ef506ec6-d857-736b-e9e2-46077ab7d778@redhat.com>
- <20200710051600.GA8689@yilunxu-OptiPlex-7050>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <85d84892-14d0-3097-c4f9-cbb9092c9a5f@redhat.com>
-Date:   Sat, 11 Jul 2020 09:21:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Jul 2020 12:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728412AbgGKQ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 12:27:00 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EC81207D4;
+        Sat, 11 Jul 2020 16:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594484820;
+        bh=QdgmgyHsnWWDRikFOV9j9mPiLF+83cg5Wvfr+sH5Lko=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=w/AS+ZTGMx7OcgcjAco9fdtofh9wBp2cwTzG22wFz37i3qsrhrhAp++/4JQjUIWrX
+         IHlAiTjXnZsEnNJL/4NaXIGIexggdDWHSCSpwG30E/QJfIMKT9iqVFDxL5rSUaHlKu
+         Bg2fGzM/Obu3PjTbDieHbM8zXyg/QUO5Lz3S0ypk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200710051600.GA8689@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1593588382-19049-3-git-send-email-wendell.lin@mediatek.com>
+References: <1593588382-19049-1-git-send-email-wendell.lin@mediatek.com> <1593588382-19049-3-git-send-email-wendell.lin@mediatek.com>
+Subject: Re: [PATCH 2/2] clk: mediatek: Add EXPORT_SYMBOL for kernel module support
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        mtk01761 <wendell.lin@mediatek.com>
+Date:   Sat, 11 Jul 2020 09:26:59 -0700
+Message-ID: <159448481956.1987609.4970524569331045099@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, i take your point on the api.
+Quoting Wendell Lin (2020-07-01 00:26:22)
+> Export common APIs from Mediatek clock driver.
+>=20
+> Signed-off-by: Wendell Lin <wendell.lin@mediatek.com>
 
-However I still feel that this change should be improved so the return is not defined inside a block.
-
-I think this could be done better with
-
-int ret = num_vfs;
-
-...
-
-return ret;
-
-There is no consistency on this check with the other drivers' sriov_configure.
-
-I do not feel strongly about this change, your original change will work. So you may add.
-
-Reviewed-by: Tom Rix <trix@redhat.com>
-
-Tom
-
-On 7/9/20 10:16 PM, Xu Yilun wrote:
-> On Thu, Jul 09, 2020 at 06:18:18AM -0700, Tom Rix wrote:
->> I think a better change is to use the ret variable, like this
->>
->> --- a/drivers/fpga/dfl-pci.c
->> +++ b/drivers/fpga/dfl-pci.c
->> @@ -312,7 +312,7 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->> Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  }
->> Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  }
->> Ã‚Â 
->> -Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  return num_vfs;
->> +Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â Ã‚Â  return ret;
->> Ã‚Â }
->>
->> The existing use of returning num_vfs is not right, the function should return 0/err not num_vfs. currently it is reusing the 0 passed in with num_vfs to mean disable as the 0 return status.Ã‚Â  it should be properly returning ret.
-> The sriov_configure callback should return negative value for error, and
-> return num_vfs if success.
->
-> See the Documentation/PCI/pci-iov-howto.rst
->
-> also in drivers/pci/iov.c:
->
->   static ssize_t sriov_numvfs_store(struct device *dev, ...)
->   {
-> 	...
->
->         ret = pdev->driver->sriov_configure(pdev, num_vfs);
->         if (ret < 0) 
->                 goto exit;
->
->         if (ret != num_vfs)
->                 pci_warn(pdev, "%d VFs requested; only %d enabled\n",
->                          num_vfs, ret);
->
-> 	...
->   }
->
->> Tom
->>
->> On 7/9/20 1:12 AM, Xu Yilun wrote:
->>> This is to fix lkp cppcheck warnings:
->>>
->>>  drivers/fpga/dfl-pci.c:230:6: warning: The scope of the variable 'ret' can be reduced. [variableScope]
->>>     int ret = 0;
->>>         ^
->>>
->>>  drivers/fpga/dfl-pci.c:230:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
->>>     int ret = 0;
->>>             ^
->>>
->>> Fixes: 3c2760b78f90 ("fpga: dfl: pci: fix return value of cci_pci_sriov_configure")
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
->>> Acked-by: Wu Hao <hao.wu@intel.com>
->>> ---
->>>  drivers/fpga/dfl-pci.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
->>> index 4a14a24..73b5153 100644
->>> --- a/drivers/fpga/dfl-pci.c
->>> +++ b/drivers/fpga/dfl-pci.c
->>> @@ -285,7 +285,6 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->>>  {
->>>  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
->>>  	struct dfl_fpga_cdev *cdev = drvdata->cdev;
->>> -	int ret = 0;
->>>  
->>>  	if (!num_vfs) {
->>>  		/*
->>> @@ -297,6 +296,8 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->>>  		dfl_fpga_cdev_config_ports_pf(cdev);
->>>  
->>>  	} else {
->>> +		int ret;
->>> +
->>>  		/*
->>>  		 * before enable SRIOV, put released ports into VF access mode
->>>  		 * first of all.
-
+Is this needed for something? I'd prefer to see some sort of mediatek
+modular patches that included this patch in it before this is applied.
