@@ -2,173 +2,153 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1AAC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 08:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6B7F20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A846206F0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 08:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZQEKQXL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIUosOHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGKHws (ORCPT
+        id S1728178AbgGKIXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 03:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgGKHwr (ORCPT
+        Sat, 11 Jul 2020 04:23:37 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37118 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgGKIXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 03:52:47 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBB2C08C5DD;
-        Sat, 11 Jul 2020 00:52:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d18so6361955edv.6;
-        Sat, 11 Jul 2020 00:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=chblfhw/pZ7F1F13XRbjCEZ4EpDpVMofJy+rOKK895o=;
-        b=rZQEKQXLQHKsEKZ14YIUwLgP1Gg4TVDuTNwwxGCX1yBHgmGU0JmdWGoPJqVUKH4Ije
-         9V6yRwBMetaPJrBSAk3DJIWfCMv9HkUDdzL39lNSoKVcgsTAwOExFiru9aFF4wJWaT6J
-         TvQ7kVPHGLHQ4qznP/EDGXTDXI7M4DI0YFawdEuCC5DSaMtB5hvlSkVOsF2Rm/tc8McB
-         Igjw9ApnydtBCHn/MJjexNiGHiLZ0NSp5j1H7KA++jOAnfnd1LqhHqQMQXvt6AkmIWti
-         Nps1YyHiiIEOaygafwoUVSUbFx+4CpJ3fCj5dfmAaJbUeRSmkMmvonPiv5FYLTKT6WcP
-         dIqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=chblfhw/pZ7F1F13XRbjCEZ4EpDpVMofJy+rOKK895o=;
-        b=G2bzA9dh88knSy1uQwYJoTEE+9VoIoHe6iMAeA5JwwbToVwwxoYofSovGOmbY64fke
-         Unja7tbgpiEpCOHX6qxN0Y+2gYNbopC0gDDjY+bp3g77JqICUPZxHZ1NkrTY8xmzaUtA
-         eDWTDpsi4Lr5F0zbwernAxgoVJAJCKj681bdho0JJ7TXL9tafchoL4gvLxjkmjspvqxJ
-         6TMLoB2VoZIL4jW1DV6AJK0tcI22W49DwAJco2s4bxhJV37+dBMvO2PWOnGAN7Tp7TOt
-         2MbfgK39Cn/cLCEoBpVx5FPaCo6MJf7DY1TcCVbuUXH22pEMS6hb4KHxIZ/Tj5WwLWqt
-         HDSw==
-X-Gm-Message-State: AOAM532p6CZqCSPV/t2dyMGHy49SjzLioTXDM3zj/73KxOCdya2djZSC
-        2XsORtYg4q75RUdu7EOtbHs=
-X-Google-Smtp-Source: ABdhPJwihN9PIaXQhbGqnJH6ukFMQ3u+W+sA+rUYcCgbXMxlm1nwnsGuXmBouw+4drIRnpRE9Tl0IQ==
-X-Received: by 2002:aa7:c24d:: with SMTP id y13mr84833261edo.123.1594453965789;
-        Sat, 11 Jul 2020 00:52:45 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id r17sm6262069edw.68.2020.07.11.00.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 00:52:44 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 10:52:42 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v6 0/4] net: enetc: remove bootloader dependency
-Message-ID: <20200711075242.dl72ymyyby6ivsk2@skbuf>
-References: <20200709213526.21972-1-michael@walle.cc>
+        Sat, 11 Jul 2020 04:23:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594455813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3JWZc4C758CGaQ7kXP65ZxsN+MDs4VksrbvIUzURHM4=;
+        b=fIUosOHnGs8QAb+KB3sXcZCkUe9lAWgS9sGu9FqBfuR7gqPM4kr38GQa2g6K0KW1vkSL1N
+        FfeYNHXwmkyzqZwQg5IYho0CCA8ZI2GjKTKmEJRQ7rkye52FQhnVM7Dpnb7vfcNSweApPB
+        khTBMSIxoqcKy61zpZVm7kXTsELBjmI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-shM6vVWLPsCKbBcbh1p3Cw-1; Sat, 11 Jul 2020 04:23:29 -0400
+X-MC-Unique: shM6vVWLPsCKbBcbh1p3Cw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B4D6800C64;
+        Sat, 11 Jul 2020 08:23:27 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46BE52DE6B;
+        Sat, 11 Jul 2020 08:23:20 +0000 (UTC)
+Date:   Sat, 11 Jul 2020 10:23:18 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     brouer@redhat.com,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+        hawk@kernel.org, john.fastabend@gmail.com,
+        mchehab+huawei@kernel.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: XDP: restrict N: and K:
+Message-ID: <20200711102318.28ce29d6@carbon>
+In-Reply-To: <28a81dfe62b1dc00ccc721ddb88669d13665252b.camel@perches.com>
+References: <87tuyfi4fm.fsf@toke.dk>
+        <20200710190407.31269-1-grandmaster@al2klimov.de>
+        <28a81dfe62b1dc00ccc721ddb88669d13665252b.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709213526.21972-1-michael@walle.cc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:35:22PM +0200, Michael Walle wrote:
-> This is a resend [now a new v6] of the series because the conversion to the
-> phylink interface will likely take longer:
-> https://lore.kernel.org/netdev/CA+h21hpBodyY8CtNH2ktRdc2FqPi=Fjp94=VVZvzSVbnvnfKVg@mail.gmail.com/
-> Also the discussion in the v3 resend doesn't look like it will be resolved
-> soon :/
-> https://lore.kernel.org/netdev/20200701213433.9217-1-michael@walle.cc/
-> 
-> Unfortunately, we have boards in the wild with a bootloader which doesn't
-> set the PCS up correctly. Thus I'd really see this patches picked up as an
-> intermediate step until the phylink conversion is ready. Vladimir Oltean
-> already offered to convert enetc to phylink when he converts the felix to
-> phylink. After this series the PCS setup of the enetc looks almost the same
-> as the current felix setup. Thus conversion should be easy.
-> 
-> These patches were picked from the following series:
-> https://lore.kernel.org/netdev/1567779344-30965-1-git-send-email-claudiu.manoil@nxp.com/
-> They have never been resent. I've picked them up, addressed Andrews
-> comments, fixed some more bugs and asked Claudiu if I can keep their SOB
-> tags; he agreed. I've tested this on our board which happens to have a
-> bootloader which doesn't do the enetc setup in all cases. Though, only
-> SGMII mode was tested.
-> 
-> changes since v5:
->  - fixed pcs->autoneg_complete and pcs->link assignment. Thanks Vladimir.
-> 
-> changes since v4:
->  - moved (and renamed) the USXGMII constants to include/uapi/linux/mdio.h.
->    Suggested by Russell King.
-> 
-> changes since v3:
->  - rebased to latest net-next where devm_mdiobus_free() was removed.
->    replace it by mdiobus_free(). The internal MDIO bus is optional, if
->    there is any error, we try to run with the bootloader default PCS
->    settings, thus in the error case, we need to free the mdiobus.
-> 
-> changes since v2:
->  - removed SOBs from "net: enetc: Initialize SerDes for SGMII and USXGMII
->    protocols" because almost everything has changed.
->  - get a phy_device for the internal PCS PHY so we can use the phy_
->    functions instead of raw mdiobus writes
->  - reuse macros already defined in fsl_mdio.h, move missing bits from
->    felix to fsl_mdio.h, because they share the same PCS PHY building
->    block
->  - added 2500BaseX mode (based on felix init routine)
->  - changed xgmii mode to usxgmii mode, because it is actually USXGMII and
->    felix does the same.
->  - fixed devad, which is 0x1f (MMD_VEND2)
-> 
-> changes since v1:
->  - mdiobus id is '"imdio-%s", dev_name(dev)' because the plain dev_name()
->    is used by the emdio.
->  - use mdiobus_write() instead of imdio->write(imdio, ..), since this is
->    already a full featured mdiobus
->  - set phy_mask to ~0 to avoid scanning the bus
->  - use phy_interface_mode_is_rgmii(phy_mode) to also include the RGMII
->    modes with pad delays.
->  - move enetc_imdio_init() to enetc_pf.c, there shouldn't be any other
->    users, should it?
->  - renamed serdes to SerDes
->  - printing the error code of mdiobus_register() in the error path
->  - call mdiobus_unregister() on _remove()
->  - call devm_mdiobus_free() if mdiobus_register() fails, since an
->    error is not fatal
-> 
-> Alex Marginean (1):
->   net: enetc: Use DT protocol information to set up the ports
-> 
-> Michael Walle (3):
->   net: phy: add USXGMII link partner ability constants
->   net: dsa: felix: (re)use already existing constants
->   net: enetc: Initialize SerDes for SGMII and USXGMII protocols
-> 
->  drivers/net/dsa/ocelot/felix_vsc9959.c        |  45 ++---
->  .../net/ethernet/freescale/enetc/enetc_hw.h   |   3 +
->  .../net/ethernet/freescale/enetc/enetc_pf.c   | 188 +++++++++++++++---
->  .../net/ethernet/freescale/enetc/enetc_pf.h   |   5 +
->  include/uapi/linux/mdio.h                     |  26 +++
->  5 files changed, 210 insertions(+), 57 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+On Fri, 10 Jul 2020 12:37:47 -0700
+Joe Perches <joe@perches.com> wrote:
 
-I plan to give this series a go on an LS1028A-QDS later today to make
-sure there are no regressions.
+> On Fri, 2020-07-10 at 21:04 +0200, Alexander A. Klimov wrote:
+> > Rationale:
+> > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
+> > which has nothing to do with XDP.
+> >=20
+> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > ---
+> >  Better?
+> >=20
+> >  MAINTAINERS | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 1d4aa7f942de..735e2475e926 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -18708,8 +18708,8 @@ F:	include/trace/events/xdp.h
+> >  F:	kernel/bpf/cpumap.c
+> >  F:	kernel/bpf/devmap.c
+> >  F:	net/core/xdp.c
+> > -N:	xdp
+> > -K:	xdp
+> > +N:	(?:\b|_)xdp
+> > +K:	(?:\b|_)xdp =20
+>=20
+> Generally, it's better to have comprehensive files lists
+> rather than adding name matching regexes.
 
-Thanks,
--Vladimir
+I like below more direct matching of the files we already know are XDP
+related. The pattern match are meant to catch drivers containing XDP
+related bits.
+
+(small typo in your patch below)
+
+> Perhaps:
+> ---
+>  MAINTAINERS | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 16854e47e8cb..2e96cbf15b31 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18763,13 +18763,19 @@ M:	John Fastabend <john.fastabend@gmail.com>
+>  L:	netdev@vger.kernel.org
+>  L:	bpf@vger.kernel.org
+>  S:	Supported
+> -F:	include/net/xdp.h
+> +F:	Documentation/networking/af_xdp.rst
+> +F:	include/net/xdp*
+>  F:	include/trace/events/xdp.h
+> +F:	include/uapi/linux/if_xdp.h
+> +F:	include/uapi/linux/xdp_diag.h
+>  F:	kernel/bpf/cpumap.c
+>  F:	kernel/bpf/devmap.c
+>  F:	net/core/xdp.c
+> -N:	xdp
+> -K:	xdp
+> +F:	net/xdp/
+> +F:	samples/bpf/xdp*
+> +F:	tools/testing/selftests/bfp/*xdp*
+                               ^^^^=20
+Typo, should be "bpf"
+
+> +F:	tools/testing/selftests/bfp/*/*xdp*
+> +K:	(?:\b|_)xdp(?:\b|_)
+> =20
+>  XDP SOCKETS (AF_XDP)
+>  M:	Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+>=20
+
+
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
