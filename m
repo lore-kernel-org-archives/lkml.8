@@ -2,54 +2,91 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB8FC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DBD20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9287B20725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgGKUBP (ORCPT
+        id S1727876AbgGKUYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:01:15 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58784 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgGKUBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 16:01:15 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1juLgN-004ebr-Dy; Sat, 11 Jul 2020 22:01:11 +0200
-Date:   Sat, 11 Jul 2020 22:01:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     min.li.xe@renesas.com
-Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] ptp: add debugfs support for IDT family of
- timing devices
-Message-ID: <20200711200111.GU1014141@lunn.ch>
-References: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
+        Sat, 11 Jul 2020 16:24:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36066 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbgGKUYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 16:24:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 371561C0BD2; Sat, 11 Jul 2020 22:24:20 +0200 (CEST)
+Date:   Sat, 11 Jul 2020 22:24:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
+ multicolor brightness function
+Message-ID: <20200711202419.GA18347@duo.ucw.cz>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-14-dmurphy@ti.com>
+ <20200711155749.GB22715@amd>
+ <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 Content-Disposition: inline
-In-Reply-To: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
+In-Reply-To: <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:41:25AM -0400, min.li.xe@renesas.com wrote:
-> From: Min Li <min.li.xe@renesas.com>
-> 
-> This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
-> It will create a debugfs directory called idtptp{x} and x is the ptp index.
-> Three inerfaces are present, which are cmd, help and regs. help is read
-> only and will display a brief help message. regs is read only amd will show
-> all register values.
 
-You can get register dumps for free in debugfs if you use regmap. And
-i2c devices are well supported by regmap.
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    Andrew
+On Sat 2020-07-11 19:19:22, Jacek Anaszewski wrote:
+> On 7/11/20 5:57 PM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > Add the multicolor brightness call back to support the multicolor
+> > > framework.  This call back allows setting  brightness on grouped chan=
+nels
+> >=20
+> > Extra space before "brightness".
+>=20
+> And before "This".
+
+That one is intentional, I believe.
+
+https://www.independent.co.uk/life-style/gadgets-and-tech/news/one-space-or=
+-two-spaces-after-a-full-stop-scientists-have-finally-found-the-answer-a833=
+7646.html
+
+We are using fixed width fonts, so typewriter rules still apply here.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXwof8wAKCRAw5/Bqldv6
+8rAyAJ4hPt7IgHlyAtBRG2ArOmyZ8Mj29QCggA8ecmn08QOBVK7ziUsCW4evjuI=
+=RSa+
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
