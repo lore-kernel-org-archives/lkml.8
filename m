@@ -2,29 +2,29 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE2BC43465
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE841C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06DA62076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A622620674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGKBAB (ORCPT
+        id S1728113AbgGKBAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:00:01 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:51673 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbgGKA7J (ORCPT
+        Fri, 10 Jul 2020 21:00:15 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54338 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726918AbgGKA7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 20:59:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
+        Fri, 10 Jul 2020 20:59:08 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
 Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2KGAZr_1594429139)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 Jul 2020 08:59:04 +0800
+          Sat, 11 Jul 2020 08:59:01 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -34,9 +34,13 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
         kirill@shutemov.name
-Subject: [PATCH v16 12/22] mm/lru: move lock into lru_note_cost
-Date:   Sat, 11 Jul 2020 08:58:46 +0800
-Message-Id: <1594429136-20002-13-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v16 04/22] mm/compaction: rename compact_deferred as compact_should_defer
+Date:   Sat, 11 Jul 2020 08:58:38 +0800
+Message-Id: <1594429136-20002-5-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -45,76 +49,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch move lru_lock into lru_note_cost. It's a bit ugly and may
-cost more locking, but it's necessary for later per pgdat lru_lock to
-per memcg lru_lock change.
+The compact_deferred is a defer suggestion check, deferring action does in
+defer_compaction not here. so, better rename it to avoid confusing.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- mm/swap.c   | 5 +++--
- mm/vmscan.c | 4 +---
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ include/linux/compaction.h        | 4 ++--
+ include/trace/events/compaction.h | 2 +-
+ mm/compaction.c                   | 8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index b88ca630db70..f645965fde0e 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -269,7 +269,9 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
- {
- 	do {
- 		unsigned long lrusize;
-+		struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index 6fa0eea3f530..be9ed7437a38 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -100,7 +100,7 @@ extern enum compact_result compaction_suitable(struct zone *zone, int order,
+ 		unsigned int alloc_flags, int highest_zoneidx);
  
-+		spin_lock_irq(&pgdat->lru_lock);
- 		/* Record cost event */
- 		if (file)
- 			lruvec->file_cost += nr_pages;
-@@ -293,15 +295,14 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
- 			lruvec->file_cost /= 2;
- 			lruvec->anon_cost /= 2;
+ extern void defer_compaction(struct zone *zone, int order);
+-extern bool compaction_deferred(struct zone *zone, int order);
++extern bool compaction_should_defer(struct zone *zone, int order);
+ extern void compaction_defer_reset(struct zone *zone, int order,
+ 				bool alloc_success);
+ extern bool compaction_restarting(struct zone *zone, int order);
+@@ -199,7 +199,7 @@ static inline void defer_compaction(struct zone *zone, int order)
+ {
+ }
+ 
+-static inline bool compaction_deferred(struct zone *zone, int order)
++static inline bool compaction_should_defer(struct zone *zone, int order)
+ {
+ 	return true;
+ }
+diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
+index 54e5bf081171..33633c71df04 100644
+--- a/include/trace/events/compaction.h
++++ b/include/trace/events/compaction.h
+@@ -274,7 +274,7 @@
+ 		1UL << __entry->defer_shift)
+ );
+ 
+-DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_deferred,
++DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_should_defer,
+ 
+ 	TP_PROTO(struct zone *zone, int order),
+ 
+diff --git a/mm/compaction.c b/mm/compaction.c
+index cd1ef9e5e638..f14780fc296a 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -154,7 +154,7 @@ void defer_compaction(struct zone *zone, int order)
+ }
+ 
+ /* Returns true if compaction should be skipped this time */
+-bool compaction_deferred(struct zone *zone, int order)
++bool compaction_should_defer(struct zone *zone, int order)
+ {
+ 	unsigned long defer_limit = 1UL << zone->compact_defer_shift;
+ 
+@@ -168,7 +168,7 @@ bool compaction_deferred(struct zone *zone, int order)
+ 	if (zone->compact_considered >= defer_limit)
+ 		return false;
+ 
+-	trace_mm_compaction_deferred(zone, order);
++	trace_mm_compaction_should_defer(zone, order);
+ 
+ 	return true;
+ }
+@@ -2377,7 +2377,7 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
+ 		enum compact_result status;
+ 
+ 		if (prio > MIN_COMPACT_PRIORITY
+-					&& compaction_deferred(zone, order)) {
++				&& compaction_should_defer(zone, order)) {
+ 			rc = max_t(enum compact_result, COMPACT_DEFERRED, rc);
+ 			continue;
  		}
-+		spin_unlock_irq(&pgdat->lru_lock);
- 	} while ((lruvec = parent_lruvec(lruvec)));
- }
+@@ -2561,7 +2561,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 		if (!populated_zone(zone))
+ 			continue;
  
- void lru_note_cost_page(struct page *page)
- {
--	spin_lock_irq(&page_pgdat(page)->lru_lock);
- 	lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
- 		      page_is_file_lru(page), hpage_nr_pages(page));
--	spin_unlock_irq(&page_pgdat(page)->lru_lock);
- }
+-		if (compaction_deferred(zone, cc.order))
++		if (compaction_should_defer(zone, cc.order))
+ 			continue;
  
- static void __activate_page(struct page *page, struct lruvec *lruvec)
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ddb29d813d77..c1c4259b4de5 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1976,19 +1976,17 @@ static int current_may_throttle(void)
- 				&stat, false);
- 
- 	spin_lock_irq(&pgdat->lru_lock);
--
- 	move_pages_to_lru(lruvec, &page_list);
- 
- 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
--	lru_note_cost(lruvec, file, stat.nr_pageout);
- 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
- 	if (!cgroup_reclaim(sc))
- 		__count_vm_events(item, nr_reclaimed);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
- 	__count_vm_events(PGSTEAL_ANON + file, nr_reclaimed);
--
- 	spin_unlock_irq(&pgdat->lru_lock);
- 
-+	lru_note_cost(lruvec, file, stat.nr_pageout);
- 	mem_cgroup_uncharge_list(&page_list);
- 	free_unref_page_list(&page_list);
- 
+ 		if (compaction_suitable(zone, cc.order, 0, zoneid) !=
 -- 
 1.8.3.1
 
