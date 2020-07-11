@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC96DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E354C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFC22075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3F52076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="tQOPOFgt"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Dzt/iMd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGKD70 (ORCPT
+        id S1727930AbgGKD7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 23:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgGKD7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jul 2020 23:59:23 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA90C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:59:23 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id i14so3384488pfu.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:59:23 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbgGKD7W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 23:59:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F167C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:59:22 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cm21so3424784pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding:cc:from:to;
-        bh=Wf2KClM6Tk5kmhkj4X2FnIK/p9JJMcXyJrf5eWEAU70=;
-        b=tQOPOFgtewhe4q5nXYz43DV8Ob8tcit3pVPeQ5TjI8XCSGeWy0QqpfT1poT6OTp9qZ
-         YjFz2pfaGqF7Im0Xa0etUyPumohyomrxVS6dAiZjGplSskgBqcJ0W4i3tH4EqmgTAuLI
-         ray0SmDHhfL0JbGHQmiGEkARHu/0ZLfEjKmfczdYDEi+Tcg619FSyL6RkdvSs0W+Wimc
-         egdq14P+9oRqZeBP0QFzd73I+cTpaCrwB0w8T86McEFZgKrVKr43mtk2lMzhnGnCOlot
-         mGekL5N/WGkfxCgmTsZV1BlX/R4q2iZ1fZuZTMXA02bsAG5A6A+6o11l/VbpxUFuQpn8
-         OU5Q==
+        bh=wantLvKFQ7sTWJpeW6b72Xahd71W/Sz84V8SEQBvlmI=;
+        b=Dzt/iMd0Hum1aoS+SHRvQmVGrLKShehT79ai0Ryv1Ow+zSH+jbU0jjwYtZpVk67aiV
+         1HiQkGeRmLeAWouzpK1njvMU2hi9+aOIhncWTl6oQ+CiXqBFME3Tc+7U9VAWwS72ayBO
+         i4/YP6ES0V92NTI30DjTMpG9aSkH+3JhVVkmxvDnnaNIIPtpvjyArJAnu4W+RkJ4veM8
+         PIn/5mchWUuc/cp8woLUw2vYx4IlJ21mUQrd3f74UNhii/G8w9nQ90zOGCgF8ZZJLRaW
+         116tQlsVrG9tfuLFIQGA+Kt9aGH+2nCXkDBm44G01dcOxh5CZ4GyVHQ6fAxIVPBEg+qo
+         Icug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding:cc:from:to;
-        bh=Wf2KClM6Tk5kmhkj4X2FnIK/p9JJMcXyJrf5eWEAU70=;
-        b=tpOB8gH2tJDyuUSHzpkCWG7inx6914qA+zJEQ4TYdxEQgGC7tNcH2NNqiwpzRpW6LK
-         UF03LlQs9Zyju91kIiTVAOcjiQ4kI+BmivW2hxN5BHfa9nT3DJeq+POf+htvBH+6J01E
-         6+P3/Wvh+4KtnHB9i/wkLMimPD7HCdLm5mVFaU1zVjaeNvmnBW9TtLnCSdlLSKFCg5Zx
-         h7BSgThyHeag8ogvArMrFb3StTSiIDCBLn2H+Qq8/EWR14eK8tuJX+8rfTSUFxdwlQO/
-         I++pOCum5ctN3cMg4Q8rGImv3A50x8s7ytvxlZE1JGrlgmV906RTPDW710m7wUohJCrT
-         FzRg==
-X-Gm-Message-State: AOAM531f6v4TVmlQjuPJmvrHzdU3KJqD0vu6nU2MdtUb1uZVvfQNWBMJ
-        fKEX1vWIWwx83WncJOBHBTMa0w==
-X-Google-Smtp-Source: ABdhPJzMofsLQD9Z2uTdicmms83eUcQQbTxAg1eUW9k4rQlfm5rNXPzgR+F3lg7A+gscikb7UdwrtQ==
-X-Received: by 2002:aa7:9ec5:: with SMTP id r5mr17529907pfq.86.1594439963157;
-        Fri, 10 Jul 2020 20:59:23 -0700 (PDT)
+        bh=wantLvKFQ7sTWJpeW6b72Xahd71W/Sz84V8SEQBvlmI=;
+        b=mqsjL5tjWE++KHfDCqg3DZWpvkhdIxCtAXSxpgVckx5+9g4QKK6RIfoKWazLDNLE5f
+         +KD96sdRyYGNZo5HqepstceSeeI9skvyVjEt52NMeuK7BET01ammrJJVu1fEKZWwHS/2
+         tks/dgiJeSCKDA4mHfclOD+PL8jNDwb0VCZoO2IduP1qvWeM4bcgkVX1KBlK95gSC2Iv
+         NjBST4vJr9WbVbXpCPonNHppQLXffYQc7ztRC4YuzxJGS9FPqsAUaZJmtO+mH9eruigC
+         pe4uv4rH5eEg9fJ1aVvtTPkQOLnwv6H9Qd6SKepbRrOTmuTvC/RhHq+fyYzurjO64yUJ
+         s3tw==
+X-Gm-Message-State: AOAM5327mTtPonZVNMwo3U8Gxryc/dxWw2MJrJUzGq7ueAaLVNqTodK+
+        uOcFK31DwcuGV60NzC6AK3Bdlg==
+X-Google-Smtp-Source: ABdhPJx/QGm0euUPP1vS4ZGSr12gxaH7Z/02J8eMRGjwMOHJlhMMz4ZQIbxP9ubJpQt+MkD/3WtArg==
+X-Received: by 2002:a17:902:bb96:: with SMTP id m22mr5383732pls.6.1594439961667;
+        Fri, 10 Jul 2020 20:59:21 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id j17sm6811709pgn.87.2020.07.10.20.59.22
+        by smtp.gmail.com with ESMTPSA id q24sm7718285pfg.34.2020.07.10.20.59.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 20:59:22 -0700 (PDT)
-Subject: [PATCH 3/3] arm64: Use the new generic copy_oldmem_page()
-Date:   Fri, 10 Jul 2020 20:55:44 -0700
-Message-Id: <20200711035544.2832154-4-palmer@dabbelt.com>
+        Fri, 10 Jul 2020 20:59:21 -0700 (PDT)
+Subject: [PATCH 2/3] arm: Use the new generic copy_oldmem_page()
+Date:   Fri, 10 Jul 2020 20:55:43 -0700
+Message-Id: <20200711035544.2832154-3-palmer@dabbelt.com>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200711035544.2832154-1-palmer@dabbelt.com>
 References: <20200711035544.2832154-1-palmer@dabbelt.com>
@@ -94,41 +94,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Palmer Dabbelt <palmerdabbelt@google.com>
 
 This is exactly the same as the arm64 code, which I just into lib/ to
-avoid copying it into the RISC-V port.  This builds with defconfig.
+avoid copying it into the RISC-V port.  This builds with defconfig and with
+CRASH_DUMP=y.
 
 Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- arch/arm64/Kconfig             |  1 +
- arch/arm64/kernel/crash_dump.c | 39 ----------------------------------
- 2 files changed, 1 insertion(+), 39 deletions(-)
+ arch/arm/Kconfig             |  1 +
+ arch/arm/kernel/Makefile     |  1 -
+ arch/arm/kernel/crash_dump.c | 54 ------------------------------------
+ 3 files changed, 1 insertion(+), 55 deletions(-)
+ delete mode 100644 arch/arm/kernel/crash_dump.c
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 66dc41fd49f2..55b27d56b163 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1109,6 +1109,7 @@ comment "Support for PE file signature verification disabled"
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 2ac74904a3ce..dfbeb14e9673 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1933,6 +1933,7 @@ config ATAGS_PROC
  
  config CRASH_DUMP
- 	bool "Build kdump crash kernel"
+ 	bool "Build kdump crash kernel (EXPERIMENTAL)"
 +	select GENERIC_LIB_COPY_OLDMEM_PAGE
  	help
  	  Generate crash dump after being started by kexec. This should
  	  be normally only set in special crash dump kernels which are
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-index e6e284265f19..197b92c249ba 100644
---- a/arch/arm64/kernel/crash_dump.c
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -13,45 +13,6 @@
- #include <linux/uaccess.h>
- #include <asm/memory.h>
- 
+diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+index 89e5d864e923..b5310a90dfe4 100644
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -65,7 +65,6 @@ obj-$(CONFIG_KGDB)		+= kgdb.o patch.o
+ obj-$(CONFIG_ARM_UNWIND)	+= unwind.o
+ obj-$(CONFIG_HAVE_TCM)		+= tcm.o
+ obj-$(CONFIG_OF)		+= devtree.o
+-obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ obj-$(CONFIG_SWP_EMULATE)	+= swp_emulate.o
+ CFLAGS_swp_emulate.o		:= -Wa,-march=armv7-a
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+diff --git a/arch/arm/kernel/crash_dump.c b/arch/arm/kernel/crash_dump.c
+deleted file mode 100644
+index 53cb92435392..000000000000
+--- a/arch/arm/kernel/crash_dump.c
++++ /dev/null
+@@ -1,54 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * arch/arm/kernel/crash_dump.c
+- *
+- * Copyright (C) 2010 Nokia Corporation.
+- * Author: Mika Westerberg
+- *
+- * This code is taken from arch/x86/kernel/crash_dump_64.c
+- *   Created by: Hariprasad Nellitheertha (hari@in.ibm.com)
+- *   Copyright (C) IBM Corporation, 2004. All rights reserved
+- */
+-
+-#include <linux/errno.h>
+-#include <linux/crash_dump.h>
+-#include <linux/uaccess.h>
+-#include <linux/io.h>
+-
 -/**
 - * copy_oldmem_page() - copy one page from old kernel memory
 - * @pfn: page frame number to be copied
 - * @buf: buffer where the copied page is placed
 - * @csize: number of bytes to copy
 - * @offset: offset in bytes into the page
-- * @userbuf: if set, @buf is in a user address space
+- * @userbuf: if set, @buf is int he user address space
 - *
 - * This function copies one page from old kernel memory into buffer pointed by
 - * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
@@ -143,27 +173,22 @@ index e6e284265f19..197b92c249ba 100644
 -	if (!csize)
 -		return 0;
 -
--	vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+-	vaddr = ioremap(__pfn_to_phys(pfn), PAGE_SIZE);
 -	if (!vaddr)
 -		return -ENOMEM;
 -
 -	if (userbuf) {
--		if (copy_to_user((char __user *)buf, vaddr + offset, csize)) {
--			memunmap(vaddr);
+-		if (copy_to_user(buf, vaddr + offset, csize)) {
+-			iounmap(vaddr);
 -			return -EFAULT;
 -		}
 -	} else {
 -		memcpy(buf, vaddr + offset, csize);
 -	}
 -
--	memunmap(vaddr);
--
+-	iounmap(vaddr);
 -	return csize;
 -}
--
- /**
-  * elfcorehdr_read - read from ELF core header
-  * @buf: buffer where the data is placed
 -- 
 2.27.0.383.g050319c2ae-goog
 
