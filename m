@@ -2,190 +2,75 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C226AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93572206A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tPdFbdEh"
+	by mail.kernel.org (Postfix) with ESMTP id 3DF57206A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgGKVBO (ORCPT
+        id S1727978AbgGKVD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 17:01:14 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42424 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgGKVBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 17:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594501272; bh=vaSU6vP72+flrmguR0y2gyS7TY57zxYCjCx6+xDJP9Q=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=tPdFbdEh1c6HH4mAkuCnSK2TW9LDbhk/v+KR+ulVLtaqPKpfzc43ATxafwkWjzTTl
-         ZFHB5JP9+hMbOdqKPHatJUy/TqSlXRmpN8R8JTdsmk5vok2uihWbqZpFabXYNZUFmQ
-         NWr600CHcy/I7oK7fc88/8L7eQPi7Nq+5eAll8Sk=
-Date:   Sat, 11 Jul 2020 23:01:11 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200711210111.5ysijhexgyzyr7u7@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200711100409.GA18901@amd>
+        Sat, 11 Jul 2020 17:03:27 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48469 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKVD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 17:03:27 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 16A05240006;
+        Sat, 11 Jul 2020 21:03:19 +0000 (UTC)
+Date:   Sat, 11 Jul 2020 14:03:17 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        alex.gaynor@gmail.com, Greg KH <gregkh@linuxfoundation.org>,
+        geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Linux kernel in-tree Rust support
+Message-ID: <20200711210317.GA60425@localhost>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200710062803.GA1071395@kroah.com>
+ <20200710125022.alry7wkymalmv3ge@wittgenstein>
+ <20200710225934.GA16881@localhost>
+ <CAHk-=wipXqemHbVnK1kQsFzGOOZ8FUXn3PKrZb5WC=KkgAjRRw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200711100409.GA18901@amd>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <CAHk-=wipXqemHbVnK1kQsFzGOOZ8FUXn3PKrZb5WC=KkgAjRRw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel,
-
-On Sat, Jul 11, 2020 at 12:04:09PM +0200, Pavel Machek wrote:
-> Hi!
+On Fri, Jul 10, 2020 at 04:54:11PM -0700, Linus Torvalds wrote:
+> On Fri, Jul 10, 2020 at 3:59 PM Josh Triplett <josh@joshtriplett.org> wrote:
+> > As I recall, Greg's biggest condition for initial introduction of this
+> > was to do the same kind of "turn this Kconfig option on and turn an
+> > option under it off" trick that LTO uses, so that neither "make
+> > allnoconfig" nor "make allyesconfig" would require Rust until we've had
+> > plenty of time to experiment with it.
 > 
-> > Some LED controllers may come with an internal HW triggering mechanism
-> > for the LED and an ability to switch between user control of the LED,
-> > or the internal control. One such example is AXP20X PMIC, that allows
-> > wither for user control of the LED, or for internal control based on
-> > the state of the battery charger.
-> > 
-> > Add support for registering per-LED device trigger.
-> > 
-> > Names of private triggers need to be globally unique, but may clash
-> > with other private triggers. This is enforced during trigger
-> > registration. Developers can register private triggers just like
-> > the normal triggers, by setting private_led to a classdev
-> > of the LED the trigger is associated with.
-> 
-> What about this? Should address Marek's concerns about resource use...
+> No, please make it a "is rust available" automatic config option. The
+> exact same way we already do the compiler versions and check for
+> various availability of compiler flags at config time.
 
-What concerns? Marek's concerns seem to be about case where we register
-a trigger for (each led * self-working configuration) which I admit
-can be quite a lot of triggers if there are many functions. But that's
-not my proposal.
+That sounds even better, and will definitely allow for more testing.
 
-My proposal is to only register on trigger per LED at most. So on my
-system that's 1 extra trigger and on Marek's system that'd be 48 new
-triggers. Neither seems like a meaningful problem from resource
-use perspective.
+We just need to make sure that any kernel CI infrastructure tests that
+right away, then, so that failures don't get introduced by a patch from
+someone without a Rust toolchain and not noticed until someone with a
+Rust toolchain tests it.
 
-regards,
-	o.
-
-> Best regards,
->      	   	 				       		Pavel
-> 
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 79e30d2cb7a5..e8333675959c 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -27,6 +27,12 @@ LIST_HEAD(trigger_list);
->  
->   /* Used by LED Class */
->  
-> +static inline bool
-> +trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
-> +{
-> +	return !trig->trigger_type || trig->trigger_type == led_cdev->trigger_type;
-> +}
-> +
->  ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->  			  struct bin_attribute *bin_attr, char *buf,
->  			  loff_t pos, size_t count)
-> @@ -50,7 +56,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->  
->  	down_read(&triggers_list_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (sysfs_streq(buf, trig->name)) {
-> +		if (sysfs_streq(buf, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->  			down_write(&led_cdev->trigger_lock);
->  			led_trigger_set(led_cdev, trig);
->  			up_write(&led_cdev->trigger_lock);
-> @@ -96,6 +103,9 @@ static int led_trigger_format(char *buf, size_t size,
->  		bool hit = led_cdev->trigger &&
->  			!strcmp(led_cdev->trigger->name, trig->name);
->  
-> +		if (!trigger_relevant(led_cdev, trig))
-> +			continue;
-> +
->  		len += led_trigger_snprintf(buf + len, size - len,
->  					    " %s%s%s", hit ? "[" : "",
->  					    trig->name, hit ? "]" : "");
-> @@ -243,7 +253,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
->  	down_read(&triggers_list_lock);
->  	down_write(&led_cdev->trigger_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
-> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->  			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
->  			led_trigger_set(led_cdev, trig);
->  			break;
-> @@ -280,7 +291,8 @@ int led_trigger_register(struct led_trigger *trig)
->  	down_write(&triggers_list_lock);
->  	/* Make sure the trigger's name isn't already in use */
->  	list_for_each_entry(_trig, &trigger_list, next_trig) {
-> -		if (!strcmp(_trig->name, trig->name)) {
-> +		if (!strcmp(_trig->name, trig->name) &&
-> +		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
->  			up_write(&triggers_list_lock);
->  			return -EEXIST;
->  		}
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 2451962d1ec5..cba52714558f 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -57,6 +57,10 @@ struct led_init_data {
->  	bool devname_mandatory;
->  };
->  
-> +struct led_hw_trigger_type {
-> +	int dummy;
-> +}
-> +
->  struct led_classdev {
->  	const char		*name;
->  	enum led_brightness	 brightness;
-> @@ -150,6 +154,8 @@ struct led_classdev {
->  
->  	/* Ensures consistent access to the LED Flash Class device */
->  	struct mutex		led_access;
-> +
-> +	struct led_hw_trigger_type *trigger_type;
->  };
->  
->  /**
-> @@ -345,6 +351,9 @@ struct led_trigger {
->  	int		(*activate)(struct led_classdev *led_cdev);
->  	void		(*deactivate)(struct led_classdev *led_cdev);
->  
-> +	/* LED-private triggers have this set. */
-> +	struct led_hw_trigger_type *trigger_type;
-> +
->  	/* LEDs under control by this trigger (for simple triggers) */
->  	rwlock_t	  leddev_list_lock;
->  	struct list_head  led_cdevs;
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
+- Josh
