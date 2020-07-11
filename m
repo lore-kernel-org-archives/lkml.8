@@ -2,129 +2,151 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D306CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEEA20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0fjdQ81"
+	by mail.kernel.org (Postfix) with ESMTP id 34A4520725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgGKSQ3 (ORCPT
+        id S1728773AbgGKSVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 14:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbgGKSQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 14:16:28 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB6AC08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:16:28 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id h16so7800373ilj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=geu2kZgahNe9b5KHjjbh7SFWlsAj55pE2E75iM1ych0=;
-        b=X0fjdQ810z3wTjdJay1KUkowDb+URPCThXgTUgZ5mxV3PJ/aSIF+bJ8IUiYLEQk/hj
-         rmwx5PF05Q+ZQtt3tlCafxCUtsZjGcrC2pjuB0JUr250pGqXsjAXx3JQKtnFs2ptrq+m
-         6TFqO0jMjPL/6Mw8cqInWtgJZ3VV2qOubS1m6JnkIPszLALgig0co7MQ6npyfWtRSjJp
-         cnWUSkaVlNuZYU40L8cyKAL2ozPDGuX9wuu/6+QfsfmxYgJE2oED3KA8HDmi65MtO50d
-         18j7CRCshuNJMX43CGDQj2UJ4gdPJadD8xOg1/CYUI6/h3NGL3EsQhY2ofFCVdgpagSt
-         YMqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=geu2kZgahNe9b5KHjjbh7SFWlsAj55pE2E75iM1ych0=;
-        b=RWh6s22NMU0lcgTefezj+EjSzNTVd08EQnKcX3sFxcsoyyCEuHLKe7NZ5vjw85+LRX
-         UhCtcepZ5Y1ujZlQfv5Tcxvc8QWFqwsrCT4FJruu4/Y81GudDl4c8ChAoR/Xy2NvFdth
-         iZ8OsNQnsmKpxGBqIS4UxlWamNOVyYAh6Y5CnXZQJ/W6Fwj5t8pTbnQeWP34dHrrEaPT
-         c9QJiCba5balDN4A6IO4VieYUfvfngZ++aKv+6MjFBqnV/Uuv4I+bP3XPaduUJryaMSL
-         odiKrv80z1tyAYmAA6Q09c3Cibkeesy6FCQ6n3IKyGW8Y1lqR9vi7mCVIEDRFqAqfS0U
-         VVuA==
-X-Gm-Message-State: AOAM532c0BNadh82rTbFp/jK0Pv6lMu+SpcHB2bJ10O7kDFJ4vvhhrSv
-        GhsenGDl7m1iCw08WK7JeO0V1mgdC6ZRuC8yQug=
-X-Google-Smtp-Source: ABdhPJwpw5572tWDlCz5wNVisy7er9T7PNOSVi4wAApd2GV67UhMooli2i5OYJk6kw5hqHKV56lQtFIw/W/A+/L8awY=
-X-Received: by 2002:a92:1547:: with SMTP id v68mr28974624ilk.294.1594491387694;
- Sat, 11 Jul 2020 11:16:27 -0700 (PDT)
+        Sat, 11 Jul 2020 14:21:36 -0400
+Received: from mail-dm6nam11olkn2108.outbound.protection.outlook.com ([40.92.19.108]:19393
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728510AbgGKSVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 14:21:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X4LHSAfm3avZ8Nj2WQij35GiUzmEgl1UJApLY7iXJ/cHDBLJlk9k48Sp2052/8URrWKUCB7W59JhF9GvYS7cbXLM4YU+qC2MN2waCej2DNzKyzEyf3DMBpnH7cLgKSDkfHAuUYBZe5TxXDjbimno3mpunYy4oKsy4mSC63sfnCwXQHDb7wIWxUhulgApZZ+V5Mp2tECAuUCZghVEbnInCaHxPEtohaCI/QFEal+SjjMULw5PaQcIcjjwWLGLERa+BRoBWnwERWsoBytdLpI8eq2/7UBdzJLBgUl/WnLI4dXNNra2gkF22VAkCk9V6CcQq7kkP0n+tr6dG1fnvWaRVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OGriJv95yATnbS4sVrxygR5NyrbkkIytciwkZsldnyQ=;
+ b=WI7aJDK0T0N/zQAkBuEm1G4b7ItTuKSDFIKuh+EYOr5BKEwFGjQhx2xZbQjrxx3HJfqaMmtdibnAFUHMc9ffZL2iA2p/kvts4OMgo6eIX0EyUr7l+mqYweaINXn1MItqIHLJeppD6YxMqJhMT5zJVJqecK+KkYmDcyMLg3JXh0G1zpGnUslblG9176NLuL5hs4/sfOGdbHVOZ8uK6Q8AKSVC3/Zbm2o/NVZd3qR89XyrenMdLkWHkaqjhYsLQWJhEAfuy+z/LVT071Kr/x50mjzpbb7Aobxrn4Tk5ubWQ2LSKgMenq9uttULDw3Beif9Xf0dGYwjFp/mVInLDYuW+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4d::48) by
+ DM6NAM11HT091.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::82)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Sat, 11 Jul
+ 2020 18:21:33 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4d::43) by DM6NAM11FT041.mail.protection.outlook.com
+ (2a01:111:e400:fc4d::98) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend
+ Transport; Sat, 11 Jul 2020 18:21:33 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:5DD35D0466BA08A2D83EE7D50044417D79F1AC63B6B263F490182A05D10C926D;UpperCasedChecksum:AADE9ECD23B29ED177A5FF77E0E4428CB4AB2DBC8A49E0EA70C8F3A234350509;SizeAsReceived:9198;Count:49
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3174.024; Sat, 11 Jul 2020
+ 18:21:33 +0000
+Subject: Re: [PATCH 05/11] media: exynos4-is: Improve support for sensors with
+ multiple pads
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+ <BN6PR04MB06604D29C9F66EB53FB17581A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200707181310.GE2621465@chromium.org>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660ECFE03B17B96FB3BAC34A3620@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Sat, 11 Jul 2020 11:21:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <20200707181310.GE2621465@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW2PR2101CA0008.namprd21.prod.outlook.com
+ (2603:10b6:302:1::21) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <bbaa5e62-2ae6-9e57-b9e9-693c0e0da5a7@live.ca>
 MIME-Version: 1.0
-References: <20200711070835.4855-1-navid.emamdoost@gmail.com> <s5htuye2zjn.wl-tiwai@suse.de>
-In-Reply-To: <s5htuye2zjn.wl-tiwai@suse.de>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Sat, 11 Jul 2020 13:16:16 -0500
-Message-ID: <CAEkB2ESiSEt6Rhs7iyni7C79LEUSCiKvtfxXRHzHU+dmkSag0A@mail.gmail.com>
-Subject: Re: [PATCH] ALSA: trident: Fix a memory leak in snd_trident_create
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MW2PR2101CA0008.namprd21.prod.outlook.com (2603:10b6:302:1::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.4 via Frontend Transport; Sat, 11 Jul 2020 18:21:31 +0000
+X-Microsoft-Original-Message-ID: <bbaa5e62-2ae6-9e57-b9e9-693c0e0da5a7@live.ca>
+X-TMN:  [q/mKHsnjZdljbYxyaYAKYkVav2cdtsDW8y4dWM0Ra+18p+DChneRoElNyr+2jD18]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 49
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: df9210bd-e2b8-49bc-3140-08d825c73d85
+X-MS-TrafficTypeDiagnostic: DM6NAM11HT091:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SEN/cA2rVw4/uaSqCGyfAGsv3GWIj0FD69h4PzP+NuozgK5dDuAXCjjz+AwCWAbB/6bwW+0PfBcZ3K4An0THNT0eRgm/T2uzmAaePxt9O+aBqUZSMWoI+2JAoTuPMO/meFyI1wDJ1jfR3CsKvY5BGPnJIkvH46KXeJFJEMobBLgN8vzPKcDUlmC9C1JxIfnLAmGDdb9wXZWtYQkdq2h5aw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: Zgeg5C4ndLZhm90nEU5CatEExnlI7KEpHOr2AvWkKgdNoxhE+ws+dn5j1bEo4lv92dkQ3BzdXNXEGwTTi4aqv7B9kvEgZxpY+OYSDNNhryJZnYMw9u77YEKmH43iULwbTE8N4E4aJWWDkd+yLXc+FGUFxsu3JlYjwI248G0HaMqlIKyO0L+T/hWC86yjo8XQ+2dJgqI5T19MEzz74QWutg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df9210bd-e2b8-49bc-3140-08d825c73d85
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 18:21:33.7492
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 4:04 AM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Sat, 11 Jul 2020 09:08:30 +0200,
-> Navid Emamdoost wrote:
-> >
-> > In the implementation of snd_trident_create(), the allocated trident is
-> > leaked if snd_trident_mixer() fails. Release via snd_trident_free().
->
-> No, this patch would result in double-free.
->
-> The manual release of trident object isn't needed once after it gets
-> added via snd_device_new().  Then it'll be automatically released at
-> the error path (via snd_trident_dev_free()).
+Hi Tomasz,
 
-Thanks for the clarification.
+On 2020-07-07 11:13 a.m., Tomasz Figa wrote:
+> Hi Jonathan,
+> 
+> On Sat, Apr 25, 2020 at 07:26:44PM -0700, Jonathan Bakker wrote:
+>> Commit 1c9f5bd7cb8a ("[media] s5p-fimc: Add support for sensors with
+>> multiple pads") caught the case where a sensor with multiple pads was
+>> connected via CSIS, but missed the case where the sensor was directly
+>> connected to the FIMC.
+>>
+>> This still assumes that the last pad of a sensor is the source.
+>>
+>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>> ---
+>>  drivers/media/platform/exynos4-is/media-dev.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+> 
+> Thank you for the patch. Please see my comments inline.
+> 
+>> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+>> index 5c32abc7251b..b38445219c72 100644
+>> --- a/drivers/media/platform/exynos4-is/media-dev.c
+>> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+>> @@ -991,7 +991,8 @@ static int fimc_md_create_links(struct fimc_md *fmd)
+>>  
+>>  		case FIMC_BUS_TYPE_ITU_601...FIMC_BUS_TYPE_ITU_656:
+>>  			source = &sensor->entity;
+>> -			pad = 0;
+>> +			/* Assume the last pad is the source */
+>> +			pad = sensor->entity.num_pads - 1;
+> 
+> Is 0 really any worse than num_pads - 1? This sounds like quite an ugly
+> hack.
+> 
+> Could you iterate over the pads of the sensor entity and explicitly find
+> a source pad instead?
 
->
->
-> thanks,
->
-> Takashi
->
-> >
-> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  sound/pci/trident/trident_main.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/sound/pci/trident/trident_main.c b/sound/pci/trident/trident_main.c
-> > index 6e50376163a2..e98c692f6aa9 100644
-> > --- a/sound/pci/trident/trident_main.c
-> > +++ b/sound/pci/trident/trident_main.c
-> > @@ -3582,8 +3582,11 @@ int snd_trident_create(struct snd_card *card,
-> >               return err;
-> >       }
-> >
-> > -     if ((err = snd_trident_mixer(trident, pcm_spdif_device)) < 0)
-> > +     err = snd_trident_mixer(trident, pcm_spdif_device);
-> > +     if (err < 0) {
-> > +             snd_trident_free(trident);
-> >               return err;
-> > +     }
-> >
-> >       /* initialise synth voices */
-> >       for (i = 0; i < 64; i++) {
-> > --
-> > 2.17.1
-> >
+Yes, iterating would work better.  This comes from when I was trying to integrate
+video-mux, before I realized I could connect multiple sensors.  I will drop this patch
+from v2 as it's not necessary.
 
+> 
+> Best regards,
+> Tomasz
+> 
 
-
--- 
-Navid.
+Thanks,
+Jonathan
