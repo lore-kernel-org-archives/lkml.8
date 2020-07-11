@@ -7,35 +7,36 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19DCC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92C05206F0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC358206F0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGKGno (ORCPT
+        id S1728094AbgGKGqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:43:44 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:39900 "EHLO
+        Sat, 11 Jul 2020 02:46:54 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:58246 "EHLO
         smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgGKGno (ORCPT
+        with ESMTP id S1727888AbgGKGqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:43:44 -0400
+        Sat, 11 Jul 2020 02:46:53 -0400
 Received: from localhost.localdomain ([93.22.151.150])
         by mwinf5d86 with ME
-        id 1ije2300L3Ewh7h03ijfPk; Sat, 11 Jul 2020 08:43:40 +0200
+        id 1imp2300E3Ewh7h03impZJ; Sat, 11 Jul 2020 08:46:51 +0200
 X-ME-Helo: localhost.localdomain
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 11 Jul 2020 08:43:40 +0200
+X-ME-Date: Sat, 11 Jul 2020 08:46:51 +0200
 X-ME-IP: 93.22.151.150
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     xx@mail.com
-Cc:     list@mail.com, linux-kernel@vger.kernel.org,
+To:     josh.h.morris@us.ibm.com, pjk1939@linux.ibm.com, axboe@kernel.dk,
+        hch@infradead.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Subject: [PATCH] rsxx: switch from 'pci_free_consistent()' to 'dma_free_coherent()'
-Date:   Sat, 11 Jul 2020 08:43:36 +0200
-Message-Id: <20200711064336.247502-1-christophe.jaillet@wanadoo.fr>
+Date:   Sat, 11 Jul 2020 08:46:47 +0200
+Message-Id: <20200711064647.247564-1-christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
