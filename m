@@ -2,138 +2,108 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0047C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4CF206D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7042C206D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MYAxXTbG"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QgPVAto0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgGKLrK (ORCPT
+        id S1727019AbgGKLsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 07:47:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12937 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgGKLrJ (ORCPT
+        Sat, 11 Jul 2020 07:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKLsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 07:47:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f09a64f0000>; Sat, 11 Jul 2020 04:45:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 11 Jul 2020 04:47:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 11 Jul 2020 04:47:09 -0700
-Received: from [10.26.72.26] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 11 Jul
- 2020 11:47:06 +0000
-Subject: Re: [PATCH 15/23] seq_file: switch over direct seq_read method calls
- to seq_read_iter
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200707174801.4162712-1-hch@lst.de>
- <20200707174801.4162712-16-hch@lst.de>
- <5a2a97f1-58b5-8068-3c69-bb06130ffb35@nvidia.com>
- <20200711064857.GA29078@lst.de>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b838bf55-bd1e-7ff8-fcf5-fe372944dc9f@nvidia.com>
-Date:   Sat, 11 Jul 2020 12:47:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 11 Jul 2020 07:48:16 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0DD3C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 04:48:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B3p7t6VJpz9sRR;
+        Sat, 11 Jul 2020 21:48:10 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1594468092;
+        bh=dKeMPZ3coLq1t8Os4YUhMXsxVwacg9mcb6Um7+nbyMM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QgPVAto0j6mboSpyNKkOHIg8wO9JF4IADPuieLiPwIrMP2FbdryVnD8LcLbW4qg1U
+         iN/+V221zlRheQ11w1bQdv3czDd5LLJzrfgKoxkRrXYdM5bH+1eYG6uMZZ7Og5a8Ng
+         Plw9PScJqaTppcY94gVfZN8fJ/etNju2ci0aych9cf8poRtj49R94tf/YX+ZRhxDJ3
+         fXIb1CP5Bf4k//8kMJBi6SWD83XsP/qgVbge0pyrvIdiHduGeIi3whlYEb+L4mPXHy
+         SYSW/yjHvNqkVTHaTGnThhkWUEDXflOv1Rxjetq6FYzCq/JVsEE6LCRrp6M1VeC3Kl
+         FDqw2iem7rn/w==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        npiggin@gmail.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-6 tag
+Date:   Sat, 11 Jul 2020 21:50:20 +1000
+Message-ID: <87v9iuuv7n.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200711064857.GA29078@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594467919; bh=YjartdxmO2Ad0/uwBSdPTgr7N6l+g/YEyWPmF+u3P6Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MYAxXTbGMgtXmRbAqCTI1xHuhZ+jBhMxajcPgk7oOIlbM5E6ZxI7IBhFMLGEpxpuR
-         6GMkWwtlyo+rgXBPGf2gxg4Rcm1HNGsKvh7jpLPLn1ODf+7A6KvzGDQ4+DzhsMG+uZ
-         m/OonsizWyXvkhEiOA4p1sahWWTzlJK8Ti4OpBd5jw/qRAAkSlSoIteaDDvijSiYe3
-         A0gpO1+xw3KCzFjjWES/6ycNSQ59bJicO0587qYfpZlgM8Ks7B0PqCEAi69krf/R5r
-         FwYbXCiV0J4jppRWxQPx6kEsEfU51p2tyR5PeviIxmpvv9wF5rBI3MlVxIDrDqHoAA
-         TCyWFnEpU+s5A==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-On 11/07/2020 07:48, Christoph Hellwig wrote:
-> Please try this one:
-> 
-> ---
-> From 5e86146296fbcd7593da1d9d39b9685a5e6b83be Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Sat, 11 Jul 2020 08:46:10 +0200
-> Subject: debugfs: add a proxy stub for ->read_iter
-> 
-> debugfs registrations typically go through a set of proxy ops to deal
-> with refcounting, which need to support every method that can be
-> supported.  Add ->read_iter to the proxy ops to prepare for seq_file to
-> be switch to ->read_iter.
-> 
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/debugfs/file.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-> index 8ba32c2feb1b73..dcd7bdaf67417f 100644
-> --- a/fs/debugfs/file.c
-> +++ b/fs/debugfs/file.c
-> @@ -231,6 +231,10 @@ FULL_PROXY_FUNC(read, ssize_t, filp,
->  			loff_t *ppos),
->  		ARGS(filp, buf, size, ppos));
->  
-> +FULL_PROXY_FUNC(read_iter, ssize_t, iocb->ki_filp,
-> +		PROTO(struct kiocb *iocb, struct iov_iter *iter),
-> +		ARGS(iocb, iter));
-> +
->  FULL_PROXY_FUNC(write, ssize_t, filp,
->  		PROTO(struct file *filp, const char __user *buf, size_t size,
->  			loff_t *ppos),
-> @@ -286,6 +290,8 @@ static void __full_proxy_fops_init(struct file_operations *proxy_fops,
->  		proxy_fops->llseek = full_proxy_llseek;
->  	if (real_fops->read)
->  		proxy_fops->read = full_proxy_read;
-> +	if (real_fops->read_iter)
-> +		proxy_fops->read_iter = full_proxy_read_iter;
->  	if (real_fops->write)
->  		proxy_fops->write = full_proxy_write;
->  	if (real_fops->poll)
-> 
+Hi Linus,
+
+Please pull another powerpc fix for 5.8:
+
+The following changes since commit 19ab500edb5d6020010caba48ce3b4ce4182ab63:
+
+  powerpc/mm/pkeys: Make pkey access check work on execute_only_key (2020-06-29 16:17:02 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-6
+
+for you to fetch changes up to 4557ac6b344b8cdf948ff8b007e8e1de34832f2e:
+
+  powerpc/64s/exception: Fix 0x1500 interrupt handler crash (2020-07-08 20:41:06 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.8 #6
+
+One fix for a crash/soft lockup on Power8, caused by the exception rework we did
+in v5.7.
+
+Thanks to:
+  Paul Menzel, Nicholas Piggin.
+
+- ------------------------------------------------------------------
+Nicholas Piggin (1):
+      powerpc/64s/exception: Fix 0x1500 interrupt handler crash
 
 
-Thanks! Works for me.
+ arch/powerpc/kernel/exceptions-64s.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl8JpzUACgkQUevqPMjh
+pYD5Zg/+JSMK0phSPCEpBusdlwIeuP5JwQzMCPZgiz7wGsOl6OMF/pMekvQmYzsD
+/9VKTWejulkn1Q1Gz3dhEEaVRJhjErPN0xb3tdrXmzyK2s67kwbkd+PhkmXyzRJ/
+ByEHmg8K3kKhB3FEC/BimNzcjAhVy2bIqBR1+4gTjF/PDc9heugv9iOpnw2uvhGu
+/DoYyQScWnC01PgOd8/dFDykELj98s/p4hKNx6JnteGi5cjrWClqJGJYCBc4xhs/
+rPSA5ybUzuN+CbMZbvDi7sJPw+w4AYIC5kVYsZqRuJVGYGh0y4qcxSYK4BL0FDO2
+UWdCLUFOkZqHtGhOUMn886YQnhPFukxVOVfLCIlkWcYeXK3HwQld8LrfzHUoMjBk
+ao06xwccNyzGlRUn0lYKuRFRGyEtWXNDqLQZ9L4Klowwe9BG5HdYRzrNxLsyi7p0
+yom6hevA5w2Sw9rZJrtImWevrsIp7ZexOcVBdfCGwCt9WlWHvT4C5iT0kMFGBh50
+Tx/nKAaBWVN9p8OLX4qsmUlRIeAGQdV18HiAaLo5YubUSJ9Ne5ZGcTTZ42VwxvaM
+1VCMUfexdr/oljy1BUP/ZTldcj8dF6saaWDb+yWWh8sUmKdsduXJP/5640au9FxS
+EBofwuyiU0u8aoV9oH4km+Tqp2WtFhMtrgTNNgHtPix7C8ck2Y4=
+=u9rR
+-----END PGP SIGNATURE-----
