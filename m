@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7868EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB354C4345D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C3A207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE63207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 00:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGKA7P (ORCPT
+        id S1727768AbgGKA7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 10 Jul 2020 20:59:15 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:38643 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726975AbgGKA7I (ORCPT
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:33516 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgGKA7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 20:59:08 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
+        Fri, 10 Jul 2020 20:59:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
 Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2KGAZr_1594429139)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 Jul 2020 08:59:05 +0800
+          Sat, 11 Jul 2020 08:59:02 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -34,11 +34,9 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
         kirill@shutemov.name
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: [PATCH v16 13/22] mm/lru: introduce TestClearPageLRU
-Date:   Sat, 11 Jul 2020 08:58:47 +0800
-Message-Id: <1594429136-20002-14-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH v16 07/22] mm/thp: remove code path which never got into
+Date:   Sat, 11 Jul 2020 08:58:41 +0800
+Message-Id: <1594429136-20002-8-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -47,158 +45,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Combine PageLRU check and ClearPageLRU into a function by new
-introduced func TestClearPageLRU. This function will be used as page
-isolation precondition to prevent other isolations some where else.
-Then there are may non PageLRU page on lru list, need to remove BUG
-checking accordingly.
+split_huge_page() will never call on a page which isn't on lru list, so
+this code never got a chance to run, and should not be run, to add tail
+pages on a lru list which head page isn't there.
 
-Hugh Dickins pointed that __page_cache_release and release_pages
-has no need to do atomic clear bit since no user on the page at that
-moment. and no need get_page() before lru bit clear in isolate_lru_page,
-since it '(1) Must be called with an elevated refcount on the page'.
+Although the bug was never triggered, it'better be removed for code
+correctness.
 
-As Andrew Morton mentioned this change would dirty cacheline for page
-isn't on LRU. But the lost would be acceptable with Rong Chen
-<rong.a.chen@intel.com> report:
-https://lkml.org/lkml/2020/3/4/173
+BTW, it looks better to have BUG() or soem warning set in the wrong
+path, but the path will be changed in incomming new page isolation
+func. So just save it here.
 
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: cgroups@vger.kernel.org
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
 Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- include/linux/page-flags.h |  1 +
- mm/mlock.c                 |  3 +--
- mm/swap.c                  |  6 ++----
- mm/vmscan.c                | 26 +++++++++++---------------
- 4 files changed, 15 insertions(+), 21 deletions(-)
+ mm/huge_memory.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 6be1aa559b1e..9554ed1387dc 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -326,6 +326,7 @@ static inline void page_init_poison(struct page *page, size_t size)
- PAGEFLAG(Dirty, dirty, PF_HEAD) TESTSCFLAG(Dirty, dirty, PF_HEAD)
- 	__CLEARPAGEFLAG(Dirty, dirty, PF_HEAD)
- PAGEFLAG(LRU, lru, PF_HEAD) __CLEARPAGEFLAG(LRU, lru, PF_HEAD)
-+	TESTCLEARFLAG(LRU, lru, PF_HEAD)
- PAGEFLAG(Active, active, PF_HEAD) __CLEARPAGEFLAG(Active, active, PF_HEAD)
- 	TESTCLEARFLAG(Active, active, PF_HEAD)
- PAGEFLAG(Workingset, workingset, PF_HEAD)
-diff --git a/mm/mlock.c b/mm/mlock.c
-index f8736136fad7..228ba5a8e0a5 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -108,13 +108,12 @@ void mlock_vma_page(struct page *page)
-  */
- static bool __munlock_isolate_lru_page(struct page *page, bool getpage)
- {
--	if (PageLRU(page)) {
-+	if (TestClearPageLRU(page)) {
- 		struct lruvec *lruvec;
- 
- 		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 		if (getpage)
- 			get_page(page);
--		ClearPageLRU(page);
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		return true;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index b18f21da4dac..1fb4147ff854 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2357,16 +2357,6 @@ static void lru_add_page_tail(struct page *head, struct page *page_tail,
+ 		/* page reclaim is reclaiming a huge page */
+ 		get_page(page_tail);
+ 		list_add_tail(&page_tail->lru, list);
+-	} else {
+-		/*
+-		 * Head page has not yet been counted, as an hpage,
+-		 * so we must account for each subpage individually.
+-		 *
+-		 * Put page_tail on the list at the correct position
+-		 * so they all end up in order.
+-		 */
+-		add_page_to_lru_list_tail(page_tail, lruvec,
+-					  page_lru(page_tail));
  	}
-diff --git a/mm/swap.c b/mm/swap.c
-index f645965fde0e..5092fe9c8c47 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -83,10 +83,9 @@ static void __page_cache_release(struct page *page)
- 		struct lruvec *lruvec;
- 		unsigned long flags;
- 
-+		__ClearPageLRU(page);
- 		spin_lock_irqsave(&pgdat->lru_lock, flags);
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		VM_BUG_ON_PAGE(!PageLRU(page), page);
--		__ClearPageLRU(page);
- 		del_page_from_lru_list(page, lruvec, page_off_lru(page));
- 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
- 	}
-@@ -878,9 +877,8 @@ void release_pages(struct page **pages, int nr)
- 				spin_lock_irqsave(&locked_pgdat->lru_lock, flags);
- 			}
- 
--			lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
--			VM_BUG_ON_PAGE(!PageLRU(page), page);
- 			__ClearPageLRU(page);
-+			lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
- 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
- 		}
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c1c4259b4de5..18986fefd49b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1548,16 +1548,16 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
- {
- 	int ret = -EINVAL;
- 
--	/* Only take pages on the LRU. */
--	if (!PageLRU(page))
--		return ret;
--
- 	/* Compaction should not handle unevictable pages but CMA can do so */
- 	if (PageUnevictable(page) && !(mode & ISOLATE_UNEVICTABLE))
- 		return ret;
- 
- 	ret = -EBUSY;
- 
-+	/* Only take pages on the LRU. */
-+	if (!PageLRU(page))
-+		return ret;
-+
- 	/*
- 	 * To minimise LRU disruption, the caller can indicate that it only
- 	 * wants to isolate pages it will be able to operate on without
-@@ -1671,8 +1671,6 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		page = lru_to_page(src);
- 		prefetchw_prev_lru_page(page, src, flags);
- 
--		VM_BUG_ON_PAGE(!PageLRU(page), page);
--
- 		nr_pages = compound_nr(page);
- 		total_scan += nr_pages;
- 
-@@ -1769,21 +1767,19 @@ int isolate_lru_page(struct page *page)
- 	VM_BUG_ON_PAGE(!page_count(page), page);
- 	WARN_RATELIMIT(PageTail(page), "trying to isolate tail page");
- 
--	if (PageLRU(page)) {
-+	if (TestClearPageLRU(page)) {
- 		pg_data_t *pgdat = page_pgdat(page);
- 		struct lruvec *lruvec;
-+		int lru = page_lru(page);
- 
--		spin_lock_irq(&pgdat->lru_lock);
-+		get_page(page);
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		if (PageLRU(page)) {
--			int lru = page_lru(page);
--			get_page(page);
--			ClearPageLRU(page);
--			del_page_from_lru_list(page, lruvec, lru);
--			ret = 0;
--		}
-+		spin_lock_irq(&pgdat->lru_lock);
-+		del_page_from_lru_list(page, lruvec, lru);
- 		spin_unlock_irq(&pgdat->lru_lock);
-+		ret = 0;
- 	}
-+
- 	return ret;
  }
  
 -- 
