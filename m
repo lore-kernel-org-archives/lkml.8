@@ -2,103 +2,152 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C04C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE44220725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594449041;
-	bh=acSdpfnvbGb2jx7WzFGXvtApWSJ1zwvQTWvxV4ZbgjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1r1oCQeshu52illcXNy2SkrLSJauasxgx0uaWrspm7YYVBbgX7L85Hf37AYiZt4mX
-	 PydNlfkdYbMvoxbiz+rYHvqQ9rM5nNF5L5W4r06jezeQxdke7mUNEqYg05ZvXfhOeM
-	 IZ6vjA+S2ET4SiwgtKvQDrAnWdhy4N/j9baDr/ow=
+	by mail.kernel.org (Postfix) with ESMTP id 2E3EE20725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgGKGaj (ORCPT
+        id S1728025AbgGKGhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgGKGaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:30:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47393206F4;
-        Sat, 11 Jul 2020 06:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594449038;
-        bh=acSdpfnvbGb2jx7WzFGXvtApWSJ1zwvQTWvxV4ZbgjA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=glLyWxGbTSKecu6XfJKxx2aYmv+Wd9NhB+w34QIKn2RDUm3GV2wOzMmAZWWDheO+6
-         F2dHJyKL97QejJB6zx6p6asf4EPtQ5JHIi2vkDYXwVfg51R2zuC1PInJsAN4KwfKN9
-         yyr3UG0dI3UG0C2wLVmYSGWdTbmTnGxjPiUbcMc8=
-Date:   Sat, 11 Jul 2020 08:30:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/1] tty: serial: owl: Initialize lock before registering
- port
-Message-ID: <20200711063041.GC2784728@kroah.com>
-References: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
- <20200529113419.GA1631227@kroah.com>
- <20200710120549.GA11293@BV030612LT>
- <20200710133542.GA2172832@kroah.com>
- <20200710155806.GA10457@BV030612LT>
- <20200710163022.GT3703480@smile.fi.intel.com>
+        Sat, 11 Jul 2020 02:37:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44116 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726963AbgGKGhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 02:37:31 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9D5481A42142F8C833DA;
+        Sat, 11 Jul 2020 14:37:25 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.214) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Jul 2020
+ 14:37:18 +0800
+Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
+ tmpfile
+To:     Richard Weinberger <richard@nod.at>
+CC:     Richard Weinberger <richard.weinberger@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        yi zhang <yi.zhang@huawei.com>
+References: <20200701112643.726986-1-chengzhihao1@huawei.com>
+ <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
+ <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
+ <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
+ <963fa5c8-414f-783f-871e-47e751b54d87@huawei.com>
+ <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
+Date:   Sat, 11 Jul 2020 14:37:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710163022.GT3703480@smile.fi.intel.com>
+In-Reply-To: <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.214]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 07:30:22PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 06:58:06PM +0300, Cristian Ciocaltea wrote:
-> > On Fri, Jul 10, 2020 at 03:35:42PM +0200, Greg Kroah-Hartman wrote:
-> > > On Fri, Jul 10, 2020 at 03:05:49PM +0300, Cristian Ciocaltea wrote:
-> 
-> ...
-> 
-> > > But I think we now have a core fix for this, no need to do this in any
-> > > individual driver, right?  Can you test my tty-linus branch to see if
-> > > your change is still needed or not?
-> > 
-> > I was not aware of the alternative approach, at that time Andy
-> > confirmed the expected behaviour is to have a proper initialization
-> > of the spinlock in the driver:
-> > https://lore.kernel.org/lkml/CAHp75Vcz0a87LSnb6Ubt5_bSF3wUcs21GbP119trXER5KBDxbQ@mail.gmail.com/
-> > https://lore.kernel.org/lkml/CAHp75Vf8xJ2yX-11JsTDnRvZQOK+16aePcB1AUzq=5oO-mFCGQ@mail.gmail.com/
-> > 
-> > I have just checked the tty-linus tree and the only related change
-> > seems to be f743061a85f5
-> > ("serial: core: Initialise spin lock before use in uart_configure_port()")
-> > 
-> > I tested it on top of 5.8.0-rc4 and I confirm it fixes the splat,
-> 
-> Thank you for the testing!
-> 
-> > however I'm a bit confused now regarding the recommended approach since
-> > there is at least one more commit in the tty-linux tree that still 
-> > handles a similar issue in the driver specific code:
-> > f38278e9b810 ("serial: sh-sci: Initialize spinlock for uart console")
-> 
-> They now should be reverted.
+在 2020/7/7 20:47, Richard Weinberger 写道:
+> ----- Ursprüngliche Mail -----
+>>>> Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix
+>>>> O_TMPFILE corner case in ubifs_link()") wanted to fix.
+>>>> I think orphan area is used to remind filesystem don't forget to delete
+>>>> inodes (whose nlink is 0) in next unclean rebooting. Generally, the file
+>>>> system is not corrupted caused by replaying orphan nodes.
+>>>> Ralph reported a filesystem corruption in combination with overlayfs.
+>>>> Can you tell me the details about that problem? Thanks.
+>>> On my test bed I didn't see a fs corruption, what I saw was a failing orphan
+>>> self test while playing with O_TMPFILE and linkat().
+>> Do we have a reproducer, or can I get the fail testcase? Is it a xfstest
+>> case?
+> I think xfstests triggered it, yes.
+> Later today I can check. :)
+>
+> Thanks,
+> //richard
+>
+> .
 
-Please send patches for that :)
+I think I have found the testcases, overlay/006 and overlay/041.
 
-thanks,
+The 'mv' and 'rm' operations will put lowertestfile into orphan list 
+twice, so we must reseve the orphan deletion operation in ubifs_link(), 
+otherwise the testcase fails and we will see the following msg:
 
-greg k-h
+   overlay/006 2s ... - output mismatch (see 
+/root/git/xfstests-dev/results//overlay/006.out.bad)
+     --- tests/overlay/006.out    2020-07-07 21:42:57.737000000 +0800
+     +++ /root/git/xfstests-dev/results//overlay/006.out.bad 2020-07-11 
+14:31:55.340000000 +0800
+     @@ -1,2 +1,4 @@
+      QA output created by 006
+      Silence is golden
+     +rm: cannot remove 
+'/tmp/scratch/ovl-mnt/uppertestdir/lowertestfile': Invalid argument
+     +lowertestfile
+     ...
+
+   [  382.258210] UBIFS error (ubi0:1 pid 11896): orphan_add [ubifs]: 
+orphaned twice
+   [  382.352535] UBIFS error (ubi0:1 pid 11930): free_orphans [ubifs]: 
+orphan list not empty at unmount
+
+
+So, how about moving ubifs_delete_orphan() after ubifs_jnl_update() in 
+function ubifs_link(). Following modifications applied in linux-5.8 has 
+been tested by overlay/041, overlay/006 and  other tmpfile cases 
+(generic/531, generic/530, generic/509, generic/389, generic/004).
+
+diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
+index ef85ec167a84..fd4443a5e8c6 100644
+--- a/fs/ubifs/dir.c
++++ b/fs/ubifs/dir.c
+@@ -722,11 +722,6 @@ static int ubifs_link(struct dentry *old_dentry, 
+struct inode *dir,
+                 goto out_fname;
+
+         lock_2_inodes(dir, inode);
+-
+-       /* Handle O_TMPFILE corner case, it is allowed to link a 
+O_TMPFILE. */
+-       if (inode->i_nlink == 0)
+-               ubifs_delete_orphan(c, inode->i_ino);
+-
+inc_nlink(inode);
+ihold(inode);
+         inode->i_ctime = current_time(inode);
+@@ -736,6 +731,11 @@ static int ubifs_link(struct dentry *old_dentry, 
+struct inode *dir,
+         err = ubifs_jnl_update(c, dir, &nm, inode, 0, 0);
+         if (err)
+                 goto out_cancel;
++
++       /* Handle O_TMPFILE corner case, it is allowed to link a 
+O_TMPFILE. */
++       if (inode->i_nlink == 1)
++               ubifs_delete_orphan(c, inode->i_ino);
++
+         unlock_2_inodes(dir, inode);
+
+         ubifs_release_budget(c, &req);
+@@ -747,8 +747,6 @@ static int ubifs_link(struct dentry *old_dentry, 
+struct inode *dir,
+         dir->i_size -= sz_change;
+         dir_ui->ui_size = dir->i_size;
+drop_nlink(inode);
+-       if (inode->i_nlink == 0)
+-               ubifs_add_orphan(c, inode->i_ino);
+         unlock_2_inodes(dir, inode);
+         ubifs_release_budget(c, &req);
+iput(inode);
+--
+
+
