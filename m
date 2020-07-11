@@ -2,126 +2,177 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3551EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E597C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDD720748
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786B820748
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyvIq9/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgGKSSw (ORCPT
+        id S1728734AbgGKSTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 14:18:52 -0400
-Received: from mail-co1nam11olkn2081.outbound.protection.outlook.com ([40.92.18.81]:10208
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728507AbgGKSSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 14:18:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dsmEr0yB6WhOFGjTfmr7C2Oftjdpj7tH5s99pvxjc5FtSfwRMkc0XD3YO0zf6u5+dgWeZZsXIKISXLZLMEObXR5UpLl2vgUlL9ToF1yB1E/At+UGxQwGk2ZehHNIlXD7iW1NIyh0CEIQ82pWsZm2Y9Q08dhqWDtcHrAcT92gQDPNi3GCMpf/Im0UBoEf30W0uj2vp6jlD2FVLuShtfygh+7JSOuNwkrjYenquq1tVjwvwPUo3Ob1cgKCvfZ83F+hey2UoMVC/ssE36qrrxLlRQR1GMgJWD5LrXGZ6wxfoJwXPuwAQcHmtXGJ4S6VC9/onEiovnOewl46k/rRvCYFcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v/3H5Qp15Ji/VDc0m5kDEKKHgyUxwGZR4wHNX0v5cbA=;
- b=fw+ib2epDwbOF6wBOj4u5t87k79yrqE3+GZrSXNlBOJFW504RaktvATYlZBnshmjaeEIGbxkrjRthVEC1TlJOLI7iA3d5mOmXGYOwJ61HkYhsXaemfxFTM+OdO/3b66kvR7kBC7WtxxoO4b4L8MQSKh1q14BHseZReMkzoyXe8+IP+8BtW5kcg2V16qdBJYahJ26q6VMGgQ768BLrjPxDUt3MN5c2l0Ln4fmJrUFy4azdE2ggxKxeYirk0eNgL4M9pDtv+Q7Sk6NkaO35HINFDoZ4bazB/bTyiOyV2XO3/xdmdPBe7TdAXqHg2njH6E9p5LSSrQMqC8UHWUa5nKrfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::45) by
- DM6NAM11HT016.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::318)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Sat, 11 Jul
- 2020 18:18:50 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::43) by DM6NAM11FT041.mail.protection.outlook.com
- (2a01:111:e400:fc4d::98) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend
- Transport; Sat, 11 Jul 2020 18:18:50 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:6F301C493BB595ACA55296A749C0BB73C061BF52215884F4ACC90F02979CF891;UpperCasedChecksum:B4396C0EF1F8BF50F664E0598DE52FAF6952286387767C7CE59EF9872EF08A6B;SizeAsReceived:9280;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3174.024; Sat, 11 Jul 2020
- 18:18:50 +0000
-Subject: Re: [PATCH 11/11] media: exynos4-is: Correct parallel port probing
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
-        krzk@kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <CGME20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120@eucas1p2.samsung.com>
- <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <05381b4a-3581-e57d-3ecc-43eaafd9d527@samsung.com>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660D832F51C14CD10257B9EA3620@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sat, 11 Jul 2020 11:18:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <05381b4a-3581-e57d-3ecc-43eaafd9d527@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR19CA0085.namprd19.prod.outlook.com
- (2603:10b6:320:1f::23) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <c94c2b00-7dd0-9b05-7f3a-0032516b7d93@live.ca>
+        Sat, 11 Jul 2020 14:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728667AbgGKSTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 14:19:55 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21716C08C5DD;
+        Sat, 11 Jul 2020 11:19:55 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f16so3987059pjt.0;
+        Sat, 11 Jul 2020 11:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r/O31HTyFTU09sJKGsQaSt7I4ZOQ9kI3I3BUbn+Nyeg=;
+        b=nyvIq9/nKgF26KtXb4F5ugi3ouo9vHeJhVxKOr8So/RShA1xPe8EDigNpJNdi5Ory8
+         KBziLEbwleHzJDe4pXWUVdeqNygJFAwn/ptPc4iqD6oACJT8jWHenhhI9KgqMfJiWf5s
+         /V+T5LD7ggcfa3qYoBaGSMAmtqDP2Ah+Qt0o6BU9TfG3tC/YAL+3wdOq8IU9rV9r3PQj
+         xkFSi6HmBEgIffl2Jq6OS/mo8I8c4BVOM8lzJi0KQnKlZ0KW5C3pc3kbO6cl7xn2F/8K
+         M6Xtkl1jNVnfpa50J4DwXkJ0+mCdK6xN3U4LNhp4bioVvrYhz8LaBxvRGWGwzc4DL+qD
+         Q8pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r/O31HTyFTU09sJKGsQaSt7I4ZOQ9kI3I3BUbn+Nyeg=;
+        b=NyXoLYOPmvJyOrFnCkAXblknuTspRdkqh9C0eSSwyigpsZ0NJSNKc6fYiNiEq4820u
+         rTXDuAJ95GU0JwbXH6mR+6gTd4VOnfoCpdGhYFHezgxF8D/F1kBMNLCqYz9Pv5xUSv8X
+         C60sLzD5S9djfPVCElHRe9LR+j2LzmbHerGkY8bifQpVE341zXmOHOxluRj83bI33YFr
+         NDEjd/ifbc4LY/QUlrIa/g5suhPQwjY++Uj+NPI31Q0GP/ujLPCazgbDWK8J4yXyAWL9
+         hcz558cazLI9WJjbQimEjKAmOTLah8YzeyV+abEOlpTbLwdukGVgKX7lnEUezKrt0G4e
+         XaKQ==
+X-Gm-Message-State: AOAM532v7tmNdsjzL2V2e8Ii/CV2jI0NCxrDjiwlszwtnKR+wBybkp8B
+        Nyp/YpRq8XxsF3aAEpaQ9jSzFD0giLk=
+X-Google-Smtp-Source: ABdhPJw43tu1dMlQ1k+02bgdIuQh+5/+gjxN72LqIRd2AvdcpprbR1r8oz325N9NIp31Dsv+DY/sPA==
+X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr53979905pll.258.1594491594292;
+        Sat, 11 Jul 2020 11:19:54 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s30sm8789045pgn.34.2020.07.11.11.19.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 Jul 2020 11:19:53 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 11:19:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (drivetemp) Avoid SCT usage on Toshiba DT01ACA
+ family drives
+Message-ID: <20200711181952.GA213963@roeck-us.net>
+References: <42108b47d0e3d64c6d36618425c9f920ff469600.1594404501.git.mail@maciej.szmigiero.name>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR19CA0085.namprd19.prod.outlook.com (2603:10b6:320:1f::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Sat, 11 Jul 2020 18:18:48 +0000
-X-Microsoft-Original-Message-ID: <c94c2b00-7dd0-9b05-7f3a-0032516b7d93@live.ca>
-X-TMN:  [aeG9F7CT36SXSoG7+mQoj0Lk4fmE18ZZudW9Qc953ZMvoAK4HxdOCtbCKG8VgpH8]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 8589d836-1a41-40e5-e3e9-08d825c6dc2e
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT016:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Qp3N6CTTtQdBMKXy6DdldoRYfNX4qXuNAtD5P9nUOS6DUjqG05PZ6Wq1dhHP11g9+7H+INxKRk2gcX8JTNcq1sIy185lSf3MquyQAnoJTWcWCBXcz5jsNL/FHyjTFyYlvldPgvzYJCQC+NENcA0/j+9x67NzHdz7EysjyoGdb36ITTmN6oPPutFViKzR8/ViteGvESNDuY1T+GPkar1e4w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 72Z21YTWq7QgusVeMQMm8GJFR6qzo3K/w1Hv+5ITy3iu6YAcDDw/UKkNSPARRMAfvA5WcmmK7iTj5NnnOl/tB0Yd/O2SKr3sT3D3AnzDjjDAJYw4IM7Zwyd7jeaxi/cofGYGEXb2PuEZm1WCoUoQAhbeOu2WUtZHSYReiDzq4k5mHjfuUns+midf50sKFpHw7/DFluMPDY9gBHUVvC3liw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8589d836-1a41-40e5-e3e9-08d825c6dc2e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 18:18:50.4256
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT016
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42108b47d0e3d64c6d36618425c9f920ff469600.1594404501.git.mail@maciej.szmigiero.name>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
+On Fri, Jul 10, 2020 at 08:10:03PM +0200, Maciej S. Szmigiero wrote:
+> It has been observed that Toshiba DT01ACA family drives have
+> WRITE FPDMA QUEUED command timeouts and sometimes just freeze until
+> power-cycled under heavy write loads when their temperature is getting
+> polled in SCT mode. The SMART mode seems to be fine, though.
+> 
+> Let's make sure we don't use SCT mode for these drives then.
+> 
+> While only the 3 TB model was actually caught exhibiting the problem let's
+> play safe here to avoid data corruption and extend the ban to the whole
+> family.
+> 
+> Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> ---
 
-On 2020-07-08 9:15 a.m., Sylwester Nawrocki wrote:
-> Hi,
-> 
-> On 26.04.2020 04:26, Jonathan Bakker wrote:
->> According to the binding doc[1], port A should be reg = 0
->> and port B reg = 1.  Unfortunately, the driver was treating 0
->> as invalid and 1 as camera port A.  Match the binding doc and
->> make 0=A and 1=B.
->>
->> [1] Documentation/devicetree/bindings/media/samsung-fimc.txt
-> 
-> Thank you for correcting this. I would prefer to correct the binding
-> documentation instead, so it says reg=1 for A and reg=2 for B. 
-> Then it would also match what we have in dts for Goni and 
-> enum fimc_input in include/media/drv-intf/exynos-fimc.h
-
-No problem, that works for me.  I'll drop this patch and replace it with one
-changing the documentation.
-
-> 
-> 
+I am out of town; more thorough review later. Quick feedback: Terms such
+as "blacklist" have run out of favor. Please use a different term.
 
 Thanks,
-Jonathan
+Guenter
+
+> Sending again since the previous message bounced for most recipients.
+> 
+> Notes:
+>     This behavior was observed on two different DT01ACA3 drives.
+>     
+>     Usually, a series of queued WRITE FPDMA QUEUED commands just time out,
+>     but sometimes the whole drive freezes. Merely disconnecting and
+>     reconnecting SATA interface cable then does not unfreeze the drive.
+>     
+>     One has to disconnect and reconnect the drive power connector for the
+>     drive to be detected again (suggesting the drive firmware itself has
+>     crashed).
+>     
+>     This only happens when the drive temperature is polled very often (like
+>     every second), so occasional SCT usage via smartmontools is probably
+>     safe.
+> 
+>  drivers/hwmon/drivetemp.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
+> index 0d4f3d97ffc6..4fd51fa8c6e3 100644
+> --- a/drivers/hwmon/drivetemp.c
+> +++ b/drivers/hwmon/drivetemp.c
+> @@ -285,6 +285,36 @@ static int drivetemp_get_scttemp(struct drivetemp_data *st, u32 attr, long *val)
+>  	return err;
+>  }
+>  
+> +static const char * const sct_blacklist_models[] = {
+> +/*
+> + * These drives will have WRITE FPDMA QUEUED command timeouts and sometimes just
+> + * freeze until power-cycled under heavy write loads when their temperature is
+> + * getting polled in SCT mode. The SMART mode seems to be fine, though.
+> + *
+> + * While only the 3 TB model was actually caught exhibiting the problem
+> + * let's play safe here to avoid data corruption and ban the whole family.
+> + */
+> +	"TOSHIBA DT01ACA0",
+> +	"TOSHIBA DT01ACA1",
+> +	"TOSHIBA DT01ACA2",
+> +	"TOSHIBA DT01ACA3",
+> +};
+> +
+> +static bool drivetemp_sct_blacklisted(struct drivetemp_data *st)
+> +{
+> +	struct scsi_device *sdev = st->sdev;
+> +	unsigned int ctr;
+> +
+> +	if (!sdev->model)
+> +		return false;
+> +
+> +	for (ctr = 0; ctr < ARRAY_SIZE(sct_blacklist_models); ctr++)
+> +		if (strncmp(sdev->model, sct_blacklist_models[ctr], 16) == 0)
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int drivetemp_identify_sata(struct drivetemp_data *st)
+>  {
+>  	struct scsi_device *sdev = st->sdev;
+> @@ -326,6 +356,13 @@ static int drivetemp_identify_sata(struct drivetemp_data *st)
+>  	/* bail out if this is not a SATA device */
+>  	if (!is_ata || !is_sata)
+>  		return -ENODEV;
+> +
+> +	if (have_sct && drivetemp_sct_blacklisted(st)) {
+> +		dev_notice(&sdev->sdev_gendev,
+> +			   "will avoid using SCT for temperature monitoring\n");
+> +		have_sct = false;
+> +	}
+> +
+>  	if (!have_sct)
+>  		goto skip_sct;
+>  
