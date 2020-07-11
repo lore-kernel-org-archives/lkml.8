@@ -2,395 +2,190 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C36C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C226AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C7520720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93572206A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 21:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tPdFbdEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgGKUtx (ORCPT
+        id S1727910AbgGKVBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:49:53 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:50545 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgGKUtv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 16:49:51 -0400
-Received: from localhost.localdomain ([93.22.151.150])
-        by mwinf5d51 with ME
-        id 1wpm2300E3Ewh7h03wpn2a; Sat, 11 Jul 2020 22:49:47 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 11 Jul 2020 22:49:47 +0200
-X-ME-IP: 93.22.151.150
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     mlindner@marvell.com, stephen@networkplumber.org,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] net: sky2: switch from 'pci_' to 'dma_' API
-Date:   Sat, 11 Jul 2020 22:49:44 +0200
-Message-Id: <20200711204944.259152-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sat, 11 Jul 2020 17:01:14 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42424 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727092AbgGKVBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 17:01:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594501272; bh=vaSU6vP72+flrmguR0y2gyS7TY57zxYCjCx6+xDJP9Q=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=tPdFbdEh1c6HH4mAkuCnSK2TW9LDbhk/v+KR+ulVLtaqPKpfzc43ATxafwkWjzTTl
+         ZFHB5JP9+hMbOdqKPHatJUy/TqSlXRmpN8R8JTdsmk5vok2uihWbqZpFabXYNZUFmQ
+         NWr600CHcy/I7oK7fc88/8L7eQPi7Nq+5eAll8Sk=
+Date:   Sat, 11 Jul 2020 23:01:11 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+References: <20200702144712.1994685-1-megous@megous.com>
+ <20200711100409.GA18901@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200711100409.GA18901@amd>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+Hello Pavel,
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GPF_ with a correct flag.
-It has been compile tested.
+On Sat, Jul 11, 2020 at 12:04:09PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > Some LED controllers may come with an internal HW triggering mechanism
+> > for the LED and an ability to switch between user control of the LED,
+> > or the internal control. One such example is AXP20X PMIC, that allows
+> > wither for user control of the LED, or for internal control based on
+> > the state of the battery charger.
+> > 
+> > Add support for registering per-LED device trigger.
+> > 
+> > Names of private triggers need to be globally unique, but may clash
+> > with other private triggers. This is enforced during trigger
+> > registration. Developers can register private triggers just like
+> > the normal triggers, by setting private_led to a classdev
+> > of the LED the trigger is associated with.
+> 
+> What about this? Should address Marek's concerns about resource use...
 
-When memory is allocated in 'sky2_alloc_buffers()', GFP_KERNEL can be used
-because some other memory allocations in the same function already use this
-flag.
+What concerns? Marek's concerns seem to be about case where we register
+a trigger for (each led * self-working configuration) which I admit
+can be quite a lot of triggers if there are many functions. But that's
+not my proposal.
 
-When memory is allocated in 'sky2_probe()', GFP_KERNEL can be used
-because another memory allocations in the same function already uses this
-flag.
+My proposal is to only register on trigger per LED at most. So on my
+system that's 1 extra trigger and on Marek's system that'd be 48 new
+triggers. Neither seems like a meaningful problem from resource
+use perspective.
 
+regards,
+	o.
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
+> Best regards,
+>      	   	 				       		Pavel
+> 
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 79e30d2cb7a5..e8333675959c 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -27,6 +27,12 @@ LIST_HEAD(trigger_list);
+>  
+>   /* Used by LED Class */
+>  
+> +static inline bool
+> +trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
+> +{
+> +	return !trig->trigger_type || trig->trigger_type == led_cdev->trigger_type;
+> +}
+> +
+>  ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  			  struct bin_attribute *bin_attr, char *buf,
+>  			  loff_t pos, size_t count)
+> @@ -50,7 +56,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  
+>  	down_read(&triggers_list_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (sysfs_streq(buf, trig->name)) {
+> +		if (sysfs_streq(buf, trig->name) &&
+> +		    trigger_relevant(led_cdev, trig)) {
+>  			down_write(&led_cdev->trigger_lock);
+>  			led_trigger_set(led_cdev, trig);
+>  			up_write(&led_cdev->trigger_lock);
+> @@ -96,6 +103,9 @@ static int led_trigger_format(char *buf, size_t size,
+>  		bool hit = led_cdev->trigger &&
+>  			!strcmp(led_cdev->trigger->name, trig->name);
+>  
+> +		if (!trigger_relevant(led_cdev, trig))
+> +			continue;
+> +
+>  		len += led_trigger_snprintf(buf + len, size - len,
+>  					    " %s%s%s", hit ? "[" : "",
+>  					    trig->name, hit ? "]" : "");
+> @@ -243,7 +253,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+>  	down_read(&triggers_list_lock);
+>  	down_write(&led_cdev->trigger_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
+> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
+> +		    trigger_relevant(led_cdev, trig)) {
+>  			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
+>  			led_trigger_set(led_cdev, trig);
+>  			break;
+> @@ -280,7 +291,8 @@ int led_trigger_register(struct led_trigger *trig)
+>  	down_write(&triggers_list_lock);
+>  	/* Make sure the trigger's name isn't already in use */
+>  	list_for_each_entry(_trig, &trigger_list, next_trig) {
+> -		if (!strcmp(_trig->name, trig->name)) {
+> +		if (!strcmp(_trig->name, trig->name) &&
+> +		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
+>  			up_write(&triggers_list_lock);
+>  			return -EEXIST;
+>  		}
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 2451962d1ec5..cba52714558f 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -57,6 +57,10 @@ struct led_init_data {
+>  	bool devname_mandatory;
+>  };
+>  
+> +struct led_hw_trigger_type {
+> +	int dummy;
+> +}
+> +
+>  struct led_classdev {
+>  	const char		*name;
+>  	enum led_brightness	 brightness;
+> @@ -150,6 +154,8 @@ struct led_classdev {
+>  
+>  	/* Ensures consistent access to the LED Flash Class device */
+>  	struct mutex		led_access;
+> +
+> +	struct led_hw_trigger_type *trigger_type;
+>  };
+>  
+>  /**
+> @@ -345,6 +351,9 @@ struct led_trigger {
+>  	int		(*activate)(struct led_classdev *led_cdev);
+>  	void		(*deactivate)(struct led_classdev *led_cdev);
+>  
+> +	/* LED-private triggers have this set. */
+> +	struct led_hw_trigger_type *trigger_type;
+> +
+>  	/* LEDs under control by this trigger (for simple triggers) */
+>  	rwlock_t	  leddev_list_lock;
+>  	struct list_head  led_cdevs;
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/marvell/sky2.c | 89 +++++++++++++++--------------
- 1 file changed, 46 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index fe54764caea9..adb1a9c19505 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -1209,8 +1209,9 @@ static int sky2_rx_map_skb(struct pci_dev *pdev, struct rx_ring_info *re,
- 	struct sk_buff *skb = re->skb;
- 	int i;
- 
--	re->data_addr = pci_map_single(pdev, skb->data, size, PCI_DMA_FROMDEVICE);
--	if (pci_dma_mapping_error(pdev, re->data_addr))
-+	re->data_addr = dma_map_single(&pdev->dev, skb->data, size,
-+				       DMA_FROM_DEVICE);
-+	if (dma_mapping_error(&pdev->dev, re->data_addr))
- 		goto mapping_error;
- 
- 	dma_unmap_len_set(re, data_size, size);
-@@ -1229,13 +1230,13 @@ static int sky2_rx_map_skb(struct pci_dev *pdev, struct rx_ring_info *re,
- 
- map_page_error:
- 	while (--i >= 0) {
--		pci_unmap_page(pdev, re->frag_addr[i],
-+		dma_unmap_page(&pdev->dev, re->frag_addr[i],
- 			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
--			       PCI_DMA_FROMDEVICE);
-+			       DMA_FROM_DEVICE);
- 	}
- 
--	pci_unmap_single(pdev, re->data_addr, dma_unmap_len(re, data_size),
--			 PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&pdev->dev, re->data_addr,
-+			 dma_unmap_len(re, data_size), DMA_FROM_DEVICE);
- 
- mapping_error:
- 	if (net_ratelimit())
-@@ -1249,13 +1250,13 @@ static void sky2_rx_unmap_skb(struct pci_dev *pdev, struct rx_ring_info *re)
- 	struct sk_buff *skb = re->skb;
- 	int i;
- 
--	pci_unmap_single(pdev, re->data_addr, dma_unmap_len(re, data_size),
--			 PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&pdev->dev, re->data_addr,
-+			 dma_unmap_len(re, data_size), DMA_FROM_DEVICE);
- 
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
--		pci_unmap_page(pdev, re->frag_addr[i],
--			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
--			       PCI_DMA_FROMDEVICE);
-+		dma_unmap_page(&pdev->dev, re->frag_addr[i],
-+			       skb_frag_size(&skb_shinfo(skb)->frags[i]),
-+			       DMA_FROM_DEVICE);
- }
- 
- /* Tell chip where to start receive checksum.
-@@ -1592,10 +1593,9 @@ static int sky2_alloc_buffers(struct sky2_port *sky2)
- 	struct sky2_hw *hw = sky2->hw;
- 
- 	/* must be power of 2 */
--	sky2->tx_le = pci_alloc_consistent(hw->pdev,
--					   sky2->tx_ring_size *
--					   sizeof(struct sky2_tx_le),
--					   &sky2->tx_le_map);
-+	sky2->tx_le = dma_alloc_coherent(&hw->pdev->dev,
-+					 sky2->tx_ring_size * sizeof(struct sky2_tx_le),
-+					 &sky2->tx_le_map, GFP_KERNEL);
- 	if (!sky2->tx_le)
- 		goto nomem;
- 
-@@ -1604,8 +1604,8 @@ static int sky2_alloc_buffers(struct sky2_port *sky2)
- 	if (!sky2->tx_ring)
- 		goto nomem;
- 
--	sky2->rx_le = pci_zalloc_consistent(hw->pdev, RX_LE_BYTES,
--					    &sky2->rx_le_map);
-+	sky2->rx_le = dma_alloc_coherent(&hw->pdev->dev, RX_LE_BYTES,
-+					 &sky2->rx_le_map, GFP_KERNEL);
- 	if (!sky2->rx_le)
- 		goto nomem;
- 
-@@ -1626,14 +1626,14 @@ static void sky2_free_buffers(struct sky2_port *sky2)
- 	sky2_rx_clean(sky2);
- 
- 	if (sky2->rx_le) {
--		pci_free_consistent(hw->pdev, RX_LE_BYTES,
--				    sky2->rx_le, sky2->rx_le_map);
-+		dma_free_coherent(&hw->pdev->dev, RX_LE_BYTES, sky2->rx_le,
-+				  sky2->rx_le_map);
- 		sky2->rx_le = NULL;
- 	}
- 	if (sky2->tx_le) {
--		pci_free_consistent(hw->pdev,
--				    sky2->tx_ring_size * sizeof(struct sky2_tx_le),
--				    sky2->tx_le, sky2->tx_le_map);
-+		dma_free_coherent(&hw->pdev->dev,
-+				  sky2->tx_ring_size * sizeof(struct sky2_tx_le),
-+				  sky2->tx_le, sky2->tx_le_map);
- 		sky2->tx_le = NULL;
- 	}
- 	kfree(sky2->tx_ring);
-@@ -1806,13 +1806,11 @@ static unsigned tx_le_req(const struct sk_buff *skb)
- static void sky2_tx_unmap(struct pci_dev *pdev, struct tx_ring_info *re)
- {
- 	if (re->flags & TX_MAP_SINGLE)
--		pci_unmap_single(pdev, dma_unmap_addr(re, mapaddr),
--				 dma_unmap_len(re, maplen),
--				 PCI_DMA_TODEVICE);
-+		dma_unmap_single(&pdev->dev, dma_unmap_addr(re, mapaddr),
-+				 dma_unmap_len(re, maplen), DMA_TO_DEVICE);
- 	else if (re->flags & TX_MAP_PAGE)
--		pci_unmap_page(pdev, dma_unmap_addr(re, mapaddr),
--			       dma_unmap_len(re, maplen),
--			       PCI_DMA_TODEVICE);
-+		dma_unmap_page(&pdev->dev, dma_unmap_addr(re, mapaddr),
-+			       dma_unmap_len(re, maplen), DMA_TO_DEVICE);
- 	re->flags = 0;
- }
- 
-@@ -1840,9 +1838,10 @@ static netdev_tx_t sky2_xmit_frame(struct sk_buff *skb,
-   		return NETDEV_TX_BUSY;
- 
- 	len = skb_headlen(skb);
--	mapping = pci_map_single(hw->pdev, skb->data, len, PCI_DMA_TODEVICE);
-+	mapping = dma_map_single(&hw->pdev->dev, skb->data, len,
-+				 DMA_TO_DEVICE);
- 
--	if (pci_dma_mapping_error(hw->pdev, mapping))
-+	if (dma_mapping_error(&hw->pdev->dev, mapping))
- 		goto mapping_error;
- 
- 	slot = sky2->tx_prod;
-@@ -2464,16 +2463,17 @@ static struct sk_buff *receive_copy(struct sky2_port *sky2,
- 
- 	skb = netdev_alloc_skb_ip_align(sky2->netdev, length);
- 	if (likely(skb)) {
--		pci_dma_sync_single_for_cpu(sky2->hw->pdev, re->data_addr,
--					    length, PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_cpu(&sky2->hw->pdev->dev, re->data_addr,
-+					length, DMA_FROM_DEVICE);
- 		skb_copy_from_linear_data(re->skb, skb->data, length);
- 		skb->ip_summed = re->skb->ip_summed;
- 		skb->csum = re->skb->csum;
- 		skb_copy_hash(skb, re->skb);
- 		__vlan_hwaccel_copy_tag(skb, re->skb);
- 
--		pci_dma_sync_single_for_device(sky2->hw->pdev, re->data_addr,
--					       length, PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_device(&sky2->hw->pdev->dev,
-+					   re->data_addr, length,
-+					   DMA_FROM_DEVICE);
- 		__vlan_hwaccel_clear_tag(re->skb);
- 		skb_clear_hash(re->skb);
- 		re->skb->ip_summed = CHECKSUM_NONE;
-@@ -4985,16 +4985,16 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	pci_set_master(pdev);
- 
- 	if (sizeof(dma_addr_t) > sizeof(u32) &&
--	    !(err = pci_set_dma_mask(pdev, DMA_BIT_MASK(64)))) {
-+	    !(err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)))) {
- 		using_dac = 1;
--		err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
-+		err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
- 		if (err < 0) {
- 			dev_err(&pdev->dev, "unable to obtain 64 bit DMA "
- 				"for consistent allocations\n");
- 			goto err_out_free_regions;
- 		}
- 	} else {
--		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 		if (err) {
- 			dev_err(&pdev->dev, "no usable DMA configuration\n");
- 			goto err_out_free_regions;
-@@ -5038,8 +5038,9 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	/* ring for status responses */
- 	hw->st_size = hw->ports * roundup_pow_of_two(3*RX_MAX_PENDING + TX_MAX_PENDING);
--	hw->st_le = pci_alloc_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
--					 &hw->st_dma);
-+	hw->st_le = dma_alloc_coherent(&pdev->dev,
-+				       hw->st_size * sizeof(struct sky2_status_le),
-+				       &hw->st_dma, GFP_KERNEL);
- 	if (!hw->st_le) {
- 		err = -ENOMEM;
- 		goto err_out_reset;
-@@ -5119,8 +5120,9 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		pci_disable_msi(pdev);
- 	free_netdev(dev);
- err_out_free_pci:
--	pci_free_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
--			    hw->st_le, hw->st_dma);
-+	dma_free_coherent(&pdev->dev,
-+			  hw->st_size * sizeof(struct sky2_status_le),
-+			  hw->st_le, hw->st_dma);
- err_out_reset:
- 	sky2_write8(hw, B0_CTST, CS_RST_SET);
- err_out_iounmap:
-@@ -5164,8 +5166,9 @@ static void sky2_remove(struct pci_dev *pdev)
- 
- 	if (hw->flags & SKY2_HW_USE_MSI)
- 		pci_disable_msi(pdev);
--	pci_free_consistent(pdev, hw->st_size * sizeof(struct sky2_status_le),
--			    hw->st_le, hw->st_dma);
-+	dma_free_coherent(&pdev->dev,
-+			  hw->st_size * sizeof(struct sky2_status_le),
-+			  hw->st_le, hw->st_dma);
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
- 
--- 
-2.25.1
 
