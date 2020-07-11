@@ -2,80 +2,138 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DF720725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4CF206D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:47:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MYAxXTbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGKL2g (ORCPT
+        id S1727984AbgGKLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 07:28:36 -0400
-Received: from mail.parknet.co.jp ([210.171.160.6]:47256 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGKL2f (ORCPT
+        Sat, 11 Jul 2020 07:47:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12937 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgGKLrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 07:28:35 -0400
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 61E7A1B3FDD;
-        Sat, 11 Jul 2020 20:28:34 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-19) with ESMTPS id 06BBSXcV194079
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sat, 11 Jul 2020 20:28:34 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-19) with ESMTPS id 06BBSWtt996343
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sat, 11 Jul 2020 20:28:32 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 06BBSVpJ996342;
-        Sat, 11 Jul 2020 20:28:31 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com>
-Subject: [PATCH] fat: Fix fat_ra_init() for data clusters == 0
-References: <000000000000ebc53005aa18a1a5@google.com>
-Date:   Sat, 11 Jul 2020 20:28:31 +0900
-In-Reply-To: <000000000000ebc53005aa18a1a5@google.com> (syzbot's message of
-        "Fri, 10 Jul 2020 09:14:16 -0700")
-Message-ID: <87mu462sv4.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Sat, 11 Jul 2020 07:47:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f09a64f0000>; Sat, 11 Jul 2020 04:45:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 11 Jul 2020 04:47:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 11 Jul 2020 04:47:09 -0700
+Received: from [10.26.72.26] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 11 Jul
+ 2020 11:47:06 +0000
+Subject: Re: [PATCH 15/23] seq_file: switch over direct seq_read method calls
+ to seq_read_iter
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200707174801.4162712-1-hch@lst.de>
+ <20200707174801.4162712-16-hch@lst.de>
+ <5a2a97f1-58b5-8068-3c69-bb06130ffb35@nvidia.com>
+ <20200711064857.GA29078@lst.de>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b838bf55-bd1e-7ff8-fcf5-fe372944dc9f@nvidia.com>
+Date:   Sat, 11 Jul 2020 12:47:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200711064857.GA29078@lst.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594467919; bh=YjartdxmO2Ad0/uwBSdPTgr7N6l+g/YEyWPmF+u3P6Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MYAxXTbGMgtXmRbAqCTI1xHuhZ+jBhMxajcPgk7oOIlbM5E6ZxI7IBhFMLGEpxpuR
+         6GMkWwtlyo+rgXBPGf2gxg4Rcm1HNGsKvh7jpLPLn1ODf+7A6KvzGDQ4+DzhsMG+uZ
+         m/OonsizWyXvkhEiOA4p1sahWWTzlJK8Ti4OpBd5jw/qRAAkSlSoIteaDDvijSiYe3
+         A0gpO1+xw3KCzFjjWES/6ycNSQ59bJicO0587qYfpZlgM8Ks7B0PqCEAi69krf/R5r
+         FwYbXCiV0J4jppRWxQPx6kEsEfU51p2tyR5PeviIxmpvv9wF5rBI3MlVxIDrDqHoAA
+         TCyWFnEpU+s5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If data clusters == 0, fat_ra_init() calls the ->ent_blocknr() for the
-cluster beyond ->max_clusters.
 
-This checks the limit before initialization to suppress the warning.
+On 11/07/2020 07:48, Christoph Hellwig wrote:
+> Please try this one:
+> 
+> ---
+> From 5e86146296fbcd7593da1d9d39b9685a5e6b83be Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Sat, 11 Jul 2020 08:46:10 +0200
+> Subject: debugfs: add a proxy stub for ->read_iter
+> 
+> debugfs registrations typically go through a set of proxy ops to deal
+> with refcounting, which need to support every method that can be
+> supported.  Add ->read_iter to the proxy ops to prepare for seq_file to
+> be switch to ->read_iter.
+> 
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/debugfs/file.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+> index 8ba32c2feb1b73..dcd7bdaf67417f 100644
+> --- a/fs/debugfs/file.c
+> +++ b/fs/debugfs/file.c
+> @@ -231,6 +231,10 @@ FULL_PROXY_FUNC(read, ssize_t, filp,
+>  			loff_t *ppos),
+>  		ARGS(filp, buf, size, ppos));
+>  
+> +FULL_PROXY_FUNC(read_iter, ssize_t, iocb->ki_filp,
+> +		PROTO(struct kiocb *iocb, struct iov_iter *iter),
+> +		ARGS(iocb, iter));
+> +
+>  FULL_PROXY_FUNC(write, ssize_t, filp,
+>  		PROTO(struct file *filp, const char __user *buf, size_t size,
+>  			loff_t *ppos),
+> @@ -286,6 +290,8 @@ static void __full_proxy_fops_init(struct file_operations *proxy_fops,
+>  		proxy_fops->llseek = full_proxy_llseek;
+>  	if (real_fops->read)
+>  		proxy_fops->read = full_proxy_read;
+> +	if (real_fops->read_iter)
+> +		proxy_fops->read_iter = full_proxy_read_iter;
+>  	if (real_fops->write)
+>  		proxy_fops->write = full_proxy_write;
+>  	if (real_fops->poll)
+> 
 
-Reported-by: syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
----
- fs/fat/fatent.c |    3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
-index bbfe18c..f7e3304 100644
---- a/fs/fat/fatent.c	2020-07-11 19:58:41.903092419 +0900
-+++ b/fs/fat/fatent.c	2020-07-11 19:58:51.545948758 +0900
-@@ -657,6 +657,9 @@ static void fat_ra_init(struct super_blo
- 	unsigned long ra_pages = sb->s_bdi->ra_pages;
- 	unsigned int reada_blocks;
- 
-+	if (fatent->entry >= ent_limit)
-+		return;
-+
- 	if (ra_pages > sb->s_bdi->io_pages)
- 		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
- 	reada_blocks = ra_pages << (PAGE_SHIFT - sb->s_blocksize_bits + 1);
-_
+Thanks! Works for me.
+
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic
