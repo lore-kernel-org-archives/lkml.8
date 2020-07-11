@@ -2,104 +2,88 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82760C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FF8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFF520725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709592078B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 18:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JpbZOZFm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+ULRwY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgGKSWK (ORCPT
+        id S1728789AbgGKSW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 14:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgGKSWJ (ORCPT
+        Sat, 11 Jul 2020 14:22:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60221 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726281AbgGKSW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 14:22:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01195C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 11:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=O4vjkbDm1sMfQr4f2tnez5VnmMDKCxziIGN8kPzcby0=; b=JpbZOZFmfvINWxOyXDbYeOnyHn
-        Is7RyrIe4BfsbSG7bpScYKXWVw4IRr8cVsvXEgSlAc/LFUkaz/zrjKbwBaFp3ar+RT7eBJSRopOQ2
-        2pFpWqderBy5ozavOCFOpJ8I5ZBAEsbSgRRX40KEZvXzDj1zDqmRX/kNVcLrO5AIwlWlmH/0pLfjo
-        /tW3mUKJk3xeW61x53CYEIwj4lgf0CvQhVqBPO+ok2NphSbd5ObR/ZiNWdZib5r5qnRBUVjP2NDUJ
-        y+QR/FsdOjwdDzfIdQSFGt8dvPDYX13tPljdMXegv4e7W/g500MzVgcI9BbkuiaSHjDgdQjjZH6g7
-        Vcm+1/OQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juK8N-0006VV-N7; Sat, 11 Jul 2020 18:22:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 41B39304E03;
-        Sat, 11 Jul 2020 20:21:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 280992367D09C; Sat, 11 Jul 2020 20:21:58 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 20:21:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Woody Suwalski <terraluna977@gmail.com>
-Cc:     pbonzini@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-        xiaoyao.li@intel.com, fenghua.yu@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: kvm crash on 5.7-rc1 and later
-Message-ID: <20200711182158.GF597537@hirez.programming.kicks-ass.net>
-References: <9178ae3e-db32-c64b-7caf-737f3bc3ba8e@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9178ae3e-db32-c64b-7caf-737f3bc3ba8e@gmail.com>
+        Sat, 11 Jul 2020 14:22:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594491777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=ltTy2GcHC036Egycy6GY0oL2cPL6zzaGde4AZbh1z7Q=;
+        b=e+ULRwY0dSgF0SGhJagMvmFR+BJguRBbQse7bgNjcQdzDr1iTab5M92ujBTVSF2mgh2B3R
+        n439LaAzO5waj0/BgZo6yi8kIdz+c5Ya3pASY8Z4PqgbEq9vyi2+VSNvFpO1SNJe9QHqmk
+        Qrz8gCW4P5QqhS375+uVc94UK8gwx7w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-5zlWZQn6MS6VvBPZPers8Q-1; Sat, 11 Jul 2020 14:22:53 -0400
+X-MC-Unique: 5zlWZQn6MS6VvBPZPers8Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB3A1107ACCA;
+        Sat, 11 Jul 2020 18:22:51 +0000 (UTC)
+Received: from llong.com (ovpn-112-135.rdu2.redhat.com [10.10.112.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FC965D9CC;
+        Sat, 11 Jul 2020 18:22:47 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH 0/2] locking/qspinlock: Allow lock to store lock holder cpu number
+Date:   Sat, 11 Jul 2020 14:21:26 -0400
+Message-Id: <20200711182128.29130-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:15:31AM -0400, Woody Suwalski wrote:
-> I am observing a 100% reproducible kvm crash on kernels starting with
-> 5.7-rc1, always with the same opcode 0000.
-> It happens during wake up from the host suspended state. Worked OK on 5.6
-> and older.
-> The host is based on Debian testing, Thinkpad T440, i5 cpu.
-> 
-> [   61.576664] kernel BUG at arch/x86/kvm/x86.c:387!
-> [   61.576672] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [   61.576678] CPU: 0 PID: 3851 Comm: qemu-system-x86 Not tainted 5.7-pingu
-> #0
-> [   61.576680] Hardware name: LENOVO 20B6005JUS/20B6005JUS, BIOS GJETA4WW
-> (2.54 ) 03/27/2020
-> [   61.576700] RIP: 0010:kvm_spurious_fault+0xa/0x10 [kvm]
-> 
-> Crash results in a dead kvm and occasionally a very unstable system.
-> 
-> Bisecting the problem between v5.6 and v5.7-rc1 points to
-> 
-> commit 6650cdd9a8ccf00555dbbe743d58541ad8feb6a7
-> Author: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Date:   Sun Jan 26 12:05:35 2020 -0800
-> 
->     x86/split_lock: Enable split lock detection by kernel
-> 
-> Reversing that patch seems to actually "cure" the issue.
-> 
-> The problem is present in all kernels past 5.7-rc1, however the patch is not
-> reversing directly in later source trees, so can not retest the logic on
-> recent kernels.
-> 
-> Peter, would you have idea how to debug that (or even better - would you
-> happen to know the fix)?
-> 
-> I have attached dmesg logs from a "good" 5.6.9 kernel, and then "bad" 5.7.0
-> and 5.8-rc3
+This patchset modifies the qspinlock code to allow it to store the lock
+holder cpu number in the lock itself if feasible for easier debugging
+and crash dump analysis. This lock holder cpu information may also be
+useful to architectures like PowerPC that needs the lock holder cpu
+number for better paravirtual spinlock performance.
 
-I have no clue about kvm. Nor do I actually have hardware with SLD on.
-I've Cc'ed a bunch of folks who might have more ideas.
+A new config option QUEUED_SPINLOCKS_CPUINFO is added. If this config
+option is set, lock holder cpu number will always be stored if the
+number is small enough.  Without this option, lock holder cpu number
+will only be stored in the slowpath of the native qspinlock.
+
+Waiman Long (2):
+  locking/qspinlock: Store lock holder cpu in lock if feasible
+  locking/pvqspinlock: Optionally store lock holder cpu into lock
+
+ arch/Kconfig                              | 12 ++++++
+ arch/x86/include/asm/qspinlock_paravirt.h |  9 ++--
+ include/asm-generic/qspinlock.h           | 13 ++++--
+ include/asm-generic/qspinlock_types.h     |  5 +++
+ kernel/locking/qspinlock.c                | 50 +++++++++++++++--------
+ kernel/locking/qspinlock_paravirt.h       | 41 ++++++++++---------
+ 6 files changed, 87 insertions(+), 43 deletions(-)
+
+-- 
+2.18.1
+
