@@ -2,91 +2,152 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB8FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C6C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9287B20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997FA20725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KccIQy+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGKUYY (ORCPT
+        id S1727919AbgGKUYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:24:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36066 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbgGKUYX (ORCPT
+        Sat, 11 Jul 2020 16:24:55 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:14555 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727098AbgGKUYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 16:24:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 371561C0BD2; Sat, 11 Jul 2020 22:24:20 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 22:24:19 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
- multicolor brightness function
-Message-ID: <20200711202419.GA18347@duo.ucw.cz>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200622185919.2131-14-dmurphy@ti.com>
- <20200711155749.GB22715@amd>
- <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Content-Disposition: inline
-In-Reply-To: <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 11 Jul 2020 16:24:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594499090;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=18zzlBN37qwwt5tcPIAQJklJ+UKlT7xWUM+c7A9ByOY=;
+        b=KccIQy+8CsDUwu+NY+muDePbJBzkox48sYRGDEAMSSVgzRWSrjJtPmJUgiCa9zTjH3
+        B0uUmnOkTHKiJvwPIV7X9twZh9KKRlY/Yz7ujcr0bpKEnc4d65X71krh6OYqyn/xc31l
+        jgY2yqqBzQ9J6uywZd8+dSCiuQf9mtotnd12P5OyiLAe/vjQZ/Xh4vKjoAG3Xzo2FoFi
+        TLJVqhgeCA4F/j+WiTbQjcm7mhWjU7iq1khZb0Z5k9SSM8LYp8/JlAoXvQVniSSF6NDW
+        FGp6VMbWBRN8gJbm4kRm9oAgk4fylqLCmb8Moua94JeU2htdOu4FP4jU+ZJELZKeQFRK
+        36Zg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXAYPzw=="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w6BKOhAv0
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 11 Jul 2020 22:24:43 +0200 (CEST)
+Subject: Re: [PATCH] MIPS: CI20: DTS: Correcting IW8103 Wifi binding
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <f617580b-fad7-f4f2-e89d-402b53c21c47@deutnet.info>
+Date:   Sat, 11 Jul 2020 22:24:47 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6AB9C165-7B42-44A6-BCA8-8879B7D70699@goldelico.com>
+References: <20200705103215.96672-1-agriveaux@deutnet.info> <457C75ED-A033-4B46-A9D9-53B510C16F37@goldelico.com> <f617580b-fad7-f4f2-e89d-402b53c21c47@deutnet.info>
+To:     Alexandre GRIVEAUX <agriveaux@deutnet.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alexandre,
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2020-07-11 19:19:22, Jacek Anaszewski wrote:
-> On 7/11/20 5:57 PM, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > Add the multicolor brightness call back to support the multicolor
-> > > framework.  This call back allows setting  brightness on grouped chan=
-nels
-> >=20
-> > Extra space before "brightness".
+> Am 06.07.2020 um 22:22 schrieb Alexandre GRIVEAUX =
+<agriveaux@deutnet.info>:
 >=20
-> And before "This".
+> Le 06/07/2020 =C3=A0 13:15, H. Nikolaus Schaller a =C3=A9crit :
+>> Hi Alexandre,
+>>=20
+>>> Am 05.07.2020 um 12:32 schrieb agriveaux@deutnet.info:
+>>>=20
+>>> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+>>>=20
+>>> Use brcm,bcm4329-fmac instead of brcm,bcm4330-fmac.
+>>>=20
+>>> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+>>> ---
+>>> arch/mips/boot/dts/ingenic/ci20.dts | 4 ++--
+>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
+b/arch/mips/boot/dts/ingenic/ci20.dts
+>>> index 75f5bfbf2c37..82a1f126b778 100644
+>>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>>> @@ -116,8 +116,8 @@
+>>> 	pinctrl-0 =3D <&pins_mmc1>;
+>>>=20
+>>> 	brcmf: wifi@1 {
+>>> -/*		reg =3D <4>;*/
+>>> -		compatible =3D "brcm,bcm4330-fmac";
+>>> +		reg =3D <1>;
+>>> +		compatible =3D "brcm,bcm4329-fmac";
+>>> 		vcc-supply =3D <&wlan0_power>;
+>>> 		device-wakeup-gpios =3D <&gpd 9 GPIO_ACTIVE_HIGH>;
+>>> 		shutdown-gpios =3D <&gpf 7 GPIO_ACTIVE_LOW>;
+>> Do you have it working with a v5.8 kernel?
+>>=20
+>> I don't see any activity to detect the module or load firmware.
+>>=20
+>> Does it rely on some other patch?
+>>=20
+>> BR and thanks,
+>> Nikolaus
+>>=20
+> Hi Nikolaus
+>=20
+>=20
+> At this time the patch have been only "tested" for error will doing =
+make:
+>=20
+> make ARCH=3Dmips CROSS_COMPILE=3Dmipsel-linux-gnu- olddefconfig &&  =
+make
+> ARCH=3Dmips CROSS_COMPILE=3Dmipsel-linux-gnu- -j8 && make ARCH=3Dmips
+> CROSS_COMPILE=3Dmipsel-linux-gnu- -j8 uImage
+>=20
+>=20
+> The .config come from creator-ci20 kernel 'config-3.18.3-ci20-1'
+>=20
+>=20
+> Even with the right DT
+> (Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt)
+> it's need some config with brcm enabled I gess.
+>=20
+>=20
+> I need to do some investigation will trying the uImage this week,
+> unfortunaly kernel developpement is not my main work, it's a hobby.
 
-That one is intentional, I believe.
+No problem. For me, the CI20 is also a hobby project :)
 
-https://www.independent.co.uk/life-style/gadgets-and-tech/news/one-space-or=
--two-spaces-after-a-full-stop-scientists-have-finally-found-the-answer-a833=
-7646.html
+Here is some information about the CI20 WiFi and firmware:
 
-We are using fixed width fonts, so typewriter rules still apply here.
+https://elinux.org/CI20_Hardware#WiFi.2FBT
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+https://elinux.org/CI20_upstream#WiFi_firmware
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
+So to be it looks as if the
 
------BEGIN PGP SIGNATURE-----
+compatible =3D "brcm,bcm4330-fmac";
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXwof8wAKCRAw5/Bqldv6
-8rAyAJ4hPt7IgHlyAtBRG2ArOmyZ8Mj29QCggA8ecmn08QOBVK7ziUsCW4evjuI=
-=RSa+
------END PGP SIGNATURE-----
+is correct. But the reg =3D <4> or <1> is something we have to find out.
 
---2fHTh5uZTiUOsy+g--
+BR,
+Nikolaus
+
