@@ -2,69 +2,160 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC3C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 04:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2879FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 04:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9149A20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 04:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594441561;
-	bh=PzRVaXTy2tvGmrp+Qlg/Fv7fKbs/z266tcTyVcifFg8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Ebt7bWwofXHRduIqtdnWVHHyxVFknaZHJC2kKbGK5IVyv4Iwpty90R2aDiLoGWcT3
-	 7LJ3Db9VITm1biINSMTYHZ2vcdHVshLNgRxwPkyb85edtIrXDMR99rCa60w8RVpje/
-	 01OvhbDHAhFf8a7DUoSPRI+PePZSfNE3WyaDTQrk=
+	by mail.kernel.org (Postfix) with ESMTP id F281520725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 04:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="apwY8yjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgGKEZK (ORCPT
+        id S1727916AbgGKE1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 00:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgGKEZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 00:25:03 -0400
-Subject: Re: [GIT PULL] SMB3 Fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594441503;
-        bh=PzRVaXTy2tvGmrp+Qlg/Fv7fKbs/z266tcTyVcifFg8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=wMQ8BhHatXEcEEI/3U3DKKK1YtY/bK8z7RCLVFNJZt5yFda0qpP8ImFKDsvb/sivf
-         R9hAO7xmMskaA7gzlVasOY3PcFO8k15kt0DQOHtji+CLnndIf+PGKX+LOcbwuFvGGp
-         B4+uQ4LEEF4vgM9jKCxcTbKnBN0HPUAnCz6n434o=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5ms400MbvDKxUg+Z8MsyVPwiL6ZEjZDUgXNwuQGR+yMYbA@mail.gmail.com>
-References: <CAH2r5ms400MbvDKxUg+Z8MsyVPwiL6ZEjZDUgXNwuQGR+yMYbA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5ms400MbvDKxUg+Z8MsyVPwiL6ZEjZDUgXNwuQGR+yMYbA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
- tags/5.8-rc4-smb3-fixes
-X-PR-Tracked-Commit-Id: a8dab63ea623610bb258d93649e30330dd1b7c8b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5ab39e08ff1558ed80d93f5c5217338f19369a40
-Message-Id: <159444150334.19180.17050675116114651653.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Jul 2020 04:25:03 +0000
-To:     Steve French <smfrench@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sat, 11 Jul 2020 00:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgGKE1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 00:27:32 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A7AC08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 21:27:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x8so3054241plm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 21:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s199aw7gACo2V2pxPMbOkqhVWvVnsPCcR2goy3FQ+MM=;
+        b=apwY8yjn7ouF2qoi06y4Cze6EAEsKFa0Yl8T96s1HcUYikGoquwaQJMcHPdriASRGH
+         8dvO/+RFclp5XQl62YFHfXsUqRquuyq7eU6o/X+h9A/grcQ0NP9kefMsU3X7WE15lzBL
+         89RNJP/tYutgq8Iaxtj2U1QoNH0/ZCOoRLGfWrzcIApD2VCsaq7WAyu0+DpMEqoIXl16
+         6WApu3tHvHETag+03MvH3rcnWxQM0x8FQQYw3XJx3YxenwWrTehtW4VgkaTjjhyR9pXK
+         XCrA+xkYyNsEpN0aJc9k6Ev/8r3S8r7g48p8NchyzSuzKss5SciOB5+KZOA1iawk+abC
+         5LSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=s199aw7gACo2V2pxPMbOkqhVWvVnsPCcR2goy3FQ+MM=;
+        b=Mt8TxHCus/uSx8dtZvdkfEj2/UTg5yOCI8ed0s3bQe8c84fc0x6LHqoIst6BTMlCAd
+         DTRmwe6TvNZDr5OpUMbF20dS4sD0FWULW0w5HXcqZ1/yT9YmjpgOAnJocugdBEjv+Z0z
+         miEpXPZ4Mb3GWlWhmu9xI0X9GMASj6sYrClIAqNipC9i1B1kCObharvZjaXo/7tNzR38
+         +o0Y1o/uLqS7aluGqk/wghRvLoOHlQMqm9tQeSvpcqlThwTKxD3vq39Ju8+0pona5+2+
+         lO1cdfeH6Y/vSqVg6XvqMjeAyH62uaXuEkY818RnjD5F/lxjTQ1Ndgn+Bki4a38T8Q5F
+         y/ag==
+X-Gm-Message-State: AOAM53110LXsJYrxPpVv7rHbAH7K4sKi6lbP2JDVx3ODKgR/38j96p2S
+        gHwJSmfH0tSkWNiQSoiaOZWlMvHQzLU=
+X-Google-Smtp-Source: ABdhPJwJO4NHu3MJeq/VfzDPjkxm32PdfxWqHvEFAkZPGoAAsGH7cOJo8jDHpVYmlpdOI17Yb7kKuw==
+X-Received: by 2002:a17:90a:a413:: with SMTP id y19mr8819172pjp.59.1594441651336;
+        Fri, 10 Jul 2020 21:27:31 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id 22sm7495377pfh.157.2020.07.10.21.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 21:27:30 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 21:27:30 -0700 (PDT)
+X-Google-Original-Date: Fri, 10 Jul 2020 21:27:21 PDT (-0700)
+Subject:     Re: [PATCH v2] riscv: Allow building with kcov coverage
+In-Reply-To: <20200626124056.29708-1-tklauser@distanz.ch>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bjorn Topel <bjorn.topel@gmail.com>, dvyukov@google.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     tklauser@distanz.ch
+Message-ID: <mhng-5606ac04-c52e-4211-bd30-fce86df7f0fd@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jul 2020 19:53:30 -0500:
+On Fri, 26 Jun 2020 05:40:56 PDT (-0700), tklauser@distanz.ch wrote:
+> Add ARCH_HAS_KCOV and HAVE_GCC_PLUGINS to the riscv Kconfig.
+> Also disable instrumentation of some early boot code and vdso.
+>
+> Boot-tested on QEMU's riscv64 virt machine.
 
-> git://git.samba.org/sfrench/cifs-2.6.git tags/5.8-rc4-smb3-fixes
+Thanks.  This is on for-next (with the ack).  I'm boot testing a config with
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5ab39e08ff1558ed80d93f5c5217338f19369a40
+    CONFIG_KCOV=y
+    CONFIG_KCOV_ENABLE_COMPARISONS=y
 
-Thank you!
+but LMK if there's something more interesting to test.  I don't see anything
+coverage-related in the boot log...
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> Cc: Björn Töpel <bjorn.topel@gmail.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> ---
+>  arch/riscv/Kconfig              | 2 ++
+>  arch/riscv/boot/Makefile        | 2 ++
+>  arch/riscv/kernel/vdso/Makefile | 1 +
+>  arch/riscv/mm/Makefile          | 2 ++
+>  4 files changed, 7 insertions(+)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 089293e4ad46..a7d7f8184f15 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -19,6 +19,7 @@ config RISCV
+>  	select ARCH_HAS_DEBUG_WX
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select ARCH_HAS_GIGANTIC_PAGE
+> +	select ARCH_HAS_KCOV
+>  	select ARCH_HAS_MMIOWB
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_SET_DIRECT_MAP
+> @@ -57,6 +58,7 @@ config RISCV
+>  	select HAVE_DMA_CONTIGUOUS if MMU
+>  	select HAVE_EBPF_JIT if MMU
+>  	select HAVE_FUTEX_CMPXCHG if FUTEX
+> +	select HAVE_GCC_PLUGINS
+>  	select HAVE_GENERIC_VDSO if MMU && 64BIT
+>  	select HAVE_PCI
+>  	select HAVE_PERF_EVENTS
+> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+> index 3530c59b3ea7..c59fca695f9d 100644
+> --- a/arch/riscv/boot/Makefile
+> +++ b/arch/riscv/boot/Makefile
+> @@ -14,6 +14,8 @@
+>  # Based on the ia64 and arm64 boot/Makefile.
+>  #
+>
+> +KCOV_INSTRUMENT := n
+> +
+>  OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
+>
+>  targets := Image loader
+> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+> index 29cf052f6541..4b0d3bcc44e5 100644
+> --- a/arch/riscv/kernel/vdso/Makefile
+> +++ b/arch/riscv/kernel/vdso/Makefile
+> @@ -29,6 +29,7 @@ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>
+>  # Disable gcov profiling for VDSO code
+>  GCOV_PROFILE := n
+> +KCOV_INSTRUMENT := n
+>
+>  # Force dependency
+>  $(obj)/vdso.o: $(obj)/vdso.so
+> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> index 363ef01c30b1..c0185e556ca5 100644
+> --- a/arch/riscv/mm/Makefile
+> +++ b/arch/riscv/mm/Makefile
+> @@ -5,6 +5,8 @@ ifdef CONFIG_FTRACE
+>  CFLAGS_REMOVE_init.o = -pg
+>  endif
+>
+> +KCOV_INSTRUMENT_init.o := n
+> +
+>  obj-y += init.o
+>  obj-y += extable.o
+>  obj-$(CONFIG_MMU) += fault.o pageattr.o
