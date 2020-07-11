@@ -2,105 +2,128 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3889FC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3722075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179CE20786
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uJrPPKby"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="S0xHc77z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGKB0k (ORCPT
+        id S1726973AbgGKB3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgGKB0k (ORCPT
+        Fri, 10 Jul 2020 21:29:12 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25158 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbgGKB3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 21:26:40 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C999FC08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:26:39 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a8so6007590edy.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FjrM6YbUyqhD93+HtMW7ZllqWvaztpbqB/gNMOtGURo=;
-        b=uJrPPKby1RgmkwDyZHBpFkBfJ9KFD0OuqUmYfgNoVzQzoUKJzLQkskDmDAfFHuZ2NY
-         T2BnhLWVnZfDeL/yNilOhadrYLWHfVnzL4/E7e49tjrdHqiCuxoV+erP5Osq8v5yGCql
-         PwHGs6YSAcPgrF8YzfqA+s6TH+U8vt96voUmimZR66l1K8R5RK6nOwADrW3d2OMdBFoM
-         UN+2SEbAkTuqKfE30XdGW113kx05fAgVeX1Akar1FM4eci8rNx2nRaWp1vYwUmff84jZ
-         b94ym6jIEU4Cqnni62TODUGGnvtFaavfr4EcIyPQymSWLag08SYG4K+kSfqtGhlvgdoK
-         XqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FjrM6YbUyqhD93+HtMW7ZllqWvaztpbqB/gNMOtGURo=;
-        b=Y7kCdB+JmNOfPKz2xQiIchnmVSfKxlpvrQDOur5nsBcycHFKinhQPSw1fRx+wpypnB
-         Ovp6dEZkKl0i/BJiPar1+SLiz2PLhEpF4ER87Q1vpQQE+2TZeIUd0LkI5JmuyVRB3Od2
-         BFMJE48RG84aVra3g3R60P3W6JqmQLOCn25yfONCX1y7OAH1k12RGfMdLk2WYR/62n0a
-         d+dEeov2DUWAUALnD9/69KN7rF0f3QmeUIK2IclblDttz2dOOXo39pUS3GD5BomCqN1O
-         rNndUgcDlnkZbC4lc5pWMQh18nZ3JHmTeFr28apMXRIWJV6JbvloIZxoi8l61YCGjWgz
-         DF+w==
-X-Gm-Message-State: AOAM533UEW/Zc5mGasfgPYkKF/otw7k/zX27bnp2moMn/nWLAzX3BzYp
-        31zA8xA9Mx5Rjty1dMR3mVTWFreoJM+/TCQDa1GAepNn+VY=
-X-Google-Smtp-Source: ABdhPJxaZWb0EaVxpvyuj0PNC4kHH62YNE23Hgn1jOXx+/IdRo57yhZxCnNSc+gMvja7FX2n7rAL1tZGmTOYfy3RY6I=
-X-Received: by 2002:a05:6402:21c2:: with SMTP id bi2mr79608854edb.296.1594430798458;
- Fri, 10 Jul 2020 18:26:38 -0700 (PDT)
+        Fri, 10 Jul 2020 21:29:11 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06B1OTFS027668
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:29:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=UkMus7+Vz7Uc0JQLrYIg82Co1meCRFb5ndzEGIP5M7A=;
+ b=S0xHc77zlybck52+BD/SPd8coZyfQcB+YYwSxpH1gvByjEKie2Tk+0Bx6H+nfPPQ5M5q
+ EDXUrmRe0XTCnQUIsF+kaco0XOWhxaS6NTahsccGg2HegeUU37LYg5CSLYK04ftdePJV
+ YhwxruwiiCZ8BXBX8z+BWpFLjD5+Q0v+mIo= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 325k2cd84t-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:29:10 -0700
+Received: from intmgw003.08.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 10 Jul 2020 18:29:07 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 4AB3C62E4FE4; Fri, 10 Jul 2020 18:26:50 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH bpf-next 0/5] bpf: fix stackmap on perf_events with PEBS
+Date:   Fri, 10 Jul 2020 18:26:34 -0700
+Message-ID: <20200711012639.3429622-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 10 Jul 2020 18:26:27 -0700
-Message-ID: <CAPcyv4jSHxx-dscb7PAadNVBWhVWgT_iczah_6TQ=JSprw9ZNg@mail.gmail.com>
-Subject: [GIT PULL] libnvdimm fix for v5.8-rc5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-10_14:2020-07-10,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007110006
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
+Calling get_perf_callchain() on perf_events from PEBS entries may cause
+unwinder errors. To fix this issue, perf subsystem fetches callchain earl=
+y,
+and marks perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
+Similar issue exists when BPF program calls get_perf_callchain() via
+helper functions. For more information about this issue, please refer to
+discussions in [1].
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-fix-v5.8-rc5
+This set provides a solution for this problem.
 
-...to receive a one line fix for a regression from some of the 'keys'
-subsystem reworks that landed in -rc1. I had been holding off to see
-if anything else percolated up, but nothing has.
+1/5 blocks ioctl(PERF_EVENT_IOC_SET_BPF) attaching BPF program that calls
+    get_perf_callchain() to perf events with PEBS entries.
+2/5 exposes callchain fetched by perf subsystem to BPF program.
+3/5 introduces bpf_get_callchain_stackid(), which is alternative to
+    bpf_get_stackid() for perf_event with PEBS.
+4/5 adds selftests for 1/5.
+5/5 adds selftests for 2/5 and 3/5.
 
-Please pull, thanks.
+[1] https://lore.kernel.org/lkml/ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.=
+com/
 
----
+Song Liu (5):
+  bpf: block bpf_get_[stack|stackid] on perf_event with PEBS entries
+  bpf: add callchain to bpf_perf_event_data
+  bpf: introduce bpf_get_callchain_stackid
+  selftests/bpf: add get_stackid_cannot_attach
+  selftests/bpf: add callchain_stackid
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+ include/linux/bpf.h                           |  1 +
+ include/linux/filter.h                        |  3 +-
+ include/linux/perf_event.h                    |  5 --
+ include/linux/trace_events.h                  |  5 ++
+ include/uapi/linux/bpf.h                      | 43 +++++++++++++
+ include/uapi/linux/bpf_perf_event.h           |  7 +++
+ kernel/bpf/btf.c                              |  5 ++
+ kernel/bpf/stackmap.c                         | 63 ++++++++++++++-----
+ kernel/bpf/verifier.c                         |  7 ++-
+ kernel/events/core.c                          | 10 +++
+ kernel/trace/bpf_trace.c                      | 29 +++++++++
+ scripts/bpf_helpers_doc.py                    |  2 +
+ tools/include/uapi/linux/bpf.h                | 43 +++++++++++++
+ tools/include/uapi/linux/bpf_perf_event.h     |  8 +++
+ .../bpf/prog_tests/callchain_stackid.c        | 61 ++++++++++++++++++
+ .../prog_tests/get_stackid_cannot_attach.c    | 57 +++++++++++++++++
+ .../selftests/bpf/progs/callchain_stackid.c   | 37 +++++++++++
+ 17 files changed, 364 insertions(+), 22 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/callchain_stac=
+kid.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/get_stackid_ca=
+nnot_attach.c
+ create mode 100644 tools/testing/selftests/bpf/progs/callchain_stackid.c
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-fix-v5.8-rc5
-
-for you to fetch changes up to 813357fead4adee73f7eca6bbe0e69dfcf514dc6:
-
-  libnvdimm/security: Fix key lookup permissions (2020-07-08 17:08:01 -0700)
-
-----------------------------------------------------------------
-libnvdimm fix for v5.8-rc5
-
-Fix key ring search permissions to address a regression from -rc1.
-
-----------------------------------------------------------------
-Dan Williams (1):
-      libnvdimm/security: Fix key lookup permissions
-
- drivers/nvdimm/security.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--
+2.24.1
