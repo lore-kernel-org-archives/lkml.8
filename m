@@ -2,139 +2,116 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9D620731
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHjyPED1"
+	by mail.kernel.org (Postfix) with ESMTP id 82A5720731
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgGKXzH (ORCPT
+        id S1727955AbgGKX7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 19:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgGKXzH (ORCPT
+        Sat, 11 Jul 2020 19:59:08 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:53228 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgGKX7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 19:55:07 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF64C08C5DD;
-        Sat, 11 Jul 2020 16:55:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so10573824ljn.4;
-        Sat, 11 Jul 2020 16:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E9dH9xs0WOC7kOt2IbwahbmPC33CGD8YY7xKZOFfTBQ=;
-        b=sHjyPED15yrfHyhsVLnPdupQLP3/g8GVPQemwRNJGA6EDHCMR1CO71/o0kZ2Oz8Kav
-         r488SxyoTCtqoTDxMOnAw4Irp285Yny/3CQjl+Tgr8eNPOJRGMR6Bd8WT5qSEHsFqR7S
-         Lv9GIKHOffRTtZgf1ifqVT/fhQN2Fy+edkkHyKEN3n0zVTowj5Qz4xd9Pz4gEfx2714i
-         sVnxzrqJSeaH/h0Dui8s9AFKu7WkbWc1FlhEUwK8RRrx3tFuW+o7CmIyuua+CCyPZTJP
-         2s5igv6p8F2/Rh/jzoajWl2s+yEUyEjUt0zuzmdPJkDS8e85hYwFPtKKV3fmXED7ICXj
-         sFDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E9dH9xs0WOC7kOt2IbwahbmPC33CGD8YY7xKZOFfTBQ=;
-        b=QbnDbCQBfdLY81LIrVUZG4VLtOuQtvOwYkxZpGkOJHblx7P2tfq7IsgDC54L9Z+Cbk
-         rKc06WXDFj0RCrJtRm05jwVsalziW2Cr0EctR05nfqZwhvQVhmvgHGdqaCO2v/8ml/TD
-         5q9ggKDqPgjWv9wnobruY7dXxriGlVMVhgq9vSUmN/eJ63a3wf5jjmiyQLoa7n7ce2Ko
-         QVXGalQE11QRG2msi1d+zucTwvzyE894pU+jgQ22xCHE8S925e80zp3i843PWCreErTP
-         uXWXwUavPYDLIl5r0XXoeCthb4emYCKPYH8WFCeX4e20ym6jZLrHcKh8Th2rqOegiTyC
-         SOlw==
-X-Gm-Message-State: AOAM531jxYL+iWalq4UstVvHvV0yuf1rGPWxDcg9H0PqmG+R6yJnePz3
-        a8BtVqrjmXBfTTyvaUznbMiFRRVYh/3OWRrM7ZhCzR1E7Nw=
-X-Google-Smtp-Source: ABdhPJxjD0K7f0vNG0otnFa0TzRqm8fcm99gbNPJ3m//mFp9ZflKoKVmrPeSmnChE3vkedJvYvRkJK+4D/f8GHWmvpk=
-X-Received: by 2002:a2e:954c:: with SMTP id t12mr43979065ljh.287.1594511705088;
- Sat, 11 Jul 2020 16:55:05 -0700 (PDT)
+        Sat, 11 Jul 2020 19:59:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 45DBA200080F;
+        Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Mk8KdIFMvSK7; Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 1F2C6200029E;
+        Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.79])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id BF109C019F4;
+        Sun, 12 Jul 2020 07:59:04 +0800 (HKT)
+Subject: Re: [PATCH v5 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jack Lo <jack.lo@gtsys.com.hk>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org
+References: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
+ <20200710021536.27544-3-chris.ruehl@gtsys.com.hk>
+ <20200710163153.GA2760091@bogus>
+ <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
+Message-ID: <4189dcf7-fc67-29c4-6357-646071d7ded0@gtsys.com.hk>
+Date:   Sun, 12 Jul 2020 07:59:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cpuwolf@gmail.com> <20200710065112.18286-1-cpuwolf@gmail.com>
-In-Reply-To: <20200710065112.18286-1-cpuwolf@gmail.com>
-From:   Wei Shuai <cpuwolf@gmail.com>
-Date:   Sun, 12 Jul 2020 07:54:54 +0800
-Message-ID: <CACa7zykn0q9XJAUvrqnNATr4DUv3Kc7XujF3vm6sfRB5pE6YNQ@mail.gmail.com>
-Subject: [PATCH] Input: break joystick limitation of maximum 80 buttons
-To:     "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     cpuwolf <cpuwolf@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Borislav Petkov <bp@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
-        Mark Gross <mgross@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Erwan Velu <e.velu@criteo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The joystick max buttons 80 limitation comes from
+Morning,
 
-#define BTN_JOYSTICK 0x120
-#define BTN_DEAD 0x12f
-#define BTN_TRIGGER_HAPPY 0x2c0
-#define KEY_MAX 0x2ff
+On 11/7/2020 6:05 pm, Chris Ruehl wrote:
+> 
+> On 11/7/2020 12:31 am, Rob Herring wrote:
+>> On Fri, 10 Jul 2020 10:15:35 +0800, Chris Ruehl wrote:
+>>> Add documentation for the newly added DTS support in the shtc1 driver.
+>>> To align with the drivers logic to have high precision by default
+>>> a boolean sensirion,low_precision is used to switch to low precision.
+>>>
+>>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+>>> ---
+>>>   .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
+>>>   1 file changed, 57 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+>>>
+>>
+>>
+>> My bot found errors running 'make dt_binding_check' on your patch:
+>>
+>> Error: 
+>> Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:25.13-14 
+>> syntax error
+>> FATAL ERROR: Unable to parse input tree
+>> scripts/Makefile.lib:315: recipe for target 
+>> 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
+>> make[1]: *** 
+>> [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
+>> make[1]: *** Waiting for unfinished jobs....
+>> Makefile:1347: recipe for target 'dt_binding_check' failed
+>> make: *** [dt_binding_check] Error 2
+>>
+>>
+>> See https://patchwork.ozlabs.org/patch/1326414
+>>
+>> If you already ran 'make dt_binding_check' and didn't see the above
+>> error(s), then make sure dt-schema is up to date:
+>>
+>> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>>
+>> Please check and re-submit.
+>>
+> 
+> Hi Rob,
+> 
+> I did run the test and didn't had any Error. dt-schema 2020.06 installed from 
+> git. pip3 install -e.
+> 
+> Can you help?
+> 
+> Chris
 
-include/uapi/linux/input-event-codes.h
+Solved, missing ";" behind reg = <0x70>
 
-according to function hidinput_configure_usage() in file drivers/hid/hid-input.c
-
-the joystick button mapping is not a continues space
-generally speaking, the mapping space is from
-
-1. BTN_JOYSTICK~BTN_DEAD
-2. BTN_TRIGGER_HAPPY~KEY_MAX
-
-Finally, I got the max limitation is 80.
-The patch is expanding KEY_MAX from 0x2ff to 4ff
-and the change has been verified on 104 button USB HID device on Ubuntu
-
-Signed-off-by: Wei Shuai <cpuwolf@gmail.com>
----
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 8d764aab29de..35eb59ae1f19 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -311,7 +311,7 @@ struct pcmcia_device_id {
- /* Input */
- #define INPUT_DEVICE_ID_EV_MAX         0x1f
- #define INPUT_DEVICE_ID_KEY_MIN_INTERESTING    0x71
--#define INPUT_DEVICE_ID_KEY_MAX                0x2ff
-+#define INPUT_DEVICE_ID_KEY_MAX                0x4ff
- #define INPUT_DEVICE_ID_REL_MAX                0x0f
- #define INPUT_DEVICE_ID_ABS_MAX                0x3f
- #define INPUT_DEVICE_ID_MSC_MAX                0x07
-diff --git a/include/uapi/linux/input-event-codes.h
-b/include/uapi/linux/input-event-codes.h
-index b6a835d37826..ad1b9bed3828 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -774,7 +774,7 @@
-
- /* We avoid low common keys in module aliases so they don't get huge. */
- #define KEY_MIN_INTERESTING    KEY_MUTE
--#define KEY_MAX                        0x2ff
-+#define KEY_MAX                        0x4ff
- #define KEY_CNT                        (KEY_MAX+1)
-
- /*
---
-2.17.1
+will resend.
