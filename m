@@ -2,297 +2,237 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E32AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E444CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 302D4206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC1020725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFwIBWtH"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="roI/CBDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGKKPm (ORCPT
+        id S1728043AbgGKKWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgGKKPm (ORCPT
+        Sat, 11 Jul 2020 06:22:00 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:36785 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgGKKV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:15:42 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4AEFC08C5DD;
-        Sat, 11 Jul 2020 03:15:41 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id t11so3645309pfq.11;
-        Sat, 11 Jul 2020 03:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=x3C6PMVhuvXtoXBSzqymZGfXBgxlxLggJJneWvRkdNw=;
-        b=uFwIBWtHcdT5LPhz8ZsV6qOtlEx4QP6RgZOTiWfnfCeG4UR46A+dBccmFHXfoPdA3U
-         mp41jbiuuCBUjmC1SMSrIxsDWW3WVqk81qxgpU3CXvp3R1LCtFKCUzCXyPNjT3UuNFx5
-         9UmBfMFM9mLJewRmv308K5n9GxaYg+rE7DBNg1Thlo/l5rYcMFOngjXoZ8TveDervhkr
-         8NWHVrKQD+7mObD6CPSB9FVjGhk7wTdl4thdoFD5OMeI9EYNg0i8FkJFN4jVBgEyIqmP
-         2mCTOJwKaLzqbexhoVTFjTyWRX82tpKXzeGXdlgTgD/1Avjejre5s9x9MmrqE5s98E7P
-         RwcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=x3C6PMVhuvXtoXBSzqymZGfXBgxlxLggJJneWvRkdNw=;
-        b=oJYMlui+KsIKs1AaD2b9NIYenFwioufGK+53NflHBuJMnoI7b4/hY1pVyUmGAdjc7p
-         02VP4HBtWcW0fO/K9h4m9fGlzAy9d3kvz6wCX5v3eVUB3snh/cG8ksMj9pJ7C98IV4dx
-         1O8NZuQXba4LjItl9/YQFA0nihCzsvBk8tG4VyuuanE9b3W/QUtLqoiEuhYnWJ4uBFbm
-         wEO37lvqADnvqavhQQSkaPu3kuBlfceliHtP/lflZz/PxBxbffKh2b78LsBe6doeWYsh
-         yyyvPvumpt27yciVLhdf2HAcuybz6i7g9/7IxJVD6sMUYZzFtlNGMXc2SJTok11s/FR+
-         ZJ/A==
-X-Gm-Message-State: AOAM531LD53C168f6fA+V4kS0mSLYUVY1b3gotKDXLgI3l9jiPErzIbF
-        Lliispt8nBmCoyzwSTmsgh4=
-X-Google-Smtp-Source: ABdhPJz6wxc7+Aw9vVBZ4PotiljrxEwcbKTMrWEo9sYGuff4Yy/ZcR4fD5p2MNExoxc9qUHAmdqX9g==
-X-Received: by 2002:a62:2b96:: with SMTP id r144mr66273549pfr.272.1594462541246;
-        Sat, 11 Jul 2020 03:15:41 -0700 (PDT)
-Received: from devel-ng-exporter-249.localdomain ([45.32.120.100])
-        by smtp.gmail.com with ESMTPSA id x9sm7883575pgr.57.2020.07.11.03.15.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 Jul 2020 03:15:40 -0700 (PDT)
-From:   Yahui Chen <goodluckwillcomesoon@gmail.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     steven.zou@intel.com, Yahui Chen <goodluckwillcomesoon@gmail.com>
-Subject: [PATCH] xsk: ixgbe: solve the soft interrupt 100% CPU usage when xdp rx traffic congestion
-Date:   Sat, 11 Jul 2020 18:10:38 +0800
-Message-Id: <1594462239-19596-1-git-send-email-goodluckwillcomesoon@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 11 Jul 2020 06:21:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=hKkiZdQQQCV7LCEzPFLeR2jKYXURO3Db8fTbLBVLOzM=;
+        b=roI/CBDdvtdfO+tdrcxWtxXDQztqaWnyzVYdpzdfDAMLP9fn1JO/eSwez7VNlpymbCzl
+        5zzKbEjCgUMJTzboObIFpZguC1nI+zHsxmTEr1V7JbFtPFtHQFbOoA4ENbD0NTSAY/RQIr
+        342C2ZQrUqYAcRNHeI28ECV9r03gGtzPQ=
+Received: by filterdrecv-p3mdw1-75c584b9c6-jp7b2 with SMTP id filterdrecv-p3mdw1-75c584b9c6-jp7b2-18-5F0992C5-3E
+        2020-07-11 10:21:57.869390778 +0000 UTC m=+1271538.380795897
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP
+        id 9PlySEwUR9ap1X6LQ-LTfQ
+        Sat, 11 Jul 2020 10:21:57.603 +0000 (UTC)
+Subject: Re: [RFC 07/12] media: uapi: h264: Add DPB entry field reference
+ flags
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20190901124531.23645-1-jonas@kwiboo.se>
+ <HE1PR06MB4011559BF2447047C66285D2ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <233509924f72d69824920d9312373eced68674c0.camel@collabora.com>
+ <20200710101333.05077f18@collabora.com>
+ <6232d8475e169ee53b5864959af21d14bf0fc620.camel@collabora.com>
+ <20200710140502.627b2b54@collabora.com>
+ <05b6cff6ba230c0ab6a562e17926d8503e2dfadd.camel@collabora.com>
+ <9a897ef99048077233685b121b03bd750e4d4a83.camel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <cf4a5d3f-934f-de59-b5df-97b23e30cb1b@kwiboo.se>
+Date:   Sat, 11 Jul 2020 10:21:57 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <9a897ef99048077233685b121b03bd750e4d4a83.camel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h=2F3MSfh0EOMJ0496t?=
+ =?us-ascii?Q?Jf=2F+iUqhESCgGvRvw6so+hSgvWFjaMthfbkbcQR?=
+ =?us-ascii?Q?g=2FAKU=2F=2F1LNxdwDk6bYbn=2FB5M6FbNNIU73Nunwl+?=
+ =?us-ascii?Q?eJWhuejsrRFpw8PoiJEc3yRjZYuts3FxOf4q2Hn?=
+ =?us-ascii?Q?OEfFOxvi4OsYOwDay3f8MLRGzpUIu+wYdgZyQEF?=
+ =?us-ascii?Q?tevuCaTnYRiX3Pzao8Y7g=3D=3D?=
+To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Language: sv
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the user mode APP of drv-mode xsk does not process packets fast enough,
-the packet receiving speed is lower than the flow rate. For example, the
-flow rate is 1Mpps, and the APP processing speed is 10Kpss only, this will
-cause a series of problems:
+On 2020-07-10 23:49, Nicolas Dufresne wrote:
+> Le vendredi 10 juillet 2020 à 09:25 -0300, Ezequiel Garcia a écrit :
+>> +Nicolas
+>>
+>> On Fri, 2020-07-10 at 14:05 +0200, Boris Brezillon wrote:
+>>> On Fri, 10 Jul 2020 08:50:28 -0300
+>>> Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>>>
+>>>> On Fri, 2020-07-10 at 10:13 +0200, Boris Brezillon wrote:
+>>>>> On Fri, 10 Jul 2020 01:21:07 -0300
+>>>>> Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>>>>>   
+>>>>>> Hello Jonas,
+>>>>>>
+>>>>>> In the context of the uAPI cleanup,
+>>>>>> I'm revisiting this patch.
+>>>>>>
+>>>>>> On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:  
+>>>>>>> Add DPB entry flags to help indicate when a reference frame is a
+>>>>>>> field picture
+>>>>>>> and how the DPB entry is referenced, top or bottom field or full
+>>>>>>> frame.
+>>>>>>>
+>>>>>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>>>>>>> ---
+>>>>>>>  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
+>>>>>>>  include/media/h264-ctrls.h                       |  4 ++++
+>>>>>>>  2 files changed, 16 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>>>>>> b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>>>>>> index bc5dd8e76567..eb6c32668ad7 100644
+>>>>>>> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>>>>>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>>>>>> @@ -2022,6 +2022,18 @@ enum
+>>>>>>> v4l2_mpeg_video_h264_hierarchical_coding_type -
+>>>>>>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
+>>>>>>>        - 0x00000004
+>>>>>>>        - The DPB entry is a long term reference frame
+>>>>>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
+>>>>>>> +      - 0x00000008
+>>>>>>> +      - The DPB entry is a field picture
+>>>>>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
+>>>>>>> +      - 0x00000010
+>>>>>>> +      - The DPB entry is a top field reference
+>>>>>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
+>>>>>>> +      - 0x00000020
+>>>>>>> +      - The DPB entry is a bottom field reference
+>>>>>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
+>>>>>>> +      - 0x00000030
+>>>>>>> +      - The DPB entry is a reference frame
+>>>>>>>  
+>>>>>>>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
+>>>>>>>      Specifies the decoding mode to use. Currently exposes slice-
+>>>>>>> based and
+>>>>>>> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+>>>>>>> index e877bf1d537c..76020ebd1e6c 100644
+>>>>>>> --- a/include/media/h264-ctrls.h
+>>>>>>> +++ b/include/media/h264-ctrls.h
+>>>>>>> @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
+>>>>>>>  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
+>>>>>>>  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
+>>>>>>>  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
+>>>>>>> +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
+>>>>>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
+>>>>>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
+>>>>>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
+>>>>>>>      
+>>>>>>
+>>>>>> I've been going thru the H264 spec and I'm unsure,
+>>>>>> are all these flags semantically needed?
+>>>>>>
+>>>>>> For instance, if one of REF_BOTTOM or REF_TOP (or both)
+>>>>>> are set, doesn't that indicate it's a field picture?
+>>>>>>
+>>>>>> Or conversely, if neither REF_BOTTOM or REF_TOP are set,
+>>>>>> then it's a frame picture?  
+>>>>>
+>>>>> I think that's what I was trying to do here [1]
+>>>>>
+>>>>> [1]https://patchwork.kernel.org/patch/11392095/  
+>>>>
+>>>> Right. Aren't we missing a DPB_ENTRY_FLAG_TOP_FIELD?
+>>>>
+>>>> If I understand correctly, the DPB can contain:
+>>>>
+>>>> * frames (FLAG_FIELD not set)
+>>>> * a field pair, with a single field (FLAG_FIELD and either TOP or BOTTOM).
+>>>> * a field pair, with boths fields (FLAG_FIELD and both TOP or BOTTOM).
+>>>
+>>> Well, my understand is that, if the buffer contains both a TOP and
+>>> BOTTOM field, it actually becomes a full frame, so you actually have
+>>> those cases:
+>>>
+>>> * FLAG_FIELD not set: this a frame (note that a TOP/BOTTOM field
+>>>   decoded buffer can become of frame if it's complemented with the
+>>>   missing field later during the decoding)
+>>> * FLAG_FIELD set + BOTTOM_FIELD not set: this is a TOP field
+>>> * FLAG_FIELD set + BOTTOM_FIELD set: this is a BOTTOM field
+>>> * FLAG_FIELD not set + BOTTOM_FIELD set: invalid combination
+> 
+> Let's admit, while this work, it's odd. Can we just move to that instewad ?
+> 
+>   FLAG_TOP_FIELD
+>   FLAG_BOTTOM_FIELD
+>   FLAG_FRAME = (FLAG_TOP_FIELD | FLAG_BOTTOM_FIELD)
+> 
+> So it can be used as a flag, but also is a proper enum and there is no longer an
+> invalid combination.
+>   
+>>>
+>>> but I might be wrong.
 
-1. If the APP doesn't use wakeup mechanism, in other world, the
-`XDP_UMEM_USES_NEED_WAKEUP` flag is not set. Then the CPU usage of the
-soft interrupt corresponding to the network card queue using xsk has
-always been 100%. The reason is that the APP is slow to receive packets,
-the packet desc can not return to the fill queue in time, resulting in
-`ixgbe_alloc_rx_buffers_zc` fail to obtain the desc, so
-`ixgbe_clean_rx_irq_zc` returns 64, which further causes its corresponding
-NAPI to be always running status, so the CPU has been busy performing soft
-interrupts.
+There seems to be some misunderstanding here, the top/bottom flagging should
+not be used to describe if the picture is a field, field pair or frame, it
+should be used to flag if a frame or the top and/or bottom field (in case of
+a field pair) is "used for short-term reference".
 
-2. If the wakeup mechanism is used, that is, use the
-`XDP_UMEM_USES_NEED_WAKEUP` flag. This method takes advantage of the
-interrupt delay function of ixgbe skillfully, thus solving the problem
-that the si CPU is always 100%. However, it will cause other problems.
-The port-level flow control will be triggered on 82599, and the pause
-frame will be sent to the upstream sender. This will affect the other
-packet receiving queues of the network card, resulting in the packet
-receiving rate of all queues dropping to 10Kpps.
+FLAG_TOP_REF
+FLAG_BOTTOM_REF
+FLAG_FRAME_REF = (FLAG_TOP_REF | FLAG_BOTTOM_REF)
 
-This situation can be understood as rx traffic congestion. The reason of
-congestion is that XSK queue cannot get DMA address in time, so packet
-cannot be delivered to the host memory which result in packets congestion
-happening on the hardware FIFO. If the number of packets exceeds the FIFO
-waterline, the network card will send pause frames.
+Would be a more appropriate naming.
 
-This patch design another way. When the queue corresponding to xsk is
-initializing, a piece of DMA memory, named congestion memory, is applied
-for traffic congestion. If failing to obtain the desc from the fill queue,
-point the xsk ring packet DMA address to the congestion memory. Let the
-network card hardware DMA the packet to the congetion memory, and the APP
-will not receive packet from the congestion memory. This way can solve the
-two problems mentioned above. However, the wakeup mechanism should also be
-retained. When the network card has only one queue, the wakeup mechanism
-will have advantages.
+The FIELD_PIC flag would then be used to describe if the picture is a
+reference frame or a complementary reference field pair.
 
-TODO:
-Apply this modification to all drivers that support xsk drv mode
+As described in hantro h264 driver [1] the MV buffer is split in two
+for field encoded frames, and I guess the rkvdec block does something
+similar and therefore the HW blocks probably needs to know if the reference
+picture is a reference frame or a complementary reference field pair.
+It should be possible to keep such state in driver but since such information
+was easily available in ffmpeg and the driver being "stateless" using a flag
+seamed like a good choice at the time.
 
-Signed-off-by: Yahui Chen <goodluckwillcomesoon@gmail.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe.h     |  3 ++
- drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 61 ++++++++++++++++++++++++----
- 2 files changed, 56 insertions(+), 8 deletions(-)
+Please note that I have not done any test without the "field pic" flagging
+but both mpp and the imx/hantro reference code are configuring this bit.
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe.h b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-index 5ddfc83..33601c1 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe.h
-@@ -351,6 +351,9 @@ struct ixgbe_ring {
- 	};
- 	struct xdp_rxq_info xdp_rxq;
- 	struct xdp_umem *xsk_umem;
-+#define XDP_CONGESTION_MEM_SIZE	(4096)
-+	void *congestion_addr;		/* address of buffer when traffic congestion */
-+	dma_addr_t congestion_dma;	/* dma address of packet when traffic congestion */
- 	u16 ring_idx;		/* {rx,tx,xdp}_ring back reference idx */
- 	u16 rx_buf_len;
- } ____cacheline_internodealigned_in_smp;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-index be9d2a8..f4a8237 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-@@ -27,6 +27,8 @@ static int ixgbe_xsk_umem_enable(struct ixgbe_adapter *adapter,
- 	struct net_device *netdev = adapter->netdev;
- 	bool if_running;
- 	int err;
-+	int size = XDP_CONGESTION_MEM_SIZE;
-+	struct ixgbe_ring *rx_ring;
- 
- 	if (qid >= adapter->num_rx_queues)
- 		return -EINVAL;
-@@ -49,6 +51,21 @@ static int ixgbe_xsk_umem_enable(struct ixgbe_adapter *adapter,
- 
- 	if (if_running) {
- 		ixgbe_txrx_ring_enable(adapter, qid);
-+		rx_ring->congestion_addr = kmalloc(size, GFP_DMA | GFP_KERNEL);
-+		if (!rx_ring->congestion_addr) {
-+			rx_ring->congestion_addr = kmalloc(size, GFP_DMA | GFP_KERNEL);
-+			if (!rx_ring->congestion_addr)
-+				return -ENOMEM;
-+		}
-+		rx_ring = adapter->rx_ring[qid];
-+		rx_ring->congestion_dma = dma_map_single(rx_ring->dev, rx_ring->congestion_addr,
-+							 size,
-+							 DMA_FROM_DEVICE);
-+		/* sync the buffer for use by the device */
-+		dma_sync_single_range_for_device(rx_ring->dev, rx_ring->congestion_dma,
-+						 0,
-+						 size,
-+						 DMA_FROM_DEVICE);
- 
- 		/* Kick start the NAPI context so that receiving will start */
- 		err = ixgbe_xsk_wakeup(adapter->netdev, qid, XDP_WAKEUP_RX);
-@@ -63,6 +80,8 @@ static int ixgbe_xsk_umem_disable(struct ixgbe_adapter *adapter, u16 qid)
- {
- 	struct xdp_umem *umem;
- 	bool if_running;
-+	int size = XDP_CONGESTION_MEM_SIZE;
-+	struct ixgbe_ring *rx_ring;
- 
- 	umem = xdp_get_umem_from_qid(adapter->netdev, qid);
- 	if (!umem)
-@@ -71,9 +90,18 @@ static int ixgbe_xsk_umem_disable(struct ixgbe_adapter *adapter, u16 qid)
- 	if_running = netif_running(adapter->netdev) &&
- 		     ixgbe_enabled_xdp_adapter(adapter);
- 
--	if (if_running)
-+	if (if_running) {
- 		ixgbe_txrx_ring_disable(adapter, qid);
- 
-+		rx_ring = adapter->rx_ring[qid];
-+		dma_sync_single_range_for_cpu(rx_ring->dev, rx_ring->congestion_dma,
-+					      0,
-+					      size,
-+					      DMA_FROM_DEVICE);
-+		dma_unmap_single(rx_ring->dev, rx_ring->congestion_addr, size, DMA_FROM_DEVICE);
-+		kfree(rx_ring->congestion_addr);
-+	}
-+
- 	clear_bit(qid, adapter->af_xdp_zc_qps);
- 	xsk_buff_dma_unmap(umem, IXGBE_RX_DMA_ATTR);
- 
-@@ -152,10 +180,12 @@ bool ixgbe_alloc_rx_buffers_zc(struct ixgbe_ring *rx_ring, u16 count)
- 		bi->xdp = xsk_buff_alloc(rx_ring->xsk_umem);
- 		if (!bi->xdp) {
- 			ok = false;
--			break;
-+			/* rx traffic congestion, we do not use umem DMA address */
-+			dma = rx_ring->congestion_dma;
-+		} else {
-+			dma = xsk_buff_xdp_get_dma(bi->xdp);
- 		}
- 
--		dma = xsk_buff_xdp_get_dma(bi->xdp);
- 
- 		/* Refresh the desc even if buffer_addrs didn't change
- 		 * because each write-back erases this info.
-@@ -231,14 +261,15 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 			  struct ixgbe_ring *rx_ring,
- 			  const int budget)
- {
--	unsigned int total_rx_bytes = 0, total_rx_packets = 0;
-+	unsigned int total_rx_bytes = 0, total_rx_packets = 0,
-+			handled_bytes = 0, handled_packets = 0;
- 	struct ixgbe_adapter *adapter = q_vector->adapter;
- 	u16 cleaned_count = ixgbe_desc_unused(rx_ring);
- 	unsigned int xdp_res, xdp_xmit = 0;
- 	bool failure = false;
- 	struct sk_buff *skb;
- 
--	while (likely(total_rx_packets < budget)) {
-+	while (likely(handled_packets < budget)) {
- 		union ixgbe_adv_rx_desc *rx_desc;
- 		struct ixgbe_rx_buffer *bi;
- 		unsigned int size;
-@@ -263,6 +294,16 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 		dma_rmb();
- 
- 		bi = &rx_ring->rx_buffer_info[rx_ring->next_to_clean];
-+		/* rx traffic congestion, ignore this packet */
-+		if (unlikely(!bi->xdp)) {
-+			handled_packets++;
-+			handled_bytes += size;
-+
-+			cleaned_count++;
-+			ixgbe_inc_ntc(rx_ring);
-+			continue;
-+		}
-+
- 
- 		if (unlikely(!ixgbe_test_staterr(rx_desc,
- 						 IXGBE_RXD_STAT_EOP))) {
-@@ -296,6 +337,8 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 				xsk_buff_free(bi->xdp);
- 
- 			bi->xdp = NULL;
-+			handled_packets++;
-+			handled_bytes += size;
- 			total_rx_packets++;
- 			total_rx_bytes += size;
- 
-@@ -317,6 +360,8 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 		if (eth_skb_pad(skb))
- 			continue;
- 
-+		handled_packets++;
-+		handled_bytes += size;
- 		total_rx_bytes += skb->len;
- 		total_rx_packets++;
- 
-@@ -341,8 +386,8 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 	rx_ring->stats.packets += total_rx_packets;
- 	rx_ring->stats.bytes += total_rx_bytes;
- 	u64_stats_update_end(&rx_ring->syncp);
--	q_vector->rx.total_packets += total_rx_packets;
--	q_vector->rx.total_bytes += total_rx_bytes;
-+	q_vector->rx.total_packets += handled_packets;
-+	q_vector->rx.total_bytes += handled_bytes;
- 
- 	if (xsk_umem_uses_need_wakeup(rx_ring->xsk_umem)) {
- 		if (failure || rx_ring->next_to_clean == rx_ring->next_to_use)
-@@ -352,7 +397,7 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
- 
- 		return (int)total_rx_packets;
- 	}
--	return failure ? budget : (int)total_rx_packets;
-+	return (int)handled_packets;
- }
- 
- void ixgbe_xsk_clean_rx_ring(struct ixgbe_ring *rx_ring)
--- 
-1.8.3.1
+[1] https://git.linuxtv.org/media_tree.git/tree/drivers/staging/media/hantro/hantro_g1_h264_dec.c#n265
 
+Regards,
+Jonas
+
+>>
+>> Yes, perhaps that's correct. I was trying to think strictly
+>> in terms of the H264 semantics, to define a clean interface.
+>>
+>> From the mpp code, looks like the above is enough for rkvdec
+>> (although I haven't done any tests).
+>>
+>> Ezequiel
+>>
+>>
+>>
+> 
