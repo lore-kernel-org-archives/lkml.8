@@ -2,150 +2,136 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDADCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED0B2075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594431137;
-	bh=JHAq849TrDR2TO0YVgHnBwsgpBJXggDvOdSCDOO9Mhg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mb1qe4jLCDfjtkn32XWKo80Kv7uzyGqdA0t9y2k8AD8FWeeCZYs3N8foAUSIvpB89
-	 YvtIfzSYkGSsARhwkI17bGY+kaRS2juoXX2r7qZ8DnkuQmpnSDQ4dOOCKfpzXS4Nrr
-	 UDwvw2tigZ9ykyz289nJ2YMq9u027AsqByOVju/c=
+	by mail.kernel.org (Postfix) with ESMTP id 6735F2075F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PK1R8HNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGKBcQ (ORCPT
+        id S1726903AbgGKBd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgGKBcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 21:32:16 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E30AC2077D;
-        Sat, 11 Jul 2020 01:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594431135;
-        bh=JHAq849TrDR2TO0YVgHnBwsgpBJXggDvOdSCDOO9Mhg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bMfSdxB7MrcYqYQa7ldPOwQ86Zvf7PpQlWpXfKwWn1cLEuXE64jZUFUYBu6rYOzyI
-         iW9WNDqwkrk0sgSJttDTT1OJ/ku53mvBNojP8dEQQR8KaZXPa7y6EUoPqUh/FVz9eG
-         YFLH08D+jTSwcQCN2Sb1ues3kIAJ8EMD9qUmzR5A=
-Received: by mail-lj1-f182.google.com with SMTP id q4so8455722lji.2;
-        Fri, 10 Jul 2020 18:32:14 -0700 (PDT)
-X-Gm-Message-State: AOAM533i9RSOURlAFGvve92goWza/FThJwSuHSocrh6mjc95rlGTOZ+4
-        3TqNKT67wiC+0SZv7TtaKeQ1BnH3eYxsadrDbL4=
-X-Google-Smtp-Source: ABdhPJyp9YYFId4+bHFEau35i4Dd+Jo03McSql50a82wua8FHQxiDnZqzZ8IFMQAFMi/x1kxYJ6SWwlxiHASFRW9a30=
-X-Received: by 2002:a2e:b0ed:: with SMTP id h13mr31505047ljl.250.1594431133218;
- Fri, 10 Jul 2020 18:32:13 -0700 (PDT)
+        Fri, 10 Jul 2020 21:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgGKBd6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 21:33:58 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70687C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:33:57 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g2so4187498lfb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QDhpDzdneHH53SGh27TE0u/VykRq3m/++IxZ3dfl0aQ=;
+        b=PK1R8HNqDEX/7Dvatfv/qKlX9vFChD7Xo4sgDpyaQ3XF/eSdBWMSSv/vUBpfpiz8tJ
+         B15BH2tNhPv5wEwEh57g5xMVKnSaqM1Qb3FuB9Bfq4k1vulgeU6DNZgscexJ7EQtfXkf
+         YreiZfIPI62bLTTvg0ARhYkHgVLIVI6Res5Y/Vyo4M6Ug6miLzZYE+rf+l6uqTKlLfPf
+         EZ54gZV1sbFgaaT0i+qvNUom2lsJAOCTIfNBElpKmbqydHlGmAO/Whl0VmYusHwvyOLT
+         +Bf2TQWdtUFiS4AWtj9FKczUt7TRfi6d3ita8Z+52cxFifcRnUkoPZaYVYcZUY5P3+ZF
+         HpKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QDhpDzdneHH53SGh27TE0u/VykRq3m/++IxZ3dfl0aQ=;
+        b=DJ2Gr5vV1pqdJ0M/2mCnEZk3mrvWDb7X3tqX9ktvHoQrCdFMLT+EoG926GTQGyNM5O
+         HsbvWIHRBO0ny8iEgbaL0GvKQTVMPPDVEWbK2xBuzFMTcRnUQIT9pLPhhHqaR9ROFv2d
+         tf23aSvYjnrszIdO9K/HxZ/N4Wj8A25MCYEGUS2v4yE5wKTf/dinwnaJZK+gJ8khPxbe
+         sPk+Kr8scWKL2RIDqpNeNxL4CjH0OENVgnJTkD3qDzVEuvKq3STaJCxhrOalcYtZXa6S
+         TQ2Eh1JqdnBqW7zvlRYbwC6pU/YvinSkKAJImsJHktZ4Fhg78/KDN8rqd/2JCCp9pDhH
+         dNkg==
+X-Gm-Message-State: AOAM530+SqhyyTGo/RDNicIkcZVeN9Z3B1JKZ1TyxmNJ2B7Kqk0yxmn2
+        XDZ0IivHmfTdmEYFSvwFgM3tbwrrjcyCcUgvez8=
+X-Google-Smtp-Source: ABdhPJza/9oDjbm0HkGoz3dNvoXdkhKypeOY8s6rz5sU6P14UexauqnXxvhbPVc2VgDdaeauVx9P/JeqJKPgwskFOlE=
+X-Received: by 2002:a19:4285:: with SMTP id p127mr43176998lfa.74.1594431235970;
+ Fri, 10 Jul 2020 18:33:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594261154-69745-1-git-send-email-guoren@kernel.org>
- <1594261154-69745-7-git-send-email-guoren@kernel.org> <20200710225017.5ce329485e911f99e17cd483@kernel.org>
-In-Reply-To: <20200710225017.5ce329485e911f99e17cd483@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 11 Jul 2020 09:32:01 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSfFY6qf7gZ9t80P-3cACWi3oEe4X8ek+_1nQZZT3Uk5w@mail.gmail.com>
-Message-ID: <CAJF2gTSfFY6qf7gZ9t80P-3cACWi3oEe4X8ek+_1nQZZT3Uk5w@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] riscv: Add KPROBES_ON_FTRACE supported
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Atish Patra <atish.patra@wdc.com>, penberg@kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <c783b3890b6df669a72c7c4a3012950d009b8034.1593530334.git.vpillai@digitalocean.com>
+ <ed837e01-043b-e19b-293c-30d44df6f3a8@linux.intel.com> <CANaguZArdu1Jz3SvogFSXhnqmbdKX5aAORmGMf_uc+J=UQZpJw@mail.gmail.com>
+In-Reply-To: <CANaguZArdu1Jz3SvogFSXhnqmbdKX5aAORmGMf_uc+J=UQZpJw@mail.gmail.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Sat, 11 Jul 2020 09:33:44 +0800
+Message-ID: <CAERHkrtqB2cMtQZxj0vQ2AkWU+6dFUQwcSpF=Pv9XR+wt=xZ0A@mail.gmail.com>
+Subject: Re: [RFC PATCH 14/16] irq: Add support for core-wide protection of
+ IRQ and softirq
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Vineeth Pillai <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Masami,
+On Fri, Jul 10, 2020 at 9:36 PM Vineeth Remanan Pillai
+<vpillai@digitalocean.com> wrote:
+>
+> Hi Aubrey,
+>
+> On Fri, Jul 10, 2020 at 8:19 AM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+> >
+> > Hi Joel/Vineeth,
+> > [...]
+> > The problem is gone when we reverted this patch. We are running multiple
+> > uperf threads(equal to cpu number) in a cgroup with coresched enabled.
+> > This is 100% reproducible on our side.
+> >
+> > Just wonder if anything already known before we dig into it.
+> >
+> Thanks for reporting this. We haven't seen any lockups like this
+> in our testing yet.
 
-On Fri, Jul 10, 2020 at 9:50 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi Guo,
->
-> On Thu,  9 Jul 2020 02:19:14 +0000
-> guoren@kernel.org wrote:
->
-> > +/* Ftrace callback handler for kprobes -- called under preepmt disabed */
-> > +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-> > +                        struct ftrace_ops *ops, struct pt_regs *regs)
-> > +{
-> > +     struct kprobe *p;
-> > +     struct kprobe_ctlblk *kcb;
-> > +
-> > +     p = get_kprobe((kprobe_opcode_t *)ip);
-> > +     if (unlikely(!p) || kprobe_disabled(p))
-> > +             return;
-> > +
-> > +     kcb = get_kprobe_ctlblk();
-> > +     if (kprobe_running()) {
-> > +             kprobes_inc_nmissed_count(p);
-> > +     } else {
-> > +             /*
-> > +              * The regs->epc hasn't been saved by SAVE_ALL in mcount-dyn.S
-> > +              * So no need to resume it, just for kprobe handler.
-> > +              */
-> > +             instruction_pointer_set(regs, ip);
-> > +             __this_cpu_write(current_kprobe, p);
-> > +             kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> > +             if (!p->pre_handler || !p->pre_handler(p, regs)) {
-> > +                     /*
-> > +                      * Emulate singlestep (and also recover regs->pc)
-> > +                      * as if there is a nop
-> > +                      */
-> > +                     instruction_pointer_set(regs,
-> > +                             (unsigned long)p->addr + MCOUNT_INSN_SIZE);
-> > +                     if (unlikely(p->post_handler)) {
-> > +                             kcb->kprobe_status = KPROBE_HIT_SSDONE;
-> > +                             p->post_handler(p, regs, 0);
-> > +                     }
->
-> Hmm, don't you need restoring the previous instruction pointer here?
-look at  riscv mcount-dyn.S SAVE_ALL function, sp frame lay out like this:
------------------------
-| return address |
------------------------
-| frame pointer   |
------------------------
-| pt_regs x1-x31|
------------------------
-It's not a complete pt_regs for the handler, so modifing regs->ip is no use.
+This is replicable on a bare metal machine. We tried to reproduce
+on a 8-cpus KVM vm but failed.
 
-> If you don't support modifying the instruction pointer in the handler,
-We can modify ip like this if necessary:
-*(unsigned long *)((unsigned long)regs + sizeof(struct pt_regs) + 8) = xxx;
+> Could you please add more information on how to reproduce this?
+> Was it a simple uperf run without any options or was it running any
+> specific kind of network test?
 
-> it must not be compatible with kprobes.
-Why, can you show related codes? thank you very much.
+I put our scripts at here:
+https://github.com/aubreyli/uperf
 
 >
-> Now BPF function override and function error injection depends on
-> this behevior, so could you consider to support it in the "ftrace"
-> implementation at first? (And if it is enabled, you can enable the
-> livepatch on RISCV too)
-Great message!
+> We shall also try to reproduce this and investigate.
 
-But can you show me codes that bpf and err-jnject using the behavior? Thx
+I'll try to see if I can narrow down the test case and grab some logs
+next week.
 
-I'll try to fix up it :)
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+Thanks,
+-Aubrey
