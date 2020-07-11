@@ -7,56 +7,59 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491BDC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A02FC433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224C82075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CBC206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="42qFGIpU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IWvf4pz3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ufsSple3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="71E4SqGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgGKKKD (ORCPT
+        id S1726867AbgGKKKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgGKKJ6 (ORCPT
+        Sat, 11 Jul 2020 06:10:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53400 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgGKKJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:09:58 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A43C08C5DD;
-        Sat, 11 Jul 2020 03:09:57 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 10:09:55 -0000
+        Sat, 11 Jul 2020 06:09:57 -0400
+Date:   Sat, 11 Jul 2020 10:09:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594462196;
+        s=2020; t=1594462194;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=pDkrlrM00qvT7UF2BhaTXlmL2vW/Jq7q6TwQl6OzQPk=;
-        b=42qFGIpUHxd2IrQ7AQLUhTbM7nwOdTTA+G21xCYFVjlieB75OYwbsNiXNpOajgHxOCS7uV
-        W5/hm4t8pkSVzTAfjUVV9Tk1emE2tqP448Vr09ihM4bpGr5RBN3Ablt0oeywqOtDouL69Q
-        RWtVQGpQ+kW4jMhUT7EurnEcc20Zj8D1fwHsAd1K44pSxzqRgcM3WSjn4hsRDfCd0mjlab
-        r0zk1sAPJHCcUpberHoPRo+Gn3zbiS6YouLJ4DiUyS/KKKMTBfY80mwqoFtzIl6NtXYLW1
-        Ml5lgJORbCtYcXpfeXwFb4/LEVQTSlU4/aVo2XEXscJwCWdqpGri0Kyq6xWiJg==
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uzzUoAVFWAnmngIp2bYTeOvYwjM4Zcg+x/D/2o5U7x0=;
+        b=ufsSple3dCUm7qT8qS1SYcGipyN7KMLvKV3E3I2WEBbOnDPNRsgrTUSg/5cm20x2nY7Rmi
+        2zlpcC9nsL6M0YEpQLOsgt8KngSt38nOYPFC+pDYW1jv2KUlEVEZlMlfY3CBaaz/DMSJkR
+        USTwd2ntMKM6CTVlU8J+sZHxZ6QCLcqdcrNQ3Sir1dTzMgzrM1GKe7F0FlQA9UXLRdpN7q
+        a4qQXcdgAldZ3m1Mkzk6l8zlT9JPyJ1Qmlg7nHVpEnTNisASu9pfESMphi9nmQw5ATvSPO
+        xLo/Q8RHkH4MHabXnJl7uKXS/QBgv3ORYHUnUUif9U04xnsTe2hHns7/jmi7TA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594462196;
+        s=2020e; t=1594462194;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=pDkrlrM00qvT7UF2BhaTXlmL2vW/Jq7q6TwQl6OzQPk=;
-        b=IWvf4pz3nPF05RzkU9IVSHee1j4Vz/6XpGIFgVYfh3HOaiTho79D68Z9+KlrBSoFrfRhNR
-        TQ3ZdxHjL3d/4DCw==
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uzzUoAVFWAnmngIp2bYTeOvYwjM4Zcg+x/D/2o5U7x0=;
+        b=71E4SqGz8xYO3NiqkpHTfZM5eYKVklG620IX5VZbEOqJV6fJXnlXUFGLROwjOGn619GSnL
+        O7FwQ8OtlhRXgACw==
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] powerpc64: Break asm/percpu.h vs spinlock_types.h
- dependency
+Subject: [tip: locking/core] lockdep: Remove
+ lockdep_hardirq{s_enabled,_context}() argument
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200623083721.571835311@infradead.org>
+References: <20200623083721.571835311@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159446219548.4006.7485001842794216727.tip-bot2@tip-bot2>
+Message-ID: <159446219309.4006.16573680750106787417.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -68,247 +71,232 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     d6bdceb6c2276276c0392b926ccd2e5991d5cb9a
-Gitweb:        https://git.kernel.org/tip/d6bdceb6c2276276c0392b926ccd2e5991d5cb9a
+Commit-ID:     f9ad4a5f3f20bee022b1bdde94e5ece6dc0b0edc
+Gitweb:        https://git.kernel.org/tip/f9ad4a5f3f20bee022b1bdde94e5ece6dc0b0edc
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 29 May 2020 22:41:01 +02:00
+AuthorDate:    Wed, 27 May 2020 13:03:26 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 10 Jul 2020 12:00:01 +02:00
+CommitterDate: Fri, 10 Jul 2020 12:00:02 +02:00
 
-powerpc64: Break asm/percpu.h vs spinlock_types.h dependency
+lockdep: Remove lockdep_hardirq{s_enabled,_context}() argument
 
-In order to use <asm/percpu.h> in lockdep.h, we need to make sure
-asm/percpu.h does not itself depend on lockdep.
-
-The below seems to make that so and builds powerpc64-defconfig +
-PROVE_LOCKING.
+Now that the macros use per-cpu data, we no longer need the argument.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
-https://lkml.kernel.org/r/20200623083721.336906073@infradead.org
+Link: https://lkml.kernel.org/r/20200623083721.571835311@infradead.org
 ---
- arch/powerpc/include/asm/dtl.h         | 52 +++++++++++++++++++++++++-
- arch/powerpc/include/asm/lppaca.h      | 44 +---------------------
- arch/powerpc/include/asm/paca.h        |  2 +-
- arch/powerpc/kernel/time.c             |  2 +-
- arch/powerpc/kvm/book3s_hv.c           |  1 +-
- arch/powerpc/platforms/pseries/dtl.c   |  1 +-
- arch/powerpc/platforms/pseries/lpar.c  |  1 +-
- arch/powerpc/platforms/pseries/setup.c |  1 +-
- arch/powerpc/platforms/pseries/svm.c   |  1 +-
- 9 files changed, 60 insertions(+), 45 deletions(-)
- create mode 100644 arch/powerpc/include/asm/dtl.h
+ arch/x86/entry/common.c        |  2 +-
+ include/linux/irqflags.h       |  8 ++++----
+ include/linux/lockdep.h        |  2 +-
+ kernel/locking/lockdep.c       | 30 +++++++++++++++---------------
+ kernel/softirq.c               |  2 +-
+ tools/include/linux/irqflags.h |  4 ++--
+ 6 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/dtl.h b/arch/powerpc/include/asm/dtl.h
-new file mode 100644
-index 0000000..1625888
---- /dev/null
-+++ b/arch/powerpc/include/asm/dtl.h
-@@ -0,0 +1,52 @@
-+#ifndef _ASM_POWERPC_DTL_H
-+#define _ASM_POWERPC_DTL_H
-+
-+#include <asm/lppaca.h>
-+#include <linux/spinlock_types.h>
-+
-+/*
-+ * Layout of entries in the hypervisor's dispatch trace log buffer.
-+ */
-+struct dtl_entry {
-+	u8	dispatch_reason;
-+	u8	preempt_reason;
-+	__be16	processor_id;
-+	__be32	enqueue_to_dispatch_time;
-+	__be32	ready_to_enqueue_time;
-+	__be32	waiting_to_ready_time;
-+	__be64	timebase;
-+	__be64	fault_addr;
-+	__be64	srr0;
-+	__be64	srr1;
-+};
-+
-+#define DISPATCH_LOG_BYTES	4096	/* bytes per cpu */
-+#define N_DISPATCH_LOG		(DISPATCH_LOG_BYTES / sizeof(struct dtl_entry))
-+
-+/*
-+ * Dispatch trace log event enable mask:
-+ *   0x1: voluntary virtual processor waits
-+ *   0x2: time-slice preempts
-+ *   0x4: virtual partition memory page faults
-+ */
-+#define DTL_LOG_CEDE		0x1
-+#define DTL_LOG_PREEMPT		0x2
-+#define DTL_LOG_FAULT		0x4
-+#define DTL_LOG_ALL		(DTL_LOG_CEDE | DTL_LOG_PREEMPT | DTL_LOG_FAULT)
-+
-+extern struct kmem_cache *dtl_cache;
-+extern rwlock_t dtl_access_lock;
-+
-+/*
-+ * When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE = y, the cpu accounting code controls
-+ * reading from the dispatch trace log.  If other code wants to consume
-+ * DTL entries, it can set this pointer to a function that will get
-+ * called once for each DTL entry that gets processed.
-+ */
-+extern void (*dtl_consumer)(struct dtl_entry *entry, u64 index);
-+
-+extern void register_dtl_buffer(int cpu);
-+extern void alloc_dtl_buffers(unsigned long *time_limit);
-+extern long hcall_vphn(unsigned long cpu, u64 flags, __be32 *associativity);
-+
-+#endif /* _ASM_POWERPC_DTL_H */
-diff --git a/arch/powerpc/include/asm/lppaca.h b/arch/powerpc/include/asm/lppaca.h
-index 3b4b305..c390ec3 100644
---- a/arch/powerpc/include/asm/lppaca.h
-+++ b/arch/powerpc/include/asm/lppaca.h
-@@ -42,7 +42,6 @@
-  */
- #include <linux/cache.h>
- #include <linux/threads.h>
--#include <linux/spinlock_types.h>
- #include <asm/types.h>
- #include <asm/mmu.h>
- #include <asm/firmware.h>
-@@ -146,49 +145,6 @@ struct slb_shadow {
- 	} save_area[SLB_NUM_BOLTED];
- } ____cacheline_aligned;
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 63c607d..4ea6403 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -758,7 +758,7 @@ noinstr void idtentry_exit_user(struct pt_regs *regs)
  
--/*
-- * Layout of entries in the hypervisor's dispatch trace log buffer.
-- */
--struct dtl_entry {
--	u8	dispatch_reason;
--	u8	preempt_reason;
--	__be16	processor_id;
--	__be32	enqueue_to_dispatch_time;
--	__be32	ready_to_enqueue_time;
--	__be32	waiting_to_ready_time;
--	__be64	timebase;
--	__be64	fault_addr;
--	__be64	srr0;
--	__be64	srr1;
--};
--
--#define DISPATCH_LOG_BYTES	4096	/* bytes per cpu */
--#define N_DISPATCH_LOG		(DISPATCH_LOG_BYTES / sizeof(struct dtl_entry))
--
--/*
-- * Dispatch trace log event enable mask:
-- *   0x1: voluntary virtual processor waits
-- *   0x2: time-slice preempts
-- *   0x4: virtual partition memory page faults
-- */
--#define DTL_LOG_CEDE		0x1
--#define DTL_LOG_PREEMPT		0x2
--#define DTL_LOG_FAULT		0x4
--#define DTL_LOG_ALL		(DTL_LOG_CEDE | DTL_LOG_PREEMPT | DTL_LOG_FAULT)
--
--extern struct kmem_cache *dtl_cache;
--extern rwlock_t dtl_access_lock;
--
--/*
-- * When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE = y, the cpu accounting code controls
-- * reading from the dispatch trace log.  If other code wants to consume
-- * DTL entries, it can set this pointer to a function that will get
-- * called once for each DTL entry that gets processed.
-- */
--extern void (*dtl_consumer)(struct dtl_entry *entry, u64 index);
--
--extern void register_dtl_buffer(int cpu);
--extern void alloc_dtl_buffers(unsigned long *time_limit);
- extern long hcall_vphn(unsigned long cpu, u64 flags, __be32 *associativity);
- 
- #endif /* CONFIG_PPC_BOOK3S */
-diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-index 45a839a..84b2564 100644
---- a/arch/powerpc/include/asm/paca.h
-+++ b/arch/powerpc/include/asm/paca.h
-@@ -29,7 +29,6 @@
- #include <asm/hmi.h>
- #include <asm/cpuidle.h>
- #include <asm/atomic.h>
--#include <asm/rtas-types.h>
- 
- #include <asm-generic/mmiowb_types.h>
- 
-@@ -53,6 +52,7 @@ extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
- #define get_slb_shadow()	(get_paca()->slb_shadow_ptr)
- 
- struct task_struct;
-+struct rtas_args;
- 
- /*
-  * Defines the layout of the paca.
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 6fcae43..f85539e 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -183,6 +183,8 @@ static inline unsigned long read_spurr(unsigned long tb)
- 
- #ifdef CONFIG_PPC_SPLPAR
- 
-+#include <asm/dtl.h>
-+
- /*
-  * Scan the dispatch trace log and count up the stolen time.
-  * Should be called with interrupts disabled.
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 6bf6664..ebb04f3 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -74,6 +74,7 @@
- #include <asm/hw_breakpoint.h>
- #include <asm/kvm_book3s_uvmem.h>
- #include <asm/ultravisor.h>
-+#include <asm/dtl.h>
- 
- #include "book3s.h"
- 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index eab8aa2..982f069 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -12,6 +12,7 @@
- #include <asm/smp.h>
- #include <linux/uaccess.h>
- #include <asm/firmware.h>
-+#include <asm/dtl.h>
- #include <asm/lppaca.h>
- #include <asm/debugfs.h>
- #include <asm/plpar_wrappers.h>
-diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-index fd26f3d..f71ff2c 100644
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -40,6 +40,7 @@
- #include <asm/fadump.h>
- #include <asm/asm-prototypes.h>
- #include <asm/debugfs.h>
-+#include <asm/dtl.h>
- 
- #include "pseries.h"
- 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 2db8469..27094c8 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -70,6 +70,7 @@
- #include <asm/idle.h>
- #include <asm/swiotlb.h>
- #include <asm/svm.h>
-+#include <asm/dtl.h>
- 
- #include "pseries.h"
- #include "../../../../drivers/pci/pci.h"
-diff --git a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
-index 40c0637..e6d7a34 100644
---- a/arch/powerpc/platforms/pseries/svm.c
-+++ b/arch/powerpc/platforms/pseries/svm.c
-@@ -11,6 +11,7 @@
- #include <asm/svm.h>
- #include <asm/swiotlb.h>
- #include <asm/ultravisor.h>
-+#include <asm/dtl.h>
- 
- static int __init init_svm(void)
+ noinstr bool idtentry_enter_nmi(struct pt_regs *regs)
  {
+-	bool irq_state = lockdep_hardirqs_enabled(current);
++	bool irq_state = lockdep_hardirqs_enabled();
+ 
+ 	__nmi_enter();
+ 	lockdep_hardirqs_off(CALLER_ADDR0);
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 255444f..5811ee8 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -40,9 +40,9 @@ DECLARE_PER_CPU(int, hardirq_context);
+   extern void trace_hardirqs_off_finish(void);
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+-# define lockdep_hardirq_context(p)	(this_cpu_read(hardirq_context))
++# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
+ # define lockdep_softirq_context(p)	((p)->softirq_context)
+-# define lockdep_hardirqs_enabled(p)	(this_cpu_read(hardirqs_enabled))
++# define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
+ # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
+ # define lockdep_hardirq_enter()			\
+ do {							\
+@@ -109,9 +109,9 @@ do {						\
+ # define trace_hardirqs_off_finish()		do { } while (0)
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+-# define lockdep_hardirq_context(p)	0
++# define lockdep_hardirq_context()	0
+ # define lockdep_softirq_context(p)	0
+-# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_hardirqs_enabled()	0
+ # define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_threaded()	do { } while (0)
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index be6cb17..fd04b9e 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -562,7 +562,7 @@ do {									\
+ 
+ # define lockdep_assert_RT_in_threaded_ctx() do {			\
+ 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
+-			  lockdep_hardirq_context(current) &&		\
++			  lockdep_hardirq_context() &&			\
+ 			  !(current->hardirq_threaded || current->irq_config),	\
+ 			  "Not in threaded context on PREEMPT_RT as expected\n");	\
+ } while (0)
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index ab4ffbe..c9ea05e 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -2062,9 +2062,9 @@ print_bad_irq_dependency(struct task_struct *curr,
+ 	pr_warn("-----------------------------------------------------\n");
+ 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] is trying to acquire:\n",
+ 		curr->comm, task_pid_nr(curr),
+-		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
++		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
+ 		curr->softirq_context, softirq_count() >> SOFTIRQ_SHIFT,
+-		lockdep_hardirqs_enabled(curr),
++		lockdep_hardirqs_enabled(),
+ 		curr->softirqs_enabled);
+ 	print_lock(next);
+ 
+@@ -3331,9 +3331,9 @@ print_usage_bug(struct task_struct *curr, struct held_lock *this,
+ 
+ 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
+ 		curr->comm, task_pid_nr(curr),
+-		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
++		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
+ 		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
+-		lockdep_hardirqs_enabled(curr),
++		lockdep_hardirqs_enabled(),
+ 		lockdep_softirqs_enabled(curr));
+ 	print_lock(this);
+ 
+@@ -3658,7 +3658,7 @@ void lockdep_hardirqs_on_prepare(unsigned long ip)
+ 	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
+ 
+-	if (unlikely(lockdep_hardirqs_enabled(current))) {
++	if (unlikely(lockdep_hardirqs_enabled())) {
+ 		/*
+ 		 * Neither irq nor preemption are disabled here
+ 		 * so this is racy by nature but losing one hit
+@@ -3686,7 +3686,7 @@ void lockdep_hardirqs_on_prepare(unsigned long ip)
+ 	 * Can't allow enabling interrupts while in an interrupt handler,
+ 	 * that's general bad form and such. Recursion, limited stack etc..
+ 	 */
+-	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context(current)))
++	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context()))
+ 		return;
+ 
+ 	current->hardirq_chain_key = current->curr_chain_key;
+@@ -3724,7 +3724,7 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
+ 	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
+ 
+-	if (lockdep_hardirqs_enabled(curr)) {
++	if (lockdep_hardirqs_enabled()) {
+ 		/*
+ 		 * Neither irq nor preemption are disabled here
+ 		 * so this is racy by nature but losing one hit
+@@ -3783,7 +3783,7 @@ void noinstr lockdep_hardirqs_off(unsigned long ip)
+ 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
+ 		return;
+ 
+-	if (lockdep_hardirqs_enabled(curr)) {
++	if (lockdep_hardirqs_enabled()) {
+ 		/*
+ 		 * We have done an ON -> OFF transition:
+ 		 */
+@@ -3832,7 +3832,7 @@ void lockdep_softirqs_on(unsigned long ip)
+ 	 * usage bit for all held locks, if hardirqs are
+ 	 * enabled too:
+ 	 */
+-	if (lockdep_hardirqs_enabled(curr))
++	if (lockdep_hardirqs_enabled())
+ 		mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ);
+ 	lockdep_recursion_finish();
+ }
+@@ -3881,7 +3881,7 @@ mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+ 	 */
+ 	if (!hlock->trylock) {
+ 		if (hlock->read) {
+-			if (lockdep_hardirq_context(curr))
++			if (lockdep_hardirq_context())
+ 				if (!mark_lock(curr, hlock,
+ 						LOCK_USED_IN_HARDIRQ_READ))
+ 					return 0;
+@@ -3890,7 +3890,7 @@ mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+ 						LOCK_USED_IN_SOFTIRQ_READ))
+ 					return 0;
+ 		} else {
+-			if (lockdep_hardirq_context(curr))
++			if (lockdep_hardirq_context())
+ 				if (!mark_lock(curr, hlock, LOCK_USED_IN_HARDIRQ))
+ 					return 0;
+ 			if (curr->softirq_context)
+@@ -3928,7 +3928,7 @@ lock_used:
+ 
+ static inline unsigned int task_irq_context(struct task_struct *task)
+ {
+-	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context(task) +
++	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context() +
+ 	       LOCK_CHAIN_SOFTIRQ_CONTEXT * !!task->softirq_context;
+ }
+ 
+@@ -4021,7 +4021,7 @@ static inline short task_wait_context(struct task_struct *curr)
+ 	 * Set appropriate wait type for the context; for IRQs we have to take
+ 	 * into account force_irqthread as that is implied by PREEMPT_RT.
+ 	 */
+-	if (lockdep_hardirq_context(curr)) {
++	if (lockdep_hardirq_context()) {
+ 		/*
+ 		 * Check if force_irqthreads will run us threaded.
+ 		 */
+@@ -4864,11 +4864,11 @@ static void check_flags(unsigned long flags)
+ 		return;
+ 
+ 	if (irqs_disabled_flags(flags)) {
+-		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled(current))) {
++		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())) {
+ 			printk("possible reason: unannotated irqs-off.\n");
+ 		}
+ 	} else {
+-		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled(current))) {
++		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled())) {
+ 			printk("possible reason: unannotated irqs-on.\n");
+ 		}
+ 	}
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 342c53f..5e9aaa6 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -230,7 +230,7 @@ static inline bool lockdep_softirq_start(void)
+ {
+ 	bool in_hardirq = false;
+ 
+-	if (lockdep_hardirq_context(current)) {
++	if (lockdep_hardirq_context()) {
+ 		in_hardirq = true;
+ 		lockdep_hardirq_exit();
+ 	}
+diff --git a/tools/include/linux/irqflags.h b/tools/include/linux/irqflags.h
+index 67e01bb..501262a 100644
+--- a/tools/include/linux/irqflags.h
++++ b/tools/include/linux/irqflags.h
+@@ -2,9 +2,9 @@
+ #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ 
+-# define lockdep_hardirq_context(p)	0
++# define lockdep_hardirq_context()	0
+ # define lockdep_softirq_context(p)	0
+-# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_hardirqs_enabled()	0
+ # define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_exit()		do { } while (0)
