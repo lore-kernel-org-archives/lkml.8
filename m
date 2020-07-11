@@ -2,194 +2,139 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E639C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F134AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC0B20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FCE20725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgGKLI0 (ORCPT
+        id S1728228AbgGKLKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 07:08:26 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:62854 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgGKLI0 (ORCPT
+        Sat, 11 Jul 2020 07:10:19 -0400
+Received: from smtprelay0109.hostedemail.com ([216.40.44.109]:58056 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbgGKLKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 07:08:26 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06BB87EO027033;
-        Sat, 11 Jul 2020 20:08:07 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
- Sat, 11 Jul 2020 20:08:06 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06BB80rN027005
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 11 Jul 2020 20:08:06 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: fbconsole needs more parameter validations.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     DRI <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-References: <20200710055329.3759-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <b1e7dd6a-fc22-bba8-0abb-d3e779329bce@i-love.sakura.ne.jp>
- <20200710105637.GB1232395@kroah.com>
- <f80527f4-ffb2-69ef-ebd4-3de92cacfa17@i-love.sakura.ne.jp>
-Message-ID: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
-Date:   Sat, 11 Jul 2020 20:08:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 11 Jul 2020 07:10:19 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 22C46100E7B42;
+        Sat, 11 Jul 2020 11:10:17 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: day58_420072326ed6
+X-Filterd-Recvd-Size: 3571
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 11 Jul 2020 11:10:15 +0000 (UTC)
+Message-ID: <02995ace8cc4524d44bf6e6db0282391c3f6d8e4.camel@perches.com>
+Subject: Re: [PATCH v2] MAINTAINERS: XDP: restrict N: and K:
+From:   Joe Perches <joe@perches.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+        hawk@kernel.org, john.fastabend@gmail.com,
+        mchehab+huawei@kernel.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Date:   Sat, 11 Jul 2020 04:10:13 -0700
+In-Reply-To: <20200711102318.28ce29d6@carbon>
+References: <87tuyfi4fm.fsf@toke.dk>
+         <20200710190407.31269-1-grandmaster@al2klimov.de>
+         <28a81dfe62b1dc00ccc721ddb88669d13665252b.camel@perches.com>
+         <20200711102318.28ce29d6@carbon>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <f80527f4-ffb2-69ef-ebd4-3de92cacfa17@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/11 15:16, Tetsuo Handa wrote:
-> On 2020/07/10 19:56, Greg Kroah-Hartman wrote:
->> Where is the over/underflow happening here when we set a size to be so
->> small?  We should bound the size somewhere, and as you show, that's not
->> really working properly, right?
+On Sat, 2020-07-11 at 10:23 +0200, Jesper Dangaard Brouer wrote:
+> On Fri, 10 Jul 2020 12:37:47 -0700
+> Joe Perches <joe@perches.com> wrote:
 > 
-> It is bit_clear_margins() where integer underflow is happening (4294966497 == 1 - 100 * 8),
-> but the cause of this problem seems to be fbcon_startup() or vc_do_resize().
+> > On Fri, 2020-07-10 at 21:04 +0200, Alexander A. Klimov wrote:
+> > > Rationale:
+> > > Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
+> > > which has nothing to do with XDP.
+> > > 
+> > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > > ---
+> > >  Better?
+> > > 
+> > >  MAINTAINERS | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 1d4aa7f942de..735e2475e926 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -18708,8 +18708,8 @@ F:	include/trace/events/xdp.h
+> > >  F:	kernel/bpf/cpumap.c
+> > >  F:	kernel/bpf/devmap.c
+> > >  F:	net/core/xdp.c
+> > > -N:	xdp
+> > > -K:	xdp
+> > > +N:	(?:\b|_)xdp
+> > > +K:	(?:\b|_)xdp  
+> > 
+> > Generally, it's better to have comprehensive files lists
+> > rather than adding name matching regexes.
 > 
+> I like below more direct matching of the files we already know are XDP
+> related. The pattern match are meant to catch drivers containing XDP
+> related bits.
 
-A possible cause is that vc_resize(vc, 0, 0) fails to set vc->vc_cols == vc->vc_rows == 0
-because of
+That's what the K: entry is for no?
 
-  new_cols = (cols ? cols : vc->vc_cols);
-  new_rows = (lines ? lines : vc->vc_rows);
+Anyway, if you agree with using the appropriate F: patterns,
+please submit it.  I'm not going to.
 
-exception. I don't know how user program referenced as
-
-  /*
-   * Change # of rows and columns (0 means unchanged/the size of fg_console)
-   * [this is to be used together with some user program
-   * like resize that changes the hardware videomode]
-   */
-  #define VC_RESIZE_MAXCOL (32767)
-  #define VC_RESIZE_MAXROW (32767)
-
-is utilizing this exception (this code predates the git repository). But since I
-don't think that a console with 0 column and/or 0 row makes sense, the real root
-cause might be that fb_set_var() fails to reject too small var.xres value for
-keeping cols > 0 and too small var.yres value for keeping lines > 0.
-
-Regardless, making "struct fbcon_ops"->clear_margins no-op when integer underflow
-is detected (like below diff) helps avoiding crash. Can we apply this handy
-protection assuming that vc->vc_cols * vc->vc_font.width and
-vc->vc_rows * vc->vc_font.heigh do not cause integer overflow?
-
- drivers/video/fbdev/core/bitblit.c   |    4 ++--
- drivers/video/fbdev/core/fbcon_ccw.c |    4 ++--
- drivers/video/fbdev/core/fbcon_cw.c  |    4 ++--
- drivers/video/fbdev/core/fbcon_ud.c  |    4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
-index ca935c09a261..35ebeeccde4d 100644
---- a/drivers/video/fbdev/core/bitblit.c
-+++ b/drivers/video/fbdev/core/bitblit.c
-@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = info->var.xoffset + rs;
- 		region.dy = 0;
- 		region.width = rw;
-@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset;
- 		region.dy = info->var.yoffset + bs;
- 		region.width = rs;
-diff --git a/drivers/video/fbdev/core/fbcon_ccw.c b/drivers/video/fbdev/core/fbcon_ccw.c
-index dfa9a8aa4509..78f3a5621478 100644
---- a/drivers/video/fbdev/core/fbcon_ccw.c
-+++ b/drivers/video/fbdev/core/fbcon_ccw.c
-@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = 0;
- 		region.dy = info->var.yoffset;
- 		region.height = rw;
-@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset + bs;
- 		region.dy = 0;
-                 region.height = info->var.yres_virtual;
-diff --git a/drivers/video/fbdev/core/fbcon_cw.c b/drivers/video/fbdev/core/fbcon_cw.c
-index ce08251bfd38..fd098ff17574 100644
---- a/drivers/video/fbdev/core/fbcon_cw.c
-+++ b/drivers/video/fbdev/core/fbcon_cw.c
-@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = 0;
- 		region.dy = info->var.yoffset + rs;
- 		region.height = rw;
-@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset;
- 		region.dy = info->var.yoffset;
-                 region.height = info->var.yres;
-diff --git a/drivers/video/fbdev/core/fbcon_ud.c b/drivers/video/fbdev/core/fbcon_ud.c
-index 1936afc78fec..e165a3fad29a 100644
---- a/drivers/video/fbdev/core/fbcon_ud.c
-+++ b/drivers/video/fbdev/core/fbcon_ud.c
-@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dy = 0;
- 		region.dx = info->var.xoffset;
- 		region.width  = rw;
-@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dy = info->var.yoffset;
- 		region.dx = info->var.xoffset;
-                 region.height  = bh;
+> (small typo in your patch below)
+> 
+> > Perhaps:
+> > ---
+> >  MAINTAINERS | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 16854e47e8cb..2e96cbf15b31 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -18763,13 +18763,19 @@ M:	John Fastabend <john.fastabend@gmail.com>
+> >  L:	netdev@vger.kernel.org
+> >  L:	bpf@vger.kernel.org
+> >  S:	Supported
+> > -F:	include/net/xdp.h
+> > +F:	Documentation/networking/af_xdp.rst
+> > +F:	include/net/xdp*
+> >  F:	include/trace/events/xdp.h
+> > +F:	include/uapi/linux/if_xdp.h
+> > +F:	include/uapi/linux/xdp_diag.h
+> >  F:	kernel/bpf/cpumap.c
+> >  F:	kernel/bpf/devmap.c
+> >  F:	net/core/xdp.c
+> > -N:	xdp
+> > -K:	xdp
+> > +F:	net/xdp/
+> > +F:	samples/bpf/xdp*
+> > +F:	tools/testing/selftests/bfp/*xdp*
+>                                ^^^^ 
+> Typo, should be "bpf"
+> 
+> > +F:	tools/testing/selftests/bfp/*/*xdp*
+> > +K:	(?:\b|_)xdp(?:\b|_)
+> >  
+> >  XDP SOCKETS (AF_XDP)
+> >  M:	Björn Töpel <bjorn.topel@intel.com>
+> > 
+> 
+> 
 
