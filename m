@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB60EC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9714320720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B788220720
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgGKGzV (ORCPT
+        id S1728266AbgGKG6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:55:21 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50136 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbgGKGzU (ORCPT
+        Sat, 11 Jul 2020 02:58:17 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:41534 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgGKG6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:55:20 -0400
-Received: by mail-io1-f69.google.com with SMTP id l7so1408818ioq.16
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 23:55:19 -0700 (PDT)
+        Sat, 11 Jul 2020 02:58:16 -0400
+Received: by mail-il1-f199.google.com with SMTP id k6so5209672ilg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 23:58:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+dz85Sf0hRZ/UgjIsHMdP1g1MRjmFGmwDieydsvrQOk=;
-        b=AjJolZPxc87OHXuTL41l4sf/4zCwRRLtSZycqob4j3c/Hi71fEpJojT7qg5QhpDQjp
-         d5+26kX2uyGNjowMEsVsp/ms0rji65c9ApDsQ1OJqJ1SjZu9fwEuugvuIsWIrNXE5MeN
-         ngryqRW7pF4/XormiRSiwCkknabLX8amPpT7iExBGBbajp/wbqFP1937ogwqWMA2l88S
-         SK9/whcprdJOEBEe//jy2J2T3/Rgw3dN8yw5mxkCqaKeLtgRGlUfKqIUWfX8i/MNxcdv
-         CO2qWLwP3aLu5Sr0lV+snXoMh/nRwKKYZZ5YTiOQSm+ewmCAz5bHMsPB+dtI3kefdLu+
-         jb+Q==
-X-Gm-Message-State: AOAM532PGVUNQB2Q/cWiFgFVuZrUTt4kdyqxyYZc3XYqTdaclxpLTsBu
-        r1GJGyqkMxE4u5p+/3RkEjZe9FUY8qLQeFGKMkBis1/aq8Ns
-X-Google-Smtp-Source: ABdhPJyuoiyF2Hi/zB2jC9J3N7RUUrUrDxIu/t2RdVsun9X1Al2bnspROLoTsGxlWPCV0Wlwsa59jhdZSe131eIfZeqwHwYfVu6W
+        bh=AkBx8LTbEovSwhwwJ9FeFsD5TmflPO84M/ic/EDjK1M=;
+        b=Eku+NnORuCYXnT/cyHLSJExuGDyqqJ64NZtvHez6PwAcBc2pEqyv7gdeX/6iSL3153
+         S1CO854kFvgukuoho8G93E3SEX8hCAW6gbIX5sKkaYwezii2RLh4I+b4/9wm6+pcw7oI
+         wwu72kBrDD9+2bv70N1kGQ92uaNzbhBQFS4LIqzBkNzah9DuGiG2ZCUFRqw8oCKFDEy4
+         jlHn7Zxnqwi6vf3JBkZ6qodHaTE1EkDm2PawR5wt5IUUDn9Jk8WcSGRm2643RN0UYgg/
+         gUFoJ5Tz92vVQg9cyUrEBhYRmuH7YM3eLcQ844iywsxUMMbtDnAD3kn2klKmntvQy2oi
+         FNoQ==
+X-Gm-Message-State: AOAM532dPXGZMn+AIKZdhxPVo5U17AC4fXMsS/blFjzzntF8slsXCQqj
+        HjMBcUUD+uLCMF0V923Ymh2/O1aAKnh/7oh1JAhbOK0Nqjnq
+X-Google-Smtp-Source: ABdhPJyHkFmFk9sP90ajG41S5cTk8F61qKnof5/Gg9oZeuf3WWRrWJgUgUCEGrpP6Ouw4P/GSXLP5u8lRScyMR0/DNxEF9rwqt1D
 MIME-Version: 1.0
-X-Received: by 2002:a02:9642:: with SMTP id c60mr80203032jai.71.1594450519081;
- Fri, 10 Jul 2020 23:55:19 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 23:55:19 -0700
+X-Received: by 2002:a05:6e02:c21:: with SMTP id q1mr5169902ilg.28.1594450694903;
+ Fri, 10 Jul 2020 23:58:14 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 23:58:14 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cd4de605aa24f03c@google.com>
-Subject: BUG: stack guard page was hit in no_context
-From:   syzbot <syzbot+b344c6786fc0f8409a1c@syzkaller.appspotmail.com>
+Message-ID: <000000000000481e2505aa24fb32@google.com>
+Subject: BUG: stack guard page was hit in __bad_area_nosemaphore
+From:   syzbot <syzbot+89eb3f606b866757455d@syzkaller.appspotmail.com>
 To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
         daniel@iogearbox.net, jeyu@kernel.org, john.fastabend@gmail.com,
         kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
@@ -62,44 +62,42 @@ syzbot found the following crash on:
 
 HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15dd7d83100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135403a3100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=b344c6786fc0f8409a1c
+dashboard link: https://syzkaller.appspot.com/bug?extid=89eb3f606b866757455d
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b344c6786fc0f8409a1c@syzkaller.appspotmail.com
+Reported-by: syzbot+89eb3f606b866757455d@syzkaller.appspotmail.com
 
-BUG: stack guard page was hit at 000000006422ef1c (stack is 000000009e8a746a..00000000d32e48ea)
+BUG: stack guard page was hit at 0000000046f5170d (stack is 00000000087b5eff..00000000b28869c7)
 kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8234 Comm: kworker/u4:8 Not tainted 5.8.0-rc3-syzkaller #0
+CPU: 0 PID: 25511 Comm: syz-executor.4 Not tainted 5.8.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bat_events batadv_purge_orig
-RIP: 0010:no_context+0x33/0x9f0 arch/x86/mm/fault.c:584
-Code: fc ff df 41 56 41 89 ce 41 55 49 89 f5 41 54 49 89 d4 55 48 89 fd 53 48 8d 9d 88 00 00 00 48 81 ec d0 00 00 00 48 8d 44 24 30 <44> 89 44 24 10 48 c7 44 24 30 b3 8a b5 41 48 c1 e8 03 48 89 04 24
-RSP: 0018:ffffc9001642ffe8 EFLAGS: 00010086
-RAX: ffffc90016430018 RBX: ffffc90016430280 RCX: 000000000000000b
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900164301f8
-RBP: ffffc900164301f8 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000002 R14: 000000000000000b R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+RIP: 0010:__bad_area_nosemaphore+0x15/0x480 arch/x86/mm/fault.c:743
+Code: ff ff 4c 89 ff e8 8b 35 7f 00 e9 0c ff ff ff 66 0f 1f 44 00 00 41 57 41 56 45 89 c6 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd <53> 4c 8d bd 88 00 00 00 48 83 ec 28 89 4c 24 14 e8 d6 df 3f 00 4c
+RSP: 0018:ffffc90016598000 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffff88804d04c580 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900165980d8
+RBP: ffffc900165980d8 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
+FS:  00007f2d59c18700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc9001642ffd8 CR3: 0000000025a2b000 CR4: 00000000001406e0
+CR2: ffffc90016597ff8 CR3: 00000000599e5000 CR4: 00000000001426f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
  do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
  handle_page_fault arch/x86/mm/fault.c:1365 [inline]
  exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc900164302a8 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc900164305b0 RCX: 0000000000000000
+RSP: 0018:ffffc90016598188 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90016598490 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -115,8 +113,8 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc900164305d8 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc900164308e0 RCX: 0000000000000000
+RSP: 0018:ffffc900165984b8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc900165987c0 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -132,8 +130,8 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016430908 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016430c10 RCX: 0000000000000000
+RSP: 0018:ffffc900165987e8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90016598af0 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -149,8 +147,8 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016430c38 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016430f40 RCX: 0000000000000000
+RSP: 0018:ffffc90016598b18 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90016598e20 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -166,8 +164,8 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016430f68 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016431270 RCX: 0000000000000000
+RSP: 0018:ffffc90016598e48 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90016599150 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -183,8 +181,8 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016431298 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc900164315a0 RCX: 0000000000000000
+RSP: 0018:ffffc90016599178 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90016599480 RCX: 0000000000000000
 RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
 RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
@@ -200,20 +198,21 @@ R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
 RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
 Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0
-Lost 828 message(s)!
----[ end trace ec14fcfb6d9859f3 ]---
-RIP: 0010:no_context+0x33/0x9f0 arch/x86/mm/fault.c:584
-Code: fc ff df 41 56 41 89 ce 41 55 49 89 f5 41 54 49 89 d4 55 48 89 fd 53 48 8d 9d 88 00 00 00 48 81 ec d0 00 00 00 48 8d 44 24 30 <44> 89 44 24 10 48 c7 44 24 30 b3 8a b5 41 48 c1 e8 03 48 89 04 24
-RSP: 0018:ffffc9001642ffe8 EFLAGS: 00010086
-RAX: ffffc90016430018 RBX: ffffc90016430280 RCX: 000000000000000b
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900164301f8
-RBP: ffffc900164301f8 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000002 R14: 000000000000000b R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+RSP: 0018:ffffc900165994a8 EFLAGS: 00010046
+RAX: 0000000000000000 
+Lost 804 message(s)!
+---[ end trace ffd1ab463dd60bcc ]---
+RIP: 0010:__bad_area_nosemaphore+0x15/0x480 arch/x86/mm/fault.c:743
+Code: ff ff 4c 89 ff e8 8b 35 7f 00 e9 0c ff ff ff 66 0f 1f 44 00 00 41 57 41 56 45 89 c6 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd <53> 4c 8d bd 88 00 00 00 48 83 ec 28 89 4c 24 14 e8 d6 df 3f 00 4c
+RSP: 0018:ffffc90016598000 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffff88804d04c580 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900165980d8
+RBP: ffffc900165980d8 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
+FS:  00007f2d59c18700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc9001642ffd8 CR3: 0000000025a2b000 CR4: 00000000001406e0
+CR2: ffffc90016597ff8 CR3: 00000000599e5000 CR4: 00000000001426f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
