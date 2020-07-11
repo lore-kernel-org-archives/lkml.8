@@ -2,108 +2,85 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E135FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F173C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECC32065D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIq8s8tO"
+	by mail.kernel.org (Postfix) with ESMTP id 6E3F220786
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594475583;
+	bh=s/7gnYxbL8MGJCdRA8lVq8/Fs0I4KXG/wBbbmOccA8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ixfxe3HSlIVry81GQthepW6yeusolNgTsVk50zXxF1YdQzqYuXpUxyDhPmibsKRcE
+	 q34NuXVZk3/R6cVhJnlVTIFPcd9/Vt9VmoitIUGK1lf/z29kQfcJj3LOwyX4tqYTFE
+	 NH5Gy5yIq3vbyaC1mkPRkgvLdhiJhGZJrwQncKA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgGKNqE (ORCPT
+        id S1728330AbgGKNxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgGKNqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:46:03 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BF4C08C5DD;
-        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u18so3793666pfk.10;
-        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4QaG2Xnk2TYLlJE8J5iwYhAP5F08MFtwcs7P6RA6aEM=;
-        b=oIq8s8tOLESYixQMi0A4Ssshbv5SYCHZuZ5PSvHfWPrOrLbLv9Te1ACCyR/pElxWhN
-         GdCIUip+aCCtI4u9dvy2hILjNDigjU4q4r1chs2usc2xqVo5lSvSsSeiNyTE7nsyrr0U
-         wpIyuOlNJGuOuCkfzx87aDhRf1BD+/wSfQO0vxv4Dw2wQibdhwDV6yEp8S+dm575YmJu
-         XAZFnzG1Cy3NdYj8fIvFSG/37NLt0nzcAYeXAbzCNkUyBKHSgE0L46+VAv3sZJBMW72I
-         2QHe9mIF4NMAZctQjU+PdWJdItewyOKOeo3/Y5KujMw1mYjtgA27sVSAaveOzFkqxjx7
-         7m9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4QaG2Xnk2TYLlJE8J5iwYhAP5F08MFtwcs7P6RA6aEM=;
-        b=gDjdjrsY/0MlDVT9zpNiNRR63OtXmkZkFb5HEHQQc8lFfJnHsqAr3c2Uso5K1PPzYy
-         SG3KQhz7wTkMs3r7vIwlouow+ZdKu1neLI2QmJtsHxwRP7bWOXwbro1aGaFdJEEJNbBU
-         5KkQuf4NZUjQlVNGNYwRmR4G6T08BV08GkpTy+gX85wRqNX5MCKkEckzpp5Ro41CtmpX
-         J/Tcaw7S6W+CDlSLObjXDWLaRAzdqr4aXq10Bu4eHquKvoPe1PiTmazRBt9lOhcxdkZi
-         F1n+EWvrHlEmt0MLPU5uyAAuN7G9hz6GNE+vxZjw8YlruTxLPTSXtRQcXRjYqJlwYtl5
-         TJSg==
-X-Gm-Message-State: AOAM533CpKM++yTLAoRaaCiDaQwKT+z7jWy470J9pOGAdVDCvR62WfZW
-        VZXK9f+C2iEFLDN36hlwAFGo7XRK
-X-Google-Smtp-Source: ABdhPJzrLGMlYJJj1TmdWoLOIt2CCho9ncVcFQlkYQt4yhPYrDiwtQvaoKTfoFg8YmF/bzy0rAsifg==
-X-Received: by 2002:a63:6c1:: with SMTP id 184mr64354562pgg.262.1594475163475;
-        Sat, 11 Jul 2020 06:46:03 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id e5sm8525597pjv.18.2020.07.11.06.46.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 06:46:02 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 06:46:01 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     min.li.xe@renesas.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] ptp: add debugfs support for IDT family of
- timing devices
-Message-ID: <20200711134601.GD20443@hoboy>
-References: <1594395685-25199-1-git-send-email-min.li.xe@renesas.com>
- <20200710135844.58d76d44@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Sat, 11 Jul 2020 09:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728087AbgGKNxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 09:53:02 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3612075F;
+        Sat, 11 Jul 2020 13:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594475581;
+        bh=s/7gnYxbL8MGJCdRA8lVq8/Fs0I4KXG/wBbbmOccA8s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VVxcVMgcqwkiplyk7Ep7Dv309WWAJdZ5Mz8P1lw6Nk+XKNhd7bn7ImReEehA5Ez10
+         SWfDY7FcDqOxdwpz6vW7hSLGhVWjeLew7FG/yB0R3p/yJJbIFCHE3M1mQZZbCLw4QF
+         JYVSUK89ZR8OgN5hRqANEpJX2afHG1q/IWvu9jVk=
+Date:   Sat, 11 Jul 2020 21:52:53 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/5] Add audio support for imx6sx platform
+Message-ID: <20200711135253.GE21277@dragon>
+References: <cover.1592460381.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710135844.58d76d44@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1592460381.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:58:44PM -0700, Jakub Kicinski wrote:
-> On Fri, 10 Jul 2020 11:41:25 -0400 min.li.xe@renesas.com wrote:
-> > From: Min Li <min.li.xe@renesas.com>
-> > 
-> > This patch is to add debugfs support for ptp_clockmatrix and ptp_idt82p33.
-> > It will create a debugfs directory called idtptp{x} and x is the ptp index.
-> > Three inerfaces are present, which are cmd, help and regs. help is read
-> > only and will display a brief help message. regs is read only amd will show
-> > all register values. cmd is write only and will accept certain commands.
-> > Currently, the accepted commands are combomode to set comobo mode and write
-> > to write up to 4 registers.
-> > 
-> > Signed-off-by: Min Li <min.li.xe@renesas.com>
+On Thu, Jun 18, 2020 at 02:03:44PM +0800, Shengjiu Wang wrote:
+> Add audio support for imx6sx platform.
+> Enable ASRC, ESAI, SPDIF, MQS.
 > 
-> No private configuration interfaces in debugfs, please.
+> Shengjiu Wang (5):
+>   ARM: dts: imx6sx: Enable ASRC device
+>   ARM: dts: imx6sx-sdb: Add MQS support
 
-I suggested to Min to use debugfs for device-specific configuration
-that would be out of place in the generic PTP Hardware Clock
-interface.
+Applied the series, except this one which doesn't apply to my branch.
 
-> If what you're exposing is a useful feature it deserves a proper 
-> uAPI interface.
+Shawn
 
-Can you expand on what you mean by "proper uAPI interface" please?
-
-Thanks,
-Richard
+>   ARM: dts: imx6sx-sdb: Add SPDIF support
+>   ARM: dts: imx6sx-sabreauto: Add SPDIF support
+>   ARM: dts: imx6sx-sabreauto: Add cs42888 sound card support
+> 
+>  arch/arm/boot/dts/Makefile             |  1 +
+>  arch/arm/boot/dts/imx6sx-sabreauto.dts | 96 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6sx-sdb-mqs.dts   | 48 +++++++++++++
+>  arch/arm/boot/dts/imx6sx-sdb.dtsi      | 30 ++++++++
+>  arch/arm/boot/dts/imx6sx.dtsi          | 36 +++++++---
+>  5 files changed, 203 insertions(+), 8 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6sx-sdb-mqs.dts
+> 
+> -- 
+> 2.21.0
+> 
