@@ -2,185 +2,228 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E55C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E82D20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129F5206D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGiVgkX3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOacYYyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGKMJE (ORCPT
+        id S1727834AbgGKMTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 08:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Sat, 11 Jul 2020 08:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgGKMJD (ORCPT
+        with ESMTP id S1726480AbgGKMTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 08:09:03 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01812C08C5DD;
-        Sat, 11 Jul 2020 05:09:02 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so4674420lfb.0;
-        Sat, 11 Jul 2020 05:09:02 -0700 (PDT)
+        Sat, 11 Jul 2020 08:19:43 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F127C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:19:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k4so3330133pld.12
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WwdLWNBKzdjz++dbZsOrtCanbz1z5iZ74y8YlMyxvhY=;
-        b=UGiVgkX33zsA5zg0vtKXFB9vjLMYCixsqmKwVIAyiGdcpo6choVUzd6xPP6J6bFuTz
-         6MxlNtF+DpPQm6QFcjQU1S8Ig1IpTTfdd8Ocp3wSIswgssUwy5IjT5tXDN4pH6TkO02n
-         ofaySMRPnH9n4+v3v54U1DR3cI9dCiCb96zygDtQV6stl/sIxcd7ybG3pVX2sVXSgBqM
-         GmHOs05qO+xyOoTMQB20DqOfOnrxOV6UXAj197EDRFvLm6jWUFoknT9+sRHaPsJ8phFn
-         At18iW9JWc/iRLjtJtBxnnZzhREAEA5z12lTrv9WE8Ld5iAWQ6Jq1iJE31DGxxQeVvqr
-         M4Jg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3VoxAVyfvGSyy1qH0WPeEcXvaJrXVn2jeakgGUmqbJA=;
+        b=SOacYYyqBg0qZnd0TNoifYk05Si+nVzJibtvZogmrYe8jRHW1KDZ0HbPVxuOdVsbA7
+         Bj/5VzR1AxVgvkwiPlZTzITeSsvZPEW1cINLirTCmpb+lPaz8KhiQbmskAGf1K/Ugr12
+         VFmHHDBmenJEh1RcN/fm+sCt8kG8g6w2D9Sgh7yzrVVJ2PC6YJNsNeE1q+UUYHo02VS+
+         CGSmmEZ3RFJ5JDFG90tsLB5//fC5lG91q9T5Tv2bic1Op6ixsJJoLk0X+lxLIFF4BwAE
+         RXni0TBMEOibCVvPj7d2/+U81vdXnkC4qNUIdLLnz5EG8l1239mb6gYuYxXiPQ3fa7rv
+         b8hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WwdLWNBKzdjz++dbZsOrtCanbz1z5iZ74y8YlMyxvhY=;
-        b=r2aAr0zrlsqfW7wbVPA9bjBCvBJNU4Qjj3jZlVYRie04VckOG/myUvqa8PWYz4lWmO
-         JxdOfOu67uxF4kdJt3EdQjedYnv0hP9v+HTX8XhECZfZRQwm48qxzfwgPDECohdgdgda
-         ihY//2iuX022uzIrXliK8tsWW3JIgeOVLUfMuJPpBr4UBpmHWKQfBLEfKZnpiFP2mEGV
-         peBZ286nTRpuzfCZSfhSFMiTlRfocwZNQuv9AAzKYWMWk+qXaBxo/AXPnGxm75plGIb+
-         UyNChGQCg4IcvHK08A2odI/t7jlHStSlSf3hxzdeIWFVVtbBNnBmblZYFn6TMJhpZcrY
-         nTTA==
-X-Gm-Message-State: AOAM530lMmJ8jBtfxKtn432dDIUC4sIY2H9Jir2wQ+JtNDsaCDPXyFFL
-        WlgrEtDDBRBq5V3iI0rtDQzXl+0m
-X-Google-Smtp-Source: ABdhPJx1LyWwIM/u3ZPjJPXz8P5aMR+vzKzgS9s2fpe2mSR5vzSjEUou2b/dcazr263T8ozRRGBp9Q==
-X-Received: by 2002:a05:6512:52a:: with SMTP id o10mr46421156lfc.137.1594469340841;
-        Sat, 11 Jul 2020 05:09:00 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id m14sm4581974lfp.18.2020.07.11.05.08.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3VoxAVyfvGSyy1qH0WPeEcXvaJrXVn2jeakgGUmqbJA=;
+        b=XpvMa6a0dj2xrKFJTGB5uyDv591s/puqBuNQX118Cee4WHdbUmAlTwQHr11aOfpfOo
+         Aq5YW4t+lEqATuFwXqMI+Wt5GMj5cpw1m5HqK3Kczxk7hbuSbVA8jYz1JstcIBRJvGVs
+         1mJyzQCKUSUq4Tu2PpclVzmOjMJc6KQ1mdOj1KONOy2JADE14m9COTc7GHk/uE1AOIee
+         NXwQWl/HlMEGyN0EXVzljyJi50Aw1Im7+NA+jzx7YdsAI0mbQt7VHBFm6wKq5gm1HUvR
+         fW6ThmFo8VkVw/wc8Z51X4JPecxwkPgITAWaTaRwvWal/CWS3ZwKzqwGwq+gCCfwFil/
+         vU+w==
+X-Gm-Message-State: AOAM531Ikn4UOML/hjNWKoyd3sKhodeBzm+W/PqNMYCszVcFMaT+gVwT
+        zCLffqolh34ia1hAawRQ0Ac=
+X-Google-Smtp-Source: ABdhPJxPxlB9lzML+Rw1tngAsIsL5C+U4G7n4d4Z+uaP+pgHQSnppIjLA+nUEcNfy7Gysn3ZCrb7Hw==
+X-Received: by 2002:a17:90a:784c:: with SMTP id y12mr9713221pjl.16.1594469982956;
+        Sat, 11 Jul 2020 05:19:42 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id o4sm8695668pjo.16.2020.07.11.05.19.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 05:08:59 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Sergey Organov <sorganov@gmail.com>
-Subject: [PATCH v2 net] net: fec: fix hardware time stamping by external devices
-Date:   Sat, 11 Jul 2020 15:08:42 +0300
-Message-Id: <20200711120842.2631-1-sorganov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200706142616.25192-1-sorganov@gmail.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
+        Sat, 11 Jul 2020 05:19:42 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 20:19:33 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 01/17] perf ftrace: select function/function_graph
+ tracer automatically
+Message-ID: <20200711121933.sgsprjjibflddkgu@mail.google.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com>
+ <20200710134322.15400-2-changbin.du@gmail.com>
+ <CAM9d7cgZFrakd5n=ZekQNS2WSa9nrnmaU1FxiRHxVrUEviUD4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cgZFrakd5n=ZekQNS2WSa9nrnmaU1FxiRHxVrUEviUD4g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix support for external PTP-aware devices such as DSA or PTP PHY:
+On Fri, Jul 10, 2020 at 11:14:05PM +0900, Namhyung Kim wrote:
+> Hello,
+> 
+> On Fri, Jul 10, 2020 at 10:43 PM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > The '-g/-G' options have already implied function_graph tracer should be
+> > used instead of function tracer. So the extra option '--tracer' can be
+> > killed.
+> >
+> > This patch changes the behavior as below:
+> >   - By default, function tracer is used.
+> >   - If '-g' or '-G' option is on, then function_graph tracer is used.
+> >   - The perf configuration item 'ftrace.tracer' is marked as deprecated.
+> >   - The option '--tracer' is marked as deprecated.
+> >
+> > Here are some examples.
+> >
+> > This will start tracing all functions using function tracer:
+> >   $ sudo perf ftrace
+> >
+> > This will trace all functions using function graph tracer:
+> >   $ sudo perf ftrace -G
+> 
+> If you removed the default value, this doesn't work, right?
+>
+yes, I forgot to update this commit message. Thanks.
 
-Make sure we never time stamp tx packets when hardware time stamping
-is disabled.
+> Thanks
+> Namhyung
+> 
+> >
+> > This will trace function vfs_read using function graph tracer:
+> >   $ sudo perf ftrace -G vfs_read
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > ---
+> > v3: remove default '*' for -G/-T.
+> > ---
+> >  tools/perf/Documentation/perf-config.txt |  5 -----
+> >  tools/perf/Documentation/perf-ftrace.txt |  2 +-
+> >  tools/perf/builtin-ftrace.c              | 15 ++++++++++-----
+> >  3 files changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> > index c7d3df5798e2..a25fee7de3b2 100644
+> > --- a/tools/perf/Documentation/perf-config.txt
+> > +++ b/tools/perf/Documentation/perf-config.txt
+> > @@ -612,11 +612,6 @@ trace.*::
+> >                 "libbeauty", the default, to use the same argument beautifiers used in the
+> >                 strace-like sys_enter+sys_exit lines.
+> >
+> > -ftrace.*::
+> > -       ftrace.tracer::
+> > -               Can be used to select the default tracer. Possible values are
+> > -               'function' and 'function_graph'.
+> > -
+> >  llvm.*::
+> >         llvm.clang-path::
+> >                 Path to clang. If omit, search it from $PATH.
+> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> > index b80c84307dc9..952e46669168 100644
+> > --- a/tools/perf/Documentation/perf-ftrace.txt
+> > +++ b/tools/perf/Documentation/perf-ftrace.txt
+> > @@ -24,7 +24,7 @@ OPTIONS
+> >
+> >  -t::
+> >  --tracer=::
+> > -       Tracer to use: function_graph or function.
+> > +       Tracer to use: function_graph or function. This option is deprecated.
+> >
+> >  -v::
+> >  --verbose=::
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 2bfc1b0db536..5f53da87040d 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -27,7 +27,6 @@
+> >  #include "util/cap.h"
+> >  #include "util/config.h"
+> >
+> > -#define DEFAULT_TRACER  "function_graph"
+> >
+> >  struct perf_ftrace {
+> >         struct evlist           *evlist;
+> > @@ -419,6 +418,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
+> >         if (strcmp(var, "ftrace.tracer"))
+> >                 return -1;
+> >
+> > +       pr_warning("Configuration ftrace.tracer is deprecated\n");
+> >         if (!strcmp(value, "function_graph") ||
+> >             !strcmp(value, "function")) {
+> >                 ftrace->tracer = value;
+> > @@ -459,7 +459,7 @@ int cmd_ftrace(int argc, const char **argv)
+> >  {
+> >         int ret;
+> >         struct perf_ftrace ftrace = {
+> > -               .tracer = DEFAULT_TRACER,
+> > +               .tracer = "function",
+> >                 .target = { .uid = UINT_MAX, },
+> >         };
+> >         const char * const ftrace_usage[] = {
+> > @@ -469,7 +469,7 @@ int cmd_ftrace(int argc, const char **argv)
+> >         };
+> >         const struct option ftrace_options[] = {
+> >         OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
+> > -                  "tracer to use: function_graph(default) or function"),
+> > +                  "tracer to use: function or function_graph (This option is deprecated)"),
+> >         OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+> >                    "trace on existing process id"),
+> >         OPT_INCR('v', "verbose", &verbose,
+> > @@ -479,11 +479,13 @@ int cmd_ftrace(int argc, const char **argv)
+> >         OPT_STRING('C', "cpu", &ftrace.target.cpu_list, "cpu",
+> >                     "list of cpus to monitor"),
+> >         OPT_CALLBACK('T', "trace-funcs", &ftrace.filters, "func",
+> > -                    "trace given functions only", parse_filter_func),
+> > +                    "trace given functions using function tracer",
+> > +                    parse_filter_func),
+> >         OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+> >                      "do not trace given functions", parse_filter_func),
+> >         OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+> > -                    "Set graph filter on given functions", parse_filter_func),
+> > +                    "trace given functions using function_graph tracer",
+> > +                    parse_filter_func),
+> >         OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
+> >                      "Set nograph filter on given functions", parse_filter_func),
+> >         OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
+> > @@ -505,6 +507,9 @@ int cmd_ftrace(int argc, const char **argv)
+> >         if (!argc && target__none(&ftrace.target))
+> >                 ftrace.target.system_wide = true;
+> >
+> > +       if (!list_empty(&ftrace.graph_funcs) || !list_empty(&ftrace.nograph_funcs))
+> > +               ftrace.tracer = "function_graph";
+> > +
+> >         ret = target__validate(&ftrace.target);
+> >         if (ret) {
+> >                 char errbuf[512];
+> > --
+> > 2.25.1
+> >
 
-Check for PTP PHY being in use and then pass ioctls related to time
-stamping of Ethernet packets to the PTP PHY rather than handle them
-ourselves. In addition, disable our own hardware time stamping in this
-case.
-
-Fixes: 6605b73 ("FEC: Add time stamping code and a PTP hardware clock")
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
----
-
-v2:
-  - Extracted from larger patch series
-  - Description/comments updated according to discussions
-  - Added Fixes: tag
-
- drivers/net/ethernet/freescale/fec.h      |  1 +
- drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
- drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
- 3 files changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index d8d76da..832a217 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -590,6 +590,7 @@ struct fec_enet_private {
- void fec_ptp_init(struct platform_device *pdev, int irq_idx);
- void fec_ptp_stop(struct platform_device *pdev);
- void fec_ptp_start_cyclecounter(struct net_device *ndev);
-+void fec_ptp_disable_hwts(struct net_device *ndev);
- int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
- int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
- 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 3982285..cc7fbfc 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
- 			ndev->stats.tx_bytes += skb->len;
- 		}
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
--			fep->bufdesc_ex) {
-+		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
-+		 * are to time stamp the packet, so we still need to check time
-+		 * stamping enabled flag.
-+		 */
-+		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
-+			     fep->hwts_tx_en) &&
-+		    fep->bufdesc_ex) {
- 			struct skb_shared_hwtstamps shhwtstamps;
- 			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
- 
-@@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
- 		return -ENODEV;
- 
- 	if (fep->bufdesc_ex) {
--		if (cmd == SIOCSHWTSTAMP)
--			return fec_ptp_set(ndev, rq);
--		if (cmd == SIOCGHWTSTAMP)
--			return fec_ptp_get(ndev, rq);
-+		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
-+
-+		if (cmd == SIOCSHWTSTAMP) {
-+			if (use_fec_hwts)
-+				return fec_ptp_set(ndev, rq);
-+			fec_ptp_disable_hwts(ndev);
-+		} else if (cmd == SIOCGHWTSTAMP) {
-+			if (use_fec_hwts)
-+				return fec_ptp_get(ndev, rq);
-+		}
- 	}
- 
- 	return phy_mii_ioctl(phydev, rq, cmd);
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 945643c..f8a592c 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
-+/**
-+ * fec_ptp_disable_hwts - disable hardware time stamping
-+ * @ndev: pointer to net_device
-+ */
-+void fec_ptp_disable_hwts(struct net_device *ndev)
-+{
-+	struct fec_enet_private *fep = netdev_priv(ndev);
-+
-+	fep->hwts_tx_en = 0;
-+	fep->hwts_rx_en = 0;
-+}
-+
- int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
 -- 
-2.10.0.1.g57b01a3
-
+Cheers,
+Changbin Du
