@@ -2,149 +2,95 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB405C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB879C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B6220720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A582A2075F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYu3lnVp"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BYy9wj6h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgGKPIh (ORCPT
+        id S1728525AbgGKP1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 11:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        Sat, 11 Jul 2020 11:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgGKPIg (ORCPT
+        with ESMTP id S1728478AbgGKP1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 11:08:36 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9526AC08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 08:08:36 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id r8so7358692oij.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 08:08:36 -0700 (PDT)
+        Sat, 11 Jul 2020 11:27:48 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC02C08C5DE
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 08:27:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id q17so3448179pls.9
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 08:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZRBM4MxQjZwlr3vgeAC3G2zshvu8PlmN+TgUFaaHs8k=;
-        b=NYu3lnVpJpBH+lVW/qrZPBJVHxT33neSZqt0btrYZhTT5kOpiH692FTKNImx6pdgRX
-         A4GvUS1s3yPZxDihU9wwCqadVk+LgDWh06nc8iueXySI8BSrS9S7hnRJHn1Chnb0Sylr
-         r+pn3gMqLGFriIv6C5U5aeDPOs6DMDXCIZ2YimIffFUlb5neHEtu/k4uq+w2T8nwbheA
-         booYHaKidlve1R3vCFVbhVIw71Qqatj0dyd9Za45tN+kWOx/+og/UoalAxPLheqS7w9H
-         5VqdNzcbLWMzohHmtNRVDLmtrqE6p32lLFS6PnEzAnsbjD4QBekktjIlnecqbGIJFVdC
-         9DEA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aJhe6zCH1WNKrcTnZAWBMSujOY8veheAqOunmYv7YNY=;
+        b=BYy9wj6hr+/2xBff/O9U6Mv8X2RuoxrhGspttITfJd4H8BT42Uvff1YmrFUq1cxZjM
+         /RlLAChkcLmFmI+uTo4zm5wijjEeCSEKarUvluxfkHEzzxmXiQlqMrHG2/F4iJIIcrUU
+         dlISfhoybUvWlEufXBVpXrUwypgMaxD7ZGIprD/q16PiAC6VPerZ8yOEw6qfLn7b1gxp
+         yBLasf14IkCYP1/Sbgl7pveb8Ap5sLlIU6Tn0JjWQLLV63+9FPOd+AGwZ5hKOXwD6lbs
+         /+Tf7pb6hwTXQ6mywbOPTiiiCpJe3T/y4srOH3PaOr0xp8zFTuVKircjNbS/AODWG60I
+         bEaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZRBM4MxQjZwlr3vgeAC3G2zshvu8PlmN+TgUFaaHs8k=;
-        b=lCA3Kg44ZVpchw/qTMXpLDMYMCJxuKBh8L+tkpPeDRnjCD0pId+FoP3pkvc/1V6tNS
-         E1OJyehJLfyqcyZ2BOknmjtgaLANL5zuS0psFDxy8FmEe4BLvEV2IqDi9rolOfFYgJOj
-         dSfz9ik3mTKyF+TsvmyxtxOzbQbIDveWsmvNUAF/Bv+R/1mCXbCIcwQtD+Q5ChB+H+D1
-         tvVfzjY37KUN+6TYJdKB1p/AQODKMaSz7Ncbq98bO6USmjE9c+S2kY+F8JH3yt5qeyS0
-         Y0seM8YCtbRW2NDrjyog0LDhCFxdcnbUXcOGtbgR4l8yehzPanFFh1EW9Cx5E4MRzu7i
-         iU+w==
-X-Gm-Message-State: AOAM530GLTzVAdhDywGPw1g3tegYflhyv1otHTkhygXkVsIev3+ZUB47
-        CNxzBGBDmE64LxsQEANVGBppy6EZxZrBJxMPbtA=
-X-Google-Smtp-Source: ABdhPJzWp7CxpTT+jxuVi1iP4wUjKKLVhEPkkguJn8KZrCdjWmWKEsZQscEmd+ZvsCtxjhuN/Jnyh0PMYVf+ThtyLLU=
-X-Received: by 2002:aca:2b18:: with SMTP id i24mr8340377oik.103.1594480115647;
- Sat, 11 Jul 2020 08:08:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aJhe6zCH1WNKrcTnZAWBMSujOY8veheAqOunmYv7YNY=;
+        b=R/sVuwuVRL28YVGs1L2UnuCI++BVUtpFJ2oSFN4KVT35teSnpkfnsLwZ/2GmqDTqli
+         C7XK+6XUKHwpsmFSYiHzzatmCekjTGdxWKRH63bPz5o6uZF/eYrlXCzV9F7wDakWpqH6
+         VYfjPh7OI+TOCva5AjfwTjSKVoW8MyPdibe85BVINeHDbajVmV4raOfis+fcDCXx0DYj
+         XrycuuToCpwULTnDiiKg4iSoVfzm3/rhhzFVleR5GVwc2ZaxmCtJLDLRD1WEYrpDYNVo
+         X8rop2M8o3nWU1fFPgBqXAbZxBtGeCXyrJ080mZR6rjU4rBirIVrncF8vcph4IzKt857
+         eJRA==
+X-Gm-Message-State: AOAM5308puLhMoABLf0aNh9aGgs/3Wtb91us7zIUBSdAybCq1+rxoBF1
+        xXKBKIAzsxlrO0tErJevji9N1w==
+X-Google-Smtp-Source: ABdhPJyBB95eQ4mlp1x88D2vqXWSfX0Jo3FgIJzOV4+vOR092AfZ2VdaRT1r4N6tEvSEQtk9/OdRQw==
+X-Received: by 2002:a17:90b:1b06:: with SMTP id nu6mr11139688pjb.106.1594481267471;
+        Sat, 11 Jul 2020 08:27:47 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id cv7sm8923477pjb.9.2020.07.11.08.27.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jul 2020 08:27:46 -0700 (PDT)
+Subject: Re: [PATCH] rsxx: switch from 'pci_free_consistent()' to
+ 'dma_free_coherent()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        josh.h.morris@us.ibm.com, pjk1939@linux.ibm.com, hch@infradead.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200711064647.247564-1-christophe.jaillet@wanadoo.fr>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c885edac-8de8-ba4c-c8bc-98654417ce20@kernel.dk>
+Date:   Sat, 11 Jul 2020 09:27:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710024100.GA2055744@ubuntu-n2-xlarge-x86>
- <20200710122459.GE5653@sirena.org.uk> <20200711033036.GA4486@Ryzen-9-3900X.localdomain>
-In-Reply-To: <20200711033036.GA4486@Ryzen-9-3900X.localdomain>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Sat, 11 Jul 2020 11:08:24 -0400
-Message-ID: <CAGngYiXBdT1jOwRS_A03iQiGRbcpPncBxtVOsnFpmauO4ffS5A@mail.gmail.com>
-Subject: Re: sound/soc/codecs/zl38060.c:614:34: warning: unused variable 'zl38_dt_ids'
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, kernel test robot <lkp@intel.com>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200711064647.247564-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan and Mark,
+On 7/11/20 12:46 AM, Christophe JAILLET wrote:
+> The wrappers in include/linux/pci-dma-compat.h should go away.
+> 
+> The patch has been generated with the coccinelle script bellow.
+> It has been compile tested.
+> 
+> This also aligns code with what is in use in '/rsxx/dma.c'
 
-On Fri, Jul 10, 2020 at 11:30 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Sure, you could hide it behind an ifdef for either CONFIG_OF or MODULE
-> (since you could build this as a module with CONFIG_OF disabled).
->
-> I just figured this would be something frowned upon but if that is how
-> you would prefer it to be fixed, then I have no objections to it.
->
+Applied, thanks.
 
-That's how things used to work in the past: we had to #ifdef CONFIG_OF
-all the driver of_XXX code, so it could be built on !CONFIG_OF.
+-- 
+Jens Axboe
 
-I remember problems with this approach: it generated a lot of
-visual noise, it was fragile in both directions: including too much,
-and excluding too much. Last but not least, it required us ARM people
-to test build each patch on !CONFIG_OF, which many conveniently forgot
-to do :)
-
-My "vote" would be to fix the warning using compiler magic. For
-example:
-
-#if !CONFIG_OF
-// #define of_match_ptr(x) NULL
-#define of_match_ptr(x) ((x) == NULL ? NULL : NULL)
-#endif
-
-That seems to eliminate the warning on my gcc version 7.5.0, but of
-course as compilers get more clever, this could eventually
-generate a warning (if it doesn't already on clang).
-
-So perhaps use compiler attributes instead?
-
-Stand-alone testable code snippet below.
-======================================================
-
-// gcc -Wall unused.c
-// results in: match_table is NULL
-// gcc -Wall -DCONFIG_OF unused.c
-// results in: match_table[0] = 5
-
-#include <stdio.h>
-
-#ifdef CONFIG_OF
-#define of_match_ptr(x) x
-#else
-#define of_match_ptr(x) ((x) == NULL ? NULL : NULL)
-#endif
-
-struct of_device_id {
-    int id;
-};
-
-static const struct of_device_id some_ids[] = {
-    { .id = 5, },
-    { /* sentinel */ }
-};
-
-struct driver {
-    const struct of_device_id *of_match_table;
-};
-
-static const struct driver my_driver = {
-    .of_match_table = of_match_ptr(some_ids),
-};
-
-int main()
-{
-    if (my_driver.of_match_table)
-        printf("match_table[0] = %d\n", my_driver.of_match_table[0].id);
-    else
-        printf("match_table is NULL\n");
-}
