@@ -2,90 +2,225 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C32C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83049206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:12:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nM2kFz5w"
+	by mail.kernel.org (Postfix) with ESMTP id C32A02065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgGKHMb (ORCPT
+        id S1728149AbgGKHKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 03:12:31 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:20793 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726958AbgGKHMb (ORCPT
+        Sat, 11 Jul 2020 03:10:24 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52146 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgGKHKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 03:12:31 -0400
-X-UUID: 6a255dd1d52a4162b9a29a9d328eb6a2-20200711
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yilbJrHb4on0J7hThn4YoSbk9aK3TSJQjUpN3XgWrzE=;
-        b=nM2kFz5wU1FHh9xBxJ8fOzMTcgthThfLMN3XDWrbbKOjHaLejrwZVXH/HvXFKm0R9BzLVMK6QqaOPlxvlyCHUbXhwHlTsblRY3MKb20r4cS1G4ohhtVMZ38aC3jV9lZVUcCyjA83rcnWRJRA6hRIi0QLurpnbvyN69y4mfAj9w8=;
-X-UUID: 6a255dd1d52a4162b9a29a9d328eb6a2-20200711
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 220947356; Sat, 11 Jul 2020 15:12:16 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 11 Jul
- 2020 15:12:15 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 11 Jul 2020 15:12:14 +0800
-Message-ID: <1594451493.16172.6.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 00/10] MT6779 IOMMU SUPPORT
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     Chao Hao <chao.hao@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>, TH Yang <th.yang@mediatek.com>,
-        <ming-fan.chen@mediatek.com>, <youlin.pei@mediatek.com>,
-        <anan.sun@mediatek.com>
-Date:   Sat, 11 Jul 2020 15:11:33 +0800
-In-Reply-To: <20200710141349.GJ27672@8bytes.org>
-References: <20200703044127.27438-1-chao.hao@mediatek.com>
-         <20200710141349.GJ27672@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 11 Jul 2020 03:10:23 -0400
+Received: by mail-io1-f70.google.com with SMTP id l1so4992231ioh.18
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 00:10:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=h3Vk3eXrn0y01MLjSo8olxdAopheGwFN2NEb7CEvUTw=;
+        b=bfzxFud139/dlayeqV1JU3x5xbk6177LvHmjRlC1wzsabY2GIu9kb7FWlEv4WzJ8y5
+         /sED2AVZk/T3mFNwPFIDRLyHDJKiHDSrDOkhLy+xkqK5GrSox2AorVLsPL9TTTankJll
+         yRV+2QGoqekXvG+dXDDPhN/113TBPhRMKUbxZ9Bc6ZLPmEifxOylimJ3iV21DxtohB17
+         EvNgz9pL0oEJafVBqHbfuZDfzPiVQvJjTxk9maWpbsQQUT0FcoXwmSBfwiT7Bol4CusQ
+         8TkRy6bl0udaoljhDNaIw7iLzptgyW7CCEmZXhSAw4+J6jeztHhXa+PlnUm3xK79Msg+
+         fMEQ==
+X-Gm-Message-State: AOAM5321zsquL5KrjGNsndRnvKao8qk8r4diMs2mqzlA2GvhN9dv8Drr
+        ePaBBsSehEZzzuFTTt0jE3qF5mCYqONydGxF4bugvijekaVZ
+X-Google-Smtp-Source: ABdhPJzax6znZAv2hvNDOtRdoAjHgnVFFNQyqkh990TTAPygXRT+/CoBEwQynS0a+/LtcCb7rmCdEGVuz0xUTKURH9cQT1ZzwQsM
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 05BB3D50A356C307CD14C3C48E7C352C564F8EC9C54A287E85E8AED5818631902000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a02:a909:: with SMTP id n9mr76315786jam.70.1594451422409;
+ Sat, 11 Jul 2020 00:10:22 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 00:10:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a4fd8105aa252630@google.com>
+Subject: BUG: stack guard page was hit in fixup_exception
+From:   syzbot <syzbot+3370f8260246b965fefd@syzkaller.appspotmail.com>
+To:     bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA3LTEwIGF0IDE2OjEzICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+
-IE9uIEZyaSwgSnVsIDAzLCAyMDIwIGF0IDEyOjQxOjE3UE0gKzA4MDAsIENoYW8gSGFvIHdyb3Rl
-Og0KPiA+IENoYW8gSGFvICgxMCk6DQo+ID4gICBkdC1iaW5kaW5nczogbWVkaWF0ZWs6IEFkZCBi
-aW5kaW5ncyBmb3IgTVQ2Nzc5DQo+ID4gICBpb21tdS9tZWRpYXRlazogUmVuYW1lIHRoZSByZWdp
-c3RlciBTVEFOREFSRF9BWElfTU9ERSgweDQ4KSB0byBNSVNDX0NUUkwNCj4gPiAgIGlvbW11L21l
-ZGlhdGVrOiBVc2UgYSB1MzIgZmxhZ3MgdG8gZGVzY3JpYmUgZGlmZmVyZW50IEhXIGZlYXR1cmVz
-DQo+ID4gICBpb21tdS9tZWRpYXRlazogU2V0dGluZyBNSVNDX0NUUkwgcmVnaXN0ZXINCj4gPiAg
-IGlvbW11L21lZGlhdGVrOiBNb3ZlIGludl9zZWxfcmVnIGludG8gdGhlIHBsYXRfZGF0YQ0KPiA+
-ICAgaW9tbXUvbWVkaWF0ZWs6IEFkZCBzdWJfY29tbSBpZCBpbiB0cmFuc2xhdGlvbiBmYXVsdA0K
-PiA+ICAgaW9tbXUvbWVkaWF0ZWs6IEFkZCBSRUdfTU1VX1dSX0xFTl9DVFJMIHJlZ2lzdGVyIGRl
-ZmluaXRpb24NCj4gPiAgIGlvbW11L21lZGlhdGVrOiBFeHRlbmQgcHJvdGVjdCBwYSBhbGlnbm1l
-bnQgdmFsdWUNCj4gPiAgIGlvbW11L21lZGlhdGVrOiBNb2RpZnkgTU1VX0NUUkwgcmVnaXN0ZXIg
-c2V0dGluZw0KPiA+ICAgaW9tbXUvbWVkaWF0ZWs6IEFkZCBtdDY3NzkgYmFzaWMgc3VwcG9ydA0K
-PiANCj4gQXBwbGllZCwgdGhhbmtzLg0KDQpIaSBKb2VyZywNCg0KVGhhbmtzIGZvciB0aGUgYXBw
-bHkuDQoNClRoZSBTTUkgcGFydCBhbHdheXMgZ28gd2l0aCB0aGUgSU9NTVUsIENvdWxkIHlvdSBh
-bHNvIGhlbHAgYXBwbHkgdGhlDQptdDY3NzkgU01JIGJhc2ljYWwgcGFydCBbMV1bMl0uIEJvdGgg
-aGFzIGFscmVhZHkgZ290IHJldmlld2VkLWJ5IGZyb20NClJvYiBhbmQgTWF0dGhpYXMuIGFuZCB0
-aGUgWzNdIGluIHRoYXQgcGF0Y2hzZXQgaXMgZm9yIHBlcmZvcm1hbmNlDQppbXByb3ZlbWVudCwg
-aXQncyBub3Qgc28gbmVjZXNzYXJ5LCBpdCBjYW4gYmUgc2VuZCBpbiBhbm90aGVyIHBhdGNoc2V0
-Lg0KDQoNClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTE3Njgz
-My8NClsyXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTE3NjgzMS8N
-ClszXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTE3NjgzMi8NCg==
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    42f82040 Merge tag 'drm-fixes-2020-07-10' of git://anongit..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12d80333100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
+dashboard link: https://syzkaller.appspot.com/bug?extid=3370f8260246b965fefd
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3370f8260246b965fefd@syzkaller.appspotmail.com
+
+BUG: stack guard page was hit at 000000004cbdbd91 (stack is 00000000e7fa34ab..000000001a32f95e)
+kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 11649 Comm: kworker/u4:5 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:fixup_exception+0x0/0xca arch/x86/mm/extable.c:143
+Code: 5d 41 5c c3 e8 b1 9f 3f 00 45 31 e4 5b 44 89 e0 5d 41 5c c3 48 89 ef e8 9e f8 7e 00 eb c7 66 90 66 2e 0f 1f 84 00 00 00 00 00 <41> 57 49 89 cf 41 56 49 89 d6 41 55 41 89 f5 41 54 49 89 fc 55 53
+RSP: 0018:ffffc90001810000 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900018102a0 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: 000000000000000e RDI: ffffc90001810218
+RBP: ffffc90001810218 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000002 R14: 000000000000000b R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc9000180fff8 CR3: 000000008749d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900018102c8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc900018105d0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900018105f8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90001810900 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001810928 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90001810c30 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001810c58 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90001810f60 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001810f88 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc90001811290 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900018112b8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc900018115c0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff83968d3b RDI: 0000000000000001
+RBP: ffffffff810078f7 R08: ffffffff83ad6dc0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
+ search_module_extables+0xce/0x100 kernel/module.c:4425
+ search_exception_tables+0x42/0x50 kernel/extable.c:59
+ fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
+ no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 
+Lost 823 message(s)!
+---[ end trace 7175130f674c1b3d ]---
+RIP: 0010:fixup_exception+0x0/0xca arch/x86/mm/extable.c:143
+Code: 5d 41 5c c3 e8 b1 9f 3f 00 45 31 e4 5b 44 89 e0 5d 41 5c c3 48 89 ef e8 9e f8 7e 00 eb c7 66 90 66 2e 0f 1f 84 00 00 00 00 00 <41> 57 49 89 cf 41 56 49 89 d6 41 55 41 89 f5 41 54 49 89 fc 55 53
+RSP: 0018:ffffc90001810000 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900018102a0 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: 000000000000000e RDI: ffffc90001810218
+RBP: ffffc90001810218 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000002 R14: 000000000000000b R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc9000180fff8 CR3: 000000008749d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
