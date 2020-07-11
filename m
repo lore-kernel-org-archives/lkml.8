@@ -2,29 +2,29 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29550C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED757C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114AF2076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFEA2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgGKBAN (ORCPT
+        id S1728140AbgGKBAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:00:13 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:49761 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726907AbgGKA7I (ORCPT
+        Fri, 10 Jul 2020 21:00:23 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:48885 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726606AbgGKA7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 20:59:08 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
+        Fri, 10 Jul 2020 20:59:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U2KGAZr_1594429139;
 Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2KGAZr_1594429139)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 Jul 2020 08:59:03 +0800
+          Sat, 11 Jul 2020 08:58:59 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -34,138 +34,119 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
         kirill@shutemov.name
-Cc:     Andrea Arcangeli <aarcange@redhat.com>
-Subject: [PATCH v16 08/22] mm/thp: narrow lru locking
-Date:   Sat, 11 Jul 2020 08:58:42 +0800
-Message-Id: <1594429136-20002-9-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH v16 00/22] per memcg lru_lock 
+Date:   Sat, 11 Jul 2020 08:58:34 +0800
+Message-Id: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1594429136-20002-1-git-send-email-alex.shi@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lru_lock and page cache xa_lock have no reason with current sequence,
-put them together isn't necessary. let's narrow the lru locking, but
-left the local_irq_disable to block interrupt re-entry and statistic update.
+The new version which bases on v5.8-rc4. Add 2 more patchs:
+'mm/thp: remove code path which never got into'
+'mm/thp: add tail pages into lru anyway in split_huge_page()'
+and modified 'mm/mlock: reorder isolation sequence during munlock'
 
-Hugh Dickins point: split_huge_page_to_list() was already silly,to be
-using the _irqsave variant: it's just been taking sleeping locks, so
-would already be broken if entered with interrupts enabled.
-so we can save passing flags argument down to __split_huge_page().
+Current lru_lock is one for each of node, pgdat->lru_lock, that guard for
+lru lists, but now we had moved the lru lists into memcg for long time. Still
+using per node lru_lock is clearly unscalable, pages on each of memcgs have
+to compete each others for a whole lru_lock. This patchset try to use per
+lruvec/memcg lru_lock to repleace per node lru lock to guard lru lists, make
+it scalable for memcgs and get performance gain.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/huge_memory.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+Currently lru_lock still guards both lru list and page's lru bit, that's ok.
+but if we want to use specific lruvec lock on the page, we need to pin down
+the page's lruvec/memcg during locking. Just taking lruvec lock first may be
+undermined by the page's memcg charge/migration. To fix this problem, we could
+take out the page's lru bit clear and use it as pin down action to block the
+memcg changes. That's the reason for new atomic func TestClearPageLRU.
+So now isolating a page need both actions: TestClearPageLRU and hold the
+lru_lock.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 1fb4147ff854..d866b6e43434 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2423,7 +2423,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
- }
- 
- static void __split_huge_page(struct page *page, struct list_head *list,
--		pgoff_t end, unsigned long flags)
-+			      pgoff_t end)
- {
- 	struct page *head = compound_head(page);
- 	pg_data_t *pgdat = page_pgdat(head);
-@@ -2432,8 +2432,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	unsigned long offset = 0;
- 	int i;
- 
--	lruvec = mem_cgroup_page_lruvec(head, pgdat);
--
- 	/* complete memcg works before add pages to LRU */
- 	mem_cgroup_split_huge_fixup(head);
- 
-@@ -2445,6 +2443,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		xa_lock(&swap_cache->i_pages);
- 	}
- 
-+	/* prevent PageLRU to go away from under us, and freeze lru stats */
-+	spin_lock(&pgdat->lru_lock);
-+
-+	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-+
- 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
- 		__split_huge_page_tail(head, i, lruvec, list);
- 		/* Some pages can be beyond i_size: drop them from page cache */
-@@ -2464,6 +2467,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	}
- 
- 	ClearPageCompound(head);
-+	spin_unlock(&pgdat->lru_lock);
-+	/* Caller disabled irqs, so they are still disabled here */
- 
- 	split_page_owner(head, HPAGE_PMD_ORDER);
- 
-@@ -2481,8 +2486,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		page_ref_add(head, 2);
- 		xa_unlock(&head->mapping->i_pages);
- 	}
--
--	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+	local_irq_enable();
- 
- 	remap_page(head);
- 
-@@ -2621,12 +2625,10 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
- int split_huge_page_to_list(struct page *page, struct list_head *list)
- {
- 	struct page *head = compound_head(page);
--	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
- 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
- 	int count, mapcount, extra_pins, ret;
--	unsigned long flags;
- 	pgoff_t end;
- 
- 	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
-@@ -2687,9 +2689,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	unmap_page(head);
- 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
- 
--	/* prevent PageLRU to go away from under us, and freeze lru stats */
--	spin_lock_irqsave(&pgdata->lru_lock, flags);
--
-+	/* block interrupt reentry in xa_lock and spinlock */
-+	local_irq_disable();
- 	if (mapping) {
- 		XA_STATE(xas, &mapping->i_pages, page_index(head));
- 
-@@ -2719,7 +2720,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 				__dec_node_page_state(head, NR_FILE_THPS);
- 		}
- 
--		__split_huge_page(page, list, end, flags);
-+		__split_huge_page(page, list, end);
- 		if (PageSwapCache(head)) {
- 			swp_entry_t entry = { .val = page_private(head) };
- 
-@@ -2738,7 +2739,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		spin_unlock(&ds_queue->split_queue_lock);
- fail:		if (mapping)
- 			xa_unlock(&mapping->i_pages);
--		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-+		local_irq_enable();
- 		remap_page(head);
- 		ret = -EBUSY;
- 	}
+The typical usage of this is isolate_migratepages_block() in compaction.c
+we have to take lru bit before lru lock, that serialized the page isolation
+in memcg page charge/migration which will change page's lruvec and new 
+lru_lock in it.
+
+The above solution suggested by Johannes Weiner, and based on his new memcg 
+charge path, then have this patchset. (Hugh Dickins tested and contributed much
+code from compaction fix to general code polish, thanks a lot!).
+
+The patchset includes 3 parts:
+1, some code cleanup and minimum optimization as a preparation.
+2, use TestCleanPageLRU as page isolation's precondition
+3, replace per node lru_lock with per memcg per node lru_lock
+
+Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+containers on a 2s * 26cores * HT box with a modefied case:
+https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+With this patchset, the readtwice performance increased about 80%
+in concurrent containers.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
+idea 8 years ago, and others who give comments as well: Daniel Jordan, 
+Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
+
+Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
+and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
+
+Alex Shi (20):
+  mm/vmscan: remove unnecessary lruvec adding
+  mm/page_idle: no unlikely double check for idle page counting
+  mm/compaction: correct the comments of compact_defer_shift
+  mm/compaction: rename compact_deferred as compact_should_defer
+  mm/thp: move lru_add_page_tail func to huge_memory.c
+  mm/thp: clean up lru_add_page_tail
+  mm/thp: remove code path which never got into
+  mm/thp: narrow lru locking
+  mm/memcg: add debug checking in lock_page_memcg
+  mm/swap: fold vm event PGROTATED into pagevec_move_tail_fn
+  mm/lru: move lru_lock holding in func lru_note_cost_page
+  mm/lru: move lock into lru_note_cost
+  mm/lru: introduce TestClearPageLRU
+  mm/thp: add tail pages into lru anyway in split_huge_page()
+  mm/compaction: do page isolation first in compaction
+  mm/mlock: reorder isolation sequence during munlock
+  mm/swap: serialize memcg changes during pagevec_lru_move_fn
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: introduce the relock_page_lruvec function
+  mm/pgdat: remove pgdat lru_lock
+
+Hugh Dickins (2):
+  mm/vmscan: use relock for move_pages_to_lru
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +-
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  21 +--
+ Documentation/trace/events-kmem.rst                |   2 +-
+ Documentation/vm/unevictable-lru.rst               |  22 +--
+ include/linux/compaction.h                         |   4 +-
+ include/linux/memcontrol.h                         |  98 +++++++++++
+ include/linux/mm_types.h                           |   2 +-
+ include/linux/mmzone.h                             |   6 +-
+ include/linux/page-flags.h                         |   1 +
+ include/linux/swap.h                               |   4 +-
+ include/trace/events/compaction.h                  |   2 +-
+ mm/compaction.c                                    | 113 ++++++++----
+ mm/filemap.c                                       |   4 +-
+ mm/huge_memory.c                                   |  47 +++--
+ mm/memcontrol.c                                    |  71 +++++++-
+ mm/memory.c                                        |   3 -
+ mm/mlock.c                                         |  93 +++++-----
+ mm/mmzone.c                                        |   1 +
+ mm/page_alloc.c                                    |   1 -
+ mm/page_idle.c                                     |   8 -
+ mm/rmap.c                                          |   4 +-
+ mm/swap.c                                          | 189 ++++++++-------------
+ mm/swap_state.c                                    |   2 -
+ mm/vmscan.c                                        | 174 ++++++++++---------
+ mm/workingset.c                                    |   2 -
+ 25 files changed, 524 insertions(+), 365 deletions(-)
+
 -- 
 1.8.3.1
 
