@@ -2,221 +2,163 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA31AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9BB4206A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1DF2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUg3QFcM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qIl9b9zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGKXTn (ORCPT
+        id S1728037AbgGKXdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 19:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        Sat, 11 Jul 2020 19:33:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgGKXTn (ORCPT
+        with ESMTP id S1726939AbgGKXdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 19:19:43 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4129C08C5DD;
-        Sat, 11 Jul 2020 16:19:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dp18so10195386ejc.8;
-        Sat, 11 Jul 2020 16:19:42 -0700 (PDT)
+        Sat, 11 Jul 2020 19:33:46 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F85C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 16:33:46 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 145so8906596qke.9
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 16:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=mStXnp/SmkzvT0Fl4Wmo68hNfOn131BHCllSW8c4OE8=;
-        b=tUg3QFcMP3HvbwT0/5qBEzoXID4WYdW5CbjRCt/pfzYuexj+Y525yp+QObN0QIdS6e
-         owp2y4/ToJMnSFZXklLVQQYP7eZ6n6w1AZpFWYX46zOV6XVnaIqt6XgCLU3M779f98op
-         Fj8YrF0N+X5FicbbLKz8Egxshpg6UNBAUZy0uPW1o88PlGTnuI5AkqYbZMKHr9fykYOy
-         H8t7zUd95MY6iYwltcXethpLWO9Cw3/yKHfbos5sHjyIYdCIoYwimLgUeW+/83ezIXgu
-         e/+9OOaT0wOX+6CxYwAtKq+pcPlufFrzpCh0zzSXJLkiSeu8O2ilp0EPN57+CQKsPJpJ
-         Vtqw==
+        bh=7z7xL3EKlTOURA9bJmOChBRDZVPEDiiwDdwRoGoh3tU=;
+        b=qIl9b9zmh8XbF0q286w8Bb/Rp5f+QT1YVrRvjp3Y9+n1lXT15pyXWbNXNkzL0XJ6mA
+         OKDXVRfdHQb173yeYwpNkVXRqypw5lYX9Y0PSvjbeMceKFi6++/t3q2LLKlk2cPos5jW
+         4gCYisSVRcsDinG3Oz8HOfKRGyBGwziTFY1Kw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mStXnp/SmkzvT0Fl4Wmo68hNfOn131BHCllSW8c4OE8=;
-        b=iq4rtf5uRgym7d0YK7dgFXcp5LrYhCiU1Q3gY6WQK7PP3ZaF1G+WMzdiDpb7qPRwcd
-         2rllF/EROcPvaB5I/WVPU4FlVdBSXsX1pZ3kqH4rvbyOwoTxWjMs4X9IFvTNWuPmmSvD
-         BWgKsJoo/EFyc/UdUBTeSMJCmSDfNsVvdTO0kpevW+QmW2w0R5mJqbvmex6VLDKOotvP
-         EuYCSluUVpn9YLwdstWwB6gsgHCA5FDVrKkv+svbRRYKHL/sbKfEXUbosGDQxc4YD/DL
-         e5nOsI8Ms+kfsNEzHeW77wSCMYUD2m+pfjOyTDdUOFa8fIRd7YdclurI7D3OUdcxO0If
-         IJZQ==
-X-Gm-Message-State: AOAM531hs6DHrwI21eAQYU4rYxTwr1QpLAIuOsYqfOfigZ0v3dchCFVu
-        BWj9ckT7PgD/VyZiA50Y9kA=
-X-Google-Smtp-Source: ABdhPJx/FqQRkidC7vfAzlHTR1kPS/Dy8FM97IHngdxCJQW93VMmXdVwh/4FfI4hM0i76/wOJfyFFQ==
-X-Received: by 2002:a17:906:7709:: with SMTP id q9mr10249158ejm.123.1594509581172;
-        Sat, 11 Jul 2020 16:19:41 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id n9sm7983490edr.46.2020.07.11.16.19.39
+        bh=7z7xL3EKlTOURA9bJmOChBRDZVPEDiiwDdwRoGoh3tU=;
+        b=deBiYSFyQT1Yt6R+QMwYHw5PXAgh5VZcUDJn57WaJizhTDlB96ggm/letBlG8UA9BV
+         4INzxnyZUI1FiRaXb75Q1pI25uJCShGH3wF99oY4Ns+oLZdSVegyKlgTAzJy7nhVgxaB
+         jsXyqgjim5U1vGkVRTU5bTRmeDAbUWfWDd+OSg22N7EJbH+E6bxtV6O/trp8f8kXJ0JT
+         PsaDKuqMIq83zFLwuQY7aMsF93g7U24NYWoTl7QyIRlrb5XfIuIEh9OSQ9xgI4hS25HX
+         Z7vymJZph/8FThDj5LONer9/mhppWlcHoIHgCaggppUrCnbEDmZdNepkJTqsBTL8sc2L
+         Znow==
+X-Gm-Message-State: AOAM530JqqapeAW/YwkJ2N+e4+BDp2HYlgXB5+odMxTpJ1EhOOIpBQ71
+        AIixULUo9VV6vagg8VhXGFWjjg==
+X-Google-Smtp-Source: ABdhPJzBXhmcVKPBjv4vWy1ZtmSU6d30YNUnZS4J3IZmJkvxaNowyVwLPDWdMWEwfihLoLS8ivO2Zw==
+X-Received: by 2002:a37:c40a:: with SMTP id d10mr50674650qki.110.1594510425183;
+        Sat, 11 Jul 2020 16:33:45 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id e23sm12603012qkl.55.2020.07.11.16.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 16:19:40 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 02:19:37 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
- devices
-Message-ID: <20200711231937.wu2zrm5spn7a6u2o@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200711120842.2631-1-sorganov@gmail.com>
+        Sat, 11 Jul 2020 16:33:44 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 19:33:44 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+Message-ID: <20200711233344.GB2608903@google.com>
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <CA+G9fYudT63yZrkWG+mfKHTcn5mP+Ay6hraEQy3G_4jufztrrA@mail.gmail.com>
+ <CAHk-=whPrCRZpXYKois-0t8MibxH9KVXn=+-O1YVvOA016fqhw@mail.gmail.com>
+ <CA+G9fYusSSrc5G_pZV6Lc-LjjkzQcc3EsLMo+ejSzvyRcMgbqw@mail.gmail.com>
+ <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200711120842.2631-1-sorganov@gmail.com>
+In-Reply-To: <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
-
-On Sat, Jul 11, 2020 at 03:08:42PM +0300, Sergey Organov wrote:
-> Fix support for external PTP-aware devices such as DSA or PTP PHY:
+On Sat, Jul 11, 2020 at 11:12:58AM -0700, Linus Torvalds wrote:
+> On Sat, Jul 11, 2020 at 10:27 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > I have started bisecting this problem and found the first bad commit
 > 
-> Make sure we never time stamp tx packets when hardware time stamping
-> is disabled.
+> Thanks for the effort. Bisection is often a great tool to figure out
+> what's wrong.
 > 
-> Check for PTP PHY being in use and then pass ioctls related to time
-> stamping of Ethernet packets to the PTP PHY rather than handle them
-> ourselves. In addition, disable our own hardware time stamping in this
-> case.
+> Sadly, in this case:
 > 
-> Fixes: 6605b73 ("FEC: Add time stamping code and a PTP hardware clock")
-
-Please use a 12-character sha1sum. Try to use the "pretty" format
-specifier I gave you in the original thread, it saves you from counting,
-and also from people complaining once it gets merged:
-
-https://www.google.com/search?q=stephen+rothwell+%22fixes+tag+needs+some+work%22
-
-> Signed-off-by: Sergey Organov <sorganov@gmail.com>
-> ---
+> > commit 9f132f7e145506efc0744426cb338b18a54afc3b
+> > Author: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Date:   Thu Jan 3 15:28:41 2019 -0800
+> >
+> >     mm: select HAVE_MOVE_PMD on x86 for faster mremap
 > 
-> v2:
->   - Extracted from larger patch series
->   - Description/comments updated according to discussions
->   - Added Fixes: tag
+> Yeah, that's just the commit that enables the code, not the commit
+> that introduces the fundamental problem.
 > 
->  drivers/net/ethernet/freescale/fec.h      |  1 +
->  drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
->  drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
->  3 files changed, 30 insertions(+), 6 deletions(-)
+> That said, this is a prime example of why I absolutely detest patch
+> series that do this kind of thing, and are several patches that create
+> new functionality, followed by one patch to enable it.
 > 
-> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-> index d8d76da..832a217 100644
-> --- a/drivers/net/ethernet/freescale/fec.h
-> +++ b/drivers/net/ethernet/freescale/fec.h
-> @@ -590,6 +590,7 @@ struct fec_enet_private {
->  void fec_ptp_init(struct platform_device *pdev, int irq_idx);
->  void fec_ptp_stop(struct platform_device *pdev);
->  void fec_ptp_start_cyclecounter(struct net_device *ndev);
-> +void fec_ptp_disable_hwts(struct net_device *ndev);
->  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
->  int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
->  
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index 3982285..cc7fbfc 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
->  			ndev->stats.tx_bytes += skb->len;
->  		}
->  
-> -		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
-> -			fep->bufdesc_ex) {
-> +		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
-> +		 * are to time stamp the packet, so we still need to check time
-> +		 * stamping enabled flag.
-> +		 */
-> +		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
-> +			     fep->hwts_tx_en) &&
-> +		    fep->bufdesc_ex) {
->  			struct skb_shared_hwtstamps shhwtstamps;
->  			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
->  
-> @@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
->  		return -ENODEV;
->  
->  	if (fep->bufdesc_ex) {
-> -		if (cmd == SIOCSHWTSTAMP)
-> -			return fec_ptp_set(ndev, rq);
-> -		if (cmd == SIOCGHWTSTAMP)
-> -			return fec_ptp_get(ndev, rq);
-> +		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
-
-I thought we were in agreement that FEC does not support PHY
-timestamping at this point, and this patch would only be fixing DSA
-switches (even though PHYs would need this fixed too, when support is
-added for them)? I would definitely not introduce support (and
-incomplete, at that) for a new feature in a bugfix patch.
-
-But it looks like we aren't.
-
-> +
-> +		if (cmd == SIOCSHWTSTAMP) {
-> +			if (use_fec_hwts)
-> +				return fec_ptp_set(ndev, rq);
-> +			fec_ptp_disable_hwts(ndev);
-> +		} else if (cmd == SIOCGHWTSTAMP) {
-> +			if (use_fec_hwts)
-> +				return fec_ptp_get(ndev, rq);
-> +		}
->  	}
->  
->  	return phy_mii_ioctl(phydev, rq, cmd);
-> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-> index 945643c..f8a592c 100644
-> --- a/drivers/net/ethernet/freescale/fec_ptp.c
-> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-> @@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
->  	return -EOPNOTSUPP;
->  }
->  
-> +/**
-> + * fec_ptp_disable_hwts - disable hardware time stamping
-> + * @ndev: pointer to net_device
-> + */
-> +void fec_ptp_disable_hwts(struct net_device *ndev)
-
-This is not really needed, is it?
-- PHY ability of hwtstamping does not change across the runtime of the
-  kernel (or do you have a "special" one where it does?)
-- The initial values for hwts_tx_en and hwts_rx_en are already 0
-- There is no code path for which it is possible for hwts_tx_en or
-  hwts_rx_en to have been non-zero prior to this call making them zero.
-
-It is just "to be sure", in a very non-necessary way.
-
-But nonetheless, it shouldn't be present in this patch either way, due
-to the fact that one patch should have one topic only, and the topic of
-this patch should be solving a clearly defined bug.
-
-> +{
-> +	struct fec_enet_private *fep = netdev_priv(ndev);
-> +
-> +	fep->hwts_tx_en = 0;
-> +	fep->hwts_rx_en = 0;
-> +}
-> +
->  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
->  {
->  	struct fec_enet_private *fep = netdev_priv(ndev);
-> -- 
-> 2.10.0.1.g57b01a3
+> If you can't get things working incrementally, maybe you shouldn't do
+> them at all. Doing a big series of "hidden work" and then enabling it
+> later is wrong.
 > 
+> In this case, though, the real patch that did the code isn't that kind
+> of "big series of hidden work" patch series, it's just the (single)
+> previous commit 2c91bd4a4e2e ("mm: speed up mremap by 20x on large
+> regions").
+> 
+> So your bisection is useful, it's just that it really points to that
+> previous commit, and it's where this code was introduced.
 
-Thanks,
--Vladimir
+Right, I think I should have squashed the enabling of the config, and the
+introduction of the feature in the same patch, but as you pointed that
+probably would not have made a difference with this bisect since this a
+single patch.
+
+> It's also worth noting that that commit doesn't really *break*
+> anything, since it just falls back to the old behavior when it warns.
+
+Agreed, I am also of the opinion that the patch is likely surface an existing
+issue and not introducing a new one.
+
+> So to "fix" your test-case, we could just remove the WARN_ON.
+>
+> But the WARN_ON() is still worrisome, because the thing it tests for
+> really _should_ be true.
+
+I'll get some tracing in an emulated i386 environment going and try to figure
+out exactly what is going on before the warning triggers. thanks for the other
+debug hints in this thread!
+
+thanks,
+
+ - Joel
+
+ - Joel
+
