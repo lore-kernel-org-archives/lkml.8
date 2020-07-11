@@ -2,225 +2,102 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB60EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B788220720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAF9206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:08:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WD5wrr46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgGKG6R (ORCPT
+        id S1728112AbgGKHIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:58:17 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:41534 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbgGKG6Q (ORCPT
+        Sat, 11 Jul 2020 03:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgGKHIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:58:16 -0400
-Received: by mail-il1-f199.google.com with SMTP id k6so5209672ilg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 23:58:15 -0700 (PDT)
+        Sat, 11 Jul 2020 03:08:46 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB2CC08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 00:08:46 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id a6so6974112ilq.13
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 00:08:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3zaiLFbNh7L3+bFoK+wl7i5xM2TsBDsZ5cXl+f5vIV8=;
+        b=WD5wrr46I1z4QIoObyt1ro0aEC7r5zKOQHU9c903/TxQOkyxxlhlIxviz5lYwf/5JK
+         EFfesDnDXaffkFcOthkfV0fD0f2MpVCfKKZUntQs9jPfPv6opWoZVayzQsYcIQ0F9vkV
+         LUpCEtRs5XapkrGV0fLRT4fgqSxGkN3lL2++5iRAyFuZ9DPmDn5ShbHYwahMM4m+KKl+
+         Zs9BrTHUGG3fbf7Bxahk/liKjy8+wm3hCp07fNoAXC4wksLX15poHHxAVg2opHZ9bsRB
+         6fJMLzSbAbtJuH/350dCONdeSeeqg+WgP0hJKK+jtax0Bxz+4gom36xYxmMLQVHhb4l7
+         0fyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=AkBx8LTbEovSwhwwJ9FeFsD5TmflPO84M/ic/EDjK1M=;
-        b=Eku+NnORuCYXnT/cyHLSJExuGDyqqJ64NZtvHez6PwAcBc2pEqyv7gdeX/6iSL3153
-         S1CO854kFvgukuoho8G93E3SEX8hCAW6gbIX5sKkaYwezii2RLh4I+b4/9wm6+pcw7oI
-         wwu72kBrDD9+2bv70N1kGQ92uaNzbhBQFS4LIqzBkNzah9DuGiG2ZCUFRqw8oCKFDEy4
-         jlHn7Zxnqwi6vf3JBkZ6qodHaTE1EkDm2PawR5wt5IUUDn9Jk8WcSGRm2643RN0UYgg/
-         gUFoJ5Tz92vVQg9cyUrEBhYRmuH7YM3eLcQ844iywsxUMMbtDnAD3kn2klKmntvQy2oi
-         FNoQ==
-X-Gm-Message-State: AOAM532dPXGZMn+AIKZdhxPVo5U17AC4fXMsS/blFjzzntF8slsXCQqj
-        HjMBcUUD+uLCMF0V923Ymh2/O1aAKnh/7oh1JAhbOK0Nqjnq
-X-Google-Smtp-Source: ABdhPJyHkFmFk9sP90ajG41S5cTk8F61qKnof5/Gg9oZeuf3WWRrWJgUgUCEGrpP6Ouw4P/GSXLP5u8lRScyMR0/DNxEF9rwqt1D
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c21:: with SMTP id q1mr5169902ilg.28.1594450694903;
- Fri, 10 Jul 2020 23:58:14 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 23:58:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000481e2505aa24fb32@google.com>
-Subject: BUG: stack guard page was hit in __bad_area_nosemaphore
-From:   syzbot <syzbot+89eb3f606b866757455d@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, jeyu@kernel.org, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3zaiLFbNh7L3+bFoK+wl7i5xM2TsBDsZ5cXl+f5vIV8=;
+        b=mOO+c52pHYgKobfIGQ8+fHyk7ezjjdlyhZzyDA0tRW2f7UiTCTqhp2hf2N64TGFzQ/
+         DtW981+ihNPB3BlSYjSgDpsEvBlgFFsD/xPeC4z4clpaD0xQM41mZXodZI1fZGIXN5wl
+         N1pSHyXLGntqYjPElBF9YyW42sY+QRfAkO6kP9i7Rg4swZyXC95ARIX2KfZBhNwdWMtj
+         xrTZHBv4IzNr7HNWlWeFDxVw3nsYRHyEgZhYGwcRKahW8PAw0+Z4oh8Qnwtwsj5amqi0
+         gv7VhHbze68bg96j2lYNVRlILercBtKH6HRAfiHsKzTkIDsVLtGXDzjk6rVwhm9P8MN6
+         BsPA==
+X-Gm-Message-State: AOAM532eMo2meeJwmetgRdbfCUzq5TgUjOL+ncDvry+Td/VcVTiK7cya
+        w1poLDyQtCtmQt3gVCcBVqg=
+X-Google-Smtp-Source: ABdhPJw9FantHw3DWTcb4xX67aNuzRPAdFkv7mM8PWkXa8Wel+7ugRwbStJKPaNhZueRIwsrpkQ0ow==
+X-Received: by 2002:a92:41d0:: with SMTP id o199mr22608975ila.205.1594451324621;
+        Sat, 11 Jul 2020 00:08:44 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
+        by smtp.googlemail.com with ESMTPSA id u6sm4469475ilg.32.2020.07.11.00.08.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 00:08:44 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+Subject: [PATCH] ALSA: trident: Fix a memory leak in snd_trident_create
+Date:   Sat, 11 Jul 2020 02:08:30 -0500
+Message-Id: <20200711070835.4855-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In the implementation of snd_trident_create(), the allocated trident is
+leaked if snd_trident_mixer() fails. Release via snd_trident_free().
 
-syzbot found the following crash on:
-
-HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135403a3100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=89eb3f606b866757455d
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+89eb3f606b866757455d@syzkaller.appspotmail.com
-
-BUG: stack guard page was hit at 0000000046f5170d (stack is 00000000087b5eff..00000000b28869c7)
-kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 25511 Comm: syz-executor.4 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__bad_area_nosemaphore+0x15/0x480 arch/x86/mm/fault.c:743
-Code: ff ff 4c 89 ff e8 8b 35 7f 00 e9 0c ff ff ff 66 0f 1f 44 00 00 41 57 41 56 45 89 c6 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd <53> 4c 8d bd 88 00 00 00 48 83 ec 28 89 4c 24 14 e8 d6 df 3f 00 4c
-RSP: 0018:ffffc90016598000 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffff88804d04c580 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900165980d8
-RBP: ffffc900165980d8 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
-FS:  00007f2d59c18700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90016597ff8 CR3: 00000000599e5000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016598188 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016598490 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc900165984b8 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc900165987c0 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc900165987e8 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016598af0 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016598b18 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016598e20 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016598e48 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016599150 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc90016599178 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc90016599480 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff83967dab RDI: 0000000000000001
-RBP: ffffffff810078f7 R08: ffffffff83ad5e30 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 000000000000000e R14: 0000000000000002 R15: 0000000000000000
- search_module_extables+0xce/0x100 kernel/module.c:4422
- search_exception_tables+0x42/0x50 kernel/extable.c:59
- fixup_exception+0x4b/0xca arch/x86/mm/extable.c:161
- no_context+0xe7/0x9f0 arch/x86/mm/fault.c:599
- __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
- do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
- handle_page_fault arch/x86/mm/fault.c:1365 [inline]
- exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
- asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
-RIP: 0010:preempt_schedule_thunk+0x0/0x18 arch/x86/entry/thunk_64.S:40
-Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-RSP: 0018:ffffc900165994a8 EFLAGS: 00010046
-RAX: 0000000000000000 
-Lost 804 message(s)!
----[ end trace ffd1ab463dd60bcc ]---
-RIP: 0010:__bad_area_nosemaphore+0x15/0x480 arch/x86/mm/fault.c:743
-Code: ff ff 4c 89 ff e8 8b 35 7f 00 e9 0c ff ff ff 66 0f 1f 44 00 00 41 57 41 56 45 89 c6 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd <53> 4c 8d bd 88 00 00 00 48 83 ec 28 89 4c 24 14 e8 d6 df 3f 00 4c
-RSP: 0018:ffffc90016598000 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffff88804d04c580 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffc900165980d8
-RBP: ffffc900165980d8 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
-FS:  00007f2d59c18700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90016597ff8 CR3: 00000000599e5000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ sound/pci/trident/trident_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/sound/pci/trident/trident_main.c b/sound/pci/trident/trident_main.c
+index 6e50376163a2..e98c692f6aa9 100644
+--- a/sound/pci/trident/trident_main.c
++++ b/sound/pci/trident/trident_main.c
+@@ -3582,8 +3582,11 @@ int snd_trident_create(struct snd_card *card,
+ 		return err;
+ 	}
+ 
+-	if ((err = snd_trident_mixer(trident, pcm_spdif_device)) < 0)
++	err = snd_trident_mixer(trident, pcm_spdif_device);
++	if (err < 0) {
++		snd_trident_free(trident);
+ 		return err;
++	}
+ 	
+ 	/* initialise synth voices */
+ 	for (i = 0; i < 64; i++) {
+-- 
+2.17.1
+
