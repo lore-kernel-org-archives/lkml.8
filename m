@@ -2,203 +2,117 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E64BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A6720720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A0C206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:24:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="U9qYpLGC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X/QDZ4VI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgGKGQm (ORCPT
+        id S1728012AbgGKGYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:16:42 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56484 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGKGQl (ORCPT
+        Sat, 11 Jul 2020 02:24:44 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:49999 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726671AbgGKGYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:16:41 -0400
-Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06B6GHGH021973;
-        Sat, 11 Jul 2020 15:16:17 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
- Sat, 11 Jul 2020 15:16:16 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06B6GBRs021817
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 11 Jul 2020 15:16:16 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: fbconsole needs more parameter validations.
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     DRI <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-References: <20200710055329.3759-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <b1e7dd6a-fc22-bba8-0abb-d3e779329bce@i-love.sakura.ne.jp>
- <20200710105637.GB1232395@kroah.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <f80527f4-ffb2-69ef-ebd4-3de92cacfa17@i-love.sakura.ne.jp>
-Date:   Sat, 11 Jul 2020 15:16:10 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 11 Jul 2020 02:24:44 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id EE187EA3;
+        Sat, 11 Jul 2020 02:24:42 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Sat, 11 Jul 2020 02:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=8A2Py9jlDUXosNHf+tIf1lzSvF3
+        YWY+pBbKgn9E4Kbg=; b=U9qYpLGCmWF3jGgn4MGK6pKrcarxbLaVdXn5QSpNQvg
+        eXu74TCi85xFhcEuGTX3VI8NHwrBlwgKJgRI7S4+jI8vBSkYAgLR5zhkPSrsVarT
+        Fan4zlBx0qT+F/oLbWIuitz4KrfwxAF01Bj39ZIP+z88pgKNqT3Zpsq9d+z8oonT
+        o9syS95tx6a+L+CJb5NQjfmlGbktPiYta8e58tcSJEIvd+6WG/mq9u18eTg/UHlh
+        iwX0LZBpEmfy5clhfGK+LJW30uqJLvXlgt/uGSvHaoJyXl6TsMkyWF4OyXk+sS/e
+        Mx2VthHRZQs6feu1y+akdoxJxX9ciFD2kdBNiYarl0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8A2Py9
+        jlDUXosNHf+tIf1lzSvF3YWY+pBbKgn9E4Kbg=; b=X/QDZ4VIauQbVmgwaKWicr
+        Fq1oWMSQyVL+A3ZaUMhKi1xbcErx1xd6I8JT3/3YpiztVwWQ9jmw3pxTC8SIsCgB
+        aUI0FjPNn8pGbJQWjWMoHe14n9UKkO8eZ2Z/0nS4XFzkLInIvELrRbfjqGq0Wb3y
+        Ig0VZ24xqK5eygygWo/XwBz/6mAbco3PRVlzV0T4uLsG59y9EfB9MQnOtboF2O6M
+        IWWSVPH6RbANIbkzAnwUNmBCc6bI8ayovCgHGsKzFvKRqMWhxTDZIanMEB/lvGHe
+        6pehquMTgs0ZNNg2jBj2N2PmVqo4ASzxv+pGU4ElfV8nlgbOSD/samBEVXGuq3kw
+        ==
+X-ME-Sender: <xms:KlsJX1tVo-hRwIEXOwSwxGMHuJVB0fTcNJqQETrdtbvl3_BnXH0cTQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddvgddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necuggftrfgrthhtvghrnhepieevhffhiefftdejveekledttedtteefheeileevvdehue
+    efffdtveefkedtgfeunecuffhomhgrihhnpegsghhnuhdrohhrghdpsghmohiiihhllhgr
+    rdhorhhgpdhklhhimhhovhhgrhgrnhgumhgrshhtvghrrghlvdhklhhimhhovhdruggvpd
+    hlkhhmlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
+    hm
+X-ME-Proxy: <xmx:KlsJX-c1Fa76TWRiiIvRiga4Hv4rd7rL-BVbtGrScIdN1xBoBbdfZA>
+    <xmx:KlsJX4zVyScQPOG9oY1fS8jak4NeD-GB4TcYxXY4Wu92qgyr9GArfw>
+    <xmx:KlsJX8Mgv9BEHPzSnR-MQhAVXQ4qrzKrLs2cHOrm_1qto68FuAHnvg>
+    <xmx:KlsJX3lhgpI0ZY082q1T8pErObKfZAE3GElUAioV_BzAKRxIMHA77g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D328D30600B2;
+        Sat, 11 Jul 2020 02:24:41 -0400 (EDT)
+Date:   Sat, 11 Jul 2020 08:24:42 +0200
+From:   Greg KH <greg@kroah.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     valentina.manea.m@gmail.com, shuah@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB OVER IP DRIVER: Replace HTTP links with HTTPS ones
+Message-ID: <20200711062442.GA2784200@kroah.com>
+References: <20200710173931.29270-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200710105637.GB1232395@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710173931.29270-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/10 19:56, Greg Kroah-Hartman wrote:
-> Where is the over/underflow happening here when we set a size to be so
-> small?  We should bound the size somewhere, and as you show, that's not
-> really working properly, right?
+On Fri, Jul 10, 2020 at 07:39:31PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
 
-It is bit_clear_margins() where integer underflow is happening (4294966497 == 1 - 100 * 8),
-but the cause of this problem seems to be fbcon_startup() or vc_do_resize().
-
-Since fbcon_modechanged() is doing
-
-  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
-  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
-  cols /= vc->vc_font.width;
-  rows /= vc->vc_font.height;
-  vc_resize(vc, cols, rows);
-  (...snipped...)
-  update_screen(vc);
-
-, info->var.xres < vc->vc_font.width makes cols == 0 and info->var.yres < vc->vc_font.height
-makes rows == 0. But vc_resize(vc, 0, 0) has a special meaning because vc_do_resize() is doing
-
-  new_cols = (cols ? cols : vc->vc_cols);
-  new_rows = (lines ? lines : vc->vc_rows);
-
-which results in new_cols == 100 and new_rows == 37 despite var.xres == var.yres == 1,
-and vc_do_resize() returns without actually resizing. Then, fbcon_modechanged() calls
-fbcon_switch(vc) via vc->vc_sw->con_switch(vc) via redraw_screen(vc, 0) via update_screen(vc),
-and fbcon_switch() calls bit_clear_margins() via fbcon_clear_margins(vc, 0), and integer
-underflow happens due to info->var.xres=1 && vc->vc_cols=100 && vc->vc_font.width=8.
-
-And fbcon_modechanged() is too late to return -EINVAL if
-info->var.xres < vc->vc_font.width || info->var.yres < vc->vc_font.height at fb_set_var().
-
-----------
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 42d8c67a481f..4af82cabb6c4 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1214,6 +1214,8 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	new_rows = (lines ? lines : vc->vc_rows);
- 	new_row_size = new_cols << 1;
- 	new_screen_size = new_row_size * new_rows;
-+	printk(KERN_DEBUG "%s: new_cols=%u cols=%u vc->vc_cols=%u new_rows=%u lines=%u vc->vc_rows=%u\n",
-+	       __func__, new_cols, cols, vc->vc_cols, new_rows, lines, vc->vc_rows);
- 
- 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
- 		return 0;
-diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
-index ca935c09a261..8d949679bfba 100644
---- a/drivers/video/fbdev/core/bitblit.c
-+++ b/drivers/video/fbdev/core/bitblit.c
-@@ -221,6 +221,8 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		region.dy = 0;
- 		region.width = rw;
- 		region.height = info->var.yres_virtual;
-+		printk(KERN_DEBUG "%s: rw=%u info->var.xres=%u vc->vc_cols=%u vc->vc_font.width=%u\n",
-+		       __func__, rw, info->var.xres, vc->vc_cols, vc->vc_font.width);
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
-@@ -229,6 +231,8 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		region.dy = info->var.yoffset + bs;
- 		region.width = rs;
- 		region.height = bh;
-+		printk(KERN_DEBUG "%s: bh=%u info->var.yres=%u vc->vc_rows=%u vc->vc_font.height=%u\n",
-+		       __func__, bh, info->var.yres, vc->vc_rows, vc->vc_font.height);
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- }
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index e2a490c5ae08..f83525a58137 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -2983,6 +2983,8 @@ static void fbcon_modechanged(struct fb_info *info)
- 
- 	if (con_is_visible(vc)) {
- 		var_to_display(p, &info->var, info);
-+		printk(KERN_DEBUG "%s: ops->rotate=%d info->var.xres=%u, info->var.yres=%u vc->vc_font.width=%u vc->vc_font.height=%u\n",
-+		       __func__, ops->rotate, info->var.xres, info->var.yres, vc->vc_font.width, vc->vc_font.height);
- 		cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
- 		rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
- 		cols /= vc->vc_font.width;
-----------
-
-----------
-[   21.854895][ T2790] fbcon_modechanged: ops->rotate=0 info->var.xres=1, info->var.yres=1 vc->vc_font.width=8 vc->vc_font.height=16
-[   21.854900][ T2790] vc_do_resize: new_cols=100 cols=0 vc->vc_cols=100 new_rows=37 lines=0 vc->vc_rows=37
-[   21.854909][ T2790] bit_clear_margins: rw=4294966497 info->var.xres=1 vc->vc_cols=100 vc->vc_font.width=8
-[   21.855743][ T2790] BUG: unable to handle page fault for address: ffffb54440d3b000
-[   21.855745][ T2790] #PF: supervisor write access in kernel mode
-[   21.855746][ T2790] #PF: error_code(0x0002) - not-present page
-[   21.855747][ T2790] PGD 13a48c067 P4D 13a48c067 PUD 13a48d067 PMD 13251c067 PTE 0
-[   21.855751][ T2790] Oops: 0002 [#1] SMP
-[   21.855753][ T2790] CPU: 0 PID: 2790 Comm: a.out Not tainted 5.8.0-rc4+ #753
-[   21.855754][ T2790] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-[   21.855758][ T2790] RIP: 0010:bitfill_aligned+0x87/0x120 [cfbfillrect]
-[   21.855759][ T2790] Code: c3 45 85 db 0f 85 85 00 00 00 44 89 c0 31 d2 41 f7 f1 89 c2 83 f8 07 76 41 8d 48 f8 c1 e9 03 48 83 c1 01 48 c1 e1 06 48 01 f1 <48> 89 3e 48 89 7e 08 48 89 7e 10 48 89 7e 18 48 89 7e 20 48 89 7e
-[   21.855760][ T2790] RSP: 0018:ffffb5444124b9a0 EFLAGS: 00010206
-[   21.855761][ T2790] RAX: 0000000003fffe70 RBX: 00000000ffff9c20 RCX: ffffb54460942000
-[   21.855762][ T2790] RDX: 0000000003fffe70 RSI: ffffb54440d3b000 RDI: 0000000000000000
-[   21.855763][ T2790] RBP: ffffb5444124b9b0 R08: 00000000ffff9c20 R09: ffffb54440d3aff8
-[   21.855763][ T2790] R10: 00000000ffffffff R11: 0000000000000000 R12: ffffffffffffffff
-[   21.855764][ T2790] R13: ffffa0d534c32800 R14: 0000000000000000 R15: ffffb54440942c80
-[   21.855765][ T2790] FS:  00007f9cef82a740(0000) GS:ffffa0d53ae00000(0000) knlGS:0000000000000000
-[   21.855785][ T2790] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   21.855786][ T2790] CR2: ffffb54440d3b000 CR3: 000000013766d006 CR4: 00000000001606f0
-[   21.855797][ T2790] Call Trace:
-[   21.855801][ T2790]  cfb_fillrect+0x159/0x340 [cfbfillrect]
-[   21.855806][ T2790]  ? vprintk_func+0x5a/0x10d
-[   21.855808][ T2790]  ? cfb_fillrect+0x340/0x340 [cfbfillrect]
-[   21.855821][ T2790]  vmw_fb_fillrect+0x12/0x30 [vmwgfx]
-[   21.855828][ T2790]  bit_clear_margins+0xe0/0xf0 [fb]
-[   21.855832][ T2790]  fbcon_clear_margins+0x4c/0x50 [fb]
-[   21.855835][ T2790]  fbcon_switch+0x321/0x570 [fb]
-[   21.855843][ T2790]  redraw_screen+0xe0/0x250
-[   21.855847][ T2790]  fbcon_modechanged+0x1a3/0x1f0 [fb]
-[   21.855851][ T2790]  fbcon_update_vcs+0x15/0x20 [fb]
-[   21.855853][ T2790]  fb_set_var+0x364/0x3c0 [fb]
-[   21.855863][ T2790]  do_fb_ioctl+0x2ff/0x3f0 [fb]
-[   21.855866][ T2790]  ? find_held_lock+0x35/0xa0
-[   21.855870][ T2790]  ? __audit_syscall_entry+0xd8/0x120
-[   21.855888][ T2790]  ? kfree+0x25a/0x2b0
-[   21.855944][ T2790]  fb_ioctl+0x2e/0x40 [fb]
-[   21.855947][ T2790]  ksys_ioctl+0x86/0xc0
-[   21.855950][ T2790]  ? do_syscall_64+0x20/0xa0
-[   21.855952][ T2790]  __x64_sys_ioctl+0x15/0x20
-[   21.855954][ T2790]  do_syscall_64+0x54/0xa0
-[   21.855957][ T2790]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   21.855959][ T2790] RIP: 0033:0x7f9cef344307
-[   21.855959][ T2790] Code: Bad RIP value.
-[   21.855960][ T2790] RSP: 002b:00007ffddb6f2e48 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[   21.855962][ T2790] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f9cef344307
-[   21.855962][ T2790] RDX: 00007ffddb6f2e50 RSI: 0000000000004601 RDI: 0000000000000003
-[   21.855963][ T2790] RBP: 0000000000000000 R08: 00007f9cef617e80 R09: 0000000000000000
-[   21.855964][ T2790] R10: 00007ffddb6f28a0 R11: 0000000000000246 R12: 00000000004004f2
-[   21.855964][ T2790] R13: 00007ffddb6f2fd0 R14: 0000000000000000 R15: 0000000000000000
-[   21.855969][ T2790] Modules linked in: mousedev rapl evdev input_leds led_class mac_hid psmouse pcspkr xt_tcpudp af_packet ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat ip6table_nat ip6table_mangle ip6table_raw iptable_nat nf_nat iptable_mangle iptable_raw nf_conntrack rtc_cmos nf_defrag_ipv4 ip_set vmw_vmci nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter bpfilter sg ac button i2c_piix4 intel_agp intel_gtt ip_tables x_tables ata_generic pata_acpi serio_raw atkbd libps2 vmwgfx drm_kms_helper cfbfillrect syscopyarea cfbimgblt sysfillrect sysimgblt fb_sys_fops cfbcopyarea fb fbdev ttm drm ahci libahci i2c_core drm_panel_orientation_quirks backlight ata_piix e1000 agpgart libata i8042 serio unix ipv6 nf_defrag_ipv6
-[   21.856040][ T2790] CR2: ffffb54440d3b000
-[   21.856042][ T2790] ---[ end trace 083bab4cc8751a86 ]---
-[   21.856044][ T2790] RIP: 0010:bitfill_aligned+0x87/0x120 [cfbfillrect]
-----------
-
+Again, subject line mess :(
