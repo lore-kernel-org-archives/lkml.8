@@ -2,103 +2,90 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED918C433F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DFDC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D763F20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D8B2077D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 10:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="PbiCT6rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGKKFJ (ORCPT
+        id S1726480AbgGKKHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:05:09 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:46708 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgGKKFJ (ORCPT
+        Sat, 11 Jul 2020 06:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgGKKHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:05:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 7E2A3201411B;
-        Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aD-6Vkk2IvhR; Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 5AD522014570;
-        Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.79])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id F20E7C01FBA;
-        Sat, 11 Jul 2020 18:05:04 +0800 (HKT)
-Subject: Re: [PATCH v5 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jack Lo <jack.lo@gtsys.com.hk>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org
-References: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
- <20200710021536.27544-3-chris.ruehl@gtsys.com.hk>
- <20200710163153.GA2760091@bogus>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
-Date:   Sat, 11 Jul 2020 18:05:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 11 Jul 2020 06:07:49 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250D2C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 03:07:49 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dp18so8643065ejc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 03:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VvgPMzxaIWY8gu27wsl9NLTmMwdfSRe2LBQ+aoof43M=;
+        b=PbiCT6rnYpxjcdz78JSzc66U2jCPCKyCvdzn3eSBaprRlJVi0AoRb7r5GY28HdyQV8
+         0kzDCApIGdgRErMQYrTaNgOIeW7F+TnstVOfQnIBrJ74RW9Kp2lAyXtPSRwI3uYjnVdG
+         RQVkMbMwPbpZHLiAwg8k5GsMrWWHsanOzaPZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VvgPMzxaIWY8gu27wsl9NLTmMwdfSRe2LBQ+aoof43M=;
+        b=UEoESDQ7G7GtTZ+82He+g0ZIK8ihfExOcUNh4ea0SOFpZV9QYeiQMrqOaE8WK87Wr/
+         c2cGgYn+SPFH/Ogb9Y38ZzOR5FWi4vaoZxQhHxhM1OcAHGhebmYeI4FaqanDFV85nFIU
+         bUDf1Mmgq23baFoucD0vdmeMuMSjcjVxoxM/dwkJFAZWSWY73vs6JKbbd6ARblAbJT/V
+         igFshgOWw4J/r8qD4V0GuXU1kUjydltedML+08JzRUw2w3wR4HtvFOqI0EVldtQG5/77
+         ZI3aYYXDvI9umPk3ojs51hv0VKRwKpCOPm/9h1UVnk06VBweL/if7AXY7J40Hr5Kvlb7
+         uCRw==
+X-Gm-Message-State: AOAM5302zfQyVZcq0e8ZVeAbsECW93/r0tefJRvrFxeqTO3ty9RypHMw
+        YElSQNQl3f+4c9VdgsQBxP5WsQ==
+X-Google-Smtp-Source: ABdhPJwDfkL/WJa2Dbdi6wpQKziY+VZNw5BInEihKFhEvNyxeYNGxcpd3iw/1vjMlfuO1RYGaRPc9g==
+X-Received: by 2002:a17:906:ca56:: with SMTP id jx22mr64001808ejb.494.1594462067714;
+        Sat, 11 Jul 2020 03:07:47 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:8860])
+        by smtp.gmail.com with ESMTPSA id y11sm5150377ejw.63.2020.07.11.03.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 03:07:47 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 11:07:46 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: consistent update to pgrefill
+Message-ID: <20200711100746.GA814207@chrisdown.name>
+References: <20200711011459.1159929-1-shakeelb@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710163153.GA2760091@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200711011459.1159929-1-shakeelb@google.com>
+User-Agent: Mutt/1.14.5 (2020-06-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Shakeel Butt writes:
+>The vmstat pgrefill is useful together with pgscan and pgsteal stats to
+>measure the reclaim efficiency. However vmstat's pgrefill is not updated
+>consistently at system level. It gets updated for both global and memcg
+>reclaim however pgscan and pgsteal are updated for only global reclaim.
+>So, update pgrefill only for global reclaim. If someone is interested in
+>the stats representing both system level as well as memcg level reclaim,
+>then consult the root memcg's memory.stat instead of /proc/vmstat.
+>
+>Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-On 11/7/2020 12:31 am, Rob Herring wrote:
-> On Fri, 10 Jul 2020 10:15:35 +0800, Chris Ruehl wrote:
->> Add documentation for the newly added DTS support in the shtc1 driver.
->> To align with the drivers logic to have high precision by default
->> a boolean sensirion,low_precision is used to switch to low precision.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->>   .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Error: Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:25.13-14 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1347: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1326414
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
-
-Hi Rob,
-
-I did run the test and didn't had any Error. dt-schema 2020.06 installed from 
-git. pip3 install -e.
-
-Can you help?
-
-Chris
+Acked-by: Chris Down <chris@chrisdown.name>
