@@ -2,169 +2,238 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3665CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07FD92076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEB92076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8nSsKrK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZvqDjVeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgGKMmK (ORCPT
+        id S1728273AbgGKMqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 08:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51058 "EHLO
+        Sat, 11 Jul 2020 08:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgGKMmK (ORCPT
+        with ESMTP id S1726342AbgGKMqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 08:42:10 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19410C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:42:10 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mn17so3754843pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:42:10 -0700 (PDT)
+        Sat, 11 Jul 2020 08:46:52 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69783C08C5DD;
+        Sat, 11 Jul 2020 05:46:52 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q17so3354381pls.9;
+        Sat, 11 Jul 2020 05:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZztSM6Av0ybGIiM16abqPooibGAiF7/cKiz34nTmzbg=;
-        b=Y8nSsKrKf2ZsksmfsqmVyl65o4r9VpiVKtcEb8JcFaPPdvufOHJL64cJ+s5BPpTK/9
-         8sgXDg66XV0d8rbefjpzx4G1JmXOIAJTvSN+7cKIEGca+HXCPPpFpu11ngT4DHXdpidf
-         ASg/CmmUFw3QfZkitk5ql0qgzHkt0AlmHerHKEna01CsxsUkBck1h5fAIoRCdxNInVRK
-         uiMuhZQ2L5i1spTc9c1bkIa3Jvjd/vaQggitAEWl+T38j00npHGDt25CLOCDo8yIrLFL
-         Rli9SrEa93IeId8jDnXv4zcaDaxks2IZ4ZRnwHwoLdnlZSvI0V3AuYnLgs+nH2rMb98u
-         VSMw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=fl44Qdgvc5qqO8fXjvD0IhwD/4PIb8ojo5zkF0IptrU=;
+        b=ZvqDjVeYFVsWFNefhx/ntIhkuT5BYSyv1u54XQLFqxJQ5waHB1h+QUn54TXgfiaXCF
+         HDg7vm3aVaVqdrI47/GzWQl6LvQuBqLPGV/4O9Fe+4Wh9NdXR5ik2p7fJnH7x82EmmEx
+         3crVPCeqbO+RHRHFK5dosiUmGL2NaVZjsVZqniyeBVUTq8U6QLw2Ao9CFrxBqzpLXm2m
+         d6lk6OCNPggr9o2lXdZc5loBr2mFST9h/6CC6wzHZEJmIqkzIwkaswh6L4k6u2qBwedP
+         tcs2Mim26G3T0MdCsNJlLLBeqKqGAgdA+KE8heH/tfiPfREQnsJFRJ5lOkxUvlKdrhH6
+         sZ/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZztSM6Av0ybGIiM16abqPooibGAiF7/cKiz34nTmzbg=;
-        b=jHVwKnqjWO85Ec5VqsNiPjhBQx2eHi+6Tf9vRreENrHvlQ5yAc+ISigzLvAu9oJjxi
-         z4VcKArKaFgLyduTTSZuUQtnLuSu399u4GUB+JtUGEAqBheKtIU5hL/E5iUzhvm3/x4e
-         NFGC1PCskffqwVIGnPi7HgRak52rv7/DdiA5B3CMY863fqNBqG58fQ3nB8W0+KC+h7tZ
-         cdSp1PHjA9FU6m5SoJ4i+4Da0tPR8V1TXtIhfHV4myozy3cTlTG/3MUY5L//o0LTjusJ
-         XgQKfRxnz7S2qpLoVnmoVuU9xiovwGe819Jql5RorhQXwFfNFHma4GTt5aZdQ2UoAPmw
-         y/5g==
-X-Gm-Message-State: AOAM532ePYf5aJJUMojxQTgTAc7fkDB1pNTESNyBkL8KrqS7qAOQIt1G
-        mG+6JxTIQCmGUXbiFkEcCpQ=
-X-Google-Smtp-Source: ABdhPJzGifKIFkIUUkTF125OAG+z3vtecUTy7Ry04u/19KThOfF1N47IpGGgN11vG9Vl9rVOJb3IgA==
-X-Received: by 2002:a17:90a:c28c:: with SMTP id f12mr10627367pjt.224.1594471329555;
-        Sat, 11 Jul 2020 05:42:09 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id c19sm8352899pjs.11.2020.07.11.05.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 05:42:08 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v5 00/17] perf: ftrace enhancement
-Date:   Sat, 11 Jul 2020 20:40:18 +0800
-Message-Id: <20200711124035.6513-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fl44Qdgvc5qqO8fXjvD0IhwD/4PIb8ojo5zkF0IptrU=;
+        b=UxEalgZv4NHVFq7vYNxrioGvLFO7mxIGs79Q8kbl+PXQ3zNvLKjrR7QatAXCHZEk+f
+         mU41RH/rh0MemsBB49t0saCFya7rW2fr3hJ4vUC/uVIqAUPSdIoi9k1lU1CoIgJww4Nz
+         8XGzKGWVigf0cKnEaOeKhce0uEdjgwDa37g9y2wf6+fHGoinahF1pQJrMJcj2nsgob6U
+         WzUrjHB+x6RkE5XywhPKlHTmK892FomQRLHLHG+0zcjjRMRrK2FaIcvLjmjyeZNaqwao
+         HkRcaPoQBP6Nekb8BeTQWIsfgR8Ztgv7xZpC/DmmWlAuH8dOF9fBl8Pw46GbBel/Ovpo
+         rlhw==
+X-Gm-Message-State: AOAM530e2N0WS5aHgFahCqH8uBYvSWgf6UM74nw97A/yY/4sqMJ24ogb
+        Orue7g9F6byyBNfpf67h7bs=
+X-Google-Smtp-Source: ABdhPJy0k7DsVVFaohURJmno3Y57eZ9mTpyZUG5n7aFQkxro38UFfTiqD+TVKxJRApKh9FyEjk0Ttg==
+X-Received: by 2002:a17:902:c142:: with SMTP id 2mr65090258plj.222.1594471611043;
+        Sat, 11 Jul 2020 05:46:51 -0700 (PDT)
+Received: from blackclown ([103.88.82.158])
+        by smtp.gmail.com with ESMTPSA id s131sm8662636pgc.30.2020.07.11.05.46.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 Jul 2020 05:46:50 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 18:16:33 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     manishrc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] staging: qlge: Remove pci-dma-compat wrapper APIs.
+Message-ID: <20200711124633.GA16459@blackclown>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The perf has basic kernel ftrace support but lack support of most tracing
-options. This serias is target to enhance the perf ftrace functionality so
-that we can make full use of kernel ftrace with perf.
 
-In general, this serias be cataloged into two main changes:
-  1) Improve usability of existing functions. For example, we don't need to type
-     extra option to select the tracer.
-  2) Add new options to support all other ftrace functions.
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here is a glance of all ftrace functions with this serias:
+The legacy API wrappers in include/linux/pci-dma-compat.h
+should go away as it creates unnecessary midlayering
+for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+APIs directly.
 
-$ sudo perf ftrace -h
+The patch has been generated with the coccinelle script below
+and compile-tested.
 
- Usage: perf ftrace [<options>] [<command>]
-    or: perf ftrace [<options>] -- <command> [<options>]
+@@@@
+- PCI_DMA_BIDIRECTIONAL
++ DMA_BIDIRECTIONAL
 
-    -a, --all-cpus        system-wide collection from all CPUs
-    -C, --cpu <cpu>       list of cpus to monitor
-    -D, --delay <n>       ms to wait before starting tracing after program start
-    -F, --funcs           Show available functions to filter
-    -G, --graph-funcs <func>
-                          trace given functions using function_graph tracer
-    -g, --nograph-funcs <func>
-                          Set nograph filter on given functions
-    -m, --buffer-size <size>
-                          size of per cpu buffer
-    -N, --notrace-funcs <func>
-                          do not trace given functions
-    -p, --pid <pid>       trace on existing process id
-    -t, --tid <tid>       trace on existing thread id (exclusive to --pid)
-    -T, --trace-funcs <func>
-                          trace given functions using function tracer
-    -t, --tracer <tracer>
-                          tracer to use: function or function_graph (This option is deprecated)
-    -v, --verbose         be more verbose
-        --func-opts <options>
-                          function tracer options, available options: call-graph,irq-info
-        --graph-opts <options>
-                          graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
-        --inherit         trace children processes
+@@@@
+- PCI_DMA_TODEVICE
++ DMA_TO_DEVICE
 
-v5:
-  o trivial fixes.
-v4:
-  o add util/parse-sublevel-options.c
-  O remove -D/--graph-depth
-v3:
-  o add --func-opts and --graph-opts to set tracer specific options.
-  o support units as a suffix for option '-m/--buffer-size'.
-v2:
-  o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
-  o update all related perf documentation.
-  o rename some options. Now all funcgraph tracer options are prefixed with
-    '--graph-', while all function tracer options are prefixed with '--func-'.
-  o mark old options deprecated instead of removing them.
+@@@@
+- PCI_DMA_FROMDEVICE
++ DMA_FROM_DEVICE
+
+@@@@
+- PCI_DMA_NONE
++ DMA_NONE
+
+@@ expression E1, E2, E3; @@
+- pci_alloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
+
+@@ expression E1, E2, E3; @@
+- pci_zalloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_free_consistent(E1, E2, E3, E4)
++ dma_free_coherent(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_single(E1, E2, E3, E4)
++ dma_map_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_single(E1, E2, E3, E4)
++ dma_unmap_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4, E5; @@
+- pci_map_page(E1, E2, E3, E4, E5)
++ dma_map_page(&E1->dev, E2, E3, E4, (enum dma_data_direction)E5)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_page(E1, E2, E3, E4)
++ dma_unmap_page(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_sg(E1, E2, E3, E4)
++ dma_map_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_sg(E1, E2, E3, E4)
++ dma_unmap_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
++ dma_sync_single_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_device(E1, E2, E3, E4)
++ dma_sync_single_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
++ dma_sync_sg_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
++ dma_sync_sg_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+
+@@ expression E1, E2; @@
+- pci_dma_mapping_error(E1, E2)
++ dma_mapping_error(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_consistent_dma_mask(E1, E2)
++ dma_set_coherent_mask(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_dma_mask(E1, E2)
++ dma_set_mask(&E1->dev, E2)
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+	This change is proposed by Christoph Hellwig <hch@infradead.org>
+        in the post https://marc.info/?l=3Dkernel-janitors&m=3D158745678307=
+186&w=3D4
+        on kernel-janitors Mailing List.
+
+ drivers/staging/qlge/qlge_mpi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mp=
+i.c
+index fa178fc642a6..16a9bf818346 100644
+--- a/drivers/staging/qlge/qlge_mpi.c
++++ b/drivers/staging/qlge/qlge_mpi.c
+@@ -788,8 +788,9 @@ int ql_dump_risc_ram_area(struct ql_adapter *qdev, void=
+ *buf,
+ 	char *my_buf;
+ 	dma_addr_t buf_dma;
+=20
+-	my_buf =3D pci_alloc_consistent(qdev->pdev, word_count * sizeof(u32),
+-				      &buf_dma);
++	my_buf =3D dma_alloc_coherent(&qdev->pdev->dev,
++				    word_count * sizeof(u32), &buf_dma,
++				    GFP_ATOMIC);
+ 	if (!my_buf)
+ 		return -EIO;
+=20
+@@ -797,8 +798,8 @@ int ql_dump_risc_ram_area(struct ql_adapter *qdev, void=
+ *buf,
+ 	if (!status)
+ 		memcpy(buf, my_buf, word_count * sizeof(u32));
+=20
+-	pci_free_consistent(qdev->pdev, word_count * sizeof(u32), my_buf,
+-			    buf_dma);
++	dma_free_coherent(&qdev->pdev->dev, word_count * sizeof(u32), my_buf,
++			  buf_dma);
+ 	return status;
+ }
+=20
+--=20
+2.17.1
 
 
-Changbin Du (17):
-  perf ftrace: select function/function_graph tracer automatically
-  perf ftrace: add option '-F/--funcs' to list available functions
-  perf ftrace: add option -t/--tid to filter by thread id
-  perf ftrace: factor out function write_tracing_file_int()
-  perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
-  perf ftrace: show trace column header
-  perf ftrace: add option '--inherit' to trace children processes
-  perf: util: add general function to parse sublevel options
-  perf ftrace: add support for tracing option 'func_stack_trace'
-  perf ftrace: add support for trace option sleep-time
-  perf ftrace: add support for trace option funcgraph-irqs
-  perf ftrace: add support for tracing option 'irq-info'
-  perf ftrace: add option 'verbose' to show more info for graph tracer
-  perf ftrace: add support for trace option tracing_thresh
-  perf: ftrace: allow set graph depth by '--graph-opts'
-  perf ftrace: add option -D/--delay to delay tracing
-  perf ftrace: add change log
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
 
- tools/perf/Documentation/perf-config.txt |   5 -
- tools/perf/Documentation/perf-ftrace.txt |  37 ++-
- tools/perf/builtin-ftrace.c              | 367 ++++++++++++++++++++++-
- tools/perf/util/Build                    |   1 +
- tools/perf/util/debug.c                  |  61 ++--
- tools/perf/util/parse-sublevel-options.c |  70 +++++
- tools/perf/util/parse-sublevel-options.h |  11 +
- 7 files changed, 484 insertions(+), 68 deletions(-)
- create mode 100644 tools/perf/util/parse-sublevel-options.c
- create mode 100644 tools/perf/util/parse-sublevel-options.h
+-----BEGIN PGP SIGNATURE-----
 
--- 
-2.25.1
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8JtKkACgkQ+gRsbIfe
+747D0g//R1ChLyHMnDJc6GeilVs7gCG2zUGsdaMK4qr11DUt+48TbVyHwFp64/3p
+QKmTK3rsaIOTFIonk8mhSll/foS6mpVBv4NXFWpCOSeyqPSvyYiCWyH8ZoAr7l06
+k6mL6QYZwVczVRXt/+hStzVLef9ToEEjzmdLJbP9JWuew9xSqfVbyNDV4TvgERmi
+3JuzM6gFCBR/nLdisBkEVKU4hrjGwHc2DRO96bSFPJtwwLnTXwZc+QDv10H9r1JY
+tVzaGa8czpsYlJv67vBRZ3Isym4iGb4ri94kICBTSfvZGdyE/HaWPqpEZzobOALK
+kBwFP65T0r3j+i+QEOeK3r3DwI96BX8qjzMzWu4C9D/vzIwlD4weyvmg2MM/mD44
+YlEucF2PhOrqWYlkYE1/JApT/7h3AaOe2SQ9cYmvTeDHWeNUrfcfr9yc13LaVJwW
+NVpKez7TQxzQ5YupsSctM8fiZIrS5uxIzXA9JKLM7HW6f4OJ8sN9wux1O8cCnrv5
+RIJw4bME/C6ihNJMNZQU/v8VGS9L9v+Ryw2AU7gs4mSA5M0JZUT1SduejM/SFsp8
+oCH1WATqdz/EG7mBC6N+m9sI8zdUeKUaRZsIvIXjYsrvoeU0g6d0OY4gAQZwx37v
+Ohot02UCvSuBoqXngEb/IGyh0GnuPCug68YBOPTYZNyuFhgy80Q=
+=/Cjw
+-----END PGP SIGNATURE-----
 
+--EeQfGwPcQSOJBaQU--
