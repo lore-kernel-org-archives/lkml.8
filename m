@@ -2,118 +2,173 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A6E20720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B7F20725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZQEKQXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgGKHp1 (ORCPT
+        id S1728112AbgGKHws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 03:45:27 -0400
-Received: from mailomta21-sa.btinternet.com ([213.120.69.27]:53647 "EHLO
-        sa-prd-fep-044.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726900AbgGKHp0 (ORCPT
+        Sat, 11 Jul 2020 03:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgGKHwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 03:45:26 -0400
-Received: from sa-prd-rgout-002.btmx-prd.synchronoss.net ([10.2.38.5])
-          by sa-prd-fep-044.btinternet.com with ESMTP
-          id <20200711074524.SVO3440.sa-prd-fep-044.btinternet.com@sa-prd-rgout-002.btmx-prd.synchronoss.net>;
-          Sat, 11 Jul 2020 08:45:24 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.71.41]
-X-OWM-Source-IP: 31.53.71.41 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrvddvgdduvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpedfoeflohhhnhcuqfhlughmrghnqedfuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeffveekffekffefhfevvdevieelvdduuedvteeviefgteetfeffffekieduieekveenucfkphepfedurdehfedrjedurdegudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihpdhinhgvthepfedurdehfedrjedurdeguddpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeouggvvhgvlhesughrihhvvghruggvvhdrohhsuhhoshhlrdhorhhgqedprhgtphhtthhopeeoghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgqedprhgtphhtthhopeeoghhushhtrghvohesvghmsggvugguvgguohhrrdgtohhmqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqe
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry (31.53.71.41) by sa-prd-rgout-002.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5ED9AA6E0630DA2A; Sat, 11 Jul 2020 08:45:24 +0100
-Date:   Sat, 11 Jul 2020 08:45:22 +0100
-From:   "<John Oldman>" <john.oldman@polehill.co.uk>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: core: Using comparison to true is
- error prone
-Message-ID: <20200711074522.GA20279@henry>
-References: <20200710201643.27322-1-john.oldman@polehill.co.uk>
- <69bf7931-7df2-a0f8-8329-929ccb6a2c20@embeddedor.com>
+        Sat, 11 Jul 2020 03:52:47 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBB2C08C5DD;
+        Sat, 11 Jul 2020 00:52:47 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d18so6361955edv.6;
+        Sat, 11 Jul 2020 00:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=chblfhw/pZ7F1F13XRbjCEZ4EpDpVMofJy+rOKK895o=;
+        b=rZQEKQXLQHKsEKZ14YIUwLgP1Gg4TVDuTNwwxGCX1yBHgmGU0JmdWGoPJqVUKH4Ije
+         9V6yRwBMetaPJrBSAk3DJIWfCMv9HkUDdzL39lNSoKVcgsTAwOExFiru9aFF4wJWaT6J
+         TvQ7kVPHGLHQ4qznP/EDGXTDXI7M4DI0YFawdEuCC5DSaMtB5hvlSkVOsF2Rm/tc8McB
+         Igjw9ApnydtBCHn/MJjexNiGHiLZ0NSp5j1H7KA++jOAnfnd1LqhHqQMQXvt6AkmIWti
+         Nps1YyHiiIEOaygafwoUVSUbFx+4CpJ3fCj5dfmAaJbUeRSmkMmvonPiv5FYLTKT6WcP
+         dIqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=chblfhw/pZ7F1F13XRbjCEZ4EpDpVMofJy+rOKK895o=;
+        b=G2bzA9dh88knSy1uQwYJoTEE+9VoIoHe6iMAeA5JwwbToVwwxoYofSovGOmbY64fke
+         Unja7tbgpiEpCOHX6qxN0Y+2gYNbopC0gDDjY+bp3g77JqICUPZxHZ1NkrTY8xmzaUtA
+         eDWTDpsi4Lr5F0zbwernAxgoVJAJCKj681bdho0JJ7TXL9tafchoL4gvLxjkmjspvqxJ
+         6TMLoB2VoZIL4jW1DV6AJK0tcI22W49DwAJco2s4bxhJV37+dBMvO2PWOnGAN7Tp7TOt
+         2MbfgK39Cn/cLCEoBpVx5FPaCo6MJf7DY1TcCVbuUXH22pEMS6hb4KHxIZ/Tj5WwLWqt
+         HDSw==
+X-Gm-Message-State: AOAM532p6CZqCSPV/t2dyMGHy49SjzLioTXDM3zj/73KxOCdya2djZSC
+        2XsORtYg4q75RUdu7EOtbHs=
+X-Google-Smtp-Source: ABdhPJwihN9PIaXQhbGqnJH6ukFMQ3u+W+sA+rUYcCgbXMxlm1nwnsGuXmBouw+4drIRnpRE9Tl0IQ==
+X-Received: by 2002:aa7:c24d:: with SMTP id y13mr84833261edo.123.1594453965789;
+        Sat, 11 Jul 2020 00:52:45 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id r17sm6262069edw.68.2020.07.11.00.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 00:52:44 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 10:52:42 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v6 0/4] net: enetc: remove bootloader dependency
+Message-ID: <20200711075242.dl72ymyyby6ivsk2@skbuf>
+References: <20200709213526.21972-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69bf7931-7df2-a0f8-8329-929ccb6a2c20@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200709213526.21972-1-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 09, 2020 at 11:35:22PM +0200, Michael Walle wrote:
+> This is a resend [now a new v6] of the series because the conversion to the
+> phylink interface will likely take longer:
+> https://lore.kernel.org/netdev/CA+h21hpBodyY8CtNH2ktRdc2FqPi=Fjp94=VVZvzSVbnvnfKVg@mail.gmail.com/
+> Also the discussion in the v3 resend doesn't look like it will be resolved
+> soon :/
+> https://lore.kernel.org/netdev/20200701213433.9217-1-michael@walle.cc/
+> 
+> Unfortunately, we have boards in the wild with a bootloader which doesn't
+> set the PCS up correctly. Thus I'd really see this patches picked up as an
+> intermediate step until the phylink conversion is ready. Vladimir Oltean
+> already offered to convert enetc to phylink when he converts the felix to
+> phylink. After this series the PCS setup of the enetc looks almost the same
+> as the current felix setup. Thus conversion should be easy.
+> 
+> These patches were picked from the following series:
+> https://lore.kernel.org/netdev/1567779344-30965-1-git-send-email-claudiu.manoil@nxp.com/
+> They have never been resent. I've picked them up, addressed Andrews
+> comments, fixed some more bugs and asked Claudiu if I can keep their SOB
+> tags; he agreed. I've tested this on our board which happens to have a
+> bootloader which doesn't do the enetc setup in all cases. Though, only
+> SGMII mode was tested.
+> 
+> changes since v5:
+>  - fixed pcs->autoneg_complete and pcs->link assignment. Thanks Vladimir.
+> 
+> changes since v4:
+>  - moved (and renamed) the USXGMII constants to include/uapi/linux/mdio.h.
+>    Suggested by Russell King.
+> 
+> changes since v3:
+>  - rebased to latest net-next where devm_mdiobus_free() was removed.
+>    replace it by mdiobus_free(). The internal MDIO bus is optional, if
+>    there is any error, we try to run with the bootloader default PCS
+>    settings, thus in the error case, we need to free the mdiobus.
+> 
+> changes since v2:
+>  - removed SOBs from "net: enetc: Initialize SerDes for SGMII and USXGMII
+>    protocols" because almost everything has changed.
+>  - get a phy_device for the internal PCS PHY so we can use the phy_
+>    functions instead of raw mdiobus writes
+>  - reuse macros already defined in fsl_mdio.h, move missing bits from
+>    felix to fsl_mdio.h, because they share the same PCS PHY building
+>    block
+>  - added 2500BaseX mode (based on felix init routine)
+>  - changed xgmii mode to usxgmii mode, because it is actually USXGMII and
+>    felix does the same.
+>  - fixed devad, which is 0x1f (MMD_VEND2)
+> 
+> changes since v1:
+>  - mdiobus id is '"imdio-%s", dev_name(dev)' because the plain dev_name()
+>    is used by the emdio.
+>  - use mdiobus_write() instead of imdio->write(imdio, ..), since this is
+>    already a full featured mdiobus
+>  - set phy_mask to ~0 to avoid scanning the bus
+>  - use phy_interface_mode_is_rgmii(phy_mode) to also include the RGMII
+>    modes with pad delays.
+>  - move enetc_imdio_init() to enetc_pf.c, there shouldn't be any other
+>    users, should it?
+>  - renamed serdes to SerDes
+>  - printing the error code of mdiobus_register() in the error path
+>  - call mdiobus_unregister() on _remove()
+>  - call devm_mdiobus_free() if mdiobus_register() fails, since an
+>    error is not fatal
+> 
+> Alex Marginean (1):
+>   net: enetc: Use DT protocol information to set up the ports
+> 
+> Michael Walle (3):
+>   net: phy: add USXGMII link partner ability constants
+>   net: dsa: felix: (re)use already existing constants
+>   net: enetc: Initialize SerDes for SGMII and USXGMII protocols
+> 
+>  drivers/net/dsa/ocelot/felix_vsc9959.c        |  45 ++---
+>  .../net/ethernet/freescale/enetc/enetc_hw.h   |   3 +
+>  .../net/ethernet/freescale/enetc/enetc_pf.c   | 188 +++++++++++++++---
+>  .../net/ethernet/freescale/enetc/enetc_pf.h   |   5 +
+>  include/uapi/linux/mdio.h                     |  26 +++
+>  5 files changed, 210 insertions(+), 57 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
 
-Hi Gustavo
-Thanks for the feedback.
-I'll re-submit the patch.
-Many thanks
-john
+I plan to give this series a go on an LS1028A-QDS later today to make
+sure there are no regressions.
 
-
-
-On Fri, Jul 10, 2020 at 03:44:53PM -0500, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 7/10/20 15:16, John Oldman wrote:
-> > clear below issues reported by checkpatch.pl:
-> > 
-> > CHECK: Using comparison to true is error prone
-> > 
-> > Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
-> > ---
-> >  drivers/staging/rtl8723bs/core/rtw_ieee80211.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> > index ca98274ae390..d9bdd4fb9dc3 100644
-> > --- a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> > +++ b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> > @@ -363,8 +363,9 @@ int rtw_generate_ie(struct registry_priv *pregistrypriv)
-> >  	}
-> >  
-> >  	/* HT Cap. */
-> > -	if (((pregistrypriv->wireless_mode&WIRELESS_11_5N) || (pregistrypriv->wireless_mode&WIRELESS_11_24N))
-> > -		&& (pregistrypriv->ht_enable == true)) {
-> > +	if (((pregistrypriv->wireless_mode & WIRELESS_11_5N)
-> > +	      || (pregistrypriv->wireless_mode & WIRELESS_11_24N))
-> > +	      && (pregistrypriv->ht_enable)) {
-> 		 ^			  ^
-> The enclosing parentheses are unnecessary.
-> 
-> Also, if you run checkpatch.pl on your patch, you'll see
-> the following:
-> 
-> CHECK: Logical continuations should be on the previous line
-> #12: FILE: drivers/staging/rtl8723bs/core/rtw_ieee80211.c:367:
-> +	if (((pregistrypriv->wireless_mode & WIRELESS_11_5N)
-> +	      || (pregistrypriv->wireless_mode & WIRELESS_11_24N))
-> 
-> CHECK: Logical continuations should be on the previous line
-> #13: FILE: drivers/staging/rtl8723bs/core/rtw_ieee80211.c:368:
-> +	      || (pregistrypriv->wireless_mode & WIRELESS_11_24N))
-> +	      && (pregistrypriv->ht_enable)) {
-> 
-> 
-> It'd be nice to fix the above, too. :)
-> 
-> --
-> Gustavo
-> 
-> >  		/* todo: */
-> >  	}
-> >  
-> > 
+Thanks,
+-Vladimir
