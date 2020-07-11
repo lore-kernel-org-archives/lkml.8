@@ -2,142 +2,153 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5933C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 02:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03834C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 931D6206D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 02:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE592075F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Xc5W+zQg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="k+6o3HJI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfMMnvdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGKCcK (ORCPT
+        id S1727785AbgGKDQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 22:32:10 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:18938 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbgGKCcK (ORCPT
+        Fri, 10 Jul 2020 23:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgGKDQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 22:32:10 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06B2QIFZ008146;
-        Fri, 10 Jul 2020 19:32:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=LN/80KJLKT4Nsf3hA+cLnFk+ND7TM9wMK+aXjJrRB8I=;
- b=Xc5W+zQgY1yOkJR1MRNfw8ynkNL5IwiUxnRZmniz58nP7XSkHABZIXl1giMc837ij4Hk
- InagdN6EBC9FKUgHMbvsbQ61rGbNWjh+WIfERGFkKUrffhkTPMHPhp5is8xZgBV9uNhQ
- sKLdex3eLaAVjUTizLwzek0xpd4sGY9nh54= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 325k2cdcae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 10 Jul 2020 19:32:03 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 10 Jul 2020 19:31:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BJI6WaeNYhDHXha528qWilbO8AqN0WO/eAzypA3uHro4Cwz+uIWjKSsjc9Wx4W8JxDr5HapCv7mQHQF6TPL0yk2iiYs4R4B/3iu49tnig3J4eI2g+fYJwSS95yuMMQ2au5HYHPwboPqJBIey6Zd4qMYhxib9xzzN8iHv+rqhyKJ1QCeqKU3ci4qPd+0PhzkoYMc5n96iogs16iujXE9Iwia6TRml1dBkGWW7xByLZ6BbBo6kh1mWQHUC4wA/ELrQWqdevQYtBIcKCWyEBAmwn4Hkg5cXqJUN8Cjrjn621SWv+kHnrdnQ1GNRjFj5atsnua+LkdxHN5jtIhL/YvruwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LN/80KJLKT4Nsf3hA+cLnFk+ND7TM9wMK+aXjJrRB8I=;
- b=S10KbaZZdMCW2jGgDVMSTlcWAhwV9SHtM55gC+hob3zpANEuIkj94XObUv6wssDvEARja/5fnwKSlkzhXkRsIHzsgsQG3e05r1PTFbyly9+Cb0IqxAmyJWO/qzX/LfKmbtyoAFgeoeuU/0o/3mrYs17IOCcD+KM/UxwO2RYkx09wQRYMT7oKq+TtLytq8u9nIwC5PnqaY39oFeoaZMqmpl5NUSf7gNgGVt4+6D0vKYvvYsha+01WChHJRPV5b//NHgq9FkKnfJANpZeUsiQr8AnlGbBP3nZMR0LiCK2oqQ+rAmFYEqWQzYSuTk57A9syaAHQZfMA4P7P6hyDaLH9Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LN/80KJLKT4Nsf3hA+cLnFk+ND7TM9wMK+aXjJrRB8I=;
- b=k+6o3HJIfaCGotqcTPcCAC17+Qn1JWf3aBMmeEEAXnkAlMnSa94ihim21uAiNfnJ9Jhzxj3dSuqpIv//1617m5ghdhbWTluh2ZfJPVkurOpHSJ4tKP/MbSgpVo0w2ZFpgx49vOCUTEm9bxumNcf3U+LidWjHs8MAMLfmS5i9zes=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2279.namprd15.prod.outlook.com (2603:10b6:a02:85::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Sat, 11 Jul
- 2020 02:31:55 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3174.021; Sat, 11 Jul 2020
- 02:31:55 +0000
-Date:   Fri, 10 Jul 2020 19:31:51 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: vmscan: consistent update to pgrefill
-Message-ID: <20200711023151.GA388137@carbon.lan>
-References: <20200711011459.1159929-1-shakeelb@google.com>
+        Fri, 10 Jul 2020 23:16:27 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E56C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:16:27 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id l1so8106638ioh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GkOHcVJOetcedNhG2Fp97wnRClOZ55pcnECegxpPc+c=;
+        b=PfMMnvdNLVcGGRphG4Kb+3GyucziOHVOF/TekxE0GjM7BSmJOtLdC31XSWW5UHrJCy
+         2O3vQLU9Xq0hdVz9G7jhRr2HsB3X3jB0b/8q/NecU+SI6jIdneXXlNsq5jsZ5Rd7UdaG
+         sKhRxSBdG2svPtzI2zaDfjuGhxu+hwlAMOhgWL8AST2VCmXUsMIjXkc8cfZ4ooa+VKq5
+         NKMF6Ru759loI3dE92iwM9qpydgX9hpIDdyKcEfopwyjX73aapnjx/LLCYpNR8Lca7ha
+         wVZ1pGWaUaP8rcHq1liEXHz/9+ihx3nd74abLJYSSL+DtXZp2YCgj+ZLHWLz8Jat+xpi
+         x0DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GkOHcVJOetcedNhG2Fp97wnRClOZ55pcnECegxpPc+c=;
+        b=jOg2jHSav1hf11Wk7XIcGozQVStYf+u89QnhjvsF/YD396W2HbdfNJ+4fIa/3v1jYh
+         3K028ale37MsvykOHEM/IHGCW6DtnQw1j7sRYDX5SRUlod/GCPrC0xUPJb2dFM+NMPkO
+         x+H3F4C1UbIPIYKaBdEs/yFtcCqtqR2rrDV9gb23QfrmTODZdfJQRdA1eR9b2XPOuSg8
+         6L0eXQlDaySB+BdpUChw0YaplRYiVuI0cSP7gyxSeULHj4m5K+bZV+FvXf4MgBUiWc5K
+         3MLwSR1YnSzAlzr3AT780PNzE+TXOjUmBey9BDE/E9tKSiLpc4SdQNrMuGBfd9eFqnRJ
+         y4bg==
+X-Gm-Message-State: AOAM531aeBCiZv4CHbjHynmK9UuUk4C4S/VEwbWnzckEvfNW4I6lB4om
+        VOscUqLZ92lS9ugIVxUBx4g=
+X-Google-Smtp-Source: ABdhPJyBnJLKwHPBwgf++/LUKWy/0IVVRlrLsNkURoWE7kda6xkFk8I0b9x3RGXfnwusOkVdEK3B0w==
+X-Received: by 2002:a6b:f911:: with SMTP id j17mr48272074iog.96.1594437386880;
+        Fri, 10 Jul 2020 20:16:26 -0700 (PDT)
+Received: from Ryzen-9-3900X.localdomain ([107.152.99.41])
+        by smtp.gmail.com with ESMTPSA id w10sm4308131ilo.10.2020.07.10.20.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 20:16:26 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 20:16:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Cesar Eduardo Barros <cesarb@cesarb.eti.br>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] Restore gcc check in mips asm/unroll.h
+Message-ID: <20200711031623.GA4441@Ryzen-9-3900X.localdomain>
+References: <20200709221102.323356-1-cesarb@cesarb.eti.br>
+ <CAHk-=wjUEmO4GiC9mCyzZ8_WS=ZWgfg6CnpxPSLq=uoF1F3Xyw@mail.gmail.com>
+ <CAKwvOdnbtbetfN5zF51QOXVhrutE8ak4uPe82iY6g9f6gwk=Vg@mail.gmail.com>
+ <CAHk-=whaqVGHSGstM4yHnJ+WkoHDBKWxMuZvgOYoxe9sYBOjEw@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200711011459.1159929-1-shakeelb@google.com>
-X-ClientProxiedBy: BY3PR04CA0027.namprd04.prod.outlook.com
- (2603:10b6:a03:217::32) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.lan (2620:10d:c090:400::5:5bf2) by BY3PR04CA0027.namprd04.prod.outlook.com (2603:10b6:a03:217::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22 via Frontend Transport; Sat, 11 Jul 2020 02:31:54 +0000
-X-Originating-IP: [2620:10d:c090:400::5:5bf2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cbf62661-8026-4441-e850-08d82542939b
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2279:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2279129D4A7443E2B7AC184DBE620@BYAPR15MB2279.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TT2rNOeAMuBcYiKi/TRMdUEC8kUleA+KArGaJ2NJqildOXmBgOkReZxB+Mr1uYl5Q5UXsDdp7VcMxJFtJC79CTt7GY+eTAnC8DO1bggVUPvMQ1O3geil8uE8AXTWLrPAWwTQlznV0BrrdVVGiusrZ3necMkPC5iWIb+pkbmlM1+mdGQsvpwiIT2T+Itb69OPF2oD5EykgudHqpoF0RVQA3LTp8A7fGQWjPuu0DZo3i9RRkaweXkzuWsZsOhh9YWAnCuiPGFtPZ/W2LNUnbnBESVAtzrQNPOmkrkomt8vGYfqWukgN2xIUkgoJqyS/f4d9NoLZmlr2btbFN0P32t3ByNhnYHT0XviCWG/dxBbi3bIiKxW3eg1QN+IrGRPNjWvbMVqG3LhKbEr4elZnGS3Akjzm24wAxFHLNjsPH9MXmsC7MHE/y6OGb4du4UaZCBQMMWowQ4rhSyIrfj9f+2OWg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(396003)(376002)(346002)(136003)(86362001)(54906003)(6916009)(478600001)(5660300002)(9686003)(966005)(316002)(1076003)(15650500001)(8886007)(8936002)(6666004)(8676002)(4744005)(55016002)(33656002)(2906002)(36756003)(83380400001)(6506007)(186003)(16526019)(4326008)(7696005)(66946007)(52116002)(66556008)(66476007)(27376004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: suG03wQhRqWa8IdtFpr2e3dJI37mHzPlO9fLLpPSvTLIykIFQ9cxY+dYybqJdfuoRa+mA2WgQn46F7lfd0sMIwDgAVGu3CgqKSs1u63g+CKSTlKnidzV/h8hx/WiM9P6BD3f5jDDGwmzDPSDJRYS4pgJUG0j+8zOmNUzuYq7Hbfw8QceDOn+DAjZDfIAcWUHbXxjKfq34vRmtDM/L4LMGrYfUqmWGTC/Rzc6i7mOpB6jp+dIRZghryEpOSqgGMT7SL5/bdrq60PzD1B1urrkFDdIadCYQTZbcXHjV0vEwydpm22wWx4zoDe72vaNPUAFl8hEGA+prqT7MUo3vgZKlkd6YQaILW7j7l4WjTzk76+eaUV4AgFJViDj48Zzuoprv4pHXtgnFNzLPuTlvT62LoLFH1zyEMYy+DwMc4HG9u2//LEUcI8Ezr6Kw/o0LN/3XP5kOdhNm85GcU/D+bQbrgWMiNuUsuqytc0w6cwSDnShbIU1AJqEFoNwTeOCH0uWwIyvHcpgp2aBhoGnFOivug==
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbf62661-8026-4441-e850-08d82542939b
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 02:31:54.9251
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NpoaOjF4r6E+x197xhx1bdDcpzWrE4qWYtIULFP7tQgXgzfPVvDpJAC1qcEURAlK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2279
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_14:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0
- phishscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=992
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007110015
-X-FB-Internal: deliver
+In-Reply-To: <CAHk-=whaqVGHSGstM4yHnJ+WkoHDBKWxMuZvgOYoxe9sYBOjEw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 06:14:59PM -0700, Shakeel Butt wrote:
-> The vmstat pgrefill is useful together with pgscan and pgsteal stats to
-> measure the reclaim efficiency. However vmstat's pgrefill is not updated
-> consistently at system level. It gets updated for both global and memcg
-> reclaim however pgscan and pgsteal are updated for only global reclaim.
-> So, update pgrefill only for global reclaim. If someone is interested in
-> the stats representing both system level as well as memcg level reclaim,
-> then consult the root memcg's memory.stat instead of /proc/vmstat.
+On Fri, Jul 10, 2020 at 03:31:00PM -0700, Linus Torvalds wrote:
+> On Fri, Jul 10, 2020 at 11:43 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > What I'd really like to see as a policy in the kernel going forward in
+> > that ANY new commit that adds some hack or workaround for a specific
+> > compiler version add a comment about which toolchain version was
+> > problematic, that way when we drop support for that version years
+> > later, we can drop whatever hacks and technical debt we've accumulated
+> > to support that older version.
 > 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> The problem is that at the time we find and fix things, it's often
+> _very_ unclear which compiler versions are affected.
+> 
+> We also have the situation that a lot of distro compilers aren't
+> necessarily completely "clean" versions, particularly for the
+> "enterprise" ones that get stuck on some old version and then fix up
+> their breakage by backporting fixes.
 
-So you went into the opposite direction from the "previous version"
-( https://lkml.org/lkml/2020/5/7/1464 ) ?
+Indeed. I would say this is less common for most distributions with
+clang, where they tend to stick closer to tip of tree, but it can still
+happen. I guess there is not a really good solution for this but we
+could just have a policy that as soon as you move away from the upstream
+version, you are on your own.
 
-Acked-by: Roman Gushchin <guro@fb.com>
+> When it's some particular version of a compiler that supports a
+> particular feature, that tends to be much more straightforward. But
+> we've had bugs where it was very unclear when exactly the bug was
+> fixed (fi it was fixed at all by the time we do the workaround).
 
-Thanks!
+As for putting a seal of approval on a minimum supported version of
+LLVM/clang, I have my reservations. 0day keeps uncovering various issues
+with its builds and clang's release model is different than from GCC's
+so if we ever come across a compiler bug in an older version of clang,
+we have basically no hope for getting it fixed. GCC supports older
+series through bug fix releases for quite some time (GCC 7 was supported
+for two and a half years), whereas with clang, they only see one
+servicing release before the next major release (for example, clang
+9.0.1 before clang 10.0.0) so it makes getting compiler fixes into the
+hands of users much more difficult. I am trying to rectify that with
+clang 10 though, where I have been testing that release against a bunch
+of different configs both in tree and out of tree:
+https://github.com/nathanchance/llvm-kernel-testing
+
+However, I think at this point, we can say clang itself is in a good
+position as of clang 9, certainly clang 10. I am less confident in
+placing a minimum version on the LLVM tools such as lld though. For arm,
+arm64, and x86_64, we are in fairly good shape as of clang 10 but I
+think there is probably some more work/polishing to be done there; for
+other architectures, it is worse. I suppose we would have to consider
+the support model: under what cases is it acceptable to bump the minimum
+required version versus inserting a bad compiler hack? As someone who is
+not super familiar with the relationship between GCC and the kernel, it
+appears to me that the general attitude towards compiler bugs has been
+workaround it in the kernel while hoping that it gets fixed at some
+point in GCC. We have been pretty aggressive about fixing the compiler
+instead of inserting a workaround, which I feel like is the better
+solution, but it makes supporting multiple versions of the compiler more
+difficult (versus just saying use the latest). It is something that
+needs to be discussed and agreed upon sooner rather than later though,
+especially as we grow more and more polished.
+
+There were some other thoughts that I had on our issue tracker here, if
+anyone cares for them:
+
+https://github.com/ClangBuiltLinux/linux/issues/941
+
+Sorry for the brain dump and cheers,
+Nathan
