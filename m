@@ -2,91 +2,93 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3C6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CBE20786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C52A207F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594475754;
+	bh=wvdNBvU3F1zN+u0G9fC/OHdlGjB9UUukKaget+WBTsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g4Fjbv/cmaL9d2RvvmJhzkZEn1U7RRfcdpvGJqPnNOyyDH2w4fK1Tgy+NacBdUA7E
+	 jeGtCmQ3ZzCZiLpBAMerp7tqUXvrPTRT5QZtO0omwfoDfSsPcvyhAFgZJH1G0LRLM4
+	 SAWlLY/vxk7rsqrYxNHhPen9YLxy9wGsdqyGw65Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgGKNzh (ORCPT
+        id S1728390AbgGKNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:55:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37296 "EHLO mga11.intel.com"
+        Sat, 11 Jul 2020 09:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgGKNzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:55:36 -0400
-IronPort-SDR: RxlwBMj8Ml3xVBojiloCN/klavHr/xv5vmt8hi4R872E4uu8TvL1w7+N+YoqA/dgdhCHlYzT9j
- G6VtWo/o+qkg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="146439062"
-X-IronPort-AV: E=Sophos;i="5.75,339,1589266800"; 
-   d="scan'208";a="146439062"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2020 06:55:36 -0700
-IronPort-SDR: uC8ttAo1xEOsPMPi0O6p3/g5T2S3Ysi1cMb5cqvlzSfLMy7Bp0S/x3mjIcEsMMiwP3VGaFP7go
- 3KKnY36TvX9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,339,1589266800"; 
-   d="scan'208";a="306870014"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Jul 2020 06:55:34 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1juFyZ-001FLr-80; Sat, 11 Jul 2020 16:55:35 +0300
-Date:   Sat, 11 Jul 2020 16:55:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/1] tty: serial: owl: Initialize lock before registering
- port
-Message-ID: <20200711135535.GW3703480@smile.fi.intel.com>
-References: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
- <20200529113419.GA1631227@kroah.com>
- <20200710120549.GA11293@BV030612LT>
- <20200710133542.GA2172832@kroah.com>
- <20200710155806.GA10457@BV030612LT>
- <20200710163022.GT3703480@smile.fi.intel.com>
- <20200711063041.GC2784728@kroah.com>
+        id S1726630AbgGKNzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 09:55:52 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E3552075F;
+        Sat, 11 Jul 2020 13:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594475751;
+        bh=wvdNBvU3F1zN+u0G9fC/OHdlGjB9UUukKaget+WBTsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tql6Q3H/S88FHlbQy2nUNhuIMxMI1C4Oa9rHcbOeZuCVthai4Hd+FSrOPwcs+jYO8
+         HlmwEaVK/HVWWa55/DCswFB7SvEObMAvr6NB+QC3bgl8daGGf5q+U+alonk7hDNmL6
+         FhHzWwFFIBeuNiVagxIIWoCizXjoJv7q2Zz4snG0=
+Date:   Sat, 11 Jul 2020 21:55:45 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, meenakshi.aggarwal@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: Re: [PATCH] dts: arm64: lx2160a-rdb: fix shunt-resistor
+Message-ID: <20200711135544.GF21277@dragon>
+References: <20200619084607.16637-1-biwen.li@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200711063041.GC2784728@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200619084607.16637-1-biwen.li@oss.nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 08:30:41AM +0200, Greg Kroah-Hartman wrote:
-> On Fri, Jul 10, 2020 at 07:30:22PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jul 10, 2020 at 06:58:06PM +0300, Cristian Ciocaltea wrote:
-> > > On Fri, Jul 10, 2020 at 03:35:42PM +0200, Greg Kroah-Hartman wrote:
-
-...
-
-> > > however I'm a bit confused now regarding the recommended approach since
-> > > there is at least one more commit in the tty-linux tree that still 
-> > > handles a similar issue in the driver specific code:
-> > > f38278e9b810 ("serial: sh-sci: Initialize spinlock for uart console")
-> > 
-> > They now should be reverted.
+On Fri, Jun 19, 2020 at 04:46:07PM +0800, Biwen Li wrote:
+> From: Biwen Li <biwen.li@nxp.com>
 > 
-> Please send patches for that :)
+> Fix value of shunt-resistor property
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
-Just sent.
+'arm64: dts: ...' as subject prefix please.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also can you improve commit log to better describe the problem the patch
+is fixing?
 
+Shawn
 
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> index e266d8a170ea..dce79018d397 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> @@ -141,7 +141,7 @@
+>  			power-monitor@40 {
+>  				compatible = "ti,ina220";
+>  				reg = <0x40>;
+> -				shunt-resistor = <1000>;
+> +				shunt-resistor = <500>;
+>  			};
+>  		};
+>  
+> -- 
+> 2.17.1
+> 
