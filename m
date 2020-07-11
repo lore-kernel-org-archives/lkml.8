@@ -3,41 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F08C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E00C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831F3207F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F292075F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594483824;
-	bh=yapXeHMIK9PVmlLcwW6FzKp88IXzSgQ+WQYAL1I8VsE=;
+	s=default; t=1594483983;
+	bh=n2ktXL7Lm8tI8qYhwAOWKKE+CTtfAlysoQtFNBza8OQ=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=do1JELPn9q5Od0utCBwDWdNLy0QM+UcCapdGLk3jAoK2CElaOWJpEHI2VJxQ1zbNy
-	 AklKQ14rMCCaKjIs3shZyGVWhiIn+fegWdvjyrAI1YBEth0jeBiGplbBtfPgELoU+W
-	 uViCJ2Z93UZslqZHGDd83TKqIFcjjFrCrxtpRiaA=
+	b=FcXLmXyCX4jOszr5lMvE9IZpsyYjJteP44a2DZYfHVc/vcWadFZ0D6Ryg/+2gMalE
+	 ozIQP7HND65ffaSWqlhXpkdBoa5JJJYT/q5DKXtxYleKSIZvvxlagXn747Xcr9ZIeR
+	 gM6mTF5ydoXBwu/twph+mxdJnhqBhsr4rbR4dT4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgGKQKX (ORCPT
+        id S1728645AbgGKQNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 12:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
+        Sat, 11 Jul 2020 12:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgGKQKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 12:10:22 -0400
+        id S1728556AbgGKQM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 12:12:59 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5195C2075F;
-        Sat, 11 Jul 2020 16:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC7782075F;
+        Sat, 11 Jul 2020 16:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594483822;
-        bh=yapXeHMIK9PVmlLcwW6FzKp88IXzSgQ+WQYAL1I8VsE=;
+        s=default; t=1594483978;
+        bh=n2ktXL7Lm8tI8qYhwAOWKKE+CTtfAlysoQtFNBza8OQ=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=IvZswk59GNeV3N7qMo2+D+6TWakET7tA/i6Urd18paPTMN3zaDHd8wutENMDRYh0O
-         4iq+oVV8BF68jxGvn8H/dHX11GFYAIxfEeg/hgQuycX8IPBxXj4hcmaPPToDmMIVDm
-         6WZWIgm9apLfE2PiLuU1qRrNhyF8U4wV2Nxliutk=
+        b=DICmeqXiU/xBy4RlrulZstDUbRxoW20fO2E8ZtP+r16L7btPxDHrkHlCP3HYReAV2
+         tMGbeUSXW3wSPy4OnpUbb3UWpr9WNPvWPkuVmvW0g1xuAF31dGANEVFc0POZBRBiHS
+         q8fVmNNvkyI5r0661FxoytvPCo4U3hEj4vK8yNck=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -55,8 +55,8 @@ To:     agross@kernel.org, bhelgaas@google.com, bjorn.andersson@linaro.org,
         robh+dt@kernel.org, sivaprak@codeaurora.org,
         smuthayy@codeaurora.org, svarbanov@mm-sol.com,
         varada@codeaurora.org, vkoul@kernel.org
-Date:   Sat, 11 Jul 2020 09:10:21 -0700
-Message-ID: <159448382156.1987609.6835614318226972862@swboyd.mtv.corp.google.com>
+Date:   Sat, 11 Jul 2020 09:12:57 -0700
+Message-ID: <159448397791.1987609.10974763524448652875@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,21 +64,11 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Quoting Sivaprakash Murugesan (2020-07-05 02:17:55)
-> diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq807=
-4.c
-> index e01f5f591d1e..443e28cda8ed 100644
-> --- a/drivers/clk/qcom/gcc-ipq8074.c
-> +++ b/drivers/clk/qcom/gcc-ipq8074.c
-> @@ -4316,6 +4316,62 @@ static struct clk_branch gcc_gp3_clk =3D {
->         },
->  };
-> =20
-> +struct freq_tbl ftbl_pcie_rchng_clk_src[] =3D {
+> Add missing clocks and resets for pcie port0 of ipq8074 devices.
+>=20
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
 
-static const?
-
-> +       F(19200000, P_XO, 1, 0, 0),
-> +       F(100000000, P_GPLL0, 8, 0, 0),
-> +       { }
-> +};
-> +
+Applied to clk-next
