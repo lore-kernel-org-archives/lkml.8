@@ -2,92 +2,109 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2612075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B0F2075D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 03:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrGcGC/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGKDbt (ORCPT
+        id S1727795AbgGKDal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 23:31:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35138 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbgGKDbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 23:31:48 -0400
-IronPort-SDR: og6m0CsWNBUNmLM7e5Jx93pdS6K2tQaDpTqVPU3khvm7qDVGB1w/juQoFG5mDo46+4UrmsxOc9
- EQK68zCV3d2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9678"; a="128400296"
-X-IronPort-AV: E=Sophos;i="5.75,338,1589266800"; 
-   d="scan'208";a="128400296"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 20:31:48 -0700
-IronPort-SDR: R27/5kAH4jxB5nKGWxbKWAGF3DUoXqlbh9j5uNEDeZAP60+BAeYUJ23ptSwG5IhclO9CNjOiCJ
- Rxems7J6o5vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,338,1589266800"; 
-   d="scan'208";a="316792120"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jul 2020 20:31:47 -0700
-Date:   Fri, 10 Jul 2020 20:31:47 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Hulk Robot <hulkci@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] device-dax: make dev_dax_kmem_probe() static
-Message-ID: <20200711033147.GA3008823@iweiny-DESK2.sc.intel.com>
-References: <20200707112340.9178-1-weiyongjun1@huawei.com>
+        Fri, 10 Jul 2020 23:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgGKDal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 23:30:41 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18739C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:30:41 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id a11so6833717ilk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 20:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1xGtSn3GzgnnxnxHEMkxu4A5bFvBvCATbzs0GEZtET8=;
+        b=mrGcGC/l0RixNmVPT1JtgeSd/s2/az05bb9aOnqtWrfEKdYkAGtyRInDvcykJshFMg
+         B8df7EQ5c5ATVRYIWo6py9ViEZ/c3C/fECBpvukN90WABTHKicbWeG2hLJw2RK1me/Sj
+         FvClA1ssJz+sv3qxycUsjDQjckpzV3OqEN7wEcYyTl9T42VW0sMpxuVVx0k9Qu/qIY1G
+         PFB7RJ01gKqR81ohebqhB+TZ+RmGG2O804JKPcDkNAn3Lypem3oWc2Zn2Fs/dF1nmvh9
+         cGAJk3Y+FZB+9gGSa6RYiDbLCObod+JBFOW3zzwJWcoHRlzaLpee7MyhkesDJQCuMOL9
+         vFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1xGtSn3GzgnnxnxHEMkxu4A5bFvBvCATbzs0GEZtET8=;
+        b=Aa6DcjjkBtC5fiiAcrEI3YWdz06B5XK1vJNSblRU6rXG6zaJaz7K+YWPDU2X0FI8xd
+         /vusVtgAR+5WDsxQrJCglxNUhA0/XKxB4BIA7Y1SxlF8HFh53EE5NkqsxbZtukZxKXTH
+         chGsm1uHJIwJV9MkrqEcSOa7/LjTZ/lL8s7HEyC+b1uz+9LOsv8XIBB5J02rvwDYXNpJ
+         ei3tu6KErLTPBjwZ7jAvnO9xAwT6/qmj2lxWIDUal9adNWGB1F4M8bcwOCD6BFn9K+WC
+         2NiaDibTePPJU2jWYNAzSWUPVIYtEQODlegrjVEsIfLDEkdwN5q7xZ/F3RBeP2QNiWvG
+         gyCA==
+X-Gm-Message-State: AOAM533/bnee5Nuv3dELBowiB9XZ6e9I2BFDQ/S73UJzMdH+wzKXKlzT
+        h7QAe2+S9qiM5QdXyDMWtvI=
+X-Google-Smtp-Source: ABdhPJx2W29CCiPvn5uJf9cHVpmqBwFUZF7Zl/9tjYANUYzAmy7EHSWaFYfLC7lWWSDqSfSLr7Gb7g==
+X-Received: by 2002:a92:cf42:: with SMTP id c2mr9952649ilr.13.1594438240262;
+        Fri, 10 Jul 2020 20:30:40 -0700 (PDT)
+Received: from Ryzen-9-3900X.localdomain ([107.152.99.41])
+        by smtp.gmail.com with ESMTPSA id v62sm4506808ila.37.2020.07.10.20.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 20:30:39 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 20:30:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: sound/soc/codecs/zl38060.c:614:34: warning: unused variable
+ 'zl38_dt_ids'
+Message-ID: <20200711033036.GA4486@Ryzen-9-3900X.localdomain>
+References: <20200710024100.GA2055744@ubuntu-n2-xlarge-x86>
+ <20200710122459.GE5653@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200707112340.9178-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200710122459.GE5653@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:23:40PM +0800, Wei Yongjun wrote:
-> sparse report warning as follows:
+On Fri, Jul 10, 2020 at 01:24:59PM +0100, Mark Brown wrote:
+> On Thu, Jul 09, 2020 at 07:41:00PM -0700, Nathan Chancellor wrote:
 > 
-> drivers/dax/kmem.c:22:5: warning:
->  symbol 'dev_dax_kmem_probe' was not declared. Should it be static?
+> > When CONFIG_SND_SOC_ZL38060 is y, MODULE_DEVICE_TABLE expands to nothing
+> > so zl38_dt_ids will be unused. This is a pretty common construct in the
+> > kernel and the only way I can think of to resolve this through the code
+> > is by adding __used annotations to all of these variables, which I think
+> > is overkill for this.
 > 
-> dev_dax_kmem_probe() is not used outside of kmem.c, so marks
-> it static.
+> > Personally, I think this warning should be downgraded to W=2, thoughts?
 > 
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> We've had that warning available for ever, we shouldn't need to disable
+> it now.  I had thought there was supposed to be magic which caused
+> of_match_ptr() to make things look referenced when !OF but don't seem to
+> actually see any sign of it.  The other thing is to just have ifdefs
+> around the table.
 
-Seems ok,
+While it has been available, it's been hidden behind W=1, which is now
+default on for 0day.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Sure, you could hide it behind an ifdef for either CONFIG_OF or MODULE
+(since you could build this as a module with CONFIG_OF disabled).
 
-> ---
->  drivers/dax/kmem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 275aa5f87399..87e271668170 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -19,7 +19,7 @@ static const char *kmem_name;
->  /* Set if any memory will remain added when the driver will be unloaded. */
->  static bool any_hotremove_failed;
->  
-> -int dev_dax_kmem_probe(struct device *dev)
-> +static int dev_dax_kmem_probe(struct device *dev)
->  {
->  	struct dev_dax *dev_dax = to_dev_dax(dev);
->  	struct resource *res = &dev_dax->region->res;
-> 
+I just figured this would be something frowned upon but if that is how
+you would prefer it to be fixed, then I have no objections to it.
+
+Cheers,
+Nathan
