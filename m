@@ -2,72 +2,42 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25046C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D868BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA1E206F0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNzDaR01"
+	by mail.kernel.org (Postfix) with ESMTP id BE90520725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 07:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgGKHTf (ORCPT
+        id S1728178AbgGKHb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 03:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGKHTe (ORCPT
+        Sat, 11 Jul 2020 03:31:26 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:48642 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgGKHbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 03:19:34 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40FBC08C5DD;
-        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id z5so3530687pgb.6;
-        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2sbW3VeapkXBFXBROMSYLe02+5wxSAmivcwGBlvvNys=;
-        b=QNzDaR01054tkyz/YJVqi/q9TFcxmfse+9weq2nlchNL13op2HWRPqDMSWwCkroAn3
-         FD/DwkkfQAHAeqJIqKDP6/UnAjF7WpgYxNtjTPlMG38vmcMYd969ySf4saUQjpLc0hO+
-         sp0BrkYLT7k6zkgb2dRqS4tYp9sbXBYN9E+6kdfhVG2IGDlS43BQqtrQks/pkMEv6zxc
-         jMPP/hyIpjezO3GEWX9EHBq8T/8Z9xxz1QAkVz61sEvYNZA+5hWjSFPV3BnYr+EJZ1Mg
-         7j7PPt1b1kPmPSzehKA54O3dv6hfd+RzHUqwa6rURaVkIpqitHJdxkTvbEadkrgKoIrs
-         dwyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2sbW3VeapkXBFXBROMSYLe02+5wxSAmivcwGBlvvNys=;
-        b=RVEnxRX1B9wPoGAH/7pmC9LYRgtpVxAqDZ2ZzEMZ9HW+Zfs+hUUpsh07IxcvOZV8r3
-         MsDJuzjjJFqkTrjlSrC+s66iQPjI6tfIWntQx8jymUjM8zrLwxpNWNh5jYZKAirzb/nW
-         0SiBPrZ03bPNb0wRtvo1NfArxLUzwR7+a/BkC/htnKWQMsJBg4j7slVlPCy/Z1PxZeRO
-         ZDQ4zCDgWPqviYpa0bC4/AsGUzycyg7fbzAMe4AdV4fAWJ0O3CR9VENWaSiGbZNwJtIb
-         MjSkYmrRy8hh/IcI7M/xgmAFimWFDwsf5fsnah1P9DA+iC3WE8lAqGjkUttZGcif9d+L
-         ioiw==
-X-Gm-Message-State: AOAM533Qb28BmKet3BTTc7yS4zTIje/aMVj1d45gW6UjssFC1N774EXl
-        pHWVpHkkxhZN07hoIvUEfGY=
-X-Google-Smtp-Source: ABdhPJyDPTLNEOM725IEvMGEGBOmqxXLlfjyzgmcNoEX0bcdL5ygp6VGfBDSyX0L4n5Q6P2EajYGqw==
-X-Received: by 2002:aa7:8513:: with SMTP id v19mr57199394pfn.74.1594451974086;
-        Sat, 11 Jul 2020 00:19:34 -0700 (PDT)
-Received: from localhost ([89.208.244.139])
-        by smtp.gmail.com with ESMTPSA id f3sm7574725pju.54.2020.07.11.00.19.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Jul 2020 00:19:33 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1] PCI: Add more information when devm_request_mem_region() goes wrong
-Date:   Sat, 11 Jul 2020 15:19:27 +0800
-Message-Id: <20200711071927.3064-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 11 Jul 2020 03:31:25 -0400
+Received: from localhost.localdomain ([93.22.151.150])
+        by mwinf5d86 with ME
+        id 1jXM2300K3Ewh7h03jXMGu; Sat, 11 Jul 2020 09:31:23 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Jul 2020 09:31:23 +0200
+X-ME-IP: 93.22.151.150
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     benve@cisco.com, neescoba@cisco.com, pkaustub@cisco.com,
+        dledford@redhat.com, jgg@ziepe.ca, hch@infradead.org
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] RDMA/usnic: switch from 'pci_' to 'dma_' API
+Date:   Sat, 11 Jul 2020 09:31:20 +0200
+Message-Id: <20200711073120.249146-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,37 +45,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add more information, the name of the resource will be printed when the
-request memory region or remapping of configuration space fails in the
-devm_request_mem_region() function.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+The patch has been generated with the coccinelle script bellow.
+It has been compile tested.
+
+When memory is allocated, GFP_ATOMIC should be used to be consistent with
+the surrounding code.
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/pci/pci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/infiniband/hw/usnic/usnic_fwd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce096272f52b..81c1045a3fa8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4153,13 +4153,15 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
- 	name = res->name ?: dev_name(dev);
+diff --git a/drivers/infiniband/hw/usnic/usnic_fwd.c b/drivers/infiniband/hw/usnic/usnic_fwd.c
+index 7875883621f4..398c4c00b932 100644
+--- a/drivers/infiniband/hw/usnic/usnic_fwd.c
++++ b/drivers/infiniband/hw/usnic/usnic_fwd.c
+@@ -214,7 +214,7 @@ usnic_fwd_alloc_flow(struct usnic_fwd_dev *ufdev, struct filter *filter,
+ 	if (!flow)
+ 		return ERR_PTR(-ENOMEM);
  
- 	if (!devm_request_mem_region(dev, res->start, size, name)) {
--		dev_err(dev, "can't request region for resource %pR\n", res);
-+		dev_err(dev, "can't request region for %s's resource %pR\n",
-+			name, res);
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
+-	tlv = pci_alloc_consistent(pdev, tlv_size, &tlv_pa);
++	tlv = dma_alloc_coherent(&pdev->dev, tlv_size, &tlv_pa, GFP_ATOMIC);
+ 	if (!tlv) {
+ 		usnic_err("Failed to allocate memory\n");
+ 		status = -ENOMEM;
+@@ -258,7 +258,7 @@ usnic_fwd_alloc_flow(struct usnic_fwd_dev *ufdev, struct filter *filter,
  
- 	dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
- 	if (!dest_ptr) {
--		dev_err(dev, "ioremap failed for resource %pR\n", res);
-+		dev_err(dev, "ioremap failed for %s's resource %pR\n",
-+			name, res);
- 		devm_release_mem_region(dev, res->start, size);
- 		dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
- 	}
+ out_free_tlv:
+ 	spin_unlock(&ufdev->lock);
+-	pci_free_consistent(pdev, tlv_size, tlv, tlv_pa);
++	dma_free_coherent(&pdev->dev, tlv_size, tlv, tlv_pa);
+ 	if (!status)
+ 		return flow;
+ out_free_flow:
 -- 
-2.25.0
+2.25.1
 
