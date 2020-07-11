@@ -2,212 +2,223 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6317BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A181C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382C420674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8B320674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 01:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="YlYu5enQ";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="nsem9T/E"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lma5SysD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGKBqO (ORCPT
+        id S1727107AbgGKBrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 21:46:14 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:37468 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbgGKBqO (ORCPT
+        Fri, 10 Jul 2020 21:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgGKBrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 21:46:14 -0400
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.157])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 7803F20151;
-        Sat, 11 Jul 2020 01:46:11 +0000 (UTC)
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id D4B303F1CC;
-        Sat, 11 Jul 2020 03:46:08 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 18E7D2A3AA;
-        Fri, 10 Jul 2020 21:46:08 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1594431968;
-        bh=dKf0O2fyrFwr3fue2b7pNxfSAL3mgUsSFu+VG2miw+s=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=YlYu5enQFuYpFtO6lY8JlMs8RWVz5GTnhiXccFmt17HTSHiOxrQuZnyiCdB+S+egi
-         9C6XBzka9fIAYmIt9wdN9yWrqwQRPa+CIANoxuj768ZCtYnYxwPVUFJSGtn0fQ0S8Y
-         RA1XD8LgvCx91erUnxqyu+X2Pb/PnQd72VEaa60s=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ers-42yXCu5f; Fri, 10 Jul 2020 21:46:06 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Fri, 10 Jul 2020 21:46:06 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 104CC413E2;
-        Sat, 11 Jul 2020 01:46:05 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="nsem9T/E";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [38.39.233.131])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id A02D2413E2;
-        Sat, 11 Jul 2020 01:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1594431937;
-        bh=dKf0O2fyrFwr3fue2b7pNxfSAL3mgUsSFu+VG2miw+s=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=nsem9T/EGQ1kkt+sjJ74Zh5VzkQnrPalkALXdgNMmk2gvIpi9Y/4yQnNExyzDSfSh
-         uBlGZK6bzuFHSGFc/3DY8X2E5iiLZmBeyUFA1bEkAwh3lru6md7zvJzZYdc7I6Z99F
-         S4zgxSLpD3FYLz73ijoKEmQy9P27xSwlMRfehpWI=
-Subject: Re: [PATCH] stmmac: pci: Add support for LS7A bridge chip
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Zhi Li <lizhi01@loongson.cn>, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net,
-        kuba@kernel.org, mcoquelin.stm32@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lixuefeng@loongson.cn, chenhc@lemote.com, yangtiezhu@loongson.cn,
-        Hongbin Li <lihongbin@loongson.cn>
-References: <1594371110-7580-1-git-send-email-lizhi01@loongson.cn>
- <51aeec81-400f-c63b-3a22-e5384ff848f8@flygoat.com>
-Message-ID: <bafaf026-9ec4-8cbd-8872-2109676dcdf5@flygoat.com>
-Date:   Sat, 11 Jul 2020 09:45:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 21:47:46 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62E3C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:47:45 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o38so5985951qtf.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 18:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LwJ+r+zSNbDBrbHfG/yJxOB40XctVV/C95i6o1WQLd4=;
+        b=lma5SysDXyrK4RYvkDP8GEQsGxjhc2LXx53kWcKEhjTNIJCPn6w1atInBkWAnCBz2z
+         SeRRlFRe1Kqp3cCHxDcBdqw/Xdszlqjncq5/pHTNHITUohwxESCzIsgoO0MlVwv5tRlR
+         6RLalIKftGqw6UrvQHWWgPSCMN82D6ZmM8a1+W8i5sD37+giXDsFz8rJCy+E9yHcH6Ox
+         PPfz2/hOBZq7T6nayvBfsXHAeeC6bwOlqrW4iwRg85BczayLvMDCOf+WKxTPb1bSGEUL
+         EejMd3WGqpFDiOVMRPM1MWZZK0p9Qq1aAb/lwqUAeoiyBWB50qFo05vfUlKXRg6p7rOz
+         NrMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LwJ+r+zSNbDBrbHfG/yJxOB40XctVV/C95i6o1WQLd4=;
+        b=rpRv5HT+Q41pgP4nkJhl2pTMd04/5rmxiT6iSsg1Nmq0ccHzfLYb9GMbmfPn7CKagf
+         KrH6HgiN5Lq2WYAgIL1DKVvm2HdZcjL9Y4QHMpuO+EE96mVqAL017RB58e7SL3j26GZD
+         51faJlzYfmR4aoNtsG45ahRYTXXLtNkRScCLcVyy05cZ8ytVSgz3YUHupsu5SN9xVw28
+         J4uhkeoqcChn9e6eGA/0V1DKNZv6XaDtg5CIQMpj0X6Jau0P0v/qI6E+o/rpHuUiv3vd
+         xuGsB8QQZuu9ZMESMAQ2wIXbxP/ZIrh4AmjDLqDkrz/70uOCt2tbCETX9MGVusRYMVMI
+         OSKg==
+X-Gm-Message-State: AOAM533OxEmUx475BheS6W7xEPmV7DhRW9+mc/JD3Z60ntqtNyN3wRYL
+        qsOxqSrkJGf0ardDcdzOoOhXIhgE5bvQtw/UHNcNDg==
+X-Google-Smtp-Source: ABdhPJw6Kjf8WI27c8EPcBFNEhz4cx+nw2z0k5lxVojVNh0y79LY5wif82NNbsx21QLsNRtUZOyRWuccgNVRNLIhIQc=
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr42297445qtq.199.1594432064956;
+ Fri, 10 Jul 2020 18:47:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <51aeec81-400f-c63b-3a22-e5384ff848f8@flygoat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 104CC413E2
-X-Spamd-Result: default: False [1.40 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         FREEMAIL_TO(0.00)[loongson.cn,st.com,synopsys.com,davemloft.net,kernel.org,gmail.com];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         SUSPICIOUS_RECIPS(1.50)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+References: <1d89d5a6b54ca3d3203cb02ff4548b4eb9820c61.1592989082.git.greentime.hu@sifive.com>
+ <mhng-21b29738-a664-4209-89e8-763e32a59a4e@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-21b29738-a664-4209-89e8-763e32a59a4e@palmerdabbelt-glaptop1>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Sat, 11 Jul 2020 09:47:33 +0800
+Message-ID: <CAHCEeh+8wzxLGEU7Mr18j6bTzYCG8fUtHBAKv6AJ7ZnEkjNr=w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: Enable context tracking
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/7/11 9:35, Jiaxun Yang 写道:
+Palmer Dabbelt <palmer@dabbelt.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8811=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=881:30=E5=AF=AB=E9=81=93=EF=BC=9A
 >
+> On Wed, 24 Jun 2020 02:03:16 PDT (-0700), greentime.hu@sifive.com wrote:
+> > This patch implements and enables context tracking for riscv (which is =
+a
+> > prerequisite for CONFIG_NO_HZ_FULL support)
+> >
+> > It adds checking for previous state in the entry that all excepttions a=
+nd
+> > interrupts goes to and calls context_tracking_user_exit() if it comes f=
+rom
+> > user space. It also calls context_tracking_user_enter() if it will retu=
+rn
+> > to user space before restore_all.
+> >
+> > This patch is tested with the dynticks-testing testcase in
+> > qemu-system-riscv64 virt machine and Unleashed board.
+> > git://git.kernel.org/pub/scm/linux/kernel/git/frederic/dynticks-testing=
+.git
+> >
+> > We can see the log here. The tick got mostly stopped during the executi=
+on
+> > of the user loop.
+> >
+> >                         _-----=3D> irqs-off
+> >                        / _----=3D> need-resched
+> >                       | / _---=3D> hardirq/softirq
+> >                       || / _--=3D> preempt-depth
+> >                       ||| /     delay
+> >      TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> >         | |       |   ||||       |         |
+> >    <idle>-0     [001] d..2   604.183512: sched_switch: prev_comm=3Dswap=
+per/1 prev_pid=3D0 prev_prio=3D120 prev_state=3DR =3D=3D> next_comm=3Dtasks=
+et next_pid=3D273 next_prio=3D120
+> > user_loop-273   [001] d.h1   604.184788: hrtimer_expire_entry: hrtimer=
+=3D000000002eda5fab function=3Dtick_sched_timer now=3D604176096300
+> > user_loop-273   [001] d.s2   604.184897: workqueue_queue_work: work str=
+uct=3D00000000383402c2 function=3Dvmstat_update workqueue=3D00000000f36d35d=
+4 req_cpu=3D1 cpu=3D1
+> > user_loop-273   [001] dns2   604.185039: tick_stop: success=3D0 depende=
+ncy=3DSCHED
+> > user_loop-273   [001] dn.1   604.185103: tick_stop: success=3D0 depende=
+ncy=3DSCHED
+> > user_loop-273   [001] d..2   604.185154: sched_switch: prev_comm=3Dtask=
+set prev_pid=3D273 prev_prio=3D120 prev_state=3DR+ =3D=3D> next_comm=3Dkwor=
+ker/1:1 next_pid=3D46 next_prio=3D120
+> >     <...>-46    [001] ....   604.185194: workqueue_execute_start: work =
+struct 00000000383402c2: function vmstat_update
+> >     <...>-46    [001] d..2   604.185266: sched_switch: prev_comm=3Dkwor=
+ker/1:1 prev_pid=3D46 prev_prio=3D120 prev_state=3DI =3D=3D> next_comm=3Dta=
+skset next_pid=3D273 next_prio=3D120
+> > user_loop-273   [001] d.h1   604.188812: hrtimer_expire_entry: hrtimer=
+=3D000000002eda5fab function=3Dtick_sched_timer now=3D604180133400
+> > user_loop-273   [001] d..1   604.189050: tick_stop: success=3D1 depende=
+ncy=3DNONE
+> > user_loop-273   [001] d..2   614.251386: sched_switch: prev_comm=3Duser=
+_loop prev_pid=3D273 prev_prio=3D120 prev_state=3DX =3D=3D> next_comm=3Dswa=
+pper/1 next_pid=3D0 next_prio=3D120
+> >    <idle>-0     [001] d..2   614.315391: sched_switch: prev_comm=3Dswap=
+per/1 prev_pid=3D0 prev_prio=3D120 prev_state=3DR =3D=3D> next_comm=3Dtasks=
+et next_pid=3D276 next_prio=3D120
+> >
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > ---
+> >  arch/riscv/Kconfig        |  1 +
+> >  arch/riscv/kernel/entry.S | 23 +++++++++++++++++++++++
+> >  2 files changed, 24 insertions(+)
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 128192e14ff2..17520e11815b 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -52,6 +52,7 @@ config RISCV
+> >       select HAVE_ARCH_SECCOMP_FILTER
+> >       select HAVE_ARCH_TRACEHOOK
+> >       select HAVE_ASM_MODVERSIONS
+> > +     select HAVE_CONTEXT_TRACKING
+> >       select HAVE_COPY_THREAD_TLS
+> >       select HAVE_DMA_CONTIGUOUS if MMU
+> >       select HAVE_EBPF_JIT if MMU
+> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> > index cae7e6d4c7ef..6ed579fc1073 100644
+> > --- a/arch/riscv/kernel/entry.S
+> > +++ b/arch/riscv/kernel/entry.S
+> > @@ -97,6 +97,14 @@ _save_context:
+> >       la gp, __global_pointer$
+> >  .option pop
+> >
+> > +#ifdef CONFIG_CONTEXT_TRACKING
+> > +     /* If previous state is in user mode, call context_tracking_user_=
+exit. */
+> > +     andi a0, s1, SR_SPP
 >
-> 在 2020/7/10 16:51, Zhi Li 写道:
->> Add gmac platform data to support LS7A bridge chip.
->>
->> Co-developed-by: Hongbin Li <lihongbin@loongson.cn>
->> Signed-off-by: Hongbin Li <lihongbin@loongson.cn>
->> Signed-off-by: Zhi Li <lizhi01@loongson.cn>
->> ---
->>   drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 22 
->> ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c 
->> b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
->> index 272cb47..dab2a40 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
->> @@ -138,6 +138,24 @@ static const struct stmmac_pci_info 
->> snps_gmac5_pci_info = {
->>       .setup = snps_gmac5_default_data,
->>   };
->>   +static int loongson_default_data(struct pci_dev *pdev, struct 
->> plat_stmmacenent_data *plat)
->> +{
->> +    common_default_data(plat);
->> +
->> +    plat->bus_id = pci_dev_id(pdev);
->> +    plat->phy_addr = 0;
->> +    plat->interface = PHY_INTERFACE_MODE_GMII;
->> +
->> +    plat->dma_cfg->pbl = 32;
->> +    plat->dma_cfg->pblx8 = true;
->> +
->> +    return 0;
->> +}
->> +
->> +static struct stmmac_pci_info loongson_pci_info = {
->> +    .setup = loongson_default_data;
->> +};
->> +
->>   /**
->>    * stmmac_pci_probe
->>    *
->> @@ -204,6 +222,8 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
->>       res.addr = pcim_iomap_table(pdev)[i];
->>       res.wol_irq = pdev->irq;
->>       res.irq = pdev->irq;
->> +    if (pdev->vendor == PCI_VENDOR_ID_LOONGSON)
->> +        res.lpi_irq = pdev->irq + 1;
+> I've changed that to SR_PP, as I don't see any reason why this should dep=
+end on
+> MMU.
 >
-> This can never work.
-> We're allocating IRQs by irq_domain, not ID.
-> Please describe IRQ in DeviceTree, and *DO NOT* sne dout untested patch.
-Oops, ^ send out
+> I think this is correct: we're using scratch=3D=3D0 elsewhere to detect r=
+ecursive
+> traps, but we've blown that away by this point so it's not an option.  I =
+don't
+> know of any reason why PP wouldn't be accurate.
 
-FYI: Here is my solution of GMAC[1] [2], I was too busy to upstream it.
-We're using totally different structure than Loongson's out of tree Kernel,
-especially in IRQ management.
+Hi Palmer,
 
-Please don't simply copy 'n paste code from your company's internal kernel.
-
-Please try to understand how upstream kernel is working and test your 
-patches
-with upstrem kernel.
-
-[1]: 
-https://github.com/FlyGoat/linux/commit/9d6584c186a8007f14dc8bb2524e48a2fd7d689a
-[2]: 
-https://github.com/FlyGoat/linux/commit/558a256acfeb022e132113e7952a9df3df375302
+Thank you. That makes sense to me.
 
 >
-> Thanks.
->
->>         return stmmac_dvr_probe(&pdev->dev, plat, &res);
->>   }
->> @@ -273,11 +293,13 @@ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, 
->> stmmac_pci_suspend, stmmac_pci_resume);
->>     #define PCI_DEVICE_ID_STMMAC_STMMAC        0x1108
->>   #define PCI_DEVICE_ID_SYNOPSYS_GMAC5_ID        0x7102
->> +#define PCI_DEVICE_ID_LOONGSON_GMAC        0x7a03
->>     static const struct pci_device_id stmmac_id_table[] = {
->>       { PCI_DEVICE_DATA(STMMAC, STMMAC, &stmmac_pci_info) },
->>       { PCI_DEVICE_DATA(STMICRO, MAC, &stmmac_pci_info) },
->>       { PCI_DEVICE_DATA(SYNOPSYS, GMAC5_ID, &snps_gmac5_pci_info) },
->> +    { PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_pci_info) },
->>       {}
->>   };
-> - Jiaxun
+> > +     bnez a0, skip_context_tracking
+> > +     call context_tracking_user_exit
+> > +
+> > +skip_context_tracking:
+> > +#endif
+> >       la ra, ret_from_exception
+> >       /*
+> >        * MSB of cause differentiates between
+> > @@ -137,6 +145,17 @@ _save_context:
+> >       tail do_trap_unknown
+> >
+> >  handle_syscall:
+> > +#ifdef CONFIG_CONTEXT_TRACKING
+> > +     /* Recover a0 - a7 for system calls */
+> > +     REG_L x10, PT_A0(sp)
+> > +     REG_L x11, PT_A1(sp)
+> > +     REG_L x12, PT_A2(sp)
+> > +     REG_L x13, PT_A3(sp)
+> > +     REG_L x14, PT_A4(sp)
+> > +     REG_L x15, PT_A5(sp)
+> > +     REG_L x16, PT_A6(sp)
+> > +     REG_L x17, PT_A7(sp)
+> > +#endif
+> >        /* save the initial A0 value (needed in signal handlers) */
+> >       REG_S a0, PT_ORIG_A0(sp)
+> >       /*
+> > @@ -205,6 +224,10 @@ resume_userspace:
+> >       andi s1, s0, _TIF_WORK_MASK
+> >       bnez s1, work_pending
+> >
+> > +#ifdef CONFIG_CONTEXT_TRACKING
+> > +     call context_tracking_user_enter
+> > +#endif
+> > +
+> >       /* Save unwound kernel stack pointer in thread_info */
+> >       addi s0, sp, PT_SIZE_ON_STACK
+> >       REG_S s0, TASK_TI_KERNEL_SP(tp)
