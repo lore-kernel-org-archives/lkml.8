@@ -8,69 +8,69 @@ X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B283AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF492075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846C3207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE8Ko1Cl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZrUFjg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGKNQk (ORCPT
+        id S1728302AbgGKNYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:16:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56330 "EHLO
+        Sat, 11 Jul 2020 09:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGKNQj (ORCPT
+        with ESMTP id S1726630AbgGKNYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:16:39 -0400
+        Sat, 11 Jul 2020 09:24:04 -0400
 Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFE4C08C5DD;
-        Sat, 11 Jul 2020 06:16:39 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d4so3785150pgk.4;
-        Sat, 11 Jul 2020 06:16:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6DDC08C5DD;
+        Sat, 11 Jul 2020 06:24:04 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so3791732pgm.2;
+        Sat, 11 Jul 2020 06:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=zWPFWZ7nY1yjdraK2wS+KgXEaieNv2NevddKOt7JQVc=;
-        b=bE8Ko1ClEYTQBL3sYEndGbLZzLBfu0J0T4sgcj7bcNZ3cb42+oeM7Ub5vJXLvVDmHH
-         OMyN3JXUHVUYShw9HZ5W6KiaMxz8kPF917Tl9nl1Ez9/HLSrhtJiOgmq/fVqfLPp1UBp
-         5Rax4YpgPK3MDT67P/724UyGiv5ILwSU9385zAeUQuiMykw2ln2TaoCBoMoIhAeoLWWa
-         RFezY8tVZCa2Kp0bKX27YklDhdHI8746vVO5VkFclUNG20ng6Y4B/tcuwgKbcf13p3AS
-         jBU+LqaPqop/u1ZlBYEASSsJkHJeVeFQ4fgNQGFz5Tt2VsaCQPDoEUtW0blXUkp2W+Jj
-         +Y7A==
+        bh=jkqCB6rwltR0PLW6W8Tf/AHK3b3SNSzPlhoy+LsjjRE=;
+        b=ZZrUFjg9JsLOtJwsM3vKb1eaqYGELbv7jee35aOeLU3QPGrUVaVeFdGIcXcwRq5YE9
+         cFzApdeIED2Fi44mi/B9mcUrtLg0azVeVWH2spQxARf7rai4f9+WZ1seB2Czp2YyIm/v
+         v2EIfiiB4nGD8GPRiv8+g1bWsAv2YcY+31//Dfuz14lpA57tlCJLDYNqyT7LFKLBkuY7
+         Z/XVBwqjyKlQUWuhlTK7AhbN8p/cB5kNRUEmvbD0O3dyG4MIg2uOhEJaPenfUfyhr1dB
+         ssCum+VuRY1JkgDiNH9Iz7DZfFAYtcMimsefD/sWzwDYfJBdpLul5n8jEv3ELvkYxdme
+         pVmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=zWPFWZ7nY1yjdraK2wS+KgXEaieNv2NevddKOt7JQVc=;
-        b=txDUA0j1kui3qgTnab14aam/xLFQrolmv8ybtXOg8TYHiEVEMkboiJKGInCkPvMN4S
-         nc9GZ24GMlRN3Yy+inVVqdQ7ODk3aH/ge0wyV7g+mi8tIqJYe4ZGVvsg0ycHJYx7/qhv
-         UPIDnyX94nKCB8uFkbbK1TY3drTWyH2cyck+R2kapAGyY+0dYrz1nG6OK+lXOoNVNuFX
-         qwWWOZ2MepHF92KGJVw6hC/yHoDLCuidUiupU9kQlQ0AKyF2w9IP5nV1A4Es0sMaEctC
-         llJWAMbc6YpolUOytnbtDbw5aOGZPQQpTS3vXkvoY62KdSawJV7ySHQjYUyRCv99QPUi
-         TO7w==
-X-Gm-Message-State: AOAM533ch5p2cu282JP3NIjeWcZI6KSM0/sQtjzJUFNcUXP8dMPHM3cf
-        uEACgDzHxlsMFYIS8ab2TzwmHZdX7tggWw==
-X-Google-Smtp-Source: ABdhPJxnZH3Ne7c9a6HuT6N1wRXeETGpJI4+TxMtrXVE9fLl/rjCbmQ+4oJFiuJeYvo1CwJpjChmIQ==
-X-Received: by 2002:a05:6a00:84e:: with SMTP id q14mr67622989pfk.309.1594473398850;
-        Sat, 11 Jul 2020 06:16:38 -0700 (PDT)
+        bh=jkqCB6rwltR0PLW6W8Tf/AHK3b3SNSzPlhoy+LsjjRE=;
+        b=IdcYQAd35dg2zvN1tRqTd/ILCxv6czHY5wVZy19lK35925bABQDIniZLskmi0J1Dc+
+         /7Vo/d0gNSTR/2KScdOvCGYjFjzmnyZECNJ6C4AiZRSpAnXZsQ9Vk0Ouwi6QIaIORnlI
+         O/qPnhSP1tLVzVlq0EDkV/QizbZEdN/3yKDGWnfNvldRx2ds2CP2XZCG+tVdOq0komGB
+         1x3jm26HeKthWsbeUlK2uaFNcr8+TDrgFRtpGAIqctzDK7tmoP+wqAC3648o6n+vUM0z
+         BeHcBVNDuKAyY/n32n2L3HDbHOsd4MYUZ9fSD1R4tttJfjoBTugXOamVk7awzm7wSIWU
+         SUyQ==
+X-Gm-Message-State: AOAM533Zcr77eWdEWE2Xt8F5uMDW1kqxk75Si7yrHYVTCH17XdPEYsgn
+        RjwUeU+MkQi2wxI4CmLEuGA=
+X-Google-Smtp-Source: ABdhPJzT+zN0PGFENRNLHFFW4jYdeb/FC0muUJel0utJcv92/Mx31jCUQiU2Q3NcXEEe73lBz2vCiQ==
+X-Received: by 2002:a62:86cc:: with SMTP id x195mr60095050pfd.39.1594473844011;
+        Sat, 11 Jul 2020 06:24:04 -0700 (PDT)
 Received: from blackclown ([103.88.82.158])
-        by smtp.gmail.com with ESMTPSA id k3sm8772212pjl.15.2020.07.11.06.16.36
+        by smtp.gmail.com with ESMTPSA id j36sm8826757pgj.39.2020.07.11.06.24.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Jul 2020 06:16:38 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 18:46:24 +0530
+        Sat, 11 Jul 2020 06:24:03 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 18:53:49 +0530
 From:   Suraj Upadhyay <usuraj35@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: rtl8192e: rtl8192E_dev: Remove pci-dma-compat
- wrapper APIs.
-Message-ID: <20200711131623.GA20537@blackclown>
+Subject: [PATCH] staging: rtl8192e: rtl_core: Remove pci-dma-compat wrapper
+ APIs.
+Message-ID: <20200711132349.GA21618@blackclown>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,7 +79,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---RnlQjJ0d97Da+TV1
+--oyUTqETQ0mS9luUI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -122,43 +122,43 @@ and compile-tested.
 
 @@ expression E1, E2, E3, E4; @@
 - pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_map_single(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_unmap_single(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4, E5; @@
 - pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, (enum dma_data_direction)E5)
++ dma_map_page(&E1->dev, E2, E3, E4, E5)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_unmap_page(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_map_sg(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_unmap_sg(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2, E3, E4; @@
 - pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
++ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
 
 @@ expression E1, E2; @@
 - pci_dma_mapping_error(E1, E2)
@@ -179,65 +179,192 @@ Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 186&w=3D4
         on kernel-janitors Mailing List.
 
- drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c | 71 ++++++++++----------
+ 1 file changed, 34 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c b/drivers/stagi=
-ng/rtl8192e/rtl8192e/r8192E_dev.c
-index ddcd7885d190..9f869fb3eaa8 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-@@ -1215,9 +1215,9 @@ void  rtl92e_fill_tx_desc(struct net_device *dev, str=
-uct tx_desc *pdesc,
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging=
+/rtl8192e/rtl8192e/rtl_core.c
+index dbcb8d0d9707..fac58eebf263 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -1558,17 +1558,16 @@ static void _rtl92e_free_rx_ring(struct net_device =
+*dev)
+ 			if (!skb)
+ 				continue;
 =20
- 	memset((u8 *)pdesc, 0, 12);
+-			pci_unmap_single(priv->pdev,
+-				*((dma_addr_t *)skb->cb),
+-				priv->rxbuffersize, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&priv->pdev->dev,
++					 *((dma_addr_t *)skb->cb),
++					 priv->rxbuffersize, DMA_FROM_DEVICE);
+ 			kfree_skb(skb);
+ 		}
 =20
--	mapping =3D pci_map_single(priv->pdev, skb->data, skb->len,
--				 PCI_DMA_TODEVICE);
--	if (pci_dma_mapping_error(priv->pdev, mapping)) {
-+	mapping =3D dma_map_single(&priv->pdev->dev, skb->data, skb->len,
-+				 DMA_TO_DEVICE);
-+	if (dma_mapping_error(&priv->pdev->dev, mapping)) {
- 		netdev_err(dev, "%s(): DMA Mapping error\n", __func__);
- 		return;
+-		pci_free_consistent(priv->pdev,
+-			sizeof(*priv->rx_ring[rx_queue_idx]) *
+-			priv->rxringcount,
+-			priv->rx_ring[rx_queue_idx],
+-			priv->rx_ring_dma[rx_queue_idx]);
++		dma_free_coherent(&priv->pdev->dev,
++				  sizeof(*priv->rx_ring[rx_queue_idx]) * priv->rxringcount,
++				  priv->rx_ring[rx_queue_idx],
++				  priv->rx_ring_dma[rx_queue_idx]);
+ 		priv->rx_ring[rx_queue_idx] =3D NULL;
  	}
-@@ -1282,10 +1282,10 @@ void  rtl92e_fill_tx_cmd_desc(struct net_device *de=
-v, struct tx_desc_cmd *entry,
- 			      struct cb_desc *cb_desc, struct sk_buff *skb)
- {
- 	struct r8192_priv *priv =3D rtllib_priv(dev);
--	dma_addr_t mapping =3D pci_map_single(priv->pdev, skb->data, skb->len,
--			 PCI_DMA_TODEVICE);
-+	dma_addr_t mapping =3D dma_map_single(&priv->pdev->dev, skb->data,
-+					    skb->len, DMA_TO_DEVICE);
+ }
+@@ -1582,14 +1581,15 @@ static void _rtl92e_free_tx_ring(struct net_device =
+*dev, unsigned int prio)
+ 		struct tx_desc *entry =3D &ring->desc[ring->idx];
+ 		struct sk_buff *skb =3D __skb_dequeue(&ring->queue);
 =20
--	if (pci_dma_mapping_error(priv->pdev, mapping))
-+	if (dma_mapping_error(&priv->pdev->dev, mapping))
- 		netdev_err(dev, "%s(): DMA Mapping error\n", __func__);
- 	memset(entry, 0, 12);
- 	entry->LINIP =3D cb_desc->bLastIniPkt;
+-		pci_unmap_single(priv->pdev, entry->TxBuffAddr,
+-			skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&priv->pdev->dev, entry->TxBuffAddr,
++				 skb->len, DMA_TO_DEVICE);
+ 		kfree_skb(skb);
+ 		ring->idx =3D (ring->idx + 1) % ring->entries;
+ 	}
+=20
+-	pci_free_consistent(priv->pdev, sizeof(*ring->desc) * ring->entries,
+-	ring->desc, ring->dma);
++	dma_free_coherent(&priv->pdev->dev,
++			  sizeof(*ring->desc) * ring->entries, ring->desc,
++			  ring->dma);
+ 	ring->desc =3D NULL;
+ }
+=20
+@@ -1676,8 +1676,8 @@ static void _rtl92e_tx_isr(struct net_device *dev, in=
+t prio)
+ 		}
+=20
+ 		skb =3D __skb_dequeue(&ring->queue);
+-		pci_unmap_single(priv->pdev, entry->TxBuffAddr,
+-		skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&priv->pdev->dev, entry->TxBuffAddr,
++				 skb->len, DMA_TO_DEVICE);
+=20
+ 		kfree_skb(skb);
+ 	}
+@@ -1782,9 +1782,10 @@ static short _rtl92e_alloc_rx_ring(struct net_device=
+ *dev)
+ 	int i, rx_queue_idx;
+=20
+ 	for (rx_queue_idx =3D 0; rx_queue_idx < MAX_RX_QUEUE; rx_queue_idx++) {
+-		priv->rx_ring[rx_queue_idx] =3D pci_zalloc_consistent(priv->pdev,
+-					      sizeof(*priv->rx_ring[rx_queue_idx]) * priv->rxringcount,
+-					      &priv->rx_ring_dma[rx_queue_idx]);
++		priv->rx_ring[rx_queue_idx] =3D dma_alloc_coherent(&priv->pdev->dev,
++								 sizeof(*priv->rx_ring[rx_queue_idx]) * priv->rxringcount,
++								 &priv->rx_ring_dma[rx_queue_idx],
++								 GFP_ATOMIC);
+ 		if (!priv->rx_ring[rx_queue_idx] ||
+ 		    (unsigned long)priv->rx_ring[rx_queue_idx] & 0xFF) {
+ 			netdev_warn(dev, "Cannot allocate RX ring\n");
+@@ -1803,11 +1804,10 @@ static short _rtl92e_alloc_rx_ring(struct net_devic=
+e *dev)
+ 			skb->dev =3D dev;
+ 			priv->rx_buf[rx_queue_idx][i] =3D skb;
+ 			mapping =3D (dma_addr_t *)skb->cb;
+-			*mapping =3D pci_map_single(priv->pdev,
++			*mapping =3D dma_map_single(&priv->pdev->dev,
+ 						  skb_tail_pointer_rsl(skb),
+-						  priv->rxbuffersize,
+-						  PCI_DMA_FROMDEVICE);
+-			if (pci_dma_mapping_error(priv->pdev, *mapping)) {
++						  priv->rxbuffersize, DMA_FROM_DEVICE);
++			if (dma_mapping_error(&priv->pdev->dev, *mapping)) {
+ 				dev_kfree_skb_any(skb);
+ 				return -1;
+ 			}
+@@ -1831,7 +1831,8 @@ static int _rtl92e_alloc_tx_ring(struct net_device *d=
+ev, unsigned int prio,
+ 	dma_addr_t dma;
+ 	int i;
+=20
+-	ring =3D pci_zalloc_consistent(priv->pdev, sizeof(*ring) * entries, &dma);
++	ring =3D dma_alloc_coherent(&priv->pdev->dev, sizeof(*ring) * entries,
++				  &dma, GFP_ATOMIC);
+ 	if (!ring || (unsigned long)ring & 0xFF) {
+ 		netdev_warn(dev, "Cannot allocate TX ring (prio =3D %d)\n", prio);
+ 		return -ENOMEM;
+@@ -1905,9 +1906,9 @@ void rtl92e_reset_desc_ring(struct net_device *dev)
+ 				struct sk_buff *skb =3D
+ 						 __skb_dequeue(&ring->queue);
+=20
+-				pci_unmap_single(priv->pdev,
+-						 entry->TxBuffAddr,
+-						 skb->len, PCI_DMA_TODEVICE);
++				dma_unmap_single(&priv->pdev->dev,
++						 entry->TxBuffAddr, skb->len,
++						 DMA_TO_DEVICE);
+ 				kfree_skb(skb);
+ 				ring->idx =3D (ring->idx + 1) % ring->entries;
+ 			}
+@@ -2028,10 +2029,8 @@ static void _rtl92e_rx_normal(struct net_device *dev)
+ 		if (unlikely(!new_skb))
+ 			goto done;
+=20
+-		pci_unmap_single(priv->pdev,
+-				*((dma_addr_t *)skb->cb),
+-				priv->rxbuffersize,
+-				PCI_DMA_FROMDEVICE);
++		dma_unmap_single(&priv->pdev->dev, *((dma_addr_t *)skb->cb),
++				 priv->rxbuffersize, DMA_FROM_DEVICE);
+=20
+ 		skb_put(skb, pdesc->Length);
+ 		skb_reserve(skb, stats.RxDrvInfoSize +
+@@ -2074,12 +2073,10 @@ static void _rtl92e_rx_normal(struct net_device *de=
+v)
+=20
+ 		priv->rx_buf[rx_queue_idx][priv->rx_idx[rx_queue_idx]] =3D
+ 								 skb;
+-		*((dma_addr_t *)skb->cb) =3D pci_map_single(priv->pdev,
+-					    skb_tail_pointer_rsl(skb),
+-					    priv->rxbuffersize,
+-					    PCI_DMA_FROMDEVICE);
+-		if (pci_dma_mapping_error(priv->pdev,
+-					  *((dma_addr_t *)skb->cb))) {
++		*((dma_addr_t *)skb->cb) =3D dma_map_single(&priv->pdev->dev,
++							  skb_tail_pointer_rsl(skb),
++							  priv->rxbuffersize, DMA_FROM_DEVICE);
++		if (dma_mapping_error(&priv->pdev->dev, *((dma_addr_t *)skb->cb))) {
+ 			dev_kfree_skb_any(skb);
+ 			return;
+ 		}
+@@ -2417,8 +2414,8 @@ static int _rtl92e_pci_probe(struct pci_dev *pdev,
+=20
+ 	pci_set_master(pdev);
+=20
+-	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
+-		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32))) {
++	if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
++		if (dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32))) {
+ 			dev_info(&pdev->dev,
+ 				 "Unable to obtain 32bit DMA for consistent allocations\n");
+ 			goto err_pci_disable;
 --=20
 2.17.1
 
 
---RnlQjJ0d97Da+TV1
+--oyUTqETQ0mS9luUI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8Ju6cACgkQ+gRsbIfe
-746PVQ/5AdOPy5H4YQEgLsRgxPsin6vIQ3UZ+Vr0vVs8wXO6/gwM3vRqzwC50E//
-kHmoWWc90Fc1bnVigYowL3tjnwErmWei0OBX52r9bJV4aSAjiJNAXjVPeMps6z4G
-ifOSG8gLacQBuEf+3E4gEKKwcXjaAqcOtO2mfEZLuwZEwBV3PieolxgomsfbfydH
-ukV9yyNS4aVXyc0uH8VGQ0EG79xYeXBrmyYzrLVI5o+kzkduKwfDITLf7FNZd/5U
-78yRnSvLuqb8c+g2b3TBVkc6wWPEArgAr8BQpIP6UdJ7KRt9pMk1ls8guoaNqc5i
-1iu/md3xVvR9en4BuMTCfUQJwgVxgu7q95YhSYV/Wm/mY6ZaC2paay4sARJ9IdhH
-cyWpopEMltqiRnhB4AaPYtkScvNRih4iEUdrPUWeL64bVLUaFQ16DVp6sxxwvRjX
-vAaN6wKz6RRkxpJwWtA6lmRFcUvC2Xp3xxQdpgqpMTFzBhNlxoA7AkID0hiUpX5r
-HCcLuKiQyzDi+tdVkHkcSLRyMI+jbylX1bWVb0MQ7mKvVNRgbGdhhoz8BV0GsUC0
-frU3VT9e/qBxggOPHoGQwAjnI0+4DaB/xzfXF3b9ZbRJDT4VJ3/ZybmpYjpOMRCX
-9XzrZLozt2KXFj2koVerZ/QsulfNWUuwfIwWQGHAI8u627LL4pM=
-=jxWP
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8JvWQACgkQ+gRsbIfe
+745NdRAApaDp2Mho03Q9fdMVKJ2j7zNLqX7Ow4YnNYk5pVGxu3DF/ER/G3Ke3IDO
+UpCoXjQLOykIMkJOK4VK48sBgJ5XE2YrbL2azghcCfXy6N97JwcZNPoGsQhJObiv
+MTCU5TPoPWOF7++yluvnAZY5voBdghA1MRK3Vcs/0twf5kTNQmEAVQHx/NezsV7y
+vUzBFTJWM1G4fgAe6cLiCPbQ3FK0S2mdIv0oJn+qIbvLEEwhLyYtRrDmo+rIgqvk
+YICkWbUOnNMQQXS8Hx0o6cbNdlX8+VjTWRRNmMxPkKzmYpVRsHdZG7W71oAontwj
+VltKqj+lS6qGV+NBoOzeGa+VJPFvOL9MtB5LcOE3o8DAVzNKNsQLFtRVVlH+w4Ra
+jv3uZM6se4UHOP8M5GJnV1Ks+ciwiSN68vRrVzbboygnB+zWzAwyGo+sSf7tw0k7
+JCHCDFNyrBrNfM2OEMNZLYHZNleub3n6tKnoFmkQU0OPaW8QS04arltEIspWvTxO
+1c2eYghSRbBl7tjH+LAQxXew3vKy/iBlAfHjw8lmVaDh95iYj82lQXPCgOKEEV4Y
+0Up7taLy7LqIkjTZyJoqypzxp5Je05w0SjbHi8wVrfiDDMjfAkVG/oxnv9z1lPve
+yMjDAFXIRV6jVE9AmTs04+KWNqlNALiLEWo6hBUehlf7bh33ygU=
+=TBaA
 -----END PGP SIGNATURE-----
 
---RnlQjJ0d97Da+TV1--
+--oyUTqETQ0mS9luUI--
