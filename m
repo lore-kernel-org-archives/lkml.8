@@ -2,206 +2,152 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C98C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFCF720786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50287206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 17:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgGKQsT (ORCPT
+        id S1728672AbgGKRDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 12:48:19 -0400
-Received: from mail-mw2nam12olkn2049.outbound.protection.outlook.com ([40.92.23.49]:3369
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728412AbgGKQsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 12:48:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U18P8hdfkY5JlPHWZ7u30u2Y89kccBWNEbZuEJVSC7pHQJSeKtvkYhGzkvUtGBhLlPqklbuRMFJBkq2Lj0tKvLgEGtjLGhuoO1kFTOaeZrHVYVIl8NSyW4qajVuKytcXM4lZeDw+EpT7sEZ/45vLgkfK0STha5bBR2BuefB5A3q+CS+kA4tlT42lX3SL2Hdc5ovtX3MIAxKBMpTc4W6pQKUNuoCT4QN9rJx1JYYC4i3cjlTqoxUcZxU7MPrFx9IAXHgA4NIw8W1Jtd9aCCHJBUFIWkYYFw0OTpfCs2PFlPc+WY0AcTs0taT/GUXTJE9oNUxrNclP+XL5YZzPJZOTog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1DeUWV63Jfv6nG0mwuYNitlEUaB7nBreYCs3GTmvHA8=;
- b=IDC7XaZi8l8rAQdSLlGKom+Xc5NYN3vXrePua+VADs/oZaVM5iK05L/CchRPBMuxO6B77otbcMriFDPyYXijAODTHOdV1BEnGw0aMV4/dmY6U84RmJwKhx2E5ztKKZ5OizFqBaAngUaIxqSpQqZTrt85/VqAFwDf8IDtV++oAH3kpzbcIfN75toPX/8JhBftMLT7VyzP6GKnqOkBA/kzjZhVC1t558/DRNH/0f0OKFll6/9wgci8pprVZB9xWsFDKsoAgX5IIqGm5E/eCdGJYvaBZ5yJF+nI5xXELa7Nckp8x+nsMnUsVoOZZU1T5nM2VZvxm2YZhK2yf1PoCTVkpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DM6NAM12FT016.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc64::46) by
- DM6NAM12HT022.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc64::331)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9; Sat, 11 Jul
- 2020 16:48:15 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc64::41) by DM6NAM12FT016.mail.protection.outlook.com
- (2a01:111:e400:fc64::217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend
- Transport; Sat, 11 Jul 2020 16:48:15 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:0CD21838A97837DE682CC1B7AB2937FDB8D61F0BD9F862E37F613D98A7B5E4A4;UpperCasedChecksum:8F38B11592944A5C33E9AF4F471AE2C7E55D506273C7C47205AB251EAEBC5B2A;SizeAsReceived:9207;Count:49
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3174.024; Sat, 11 Jul 2020
- 16:48:15 +0000
-Subject: Re: [PATCH 07/11] media: exynos4-is: Add support for multiple sensors
- on one port
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB0660CE60DA8585C5E1DA9EB9A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200707183655.GG2621465@chromium.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB066080F9D8FBD2B2D26CA33AA3620@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Sat, 11 Jul 2020 09:48:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200707183655.GG2621465@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR1701CA0021.namprd17.prod.outlook.com
- (2603:10b6:301:14::31) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <ff3721f4-a7b6-e2ed-0d3b-0504e24c3726@live.ca>
+        Sat, 11 Jul 2020 13:03:21 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:36536 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbgGKRDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 13:03:21 -0400
+Received: by mail-il1-f199.google.com with SMTP id t19so6004867ili.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 10:03:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zx+wcMN9XwcOE9Jwr6b7EFyTsUN+BF3ioh+EWC9OsoU=;
+        b=axUwVQcjbT9zzeRoMwTu9LxIXrSBnSAV4AFT7nowOCdSzXogCvh20MqaWRn/77wkdU
+         INT9ZlQIvZksKHzV061FEaz20ELBQfokazaJg41d0cGcUA0983DykoOD9vd0DcLXpqAa
+         zOw58nHY9pBV00YBUBgk9XcAfSPJZ+WN/Qr1wHp2/mg9O/7D45tQZBir9jGXYsfy9dos
+         GZwxu2vJIYUm9XT3R0nlR+2Cg8KbDL70NEL32OztO8naaL8Svc6W4Nglg+qp6AWj5M6J
+         wdFCwZmWUNrac85aH0qT8a3dVOOwXHgIFRLKFmX2hl01OyTPVL9ccnXqIyQT34XdVNlR
+         K8Gg==
+X-Gm-Message-State: AOAM531IR1Eos9+2kIQyslfdvbrimZu5P5Jo2DhDTWBJ4EkeXsCzGb+b
+        pgt5id3pM+rDCRNNpsa6AYRazgHOiMbGGgZgS1TiqD9sgnNV
+X-Google-Smtp-Source: ABdhPJxCNrQ7mwfVu4cyIs1iVuRfd7CVfH485Y1eSUaP3CBGERIgIgOaI+mZPbaGNgwQVkMDXgoVmaJWisdQH/1M/dyre4UOH0UL
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR1701CA0021.namprd17.prod.outlook.com (2603:10b6:301:14::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Sat, 11 Jul 2020 16:48:13 +0000
-X-Microsoft-Original-Message-ID: <ff3721f4-a7b6-e2ed-0d3b-0504e24c3726@live.ca>
-X-TMN:  [W0LoOdUomI2nKCl/XlVIW1p24jVXIsYxSoh581/bKqwFZIw37uagyPgpz2S1gn/0]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 49
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 4bc66762-6c1c-4ac9-679f-08d825ba34bf
-X-MS-TrafficTypeDiagnostic: DM6NAM12HT022:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: I67ufvW/hiotOu1f6Vmfs53IbD6yul60nHst1yzsXCGN1XmfUNFBoWoq0BOhUNkNE02O5weyx45BQ/LufTNZv2NcBTrgOeXIAQE+naEq2T0Nl/a2yPthbVaOJHybeQ6Lp7jQj7Ths/mwIN1oZX7DMEL5cxvs9BWvfZGiwVSmL0TXTw0JBZ+dezRipilNCBWcBZqmP5iou6Wqp39MvDosTQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: uy/O7EPfHt4Ogngs21Krd1wdHZJra6fbhUuSsSbz6yPwrdVVlMRJINxk/4XpK1lUmi+OLvHAbXq7Tvr2gkAAzJQ5pLHEmCDX6RJVugX+Dx6Vs6WiXtSSSLX5HcJPf+MRaLan7VE3K9G5IrLnHpg6hOZipWsnIrVLLupEi1KZ1TTMZdZBRPKMfGrWJhvj32DrGcha+paVPnUV2gqER6bHtw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bc66762-6c1c-4ac9-679f-08d825ba34bf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2020 16:48:15.5057
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT016.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM12HT022
+X-Received: by 2002:a5e:9b08:: with SMTP id j8mr6336861iok.116.1594486999819;
+ Sat, 11 Jul 2020 10:03:19 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 10:03:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000392a0a05aa2d6faf@google.com>
+Subject: general protection fault in htab_elem_free_rcu
+From:   syzbot <syzbot+a9db0ab6a8e0ca14351d@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, kafai@fb.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+Hello,
 
-On 2020-07-07 11:36 a.m., Tomasz Figa wrote:
-> On Sat, Apr 25, 2020 at 07:26:46PM -0700, Jonathan Bakker wrote:
->> On some devices, there may be multiple camera sensors attached
->> to the same port.  Make sure we probe all of them, not just the
->> first one.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  drivers/media/platform/exynos4-is/media-dev.c | 32 ++++++++++++-------
->>  1 file changed, 21 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
->> index b38445219c72..a87ebd7913be 100644
->> --- a/drivers/media/platform/exynos4-is/media-dev.c
->> +++ b/drivers/media/platform/exynos4-is/media-dev.c
->> @@ -397,25 +397,28 @@ static void fimc_md_pipelines_free(struct fimc_md *fmd)
->>  /* Parse port node and register as a sub-device any sensor specified there. */
->>  static int fimc_md_parse_port_node(struct fimc_md *fmd,
->>  				   struct device_node *port,
->> -				   unsigned int index)
->> +				   unsigned int *index)
->>  {
->> -	struct fimc_source_info *pd = &fmd->sensor[index].pdata;
->> +	struct fimc_source_info *pd;
->>  	struct device_node *rem, *ep, *np;
->> -	struct v4l2_fwnode_endpoint endpoint = { .bus_type = 0 };
->> +	struct v4l2_fwnode_endpoint endpoint;
->>  	int ret;
->>  
->> -	/* Assume here a port node can have only one endpoint node. */
->>  	ep = of_get_next_child(port, NULL);
->>  	if (!ep)
->>  		return 0;
->>  
->> +parse_sensor:
->> +	pd = &fmd->sensor[*index].pdata;
->> +	endpoint.bus_type = 0;
->> +
->>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &endpoint);
->>  	if (ret) {
->>  		of_node_put(ep);
->>  		return ret;
->>  	}
->>  
->> -	if (WARN_ON(endpoint.base.port == 0) || index >= FIMC_MAX_SENSORS) {
->> +	if (WARN_ON(endpoint.base.port == 0) || *index >= FIMC_MAX_SENSORS) {
->>  		of_node_put(ep);
->>  		return -EINVAL;
->>  	}
->> @@ -462,16 +465,16 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->>  		pd->fimc_bus_type = pd->sensor_bus_type;
->>  	of_node_put(np);
->>  
->> -	if (WARN_ON(index >= ARRAY_SIZE(fmd->sensor))) {
->> +	if (WARN_ON(*index >= ARRAY_SIZE(fmd->sensor))) {
->>  		of_node_put(rem);
->>  		return -EINVAL;
->>  	}
->>  
->> -	fmd->sensor[index].asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
->> -	fmd->sensor[index].asd.match.fwnode = of_fwnode_handle(rem);
->> +	fmd->sensor[*index].asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
->> +	fmd->sensor[*index].asd.match.fwnode = of_fwnode_handle(rem);
->>  
->>  	ret = v4l2_async_notifier_add_subdev(&fmd->subdev_notifier,
->> -					     &fmd->sensor[index].asd);
->> +					     &fmd->sensor[*index].asd);
->>  	if (ret) {
->>  		of_node_put(rem);
->>  		return ret;
->> @@ -479,6 +482,13 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->>  
->>  	fmd->num_sensors++;
->>  
->> +	/* Check for additional sensors on same port */
->> +	ep = of_get_next_child(port, ep);
->> +	if (ep) {
->> +		(*index)++;
-> 
-> Do we need this index argument at all? I can see that we already have
-> fmd->num_sensors and we increment it every time we discover a sensor.
-> Perhaps we could just use it instead?
-> 
->> +		goto parse_sensor;
-> 
-> As we know, goto in principle isn't the best coding pattern. There is a
-> number of exceptions where it is welcome, e.g. error handling, but
-> reimplementing a loop using goto is not very nice.
-> 
-> Instead, could you separate the code that probes one sensor into
-> fimc_md_parse_one_endpoint() and in this one simply iterate over all child
-> nodes of the port using for_each_child_of_node()?
-> 
+syzbot found the following crash on:
 
-That definitely looks doable, thanks for the suggestion.  I'll work on implementing
-and testing this.  It should then also be possible to remove the index hack as well.
+HEAD commit:    d31958b3 Add linux-next specific files for 20200710
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13935857100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3fe4fccb94cbc1a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=a9db0ab6a8e0ca14351d
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133db22b100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fe6f1f100000
 
-> Best regards,
-> Tomasz
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a9db0ab6a8e0ca14351d@syzkaller.appspotmail.com
 
-Thanks,
-Jonathan
+general protection fault, probably for non-canonical address 0xf33bb70012bc003b: 0000 [#1] PREEMPT SMP KASAN
+KASAN: maybe wild-memory-access in range [0x99ddd80095e001d8-0x99ddd80095e001df]
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-rc4-next-20200710-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:htab_elem_free kernel/bpf/hashtab.c:769 [inline]
+RIP: 0010:htab_elem_free_rcu+0x4a/0x110 kernel/bpf/hashtab.c:779
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bc 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b f8 48 8d 7d 18 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 82 00 00 00 44 8b 65 18 bf 05
+RSP: 0018:ffffc90000007e48 EFLAGS: 00010a03
+RAX: dffffc0000000000 RBX: ffff888084800010 RCX: 0000000000000001
+RDX: 133bbb0012bc003b RSI: ffffffff8186891e RDI: 99ddd80095e001de
+RBP: 99ddd80095e001c6 R08: 0000000000000000 R09: ffffffff8c5b09f7
+R10: fffffbfff18b613e R11: 0000000000000000 R12: ffffc90000007ed8
+R13: ffff888084800000 R14: 0000000000000000 R15: ffffffff89a86580
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c6368 CR3: 0000000009a79000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ rcu_do_batch kernel/rcu/tree.c:2418 [inline]
+ rcu_core+0x5dc/0x11d0 kernel/rcu/tree.c:2645
+ __do_softirq+0x34c/0xa60 kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x111/0x170 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x229/0x270 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x54/0x120 arch/x86/kernel/apic/apic.c:1090
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: ff 4c 89 ef e8 93 66 c6 f9 e9 8e fe ff ff 48 89 df e8 86 66 c6 f9 eb 8a cc cc cc cc e9 07 00 00 00 0f 00 2d 34 9b 5b 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d 24 9b 5b 00 f4 c3 cc cc 55 53 e8 09
+RSP: 0018:ffffffff89a07c70 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffffffff89a86580 RSI: ffffffff87ed2968 RDI: ffffffff87ed293e
+RBP: ffff8880a6a93064 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880a6a93064
+R13: 1ffffffff1340f98 R14: ffff8880a6a93065 R15: 0000000000000001
+ arch_safe_halt arch/x86/include/asm/paravirt.h:150 [inline]
+ acpi_safe_halt+0x8d/0x110 drivers/acpi/processor_idle.c:111
+ acpi_idle_do_entry+0x15c/0x1b0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x3f9/0xab0 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xff/0x960 drivers/cpuidle/cpuidle.c:235
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:346
+ call_cpuidle kernel/sched/idle.c:126 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:214 [inline]
+ do_idle+0x431/0x6d0 kernel/sched/idle.c:276
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:372
+ start_kernel+0x9cb/0xa06 init/main.c:1045
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+Modules linked in:
+---[ end trace 5ce7b44eaacf6c96 ]---
+RIP: 0010:htab_elem_free kernel/bpf/hashtab.c:769 [inline]
+RIP: 0010:htab_elem_free_rcu+0x4a/0x110 kernel/bpf/hashtab.c:779
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bc 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b f8 48 8d 7d 18 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 82 00 00 00 44 8b 65 18 bf 05
+RSP: 0018:ffffc90000007e48 EFLAGS: 00010a03
+RAX: dffffc0000000000 RBX: ffff888084800010 RCX: 0000000000000001
+RDX: 133bbb0012bc003b RSI: ffffffff8186891e RDI: 99ddd80095e001de
+RBP: 99ddd80095e001c6 R08: 0000000000000000 R09: ffffffff8c5b09f7
+R10: fffffbfff18b613e R11: 0000000000000000 R12: ffffc90000007ed8
+R13: ffff888084800000 R14: 0000000000000000 R15: ffffffff89a86580
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c6368 CR3: 0000000009a79000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
