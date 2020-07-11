@@ -2,84 +2,138 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B282C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557BCC433EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5C020720
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G9rruAgC"
+	by mail.kernel.org (Postfix) with ESMTP id 3ACA520720
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgGKGun (ORCPT
+        id S1728237AbgGKGvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:50:43 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57635 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726963AbgGKGun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:50:43 -0400
-X-UUID: 611b96dc5baf4b4eb1ff4fb9afb2de9e-20200711
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dIm9QvJA4EDLMqFKpW7/RJwYmqQVAH3p/C0RPnf4QwE=;
-        b=G9rruAgCEt3Y4HNjPz42vEmiqDVG6Ef0lxlgZxa6HjN3Uy8CxcAhbsJP5cCvx4uqVKUQftBvlm13d9xXD9DnRK5JG3921mWVMPuilJmV9A9h86hHGG3DBPLk2oUnddTNBz6izhYMg1jWHffEshfM2k0YEA8hBcwfLNYi2hRBuY8=;
-X-UUID: 611b96dc5baf4b4eb1ff4fb9afb2de9e-20200711
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1840359348; Sat, 11 Jul 2020 14:50:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 11 Jul 2020 14:50:36 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 11 Jul 2020 14:50:35 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-CC:     Will Deacon <will@kernel.org>, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Sat, 11 Jul 2020 02:51:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54364 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726963AbgGKGvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 02:51:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 104F5913F15158AB43CC;
+        Sat, 11 Jul 2020 14:50:57 +0800 (CST)
+Received: from [127.0.0.1] (10.174.186.75) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Jul 2020
+ 14:50:47 +0800
+Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
+        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>,
         <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
-        <chao.hao@mediatek.com>, <ming-fan.chen@mediatek.com>
-Subject: [PATCH 06/21] iommu/io-pgtable-arm-v7s: Use ias to check the valid iova in unmap
-Date:   Sat, 11 Jul 2020 14:48:31 +0800
-Message-ID: <20200711064846.16007-7-yong.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200711064846.16007-1-yong.wu@mediatek.com>
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <20200710094420.517-3-yezhenyu2@huawei.com> <20200710183158.GE11839@gaia>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <b34e3d42-faaa-73ba-9b54-8e4017514ee0@huawei.com>
+Date:   Sat, 11 Jul 2020 14:50:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200710183158.GE11839@gaia>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QXMgdGl0bGUuDQoNClNpZ25lZC1vZmYtYnk6IFlvbmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29t
-Pg0KLS0tDQogZHJpdmVycy9pb21tdS9pby1wZ3RhYmxlLWFybS12N3MuYyB8IDIgKy0NCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0tdjdzLmMgYi9kcml2ZXJzL2lvbW11L2lvLXBn
-dGFibGUtYXJtLXY3cy5jDQppbmRleCA0MjcyZmU0ZTE3ZjQuLjAxZjJhODg3NjgwOCAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0tdjdzLmMNCisrKyBiL2RyaXZlcnMv
-aW9tbXUvaW8tcGd0YWJsZS1hcm0tdjdzLmMNCkBAIC03MTcsNyArNzE3LDcgQEAgc3RhdGljIHNp
-emVfdCBhcm1fdjdzX3VubWFwKHN0cnVjdCBpb19wZ3RhYmxlX29wcyAqb3BzLCB1bnNpZ25lZCBs
-b25nIGlvdmEsDQogew0KIAlzdHJ1Y3QgYXJtX3Y3c19pb19wZ3RhYmxlICpkYXRhID0gaW9fcGd0
-YWJsZV9vcHNfdG9fZGF0YShvcHMpOw0KIA0KLQlpZiAoV0FSTl9PTih1cHBlcl8zMl9iaXRzKGlv
-dmEpKSkNCisJaWYgKFdBUk5fT04oaW92YSA+PSAoMVVMTCA8PCBkYXRhLT5pb3AuY2ZnLmlhcykp
-KQ0KIAkJcmV0dXJuIDA7DQogDQogCXJldHVybiBfX2FybV92N3NfdW5tYXAoZGF0YSwgZ2F0aGVy
-LCBpb3ZhLCBzaXplLCAxLCBkYXRhLT5wZ2QpOw0KLS0gDQoyLjE4LjANCg==
+Hi Catalin,
+
+On 2020/7/11 2:31, Catalin Marinas wrote:
+> On Fri, Jul 10, 2020 at 05:44:20PM +0800, Zhenyu Ye wrote:
+>> -	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+>> +	if ((!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+>> +	    (end - start) >= (MAX_TLBI_OPS * stride)) ||
+>> +	    pages >= MAX_TLBI_RANGE_PAGES) {
+>>  		flush_tlb_mm(vma->vm_mm);
+>>  		return;
+>>  	}
+> 
+> I think we can use strictly greater here rather than greater or equal.
+> MAX_TLBI_RANGE_PAGES can be encoded as num 31, scale 3.
+
+Sorry, we can't.
+For a boundary value (such as 2^6), we have two way to express it
+in TLBI RANGE operations:
+1. scale = 0, num = 31.
+2. scale = 1, num = 0.
+
+I used the second way in following implementation.  However, for the
+MAX_TLBI_RANGE_PAGES, we can only use scale = 3, num = 31.
+So if use strictly greater here, ERROR will happen when range pages
+equal to MAX_TLBI_RANGE_PAGES.
+
+There are two ways to avoid this bug:
+1. Just keep 'greater or equal' here.  The ARM64 specification does
+not specify how we flush tlb entries in this case, flush_tlb_mm()
+is also a good choice for such a wide range of pages.
+2. Add check in the loop, just like: (this may cause the codes a bit ugly)
+
+	num = __TLBI_RANGE_NUM(pages, scale) - 1;
+
+	/* scale = 4, num = 0 is equal to scale = 3, num = 31. */
+	if (scale == 4 && num == 0) {
+		scale = 3;
+		num = 31;
+	}
+
+	if (num >= 0) {
+	...
+
+Which one do you prefer and how do you want to fix this error? Just
+a fix patch again?
+
+> 
+>>  
+>> -	/* Convert the stride into units of 4k */
+>> -	stride >>= 12;
+>> +	dsb(ishst);
+>>  
+>> -	start = __TLBI_VADDR(start, asid);
+>> -	end = __TLBI_VADDR(end, asid);
+>> +	/*
+>> +	 * When cpu does not support TLBI RANGE feature, we flush the tlb
+>> +	 * entries one by one at the granularity of 'stride'.
+>> +	 * When cpu supports the TLBI RANGE feature, then:
+>> +	 * 1. If pages is odd, flush the first page through non-RANGE
+>> +	 *    instruction;
+>> +	 * 2. For remaining pages: The minimum range granularity is decided
+>> +	 *    by 'scale', so we can not flush all pages by one instruction
+>> +	 *    in some cases.
+>> +	 *    Here, we start from scale = 0, flush corresponding pages
+>> +	 *    (from 2^(5*scale + 1) to 2^(5*(scale + 1) + 1)), and increase
+>> +	 *    it until no pages left.
+>> +	 */
+>> +	while (pages > 0) {
+> 
+> I did some simple checks on ((end - start) % stride) and never
+> triggered. I had a slight worry that pages could become negative (and
+> we'd loop forever since it's unsigned long) for some mismatched stride
+> and flush size. It doesn't seem like.
+> 
+
+The start and end are round_down/up in the function:
+
+	start = round_down(start, stride);
+ 	end = round_up(end, stride);
+
+So the flush size and stride will never mismatch.
+
+Thanks,
+Zhenyu
 
