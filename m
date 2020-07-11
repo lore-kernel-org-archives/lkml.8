@@ -2,124 +2,120 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DD9C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE6CC433E1
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B702076A
+	by mail.kernel.org (Postfix) with ESMTP id 94BCA20786
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 15:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594479737;
-	bh=thegBoeKlCc9Hando3InB6eZrnjks6/2imYKIUDsj1c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MeT1MVuG7DHPey/ZhSPHmYs3UQt35AB4EacCJTX4kyoEb6vFFoMe1sIcbtKAkPf0V
-	 upvAuR2AzgcQiCoV8K8RyZty4ItKvh38sEOjS5NYj6RLtKnFrUeMjU6c7+lFcBLKCZ
-	 OklPoYflUrZYaZACIyV/zzyRA19M+0zaNFTM9fww=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMRj30qE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgGKPAM (ORCPT
+        id S1728441AbgGKO77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 11:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbgGKPAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 11:00:12 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869E7207D4
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 15:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594479611;
-        bh=thegBoeKlCc9Hando3InB6eZrnjks6/2imYKIUDsj1c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bZ63pOrjr5eKUWn8dQZuyIPwOgYa2XiDtiQShZ3B8VQFebj/7fuge8r257Ks89fua
-         WKrUpevn50vtknBnCfudJ1hWRBmqbUnZpKSR4oS04cmp/hh0vFJow6/0OzDQCgjuBh
-         W8ZawIdNYMJRMFVG0TzNGXuOuFJnopL4A9iyDLn4=
-Received: by mail-oi1-f180.google.com with SMTP id t4so7332005oij.9
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 08:00:11 -0700 (PDT)
-X-Gm-Message-State: AOAM533Lec92OWFz2yJJqgVX8N/8Fmr+teyb7eO8c8gNWJlZmBjnaIu1
-        35+qxVhEWyounzkLWBFvzGHR9x0lesoV+cRqM+M=
-X-Google-Smtp-Source: ABdhPJxiA3Ng3C1QlOJteaWU820bLOUDxyG0pH+nb6rnJ5QSgMiY25GSbFC08MRYgDF5yQ1UqufwrfKAUJcRrI0KQrA=
-X-Received: by 2002:aca:5516:: with SMTP id j22mr7652467oib.47.1594479610891;
- Sat, 11 Jul 2020 08:00:10 -0700 (PDT)
+        Sat, 11 Jul 2020 10:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbgGKO77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 10:59:59 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012A5C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 07:59:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so8739697wrs.11
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 07:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=+5YJ4BXyiVlwCev/UR7kk6fTDXZ3Zt+Tj2RKUuxL+a8=;
+        b=CMRj30qE68pT3/+9gTayn6Oxa3rw+6akAmiovWC9XLMF8VgQXxMOZFuuoGYKLYCp4A
+         K5LlDsduDQhuHIZwqGaPynMi79PC3WUPu3gclwFmgrTl85ceQX9v+T7MUSt3E+Ni4mhR
+         PzHs1OqIoy/MaAUiOsRe1+iljA6ikgK8cPQJTUcQrCvvfx6l0qWxgoSuOVnQo9tj/D9M
+         Zlfg+hfCwLEH1/lAGpTXgdTughYytb6uaYSgdY6sHuQ4z5R3OOxSH+8ejyUXYLdONlGP
+         /sfrrvDytwnnz6o+BL6G4y9T8+q4lGOjVVUvBne3WwPDs404QTJgcFUWkN+pTUtNvDEf
+         1HAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=+5YJ4BXyiVlwCev/UR7kk6fTDXZ3Zt+Tj2RKUuxL+a8=;
+        b=Xv1LVzWMRL/efn1Vdqy9Rm8TJcR1/6fL2QD7al6gTMcd9goDQLHlg9yU2S0c+A/Vi5
+         Q5hphy6miNrdaolFUvR+TZcT7KUeLOrqLq3Ul8AWZfZRWMC9sDFqL67s9pE+YfoEZlwT
+         gM9W6spaArPzC5GIuSPc5QSdKQngFukqn8xweCtqGAQXEEFD/OVQqXLeZtSdgq/ye5oP
+         Ox68GHbSsFQwvnItu4eZniuv0CeAf88tFMO/izv5ek1tHr/QD9gP3G9dGe9qLeYv46xX
+         Fu4IX9XdCGSDXzJNMAWlDOVqBcp26m/sG/K17x+Pru81Us2HYDtwqJ7J5GyEG0WT2nD8
+         K6iA==
+X-Gm-Message-State: AOAM531BUJwuj2noEIEfauI/S2aQd9NNd6z8FbBXlvYPG+0UGIfGKDvt
+        GMyPLgCHkhUDP4l0wV1Bd+vWeMo=
+X-Google-Smtp-Source: ABdhPJzTCmgbsceK42zcfVRe0huxYhnfmTSIbqUca//xWYfyNJKm4Tei1PSmOI8Y4d9+upaWrmhyfw==
+X-Received: by 2002:a5d:6802:: with SMTP id w2mr69479724wru.88.1594479597634;
+        Sat, 11 Jul 2020 07:59:57 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.249.169])
+        by smtp.gmail.com with ESMTPSA id p25sm13157545wmg.39.2020.07.11.07.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 07:59:56 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 17:59:54 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] rwsem: fix commas in initialisation
+Message-ID: <20200711145954.GA1178171@localhost.localdomain>
 MIME-Version: 1.0
-References: <202007111901.282t0ZCv%lkp@intel.com> <20200711123025.GM1551@shell.armlinux.org.uk>
-In-Reply-To: <20200711123025.GM1551@shell.armlinux.org.uk>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 11 Jul 2020 17:59:59 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXG1OgFHmS2J=FODHNHgCbLWmmrAzn9jNpN2OmD9+c6__g@mail.gmail.com>
-Message-ID: <CAMj1kXG1OgFHmS2J=FODHNHgCbLWmmrAzn9jNpN2OmD9+c6__g@mail.gmail.com>
-Subject: Re: arm-linux-gnueabi-ld: section .rodata VMA overlaps section .bss VMA
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     kernel test robot <lkp@intel.com>,
-        Kees Cook <keescook@chromium.org>, kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Arnd)
+Leading comma prevents arbitrary reordering of initialisation clauses.
+The whole point of C99 initialisation is to allow any such reordering.
 
-On Sat, 11 Jul 2020 at 15:30, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> I doubt anyone is going to fix this; it's an XIP kernel, and it looks
-> like the .data and .rodata sections are correctly placed as per the
-> configuration, but for some reason the .text (and sections that follow)
-> are incorrectly placed in VMA space.  The configuration file says that
-> the kernel should start at 0x00080000, and there's no way the .text
-> VMA should be starting at 0x3f0801a0.
->
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-Note that only one of those lines has the >> prefix, and so this
-config was broken even before this patch got applied.
+ include/linux/rwsem.h |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> Unless one of the XIP using folk can debug this, I doubt there will be
-> any movement on it.  Especially as it's 5 months old...
->
-> What do we do with bugs like this that people won't fix?  Remove XIP
-> support from the kernel?
->
-
-I fail to see the point of randconfig testing for xip kernels tbh, and
-i don't think it is fair to disable xip altogether if the configs that
-those people care about still build as expected.
-
-But it would indeed be nice if we could at least get rid of these
-pointless build reports. Is there any way we can avoid xip from being
-selected by randconfig?
-
-
-> On Sat, Jul 11, 2020 at 07:05:04PM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   1df0d8960499e58963fd6c8ac75e544f2b417b29
-> > commit: f87b1c49bc675da30d8e1e8f4b60b800312c7b90 ARM: 8958/1: rename missed uaccess .fixup section
-> > date:   5 months ago
-> > config: arm-randconfig-c004-20200711 (attached as .config)
-> > compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    arm-linux-gnueabi-ld: section .data VMA [0000000040008000,00000000401e9edf] overlaps section .text VMA [000000003f0801a0,0000000040515887]
-> > >> arm-linux-gnueabi-ld: section .rodata VMA [0000000040516000,00000000409a24ee] overlaps section .bss VMA [0000000040208000,00000000409d80db]
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
->
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -66,22 +66,22 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define __RWSEM_DEP_MAP_INIT(lockname)			\
+-	, .dep_map = {					\
++	.dep_map = {					\
+ 		.name = #lockname,			\
+ 		.wait_type_inner = LD_WAIT_SLEEP,	\
+-	}
++	},
+ #else
+ # define __RWSEM_DEP_MAP_INIT(lockname)
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_RWSEMS
+-# define __DEBUG_RWSEM_INITIALIZER(lockname) , .magic = &lockname
++# define __DEBUG_RWSEM_INITIALIZER(lockname) .magic = &lockname,
+ #else
+ # define __DEBUG_RWSEM_INITIALIZER(lockname)
+ #endif
+ 
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
++#define __RWSEM_OPT_INIT(lockname) .osq = OSQ_LOCK_UNLOCKED,
+ #else
+ #define __RWSEM_OPT_INIT(lockname)
+ #endif
+@@ -90,7 +90,7 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ 	{ __RWSEM_INIT_COUNT(name),				\
+ 	  .owner = ATOMIC_LONG_INIT(0),				\
+ 	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
+-	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
++	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock),\
+ 	  __RWSEM_OPT_INIT(name)				\
+ 	  __DEBUG_RWSEM_INITIALIZER(name)			\
+ 	  __RWSEM_DEP_MAP_INIT(name) }
