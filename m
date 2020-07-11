@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956F5C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB47C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70DF42075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E1E20786
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgGKN6Q (ORCPT
+        id S1728430AbgGKN6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34436 "EHLO
+        Sat, 11 Jul 2020 09:58:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgGKN6P (ORCPT
+        with ESMTP id S1727004AbgGKN6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:58:15 -0400
+        Sat, 11 Jul 2020 09:58:21 -0400
 Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0A7C08C5DD;
-        Sat, 11 Jul 2020 06:58:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40251C08C5DD;
+        Sat, 11 Jul 2020 06:58:21 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2845FBC0CA;
-        Sat, 11 Jul 2020 13:58:10 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 3A402BC069;
+        Sat, 11 Jul 2020 13:58:19 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
+To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] usb: dwc3: Replace HTTP links with HTTPS ones
-Date:   Sat, 11 Jul 2020 15:58:04 +0200
-Message-Id: <20200711135804.19735-1-grandmaster@al2klimov.de>
+Subject: [PATCH] usb: host: xhci-plat: Replace HTTP links with HTTPS ones
+Date:   Sat, 11 Jul 2020 15:58:13 +0200
+Message-Id: <20200711135813.19798-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -83,232 +82,22 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/usb/dwc3/core.c           | 2 +-
- drivers/usb/dwc3/core.h           | 2 +-
- drivers/usb/dwc3/debug.h          | 2 +-
- drivers/usb/dwc3/debugfs.c        | 2 +-
- drivers/usb/dwc3/drd.c            | 2 +-
- drivers/usb/dwc3/dwc3-keystone.c  | 2 +-
- drivers/usb/dwc3/dwc3-of-simple.c | 2 +-
- drivers/usb/dwc3/dwc3-omap.c      | 2 +-
- drivers/usb/dwc3/dwc3-pci.c       | 2 +-
- drivers/usb/dwc3/ep0.c            | 2 +-
- drivers/usb/dwc3/gadget.c         | 2 +-
- drivers/usb/dwc3/gadget.h         | 2 +-
- drivers/usb/dwc3/host.c           | 2 +-
- drivers/usb/dwc3/io.h             | 2 +-
- drivers/usb/dwc3/trace.c          | 2 +-
- drivers/usb/dwc3/trace.h          | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/usb/host/xhci-plat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 25c686a752b0..422aea24afcd 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -2,7 +2,7 @@
- /**
-  * core.c - DesignWare USB3 DRD Controller Core file
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 013f42a2b5dc..2f04b3e42bf1 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index f6b4089bfc4a..8cd62ecd8b43 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
 @@ -2,7 +2,7 @@
  /*
-  * core.h - DesignWare USB3 DRD Core Header
+  * xhci-plat.c - xHCI host controller driver platform Bus Glue.
   *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
-index d8f600e0e88f..3d16dac4e5cc 100644
---- a/drivers/usb/dwc3/debug.h
-+++ b/drivers/usb/dwc3/debug.h
-@@ -2,7 +2,7 @@
- /**
-  * debug.h - DesignWare USB3 DRD Controller Debug Header
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/debugfs.c b/drivers/usb/dwc3/debugfs.c
-index 6d9de334e46a..4abee42841ee 100644
---- a/drivers/usb/dwc3/debugfs.c
-+++ b/drivers/usb/dwc3/debugfs.c
-@@ -2,7 +2,7 @@
- /**
-  * debugfs.c - DesignWare USB3 DRD Controller DebugFS file
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 2e483448d695..eff05ca41d6d 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -2,7 +2,7 @@
- /**
-  * drd.c - DesignWare USB3 DRD Controller Dual-role support
-  *
-- * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Roger Quadros <rogerq@ti.com>
-  */
-diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
-index 6505f7bd69e2..9a99253d5ba3 100644
---- a/drivers/usb/dwc3/dwc3-keystone.c
-+++ b/drivers/usb/dwc3/dwc3-keystone.c
-@@ -2,7 +2,7 @@
- /**
-  * dwc3-keystone.c - Keystone Specific Glue layer
-  *
-- * Copyright (C) 2010-2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2013 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: WingMan Kwok <w-kwok2@ti.com>
-  */
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index 8852fbfdead4..37e9faf8c75a 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -2,7 +2,7 @@
- /**
-  * dwc3-of-simple.c - OF glue layer for simple integrations
-  *
-- * Copyright (c) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (c) 2015 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Felipe Balbi <balbi@ti.com>
-  *
-diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
-index 8c3de2d258bf..98d2693a7fdd 100644
---- a/drivers/usb/dwc3/dwc3-omap.c
-+++ b/drivers/usb/dwc3/dwc3-omap.c
-@@ -2,7 +2,7 @@
- /**
-  * dwc3-omap.c - OMAP Specific Glue layer
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 96c05b121fac..519302b34154 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -2,7 +2,7 @@
- /**
-  * dwc3-pci.c - PCI Specific glue layer
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
-index 6dee4dabc0a4..198f9e4aaf52 100644
---- a/drivers/usb/dwc3/ep0.c
-+++ b/drivers/usb/dwc3/ep0.c
-@@ -2,7 +2,7 @@
- /*
-  * ep0.c - DesignWare USB3 DRD Controller Endpoint 0 Handling
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 80c3ef134e41..afce2f8988a7 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2,7 +2,7 @@
- /*
-  * gadget.c - DesignWare USB3 DRD Controller Gadget Framework Link
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/gadget.h b/drivers/usb/dwc3/gadget.h
-index 24dca3872022..42907dd89212 100644
---- a/drivers/usb/dwc3/gadget.h
-+++ b/drivers/usb/dwc3/gadget.h
-@@ -2,7 +2,7 @@
- /*
-  * gadget.h - DesignWare USB3 DRD Gadget Header
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index bef1c1ac2067..e195176580de 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -2,7 +2,7 @@
- /*
-  * host.c - DesignWare USB3 DRD Controller Host Glue
-  *
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  */
-diff --git a/drivers/usb/dwc3/io.h b/drivers/usb/dwc3/io.h
-index 9bbe5d4bf076..76b73b116862 100644
---- a/drivers/usb/dwc3/io.h
-+++ b/drivers/usb/dwc3/io.h
-@@ -2,7 +2,7 @@
- /**
-  * io.h - DesignWare USB3 DRD IO Header
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors: Felipe Balbi <balbi@ti.com>,
-  *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-diff --git a/drivers/usb/dwc3/trace.c b/drivers/usb/dwc3/trace.c
-index f8886f3f3c9e..1b45a9723eeb 100644
---- a/drivers/usb/dwc3/trace.c
-+++ b/drivers/usb/dwc3/trace.c
-@@ -2,7 +2,7 @@
- /**
-  * trace.c - DesignWare USB3 DRD Controller Trace Support
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Felipe Balbi <balbi@ti.com>
-  */
-diff --git a/drivers/usb/dwc3/trace.h b/drivers/usb/dwc3/trace.h
-index 4c4fc6c41d9b..da1be01637c8 100644
---- a/drivers/usb/dwc3/trace.h
-+++ b/drivers/usb/dwc3/trace.h
-@@ -2,7 +2,7 @@
- /**
-  * trace.h - DesignWare USB3 DRD Controller Trace Support
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Felipe Balbi <balbi@ti.com>
-  */
+  * A lot of code borrowed from the Linux xHCI driver.
 -- 
 2.27.0
 
