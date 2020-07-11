@@ -2,150 +2,80 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450FA20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DF720725
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 11:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgGKLbl (ORCPT
+        id S1727834AbgGKL2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 07:31:41 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:13526 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGKLbl (ORCPT
+        Sat, 11 Jul 2020 07:28:36 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:47256 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgGKL2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 07:31:41 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 11 Jul 2020 04:31:40 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jul 2020 04:31:38 -0700
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 11 Jul 2020 17:01:16 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id 5534B21515; Sat, 11 Jul 2020 17:01:15 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        rjliao@codeaurora.org, hbandi@codeaurora.org,
-        abhishekpandit@chromium.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Bug fixes for SSR
-Date:   Sat, 11 Jul 2020 17:01:12 +0530
-Message-Id: <1594467072-13332-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Sat, 11 Jul 2020 07:28:35 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 61E7A1B3FDD;
+        Sat, 11 Jul 2020 20:28:34 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-19) with ESMTPS id 06BBSXcV194079
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sat, 11 Jul 2020 20:28:34 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-19) with ESMTPS id 06BBSWtt996343
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sat, 11 Jul 2020 20:28:32 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 06BBSVpJ996342;
+        Sat, 11 Jul 2020 20:28:31 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com>
+Subject: [PATCH] fat: Fix fat_ra_init() for data clusters == 0
+References: <000000000000ebc53005aa18a1a5@google.com>
+Date:   Sat, 11 Jul 2020 20:28:31 +0900
+In-Reply-To: <000000000000ebc53005aa18a1a5@google.com> (syzbot's message of
+        "Fri, 10 Jul 2020 09:14:16 -0700")
+Message-ID: <87mu462sv4.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.During SSR for command time out if BT SoC goes to inresponsive
-state, power cycling of BT SoC was not happening.Given the fix by
-sending hw error event to reset the BT SoC.
+If data clusters == 0, fat_ra_init() calls the ->ent_blocknr() for the
+cluster beyond ->max_clusters.
 
-2.If SSR is triggered then ignore the transmit data requests to
-BT SoC until SSR is completed.
+This checks the limit before initialization to suppress the warning.
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Reported-by: syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 ---
- drivers/bluetooth/hci_qca.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ fs/fat/fatent.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 7e39546..bfebefa 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -72,7 +72,8 @@ enum qca_flags {
- 	QCA_DROP_VENDOR_EVENT,
- 	QCA_SUSPENDING,
- 	QCA_MEMDUMP_COLLECTION,
--	QCA_HW_ERROR_EVENT
-+	QCA_HW_ERROR_EVENT,
-+	QCA_SSR_TRIGGERED
- };
+diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+index bbfe18c..f7e3304 100644
+--- a/fs/fat/fatent.c	2020-07-11 19:58:41.903092419 +0900
++++ b/fs/fat/fatent.c	2020-07-11 19:58:51.545948758 +0900
+@@ -657,6 +657,9 @@ static void fat_ra_init(struct super_blo
+ 	unsigned long ra_pages = sb->s_bdi->ra_pages;
+ 	unsigned int reada_blocks;
  
- enum qca_capabilities {
-@@ -854,6 +855,13 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
- 	BT_DBG("hu %p qca enq skb %p tx_ibs_state %d", hu, skb,
- 	       qca->tx_ibs_state);
- 
-+	if (test_bit(QCA_SSR_TRIGGERED, &qca->flags)) {
-+		/* As SSR is in progress,Ignore the packets */
-+		bt_dev_dbg(hu->hdev, "SSR is in progress");
-+		kfree_skb(skb);
-+		return 0;
-+	}
++	if (fatent->entry >= ent_limit)
++		return;
 +
- 	/* Prepend skb with frame type */
- 	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
- 
-@@ -1123,6 +1131,7 @@ static int qca_controller_memdump_event(struct hci_dev *hdev,
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	skb_queue_tail(&qca->rx_memdump_q, skb);
- 	queue_work(qca->workqueue, &qca->ctrl_memdump_evt);
- 
-@@ -1481,6 +1490,7 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
- 
-@@ -1529,10 +1539,30 @@ static void qca_cmd_timeout(struct hci_dev *hdev)
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
--	if (qca->memdump_state == QCA_MEMDUMP_IDLE)
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-+		set_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
- 		qca_send_crashbuffer(hu);
--	else
--		bt_dev_info(hdev, "Dump collection is in process");
-+		qca_wait_for_dump_collection(hdev);
-+	} else if (qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
-+		/* Let us wait here until memory dump collected or
-+		 * memory dump timer expired.
-+		 */
-+		bt_dev_info(hdev, "waiting for dump to complete");
-+		qca_wait_for_dump_collection(hdev);
-+	}
-+
-+	mutex_lock(&qca->hci_memdump_lock);
-+	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
-+		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
-+		if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
-+			/* Inject hw error event to reset the device
-+			 * and driver.
-+			 */
-+			hci_reset_dev(hu->hdev);
-+		}
-+	}
-+	mutex_unlock(&qca->hci_memdump_lock);
- }
- 
- static int qca_wcn3990_init(struct hci_uart *hu)
-@@ -1643,6 +1673,8 @@ static int qca_setup(struct hci_uart *hu)
- 	if (ret)
- 		return ret;
- 
-+	clear_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+
- 	if (qca_is_wcn399x(soc_type)) {
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+ 	if (ra_pages > sb->s_bdi->io_pages)
+ 		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+ 	reada_blocks = ra_pages << (PAGE_SHIFT - sb->s_blocksize_bits + 1);
+_
