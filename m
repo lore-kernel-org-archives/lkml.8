@@ -7,33 +7,29 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB47C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381BFC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31E1E20786
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F199220786
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 13:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgGKN6W (ORCPT
+        id S1728455AbgGKN6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgGKN6V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:58:21 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40251C08C5DD;
-        Sat, 11 Jul 2020 06:58:21 -0700 (PDT)
+        Sat, 11 Jul 2020 09:58:35 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:60026 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727004AbgGKN6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 09:58:33 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 3A402BC069;
-        Sat, 11 Jul 2020 13:58:19 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 674A2BC078;
+        Sat, 11 Jul 2020 13:58:31 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+To:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] usb: host: xhci-plat: Replace HTTP links with HTTPS ones
-Date:   Sat, 11 Jul 2020 15:58:13 +0200
-Message-Id: <20200711135813.19798-1-grandmaster@al2klimov.de>
+Subject: [PATCH] usb: typec: Replace HTTP links with HTTPS ones
+Date:   Sat, 11 Jul 2020 15:58:25 +0200
+Message-Id: <20200711135825.19862-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -82,22 +78,36 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/usb/host/xhci-plat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/typec/tps6598x.c   | 2 +-
+ drivers/usb/typec/ucsi/Kconfig | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index f6b4089bfc4a..8cd62ecd8b43 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -2,7 +2,7 @@
+diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
+index b7c9fe5caabe..3db33bb622c3 100644
+--- a/drivers/usb/typec/tps6598x.c
++++ b/drivers/usb/typec/tps6598x.c
+@@ -100,7 +100,7 @@ struct tps6598x {
+ 
  /*
-  * xhci-plat.c - xHCI host controller driver platform Bus Glue.
-  *
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-  *
-  * A lot of code borrowed from the Linux xHCI driver.
+  * Max data bytes for Data1, Data2, and other registers. See ch 1.3.2:
+- * http://www.ti.com/lit/ug/slvuan1a/slvuan1a.pdf
++ * https://www.ti.com/lit/ug/slvuan1a/slvuan1a.pdf
+  */
+ #define TPS_MAX_LEN	64
+ 
+diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
+index 15c2ac7db02d..2192d7c4fec7 100644
+--- a/drivers/usb/typec/ucsi/Kconfig
++++ b/drivers/usb/typec/ucsi/Kconfig
+@@ -18,7 +18,7 @@ config TYPEC_UCSI
+ 	  for every supported interface method.
+ 
+ 	  The UCSI specification can be downloaded from:
+-	  http://www.intel.com/content/www/us/en/io/universal-serial-bus/usb-type-c-ucsi-spec.html
++	  https://www.intel.com/content/www/us/en/io/universal-serial-bus/usb-type-c-ucsi-spec.html
+ 
+ 	  To compile the driver as a module, choose M here: the module will be
+ 	  called typec_ucsi.
 -- 
 2.27.0
 
