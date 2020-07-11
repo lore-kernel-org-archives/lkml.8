@@ -2,152 +2,233 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3EE20725
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C05206F0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 06:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgGKGhb (ORCPT
+        id S1728052AbgGKGno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 02:37:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44116 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726963AbgGKGhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 02:37:31 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9D5481A42142F8C833DA;
-        Sat, 11 Jul 2020 14:37:25 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.214) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Jul 2020
- 14:37:18 +0800
-Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
- tmpfile
-To:     Richard Weinberger <richard@nod.at>
-CC:     Richard Weinberger <richard.weinberger@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        yi zhang <yi.zhang@huawei.com>
-References: <20200701112643.726986-1-chengzhihao1@huawei.com>
- <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
- <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
- <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
- <963fa5c8-414f-783f-871e-47e751b54d87@huawei.com>
- <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
-Date:   Sat, 11 Jul 2020 14:37:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 11 Jul 2020 02:43:44 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:39900 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbgGKGno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 02:43:44 -0400
+Received: from localhost.localdomain ([93.22.151.150])
+        by mwinf5d86 with ME
+        id 1ije2300L3Ewh7h03ijfPk; Sat, 11 Jul 2020 08:43:40 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Jul 2020 08:43:40 +0200
+X-ME-IP: 93.22.151.150
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     xx@mail.com
+Cc:     list@mail.com, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] rsxx: switch from 'pci_free_consistent()' to 'dma_free_coherent()'
+Date:   Sat, 11 Jul 2020 08:43:36 +0200
+Message-Id: <20200711064336.247502-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.214]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/7/7 20:47, Richard Weinberger 写道:
-> ----- Ursprüngliche Mail -----
->>>> Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix
->>>> O_TMPFILE corner case in ubifs_link()") wanted to fix.
->>>> I think orphan area is used to remind filesystem don't forget to delete
->>>> inodes (whose nlink is 0) in next unclean rebooting. Generally, the file
->>>> system is not corrupted caused by replaying orphan nodes.
->>>> Ralph reported a filesystem corruption in combination with overlayfs.
->>>> Can you tell me the details about that problem? Thanks.
->>> On my test bed I didn't see a fs corruption, what I saw was a failing orphan
->>> self test while playing with O_TMPFILE and linkat().
->> Do we have a reproducer, or can I get the fail testcase? Is it a xfstest
->> case?
-> I think xfstests triggered it, yes.
-> Later today I can check. :)
->
-> Thanks,
-> //richard
->
-> .
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-I think I have found the testcases, overlay/006 and overlay/041.
+The patch has been generated with the coccinelle script bellow.
+It has been compile tested.
 
-The 'mv' and 'rm' operations will put lowertestfile into orphan list 
-twice, so we must reseve the orphan deletion operation in ubifs_link(), 
-otherwise the testcase fails and we will see the following msg:
-
-   overlay/006 2s ... - output mismatch (see 
-/root/git/xfstests-dev/results//overlay/006.out.bad)
-     --- tests/overlay/006.out    2020-07-07 21:42:57.737000000 +0800
-     +++ /root/git/xfstests-dev/results//overlay/006.out.bad 2020-07-11 
-14:31:55.340000000 +0800
-     @@ -1,2 +1,4 @@
-      QA output created by 006
-      Silence is golden
-     +rm: cannot remove 
-'/tmp/scratch/ovl-mnt/uppertestdir/lowertestfile': Invalid argument
-     +lowertestfile
-     ...
-
-   [  382.258210] UBIFS error (ubi0:1 pid 11896): orphan_add [ubifs]: 
-orphaned twice
-   [  382.352535] UBIFS error (ubi0:1 pid 11930): free_orphans [ubifs]: 
-orphan list not empty at unmount
+This also aligns code with what is in use in '/rsxx/dma.c'
 
 
-So, how about moving ubifs_delete_orphan() after ubifs_jnl_update() in 
-function ubifs_link(). Following modifications applied in linux-5.8 has 
-been tested by overlay/041, overlay/006 and  other tmpfile cases 
-(generic/531, generic/530, generic/509, generic/389, generic/004).
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
-diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-index ef85ec167a84..fd4443a5e8c6 100644
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -722,11 +722,6 @@ static int ubifs_link(struct dentry *old_dentry, 
-struct inode *dir,
-                 goto out_fname;
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
 
-         lock_2_inodes(dir, inode);
--
--       /* Handle O_TMPFILE corner case, it is allowed to link a 
-O_TMPFILE. */
--       if (inode->i_nlink == 0)
--               ubifs_delete_orphan(c, inode->i_ino);
--
-inc_nlink(inode);
-ihold(inode);
-         inode->i_ctime = current_time(inode);
-@@ -736,6 +731,11 @@ static int ubifs_link(struct dentry *old_dentry, 
-struct inode *dir,
-         err = ubifs_jnl_update(c, dir, &nm, inode, 0, 0);
-         if (err)
-                 goto out_cancel;
-+
-+       /* Handle O_TMPFILE corner case, it is allowed to link a 
-O_TMPFILE. */
-+       if (inode->i_nlink == 1)
-+               ubifs_delete_orphan(c, inode->i_ino);
-+
-         unlock_2_inodes(dir, inode);
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
 
-         ubifs_release_budget(c, &req);
-@@ -747,8 +747,6 @@ static int ubifs_link(struct dentry *old_dentry, 
-struct inode *dir,
-         dir->i_size -= sz_change;
-         dir_ui->ui_size = dir->i_size;
-drop_nlink(inode);
--       if (inode->i_nlink == 0)
--               ubifs_add_orphan(c, inode->i_ino);
-         unlock_2_inodes(dir, inode);
-         ubifs_release_budget(c, &req);
-iput(inode);
---
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
 
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+
+For an example of code used in '/rsxx/dma.c', see:
+   https://elixir.bootlin.com/linux/v5.7.8/source/drivers/block/rsxx/dma.c#L951
+---
+ drivers/block/rsxx/core.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
+index 9230f453bb8b..e631749e14ca 100644
+--- a/drivers/block/rsxx/core.c
++++ b/drivers/block/rsxx/core.c
+@@ -562,13 +562,15 @@ static int rsxx_eeh_frozen(struct pci_dev *dev)
+ 
+ 	for (i = 0; i < card->n_targets; i++) {
+ 		if (card->ctrl[i].status.buf)
+-			pci_free_consistent(card->dev, STATUS_BUFFER_SIZE8,
+-					    card->ctrl[i].status.buf,
+-					    card->ctrl[i].status.dma_addr);
++			dma_free_coherent(&card->dev->dev,
++					  STATUS_BUFFER_SIZE8,
++					  card->ctrl[i].status.buf,
++					  card->ctrl[i].status.dma_addr);
+ 		if (card->ctrl[i].cmd.buf)
+-			pci_free_consistent(card->dev, COMMAND_BUFFER_SIZE8,
+-					    card->ctrl[i].cmd.buf,
+-					    card->ctrl[i].cmd.dma_addr);
++			dma_free_coherent(&card->dev->dev,
++					  COMMAND_BUFFER_SIZE8,
++					  card->ctrl[i].cmd.buf,
++					  card->ctrl[i].cmd.dma_addr);
+ 	}
+ 
+ 	return 0;
+@@ -711,15 +713,15 @@ static pci_ers_result_t rsxx_slot_reset(struct pci_dev *dev)
+ failed_hw_buffers_init:
+ 	for (i = 0; i < card->n_targets; i++) {
+ 		if (card->ctrl[i].status.buf)
+-			pci_free_consistent(card->dev,
+-					STATUS_BUFFER_SIZE8,
+-					card->ctrl[i].status.buf,
+-					card->ctrl[i].status.dma_addr);
++			dma_free_coherent(&card->dev->dev,
++					  STATUS_BUFFER_SIZE8,
++					  card->ctrl[i].status.buf,
++					  card->ctrl[i].status.dma_addr);
+ 		if (card->ctrl[i].cmd.buf)
+-			pci_free_consistent(card->dev,
+-					COMMAND_BUFFER_SIZE8,
+-					card->ctrl[i].cmd.buf,
+-					card->ctrl[i].cmd.dma_addr);
++			dma_free_coherent(&card->dev->dev,
++					  COMMAND_BUFFER_SIZE8,
++					  card->ctrl[i].cmd.buf,
++					  card->ctrl[i].cmd.dma_addr);
+ 	}
+ failed_hw_setup:
+ 	rsxx_eeh_failure(dev);
+-- 
+2.25.1
 
