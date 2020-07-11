@@ -2,83 +2,221 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 22:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA31AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D4C206A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 22:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BB4206A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 23:19:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Tu+br38l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUg3QFcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgGKW2o (ORCPT
+        id S1727906AbgGKXTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 18:28:44 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:35771 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbgGKW2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 18:28:44 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c50e4350
-        for <linux-kernel@vger.kernel.org>;
-        Sat, 11 Jul 2020 22:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=tHmjuOtOeEXsejtJ+4YLouIDGXo=; b=Tu+br3
-        8lYRYCdGLXuMiU7bnfcwpstjH2v/TBBR/aImRkKazp0MZAo4EULtofn9IK8lD8li
-        GCso5n28ntNDDRYzyh39cEPeZsgH284ZaKcG2l+EKU4FkFLVaIn757ZJuYzZd0Xo
-        QICZ/lkW9kEkoyhnTNxNGy2RPmLDsCxOkFNtEk+EogXsL/Mm0uC7n6GK7fzkkOEe
-        Hs6wRCfCoYWP/1TMUrPCV3aD5HLxC2ZV69Jllll7nqLrJrAyoKxtQr+kxD38twjd
-        haxHlhfUmzr7K4TF9PgmLl/N/m+lN5gPAbWe8aZuLFvt9xUJsgvKKnoXWzFBPio0
-        XevjW0/4f0kQI01w==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c9b6a749 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Sat, 11 Jul 2020 22:07:25 +0000 (UTC)
-Received: by mail-io1-f52.google.com with SMTP id p205so1175879iod.8
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 15:28:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5329jqfqvEKi8wjfmHcVMTzjbijXFSQOaFGCSpI5wLwUtEY4uyz9
-        wD4tnC9etAHNlbcSACsliMem4bQ6047yhL6B1GA=
-X-Google-Smtp-Source: ABdhPJy/LAe4LHsK4Je/M460Rz6W+u43TcvVtnGuQAJ4f1vZHX7k9NwI+f9SQsoj0nCK3/3J7zN6E6gZ74aLr0DQrMI=
-X-Received: by 2002:a05:6638:dcf:: with SMTP id m15mr85722623jaj.86.1594506520979;
- Sat, 11 Jul 2020 15:28:40 -0700 (PDT)
+        Sat, 11 Jul 2020 19:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKXTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jul 2020 19:19:43 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4129C08C5DD;
+        Sat, 11 Jul 2020 16:19:42 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so10195386ejc.8;
+        Sat, 11 Jul 2020 16:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mStXnp/SmkzvT0Fl4Wmo68hNfOn131BHCllSW8c4OE8=;
+        b=tUg3QFcMP3HvbwT0/5qBEzoXID4WYdW5CbjRCt/pfzYuexj+Y525yp+QObN0QIdS6e
+         owp2y4/ToJMnSFZXklLVQQYP7eZ6n6w1AZpFWYX46zOV6XVnaIqt6XgCLU3M779f98op
+         Fj8YrF0N+X5FicbbLKz8Egxshpg6UNBAUZy0uPW1o88PlGTnuI5AkqYbZMKHr9fykYOy
+         H8t7zUd95MY6iYwltcXethpLWO9Cw3/yKHfbos5sHjyIYdCIoYwimLgUeW+/83ezIXgu
+         e/+9OOaT0wOX+6CxYwAtKq+pcPlufFrzpCh0zzSXJLkiSeu8O2ilp0EPN57+CQKsPJpJ
+         Vtqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mStXnp/SmkzvT0Fl4Wmo68hNfOn131BHCllSW8c4OE8=;
+        b=iq4rtf5uRgym7d0YK7dgFXcp5LrYhCiU1Q3gY6WQK7PP3ZaF1G+WMzdiDpb7qPRwcd
+         2rllF/EROcPvaB5I/WVPU4FlVdBSXsX1pZ3kqH4rvbyOwoTxWjMs4X9IFvTNWuPmmSvD
+         BWgKsJoo/EFyc/UdUBTeSMJCmSDfNsVvdTO0kpevW+QmW2w0R5mJqbvmex6VLDKOotvP
+         EuYCSluUVpn9YLwdstWwB6gsgHCA5FDVrKkv+svbRRYKHL/sbKfEXUbosGDQxc4YD/DL
+         e5nOsI8Ms+kfsNEzHeW77wSCMYUD2m+pfjOyTDdUOFa8fIRd7YdclurI7D3OUdcxO0If
+         IJZQ==
+X-Gm-Message-State: AOAM531hs6DHrwI21eAQYU4rYxTwr1QpLAIuOsYqfOfigZ0v3dchCFVu
+        BWj9ckT7PgD/VyZiA50Y9kA=
+X-Google-Smtp-Source: ABdhPJx/FqQRkidC7vfAzlHTR1kPS/Dy8FM97IHngdxCJQW93VMmXdVwh/4FfI4hM0i76/wOJfyFFQ==
+X-Received: by 2002:a17:906:7709:: with SMTP id q9mr10249158ejm.123.1594509581172;
+        Sat, 11 Jul 2020 16:19:41 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id n9sm7983490edr.46.2020.07.11.16.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 16:19:40 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 02:19:37 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
+ devices
+Message-ID: <20200711231937.wu2zrm5spn7a6u2o@skbuf>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200711120842.2631-1-sorganov@gmail.com>
 MIME-Version: 1.0
-References: <20200622030222.1370098-1-Jason@zx2c4.com>
-In-Reply-To: <20200622030222.1370098-1-Jason@zx2c4.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sat, 11 Jul 2020 16:28:29 -0600
-X-Gmail-Original-Message-ID: <CAHmME9o84kCsK=J-c59gP9RhhzApkwMeh9Y95UeRG8Cs-2ED=g@mail.gmail.com>
-Message-ID: <CAHmME9o84kCsK=J-c59gP9RhhzApkwMeh9Y95UeRG8Cs-2ED=g@mail.gmail.com>
-Subject: Re: [PATCH] Revert "kernel/printk: add kmsg SEEK_CUR handling"
-To:     Petr Mladek <pmladek@suse.com>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Bruno Meneguele <bmeneg@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200711120842.2631-1-sorganov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 9:02 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> This commit broke userspace. Bash uses ESPIPE to determine whether or
-> not the file should be read using "unbuffered I/O", which means reading
-> 1 byte at a time instead of 128 bytes at a time. I used to use bash to
-> read through kmsg in a really quite nasty way:
->
->     while read -t 0.1 -r line 2>/dev/null || [[ $? -ne 142 ]]; do
->        echo "SARU $line"
->     done < /dev/kmsg
->
-> This will show all lines that can fit into the 128 byte buffer, and skip
-> lines that don't. That's pretty awful, but at least it worked.
+Hi Sergey,
 
-FYI, bash finally bumped its read buffer up to 4k, which actually
-makes reading /dev/kmsg less awful than previously thought:
-http://git.savannah.gnu.org/cgit/bash.git/commit/?id=6edcd70089d71ee8c17bf3298527054b3223be9f
-This is probably too mundane to warrant an email, but in case somebody
-finds this thread in the future, voila.
+On Sat, Jul 11, 2020 at 03:08:42PM +0300, Sergey Organov wrote:
+> Fix support for external PTP-aware devices such as DSA or PTP PHY:
+> 
+> Make sure we never time stamp tx packets when hardware time stamping
+> is disabled.
+> 
+> Check for PTP PHY being in use and then pass ioctls related to time
+> stamping of Ethernet packets to the PTP PHY rather than handle them
+> ourselves. In addition, disable our own hardware time stamping in this
+> case.
+> 
+> Fixes: 6605b73 ("FEC: Add time stamping code and a PTP hardware clock")
+
+Please use a 12-character sha1sum. Try to use the "pretty" format
+specifier I gave you in the original thread, it saves you from counting,
+and also from people complaining once it gets merged:
+
+https://www.google.com/search?q=stephen+rothwell+%22fixes+tag+needs+some+work%22
+
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+> ---
+> 
+> v2:
+>   - Extracted from larger patch series
+>   - Description/comments updated according to discussions
+>   - Added Fixes: tag
+> 
+>  drivers/net/ethernet/freescale/fec.h      |  1 +
+>  drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
+>  drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
+>  3 files changed, 30 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+> index d8d76da..832a217 100644
+> --- a/drivers/net/ethernet/freescale/fec.h
+> +++ b/drivers/net/ethernet/freescale/fec.h
+> @@ -590,6 +590,7 @@ struct fec_enet_private {
+>  void fec_ptp_init(struct platform_device *pdev, int irq_idx);
+>  void fec_ptp_stop(struct platform_device *pdev);
+>  void fec_ptp_start_cyclecounter(struct net_device *ndev);
+> +void fec_ptp_disable_hwts(struct net_device *ndev);
+>  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
+>  int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
+>  
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index 3982285..cc7fbfc 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
+>  			ndev->stats.tx_bytes += skb->len;
+>  		}
+>  
+> -		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+> -			fep->bufdesc_ex) {
+> +		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
+> +		 * are to time stamp the packet, so we still need to check time
+> +		 * stamping enabled flag.
+> +		 */
+> +		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
+> +			     fep->hwts_tx_en) &&
+> +		    fep->bufdesc_ex) {
+>  			struct skb_shared_hwtstamps shhwtstamps;
+>  			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
+>  
+> @@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
+>  		return -ENODEV;
+>  
+>  	if (fep->bufdesc_ex) {
+> -		if (cmd == SIOCSHWTSTAMP)
+> -			return fec_ptp_set(ndev, rq);
+> -		if (cmd == SIOCGHWTSTAMP)
+> -			return fec_ptp_get(ndev, rq);
+> +		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
+
+I thought we were in agreement that FEC does not support PHY
+timestamping at this point, and this patch would only be fixing DSA
+switches (even though PHYs would need this fixed too, when support is
+added for them)? I would definitely not introduce support (and
+incomplete, at that) for a new feature in a bugfix patch.
+
+But it looks like we aren't.
+
+> +
+> +		if (cmd == SIOCSHWTSTAMP) {
+> +			if (use_fec_hwts)
+> +				return fec_ptp_set(ndev, rq);
+> +			fec_ptp_disable_hwts(ndev);
+> +		} else if (cmd == SIOCGHWTSTAMP) {
+> +			if (use_fec_hwts)
+> +				return fec_ptp_get(ndev, rq);
+> +		}
+>  	}
+>  
+>  	return phy_mii_ioctl(phydev, rq, cmd);
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
+> index 945643c..f8a592c 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +/**
+> + * fec_ptp_disable_hwts - disable hardware time stamping
+> + * @ndev: pointer to net_device
+> + */
+> +void fec_ptp_disable_hwts(struct net_device *ndev)
+
+This is not really needed, is it?
+- PHY ability of hwtstamping does not change across the runtime of the
+  kernel (or do you have a "special" one where it does?)
+- The initial values for hwts_tx_en and hwts_rx_en are already 0
+- There is no code path for which it is possible for hwts_tx_en or
+  hwts_rx_en to have been non-zero prior to this call making them zero.
+
+It is just "to be sure", in a very non-necessary way.
+
+But nonetheless, it shouldn't be present in this patch either way, due
+to the fact that one patch should have one topic only, and the topic of
+this patch should be solving a clearly defined bug.
+
+> +{
+> +	struct fec_enet_private *fep = netdev_priv(ndev);
+> +
+> +	fep->hwts_tx_en = 0;
+> +	fep->hwts_rx_en = 0;
+> +}
+> +
+>  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
+>  {
+>  	struct fec_enet_private *fep = netdev_priv(ndev);
+> -- 
+> 2.10.0.1.g57b01a3
+> 
+
+Thanks,
+-Vladimir
