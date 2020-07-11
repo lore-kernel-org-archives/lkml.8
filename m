@@ -2,253 +2,210 @@ Return-Path: <SRS0=TDCE=AW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD85C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2BD82076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C3A2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jul 2020 12:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szfGIZb/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEaKL+pO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgGKMfu (ORCPT
+        id S1728209AbgGKMhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jul 2020 08:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        Sat, 11 Jul 2020 08:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgGKMft (ORCPT
+        with ESMTP id S1726502AbgGKMhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jul 2020 08:35:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE812C08C5DD;
-        Sat, 11 Jul 2020 05:35:49 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w17so3344630ply.11;
-        Sat, 11 Jul 2020 05:35:49 -0700 (PDT)
+        Sat, 11 Jul 2020 08:37:34 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F807C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:37:34 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m9so3768378pfh.0
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jul 2020 05:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=36WcEQAUH1mKZZkQq7Ag/oNpXtMLgwjbol+RbIVU1ME=;
-        b=szfGIZb/K3Wsqmw1uVWSAPepQUrayVwnAQwtLFRXbVb8sJJ0/TutnVaczxzXRIRgPy
-         7XDb3zLW88nICz7hS1VsY8g2jA2hnEgjzPgvMBmwsWeSGw57NuC/dytPw8HfTFyMAoCk
-         JsoK/vF7UZ1pVLupcJ1zmYH7FbP3JOttpmyZoC8aFF7kHDRiJtI1cxHUcNI/2yUZFuaA
-         45MmS5uahTscYkCzsRYP9DRH+ouuFf9mnZsPSvQZM2eUWwLiYxLDYkPJLDhhne/sdqnX
-         x9TBPn0a3JYBduGG1kLt9W1a/VcBifv2Y8gV2zHHeAp9gmWHosCD7z753TeUR63mUHg1
-         Zg0A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ja2u/aTH0QYUI+aOka8Hx8/x8jsy05eo2BYAUZcjGF0=;
+        b=cEaKL+pOBerfmPoBsOViPTFvVm0Zxt7177Srgy7ciPMn5Dy2LZOidFFyHRJVOZWlJS
+         jGtfA02Pu+Bkmdlw5MyKqATYFlS8dlZhU9VyHCMzn5GdjQX8X6ZuF6P7k+DA73rqvLcH
+         6JgT02fgZtrn4DFIma69ccMb6FOZXv1bvL3TEiwDhpriwrMhjfJkvnJjBXXFnMXLK3P9
+         ebKv7wvg4L226CoD4+Q8BQ/Wt5TV/hUrw1/YQpzicBNJRBZOKoDJEeJUB1ytRB6TUpda
+         yQG5g3GPLhozlSdRy6OWQ5p8UypJRsNsY8cy7R8UAIKgi2awjpz7+4lIxcAx/J2nRxif
+         ilFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=36WcEQAUH1mKZZkQq7Ag/oNpXtMLgwjbol+RbIVU1ME=;
-        b=FKjT86+aV0whqXQjBblnkEQELsNEMJQ76SdcL65AIrFe91ztI5mdbyY+bPYu4G5w3b
-         dUOkltBaT+MHsXZr6K8bcHFonsFMvbY245gdnacGn/9jyhgv+pll+YCXVG3JrZvs11J3
-         9MAXp92TGhTtAVv6cZ7I9z2k+sgC+QScZoNFeuMeQvsuuOL1Pe+1HuKhsIvbQm3wwTD7
-         Lr0vEXPKKPa0aYhqBH3s/pWm/wC0uGb7Ikeo2bdwY02vjqmJcSOcE13sxd6nz2v0dM9+
-         mL14cJI50GwtVW/Sy/u58nqKBPZbH5yT9XSEvmxUAm6pVhEXqbfpgqmidhIvf25+dKnq
-         0mvA==
-X-Gm-Message-State: AOAM530n6+W4ncS4f0/gpVFf9Vkiejk0Prdn/2+QndluzUIxFAgYBCH+
-        ySuqZ8Z7Dmekw9EGQvuSKrU=
-X-Google-Smtp-Source: ABdhPJzcy7LYLPaz+ONUlYoEzAUwBeSvrHUypYHJNfM7aQFTO4/iqIhcXb5yOEYYYZWq/U12uHbWPA==
-X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr58265738plt.75.1594470949240;
-        Sat, 11 Jul 2020 05:35:49 -0700 (PDT)
-Received: from blackclown ([103.88.82.158])
-        by smtp.gmail.com with ESMTPSA id b24sm8601682pgn.8.2020.07.11.05.35.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Jul 2020 05:35:48 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 18:05:33 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     gregkh@linuxfoundation.org, abbotti@mev.co.uk,
-        hsweeten@visionengravers.com
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: comedi: s626: Remove pci-dma-compat wrapper APIs.
-Message-ID: <20200711123533.GA15038@blackclown>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ja2u/aTH0QYUI+aOka8Hx8/x8jsy05eo2BYAUZcjGF0=;
+        b=k60ghXJF+Q7aK+5knW4lLbS3H6963RgV06farauh1fmgplKTXyvYbWtBWFo6KOykUz
+         OUooX0uafhwnNeMHMRm3YHIru8GLW3maCRv5gIGNcYxNd2usCI0L91Wudm/0ujW3BNqB
+         De5x7+6hrTIoYhEQgXpOwEl66e/PJRI7EipRyxUA1aV1k2yWCciBqRUyuRX/a1zjfx3k
+         Y2mZH6fLI3U7+FsR+kg04H06SYekbEiljN5GfGQoyZFVk/J7g+QL553acgWiPcP7hYIN
+         DxxN0xmJU5WWluNOLJyltM6n4rY7MHcAodo6yvOhMeESZiJgztUBmwagOlZ+9RvEHZ0n
+         yWsg==
+X-Gm-Message-State: AOAM533ZG2aKqAAyR8fknD2epzKUl+Q748efrUJ1htTpBGmL0KT8wz38
+        pj1lEuCDVrMFm/oCGYSsljI=
+X-Google-Smtp-Source: ABdhPJwQddKQLxHwDNXd6m70yhxZIJ3RHF4VS2bbCFxLJ58507FqgW51TIv4z5A2IfIws7bBvZvXKg==
+X-Received: by 2002:a65:6703:: with SMTP id u3mr58633040pgf.254.1594471053983;
+        Sat, 11 Jul 2020 05:37:33 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id c2sm8558777pgk.77.2020.07.11.05.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 05:37:32 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 20:37:25 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 08/17] perf: util: add general function to parse
+ sublevel options
+Message-ID: <20200711123725.sojcctyvzyxzlfzs@mail.google.com>
+References: <20200710134322.15400-1-changbin.du@gmail.com>
+ <20200710134322.15400-9-changbin.du@gmail.com>
+ <CAM9d7ciuzqbBb+POeuiFh-KOFKKzi7LOC6r2vu=WiQ_5tMe7Zw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAM9d7ciuzqbBb+POeuiFh-KOFKKzi7LOC6r2vu=WiQ_5tMe7Zw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 11:29:49PM +0900, Namhyung Kim wrote:
+> On Fri, Jul 10, 2020 at 10:44 PM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > This factors out a general function perf_parse_sublevel_options() to parse
+> > sublevel options. The 'sublevel' options is something like the '--debug'
+> > options which allow more sublevel options.
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > ---
+> > v2: add util/parse-sublevel-options.c
+> > ---
+> [snip]
+> > diff --git a/tools/perf/util/parse-sublevel-options.c b/tools/perf/util/parse-sublevel-options.c
+> > new file mode 100644
+> > index 000000000000..39798568547c
+> > --- /dev/null
+> > +++ b/tools/perf/util/parse-sublevel-options.c
+> > @@ -0,0 +1,63 @@
+> > +#include <stdlib.h>
+> > +#include <stdint.h>
+> > +#include <string.h>
+> > +#include <stdio.h>
+> > +
+> > +#include "util/debug.h"
+> > +#include "util/parse-sublevel-options.h"
+> > +
+> > +static int parse_one_sublevel_option(const char *str,
+> > +                                    struct sublevel_option *opts)
+> > +{
+> > +       struct sublevel_option *opt = &opts[0];
+> > +       char *vstr, *s = strdup(str);
+> > +       int v = 1;
+> 
+> I know you just copied the code, but let's add a check for
+> the return value of strdup().
+>
+yes, the 's' should be checked here.
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Also I think you can just use the opts pointer..
+> 
+For this, personally I prefer to opt as it's singular form. Because we are
+dealing with single element.
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
+> 
+> > +
+> > +       vstr = strchr(s, '=');
+> > +       if (vstr)
+> > +               *vstr++ = 0;
+> > +
+> > +       while (opt->name) {
+> > +               if (!strcmp(s, opt->name))
+> > +                       break;
+> > +               opt++;
+> > +       }
+> > +
+> > +       if (!opt->name) {
+> > +               pr_err("Unknown option name '%s'\n", s);
+> > +               free(s);
+> > +               return -1;
+> > +       }
+> > +
+> > +       if (vstr)
+> > +               v = atoi(vstr);
+> > +
+> > +       *opt->value_ptr = v;
+> > +       free(s);
+> > +       return 0;
+> > +}
+> > +
+> > +/* parse options like --foo a=<n>,b,c... */
+> > +int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts)
+> > +{
+> > +       char *s = strdup(str);
+> > +       char *p = NULL;
+> > +       int ret;
+> > +
+> > +       if (!s)
+> > +               return -1;
+> > +
+> > +       p = strtok(s, ",");
+> > +       while (p) {
+> > +               ret = parse_one_sublevel_option(p, opts);
+> > +               if (ret) {
+> > +                       free(s);
+> > +                       return ret;
+> > +               }
+> > +
+> > +               p = strtok(NULL, ",");
+> > +       }
+> > +
+> > +       free(s);
+> > +       return 0;
+> > +}
+> > diff --git a/tools/perf/util/parse-sublevel-options.h b/tools/perf/util/parse-sublevel-options.h
+> > new file mode 100644
+> > index 000000000000..9b9efcc2aaad
+> > --- /dev/null
+> > +++ b/tools/perf/util/parse-sublevel-options.h
+> > @@ -0,0 +1,11 @@
+> > +#ifndef _PERF_PARSE_SUBLEVEL_OPTIONS_H
+> > +#define _PERF_PARSE_SUBLEVEL_OPTIONS_H
+> > +
+> > +struct sublevel_option {
+> > +       const char *name;
+> > +       int *value_ptr;
+> > +};
+> > +
+> > +int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts);
+> > +
+> > +#endif
+> > \ No newline at end of file
+> 
+> Please add a newline at the end.
+> 
+> Thanks
+> Namhyung
+> 
+> 
+> > --
+> > 2.25.1
+> >
 
-The patch has been generated with the coccinelle script below
-and compile-tested.
-
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
-
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, (enum dma_data_direction)E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
-	This change is proposed by Christoph Hellwig <hch@infradead.org>
-	in the post https://marc.info/?l=3Dkernel-janitors&m=3D158745678307186&w=
-=3D4
-	on kernel-janitors Mailing List.
-
- drivers/staging/comedi/drivers/s626.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/staging/comedi/drivers/s626.c b/drivers/staging/comedi=
-/drivers/s626.c
-index 084a8e7b9fc2..c159416662fd 100644
---- a/drivers/staging/comedi/drivers/s626.c
-+++ b/drivers/staging/comedi/drivers/s626.c
-@@ -2130,13 +2130,15 @@ static int s626_allocate_dma_buffers(struct comedi_=
-device *dev)
- 	void *addr;
- 	dma_addr_t appdma;
-=20
--	addr =3D pci_alloc_consistent(pcidev, S626_DMABUF_SIZE, &appdma);
-+	addr =3D dma_alloc_coherent(&pcidev->dev, S626_DMABUF_SIZE, &appdma,
-+				  GFP_ATOMIC);
- 	if (!addr)
- 		return -ENOMEM;
- 	devpriv->ana_buf.logical_base =3D addr;
- 	devpriv->ana_buf.physical_base =3D appdma;
-=20
--	addr =3D pci_alloc_consistent(pcidev, S626_DMABUF_SIZE, &appdma);
-+	addr =3D dma_alloc_coherent(&pcidev->dev, S626_DMABUF_SIZE, &appdma,
-+				  GFP_ATOMIC);
- 	if (!addr)
- 		return -ENOMEM;
- 	devpriv->rps_buf.logical_base =3D addr;
-@@ -2154,13 +2156,13 @@ static void s626_free_dma_buffers(struct comedi_dev=
-ice *dev)
- 		return;
-=20
- 	if (devpriv->rps_buf.logical_base)
--		pci_free_consistent(pcidev, S626_DMABUF_SIZE,
--				    devpriv->rps_buf.logical_base,
--				    devpriv->rps_buf.physical_base);
-+		dma_free_coherent(&pcidev->dev, S626_DMABUF_SIZE,
-+				  devpriv->rps_buf.logical_base,
-+				  devpriv->rps_buf.physical_base);
- 	if (devpriv->ana_buf.logical_base)
--		pci_free_consistent(pcidev, S626_DMABUF_SIZE,
--				    devpriv->ana_buf.logical_base,
--				    devpriv->ana_buf.physical_base);
-+		dma_free_coherent(&pcidev->dev, S626_DMABUF_SIZE,
-+				  devpriv->ana_buf.logical_base,
-+				  devpriv->ana_buf.physical_base);
- }
-=20
- static int s626_initialize(struct comedi_device *dev)
---=20
-2.17.1
-
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8JsgwACgkQ+gRsbIfe
-7474BQ/4kb5fufct1WPXGSk5GazzpLTQpggErwbo+mTWR8xrR0hu0JEkSq3rlcJC
-PlyH5wxUTm6AJM6ub8UbDbrIiFCoGvFW/wPKyBgdVFnkrEf5GbPg4QuGD0eEOegC
-EDJ34j2meK2fPpOhvKh8I7mk/YXVl0uNB3CTul9GLzAC/NQG3GERX1g3JZsDo+Ib
-5sNly1D6mRr2WOxaTOGGLK+JI5PXeQ5jT8x40Q6TwEfZNDFA1A6diStFLOAusNA0
-txdSpArNNXJGjxSITQi7Gw4Ifp0g8MW0WnYjL/f4eYVqbGstVo6JYTjI+iwt1aPe
-pJpQlNYlXmELft+vVFIq++I6/mIbdxuRjzOKI5e5FJ5/GQpU9nnxlCaW00/c3p0A
-8ioeIhy0pI3JekPsDrw5pF5xUZZxXUbHiIxgzrts54g17isyQFwoh0mTnvmANlcz
-LTVV9U0xjeQEc3btQMG3c6JWGQ2gpyFDA89Out1769HJvBpuWBzbytUtFVnTKizp
-FFV+3c8RjyIih39KvNVE89zay2Y+EFSeiEl3oYhFX9digbSP+ErIQcu0YYaV4k+Q
-FjIMZB1j/tBHshL5TwWbU20naZXbrmgReJkvdJwCb292ehp/kFDfV35VFi9qTJD7
-D5TH075SMqXfsPrBMuZha868gzaO4dzfmiqAkZEcJ4QLNQ78Mg==
-=YDlr
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+-- 
+Cheers,
+Changbin Du
