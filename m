@@ -2,74 +2,70 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96479C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3675C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B9A20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B239720674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594597505;
+	bh=aYOvkV3FqzQPRgqjA1K8djXyZwXO1oYL79KDo3RuH4E=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=pdO2/7g6mGj0t/SRRJYCyTT95ze5Htbgq1rG3DAZlEoYvwmh5m3fDhQTIAcRJX920
+	 jW6Kd3ISTsRKZqfJpuv/B6uNPyAJ6tlJPseMcHG49t9316gDfDZAXzZ5ljNx9Ifofx
+	 XoiU6wQtOtssD98kX9tiV0vOjNqvu5DlrEVDKUM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgGLXjv (ORCPT
+        id S1728479AbgGLXpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:39:51 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:59170 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgGLXjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:39:51 -0400
-Date:   Sun, 12 Jul 2020 19:39:48 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Rob Landley <rob@landley.net>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        ysato@users.sourceforge.jp, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: Replace HTTP links with HTTPS ones
-Message-ID: <20200712233944.GB14669@brightrain.aerifal.cx>
-References: <8b008a69-e73a-43cc-3dba-c1bce90c9902@landley.net>
- <20200712111118.24916-1-grandmaster@al2klimov.de>
- <14fdab51-0197-1784-9ebb-356a0fd39952@landley.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14fdab51-0197-1784-9ebb-356a0fd39952@landley.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sun, 12 Jul 2020 19:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbgGLXpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:45:03 -0400
+Subject: Re: [PULL 0/3] xtensa fixes for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594597503;
+        bh=aYOvkV3FqzQPRgqjA1K8djXyZwXO1oYL79KDo3RuH4E=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=qqlmzppDrYMTI5Nq2Z2qGBJr+P/VGYq1LuCKL9dYma/mYJzPZms3LcZYcPQn3zClD
+         0ZaNzjZfGCK5MvrjOf/ZaxosKFyWY2wej0C1AAsnyJyc75EScM5aCMvClRn0EPCbUP
+         QpnifQ+C2NDO53kWjG/lHaW4ejIVh6wnyXAcCdUY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200712195523.6411-1-jcmvbkbc@gmail.com>
+References: <20200712195523.6411-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200712195523.6411-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-Remote: git://github.com/jcmvbkbc/linux-xtensa.git
+ tags/xtensa-20200712
+X-PR-Tracked-Commit-Id: ee769ebbe9e5fc7219e979fb7c5ed5bb5722649e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5c38b7d3c48bbbec043913354b5974f998373efa
+Message-Id: <159459750360.6499.2063385470455622433.pr-tracker-bot@kernel.org>
+Date:   Sun, 12 Jul 2020 23:45:03 +0000
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 06:30:04AM -0500, Rob Landley wrote:
-> On 7/12/20 6:11 AM, Alexander A. Klimov wrote:
-> > Rationale:
-> > Reduces attack surface on kernel devs opening the links for MITM
-> > as HTTPS traffic is much harder to manipulate.
-> 
-> Trimmed just to the one site without the self-signed certficate: check.
-> 
-> > Deterministic algorithm:
-> > For each file:
-> >   If not .svg:
-> >     For each line:
-> >       If doesn't contain `\bxmlns\b`:
-> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> >             If both the HTTP and HTTPS versions
-> >             return 200 OK and serve the same content:
-> >               Replace HTTP with HTTPS.
-> > 
-> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> 
-> Acked-by: Rob Landley <rob@landley.net>
+The pull request you sent on Sun, 12 Jul 2020 12:55:23 -0700:
 
-Acked-by: Rich Felker <dalias@libc.org>
+> git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20200712
 
-I agree about replacing just the one with working https, not the dead
-self-signed one. Alexander, is this whole set being submitted upstream
-through a single maintainer, or do you want me to take the arch/sh
-patch individually?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5c38b7d3c48bbbec043913354b5974f998373efa
 
-Rich
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
