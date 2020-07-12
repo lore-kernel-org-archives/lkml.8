@@ -2,194 +2,85 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381CAC433ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F950C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E88206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28BD20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIyFzsDc"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="dgarWx6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgGLXPw (ORCPT
+        id S1728618AbgGLXSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgGLXPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:15:50 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084B7C061794;
-        Sun, 12 Jul 2020 16:15:50 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id a8so10421369edy.1;
-        Sun, 12 Jul 2020 16:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ufXlWsSbQjgi4oIUlNgGwOevOPgtDjD5Z0wxS+QyBqs=;
-        b=gIyFzsDcvDoFbqmY8MNNEoFc4zyHlEt7W5KBJnNGbEY2rsjYLkCDxC0V3W4XvwZERd
-         ZJY/uzU1K1rSDmaruC0TtCzCFLIoGe6QwaIHlz+WN/Mj+0LqUV45+qKeJDrs4dnlKDxU
-         QNp5FxpR3+7DZ+N6Xf4qWyMlnvucUwb3wfhfl18HoEJZPH9NtALg7de5Lshv2fM/5+2R
-         cDXX0LqNxXJJhM6LpUiVFvA1kZKY35tAtgWJZsQ1mddy4qDlkxQ23H7QANaNyyhbo8Lx
-         K046lwZUKIlkDlJA0gSjfLy90ECJWxCqJ5BpqtwWxGHq8Qad7DXuN7MydTKhTjbhSuQJ
-         xzSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ufXlWsSbQjgi4oIUlNgGwOevOPgtDjD5Z0wxS+QyBqs=;
-        b=ljET0AV6Owr756/zidz51/J7hT9DNI6ZgSmhp1ADZp4eP5ltAF+ehD6+2F4GrKrzUR
-         QymROaKFj2C5IQk6G6vZHdssXfqpubHZqCBVs1EAHtMJA9EpjRaHjFX8J4i+Al8NBPjj
-         QFrZq8eYCcd+FBJ2O63mlL/KbVCtBAFBk81MOS7rb0Lk83c/z5jkJuoSGGKPV4n6EVEl
-         7+v077siAeNUrgxYYrcAXvdfP6LLpsf3n/uUxgJUhD/G9lZn+PogEdK3x3y7vQaC31JT
-         r+dlFk7KXS4kM2PTf8Plrv1zkyVLi5hrFcHJhB9zNXZz23MytH1NtxyEIWAKv0htjFVi
-         SOoA==
-X-Gm-Message-State: AOAM532k2Px7KJO65WG5dLdNqlLpwavLj8JHA10RJmfA6I8mzU3deBo9
-        4Hys06QDdrQ5zT02pvOkf2qG42sx
-X-Google-Smtp-Source: ABdhPJzYsShQzcoTdZHEXG8NR5IOJV9+SW4PEDBQTFQt/rFG6kH4qrNhToHHe92JRfJbCJMhOryToA==
-X-Received: by 2002:a50:f149:: with SMTP id z9mr90011386edl.167.1594595748632;
-        Sun, 12 Jul 2020 16:15:48 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id o17sm8502946ejb.105.2020.07.12.16.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 16:15:48 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 02:15:46 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
- devices
-Message-ID: <20200712231546.4k6qyaiq2cgok3ep@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200711120842.2631-1-sorganov@gmail.com>
- <20200711231937.wu2zrm5spn7a6u2o@skbuf>
- <87wo387r8n.fsf@osv.gnss.ru>
- <20200712150151.55jttxaf4emgqcpc@skbuf>
- <87r1tg7ib9.fsf@osv.gnss.ru>
- <20200712193344.bgd5vpftaikwcptq@skbuf>
- <87365wgyae.fsf@osv.gnss.ru>
+        Sun, 12 Jul 2020 19:18:44 -0400
+Received: from mail.nic.cz ([217.31.204.67]:34040 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgGLXSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:18:43 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 1C496140637;
+        Mon, 13 Jul 2020 01:18:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1594595922; bh=oWEGZNZzPfZSyReuwO/r4sDrMA3Ym1alNAfm/HZaDUE=;
+        h=Date:From:To;
+        b=dgarWx6WIlF5MziAb8hhRGF0jJpKwHv1ukVGYMshFaJ0BLFHVaS8AdZqUmwhGKiSX
+         TIGAe3AjNYw36p8Iw4ZKT/60tRNhn2hHflEqIfi0hpAviHIOBJVodrF7tYQBIbD3bV
+         d0rmZU6noMPs44fDiolwpvRhhT9L2OTiTvTeMdgw=
+Date:   Mon, 13 Jul 2020 01:18:41 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200713011841.25904273@nic.cz>
+In-Reply-To: <20200713011544.0adc51f1@nic.cz>
+References: <20200702144712.1994685-1-megous@megous.com>
+        <20200711100409.GA18901@amd>
+        <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+        <20200712072554.GC4721@duo.ucw.cz>
+        <20200712134911.r3lig4hgyqhmslth@core.my.home>
+        <20200712191111.GA20592@amd>
+        <20200712223821.742ljr4qxdrx3aqv@core.my.home>
+        <20200713011544.0adc51f1@nic.cz>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87365wgyae.fsf@osv.gnss.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:32:09AM +0300, Sergey Organov wrote:
-> >
-> > If you run "ethtool -T eth0" on a FEC network interface, it will always
-> > report its own PHC, and never the PHC of a PHY. So, you cannot claim
-> > that you are fixing PHY timestamping, since PHY timestamping is not
-> > advertised. That's not what a bug fix is, at least not around here, with
-> > its associated backporting efforts.
->
-> You can't actually try it as you don't have the hardware, right? As for
-> me, rather than running exactly ethtool, I do corresponding ioctl() in
-> my program, and the kernel does report features of my external PTP PHY,
-> not of internal one of the FEC, without my patches!
->
-> > The only way you could have claimed that this was fixing PHY
-> > timestamping was if "ethtool -T eth0" was reporting a PHY PHC, however
-> > timestamps were not coming from the PHY.
->
-> That's /exactly/ the case! Moreover, my original work is on 4.9.146
-> kernel, so ethtool works correctly at least since then. Here is quote from
-> my original question that I already gave reference to:
->
-> <quote>
-> Almost everything works fine out of the box, except hardware
-> timestamping. The problems are that I apparently get timestamps from fec
-> built-in PTP instead of external PHY, and that
->
->   ioctl(fd, SIOCSHWTSTAMP, &ifr)
->
-> ends up being executed by fec1 built-in PTP code instead of being
-> forwarded to the external PHY, and that this happens despite the call to
->
->    info.cmd = ETHTOOL_GET_TS_INFO;
->    ioctl(fd, SIOCETHTOOL, &ifr);
->
-> returning phc_index = 1 that corresponds to external PHY, and reports
-> features of the external PHY, leading to major inconsistency as seen
-> from user-space.
-> </quote>
->
-> You see? This is exactly the case where I could claim fixing PHY time
-> stamping even according to your own expertise!
->
-> > From the perspective of the mainline kernel, that can never happen.
->
-> Yet in happened to me, and in some way because of the UAPI deficiencies
-> I've mentioned, as ethtool has entirely separate code path, that happens
-> to be correct for a long time already.
->
+On Mon, 13 Jul 2020 01:15:44 +0200
+Marek Behun <marek.behun@nic.cz> wrote:
 
-Yup, you are right:
+> On Mon, 13 Jul 2020 00:38:21 +0200
+> Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>=20
+> > So after trying to use this, this seems to disallow the use of multiple=
+ HW
+> > triggers per LED. That's fine by me, because using one HW sysfs configu=
+red
+> > trigger per LED that use case is my proposal, but is it desireable in g=
+eneral? =20
+>=20
+> Why? If you register one LED and several triggers, all sharing the same
+> trigger_type pointer, I think it should work.
+>=20
+> Marek
 
-int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
-{
-	const struct ethtool_ops *ops = dev->ethtool_ops;
-	struct phy_device *phydev = dev->phydev;
+The problem arises when I have two LEDs and two HW triggers, and the
+hardware allows setting one HW trigger on both LEDs and other HW
+trigger only on one LED. But this could simply be ignored - the
+set_trigger function could simply return -ENOTSUPP or something.
 
-	memset(info, 0, sizeof(*info));
-	info->cmd = ETHTOOL_GET_TS_INFO;
-
-	if (phy_has_tsinfo(phydev))
-		return phy_ts_info(phydev, info);
-	if (ops->get_ts_info)
-		return ops->get_ts_info(dev, info);
-
-	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-				SOF_TIMESTAMPING_SOFTWARE;
-	info->phc_index = -1;
-
-	return 0;
-}
-
-Very bad design choice indeed...
-Given the fact that the PHY timestamping needs massaging from MAC driver
-for plenty of other reasons, now of all things, ethtool just decided
-it's not going to consult the MAC driver about the PHC it intends to
-expose to user space, and just say "here's the PHY, deal with it". This
-is a structural bug, I would say.
-
-> > From your perspective as a developer, in your private work tree, where
-> > _you_ added the necessary wiring for PHY timestamping, I fully
-> > understand that this is exactly what happened _to_you_.
-> > I am not saying that PHY timestamping doesn't need this issue fixed. It
-> > does, and if it weren't for DSA, it would have simply been a "new
-> > feature", and it would have been ok to have everything in the same
-> > patch.
->
-> Except that it's not a "new feature", but a bug-fix of an existing one,
-> as I see it.
->
-
-See above. It's clear that the intention of the PHY timestamping support
-is for MAC drivers to opt-in, otherwise some mechanism would have been
-devised such that not every single one of them would need to check for
-phy_has_hwtstamp() in .ndo_do_ioctl(). That simply doesn't scale. Also,
-it seems that automatically calling phy_ts_info from
-__ethtool_get_ts_info is not coherent with that intention.
-
-I need to think more about this. Anyway, if your aim is to "reduce
-confusion" for others walking in your foot steps, I think this is much
-worthier of your time: avoiding the inconsistent situation where the MAC
-driver is obviously not ready for PHY timestamping, however not all
-parts of the kernel are in agreement with that, and tell the user
-something else.
-
-Thanks,
--Vladimir
+Marek
