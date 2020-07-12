@@ -2,78 +2,134 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 04:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA119C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A346820809
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 04:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76F32070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKU6jc9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgGLEoU (ORCPT
+        id S1728187AbgGLFG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 00:44:20 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:37130 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgGLEoT (ORCPT
+        Sun, 12 Jul 2020 01:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgGLFG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 00:44:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id E985C201411B;
-        Sun, 12 Jul 2020 12:44:16 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c7g4X1_s4bSX; Sun, 12 Jul 2020 12:44:16 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id C447C2014570;
-        Sun, 12 Jul 2020 12:44:16 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id B41AEC019F4;
-        Sun, 12 Jul 2020 12:44:16 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 7C210202299; Sun, 12 Jul 2020 12:44:16 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/2] shtc1: add support for device tree bindings
-Date:   Sun, 12 Jul 2020 12:44:08 +0800
-Message-Id: <20200712044411.23323-1-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
+        Sun, 12 Jul 2020 01:06:58 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2148C08C5DD;
+        Sat, 11 Jul 2020 22:06:57 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j80so9280713qke.0;
+        Sat, 11 Jul 2020 22:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QAuIgUlyx0NcAgvFi4UCXRdkXlOyU9Eym+vjtofH6xc=;
+        b=NKU6jc9/eBK/JAe1uymTij9SwQNxCDVEKCiWujObLWCE44KEcDWFCMzs+e03rupU0E
+         7RID5Bp39ayXrgYWUdDN4pvGjiaukNoXk5+fd8aE6CuEpmQUsiy9U4bB9xSYO6hNBRlo
+         rIqp2xFOm7a/gzmLwjw9UFgTs4pRONzYa0Hk6StbWyim4CznqAPbG856BkMS1t7hdQSS
+         VFWVp2JhfN6j+rsnID7ZtBlbUlVokau75PzUtecZJt+ijrZnJa5nvAuvWg8O8IN2riPo
+         xyH7sAAFZpXtWoyWWU1ZMmVIcMW+H9eyf1Xm4E1cwlRFdo+1OFhzR3dLFQKCsvnX7faK
+         y0ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QAuIgUlyx0NcAgvFi4UCXRdkXlOyU9Eym+vjtofH6xc=;
+        b=NU1hRDFqZzHc4YY8SWzp7HB3FfBsdiGmJ8Bb0U2Ih9R6f6EAMxeCiRsFOtF79731kM
+         BJLzJ+gWafGFfSwRU0orKgAKiqSMolPjB+n2CRPeV2Q5Tj8XyoyK0+YRPvEpzeuny1R9
+         zTMnlgICQ/PFNUbYi8NtHDdZbsBAuvtnUqVGLO3cHOgJTzfgeJEbYg7ZC1d9I1UA8W4s
+         445CGydcJSJNIoi9b5xBASX2ZMABFCRXz0e/a1WukOAutjwMF5d8cSxgi9kSpokWKCu4
+         g6idMxTg8UQaOEgWpeAXdK4oAgz2JK8iGPMftRGBH026U1TD3UoUN2rl1cjP3e1rqxGf
+         6wTQ==
+X-Gm-Message-State: AOAM531DZFP4KtBkRk5pUt28iq4As8gcDW/zeZFUNL2lE+PccxE9pFnF
+        s1ODyIwsqOjcVIXNFMEv1Z9qp8Awh+bFs096Oq4=
+X-Google-Smtp-Source: ABdhPJzf/ifl2V0QHB4AVv/RcZCgAOwMyXpCjJUPLxlKuEGK/PBSadlSUeVbyxb8wVW2Ol0W7Ahi5HlEQB11hHF6wqY=
+X-Received: by 2002:a05:620a:1666:: with SMTP id d6mr78293499qko.449.1594530416664;
+ Sat, 11 Jul 2020 22:06:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200711012639.3429622-1-songliubraving@fb.com>
+ <20200711012639.3429622-2-songliubraving@fb.com> <CAEf4BzaHAFNdEPp38ZnKOYTy3CfRCwaxDykS_Xir_VqDm0Kiug@mail.gmail.com>
+ <DEF050B0-E423-4442-9C95-02FB20F6BA57@fb.com>
+In-Reply-To: <DEF050B0-E423-4442-9C95-02FB20F6BA57@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sat, 11 Jul 2020 22:06:45 -0700
+Message-ID: <CAEf4Bzbur1KBM3aPMMtQmsYXbHTfwsx4ULbNxpzR-DF7g=HDeA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/5] bpf: block bpf_get_[stack|stackid] on
+ perf_event with PEBS entries
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Peter Ziljstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for DTS bindings to the shtc driver
-The patches add the compatible table and of_property_read_bool to the
-shtc1.c. Newly created Yaml document has been released to the
-Documentation/devicetree/hwmon/sensirion,shtc1.yaml
+On Fri, Jul 10, 2020 at 11:28 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Jul 10, 2020, at 8:53 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Fri, Jul 10, 2020 at 6:30 PM Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >> Calling get_perf_callchain() on perf_events from PEBS entries may cause
+> >> unwinder errors. To fix this issue, the callchain is fetched early. Such
+> >> perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
+> >>
+> >> Similarly, calling bpf_get_[stack|stackid] on perf_events from PEBS may
+> >> also cause unwinder errors. To fix this, block bpf_get_[stack|stackid] on
+> >> these perf_events. Unfortunately, bpf verifier cannot tell whether the
+> >> program will be attached to perf_event with PEBS entries. Therefore,
+> >> block such programs during ioctl(PERF_EVENT_IOC_SET_BPF).
+> >>
+> >> Signed-off-by: Song Liu <songliubraving@fb.com>
+> >> ---
+> >
+> > Perhaps it's a stupid question, but why bpf_get_stack/bpf_get_stackid
+> > can't figure out automatically that they are called from
+> > __PERF_SAMPLE_CALLCHAIN_EARLY perf event and use different callchain,
+> > if necessary?
+> >
+> > It is quite suboptimal from a user experience point of view to require
+> > two different BPF helpers depending on PEBS or non-PEBS perf events.
+>
+> I am not aware of an easy way to tell the difference in bpf_get_stack.
+> But I do agree that would be much better.
+>
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- Version 6
-    fix dt_binding_check: missing ';' in examples
- Version 5
-    devicetree/driver-source: name conversion sensirion,low-precision sensirion,blocking-io
-	use const: 0x70 with the reg:
- Version 4
-	Fix errors report by make dt_binding_check (devicetree)
-	Set maintainers for the yaml document to my own.
- Version 3
-	Fix errors report with checkpatch.pl
-	Correct logic, add (!) when check for sensirion,low_precision
- Version 2
-	remove the #ifdef CONFIG_OF
-	ignore platform data if dev->of_node is valid
-	use boolean only therefor use sensirion,low_precise to fit the logic
-	add missing driver.of_match_table entry
- Version 1
-	initial version
+Hm... Looking a bit more how all this is tied together in the kernel,
+I think it's actually quite easy. So, for perf_event BPF program type:
+
+1. return a special prototype for bpf_get_stack/bpf_get_stackid, which
+will have this extra bit of logic for callchain. All other program
+types with access to bpf_get_stack/bpf_get_stackid should use the
+current one, probably.
+2. For that special program, just like for bpf_read_branch_records(),
+we know that context is actually `struct bpf_perf_event_data_kern *`,
+and it has pt_regs, perf_sample_data and perf_event itself.
+3. With that, it seems like you'll have everything you need to
+automatically choose a proper callchain.
+
+All this absolutely transparently to the BPF program.
+
+Am I missing something?
+
+> Thanks,
+> Song
