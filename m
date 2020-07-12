@@ -2,115 +2,234 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD92C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96877C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933EB2063A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uF/QHLQp"
+	by mail.kernel.org (Postfix) with ESMTP id 7A388206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgGLQao (ORCPT
+        id S1729064AbgGLQmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 12:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728854AbgGLQan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 12:30:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3593DC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 09:30:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f2so4416942plr.8
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 09:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=fduEEX0FvmLvbjM6DjKUizgxNHtjjRTc20Yn5n2GOU4=;
-        b=uF/QHLQpIEkXpsDzG6f4pmhhE6qd8Z/6Z1lxRzQNgJES9td/xuPCsUWjaFhAlRoGqv
-         Kr10QnkY9xqNmEu++t1ZGnBUXDpGTw0i8nQrxwLGrm8IT/wcJXGtx3cDvFfLirVv/RRt
-         /xGMIujy+bPfN2tgXps+2+sid/uBaRwmZ49ZerJSk6VNeuftQP/y/6qPQqgcz/4V4YYL
-         WlwE/eiSuGFKqg6c3aEMg7l9p9Ti9D9MBTFSmuT6xlqiECAkCYWDomuUVEyPh+CSy4Jh
-         VkQ44y3grWAO7hLcaMg+fxkvEO5W/aq8zyoSQIltKTNC9yCKoOGN9+t4v5dn1r/60xDl
-         JTzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=fduEEX0FvmLvbjM6DjKUizgxNHtjjRTc20Yn5n2GOU4=;
-        b=JG6GTh4cHshkev4BiNtpVxngyFKKRC0z8zGPurG5IcI7sAgXH74BFTOBEhXzbaBTXM
-         7u9eIk3pkDJq+t4iIVH/4Uf88MUlj6QDKQexGdLoSM3UYNkP9PYSuPMnWcfnmD3kqSjS
-         Hq1dWcrQz4fMy2bpmR3bA6whrdsRX6MJQyZQewAXjXT9PDyN280f/eBUwodhOrrwP5mt
-         C1HO913OGWymUEdR3ip0RNsOpAo2MeQXofhFpd/TtrzHtPiRb3OpGI8/cNHjzqkV726J
-         z7E1c1BRxQCeToiB7F/DTb5u+pzq3HWK62iORWcLaAejgT0laRaW742BPCdD8g4dlhIf
-         RloQ==
-X-Gm-Message-State: AOAM5334cBh5AM9LsdpgTtqICOwV5lO7muq8qGCG/aGyDr26NkLmAB5E
-        JVkjVN1Acgixj7MtaX1JyOyn56T8k2RxGA==
-X-Google-Smtp-Source: ABdhPJwdHApLEQXID+EPdWAxQbWH/w7vmc3jSPVQLWW6Te77B3fnsXw+3basNFqIrvxZNLWQ0CJAMQ==
-X-Received: by 2002:a17:90a:30c2:: with SMTP id h60mr15281620pjb.23.1594571442362;
-        Sun, 12 Jul 2020 09:30:42 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id n2sm11176025pgv.37.2020.07.12.09.30.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 09:30:41 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.8-rc5
-Message-ID: <4583056e-bec6-f26a-5194-1add6f2b619f@kernel.dk>
-Date:   Sun, 12 Jul 2020 10:30:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Jul 2020 12:42:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25234 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728854AbgGLQmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 12:42:23 -0400
+IronPort-SDR: Z69v/ORhMbLG0E5kePfctdqTImwG7ZFvZF+tZqDFkRwyfFtPNWJvuxGyvBFTysGlJtixmt/1Yf
+ Qdv4Kcw8ussw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="210054562"
+X-IronPort-AV: E=Sophos;i="5.75,344,1589266800"; 
+   d="scan'208";a="210054562"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 09:42:22 -0700
+IronPort-SDR: w09DlxdoREi5sngYNiZBKWJOVTLl+CDIvtzZ/uaA4MupcVijS0R+Mlb2tQyBlcFZBMiu8NVopd
+ tnqyNHuv32/A==
+X-IronPort-AV: E=Sophos;i="5.75,344,1589266800"; 
+   d="scan'208";a="317142928"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 09:42:21 -0700
+Subject: [PATCH v2 00/22] device-dax: Support sub-dividing soft-reserved
+ ranges
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        hch@lst.de, joao.m.martins@oracle.com
+Date:   Sun, 12 Jul 2020 09:26:05 -0700
+Message-ID: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Changes since v1 [1]:
 
-Two late fixes again, but they should make -rc5.
+- Combine this series with "Manual definition of Soft Reserved memory
+  devices" [2] as the pre-requisites are required to test the device-dax
+  facility, the device-dax changes are part of the justification for the
+  numa-info reworks.
 
-- Fix missing msg_name assignment in certain cases (Pavel)
+- Provide a generic version of numa data retrieval based on memblock for
+  arm64 rather than adding a new / empty phys_to_target_node() stub
+  alongside memory_add_physaddr_to_nid(). (Will)
 
-- Correct a previous fix for full coverage (Pavel)
+- Fix several corner case allocation bugs and pass the unit test written
+  by Joao.
 
-Please pull!
+- Lift the restriction that a 'seed' device must be activated before a
+  new seed can be created. This minor sanity check was to prevent userspace
+  spamming devices, but it gets in the way of some of allocation
+  scenarios like allocating a memory-range that is guaranteed to never be
+  evicted due to memory-side-cache conflicts. (Iqbal)
 
+- Add debug prints for space allocation decisions (Joao)
 
-The following changes since commit 309fc03a3284af62eb6082fb60327045a1dabf57:
+- Rebased on v5.8-rc2 which included resolving conflicts in the kmem
+  driver and memremap_pages().
 
-  io_uring: account user memory freed when exit has been queued (2020-07-10 09:18:35 -0600)
+[1]: http://lore.kernel.org/r/158500767138.2088294.17131646259803932461.stgit@dwillia2-desk3.amr.corp.intel.com
+[2]: http://lore.kernel.org/r/158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-are available in the Git repository at:
+---
 
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-12
+The device-dax facility allows an address range to be directly mapped
+through a chardev, or optionally hotplugged to the core kernel page
+allocator as System-RAM. It is the mechanism for converting persistent
+memory (pmem) to be used as another volatile memory pool i.e. the
+current Memory Tiering hot topic on linux-mm.
 
-for you to fetch changes up to 16d598030a37853a7a6b4384cad19c9c0af2f021:
+In the case of pmem the nvdimm-namespace-label mechanism can sub-divide
+it, but that labeling mechanism is not available / applicable to
+soft-reserved ("EFI specific purpose") memory [3]. This series provides
+a sysfs-mechanism for the daxctl utility to enable provisioning of
+volatile-soft-reserved memory ranges.
 
-  io_uring: fix not initialised work->flags (2020-07-12 09:40:50 -0600)
+The motivations for this facility are:
 
-----------------------------------------------------------------
-io_uring-5.8-2020-07-12
+1/ Allow performance differentiated memory ranges to be split between
+   kernel-managed and directly-accessed use cases.
 
-----------------------------------------------------------------
-Pavel Begunkov (2):
-      io_uring: fix missing msg_name assignment
-      io_uring: fix not initialised work->flags
+2/ Allow physical memory to be provisioned along performance relevant
+   address boundaries. For example, divide a memory-side cache [4] along
+   cache-color boundaries.
 
- fs/io_uring.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+3/ Parcel out soft-reserved memory to VMs using device-dax as a security
+   / permissions boundary [5]. Specifically I have seen people (ab)using
+   memmap=nn!ss (mark System-RAM as Persistent Memory) just to get the
+   device-dax interface on custom address ranges. A follow-on for the VM
+   use case is to teach device-dax to dynamically allocate 'struct page' at
+   runtime to reduce the duplication of 'struct page' space in both the
+   guest and the host kernel for the same physical pages.
 
--- 
-Jens Axboe
+Given the intersections of arm64, x86, and core memremap_pages() changes
+I'd like to explore taking this through the libnvdimm tree, but that is
+step 2. Any concerns with the proposed infrastructure changes
+(memblock-numainfo and multi-range-memremap-pages)?
 
+[3]: http://lore.kernel.org/r/157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com
+[4]: http://lore.kernel.org/r/154899811738.3165233.12325692939590944259.stgit@dwillia2-desk3.amr.corp.intel.com
+[5]: http://lore.kernel.org/r/20200110190313.17144-1-joao.m.martins@oracle.com
+
+---
+
+Dan Williams (22):
+      x86/numa: Cleanup configuration dependent command-line options
+      x86/numa: Add 'nohmat' option
+      efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+      ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+      resource: Report parent to walk_iomem_res_desc() callback
+      x86: Move NUMA_KEEP_MEMINFO and related definition to x86-internals
+      numa: Introduce a generic memory_add_physaddr_to_nid()
+      memblock: Introduce a generic phys_addr_to_target_node()
+      arm64: Convert to generic memblock for numa-info
+      ACPI: HMAT: Attach a device for each soft-reserved range
+      device-dax: Drop the dax_region.pfn_flags attribute
+      device-dax: Move instance creation parameters to 'struct dev_dax_data'
+      device-dax: Make pgmap optional for instance creation
+      device-dax: Kill dax_kmem_res
+      device-dax: Add an allocation interface for device-dax instances
+      device-dax: Introduce 'seed' devices
+      drivers/base: Make device_find_child_by_name() compatible with sysfs inputs
+      device-dax: Add resize support
+      mm/memremap_pages: Convert to 'struct range'
+      mm/memremap_pages: Support multiple ranges per invocation
+      device-dax: Add dis-contiguous resource support
+      device-dax: Introduce 'mapping' devices
+
+ arch/arm64/Kconfig                     |    1 
+ arch/arm64/mm/numa.c                   |   10 
+ arch/powerpc/kvm/book3s_hv_uvmem.c     |   14 
+ arch/x86/Kconfig                       |    7 
+ arch/x86/include/asm/numa.h            |    8 
+ arch/x86/kernel/e820.c                 |   16 +
+ arch/x86/mm/numa.c                     |   12 
+ arch/x86/mm/numa_emulation.c           |    3 
+ arch/x86/mm/numa_internal.h            |    7 
+ arch/x86/xen/enlighten_pv.c            |    2 
+ drivers/acpi/numa/hmat.c               |   76 ---
+ drivers/acpi/numa/srat.c               |    9 
+ drivers/base/core.c                    |    2 
+ drivers/dax/Kconfig                    |    6 
+ drivers/dax/Makefile                   |    3 
+ drivers/dax/bus.c                      |  902 ++++++++++++++++++++++++++++++--
+ drivers/dax/bus.h                      |   28 +
+ drivers/dax/dax-private.h              |   39 +
+ drivers/dax/device.c                   |   97 ++-
+ drivers/dax/hmem/Makefile              |    6 
+ drivers/dax/hmem/device.c              |  100 ++++
+ drivers/dax/hmem/hmem.c                |   20 -
+ drivers/dax/kmem.c                     |  199 ++++---
+ drivers/dax/pmem/compat.c              |    2 
+ drivers/dax/pmem/core.c                |   22 +
+ drivers/firmware/efi/x86_fake_mem.c    |   12 
+ drivers/gpu/drm/nouveau/nouveau_dmem.c |    4 
+ drivers/nvdimm/badrange.c              |   26 -
+ drivers/nvdimm/claim.c                 |   13 
+ drivers/nvdimm/nd.h                    |    3 
+ drivers/nvdimm/pfn_devs.c              |   13 
+ drivers/nvdimm/pmem.c                  |   27 +
+ drivers/nvdimm/region.c                |   21 -
+ drivers/pci/p2pdma.c                   |   12 
+ include/acpi/acpi_numa.h               |   14 
+ include/linux/dax.h                    |    8 
+ include/linux/memblock.h               |    4 
+ include/linux/memremap.h               |   11 
+ include/linux/mm.h                     |   13 
+ include/linux/numa.h                   |    9 
+ include/linux/range.h                  |    6 
+ kernel/resource.c                      |   11 
+ mm/Kconfig                             |    7 
+ mm/memblock.c                          |   22 +
+ mm/memremap.c                          |  300 ++++++-----
+ mm/page_alloc.c                        |   82 +++
+ tools/testing/nvdimm/dax-dev.c         |   22 +
+ tools/testing/nvdimm/test/iomap.c      |    2 
+ 48 files changed, 1705 insertions(+), 528 deletions(-)
+ create mode 100644 drivers/dax/hmem/Makefile
+ create mode 100644 drivers/dax/hmem/device.c
+ rename drivers/dax/{hmem.c => hmem/hmem.c} (74%)
+
+base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
