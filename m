@@ -2,261 +2,259 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC61DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE9420674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DDE2068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594560147;
+	bh=Cc8lwxbd6iczOQZCUpW+rdnW0VKP6oA8Xu5HVzWVWgU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rfOVROL/JkJcTzIJYad/LsCXhr67Nbx8MzP/1/Mnheae1sMbXfYGZhaECiFhOI1bY
+	 TkpwascDG4W1gcsS/4SL6xmDfNuA3D+MiEKxnifn/PER1L4ZKi44DasEPJvFv7mx/6
+	 YNfEp/PZLniX2KsZ/cTnJZoaUQPWR8+JBAhx5y3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgGLNQR (ORCPT
+        id S1728857AbgGLNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:16:17 -0400
-Received: from mta-out1.inet.fi ([62.71.2.202]:55040 "EHLO julia1.inet.fi"
+        Sun, 12 Jul 2020 09:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgGLNQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:16:16 -0400
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrvdeigdeihecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfupfevtfenuceurghilhhouhhtmecufedttdenucenucfjughrpefuhffvfhfkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefklhhkkhgrucfrrhhushhiuceoihhlkhhkrgdrphhruhhsihesphhprdhinhgvthdrfhhiqeenucggtffrrghtthgvrhhnpeeufeduleegkefhgeektdetieegfedvtdehvdevheduffduiedvueevjeegieekkeenucfkphepkeegrddvhedurdduleegrdduieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghloheplgduledvrdduieekrddurddutdehngdpihhnvghtpeekgedrvdehuddrudelgedrudeigedpmhgrihhlfhhrohhmpeeophhruhhsihhlqddusehmsghogidrihhnvghtrdhfihequceuqfffjgepkeeukffvoffkoffgpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-Received: from [192.168.1.105] (84.251.194.164) by julia1.inet.fi (9.0.019.26-1) (authenticated as prusil-1)
-        id 5EFB425600416465 for linux-kernel@vger.kernel.org; Sun, 12 Jul 2020 16:16:05 +0300
-Subject: Re: splat and freeze (2 instances)
-From:   Ilkka Prusi <ilkka.prusi@pp.inet.fi>
-To:     linux-kernel@vger.kernel.org
-References: <40e7f7f4-88f5-da0f-bf7f-067b74ac7714@pp.inet.fi>
- <d462da83-4657-1844-9fcf-c3782354c44a@pp.inet.fi>
-Message-ID: <c1fa157d-1653-0ce8-2660-a298ce73cb15@pp.inet.fi>
-Date:   Sun, 12 Jul 2020 16:16:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728339AbgGLNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:22:23 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FD12068F;
+        Sun, 12 Jul 2020 13:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594560142;
+        bh=Cc8lwxbd6iczOQZCUpW+rdnW0VKP6oA8Xu5HVzWVWgU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r7DkG3eGWjS8Dl4mC+PKN3ZX3LVjfwu95rKulqhX46oaTAVoBw0Bvq9FCi2A3HUHB
+         ViqcX/i8XWdhdOradoNKm+DP7sSD5Usgm/jjyAv49MGDIh84NvQDaMVF1lZ54iWzeX
+         0fJriJdRyOaVzYNBKy6U8uBo5/Vbe93g3xTCdkLs=
+Date:   Sun, 12 Jul 2020 14:22:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Replace HTTP links with HTTPS ones:
+ Documentation/devicetree/bindings/iio
+Message-ID: <20200712142217.1fcd2d08@archlinux>
+In-Reply-To: <CAJCx=gmv67jh2aP14U-Jr=+SGPtzE8z5K-ax5dn9yM74SaVj+g@mail.gmail.com>
+References: <20200704173459.78ceec60@archlinux>
+        <20200704193345.18847-1-grandmaster@al2klimov.de>
+        <CAJCx=gmv67jh2aP14U-Jr=+SGPtzE8z5K-ax5dn9yM74SaVj+g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <d462da83-4657-1844-9fcf-c3782354c44a@pp.inet.fi>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, 4 Jul 2020 16:05:01 -0700
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-Here's a second splat with some additional tracing enabled.
-
-Again this is gathered with phonecamera from frozen machine (dmesg -w) 
-and full logs could not be saved.
-
-Linux version 5.8.0-rc4+ (gcc (Debian 9.3.0-14) 9.3.0, GNU ld (GNU 
-Binutils for Debian) 2.34.90.20200706) #95 SMP PREEMPT Sun Jul 12 
-12:29:16 EEST 2020
-
-schedule_timeout+0x162/0x1a0
-? trace_hardirqs_on+0x1c/0xf0
-wait_for_completion+0x84/0xe0
-virt_efi_query_variable_info+0x163/0x170
-efi_query_variable_store+0x53/0x190
-? _raw_spin_unlock_irqrestore+0x41/0x70
-efivar_entry_set_safe+0xbf/0x210
-efi_pstore_write+0x116/0x160/ [efi_pstore]
-pstore_dump+0x10c/0x2e0
-? kmsg_dump+0xd5/0x1c0
-kmsg_dump+0x7b/0x1c0
-oops_end+0x6f/0xc0
-do_trap+0x8c/0x100
-? do_futex+0x15e/0x560
-do_error_trap+0x86/0x100
-? do_futex+0x15e/0x560
-? do_futex+0x15e/0x560
-exc_invalid_op+0x4c/0x60
-? do_futex+0x15e/0x560
-asm_exc_invalid_op+0xf/0x20
-RIP: 0010:do_futex+0x15e/0x560
-Code: 85 c0 75 4b c7 84 24 a8 00 00 00 ff ff ff ff 41 b8 ff ff ff ff 4c 
-89 e9 44 89 f2 44 89 e6 48 89 ef e8 d6 e0 ff ff 48 98 e9 62 <ff> ff ff 
-83 f8 08 74 61 83 f8 09 75 18 44 8b 84 24 a8 00 00 00 eb
-RSP: 0018:ffffc9000128fe08 EFLAGS: 00010282
-RAX: 00000000ffffff92 RBX: 0000000000000000 RCX: 0000000000ae8b8c
-RDX: ffff8887fe8dde80 RSI: ffff8887fa562720 RDI: ffffc9000128fd10
-RBP: 0000000057b01018 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc9000128fed0 R14: 0000000000000000 R15: 0000000000000000
-? do_futex+0x15e/0x560
-? lockdep_hardirqs_on_prepare+0xcf/0x170
-? _raw_spin_unlock_irq+0x24/0x50
-? trace_hardirqs_on+0x1c/0xf0
-? _raw_spin_unlock_irq+0x35/0x50
-? finish_task_switch+0x9e/0x280
-? finish_task_switch+0x70/0x280
-? __switch_to+0x361/0x480
-? __switch_to_asm+0x36/0x70
-__ia32_sys_futex_time32+0x13a/0x168
-do_syscall_32_irqs_on+0x45/0x60
-do_fast_syscall_32+0x6b/0xf0
-entry_SYSCALL_compat_after_hwframe+0x45/0x4d
-RIP: 0023:0xf7f06579
-Code: Bad RIP value.
-RSP: 002b:00000000be3faec0 EFLAGS: 00200282 ORIG_RAX: 00000000000000f0
-RAX: ffffffffffffffda RBX: 0000000057b01018 RCX: 0000000000000089
-RDX: 0000000000000000 RSI: 00000000be3faf90 RDI: 0000000000000000
-RBP: 00000000ffffffff R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-irq event stamp: 455331
-hardirqs last  enabled at (455331): [<ffffffff8102e03e>] 
-do_error_trap+0xbe/0x100
-hardirqs last disabled at (455330): [<ffffffff818b071d>] 
-idtentry_enter_cond_rcu+0x1d/0x50
-softirqs last  enabled at (454086): [<ffffffff81c003aa>] 
-__do_softirq+0x3aa/0x4af
-softirqs last disabled at (454075): [<ffffffff81a00f82>] 
-asm_call_on_stack+0x12/0x20
----[ end trace 87cc90f8d863ccc2 ]---
-
-decode stacktrace:
-$ cat ~/crashdata/580rc4/irq | ./scripts/decode_stacktrace.sh vmlinux . 
-/lib/modules/5.8.0-rc4+/
-schedule_timeout (/usr/src/linux/kernel/time/timer.c:1874)
-? trace_hardirqs_on (/usr/src/linux/kernel/trace/trace_preemptirq.c:50 
-(discriminator 42))
-wait_for_completion (/usr/src/linux/kernel/sched/completion.c:86 
-/usr/src/linux/kernel/sched/completion.c:106 
-/usr/src/linux/kernel/sched/completion.c:117 
-/usr/src/linux/kernel/sched/completion.c:138)
-virt_efi_query_variable_info 
-(/usr/src/linux/drivers/firmware/efi/runtime-wrappers.c:374 
-(discriminator 7))
-efi_query_variable_store 
-(/usr/src/linux/arch/x86/platform/efi/quirks.c:165 
-/usr/src/linux/arch/x86/platform/efi/quirks.c:151)
-? _raw_spin_unlock_irqrestore 
-(/usr/src/linux/./arch/x86/include/asm/preempt.h:102 
-/usr/src/linux/./include/linux/spinlock_api_smp.h:161 
-/usr/src/linux/kernel/locking/spinlock.c:191)
-efivar_entry_set_safe (/usr/src/linux/drivers/firmware/efi/vars.c:784)
-efi_pstore_write (/usr/src/linux/drivers/firmware/efi/efi-pstore.c:243) 
-efi_pstore
-pstore_dump (/usr/src/linux/fs/pstore/platform.c:456)
-? kmsg_dump (/usr/src/linux/kernel/printk/printk.c:3221)
-kmsg_dump (/usr/src/linux/kernel/printk/printk.c:3231 (discriminator 4))
-oops_end (/usr/src/linux/arch/x86/kernel/dumpstack.c:348)
-do_trap (/usr/src/linux/arch/x86/kernel/traps.c:119 
-/usr/src/linux/arch/x86/kernel/traps.c:157)
-? do_futex (/usr/src/linux/kernel/futex.c:3811)
-do_error_trap (/usr/src/linux/arch/x86/kernel/traps.c:83 
-/usr/src/linux/arch/x86/kernel/traps.c:178)
-? do_futex (/usr/src/linux/kernel/futex.c:3811)
-? do_futex (/usr/src/linux/kernel/futex.c:3811)
-exc_invalid_op (/usr/src/linux/arch/x86/kernel/traps.c:262)
-? do_futex (/usr/src/linux/kernel/futex.c:3811)
-asm_exc_invalid_op (/usr/src/linux/./arch/x86/include/asm/idtentry.h:542)
-RIP: 0010:do_futex (/usr/src/linux/kernel/futex.c:3811)
-Code: 85 c0 75 4b c7 84 24 a8 00 00 00 ff ff ff ff 41 b8 ff ff ff ff 4c 
-89 e9 44 89 f2 44 89 e6 48 89 ef e8 d6 e0 ff ff 48 98 e9 62 <ff> ff ff 
-83 f8 08 74 61 83 f8 09 75 18 44 8b 84 24 a8 00 00 00 eb
-All code
-========
-    0:    85 c0                    test   %eax,%eax
-    2:    75 4b                    jne    0x4f
-    4:    c7 84 24 a8 00 00 00     movl   $0xffffffff,0xa8(%rsp)
-    b:    ff ff ff ff
-    f:    41 b8 ff ff ff ff        mov    $0xffffffff,%r8d
-   15:    4c 89 e9                 mov    %r13,%rcx
-   18:    44 89 f2                 mov    %r14d,%edx
-   1b:    44 89 e6                 mov    %r12d,%esi
-   1e:    48 89 ef                 mov    %rbp,%rdi
-   21:    e8 d6 e0 ff ff           callq  0xffffffffffffe0fc
-   26:    48 98                    cltq
-   28:*    e9 62 ff ff ff           jmpq   0xffffffffffffff8f     <-- 
-trapping instruction
-   2d:    83 f8 08                 cmp    $0x8,%eax
-   30:    74 61                    je     0x93
-   32:    83 f8 09                 cmp    $0x9,%eax
-   35:    75 18                    jne    0x4f
-   37:    44 8b 84 24 a8 00 00     mov    0xa8(%rsp),%r8d
-   3e:    00
-   3f:    eb                       .byte 0xeb
-
-Code starting with the faulting instruction
-===========================================
-    0:    ff                       (bad)
-    1:    ff                       (bad)
-    2:    ff 83 f8 08 74 61        incl   0x617408f8(%rbx)
-    8:    83 f8 09                 cmp    $0x9,%eax
-    b:    75 18                    jne    0x25
-    d:    44 8b 84 24 a8 00 00     mov    0xa8(%rsp),%r8d
-   14:    00
-   15:    eb                       .byte 0xeb
-RSP: 0018:ffffc9000128fe08 EFLAGS: 00010282
-RAX: 00000000ffffff92 RBX: 0000000000000000 RCX: 0000000000ae8b8c
-RDX: ffff8887fe8dde80 RSI: ffff8887fa562720 RDI: ffffc9000128fd10
-RBP: 0000000057b01018 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc9000128fed0 R14: 0000000000000000 R15: 0000000000000000
-? do_futex (/usr/src/linux/kernel/futex.c:3811)
-? lockdep_hardirqs_on_prepare 
-(/usr/src/linux/kernel/locking/lockdep.c:3635 
-/usr/src/linux/kernel/locking/lockdep.c:3686)
-? _raw_spin_unlock_irq 
-(/usr/src/linux/./arch/x86/include/asm/paravirt.h:775 
-/usr/src/linux/./include/linux/spinlock_api_smp.h:168 
-/usr/src/linux/kernel/locking/spinlock.c:199)
-? trace_hardirqs_on (/usr/src/linux/kernel/trace/trace_preemptirq.c:50 
-(discriminator 42))
-? _raw_spin_unlock_irq 
-(/usr/src/linux/./arch/x86/include/asm/preempt.h:102 
-/usr/src/linux/./include/linux/spinlock_api_smp.h:169 
-/usr/src/linux/kernel/locking/spinlock.c:199)
-? finish_task_switch 
-(/usr/src/linux/./arch/x86/include/asm/jump_label.h:25 
-/usr/src/linux/kernel/sched/core.c:3103 
-/usr/src/linux/kernel/sched/core.c:3296)
-? finish_task_switch (/usr/src/linux/kernel/sched/core.c:3163 
-/usr/src/linux/kernel/sched/core.c:3291)
-? __switch_to (/usr/src/linux/./arch/x86/include/asm/paravirt.h:283 
-/usr/src/linux/arch/x86/kernel/process_64.c:225 
-/usr/src/linux/arch/x86/kernel/process_64.c:274 
-/usr/src/linux/arch/x86/kernel/process_64.c:283 
-/usr/src/linux/arch/x86/kernel/process_64.c:482)
-? __switch_to_asm (/usr/src/linux/arch/x86/entry/entry_64.S:252)
-__ia32_sys_futex_time32 (/usr/src/linux/kernel/futex.c:4060 
-/usr/src/linux/kernel/futex.c:4034 /usr/src/linux/kernel/futex.c:4034)
-do_syscall_32_irqs_on (/usr/src/linux/arch/x86/entry/common.c:428)
-do_fast_syscall_32 (/usr/src/linux/arch/x86/entry/common.c:121 
-/usr/src/linux/arch/x86/entry/common.c:506)
-entry_SYSCALL_compat_after_hwframe 
-(/usr/src/linux/arch/x86/entry/entry_64_compat.S:256)
-RIP: 0023:0xf7f06579
-Code: Bad RIP value.
-objdump: '/tmp/tmp.a5phocvdOL.o': No such file
-
-Code starting with the faulting instruction
-===========================================
-RSP: 002b:00000000be3faec0 EFLAGS: 00200282 ORIG_RAX: 00000000000000f0
-RAX: ffffffffffffffda RBX: 0000000057b01018 RCX: 0000000000000089
-RDX: 0000000000000000 RSI: 00000000be3faf90 RDI: 0000000000000000
-RBP: 00000000ffffffff R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-irq event stamp: 455331
-hardirqs last enabled at (455331): do_error_trap 
-(/usr/src/linux/./arch/x86/include/asm/paravirt.h:775 
-/usr/src/linux/arch/x86/kernel/traps.c:78 
-/usr/src/linux/arch/x86/kernel/traps.c:176)
-hardirqs last disabled at (455330): idtentry_enter_cond_rcu 
-(/usr/src/linux/arch/x86/entry/common.c:652)
-softirqs last enabled at (454086): __do_softirq 
-(/usr/src/linux/./arch/x86/include/asm/preempt.h:26 
-/usr/src/linux/kernel/softirq.c:320)
-softirqs last disabled at (454075): asm_call_on_stack 
-(/usr/src/linux/arch/x86/entry/entry_64.S:719)
----[ end trace 87cc90f8d863ccc2 ]---
-
---
-
-  - Ilkka
-
+> On Sat, Jul 4, 2020 at 12:34 PM Alexander A. Klimov
+> <grandmaster@al2klimov.de> wrote:
+> >
+> > Rationale:
+> > Reduces attack surface on kernel devs opening the links for MITM
+> > as HTTPS traffic is much harder to manipulate.
+> >  
+> 
+> With regards to the drivers that I've authored the changes look good to me.
+> 
+> Reviewed-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Applied. Thanks
+> 
+> 
+> > Deterministic algorithm:
+> > For each file:
+> >   If not .svg:
+> >     For each line:
+> >       If doesn't contain `\bxmlns\b`:
+> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> >           If both the HTTP and HTTPS versions
+> >           return 200 OK and serve the same content:
+> >             Replace HTTP with HTTPS.
+> >
+> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > ---
+> >  Changes in v2:
+> >  Addressed https://lore.kernel.org/linux-iio/20200704173459.78ceec60@archlinux/
+> >
+> >  Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml  | 4 ++--
+> >  Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt      | 2 +-
+> >  Documentation/devicetree/bindings/iio/iio-bindings.txt        | 2 +-
+> >  Documentation/devicetree/bindings/iio/light/apds9300.txt      | 2 +-
+> >  Documentation/devicetree/bindings/iio/light/apds9960.txt      | 2 +-
+> >  Documentation/devicetree/bindings/iio/light/opt3001.txt       | 2 +-
+> >  Documentation/devicetree/bindings/iio/light/vl6180.txt        | 2 +-
+> >  .../devicetree/bindings/iio/potentiometer/mcp41010.txt        | 2 +-
+> >  .../devicetree/bindings/iio/potentiostat/lmp91000.txt         | 4 ++--
+> >  .../devicetree/bindings/iio/pressure/asc,dlhl60d.yaml         | 2 +-
+> >  .../devicetree/bindings/iio/proximity/devantech-srf04.yaml    | 4 ++--
+> >  11 files changed, 14 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> > index d124eba1ce54..fd4eaa3d0ab4 100644
+> > --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> > @@ -12,8 +12,8 @@ maintainers:
+> >  description: |
+> >    Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers that supports
+> >    both I2C & SPI interfaces.
+> > -    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
+> > -    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
+> > +    https://www.analog.com/en/products/mems/accelerometers/adxl345.html
+> > +    https://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
+> >
+> >  properties:
+> >    compatible:
+> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> > index 639c94ed83e9..17af395b99d9 100644
+> > --- a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> > +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> > @@ -6,7 +6,7 @@ Is is programmable through an SPI interface.
+> >
+> >  The internal DACs are loaded when the LOADDACS pin is pulled down.
+> >
+> > -http://www.ti.com/lit/ds/sbas106/sbas106.pdf
+> > +https://www.ti.com/lit/ds/sbas106/sbas106.pdf
+> >
+> >  Required Properties:
+> >  - compatible: Should be one of:
+> > diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > index af33267727f4..aa63cac7323e 100644
+> > --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > @@ -9,7 +9,7 @@ specifier is an array of one or more cells identifying the IIO
+> >  output on a device. The length of an IIO specifier is defined by the
+> >  value of a #io-channel-cells property in the IIO provider node.
+> >
+> > -[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+> > +[1] https://marc.info/?l=linux-iio&m=135902119507483&w=2
+> >
+> >  ==IIO providers==
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
+> > index aa199e09a493..3aa6db3ee99d 100644
+> > --- a/Documentation/devicetree/bindings/iio/light/apds9300.txt
+> > +++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
+> > @@ -1,6 +1,6 @@
+> >  * Avago APDS9300 ambient light sensor
+> >
+> > -http://www.avagotech.com/docs/AV02-1077EN
+> > +https://www.avagotech.com/docs/AV02-1077EN
+> >
+> >  Required properties:
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+> > index 3af325ad194b..c53ddb81c4aa 100644
+> > --- a/Documentation/devicetree/bindings/iio/light/apds9960.txt
+> > +++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+> > @@ -1,6 +1,6 @@
+> >  * Avago APDS9960 gesture/RGB/ALS/proximity sensor
+> >
+> > -http://www.avagotech.com/docs/AV02-4191EN
+> > +https://www.avagotech.com/docs/AV02-4191EN
+> >
+> >  Required properties:
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+> > index 47b13eb8f4ec..9e6f2998e751 100644
+> > --- a/Documentation/devicetree/bindings/iio/light/opt3001.txt
+> > +++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+> > @@ -6,7 +6,7 @@ the optional generation of IIO events on rising/falling light threshold changes
+> >  requires the use of interrupts. Without interrupts, only the simple reading
+> >  of the current light value is supported through the IIO API.
+> >
+> > -http://www.ti.com/product/opt3001
+> > +https://www.ti.com/product/opt3001
+> >
+> >  Required properties:
+> >    - compatible: should be "ti,opt3001"
+> > diff --git a/Documentation/devicetree/bindings/iio/light/vl6180.txt b/Documentation/devicetree/bindings/iio/light/vl6180.txt
+> > index 2c52952715a0..fb9137d85df9 100644
+> > --- a/Documentation/devicetree/bindings/iio/light/vl6180.txt
+> > +++ b/Documentation/devicetree/bindings/iio/light/vl6180.txt
+> > @@ -1,6 +1,6 @@
+> >  STMicro VL6180 -  ALS, range and proximity sensor
+> >
+> > -Link to datasheet: http://www.st.com/resource/en/datasheet/vl6180x.pdf
+> > +Link to datasheet: https://www.st.com/resource/en/datasheet/vl6180x.pdf
+> >
+> >  Required properties:
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> > index 566711b9950c..4f245e8469fd 100644
+> > --- a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> > +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> > @@ -1,7 +1,7 @@
+> >  * Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
+> >
+> >  Datasheet publicly available at:
+> > -http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
+> > +https://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
+> >
+> >  The node for this driver must be a child node of a SPI controller, hence
+> >  all mandatory properties described in
+> > diff --git a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > index e6d0c2eb345c..f3ab02b0dd41 100644
+> > --- a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > +++ b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
+> > @@ -1,7 +1,7 @@
+> >  * Texas Instruments LMP91000 series of potentiostats
+> >
+> > -LMP91000: http://www.ti.com/lit/ds/symlink/lmp91000.pdf
+> > -LMP91002: http://www.ti.com/lit/ds/symlink/lmp91002.pdf
+> > +LMP91000: https://www.ti.com/lit/ds/symlink/lmp91000.pdf
+> > +LMP91002: https://www.ti.com/lit/ds/symlink/lmp91002.pdf
+> >
+> >  Required properties:
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
+> > index 64c18f1693f0..be2be4b556db 100644
+> > --- a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
+> > @@ -13,7 +13,7 @@ description: |
+> >    Bindings for the All Sensors DLH series pressure sensors.
+> >
+> >    Specifications about the sensors can be found at:
+> > -    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
+> > +    https://www.allsensors.com/cad/DS-0355_Rev_B.PDF
+> >
+> >  properties:
+> >    compatible:
+> > diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > index f86f8b23ef18..ce795279839e 100644
+> > --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > @@ -17,9 +17,9 @@ description: |
+> >      until it is received once again
+> >
+> >    Specifications about the devices can be found at:
+> > -  http://www.robot-electronics.co.uk/htm/srf04tech.htm
+> > +  https://www.robot-electronics.co.uk/htm/srf04tech.htm
+> >
+> > -  http://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
+> > +  https://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
+> >
+> >  properties:
+> >    compatible:
+> > --
+> > 2.27.0
+> >  
 
