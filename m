@@ -2,180 +2,163 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919D8C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93412C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF1A2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D34206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j9AjgHBD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0HHcMjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgGLSeY (ORCPT
+        id S1729179AbgGLSkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 14:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
+        Sun, 12 Jul 2020 14:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbgGLSeY (ORCPT
+        with ESMTP id S1728945AbgGLSkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 14:34:24 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D96C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:34:23 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y13so6432846lfe.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:34:23 -0700 (PDT)
+        Sun, 12 Jul 2020 14:40:46 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 581C1C061794;
+        Sun, 12 Jul 2020 11:40:46 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so4964198pfq.11;
+        Sun, 12 Jul 2020 11:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IO9uKm8bvdgEjXJqj5Rrs1xcnUatMvk40LVf7RvbX1E=;
-        b=j9AjgHBDK8GhxGwrcFrgpH75XSyVbuNfHykEx4D4mLydcgD/rn7GbBfs1u5ekG2XOP
-         rBa7qpU1iHuVcWsWMIRn7fxyBREUsOaBW/HBn0hRaqYEmT1Lp+z0JecsqXPvA+hKXKVl
-         v2yBsHzTJgFCEACderYqPlp4GsvJHID7YtykwUWRvBI+w9q2TiHt63YIoEmwOaRd5+09
-         T5sBBkxwaK4lXsk6SYK81iiVCS6QO7NZqHKUm5PMG9Kvtqd7AFw3ENSx8k/PrJgPH7+H
-         ibHqQj2ZOIIUdUhcijI56PQmDDiRoA46ppkUqgEu9YbLVxe/fLhErxtqw5u40U1KDBPC
-         YGuQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5TJ+34sQAVUrawBXByyfuwrbgj6i1cli/YCTjxtCBqw=;
+        b=N0HHcMjVGeZLZKs6kySBi/kLjx//vGsHRhAgAn70NbsmCWAMm2ggej1XEym1TkTrI2
+         1RaGmxT5o0gLydjCDJGV76FDHQsG0/MeBmIbxTv5DSaT3TULK/IfbYlfepfNEkiMQmk9
+         pMxE7Rt2/EFgEH7Quq7GvESDdpvWY+RbR8tRKc/SElrWfewWr1bDfzmOZAel5bastYU4
+         l+o96BGwta1qZ7PRMbDolq2P/ebYU/wwwO2jQcK/mwQ0tlDCRPQ2vZa/eEBWU7Y6nUZT
+         K+Ku0Xl1nF8NMzl71Sss8yD4qs25ojddZtL3UAw9gfH97kt9dPHm6QwrFWkINM8fPBxh
+         i8Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IO9uKm8bvdgEjXJqj5Rrs1xcnUatMvk40LVf7RvbX1E=;
-        b=ekCSwJSrXyzv0lxqScZ8iUOWqAEfs6HbRGlnEz7h4kMEQkHVe5L2a61a5pvgcWN1oZ
-         6aqD0Kn6EZtg0IwCZvOSWeubZATpgu++orqPC+eeLiZcwaDhL75pElYxIseE+eUtqDnH
-         KgY/cO4woQa9v3wSSnLkMZWxzAxsSMw+5DGaqtrOFZq1Dc/D1kF4oBcq5vYZhjI8V30o
-         IA4a6qAdveLoAx0OGcUJ5gOC2aBEuOE4abgHCtr82+26UkblLz1zdtBOrMB4uGi2Ie0B
-         PVvnrXxP/g7Hb/ogttAQHebCNYKtNwvRQdL1JEqFFPED4gBIiS+JFPahWI7yv5Wup9wT
-         WXEA==
-X-Gm-Message-State: AOAM533EeH/JGKTxhkuRDJOLn5hSdbTlam7ZVPZqE+seas8aODHjXMHu
-        KzgmGjlxBpE+9ElEQov6tojmtP2aoTeWXRdiaNcVKg==
-X-Google-Smtp-Source: ABdhPJyD3BLm7rKT28e/lXdMw50zAGeCsTW4qgPGdvr71CB1pTn9a1l/8uedaLfOGd2pmua+XpcP+k3dqyADBddg7Zk=
-X-Received: by 2002:a05:6512:74f:: with SMTP id c15mr40253704lfs.26.1594578861881;
- Sun, 12 Jul 2020 11:34:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5TJ+34sQAVUrawBXByyfuwrbgj6i1cli/YCTjxtCBqw=;
+        b=kAL1AeVGyXcUTUofp0qT+d9ROc/R+wNt8dkopupUEhPCuq/jc1Gt03KugsDzsJWjHE
+         kTbvdlXOS1ARfYblQhGYzP2k4WKWO0LXMsc+wHHI9i12AfcqztZwwFR4Mn0qL20CJSKd
+         5ko93DICDZ746tqkIMbQGw8Ux7fWnb65OK6njOnbUfhliP0sRSMF4zcZYnX/tzi4gbUH
+         rQWDCxSNJeEFTm75E+husyEjPvCYJehGLRPNrArLY8ngcYyGZuImcQGF9s9ZPPhf1Q1H
+         MthfEG4ZccIJvIibF+kJLndGP1qckdL8/swH10GRpYvfq0EvmjBu14MJ9PZroF+9bZWL
+         XS6A==
+X-Gm-Message-State: AOAM530cuBKZLMCPFlIHhYhM0C3cEo2tnJU+eT67XP7WKbV1JixTbzIl
+        54JQLAiWqfkDuySCN7QZqbE=
+X-Google-Smtp-Source: ABdhPJwaLeWOxzmuhJhjgAdmI0j3ddtpspQ4OkHVexe7PvXeW20GC370vRPp3GnVrW9KjIJcaky3VQ==
+X-Received: by 2002:a62:29c6:: with SMTP id p189mr52732155pfp.55.1594579245655;
+        Sun, 12 Jul 2020 11:40:45 -0700 (PDT)
+Received: from Ryzen-9-3900X.localdomain (ip98-167-246-98.ph.ph.cox.net. [98.167.246.98])
+        by smtp.gmail.com with ESMTPSA id ci23sm11966956pjb.29.2020.07.12.11.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 11:40:45 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 11:40:41 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+ <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
-In-Reply-To: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 13 Jul 2020 00:04:10 +0530
-Message-ID: <CA+G9fYuYwef7HcKbiDk_DQkKzdKf87yCnc7nHXeCmbQmFWHEUA@mail.gmail.com>
-Subject: Re: [PATCH v3] mm, oom: make the calculation of oom badness more accurate
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        rientjes@google.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 at 21:28, Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> Recently we found an issue on our production environment that when memcg
-> oom is triggered the oom killer doesn't chose the process with largest
-> resident memory but chose the first scanned process. Note that all
-> processes in this memcg have the same oom_score_adj, so the oom killer
-> should chose the process with largest resident memory.
->
-> Bellow is part of the oom info, which is enough to analyze this issue.
-> [7516987.983223] memory: usage 16777216kB, limit 16777216kB, failcnt 5284=
-3037
-> [7516987.983224] memory+swap: usage 16777216kB, limit 9007199254740988kB,=
- failcnt 0
-> [7516987.983225] kmem: usage 301464kB, limit 9007199254740988kB, failcnt =
-0
-[...]
-> [7516987.984221] oom-kill:constraint=3DCONSTRAINT_MEMCG,nodemask=3D(null)=
-,cpuset=3D3aa16c9482ae3a6f6b78bda68a55d32c87c99b985e0f11331cddf05af6c4d753,=
-mems_allowed=3D0-1,oom_memcg=3D/kubepods/podf1c273d3-9b36-11ea-b3df-246e969=
-3c184,task_memcg=3D/kubepods/podf1c273d3-9b36-11ea-b3df-246e9693c184/1f246a=
-3eeea8f70bf91141eeaf1805346a666e225f823906485ea0b6c37dfc3d,task=3Dpause,pid=
-=3D5740,uid=3D0
-> [7516987.984254] Memory cgroup out of memory: Killed process 5740 (pause)=
- total-vm:1028kB, anon-rss:4kB, file-rss:0kB, shmem-rss:0kB
-> [7516988.092344] oom_reaper: reaped process 5740 (pause), now anon-rss:0k=
-B, file-rss:0kB, shmem-rss:0kB
->
-> We can find that the first scanned process 5740 (pause) was killed, but i=
-ts
-> rss is only one page. That is because, when we calculate the oom badness =
-in
-> oom_badness(), we always ignore the negtive point and convert all of thes=
-e
-> negtive points to 1. Now as oom_score_adj of all the processes in this
-> targeted memcg have the same value -998, the points of these processes ar=
-e
-> all negtive value. As a result, the first scanned process will be killed.
->
-> The oom_socre_adj (-998) in this memcg is set by kubelet, because it is a
-> a Guaranteed pod, which has higher priority to prevent from being killed =
-by
-> system oom.
->
-> To fix this issue, we should make the calculation of oom point more
-> accurate. We can achieve it by convert the chosen_point from 'unsigned
-> long' to 'long'.
->
-> [cai@lca.pw: reported a issue in the previous version]
-> [mhocko@suse.com: fixed the issue reported by Cai]
-> [mhocko@suse.com: add the comment in proc_oom_score()]
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Qian Cai <cai@lca.pw>
->
-> ---
-> v2 -> v3:
-> - fix the type of variable 'point' in oom_evaluate_task()
-> - initialize oom_control->chosen_points in select_bad_process() per Micha=
-l
-> - update the comment in proc_oom_score() per Michal
->
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+On Sun, Jul 12, 2020 at 10:59:17AM +0200, Sedat Dilek wrote:
+> On Sat, Jul 11, 2020 at 6:32 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+> >
+> > Dear Sami,
+> >
+> >
+> > Am 24.06.20 um 22:31 schrieb Sami Tolvanen:
+> > > This patch series adds support for building x86_64 and arm64 kernels
+> > > with Clang's Link Time Optimization (LTO).
+> > >
+> > > In addition to performance, the primary motivation for LTO is to allow
+> > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> > >
+> > > Most of the patches are build system changes for handling LLVM bitcode,
+> > > which Clang produces with LTO instead of ELF object files, postponing
+> > > ELF processing until a later stage, and ensuring initcall ordering.
+> > >
+> > > Note that first objtool patch in the series is already in linux-next,
+> > > but as it's needed with LTO, I'm including it also here to make testing
+> > > easier.
+> >
+> > […]
+> >
+> > Thank you very much for sending these changes.
+> >
+> > Do you have a branch, where your current work can be pulled from? Your
+> > branch on GitHub [1] seems 15 months old.
+> >
+> 
+> Agreed it's easier to git-pull.
+> I have seen [1] - not sure if this is the latest version.
+> Alternatively, you can check patchwork LKML by searching for $submitter.
+> ( You can open patch 01/22 and download the whole patch-series by
+> following the link "series", see [3]. )
+> 
+> - Sedat -
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git/log/?h=lto
+> [2] https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=19676
+> [3] https://lore.kernel.org/patchwork/series/450026/mbox/
+> 
 
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Sami tagged this series on his GitHub:
 
-I have noticed kernel panic with v2 patch while running LTP mm test suite.
+https://github.com/samitolvanen/linux/releases/tag/lto-v1
 
-[ 63.451494] Out of memory and no killable processes...
-[ 63.456633] Kernel panic - not syncing: System is deadlocked on memory
+git pull https://github.com/samitolvanen/linux lto-v1
 
-Then I have removed the v2 patch and applied this below v3 patch and re-tes=
-ted.
-No regression noticed with v3 patch while running LTP mm on x86_64 and arm.
+Otherwise, he is updating the clang-cfi branch that includes both the
+LTO and CFI patchsets. You can pull that and just turn on
+CONFIG_LTO_CLANG.
 
-OTOH,
-oom01 test case started with 100 iterations but runltp got killed after the
-6th iteration [3]. I think this is expected.
+Lastly, for the future, I would recommend grabbing b4 to easily apply
+patches (specifically full series) from lore.kernel.org.
 
-test steps:
-          - cd /opt/ltp
-          - ./runltp -s oom01 -I 100 || true
+https://git.kernel.org/pub/scm/utils/b4/b4.git/
+https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/README.rst
 
-[  209.052842] Out of memory: Killed process 519 (runltp)
-total-vm:10244kB, anon-rss:904kB, file-rss:4kB, shmem-rss:0kB, UID:0
-pgtables:60kB oom_score_adj:0
-[  209.066782] oom_reaper: reaped process 519 (runltp), now
-anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-/lava-1558245/0/tests/0_prep-tmp-disk/run.sh: line 21:   519 Killed
-              ./runltp -s oom01 -I 100
+You could grab this series and apply it easily by either downloading the
+mbox file and following the instructions it gives for applying the mbox
+file:
 
-> ---
->  fs/proc/base.c      | 11 ++++++++++-
->  include/linux/oom.h |  4 ++--
->  mm/oom_kill.c       | 22 ++++++++++------------
->  3 files changed, 22 insertions(+), 15 deletions(-)
+$ b4 am 20200624203200.78870-1-samitolvanen@google.com
 
+or I prefer piping so that I don't have to clean up later:
 
-Reference test jobs,
-[1] https://lkft.validation.linaro.org/scheduler/job/1558246#L9189
-[2] https://lkft.validation.linaro.org/scheduler/job/1558247#L17213
-[3] https://lkft.validation.linaro.org/scheduler/job/1558245#L1407
+$ b4 am -o - 20200624203200.78870-1-samitolvanen@google.com | git am
+
+Cheers,
+Nathan
