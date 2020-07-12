@@ -2,255 +2,118 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8588C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C614C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCE892067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD732067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDJtHFl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgGLTyC (ORCPT
+        id S1729418AbgGLTzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 15:54:02 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:45725 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbgGLTyC (ORCPT
+        Sun, 12 Jul 2020 15:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729249AbgGLTzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 15:54:02 -0400
-Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay11.mail.gandi.net (Postfix) with ESMTPA id C3302100005;
-        Sun, 12 Jul 2020 19:53:57 +0000 (UTC)
+        Sun, 12 Jul 2020 15:55:37 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 085D1C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 12:55:37 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id o22so5097775pjw.2
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 12:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIetUemoKxubLIYPWxy8SSfRsMLA5iGT0+nNiwpoC8E=;
+        b=hDJtHFl+cs7wxiwlm/QzWtMohfBYx6eBi9chJv3S6i1ej30kh6SApEDRMKcoBel7j/
+         pEwVHjAFsNMGYaw3qx44QHbKs1MXZCTyC10bdU+IMyMKmDKln4SZ667XpNyKhZsyXANy
+         96ne/wRADtz/JeT4w0ej0Q5ZD2YQ3fHnb97m2Kk6O/9xyx/3G9E2HxSMSzvw2eKhQatS
+         EEdGKx1dS4W91yvgqXSeN6QaRip+kHwPyh+0j84pSLdT0v/u7tjYzUfc8CqbaKd9wtRK
+         09LOk4XAGwquNkzMZFt1SJAVJwU/KKyRYvlr+CGS3nEvKRAyBfEHKXo2K3GzJtsXsD6w
+         50bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIetUemoKxubLIYPWxy8SSfRsMLA5iGT0+nNiwpoC8E=;
+        b=W7dX6FgIIdCz8oIlScXxFWi3i07/upDmdOU6akJ9ljODm9+A7AIjZe2mSvRXEhtj0U
+         2rh1bBGdnXvD//VX46nfgSobBOjSZ9nw4huvwV45MI0gXZr0ikBm1RhPsIYGnNpmnS27
+         si/rcLwbSUMghLgJBU2umwWpyAmGlnawYWwkb/MK3YJv4F4qtwokgesmvDj20dygvD4m
+         YjQHjjlKWi4qM8yy2eDahSF9B2ddbLPR7UYR45/DMdPPsoRCFY6dLbnOdjidRRpjP55R
+         2NoFGJjXZ6tbMx2tIAllSAtYYTJBycZT+taTfNOh4sGTPo0XXitvVJansHpBm/laEG/J
+         RsdA==
+X-Gm-Message-State: AOAM5323OhCFb17XBd+DKURaaDIz2ksYDAjcJ8qg0WRz84WXGpbWLwbp
+        oemTo43Y47DWbG4Rx8XTNqc=
+X-Google-Smtp-Source: ABdhPJxt/3avMldT/5sRUPLXyx9n2Xa19Em9/z1ugiHkq8+HTiCY6i+RomfItIhd8PA51kYGUbWiUA==
+X-Received: by 2002:a17:902:b204:: with SMTP id t4mr69685235plr.132.1594583736545;
+        Sun, 12 Jul 2020 12:55:36 -0700 (PDT)
+Received: from octofox.hsd1.ca.comcast.net ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
+        by smtp.gmail.com with ESMTPSA id nl11sm31314271pjb.0.2020.07.12.12.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 12:55:35 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/3] xtensa fixes for v5.8
+Date:   Sun, 12 Jul 2020 12:55:23 -0700
+Message-Id: <20200712195523.6411-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 12 Jul 2020 21:53:57 +0200
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 4/6] iio/adc: ingenic: Retrieve channels list from soc
- data struct
-In-Reply-To: <20200712131130.350fd3c7@archlinux>
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
- <20200709152200.10039-5-contact@artur-rojek.eu>
- <20200712130713.64cd2bac@archlinux> <20200712131130.350fd3c7@archlinux>
-Message-ID: <3f9ced8ead2f13bc73c4345f7751b3d0@artur-rojek.eu>
-X-Sender: contact@artur-rojek.eu
-User-Agent: Roundcube Webmail/1.3.13
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-12 14:11, Jonathan Cameron wrote:
-> On Sun, 12 Jul 2020 13:07:13 +0100
-> Jonathan Cameron <jic23@kernel.org> wrote:
-> 
->> On Thu,  9 Jul 2020 17:21:58 +0200
->> Artur Rojek <contact@artur-rojek.eu> wrote:
->> 
->> > From: Paul Cercueil <paul@crapouillou.net>
->> >
->> > Instead of having one array of struct iio_chan_spec for all SoCs, and
->> > have some SoCs remove the last item of the array as they can't use it,
->> > have each SoC define its array of supported channels.
->> >
->> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> > Tested-by: Artur Rojek <contact@artur-rojek.eu>
->> Applied to the togreg branch of iio.git and pushed out as testing for
->> autobuilders to play with it.
-> Actually removed from tree again.
-> 
-> Artur, as you sent this patch on to me, you need to sign-off on it
-> so we maintain the DCO related records of how this got to the kernel.
-> You can just reply here to give it.
+Hi Linus,
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+please pull the following Xtensa architecture fixes for v5.8:
 
-Thanks,
-Artur
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
->> 
->> Thanks,
->> 
->> Jonathan
->> 
->> > ---
->> >
->> >  Changes:
->> >
->> >  v8: new patch
->> >
->> >  drivers/iio/adc/ingenic-adc.c | 99 +++++++++++++++++++++++------------
->> >  1 file changed, 65 insertions(+), 34 deletions(-)
->> >
->> > diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
->> > index 89019fb59d48..0233a9055c86 100644
->> > --- a/drivers/iio/adc/ingenic-adc.c
->> > +++ b/drivers/iio/adc/ingenic-adc.c
->> > @@ -55,6 +55,8 @@ struct ingenic_adc_soc_data {
->> >  	size_t battery_scale_avail_size;
->> >  	unsigned int battery_vref_mode: 1;
->> >  	unsigned int has_aux2: 1;
->> > +	const struct iio_chan_spec *channels;
->> > +	unsigned int num_channels;
->> >  	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
->> >  };
->> >
->> > @@ -262,6 +264,61 @@ static int jz4770_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
->> >  	return 0;
->> >  }
->> >
->> > +static const struct iio_chan_spec jz4740_channels[] = {
->> > +	{
->> > +		.extend_name = "aux",
->> > +		.type = IIO_VOLTAGE,
->> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > +				      BIT(IIO_CHAN_INFO_SCALE),
->> > +		.indexed = 1,
->> > +		.channel = INGENIC_ADC_AUX,
->> > +		.scan_index = -1,
->> > +	},
->> > +	{
->> > +		.extend_name = "battery",
->> > +		.type = IIO_VOLTAGE,
->> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > +				      BIT(IIO_CHAN_INFO_SCALE),
->> > +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW) |
->> > +						BIT(IIO_CHAN_INFO_SCALE),
->> > +		.indexed = 1,
->> > +		.channel = INGENIC_ADC_BATTERY,
->> > +		.scan_index = -1,
->> > +	},
->> > +};
->> > +
->> > +static const struct iio_chan_spec jz4770_channels[] = {
->> > +	{
->> > +		.extend_name = "aux",
->> > +		.type = IIO_VOLTAGE,
->> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > +				      BIT(IIO_CHAN_INFO_SCALE),
->> > +		.indexed = 1,
->> > +		.channel = INGENIC_ADC_AUX,
->> > +		.scan_index = -1,
->> > +	},
->> > +	{
->> > +		.extend_name = "battery",
->> > +		.type = IIO_VOLTAGE,
->> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > +				      BIT(IIO_CHAN_INFO_SCALE),
->> > +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW) |
->> > +						BIT(IIO_CHAN_INFO_SCALE),
->> > +		.indexed = 1,
->> > +		.channel = INGENIC_ADC_BATTERY,
->> > +		.scan_index = -1,
->> > +	},
->> > +	{
->> > +		.extend_name = "aux2",
->> > +		.type = IIO_VOLTAGE,
->> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > +				      BIT(IIO_CHAN_INFO_SCALE),
->> > +		.indexed = 1,
->> > +		.channel = INGENIC_ADC_AUX2,
->> > +		.scan_index = -1,
->> > +	},
->> > +};
->> > +
->> >  static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
->> >  	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
->> >  	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
->> > @@ -271,6 +328,8 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
->> >  	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
->> >  	.battery_vref_mode = true,
->> >  	.has_aux2 = false,
->> > +	.channels = jz4740_channels,
->> > +	.num_channels = ARRAY_SIZE(jz4740_channels),
->> >  	.init_clk_div = jz4725b_adc_init_clk_div,
->> >  };
->> >
->> > @@ -283,6 +342,8 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
->> >  	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
->> >  	.battery_vref_mode = true,
->> >  	.has_aux2 = false,
->> > +	.channels = jz4740_channels,
->> > +	.num_channels = ARRAY_SIZE(jz4740_channels),
->> >  	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
->> >  };
->> >
->> > @@ -295,6 +356,8 @@ static const struct ingenic_adc_soc_data jz4770_adc_soc_data = {
->> >  	.battery_scale_avail_size = ARRAY_SIZE(jz4770_adc_battery_scale_avail),
->> >  	.battery_vref_mode = false,
->> >  	.has_aux2 = true,
->> > +	.channels = jz4770_channels,
->> > +	.num_channels = ARRAY_SIZE(jz4770_channels),
->> >  	.init_clk_div = jz4770_adc_init_clk_div,
->> >  };
->> >
->> > @@ -427,35 +490,6 @@ static const struct iio_info ingenic_adc_info = {
->> >  	.of_xlate = ingenic_adc_of_xlate,
->> >  };
->> >
->> > -static const struct iio_chan_spec ingenic_channels[] = {
->> > -	{
->> > -		.extend_name = "aux",
->> > -		.type = IIO_VOLTAGE,
->> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > -				      BIT(IIO_CHAN_INFO_SCALE),
->> > -		.indexed = 1,
->> > -		.channel = INGENIC_ADC_AUX,
->> > -	},
->> > -	{
->> > -		.extend_name = "battery",
->> > -		.type = IIO_VOLTAGE,
->> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > -				      BIT(IIO_CHAN_INFO_SCALE),
->> > -		.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW) |
->> > -						BIT(IIO_CHAN_INFO_SCALE),
->> > -		.indexed = 1,
->> > -		.channel = INGENIC_ADC_BATTERY,
->> > -	},
->> > -	{ /* Must always be last in the array. */
->> > -		.extend_name = "aux2",
->> > -		.type = IIO_VOLTAGE,
->> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
->> > -				      BIT(IIO_CHAN_INFO_SCALE),
->> > -		.indexed = 1,
->> > -		.channel = INGENIC_ADC_AUX2,
->> > -	},
->> > -};
->> > -
->> >  static int ingenic_adc_probe(struct platform_device *pdev)
->> >  {
->> >  	struct device *dev = &pdev->dev;
->> > @@ -517,11 +551,8 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->> >  	iio_dev->dev.parent = dev;
->> >  	iio_dev->name = "jz-adc";
->> >  	iio_dev->modes = INDIO_DIRECT_MODE;
->> > -	iio_dev->channels = ingenic_channels;
->> > -	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
->> > -	/* Remove AUX2 from the list of supported channels. */
->> > -	if (!adc->soc_data->has_aux2)
->> > -		iio_dev->num_channels -= 1;
->> > +	iio_dev->channels = soc_data->channels;
->> > +	iio_dev->num_channels = soc_data->num_channels;
->> >  	iio_dev->info = &ingenic_adc_info;
->> >
->> >  	ret = devm_iio_device_register(dev, iio_dev);
->> 
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+
+are available in the Git repository at:
+
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20200712
+
+for you to fetch changes up to ee769ebbe9e5fc7219e979fb7c5ed5bb5722649e:
+
+  xtensa: simplify xtensa_pmu_irq_handler (2020-07-08 00:18:15 -0700)
+
+----------------------------------------------------------------
+Xtensa fixes for v5.8:
+
+- fix __sync_fetch_and_{and,or}_4 declarations to avoid build warning
+- update *pos in cpuinfo_op.next to avoid runtime warning
+- use for_each_set_bit in xtensa_pmu_irq_handler instead of open-coding
+  it
+
+----------------------------------------------------------------
+Max Filippov (2):
+      xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+      xtensa: update *pos in cpuinfo_op.next
+
+Xu Wang (1):
+      xtensa: simplify xtensa_pmu_irq_handler
+
+ arch/xtensa/kernel/perf_event.c   | 4 +---
+ arch/xtensa/kernel/setup.c        | 3 ++-
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+-- 
+Thanks.
+-- Max
