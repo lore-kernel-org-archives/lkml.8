@@ -2,201 +2,209 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBDA206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594561077;
-	bh=bhY7zQPI40DPChwSXUzdQqdIEuZ9kJIomhYQgBXWoI0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XmESvMHSneqkWGUD7JgHp5YnVMqPP4037fpyofdDDvIpG6sWBM6cQZ+kVXrj7OHal
-	 Vh7FyU6G0yEL7j4MCr16memMoC4+kFoIklWwcjn5n3YQpdCEkPSY3Kxli5PMyD0n9P
-	 dT371EkCD59oUX4IY1fU7vymf7na4Oan0cTcqPQY=
+	by mail.kernel.org (Postfix) with ESMTP id 5BCC0206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgGLNhz (ORCPT
+        id S1728911AbgGLNql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 09:46:41 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8461 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgGLNhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:37:55 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6028D206B6;
-        Sun, 12 Jul 2020 13:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594561074;
-        bh=bhY7zQPI40DPChwSXUzdQqdIEuZ9kJIomhYQgBXWoI0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1QAUfCtEAu3GOYaJw7LLKPSzRIYj9pFgcgpA0ghV91mg5fpskLvnYbD51Q+EdF1Fi
-         4YxIpRX7HQrfI2mY8m/PCl0yELMlmNcpzPV8rF6E0u2ehacqhw8ViYovaYDS9PDoux
-         GpEjBhwQYZeenLBBowZZU+nUKDKY1t4jOCx1lz2Y=
-Date:   Sun, 12 Jul 2020 22:37:48 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        Patrick =?UTF-8?B?U3TDpGhsaW4=?= <me@packi.ch>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Atish Patra <atish.patra@wdc.com>, penberg@kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: Re: [PATCH v2 6/6] riscv: Add KPROBES_ON_FTRACE supported
-Message-Id: <20200712223748.9cb00fdf7938fbf7353c11cc@kernel.org>
-In-Reply-To: <CAJF2gTSfFY6qf7gZ9t80P-3cACWi3oEe4X8ek+_1nQZZT3Uk5w@mail.gmail.com>
-References: <1594261154-69745-1-git-send-email-guoren@kernel.org>
-        <1594261154-69745-7-git-send-email-guoren@kernel.org>
-        <20200710225017.5ce329485e911f99e17cd483@kernel.org>
-        <CAJF2gTSfFY6qf7gZ9t80P-3cACWi3oEe4X8ek+_1nQZZT3Uk5w@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728754AbgGLNql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:46:41 -0400
+IronPort-SDR: mwCGpF3H87/MdUJrNkIzvWdXlGFaaomvqW8JkwzbiV4rqEcdyog22JOKPmCTlHErdAjiAmjYK5
+ r9V9ACey7k+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540888"
+X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
+   d="scan'208";a="146540888"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:41 -0700
+IronPort-SDR: JQVxbhj6If0mkuy3BQvbSfUv0FMAr0fZg9FrjZsYdlcX03IIDdKHLWYRjUBqjd1Kllh4H/MEjd
+ IzUSFWFDB8Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
+   d="scan'208";a="307148585"
+Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:40 -0700
+From:   Gage Eads <gage.eads@intel.com>
+To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
+Subject: [PATCH 00/20] dlb2: introduce DLB 2.0 device driver
+Date:   Sun, 12 Jul 2020 08:43:11 -0500
+Message-Id: <20200712134331.8169-1-gage.eads@intel.com>
+X-Mailer: git-send-email 2.13.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jul 2020 09:32:01 +0800
-Guo Ren <guoren@kernel.org> wrote:
+This commit introduces a new misc device driver for the Intel(r) Dynamic
+Load Balancer 2.0 (Intel(r) DLB 2.0). The Intel DLB 2.0 is a PCIe device that
+provides load-balanced, prioritized scheduling of core-to-core communication.
 
-> Thx Masami,
-> 
-> On Fri, Jul 10, 2020 at 9:50 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > Hi Guo,
-> >
-> > On Thu,  9 Jul 2020 02:19:14 +0000
-> > guoren@kernel.org wrote:
-> >
-> > > +/* Ftrace callback handler for kprobes -- called under preepmt disabed */
-> > > +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-> > > +                        struct ftrace_ops *ops, struct pt_regs *regs)
-> > > +{
-> > > +     struct kprobe *p;
-> > > +     struct kprobe_ctlblk *kcb;
-> > > +
-> > > +     p = get_kprobe((kprobe_opcode_t *)ip);
-> > > +     if (unlikely(!p) || kprobe_disabled(p))
-> > > +             return;
-> > > +
-> > > +     kcb = get_kprobe_ctlblk();
-> > > +     if (kprobe_running()) {
-> > > +             kprobes_inc_nmissed_count(p);
-> > > +     } else {
-> > > +             /*
-> > > +              * The regs->epc hasn't been saved by SAVE_ALL in mcount-dyn.S
-> > > +              * So no need to resume it, just for kprobe handler.
-> > > +              */
-> > > +             instruction_pointer_set(regs, ip);
-> > > +             __this_cpu_write(current_kprobe, p);
-> > > +             kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> > > +             if (!p->pre_handler || !p->pre_handler(p, regs)) {
-> > > +                     /*
-> > > +                      * Emulate singlestep (and also recover regs->pc)
-> > > +                      * as if there is a nop
-> > > +                      */
-> > > +                     instruction_pointer_set(regs,
-> > > +                             (unsigned long)p->addr + MCOUNT_INSN_SIZE);
-> > > +                     if (unlikely(p->post_handler)) {
-> > > +                             kcb->kprobe_status = KPROBE_HIT_SSDONE;
-> > > +                             p->post_handler(p, regs, 0);
-> > > +                     }
-> >
-> > Hmm, don't you need restoring the previous instruction pointer here?
-> look at  riscv mcount-dyn.S SAVE_ALL function, sp frame lay out like this:
-> -----------------------
-> | return address |
-> -----------------------
-> | frame pointer   |
-> -----------------------
-> | pt_regs x1-x31|
-> -----------------------
-> It's not a complete pt_regs for the handler, so modifing regs->ip is no use.
+The Intel DLB 2.0 consists of queues and arbiters that connect producer cores
+and consumer cores. The device implements load-balanced queueing features
+including:
+- Lock-free multi-producer/multi-consumer operation.
+- Multiple priority levels for varying traffic types.
+- 'Direct' traffic (i.e. multi-producer/single-consumer)
+- Simple unordered load-balanced distribution.
+- Atomic lock free load balancing across multiple consumers.
+- Queue element reordering feature allowing ordered load-balanced
+  distribution.
 
-Yes, that is same on x86. But ftrace regs_caller on x86-64 modifies the
-return address on the stack by regs->ip.
+Intel DLB 2.0 can be used in an event-driven programming model, such as DPDK's
+Event Device Library[2]. Such frameworks are commonly used in packet processing
+pipelines that benefit from the framework's multi-core scalability, dynamic
+load-balancing, and variety of packet distribution and synchronization schemes.
 
-See arch/x86/kernel/ftrace_64.S:
+These distribution schemes include "parallel" (packets are load-balanced
+across multiple cores and processed in parallel), "ordered" (similar to
+"parallel" but packets are reordered into ingress order by the device), and
+"atomic" (packet flows are scheduled to a single core at a time such that
+locks are not required to access per-flow data, and dynamically migrated to
+ensure load-balance).
 
------
-SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-        call ftrace_stub
+The fundamental unit of communication through the device is a queue entry
+(QE), which consists of 8B of data and 8B of metadata (destination queue,
+priority, etc.). The data field can be any type that fits within 8B.
 
-        /* Copy flags back to SS, to restore them */
-        movq EFLAGS(%rsp), %rax
-        movq %rax, MCOUNT_REG_SIZE(%rsp)
+A core's interface to the device, a "port," consists of a memory-mappable
+region through which the core enqueues a queue entry, and an in-memory
+queue (the "consumer queue") to which the device schedules QEs. Each QE
+is enqueued to a device-managed queue, and from there scheduled to a port.
+Software specifies the "linking" of queues and ports; i.e. which ports the
+device is allowed to schedule to for a given queue. The device uses a
+credit scheme to prevent overflow of the on-device queue storage.
 
-        /* Handlers can change the RIP */
-        movq RIP(%rsp), %rax
-        movq %rax, MCOUNT_REG_SIZE+8(%rsp)
------
+Applications can interface directly with the device by mapping the port's
+memory and MMIO regions into the application's address space for enqueue
+and dequeue operations, but call into the kernel driver for configuration
+operations. An application can also be polling- or interrupt-driven;
+Intel DLB 2.0 supports both modes of operation.
 
-The last part update the return address on the stack.
+Device resources -- i.e. ports, queues, and credits -- are contained within
+a scheduling domain. Scheduling domains are isolated from one another; a
+port can only enqueue to and dequeue from queues within its scheduling
+domain. A scheduling domain's resources are configured through a scheduling
+domain file, which is acquired through an ioctl.
 
-> > If you don't support modifying the instruction pointer in the handler,
-> We can modify ip like this if necessary:
-> *(unsigned long *)((unsigned long)regs + sizeof(struct pt_regs) + 8) = xxx;
-> 
-> > it must not be compatible with kprobes.
-> Why, can you show related codes? thank you very much.
+Intel DLB 2.0 supports SR-IOV and Scalable IOV, and allows for a flexible
+division of its resources among the PF and its virtual devices. The virtual
+devices are incapable of configuring the device directly; they use a hardware
+mailbox to proxy configuration requests to the PF driver. This driver supports
+both PF and virtual devices, as there is significant code re-use between the
+two, with device-specific behavior handled through a callback interface.
+Virtualization support will be added in a later patch set.
 
-The "Changing Execution Path" section in the Documentation/kprobes.txt said
+The dlb driver uses ioctls as its primary interface (it makes use of sysfs
+as well, to a lesser extent). The dlb device file supports a different
+ioctl interface than the scheduling domain file; the dlb device file
+is used for device-wide operations (including scheduling domain creation),
+and the scheduling domain file supports operations on the scheduling
+domain's resources (primarily resource configuration).
 
------
-Since kprobes can probe into a running kernel code, it can change the
-register set, including instruction pointer.
------
+The dlb driver is partially dual-licensed (GPLv2 and BSD 3 clause). The
+dual-licensed files implement a "hardware access library" that is largely
+Linux independent (except, for example, kmalloc() and kfree() calls), so
+that they can be ported to other environments (e.g. DPDK).
 
-As you can see, this is the expected behavior on kprobes.
-Since user will not know the kprobes is working on a breakpoint or
-ftrace, we have to support this behavior transparently. So, could you
-enable this feature at first on ftrace@RISCV?
+[1] https://builders.intel.com/docs/networkbuilders/SKU-343247-001US-queue-management-and-load-balancing-on-intel-architecture.pdf
+[2] https://doc.dpdk.org/guides/prog_guide/eventdev.html
 
-> 
-> >
-> > Now BPF function override and function error injection depends on
-> > this behevior, so could you consider to support it in the "ftrace"
-> > implementation at first? (And if it is enabled, you can enable the
-> > livepatch on RISCV too)
-> Great message!
-> 
-> But can you show me codes that bpf and err-jnject using the behavior? Thx
+Note: This patchset underwent multiple internal reviews and revisions, and
+those changes include:
+- Many style corrections (multi-line comments, header order, etc.)
+- Add device and software documentation (dlb2.rst)
+- Use dyndbg for debug messages
+- Refactor mmap and device file architecture
+- Use ida library for ID management
+- Fill data structure holes
+- Add missing static keyword for various functions
+- Various bug fixes
 
-In kernel/fail_function.c
+Gage Eads (20):
+  dlb2: add skeleton for DLB 2.0 driver
+  dlb2: initialize PF device
+  dlb2: add resource and device initialization
+  dlb2: add device ioctl layer and first 4 ioctls
+  dlb2: add sched domain config and reset support
+  dlb2: add ioctl to get sched domain fd
+  dlb2: add runtime power-management support
+  dlb2: add queue create and queue-depth-get ioctls
+  dlb2: add ioctl to configure ports, query poll mode
+  dlb2: add port mmap support
+  dlb2: add start domain ioctl
+  dlb2: add queue map and unmap ioctls
+  dlb2: add port enable/disable ioctls
+  dlb2: add CQ interrupt support
+  dlb2: add domain alert support
+  dlb2: add sequence-number management ioctls
+  dlb2: add cos bandwidth get/set ioctls
+  dlb2: add device FLR support
+  dlb2: add basic PF sysfs interfaces
+  dlb2: add ingress error handling
 
------
-static int fei_kprobe_handler(struct kprobe *kp, struct pt_regs *regs)
-{
-        struct fei_attr *attr = container_of(kp, struct fei_attr, kp);
+ Documentation/ABI/testing/sysfs-driver-dlb2 |  202 +
+ Documentation/misc-devices/dlb2.rst         |  313 ++
+ Documentation/misc-devices/index.rst        |    1 +
+ MAINTAINERS                                 |    7 +
+ drivers/misc/Kconfig                        |    1 +
+ drivers/misc/Makefile                       |    1 +
+ drivers/misc/dlb2/Kconfig                   |   11 +
+ drivers/misc/dlb2/Makefile                  |   13 +
+ drivers/misc/dlb2/dlb2_bitmap.h             |  286 ++
+ drivers/misc/dlb2/dlb2_file.c               |  133 +
+ drivers/misc/dlb2/dlb2_file.h               |   19 +
+ drivers/misc/dlb2/dlb2_hw_types.h           |  357 ++
+ drivers/misc/dlb2/dlb2_intr.c               |  140 +
+ drivers/misc/dlb2/dlb2_intr.h               |   30 +
+ drivers/misc/dlb2/dlb2_ioctl.c              | 1319 +++++
+ drivers/misc/dlb2/dlb2_ioctl.h              |   19 +
+ drivers/misc/dlb2/dlb2_main.c               | 1181 +++++
+ drivers/misc/dlb2/dlb2_main.h               |  285 ++
+ drivers/misc/dlb2/dlb2_pf_ops.c             | 1313 +++++
+ drivers/misc/dlb2/dlb2_regs.h               | 3702 ++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.c           | 7119 +++++++++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.h           |  924 ++++
+ include/linux/pci_ids.h                     |    2 +
+ include/uapi/linux/dlb2_user.h              | 1158 +++++
+ 24 files changed, 18536 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-dlb2
+ create mode 100644 Documentation/misc-devices/dlb2.rst
+ create mode 100644 drivers/misc/dlb2/Kconfig
+ create mode 100644 drivers/misc/dlb2/Makefile
+ create mode 100644 drivers/misc/dlb2/dlb2_bitmap.h
+ create mode 100644 drivers/misc/dlb2/dlb2_file.c
+ create mode 100644 drivers/misc/dlb2/dlb2_file.h
+ create mode 100644 drivers/misc/dlb2/dlb2_hw_types.h
+ create mode 100644 drivers/misc/dlb2/dlb2_intr.c
+ create mode 100644 drivers/misc/dlb2/dlb2_intr.h
+ create mode 100644 drivers/misc/dlb2/dlb2_ioctl.c
+ create mode 100644 drivers/misc/dlb2/dlb2_ioctl.h
+ create mode 100644 drivers/misc/dlb2/dlb2_main.c
+ create mode 100644 drivers/misc/dlb2/dlb2_main.h
+ create mode 100644 drivers/misc/dlb2/dlb2_pf_ops.c
+ create mode 100644 drivers/misc/dlb2/dlb2_regs.h
+ create mode 100644 drivers/misc/dlb2/dlb2_resource.c
+ create mode 100644 drivers/misc/dlb2/dlb2_resource.h
+ create mode 100644 include/uapi/linux/dlb2_user.h
 
-        if (should_fail(&fei_fault_attr, 1)) {
-                regs_set_return_value(regs, attr->retval);
-                override_function_with_return(regs);
-                return 1;
-        }
 
-        return 0;
-}
------
-
-And follow the code related to CONFIG_BPF_KPROBE_OVERRIDE in
-kernel/trace/bpf_trace.c. (doing similar thing, but fail_function.c
-is simpler.)
-
-Thank you,
-
-
+base-commit: 2d41d2ab85d414f6ea9eac2f853b1aa31ba0820f
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.13.6
+
