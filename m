@@ -2,220 +2,180 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77497C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C76E206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF1A2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2+aKNsi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j9AjgHBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgGLSNR (ORCPT
+        id S1729328AbgGLSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 14:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
+        Sun, 12 Jul 2020 14:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgGLSNR (ORCPT
+        with ESMTP id S1729136AbgGLSeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 14:13:17 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079F7C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:13:17 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so10772430wmf.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:13:16 -0700 (PDT)
+        Sun, 12 Jul 2020 14:34:24 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D96C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:34:23 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y13so6432846lfe.9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eeOcB9pmMGk8mHjcVHnFiJN3rGVgIfLhswrzgdsAh1w=;
-        b=C2+aKNsi1srDRHdu2CaEs1W8hpiapnF7OMvdpOdeY9LANWWCGewcVjXjZeDaIhxZYX
-         +TLQKKmwE5uMzmZj1yIgvRJR4ST8opXxsMk1bDsq89Vxl8Dl6SnLdGqB17j3wuo9kljW
-         J+xKKgtctdcZy+Jw87dPvM11JJCnXEDt99yXyUZppnmVUWL0ngk1VPr+Au68Tmkx0ToH
-         +M5r5YYlmB7nKHFFWkQWuRSlWpPBiR+yJ5K5R4JmWevfDaVDqVWAHAeLVmxonHCRSQdr
-         3ksBQKkMcoZb/1gmHMFh/9mWgjKIMQ4ii7zOq7Z3qOjKgK7BFpxiYDofHWJvHSONi1JH
-         gsyQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IO9uKm8bvdgEjXJqj5Rrs1xcnUatMvk40LVf7RvbX1E=;
+        b=j9AjgHBDK8GhxGwrcFrgpH75XSyVbuNfHykEx4D4mLydcgD/rn7GbBfs1u5ekG2XOP
+         rBa7qpU1iHuVcWsWMIRn7fxyBREUsOaBW/HBn0hRaqYEmT1Lp+z0JecsqXPvA+hKXKVl
+         v2yBsHzTJgFCEACderYqPlp4GsvJHID7YtykwUWRvBI+w9q2TiHt63YIoEmwOaRd5+09
+         T5sBBkxwaK4lXsk6SYK81iiVCS6QO7NZqHKUm5PMG9Kvtqd7AFw3ENSx8k/PrJgPH7+H
+         ibHqQj2ZOIIUdUhcijI56PQmDDiRoA46ppkUqgEu9YbLVxe/fLhErxtqw5u40U1KDBPC
+         YGuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eeOcB9pmMGk8mHjcVHnFiJN3rGVgIfLhswrzgdsAh1w=;
-        b=EAGekZhJOnMajjLvykMybpzBTNJmUJoAgl1Ngy+HY707EvwtPtWx5Zxqcj8i8UCoyq
-         wZFbr03o+xf63xsQVg/AwyQVT1pY4JNV4zlBDXJSkyF3mdwE6y7vPJczgy5Pgwutd//B
-         xPtj0w1eiaqqYbxZbtCOLND4fSxYZ5vSr3cVrDmTT6Dk9mZrOAalr3c0ZAYru8YAICP6
-         u4tYpqQsfdqKsqERFBNGUa+FZFT20CPfkZUATRwWKVLflh217uTJ13xDCLC7ekf+1PCv
-         9TtkLUeh3y5gmxPvuMaz78pP2FVj8VxzhK8mmkWhpaxPCR2ioZqsBnkd95F43agKdiKI
-         o3nw==
-X-Gm-Message-State: AOAM532q61BUjPfSq44FOzRGIRrJGg7kFYBhzQNrxISJ5U7k9B1HgY/S
-        XwmwNIpL3PbwJTP2SNFcwy+qww==
-X-Google-Smtp-Source: ABdhPJzc5glWxfrQkcrn/Nn0iMfNJ1oyuY2P0V1jzPzVQhKtTk82MX3Jozx6f85g0prM1TCJXRqMLg==
-X-Received: by 2002:a1c:9a07:: with SMTP id c7mr15758081wme.147.1594577595493;
-        Sun, 12 Jul 2020 11:13:15 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:14f:a791:68cb:2264? ([2a01:e34:ed2f:f020:14f:a791:68cb:2264])
-        by smtp.googlemail.com with ESMTPSA id g3sm22875230wrb.59.2020.07.12.11.13.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 11:13:14 -0700 (PDT)
-Subject: Re: [PATCH] Revert "thermal: mediatek: fix register index error"
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Collabora Kernel ML <kernel@collabora.com>, drinkcat@chromium.org,
-        hsinyi@chromium.org, Michael Kao <michael.kao@mediatek.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>
-References: <20200707103412.1010823-1-enric.balletbo@collabora.com>
- <98369dbc-2e2a-a1bd-f3cd-68f33f66b882@gmail.com>
- <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c62fc116-b3e0-c47c-5606-df62b1d10a04@linaro.org>
-Date:   Sun, 12 Jul 2020 20:13:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IO9uKm8bvdgEjXJqj5Rrs1xcnUatMvk40LVf7RvbX1E=;
+        b=ekCSwJSrXyzv0lxqScZ8iUOWqAEfs6HbRGlnEz7h4kMEQkHVe5L2a61a5pvgcWN1oZ
+         6aqD0Kn6EZtg0IwCZvOSWeubZATpgu++orqPC+eeLiZcwaDhL75pElYxIseE+eUtqDnH
+         KgY/cO4woQa9v3wSSnLkMZWxzAxsSMw+5DGaqtrOFZq1Dc/D1kF4oBcq5vYZhjI8V30o
+         IA4a6qAdveLoAx0OGcUJ5gOC2aBEuOE4abgHCtr82+26UkblLz1zdtBOrMB4uGi2Ie0B
+         PVvnrXxP/g7Hb/ogttAQHebCNYKtNwvRQdL1JEqFFPED4gBIiS+JFPahWI7yv5Wup9wT
+         WXEA==
+X-Gm-Message-State: AOAM533EeH/JGKTxhkuRDJOLn5hSdbTlam7ZVPZqE+seas8aODHjXMHu
+        KzgmGjlxBpE+9ElEQov6tojmtP2aoTeWXRdiaNcVKg==
+X-Google-Smtp-Source: ABdhPJyD3BLm7rKT28e/lXdMw50zAGeCsTW4qgPGdvr71CB1pTn9a1l/8uedaLfOGd2pmua+XpcP+k3dqyADBddg7Zk=
+X-Received: by 2002:a05:6512:74f:: with SMTP id c15mr40253704lfs.26.1594578861881;
+ Sun, 12 Jul 2020 11:34:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
+In-Reply-To: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 13 Jul 2020 00:04:10 +0530
+Message-ID: <CA+G9fYuYwef7HcKbiDk_DQkKzdKf87yCnc7nHXeCmbQmFWHEUA@mail.gmail.com>
+Subject: Re: [PATCH v3] mm, oom: make the calculation of oom badness more accurate
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        rientjes@google.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/2020 18:55, Matthias Brugger wrote:
-> On 10/07/2020 15:58, Matthias Brugger wrote:
->>
->>
->> On 07/07/2020 12:34, Enric Balletbo i Serra wrote:
->>> This reverts commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6
->>>
->>> The above patch is supposed to fix a register index error on mt2701. It
->>> is not clear if the problem solved is a hang or just an invalid value
->>> returned, my guess is the second. The patch introduces, though, a new
->>> hang on MT8173 device making them unusable. So, seems reasonable, revert
->>> the patch because introduces a worst issue.
->>>
->>> The reason I send a revert instead of trying to fix the issue for MT8173
->>> is because the information needed to fix the issue is in the datasheet
->>> and is not public. So I am not really able to fix it.
->>>
->>> Fixes the following bug when CONFIG_MTK_THERMAL is set on MT8173
->>> devices.
->>>
->>> [    2.222488] Unable to handle kernel paging request at virtual
->>> address ffff8000125f5001
->>> [    2.230421] Mem abort info:
->>> [    2.233207]   ESR = 0x96000021
->>> [    2.236261]   EC = 0x25: DABT (current EL), IL = 32 bits
->>> [    2.241571]   SET = 0, FnV = 0
->>> [    2.244623]   EA = 0, S1PTW = 0
->>> [    2.247762] Data abort info:
->>> [    2.250640]   ISV = 0, ISS = 0x00000021
->>> [    2.254473]   CM = 0, WnR = 0
->>> [    2.257544] swapper pgtable: 4k pages, 48-bit VAs,
->>> pgdp=0000000041850000
->>> [    2.264251] [ffff8000125f5001] pgd=000000013ffff003,
->>> pud=000000013fffe003, pmd=000000013fff9003, pte=006800001100b707
->>> [    2.274867] Internal error: Oops: 96000021 [#1] PREEMPT SMP
->>> [    2.280432] Modules linked in:
->>> [    2.283483] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #162
->>> [    2.289914] Hardware name: Google Elm (DT)
->>> [    2.294003] pstate: 20000005 (nzCv daif -PAN -UAO)
->>> [    2.298792] pc : mtk_read_temp+0xb8/0x1c8
->>> [    2.302793] lr : mtk_read_temp+0x7c/0x1c8
->>> [    2.306794] sp : ffff80001003b930
->>> [    2.310100] x29: ffff80001003b930 x28: 0000000000000000
->>> [    2.315404] x27: 0000000000000002 x26: ffff0000f9550b10
->>> [    2.320709] x25: ffff0000f9550a80 x24: 0000000000000090
->>> [    2.326014] x23: ffff80001003ba24 x22: 00000000610344c0
->>> [    2.331318] x21: 0000000000002710 x20: 00000000000001f4
->>> [    2.336622] x19: 0000000000030d40 x18: ffff800011742ec0
->>> [    2.341926] x17: 0000000000000001 x16: 0000000000000001
->>> [    2.347230] x15: ffffffffffffffff x14: ffffff0000000000
->>> [    2.352535] x13: ffffffffffffffff x12: 0000000000000028
->>> [    2.357839] x11: 0000000000000003 x10: ffff800011295ec8
->>> [    2.363143] x9 : 000000000000291b x8 : 0000000000000002
->>> [    2.368447] x7 : 00000000000000a8 x6 : 0000000000000004
->>> [    2.373751] x5 : 0000000000000000 x4 : ffff800011295cb0
->>> [    2.379055] x3 : 0000000000000002 x2 : ffff8000125f5001
->>> [    2.384359] x1 : 0000000000000001 x0 : ffff0000f9550a80
->>> [    2.389665] Call trace:
->>> [    2.392105]  mtk_read_temp+0xb8/0x1c8
->>> [    2.395760]  of_thermal_get_temp+0x2c/0x40
->>> [    2.399849]  thermal_zone_get_temp+0x78/0x160
->>> [    2.404198]  thermal_zone_device_update.part.0+0x3c/0x1f8
->>> [    2.409589]  thermal_zone_device_update+0x34/0x48
->>> [    2.414286]  of_thermal_set_mode+0x58/0x88
->>> [    2.418375]  thermal_zone_of_sensor_register+0x1a8/0x1d8
->>> [    2.423679]  devm_thermal_zone_of_sensor_register+0x64/0xb0
->>> [    2.429242]  mtk_thermal_probe+0x690/0x7d0
->>> [    2.433333]  platform_drv_probe+0x5c/0xb0
->>> [    2.437335]  really_probe+0xe4/0x448
->>> [    2.440901]  driver_probe_device+0xe8/0x140
->>> [    2.445077]  device_driver_attach+0x7c/0x88
->>> [    2.449252]  __driver_attach+0xac/0x178
->>> [    2.453082]  bus_for_each_dev+0x78/0xc8
->>> [    2.456909]  driver_attach+0x2c/0x38
->>> [    2.460476]  bus_add_driver+0x14c/0x230
->>> [    2.464304]  driver_register+0x6c/0x128
->>> [    2.468131]  __platform_driver_register+0x50/0x60
->>> [    2.472831]  mtk_thermal_driver_init+0x24/0x30
->>> [    2.477268]  do_one_initcall+0x50/0x298
->>> [    2.481098]  kernel_init_freeable+0x1ec/0x264
->>> [    2.485450]  kernel_init+0x1c/0x110
->>> [    2.488931]  ret_from_fork+0x10/0x1c
->>> [    2.492502] Code: f9401081 f9400402 b8a67821 8b010042 (b9400042)
->>> [    2.498599] ---[ end trace e43e3105ed27dc99 ]---
->>> [    2.503367] Kernel panic - not syncing: Attempted to kill init!
->>> exitcode=0x0000000b
->>> [    2.511020] SMP: stopping secondary CPUs
->>> [    2.514941] Kernel Offset: disabled
->>> [    2.518421] CPU features: 0x090002,25006005
->>> [    2.522595] Memory Limit: none
->>> [    2.525644] ---[ end Kernel panic - not syncing: Attempted to kill
->>> init! exitcode=0x0000000b ]--
->>>
->>> Cc: Michael Kao <michael.kao@mediatek.com>
->>> Fixes: eb9aecd90d1a ("thermal: mediatek: fix register index error")
->>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>
->> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
->>
->> Daniel, Zhang, Amit: can you take this as a bugfix for v5.8 please? We
->> waited long enough to get a proper fix for the driver, but nothing was
->> posted on the mailinglist. Also we don't know if this will break
->> mt2701 or not, we prefer to have a working mt8173 as this is actually
->> a SoC that is available to the general public (as a chromebook product).
->>
->> I propose to take this revert for now and hope that MediaTek will fix
->> the driver for good in the near future.
->>
-> 
-> Frank tested the patch, with the only board that is affected and
-> available (apart from the mt8183 SoC), the BananaPi R2 (mt7623). The
-> revert does not break the driver. Even more interesting, with and
-> without the revert the thermal sensor returns always zero, so it seems
-> it never actually worked.
-> 
-> So I think we are more then good, to go ahead with reverting the patch.
+On Fri, 10 Jul 2020 at 21:28, Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> Recently we found an issue on our production environment that when memcg
+> oom is triggered the oom killer doesn't chose the process with largest
+> resident memory but chose the first scanned process. Note that all
+> processes in this memcg have the same oom_score_adj, so the oom killer
+> should chose the process with largest resident memory.
+>
+> Bellow is part of the oom info, which is enough to analyze this issue.
+> [7516987.983223] memory: usage 16777216kB, limit 16777216kB, failcnt 5284=
+3037
+> [7516987.983224] memory+swap: usage 16777216kB, limit 9007199254740988kB,=
+ failcnt 0
+> [7516987.983225] kmem: usage 301464kB, limit 9007199254740988kB, failcnt =
+0
+[...]
+> [7516987.984221] oom-kill:constraint=3DCONSTRAINT_MEMCG,nodemask=3D(null)=
+,cpuset=3D3aa16c9482ae3a6f6b78bda68a55d32c87c99b985e0f11331cddf05af6c4d753,=
+mems_allowed=3D0-1,oom_memcg=3D/kubepods/podf1c273d3-9b36-11ea-b3df-246e969=
+3c184,task_memcg=3D/kubepods/podf1c273d3-9b36-11ea-b3df-246e9693c184/1f246a=
+3eeea8f70bf91141eeaf1805346a666e225f823906485ea0b6c37dfc3d,task=3Dpause,pid=
+=3D5740,uid=3D0
+> [7516987.984254] Memory cgroup out of memory: Killed process 5740 (pause)=
+ total-vm:1028kB, anon-rss:4kB, file-rss:0kB, shmem-rss:0kB
+> [7516988.092344] oom_reaper: reaped process 5740 (pause), now anon-rss:0k=
+B, file-rss:0kB, shmem-rss:0kB
+>
+> We can find that the first scanned process 5740 (pause) was killed, but i=
+ts
+> rss is only one page. That is because, when we calculate the oom badness =
+in
+> oom_badness(), we always ignore the negtive point and convert all of thes=
+e
+> negtive points to 1. Now as oom_score_adj of all the processes in this
+> targeted memcg have the same value -998, the points of these processes ar=
+e
+> all negtive value. As a result, the first scanned process will be killed.
+>
+> The oom_socre_adj (-998) in this memcg is set by kubelet, because it is a
+> a Guaranteed pod, which has higher priority to prevent from being killed =
+by
+> system oom.
+>
+> To fix this issue, we should make the calculation of oom point more
+> accurate. We can achieve it by convert the chosen_point from 'unsigned
+> long' to 'long'.
+>
+> [cai@lca.pw: reported a issue in the previous version]
+> [mhocko@suse.com: fixed the issue reported by Cai]
+> [mhocko@suse.com: add the comment in proc_oom_score()]
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Qian Cai <cai@lca.pw>
+>
+> ---
+> v2 -> v3:
+> - fix the type of variable 'point' in oom_evaluate_task()
+> - initialize oom_control->chosen_points in select_bad_process() per Micha=
+l
+> - update the comment in proc_oom_score() per Michal
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 
-Ok, I'll take care of it as a fix for 5.8.
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-Thanks!
+I have noticed kernel panic with v2 patch while running LTP mm test suite.
 
-  -- Daniel
+[ 63.451494] Out of memory and no killable processes...
+[ 63.456633] Kernel panic - not syncing: System is deadlocked on memory
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Then I have removed the v2 patch and applied this below v3 patch and re-tes=
+ted.
+No regression noticed with v3 patch while running LTP mm on x86_64 and arm.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+OTOH,
+oom01 test case started with 100 iterations but runltp got killed after the
+6th iteration [3]. I think this is expected.
+
+test steps:
+          - cd /opt/ltp
+          - ./runltp -s oom01 -I 100 || true
+
+[  209.052842] Out of memory: Killed process 519 (runltp)
+total-vm:10244kB, anon-rss:904kB, file-rss:4kB, shmem-rss:0kB, UID:0
+pgtables:60kB oom_score_adj:0
+[  209.066782] oom_reaper: reaped process 519 (runltp), now
+anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+/lava-1558245/0/tests/0_prep-tmp-disk/run.sh: line 21:   519 Killed
+              ./runltp -s oom01 -I 100
+
+> ---
+>  fs/proc/base.c      | 11 ++++++++++-
+>  include/linux/oom.h |  4 ++--
+>  mm/oom_kill.c       | 22 ++++++++++------------
+>  3 files changed, 22 insertions(+), 15 deletions(-)
+
+
+Reference test jobs,
+[1] https://lkft.validation.linaro.org/scheduler/job/1558246#L9189
+[2] https://lkft.validation.linaro.org/scheduler/job/1558247#L17213
+[3] https://lkft.validation.linaro.org/scheduler/job/1558245#L1407
