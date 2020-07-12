@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D2AC433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25E3C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFE23206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FFD20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgGLNwp (ORCPT
+        id S1729041AbgGLNwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:52:45 -0400
+        Sun, 12 Jul 2020 09:52:19 -0400
 Received: from mga11.intel.com ([192.55.52.93]:8919 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729082AbgGLNwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:52:41 -0400
-IronPort-SDR: dhKqkrDcitYuyS2OSZcCCK+yAEWPDDit1BU7kjKdwjjBfJJ76iVfjtzenz6HJij6cgh3Qc8KHV
- 7toksBENkDwQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540914"
+        id S1728916AbgGLNwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:52:18 -0400
+IronPort-SDR: ORpR2gEM3ORc2B77/GmZfolgsMco46jnq1VjL8SgsDVfSzFPWZjKYKcoEwZYXB7wATBoKNKfqN
+ AXpWQRQ8NeFA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540909"
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="146540914"
+   d="scan'208";a="146540909"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:52 -0700
-IronPort-SDR: 1LtFiLsMvaVqrmJ0EkArgjiBtwLxK53RUVLw6lKk0xTTODlcswBo7wYt6r/MzBGS1NohVj0BWf
- XSVCgbqOrIUw==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:50 -0700
+IronPort-SDR: rwtV23Dh+yddr4cy2LJ4TOTaJCfgxjJyo1gfN8niVJ7chN/+3izG8akwSQWa8THxxzJHVmK4mC
+ 73Df+02ihmyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="307148650"
+   d="scan'208";a="307148633"
 Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:52 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:49 -0700
 From:   Gage Eads <gage.eads@intel.com>
 To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
         gregkh@linuxfoundation.org
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: [PATCH 17/20] dlb2: add cos bandwidth get/set ioctls
-Date:   Sun, 12 Jul 2020 08:43:28 -0500
-Message-Id: <20200712134331.8169-18-gage.eads@intel.com>
+Subject: [PATCH 13/20] dlb2: add port enable/disable ioctls
+Date:   Sun, 12 Jul 2020 08:43:24 -0500
+Message-Id: <20200712134331.8169-14-gage.eads@intel.com>
 X-Mailer: git-send-email 2.13.6
 In-Reply-To: <20200712134331.8169-1-gage.eads@intel.com>
 References: <20200712134331.8169-1-gage.eads@intel.com>
@@ -54,39 +54,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DLB 2.0 supports four load-balanced port classes of service (CoS). Each
-CoS receives a guaranteed percentage of the load-balanced scheduler's
-bandwidth, and any unreserved bandwidth is divided among the four CoS.
-
-These two ioctls allow applications to query CoS allocations and adjust
-them as needed. These allocations are controlled by the PF driver; virtual
-devices, when support for them is added, will not be able to adjust them.
+The ioctls can be used to dynamically enable or disable scheduling to a
+port. (By default, ports start with their scheduling enabled.) Doing so
+allows software to, for example, quickly add/remove cores to/from a worker
+pool.
 
 Signed-off-by: Gage Eads <gage.eads@intel.com>
 Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
 ---
- drivers/misc/dlb2/dlb2_ioctl.c    | 76 +++++++++++++++++++++++++++++++++++++++
- drivers/misc/dlb2/dlb2_main.h     |  2 ++
- drivers/misc/dlb2/dlb2_pf_ops.c   | 14 ++++++++
- drivers/misc/dlb2/dlb2_resource.c | 59 ++++++++++++++++++++++++++++++
- drivers/misc/dlb2/dlb2_resource.h | 28 +++++++++++++++
- include/uapi/linux/dlb2_user.h    | 54 ++++++++++++++++++++++++++++
- 6 files changed, 233 insertions(+)
+ drivers/misc/dlb2/dlb2_ioctl.c    | 152 +++++++++++++++
+ drivers/misc/dlb2/dlb2_main.h     |  16 ++
+ drivers/misc/dlb2/dlb2_pf_ops.c   |  40 ++++
+ drivers/misc/dlb2/dlb2_resource.c | 382 ++++++++++++++++++++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.h | 120 ++++++++++++
+ include/uapi/linux/dlb2_user.h    |  96 ++++++++++
+ 6 files changed, 806 insertions(+)
 
 diff --git a/drivers/misc/dlb2/dlb2_ioctl.c b/drivers/misc/dlb2/dlb2_ioctl.c
-index 8701643fc1f1..ce80cdd71af8 100644
+index 65d7ab82161c..ff1037ffee3f 100644
 --- a/drivers/misc/dlb2/dlb2_ioctl.c
 +++ b/drivers/misc/dlb2/dlb2_ioctl.c
-@@ -1049,6 +1049,80 @@ static int dlb2_ioctl_get_sn_allocation(struct dlb2_dev *dev,
- 	return ret;
- }
+@@ -101,6 +101,154 @@ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(get_dir_queue_depth)
+ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(pending_port_unmaps)
  
-+static int dlb2_ioctl_set_cos_bw(struct dlb2_dev *dev,
-+				 unsigned long user_arg,
-+				 u16 size)
+ /*
++ * Port enable/disable ioctls don't use the callback template macro because
++ * they have additional CQ interrupt management logic.
++ */
++static int dlb2_domain_ioctl_enable_ldb_port(struct dlb2_dev *dev,
++					     struct dlb2_domain *domain,
++					     unsigned long user_arg,
++					     u16 size)
 +{
 +	struct dlb2_cmd_response response = {0};
-+	struct dlb2_set_cos_bw_args arg;
++	struct dlb2_enable_ldb_port_args arg;
 +	int ret;
 +
 +	dev_dbg(dev->dlb2_device, "Entering %s()\n", __func__);
@@ -102,7 +103,7 @@ index 8701643fc1f1..ce80cdd71af8 100644
 +
 +	mutex_lock(&dev->resource_mutex);
 +
-+	ret = dev->ops->set_cos_bw(&dev->hw, arg.cos_id, arg.bandwidth);
++	ret = dev->ops->enable_ldb_port(&dev->hw, domain->id, &arg, &response);
 +
 +	mutex_unlock(&dev->resource_mutex);
 +
@@ -116,12 +117,13 @@ index 8701643fc1f1..ce80cdd71af8 100644
 +	return ret;
 +}
 +
-+static int dlb2_ioctl_get_cos_bw(struct dlb2_dev *dev,
-+				 unsigned long user_arg,
-+				 u16 size)
++static int dlb2_domain_ioctl_enable_dir_port(struct dlb2_dev *dev,
++					     struct dlb2_domain *domain,
++					     unsigned long user_arg,
++					     u16 size)
 +{
 +	struct dlb2_cmd_response response = {0};
-+	struct dlb2_get_cos_bw_args arg;
++	struct dlb2_enable_dir_port_args arg;
 +	int ret;
 +
 +	dev_dbg(dev->dlb2_device, "Entering %s()\n", __func__);
@@ -137,11 +139,7 @@ index 8701643fc1f1..ce80cdd71af8 100644
 +
 +	mutex_lock(&dev->resource_mutex);
 +
-+	ret = dev->ops->get_cos_bw(&dev->hw, arg.cos_id);
-+
-+	response.id = ret;
-+
-+	ret = (ret > 0) ? 0 : ret;
++	ret = dev->ops->enable_dir_port(&dev->hw, domain->id, &arg, &response);
 +
 +	mutex_unlock(&dev->resource_mutex);
 +
@@ -155,251 +153,830 @@ index 8701643fc1f1..ce80cdd71af8 100644
 +	return ret;
 +}
 +
- static int dlb2_ioctl_get_sn_occupancy(struct dlb2_dev *dev,
- 				       unsigned long user_arg,
- 				       u16 size)
-@@ -1131,6 +1205,8 @@ static dlb2_ioctl_callback_fn_t dlb2_ioctl_callback_fns[NUM_DLB2_CMD] = {
- 	dlb2_ioctl_get_driver_version,
- 	dlb2_ioctl_set_sn_allocation,
- 	dlb2_ioctl_get_sn_allocation,
-+	dlb2_ioctl_set_cos_bw,
-+	dlb2_ioctl_get_cos_bw,
- 	dlb2_ioctl_get_sn_occupancy,
- 	dlb2_ioctl_query_cq_poll_mode,
- };
++static int dlb2_domain_ioctl_disable_ldb_port(struct dlb2_dev *dev,
++					      struct dlb2_domain *domain,
++					      unsigned long user_arg,
++					      u16 size)
++{
++	struct dlb2_cmd_response response = {0};
++	struct dlb2_disable_ldb_port_args arg;
++	int ret;
++
++	dev_dbg(dev->dlb2_device, "Entering %s()\n", __func__);
++
++	ret = dlb2_copy_from_user(dev, user_arg, size, &arg, sizeof(arg));
++	if (ret)
++		return ret;
++
++	/* Copy zeroes to verify the user-provided response pointer */
++	ret = dlb2_copy_resp_to_user(dev, arg.response, &response);
++	if (ret)
++		return ret;
++
++	mutex_lock(&dev->resource_mutex);
++
++	ret = dev->ops->disable_ldb_port(&dev->hw, domain->id, &arg, &response);
++
++	mutex_unlock(&dev->resource_mutex);
++
++	if (copy_to_user((void __user *)arg.response,
++			 &response,
++			 sizeof(response)))
++		return -EFAULT;
++
++	dev_dbg(dev->dlb2_device, "Exiting %s()\n", __func__);
++
++	return ret;
++}
++
++static int dlb2_domain_ioctl_disable_dir_port(struct dlb2_dev *dev,
++					      struct dlb2_domain *domain,
++					      unsigned long user_arg,
++					      u16 size)
++{
++	struct dlb2_cmd_response response = {0};
++	struct dlb2_disable_dir_port_args arg;
++	int ret;
++
++	dev_dbg(dev->dlb2_device, "Entering %s()\n", __func__);
++
++	ret = dlb2_copy_from_user(dev, user_arg, size, &arg, sizeof(arg));
++	if (ret)
++		return ret;
++
++	/* Copy zeroes to verify the user-provided response pointer */
++	ret = dlb2_copy_resp_to_user(dev, arg.response, &response);
++	if (ret)
++		return ret;
++
++	mutex_lock(&dev->resource_mutex);
++
++	ret = dev->ops->disable_dir_port(&dev->hw, domain->id, &arg, &response);
++
++	mutex_unlock(&dev->resource_mutex);
++
++	if (copy_to_user((void __user *)arg.response,
++			 &response,
++			 sizeof(response)))
++		return -EFAULT;
++
++	dev_dbg(dev->dlb2_device, "Exiting %s()\n", __func__);
++
++	return ret;
++}
++
++/*
+  * Port creation ioctls don't use the callback template macro because they have
+  * a number of OS-dependent memory operations.
+  */
+@@ -472,6 +620,10 @@ dlb2_domain_ioctl_callback_fns[NUM_DLB2_DOMAIN_CMD] = {
+ 	dlb2_domain_ioctl_start_domain,
+ 	dlb2_domain_ioctl_map_qid,
+ 	dlb2_domain_ioctl_unmap_qid,
++	dlb2_domain_ioctl_enable_ldb_port,
++	dlb2_domain_ioctl_enable_dir_port,
++	dlb2_domain_ioctl_disable_ldb_port,
++	dlb2_domain_ioctl_disable_dir_port,
+ 	dlb2_domain_ioctl_get_ldb_queue_depth,
+ 	dlb2_domain_ioctl_get_dir_queue_depth,
+ 	dlb2_domain_ioctl_pending_port_unmaps,
 diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
-index aa73dad1ce77..4b7a430ffd86 100644
+index bca24e3a4f84..edd5d9703ebb 100644
 --- a/drivers/misc/dlb2/dlb2_main.h
 +++ b/drivers/misc/dlb2/dlb2_main.h
-@@ -146,6 +146,8 @@ struct dlb2_device_ops {
+@@ -94,6 +94,22 @@ struct dlb2_device_ops {
  				   u32 domain_id,
- 				   struct dlb2_get_dir_queue_depth_args *args,
+ 				   struct dlb2_pending_port_unmaps_args *args,
  				   struct dlb2_cmd_response *resp);
-+	int (*set_cos_bw)(struct dlb2_hw *hw, u32 cos_id, u8 bandwidth);
-+	int (*get_cos_bw)(struct dlb2_hw *hw, u32 cos_id);
- 	void (*init_hardware)(struct dlb2_dev *dev);
- 	int (*query_cq_poll_mode)(struct dlb2_dev *dev,
- 				  struct dlb2_cmd_response *user_resp);
++	int (*enable_ldb_port)(struct dlb2_hw *hw,
++			       u32 domain_id,
++			       struct dlb2_enable_ldb_port_args *args,
++			       struct dlb2_cmd_response *resp);
++	int (*disable_ldb_port)(struct dlb2_hw *hw,
++				u32 domain_id,
++				struct dlb2_disable_ldb_port_args *args,
++				struct dlb2_cmd_response *resp);
++	int (*enable_dir_port)(struct dlb2_hw *hw,
++			       u32 domain_id,
++			       struct dlb2_enable_dir_port_args *args,
++			       struct dlb2_cmd_response *resp);
++	int (*disable_dir_port)(struct dlb2_hw *hw,
++				u32 domain_id,
++				struct dlb2_disable_dir_port_args *args,
++				struct dlb2_cmd_response *resp);
+ 	int (*get_num_resources)(struct dlb2_hw *hw,
+ 				 struct dlb2_get_num_resources_args *args);
+ 	int (*reset_domain)(struct dlb2_hw *hw, u32 domain_id);
 diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
-index 8bdeb86a1e87..124e097ff979 100644
+index 51562978ee1a..b5b1b14bcb7e 100644
 --- a/drivers/misc/dlb2/dlb2_pf_ops.c
 +++ b/drivers/misc/dlb2/dlb2_pf_ops.c
-@@ -644,6 +644,18 @@ dlb2_pf_set_sn_allocation(struct dlb2_hw *hw, u32 group_id, u32 num)
+@@ -318,6 +318,42 @@ dlb2_pf_pending_port_unmaps(struct dlb2_hw *hw,
  }
  
  static int
-+dlb2_pf_set_cos_bw(struct dlb2_hw *hw, u32 cos_id, u8 bandwidth)
++dlb2_pf_enable_ldb_port(struct dlb2_hw *hw,
++			u32 id,
++			struct dlb2_enable_ldb_port_args *args,
++			struct dlb2_cmd_response *resp)
 +{
-+	return dlb2_hw_set_cos_bandwidth(hw, cos_id, bandwidth);
++	return dlb2_hw_enable_ldb_port(hw, id, args, resp, false, 0);
 +}
 +
 +static int
-+dlb2_pf_get_cos_bw(struct dlb2_hw *hw, u32 cos_id)
++dlb2_pf_disable_ldb_port(struct dlb2_hw *hw,
++			 u32 id,
++			 struct dlb2_disable_ldb_port_args *args,
++			 struct dlb2_cmd_response *resp)
 +{
-+	return dlb2_hw_get_cos_bandwidth(hw, cos_id);
++	return dlb2_hw_disable_ldb_port(hw, id, args, resp, false, 0);
 +}
 +
 +static int
- dlb2_pf_get_sn_occupancy(struct dlb2_hw *hw, u32 group_id)
++dlb2_pf_enable_dir_port(struct dlb2_hw *hw,
++			u32 id,
++			struct dlb2_enable_dir_port_args *args,
++			struct dlb2_cmd_response *resp)
++{
++	return dlb2_hw_enable_dir_port(hw, id, args, resp, false, 0);
++}
++
++static int
++dlb2_pf_disable_dir_port(struct dlb2_hw *hw,
++			 u32 id,
++			 struct dlb2_disable_dir_port_args *args,
++			 struct dlb2_cmd_response *resp)
++{
++	return dlb2_hw_disable_dir_port(hw, id, args, resp, false, 0);
++}
++
++static int
+ dlb2_pf_get_num_resources(struct dlb2_hw *hw,
+ 			  struct dlb2_get_num_resources_args *args)
  {
- 	return dlb2_get_group_sequence_number_occupancy(hw, group_id);
-@@ -694,6 +706,8 @@ struct dlb2_device_ops dlb2_pf_ops = {
- 	.get_sn_occupancy = dlb2_pf_get_sn_occupancy,
- 	.get_ldb_queue_depth = dlb2_pf_get_ldb_queue_depth,
- 	.get_dir_queue_depth = dlb2_pf_get_dir_queue_depth,
-+	.set_cos_bw = dlb2_pf_set_cos_bw,
-+	.get_cos_bw = dlb2_pf_get_cos_bw,
- 	.init_hardware = dlb2_pf_init_hardware,
- 	.query_cq_poll_mode = dlb2_pf_query_cq_poll_mode,
- };
+@@ -408,6 +444,10 @@ struct dlb2_device_ops dlb2_pf_ops = {
+ 	.map_qid = dlb2_pf_map_qid,
+ 	.unmap_qid = dlb2_pf_unmap_qid,
+ 	.pending_port_unmaps = dlb2_pf_pending_port_unmaps,
++	.enable_ldb_port = dlb2_pf_enable_ldb_port,
++	.enable_dir_port = dlb2_pf_enable_dir_port,
++	.disable_ldb_port = dlb2_pf_disable_ldb_port,
++	.disable_dir_port = dlb2_pf_disable_dir_port,
+ 	.get_num_resources = dlb2_pf_get_num_resources,
+ 	.reset_domain = dlb2_pf_reset_domain,
+ 	.ldb_port_owned_by_domain = dlb2_pf_ldb_port_owned_by_domain,
 diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
-index f686b3045a2b..2c04c5164223 100644
+index bc1c16ebadde..a7e28088458e 100644
 --- a/drivers/misc/dlb2/dlb2_resource.c
 +++ b/drivers/misc/dlb2/dlb2_resource.c
-@@ -6771,6 +6771,65 @@ void dlb2_clr_pmcsr_disable(struct dlb2_hw *hw)
- 	DLB2_CSR_WR(hw, DLB2_CFG_MSTR_CFG_PM_PMCSR_DISABLE, r0.val);
+@@ -1707,6 +1707,150 @@ static int dlb2_verify_unmap_qid_args(struct dlb2_hw *hw,
+ 	return -EINVAL;
  }
  
-+int dlb2_hw_get_cos_bandwidth(struct dlb2_hw *hw, u32 cos_id)
++static int
++dlb2_verify_enable_ldb_port_args(struct dlb2_hw *hw,
++				 u32 domain_id,
++				 struct dlb2_enable_ldb_port_args *args,
++				 struct dlb2_cmd_response *resp,
++				 bool vdev_req,
++				 unsigned int vdev_id)
 +{
-+	if (cos_id >= DLB2_NUM_COS_DOMAINS)
++	struct dlb2_hw_domain *domain;
++	struct dlb2_ldb_port *port;
++	int id;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	if (!domain) {
++		resp->status = DLB2_ST_INVALID_DOMAIN_ID;
 +		return -EINVAL;
++	}
 +
-+	return hw->cos_reservation[cos_id];
-+}
-+
-+static void dlb2_log_set_cos_bandwidth(struct dlb2_hw *hw, u32 cos_id, u8 bw)
-+{
-+	DLB2_HW_DBG(hw, "DLB2 set port CoS bandwidth:\n");
-+	DLB2_HW_DBG(hw, "\tCoS ID:    %u\n", cos_id);
-+	DLB2_HW_DBG(hw, "\tBandwidth: %u\n", bw);
-+}
-+
-+int dlb2_hw_set_cos_bandwidth(struct dlb2_hw *hw, u32 cos_id, u8 bandwidth)
-+{
-+	union dlb2_lsp_cfg_shdw_range_cos r0 = { {0} };
-+	union dlb2_lsp_cfg_shdw_ctrl r1 = { {0} };
-+	unsigned int i;
-+	u8 total;
-+
-+	if (cos_id >= DLB2_NUM_COS_DOMAINS)
++	if (!domain->configured) {
++		resp->status = DLB2_ST_DOMAIN_NOT_CONFIGURED;
 +		return -EINVAL;
++	}
 +
-+	if (bandwidth > 100)
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_ldb_port(id, vdev_req, domain);
++
++	if (!port || !port->configured) {
++		resp->status = DLB2_ST_INVALID_PORT_ID;
 +		return -EINVAL;
-+
-+	total = 0;
-+
-+	for (i = 0; i < DLB2_NUM_COS_DOMAINS; i++)
-+		total += (i == cos_id) ? bandwidth : hw->cos_reservation[i];
-+
-+	if (total > 100)
-+		return -EINVAL;
-+
-+	r0.val = DLB2_CSR_RD(hw, DLB2_LSP_CFG_SHDW_RANGE_COS(cos_id));
-+
-+	/*
-+	 * Normalize the bandwidth to a value in the range 0-255. Integer
-+	 * division may leave unreserved scheduling slots; these will be
-+	 * divided among the 4 classes of service.
-+	 */
-+	r0.field.bw_range = (bandwidth * 256) / 100;
-+
-+	DLB2_CSR_WR(hw, DLB2_LSP_CFG_SHDW_RANGE_COS(cos_id), r0.val);
-+
-+	r1.field.transfer = 1;
-+
-+	/* Atomically transfer the newly configured service weight */
-+	DLB2_CSR_WR(hw, DLB2_LSP_CFG_SHDW_CTRL, r1.val);
-+
-+	dlb2_log_set_cos_bandwidth(hw, cos_id, bandwidth);
-+
-+	hw->cos_reservation[cos_id] = bandwidth;
++	}
 +
 +	return 0;
 +}
 +
- void dlb2_hw_enable_sparse_ldb_cq_mode(struct dlb2_hw *hw)
++static int
++dlb2_verify_enable_dir_port_args(struct dlb2_hw *hw,
++				 u32 domain_id,
++				 struct dlb2_enable_dir_port_args *args,
++				 struct dlb2_cmd_response *resp,
++				 bool vdev_req,
++				 unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++	struct dlb2_dir_pq_pair *port;
++	int id;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	if (!domain) {
++		resp->status = DLB2_ST_INVALID_DOMAIN_ID;
++		return -EINVAL;
++	}
++
++	if (!domain->configured) {
++		resp->status = DLB2_ST_DOMAIN_NOT_CONFIGURED;
++		return -EINVAL;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_dir_pq(id, vdev_req, domain);
++
++	if (!port || !port->port_configured) {
++		resp->status = DLB2_ST_INVALID_PORT_ID;
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int
++dlb2_verify_disable_ldb_port_args(struct dlb2_hw *hw,
++				  u32 domain_id,
++				  struct dlb2_disable_ldb_port_args *args,
++				  struct dlb2_cmd_response *resp,
++				  bool vdev_req,
++				  unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++	struct dlb2_ldb_port *port;
++	int id;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	if (!domain) {
++		resp->status = DLB2_ST_INVALID_DOMAIN_ID;
++		return -EINVAL;
++	}
++
++	if (!domain->configured) {
++		resp->status = DLB2_ST_DOMAIN_NOT_CONFIGURED;
++		return -EINVAL;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_ldb_port(id, vdev_req, domain);
++
++	if (!port || !port->configured) {
++		resp->status = DLB2_ST_INVALID_PORT_ID;
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int
++dlb2_verify_disable_dir_port_args(struct dlb2_hw *hw,
++				  u32 domain_id,
++				  struct dlb2_disable_dir_port_args *args,
++				  struct dlb2_cmd_response *resp,
++				  bool vdev_req,
++				  unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++	struct dlb2_dir_pq_pair *port;
++	int id;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	if (!domain) {
++		resp->status = DLB2_ST_INVALID_DOMAIN_ID;
++		return -EINVAL;
++	}
++
++	if (!domain->configured) {
++		resp->status = DLB2_ST_DOMAIN_NOT_CONFIGURED;
++		return -EINVAL;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_dir_pq(id, vdev_req, domain);
++
++	if (!port || !port->port_configured) {
++		resp->status = DLB2_ST_INVALID_PORT_ID;
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static void dlb2_configure_domain_credits(struct dlb2_hw *hw,
+ 					  struct dlb2_hw_domain *domain)
  {
- 	union dlb2_chp_cfg_chp_csr_ctrl r0;
+@@ -4303,6 +4447,244 @@ int dlb2_hw_unmap_qid(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++static void dlb2_log_enable_port(struct dlb2_hw *hw,
++				 u32 domain_id,
++				 u32 port_id,
++				 bool vdev_req,
++				 unsigned int vdev_id)
++{
++	DLB2_HW_DBG(hw, "DLB2 enable port arguments:\n");
++	if (vdev_req)
++		DLB2_HW_DBG(hw, "(Request from vdev %d)\n", vdev_id);
++	DLB2_HW_DBG(hw, "\tDomain ID: %d\n",
++		    domain_id);
++	DLB2_HW_DBG(hw, "\tPort ID:   %d\n",
++		    port_id);
++}
++
++int dlb2_hw_enable_ldb_port(struct dlb2_hw *hw,
++			    u32 domain_id,
++			    struct dlb2_enable_ldb_port_args *args,
++			    struct dlb2_cmd_response *resp,
++			    bool vdev_req,
++			    unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++	struct dlb2_ldb_port *port;
++	int ret, id;
++
++	dlb2_log_enable_port(hw, domain_id, args->port_id, vdev_req, vdev_id);
++
++	/*
++	 * Verify that hardware resources are available before attempting to
++	 * satisfy the request. This simplifies the error unwinding code.
++	 */
++	ret = dlb2_verify_enable_ldb_port_args(hw,
++					       domain_id,
++					       args,
++					       resp,
++					       vdev_req,
++					       vdev_id);
++	if (ret)
++		return ret;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_ldb_port(id, vdev_req, domain);
++
++	/* Hardware requires disabling the CQ before unmapping QIDs. */
++	if (!port->enabled) {
++		dlb2_ldb_port_cq_enable(hw, port);
++		port->enabled = true;
++	}
++
++	resp->status = 0;
++
++	return 0;
++}
++
++static void dlb2_log_disable_port(struct dlb2_hw *hw,
++				  u32 domain_id,
++				  u32 port_id,
++				  bool vdev_req,
++				  unsigned int vdev_id)
++{
++	DLB2_HW_DBG(hw, "DLB2 disable port arguments:\n");
++	if (vdev_req)
++		DLB2_HW_DBG(hw, "(Request from vdev %d)\n", vdev_id);
++	DLB2_HW_DBG(hw, "\tDomain ID: %d\n",
++		    domain_id);
++	DLB2_HW_DBG(hw, "\tPort ID:   %d\n",
++		    port_id);
++}
++
++int dlb2_hw_disable_ldb_port(struct dlb2_hw *hw,
++			     u32 domain_id,
++			     struct dlb2_disable_ldb_port_args *args,
++			     struct dlb2_cmd_response *resp,
++			     bool vdev_req,
++			     unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++	struct dlb2_ldb_port *port;
++	int ret, id;
++
++	dlb2_log_disable_port(hw, domain_id, args->port_id, vdev_req, vdev_id);
++
++	/*
++	 * Verify that hardware resources are available before attempting to
++	 * satisfy the request. This simplifies the error unwinding code.
++	 */
++	ret = dlb2_verify_disable_ldb_port_args(hw,
++						domain_id,
++						args,
++						resp,
++						vdev_req,
++						vdev_id);
++	if (ret)
++		return ret;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++	if (!domain) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: domain not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_ldb_port(id, vdev_req, domain);
++	if (!port) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: port not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	/* Hardware requires disabling the CQ before unmapping QIDs. */
++	if (port->enabled) {
++		dlb2_ldb_port_cq_disable(hw, port);
++		port->enabled = false;
++	}
++
++	resp->status = 0;
++
++	return 0;
++}
++
++int dlb2_hw_enable_dir_port(struct dlb2_hw *hw,
++			    u32 domain_id,
++			    struct dlb2_enable_dir_port_args *args,
++			    struct dlb2_cmd_response *resp,
++			    bool vdev_req,
++			    unsigned int vdev_id)
++{
++	struct dlb2_dir_pq_pair *port;
++	struct dlb2_hw_domain *domain;
++	int ret, id;
++
++	dlb2_log_enable_port(hw, domain_id, args->port_id, vdev_req, vdev_id);
++
++	/*
++	 * Verify that hardware resources are available before attempting to
++	 * satisfy the request. This simplifies the error unwinding code.
++	 */
++	ret = dlb2_verify_enable_dir_port_args(hw,
++					       domain_id,
++					       args,
++					       resp,
++					       vdev_req,
++					       vdev_id);
++	if (ret)
++		return ret;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++	if (!domain) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: domain not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_dir_pq(id, vdev_req, domain);
++	if (!port) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: port not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	/* Hardware requires disabling the CQ before unmapping QIDs. */
++	if (!port->enabled) {
++		dlb2_dir_port_cq_enable(hw, port);
++		port->enabled = true;
++	}
++
++	resp->status = 0;
++
++	return 0;
++}
++
++int dlb2_hw_disable_dir_port(struct dlb2_hw *hw,
++			     u32 domain_id,
++			     struct dlb2_disable_dir_port_args *args,
++			     struct dlb2_cmd_response *resp,
++			     bool vdev_req,
++			     unsigned int vdev_id)
++{
++	struct dlb2_dir_pq_pair *port;
++	struct dlb2_hw_domain *domain;
++	int ret, id;
++
++	dlb2_log_disable_port(hw, domain_id, args->port_id, vdev_req, vdev_id);
++
++	/*
++	 * Verify that hardware resources are available before attempting to
++	 * satisfy the request. This simplifies the error unwinding code.
++	 */
++	ret = dlb2_verify_disable_dir_port_args(hw,
++						domain_id,
++						args,
++						resp,
++						vdev_req,
++						vdev_id);
++	if (ret)
++		return ret;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++	if (!domain) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: domain not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	id = args->port_id;
++
++	port = dlb2_get_domain_used_dir_pq(id, vdev_req, domain);
++	if (!port) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: port not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	/* Hardware requires disabling the CQ before unmapping QIDs. */
++	if (port->enabled) {
++		dlb2_dir_port_cq_disable(hw, port);
++		port->enabled = false;
++	}
++
++	resp->status = 0;
++
++	return 0;
++}
++
+ static u32 dlb2_ldb_cq_inflight_count(struct dlb2_hw *hw,
+ 				      struct dlb2_ldb_port *port)
+ {
 diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
-index 246d4e303ecf..430175efcd71 100644
+index 80bebeee7bb6..bc02d01e2a5e 100644
 --- a/drivers/misc/dlb2/dlb2_resource.h
 +++ b/drivers/misc/dlb2/dlb2_resource.h
-@@ -823,6 +823,34 @@ int dlb2_hw_pending_port_unmaps(struct dlb2_hw *hw,
- 				unsigned int vf_id);
+@@ -325,6 +325,126 @@ int dlb2_hw_unmap_qid(struct dlb2_hw *hw,
+ 		      unsigned int vdev_id);
  
  /**
-+ * dlb2_hw_get_cos_bandwidth() - returns the percent of bandwidth allocated
-+ *	to a port class-of-service.
++ * dlb2_hw_enable_ldb_port() - enable a load-balanced port for scheduling
 + * @hw: dlb2_hw handle for a particular device.
-+ * @cos_id: class-of-service ID.
++ * @domain_id: domain ID.
++ * @args: port enable arguments.
++ * @resp: response structure.
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function configures the DLB to schedule QEs to a load-balanced port.
++ * Ports are enabled by default.
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
 + *
 + * Return:
-+ * Returns -EINVAL if cos_id is invalid, else the class' bandwidth allocation.
-+ */
-+int dlb2_hw_get_cos_bandwidth(struct dlb2_hw *hw, u32 cos_id);
-+
-+/**
-+ * dlb2_hw_set_cos_bandwidth() - set a bandwidth allocation percentage for a
-+ *	port class-of-service.
-+ * @hw: dlb2_hw handle for a particular device.
-+ * @cos_id: class-of-service ID.
-+ * @bandwidth: class-of-service bandwidth.
-+ *
-+ * Return:
-+ * Returns 0 upon success, < 0 otherwise.
++ * Returns 0 upon success, < 0 otherwise. If an error occurs, resp->status is
++ * assigned a detailed error code from enum dlb2_error.
 + *
 + * Errors:
-+ * EINVAL - Invalid cos ID, bandwidth is greater than 100, or bandwidth would
-+ *	    cause the total bandwidth across all classes of service to exceed
-+ *	    100%.
++ * EINVAL - The port ID is invalid or the domain is not configured.
++ * EFAULT - Internal error (resp->status not set).
 + */
-+int dlb2_hw_set_cos_bandwidth(struct dlb2_hw *hw, u32 cos_id, u8 bandwidth);
++int dlb2_hw_enable_ldb_port(struct dlb2_hw *hw,
++			    u32 domain_id,
++			    struct dlb2_enable_ldb_port_args *args,
++			    struct dlb2_cmd_response *resp,
++			    bool vdev_request,
++			    unsigned int vdev_id);
 +
 +/**
-  * dlb2_hw_enable_sparse_ldb_cq_mode() - enable sparse mode for load-balanced
-  *	ports.
++ * dlb2_hw_disable_ldb_port() - disable a load-balanced port for scheduling
++ * @hw: dlb2_hw handle for a particular device.
++ * @domain_id: domain ID.
++ * @args: port disable arguments.
++ * @resp: response structure.
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function configures the DLB to stop scheduling QEs to a load-balanced
++ * port. Ports are enabled by default.
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise. If an error occurs, resp->status is
++ * assigned a detailed error code from enum dlb2_error.
++ *
++ * Errors:
++ * EINVAL - The port ID is invalid or the domain is not configured.
++ * EFAULT - Internal error (resp->status not set).
++ */
++int dlb2_hw_disable_ldb_port(struct dlb2_hw *hw,
++			     u32 domain_id,
++			     struct dlb2_disable_ldb_port_args *args,
++			     struct dlb2_cmd_response *resp,
++			     bool vdev_request,
++			     unsigned int vdev_id);
++
++/**
++ * dlb2_hw_enable_dir_port() - enable a directed port for scheduling
++ * @hw: dlb2_hw handle for a particular device.
++ * @domain_id: domain ID.
++ * @args: port enable arguments.
++ * @resp: response structure.
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function configures the DLB to schedule QEs to a directed port.
++ * Ports are enabled by default.
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise. If an error occurs, resp->status is
++ * assigned a detailed error code from enum dlb2_error.
++ *
++ * Errors:
++ * EINVAL - The port ID is invalid or the domain is not configured.
++ * EFAULT - Internal error (resp->status not set).
++ */
++int dlb2_hw_enable_dir_port(struct dlb2_hw *hw,
++			    u32 domain_id,
++			    struct dlb2_enable_dir_port_args *args,
++			    struct dlb2_cmd_response *resp,
++			    bool vdev_request,
++			    unsigned int vdev_id);
++
++/**
++ * dlb2_hw_disable_dir_port() - disable a directed port for scheduling
++ * @hw: dlb2_hw handle for a particular device.
++ * @domain_id: domain ID.
++ * @args: port disable arguments.
++ * @resp: response structure.
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function configures the DLB to stop scheduling QEs to a directed port.
++ * Ports are enabled by default.
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise. If an error occurs, resp->status is
++ * assigned a detailed error code from enum dlb2_error.
++ *
++ * Errors:
++ * EINVAL - The port ID is invalid or the domain is not configured.
++ * EFAULT - Internal error (resp->status not set).
++ */
++int dlb2_hw_disable_dir_port(struct dlb2_hw *hw,
++			     u32 domain_id,
++			     struct dlb2_disable_dir_port_args *args,
++			     struct dlb2_cmd_response *resp,
++			     bool vdev_request,
++			     unsigned int vdev_id);
++
++/**
+  * dlb2_reset_domain() - reset a scheduling domain
   * @hw: dlb2_hw handle for a particular device.
+  * @domain_id: domain ID.
 diff --git a/include/uapi/linux/dlb2_user.h b/include/uapi/linux/dlb2_user.h
-index d86e5a748f16..b6c55174b1c0 100644
+index bc692eb73bc8..763ae7eb7a23 100644
 --- a/include/uapi/linux/dlb2_user.h
 +++ b/include/uapi/linux/dlb2_user.h
-@@ -339,6 +339,50 @@ struct dlb2_get_sn_allocation_args {
+@@ -533,6 +533,82 @@ struct dlb2_unmap_qid_args {
  };
  
  /*
-+ * DLB2_CMD_SET_COS_BW: Set a bandwidth allocation percentage for a
-+ *	load-balanced port class-of-service (PF only).
-+ *
++ * DLB2_DOMAIN_CMD_ENABLE_LDB_PORT: Enable scheduling to a load-balanced port.
 + * Input parameters:
-+ * - cos_id: class-of-service ID, between 0 and 3 (inclusive).
-+ * - bandwidth: class-of-service bandwidth percentage. Total bandwidth
-+ *		percentages across all 4 classes cannot exceed 100%.
-+ *
-+ * Output parameters:
-+ * - response: pointer to a struct dlb2_cmd_response.
-+ *	response.status: Detailed error code. In certain cases, such as if the
-+ *		response pointer is invalid, the driver won't set status.
-+ */
-+struct dlb2_set_cos_bw_args {
-+	/* Output parameters */
-+	__u64 response;
-+	/* Input parameters */
-+	__u32 cos_id;
-+	__u32 bandwidth;
-+};
-+
-+/*
-+ * DLB2_CMD_GET_COS_BW: Get the bandwidth allocation percentage for a
-+ *	load-balanced port class-of-service.
-+ *
-+ * Input parameters:
-+ * - cos_id: class-of-service ID, between 0 and 3 (inclusive).
++ * - port_id: Load-balanced port ID.
 + * - padding0: Reserved for future use.
 + *
 + * Output parameters:
 + * - response: pointer to a struct dlb2_cmd_response.
 + *	response.status: Detailed error code. In certain cases, such as if the
 + *		response pointer is invalid, the driver won't set status.
-+ *	response.id: Specified class's bandwidth percentage.
 + */
-+struct dlb2_get_cos_bw_args {
++struct dlb2_enable_ldb_port_args {
 +	/* Output parameters */
 +	__u64 response;
 +	/* Input parameters */
-+	__u32 cos_id;
++	__u32 port_id;
 +	__u32 padding0;
 +};
 +
 +/*
-  * DLB2_CMD_GET_SN_OCCUPANCY: Get a sequence number group's occupancy
-  *
-  * Each sequence number group has one or more slots, depending on its
-@@ -399,6 +443,8 @@ enum dlb2_user_interface_commands {
- 	DLB2_CMD_GET_DRIVER_VERSION,
- 	DLB2_CMD_SET_SN_ALLOCATION,
- 	DLB2_CMD_GET_SN_ALLOCATION,
-+	DLB2_CMD_SET_COS_BW,
-+	DLB2_CMD_GET_COS_BW,
- 	DLB2_CMD_GET_SN_OCCUPANCY,
- 	DLB2_CMD_QUERY_CQ_POLL_MODE,
- 
-@@ -1012,6 +1058,14 @@ enum dlb2_domain_user_interface_commands {
++ * DLB2_DOMAIN_CMD_ENABLE_DIR_PORT: Enable scheduling to a directed port.
++ * Input parameters:
++ * - port_id: Directed port ID.
++ * - padding0: Reserved for future use.
++ *
++ * Output parameters:
++ * - response: pointer to a struct dlb2_cmd_response.
++ *	response.status: Detailed error code. In certain cases, such as if the
++ *		response pointer is invalid, the driver won't set status.
++ */
++struct dlb2_enable_dir_port_args {
++	/* Output parameters */
++	__u64 response;
++	/* Input parameters */
++	__u32 port_id;
++};
++
++/*
++ * DLB2_DOMAIN_CMD_DISABLE_LDB_PORT: Disable scheduling to a load-balanced
++ *	port.
++ * Input parameters:
++ * - port_id: Load-balanced port ID.
++ * - padding0: Reserved for future use.
++ *
++ * Output parameters:
++ * - response: pointer to a struct dlb2_cmd_response.
++ *	response.status: Detailed error code. In certain cases, such as if the
++ *		response pointer is invalid, the driver won't set status.
++ */
++struct dlb2_disable_ldb_port_args {
++	/* Output parameters */
++	__u64 response;
++	/* Input parameters */
++	__u32 port_id;
++	__u32 padding0;
++};
++
++/*
++ * DLB2_DOMAIN_CMD_DISABLE_DIR_PORT: Disable scheduling to a directed port.
++ * Input parameters:
++ * - port_id: Directed port ID.
++ * - padding0: Reserved for future use.
++ *
++ * Output parameters:
++ * - response: pointer to a struct dlb2_cmd_response.
++ *	response.status: Detailed error code. In certain cases, such as if the
++ *		response pointer is invalid, the driver won't set status.
++ */
++struct dlb2_disable_dir_port_args {
++	/* Output parameters */
++	__u64 response;
++	/* Input parameters */
++	__u32 port_id;
++	__u32 padding0;
++};
++
++/*
+  * DLB2_DOMAIN_CMD_GET_LDB_QUEUE_DEPTH: Get a load-balanced queue's depth.
+  * Input parameters:
+  * - queue_id: The load-balanced queue ID.
+@@ -639,6 +715,10 @@ enum dlb2_domain_user_interface_commands {
+ 	DLB2_DOMAIN_CMD_START_DOMAIN,
+ 	DLB2_DOMAIN_CMD_MAP_QID,
+ 	DLB2_DOMAIN_CMD_UNMAP_QID,
++	DLB2_DOMAIN_CMD_ENABLE_LDB_PORT,
++	DLB2_DOMAIN_CMD_ENABLE_DIR_PORT,
++	DLB2_DOMAIN_CMD_DISABLE_LDB_PORT,
++	DLB2_DOMAIN_CMD_DISABLE_DIR_PORT,
+ 	DLB2_DOMAIN_CMD_GET_LDB_QUEUE_DEPTH,
+ 	DLB2_DOMAIN_CMD_GET_DIR_QUEUE_DEPTH,
+ 	DLB2_DOMAIN_CMD_PENDING_PORT_UNMAPS,
+@@ -716,6 +796,22 @@ enum dlb2_domain_user_interface_commands {
  		_IOWR(DLB2_IOC_MAGIC,				\
- 		      DLB2_CMD_GET_SN_ALLOCATION,		\
- 		      struct dlb2_get_sn_allocation_args)
-+#define DLB2_IOC_SET_COS_BW					\
+ 		      DLB2_DOMAIN_CMD_UNMAP_QID,		\
+ 		      struct dlb2_unmap_qid_args)
++#define DLB2_IOC_ENABLE_LDB_PORT				\
 +		_IOWR(DLB2_IOC_MAGIC,				\
-+		      DLB2_CMD_SET_COS_BW,			\
-+		      struct dlb2_set_cos_bw_args)
-+#define DLB2_IOC_GET_COS_BW					\
++		      DLB2_DOMAIN_CMD_ENABLE_LDB_PORT,		\
++		      struct dlb2_enable_ldb_port_args)
++#define DLB2_IOC_ENABLE_DIR_PORT				\
 +		_IOWR(DLB2_IOC_MAGIC,				\
-+		      DLB2_CMD_GET_COS_BW,			\
-+		      struct dlb2_get_cos_bw_args)
- #define DLB2_IOC_GET_SN_OCCUPANCY				\
++		      DLB2_DOMAIN_CMD_ENABLE_DIR_PORT,		\
++		      struct dlb2_enable_dir_port_args)
++#define DLB2_IOC_DISABLE_LDB_PORT				\
++		_IOWR(DLB2_IOC_MAGIC,				\
++		      DLB2_DOMAIN_CMD_DISABLE_LDB_PORT,		\
++		      struct dlb2_disable_ldb_port_args)
++#define DLB2_IOC_DISABLE_DIR_PORT				\
++		_IOWR(DLB2_IOC_MAGIC,				\
++		      DLB2_DOMAIN_CMD_DISABLE_DIR_PORT,		\
++		      struct dlb2_disable_dir_port_args)
+ #define DLB2_IOC_GET_LDB_QUEUE_DEPTH				\
  		_IOWR(DLB2_IOC_MAGIC,				\
- 		      DLB2_CMD_GET_SN_OCCUPANCY,		\
+ 		      DLB2_DOMAIN_CMD_GET_LDB_QUEUE_DEPTH,	\
 -- 
 2.13.6
 
