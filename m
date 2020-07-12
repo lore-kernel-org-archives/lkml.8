@@ -2,86 +2,126 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C44CC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6932FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635942070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EF52070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="et8c4srf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgGLIvD (ORCPT
+        id S1728461AbgGLI7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 04:51:03 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51972 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgGLIvC (ORCPT
+        Sun, 12 Jul 2020 04:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgGLI7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 04:51:02 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AC08A1C0BD2; Sun, 12 Jul 2020 10:50:59 +0200 (CEST)
-Date:   Sun, 12 Jul 2020 10:50:59 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
-        kernel@pengutronix.de, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20200712085059.GA13495@amd>
-References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
- <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
- <20200712082453.GI8295@amd>
- <20200712084352.GA175558@kroah.com>
+        Sun, 12 Jul 2020 04:59:30 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E66C061794;
+        Sun, 12 Jul 2020 01:59:30 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id v8so10415484iox.2;
+        Sun, 12 Jul 2020 01:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=+Dl8Q1XzZiYA4GO8ZZtoY/mYTNvNLG4yL/TSgXjOVXM=;
+        b=et8c4srf7jKz/ghq6ldgJw1wpsajAh/iicKsgGLSk5HCxGZ5CQ86IFUST3G/dAZS9R
+         BK+JEehQthnnir07FeiPcL/qpVUZ2NGCyUjND9byzvK8PnixOnaWkF96m/M5kUymOL2C
+         LII6vqDG01OkywVTUDEiMrt1QcYjd+y6es/0VA01BLEP3VrfKh/wxRZhab4S/+5xDWOB
+         xe88vsXrHJ2oYLtwubG993g1CAsa5aM8/V0M7++JN1XNtMqDZiEmh7FXGrho8fAIGKiT
+         KJW0LpTSPQuedYjKrMO8KvYmRECOyDbXavBRUCJEaU4kO1PGAriZ+FRdd/Me8DIzlfab
+         p9uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=+Dl8Q1XzZiYA4GO8ZZtoY/mYTNvNLG4yL/TSgXjOVXM=;
+        b=CafyuPnaQWggO8PEixrRbkVAkgjZD8f+UkmoKcWcFsIIRaq3RLpP5cwWOhMKEYh4g8
+         7WxtNI9ca8lHQjl1ja7ble2ASNCYrAXjbMY4EDJhmkYKvfYZ+opVMil8K3MAJ4AUxtp1
+         ThSji8sFkAuCrCmuoI8SKYA/MUZ2lYLZJbG3fCmkC6CJnX22aAki8TujsHHuyKuqXE1c
+         JGVxO18dDrfMHjtyX9YzEM/x6A0CS15REVPqzvxL5SpXT2NINXroaR5kuuPEZs3Ssa+8
+         O7GUgeZZ30hY3jNuXo92vW3anwL6vy/EqoGatulaOuTz3X2ABz27nuyd2vdbcj1sbCZT
+         HGQg==
+X-Gm-Message-State: AOAM5327tf9z0the4zjHMjxdw8A4JgjbiCsSC1ieJkvlNQ9WMeswB739
+        cjSsXZ8h9jX9FML4QC/xNOGhWU2wnuT4JxOdrLw=
+X-Google-Smtp-Source: ABdhPJz6yajbht8v21aUb5AqbeseJZbW7WiEMt9+Xzj6unIHhgR9p8E/p5dg9MyRRh3U33wQNCR5IYqWyZHeGZXnsKY=
+X-Received: by 2002:a05:6602:1555:: with SMTP id h21mr6773338iow.163.1594544369052;
+ Sun, 12 Jul 2020 01:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <20200712084352.GA175558@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200624203200.78870-1-samitolvanen@google.com> <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+In-Reply-To: <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sun, 12 Jul 2020 10:59:17 +0200
+Message-ID: <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 11, 2020 at 6:32 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+> Dear Sami,
+>
+>
+> Am 24.06.20 um 22:31 schrieb Sami Tolvanen:
+> > This patch series adds support for building x86_64 and arm64 kernels
+> > with Clang's Link Time Optimization (LTO).
+> >
+> > In addition to performance, the primary motivation for LTO is to allow
+> > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM bitcode,
+> > which Clang produces with LTO instead of ELF object files, postponing
+> > ELF processing until a later stage, and ensuring initcall ordering.
+> >
+> > Note that first objtool patch in the series is already in linux-next,
+> > but as it's needed with LTO, I'm including it also here to make testing
+> > easier.
+>
+> [=E2=80=A6]
+>
+> Thank you very much for sending these changes.
+>
+> Do you have a branch, where your current work can be pulled from? Your
+> branch on GitHub [1] seems 15 months old.
+>
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed it's easier to git-pull.
+I have seen [1] - not sure if this is the latest version.
+Alternatively, you can check patchwork LKML by searching for $submitter.
+( You can open patch 01/22 and download the whole patch-series by
+following the link "series", see [3]. )
 
-On Sun 2020-07-12 10:43:52, Greg Kroah-Hartman wrote:
-> On Sun, Jul 12, 2020 at 10:24:53AM +0200, Pavel Machek wrote:
-> > > +++ b/drivers/leds/trigger/ledtrig-tty.c
-> > > @@ -0,0 +1,192 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> >=20
-> > 2.0+ is preffered.
->=20
-> No it is not, that's up to the developer.
+- Sedat -
 
-For code I maintain, yes it is.
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8KzvMACgkQMOfwapXb+vJg0gCgiaHo248bMnC/ER1wS0CSxqGG
-PR8Anjb6IckYrVJmK2nIuQvvbra8cq0L
-=0XQO
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.=
+git/log/?h=3Dlto
+[2] https://lore.kernel.org/patchwork/project/lkml/list/?series=3D&submitte=
+r=3D19676
+[3] https://lore.kernel.org/patchwork/series/450026/mbox/
