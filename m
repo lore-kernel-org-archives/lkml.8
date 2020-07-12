@@ -2,105 +2,242 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F46C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6781C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943CA2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="iDNr7lSc"
+	by mail.kernel.org (Postfix) with ESMTP id B5BD62075F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594552948;
+	bh=ZselvpBXx8fvRjXcrydYqfW7ObsUAVRjBnXH31XHV40=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vYAWG3xr1fPndn2Ir5QZEJDh1aOHFXhl4CmnSDyFDIdtVGts6MzgE7aMaKLwbqmsV
+	 KTnm2Okx2WPciXdFmgKscEVplEjx5g01zLzotBVRKjLrr4Uyo4LwhMQtw7RiuETNaH
+	 CGz0QxJiMRgGfWNADFYlP+uzPMJvMYblocUY5kTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgGLLWP (ORCPT
+        id S1728909AbgGLLW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 07:22:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728851AbgGLLWO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 07:22:14 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86FB3C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 04:22:14 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id k18so9638833qke.4
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 04:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=E8uIIGdZhBbt4P5nnZk6uO1gBzr10gvYnt0IgsMFtwA=;
-        b=iDNr7lScSy5HSPnOIvGjT67vtn/XV/mjkEMKKL9E+H+Sokl1bQU7aUHIXX/MWVY3jg
-         nNVrzTs7NVEFiNEt1QE45o9yOzxHr/CD9VbXiZDMYDMbCVIl66/VGhwot2HmJ6V5IOQo
-         wE9kY9jsu9gMIenWCc4Jf9InVdIxwpKQue8q1MMxrJn5evdxNHTLXH1yJA8y6tpmlyBD
-         bICbKgfL2ou6wrIVzODfEoxlLGqVhzx0xZh1yFMYIhhhsPMLlCMr0VuNYhkRaQw9coid
-         al5MOsPTf9ZMUJZ99HfoShOVJhs9OOY9zJKwgA5lsaxnLgrZuG8IbiAH3+zWH0hAqOR4
-         7BJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E8uIIGdZhBbt4P5nnZk6uO1gBzr10gvYnt0IgsMFtwA=;
-        b=FaVLN1riu+W4T9XoQFdbkqzNiUyzKOsfoPjnznM/RTy7O3QY9dOoyQW+oAXfgm3cHe
-         RosEtxcMnKYg5NX+p9qCQBEGj9m+1eQtDaB9QRp2Y/JUS6OA7iW012SkhA9eFER1KSN+
-         xFIzYMEV8sTtRjcnI289BI5UF2OFTXRrIhHS9F+5X6O9U6p0g0aTOkqA8hI8obcjq/Bp
-         HDFVYwUnkupZnEvwM+MmLV/isb7j6L3U7a+rqfWzbDlL6n3/9GpJ+bZIGoU3KQD3K31C
-         ycUrnhKWKe7NrXHyR/in2BFZtGEVaxqcmWsOAEi0wKfysOG1T2Rj4Zgk3PTIqSzJZpIc
-         E8fw==
-X-Gm-Message-State: AOAM530Qsnpp+D0VvPBXRlZZ55WXO1aUNdeDW6h3wUt13jYaEpS9yUNe
-        KPyz6wQ72j2YxnHhuvfLIA4mXmtTDLdFcA==
-X-Google-Smtp-Source: ABdhPJwXIX/5PdSBHlaLzL5ZpjQeaRL0vF/bU9bzDwuxMCHJrW33wRDReDTH1nuTtATOSSmmX1BSSg==
-X-Received: by 2002:a37:451:: with SMTP id 78mr49538711qke.117.1594552933707;
-        Sun, 12 Jul 2020 04:22:13 -0700 (PDT)
-Received: from ?IPv6:2607:fb90:95b7:945a:fceb:31ff:fed3:9377? ([2607:fb90:95b7:945a:fceb:31ff:fed3:9377])
-        by smtp.gmail.com with ESMTPSA id g1sm16012505qkl.86.2020.07.12.04.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 04:22:12 -0700 (PDT)
-Subject: Re: [PATCH] sh: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        ysato@users.sourceforge.jp, dalias@libc.org,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <8b008a69-e73a-43cc-3dba-c1bce90c9902@landley.net>
- <20200712111118.24916-1-grandmaster@al2klimov.de>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <14fdab51-0197-1784-9ebb-356a0fd39952@landley.net>
-Date:   Sun, 12 Jul 2020 06:30:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 12 Jul 2020 07:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728828AbgGLLW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 07:22:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 663FC2075F;
+        Sun, 12 Jul 2020 11:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594552945;
+        bh=ZselvpBXx8fvRjXcrydYqfW7ObsUAVRjBnXH31XHV40=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HmSPwmhUhokYPC5svIpG9xyv9N62LQcH9CPsa82fkLzWHfZC5PoyR93qeAwPxJk9d
+         80LKKbnFOiUVwswt4qXrqzJvXcLzi48Sgz3/D4MxAW2dHr4xSCaM3fTyVqjggGD++w
+         hl1wi6t6RKPddPQgiR/QbsIpUWzH6Zh1T3VPi2nU=
+Date:   Sun, 12 Jul 2020 12:22:19 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/6] dt-bindings: iio/adc: Convert ingenic-adc docs
+ to YAML.
+Message-ID: <20200712122219.6c9e1e62@archlinux>
+In-Reply-To: <20200709152200.10039-2-contact@artur-rojek.eu>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+        <20200709152200.10039-2-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200712111118.24916-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/20 6:11 AM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Thu,  9 Jul 2020 17:21:55 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Trimmed just to the one site without the self-signed certficate: check.
-
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> Convert the textual documentation of Device Tree bindings for the
+> Ingenic JZ47xx SoCs ADC controller to YAML.
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> The `interrupts` property is now explicitly listed and marked as
+> required. While missing from the previous textual documentation, this
+> property has been used with all the boards which probe this driver.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Landley <rob@landley.net>
+Given this is a good change on it's own. I'll apply it before even
+reading the rest of the series.  If we do need to go to a v9 at least
+it'll be shorter ;) 
 
-Rob
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to poke at it.
+
+Thanks,
+
+Jonathan
+
+> ---
+> 
+>  Changes:
+> 
+>  v6: new patch
+> 
+>  v7: - specify `maxItems: 1` for single entry properties
+>      - get rid of redundant descriptions of said properties
+> 
+>  v8: no change
+> 
+>  .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
+>  .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
+>  2 files changed, 71 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> deleted file mode 100644
+> index cd9048cf9dcf..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -* Ingenic JZ47xx ADC controller IIO bindings
+> -
+> -Required properties:
+> -
+> -- compatible: Should be one of:
+> -  * ingenic,jz4725b-adc
+> -  * ingenic,jz4740-adc
+> -  * ingenic,jz4770-adc
+> -- reg: ADC controller registers location and length.
+> -- clocks: phandle to the SoC's ADC clock.
+> -- clock-names: Must be set to "adc".
+> -- #io-channel-cells: Must be set to <1> to indicate channels are selected
+> -  by index.
+> -
+> -ADC clients must use the format described in iio-bindings.txt, giving
+> -a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> -
+> -Example:
+> -
+> -#include <dt-bindings/iio/adc/ingenic,adc.h>
+> -
+> -adc: adc@10070000 {
+> -	compatible = "ingenic,jz4740-adc";
+> -	#io-channel-cells = <1>;
+> -
+> -	reg = <0x10070000 0x30>;
+> -
+> -	clocks = <&cgu JZ4740_CLK_ADC>;
+> -	clock-names = "adc";
+> -
+> -	interrupt-parent = <&intc>;
+> -	interrupts = <18>;
+> -};
+> -
+> -adc-keys {
+> -	...
+> -	compatible = "adc-keys";
+> -	io-channels = <&adc INGENIC_ADC_AUX>;
+> -	io-channel-names = "buttons";
+> -	...
+> -};
+> -
+> -battery {
+> -	...
+> -	compatible = "ingenic,jz4740-battery";
+> -	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> -	io-channel-names = "battery";
+> -	...
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> new file mode 100644
+> index 000000000000..9f414dbdae86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Ingenic JZ47xx ADC controller IIO bindings
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: >
+> +  Industrial I/O subsystem bindings for ADC controller found in
+> +  Ingenic JZ47xx SoCs.
+> +
+> +  ADC clients must use the format described in iio-bindings.txt, giving
+> +  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ingenic,jz4725b-adc
+> +      - ingenic,jz4740-adc
+> +      - ingenic,jz4770-adc
+> +
+> +  '#io-channel-cells':
+> +    const: 1
+> +    description:
+> +      Must be set to <1> to indicate channels are selected by index.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: adc
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#io-channel-cells'
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4740-cgu.h>
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +
+> +    adc@10070000 {
+> +            compatible = "ingenic,jz4740-adc";
+> +            #io-channel-cells = <1>;
+> +
+> +            reg = <0x10070000 0x30>;
+> +
+> +            clocks = <&cgu JZ4740_CLK_ADC>;
+> +            clock-names = "adc";
+> +
+> +            interrupt-parent = <&intc>;
+> +            interrupts = <18>;
+> +    };
+
