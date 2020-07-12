@@ -2,106 +2,118 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD9BC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074292067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34EE20702
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbgGLTzr (ORCPT
+        id S1729357AbgGLTwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 15:55:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51058 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbgGLTzq (ORCPT
+        Sun, 12 Jul 2020 15:52:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39075 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729249AbgGLTwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 15:55:46 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8E9471C0BDD; Sun, 12 Jul 2020 21:55:44 +0200 (CEST)
-Date:   Sun, 12 Jul 2020 21:55:44 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
-Message-ID: <20200712195544.GC20592@amd>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200704124729.GA20088@amd>
- <20200712191315.5dab10a6@nic.cz>
+        Sun, 12 Jul 2020 15:52:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b9so4526659plx.6;
+        Sun, 12 Jul 2020 12:52:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dO5yhKcx3TVstL15EUrXTrP6cS7pNgdc/FFT2kCEn1c=;
+        b=hBwn0QzwlWpUVhcIQdMRKauB4BiExr/UX5wua3ijAMeV2+dcQzQfjwwJZ3QXEpxfML
+         6GvOHVdK0EjEFBWShvkFgOsYmukjGxJW7TZATIkrvXTQ9N51P7VcyjvFLqVhoaMWt81C
+         Ff8LeHgRLfs8X0u1Nk2p4bqUzECC+e/CJqABIS1t7BpRK165JKJMAH5/Z/X9Rr7jL35u
+         pUUcnleRmKOjth9PVKBo6TaOm6m4YbxGNuWamm+qVWK2IExRftPdIqmsWoZCLXzDqB46
+         LgT8L319tgti+5ISvEnKnzKeLMKAOYVL/7xNRvJ9GkvyLhiybb5v51TsTyC+4CglHwSQ
+         7m8A==
+X-Gm-Message-State: AOAM533wYmO8cxTMJbJkQtxRzuzRkVhdTodUycXVuIXK17TSwwC3SEN+
+        wD1EQhsyQw2Fky1De/BHh5TcxMtp
+X-Google-Smtp-Source: ABdhPJzactO0ejDBhEssTONkZYgUAMe5eHla073wUvRdRBi3CbdjxIjwt/4sLEzjc6B+qeeT9p0QqA==
+X-Received: by 2002:a17:90a:71c3:: with SMTP id m3mr17226340pjs.225.1594583524624;
+        Sun, 12 Jul 2020 12:52:04 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id x3sm12424283pfn.154.2020.07.12.12.52.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jul 2020 12:52:03 -0700 (PDT)
+Subject: Re: [PATCH] SCSI RDMA PROTOCOL (SRP) TARGET: Replace HTTP links with
+ HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200709194820.27032-1-grandmaster@al2klimov.de>
+ <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
+ <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <bf85e454-cccc-37ef-d55f-d44a5c5c51df@acm.org>
+Date:   Sun, 12 Jul 2020 12:52:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="f0KYrhQ4vYSV2aJu"
-Content-Disposition: inline
-In-Reply-To: <20200712191315.5dab10a6@nic.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-10 11:12, Alexander A. Klimov wrote:
+> Am 10.07.20 um 16:22 schrieb Bart Van Assche:
+>> On 2020-07-09 12:48, Alexander A. Klimov wrote:
+>>> diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
+>>> index 4b5d9b792cfa..f63b34d9ae32 100644
+>>> --- a/drivers/infiniband/ulp/srpt/Kconfig
+>>> +++ b/drivers/infiniband/ulp/srpt/Kconfig
+>>> @@ -10,4 +10,4 @@ config INFINIBAND_SRPT
+>>>         that supports the RDMA protocol. Currently the RDMA protocol is
+>>>         supported by InfiniBand and by iWarp network hardware. More
+>>>         information about the SRP protocol can be found on the website
+>>> -      of the INCITS T10 technical committee (http://www.t10.org/).
+>>> +      of the INCITS T10 technical committee (https://www.t10.org/).
+>>
+>> It is not clear to me how modifying an URL in a Kconfig file helps to
+>> reduce the attack surface on kernel devs?
+>
+> Not on all, just on the ones who open it.
 
---f0KYrhQ4vYSV2aJu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is changing every single HTTP URL in the kernel into a HTTPS URL the best
+solution? Is this the only solution? Has it been considered to recommend
+kernel developers who are concerned about MITM attacks to install a browser
+extension like HTTPS Everywhere instead?
 
-Hi!
+Thanks,
 
-> > > This is the multi color LED framework.   This framework presents clus=
-tered
-> > > colored LEDs into an array and allows the user space to adjust the br=
-ightness
-> > > of the cluster using a single file write.  The individual colored LEDs
-> > > intensities are controlled via a single file that is an array of LEDs
-> > >=20
-> > > Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
-> > > Added update to the u8500_defconfig =20
-> >=20
-> > Marek, would you be willing to look over this series?
->=20
-> Overall this series looks good to me. I wanted to apply version 29 of
-> the patches, but I didn't receive all patches in v29 (some are
-> missing), so I had to search for previous versions of selected patches.
->=20
-> I have seen some typos in documentation, but that can be solved
-> afterwards.
->=20
-> One thing I don't like much is that in the sysfs multi_index and
-> multi_intensity files there is a trailing space after the last color.
-> This is not true for example for the trigger file. It is trivial to fix
-> this, so again maybe a will send a follow-up patch after this series is
-> accepted.
-
-Yes, I noticed that one, too, and expect it to be fixed before the
-merge.
-
-I believe you'll get next version of the patches... If not that one
-will likely appear in -next, so will be available using git.
-
-Thank you for the review,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---f0KYrhQ4vYSV2aJu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8LasAACgkQMOfwapXb+vIB3wCgunzoVWqliii9lNc24fOaIt3+
-2PkAn10TYib5AulKavO98SWIeoUXvOtM
-=LdeN
------END PGP SIGNATURE-----
-
---f0KYrhQ4vYSV2aJu--
+Bart.
