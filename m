@@ -2,92 +2,82 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D29C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFA82067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BA22067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6F8mkCN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ek0pibK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgGLVKu (ORCPT
+        id S1729477AbgGLVMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 17:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbgGLVKu (ORCPT
+        Sun, 12 Jul 2020 17:12:13 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26362 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729020AbgGLVMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 17:10:50 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E65C061794;
-        Sun, 12 Jul 2020 14:10:50 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so5071825pfu.1;
-        Sun, 12 Jul 2020 14:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lUm4cLOAP9oD2S5sJi8gYSXH2QfTVX1GOTo0+hkX9Vw=;
-        b=O6F8mkCNKikIkJNPo8IyOR2P1aVobZP0JBcpPYikcOWdR66LKUkequBincy02tlLVy
-         hcAxeAoGq+5TjhwWDKaRP716hbMChV0VTPnjGKpbAqNBXei8oDMKRk5YPID0Bvpgomxi
-         TwPLqsGkWFsyaa1/nskgH15LdhQX0iy/0DsXFTrkfuccF6eqWxGbxlqiixcP+v9D0dpK
-         qMapDHxkhgfPi0O62NVbKzUklImQDWs+FNxt0fMVCseWHXNZQWB/8obwHHuqD9N/pSBj
-         o/4ynkYyIXaijTMou/mlVC3ievRIJtiIlRqp6Z4yaS68Of5WCao/vyl54IY1num1+f6X
-         vPPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lUm4cLOAP9oD2S5sJi8gYSXH2QfTVX1GOTo0+hkX9Vw=;
-        b=d1sSnGdiqVmPsisNvSFxRGwACEq/7+EvweJDZT42Sn+a5CZszg/F2t7QgKj5D8zJ8N
-         LgBL/QO3E9aHWgwLsg/GNlh4shpDiDz+bIG8XjyjvZ0ebEdz2gUH0w49D9iPxj87TzTb
-         OM3uCPzeaFzeCauEa3KXMog41hCJCJF1WZQj4lp71oPn0v/cCdWtibn+hHGoTRR8YNN1
-         dTQwW5dBBWDSLSZ04gBFFbcYwVkvrmx2W5oVCb51Xvci5UyzUNV+2oXGHh3+G8WVhbgU
-         QT+WX4wKU3t0hz/HyNAxNvQ5f9M01qfzcwq5lRs2a7MacRN+5NLc+7JR5gZcySEQ4o58
-         /nyQ==
-X-Gm-Message-State: AOAM532QDTifoxkq58QpvDQAkDfowFVLo0alGq5seRCgMTxV3/4PgfpW
-        asJMB1mIzdIc6Up0Di2BBSY=
-X-Google-Smtp-Source: ABdhPJy3vL+y6+PJJgo91UvG6zi9x0U+Z/p1fmB+bUb9pJVVBrqWVjmhlbkhKbSU+d9auRivIZIbrA==
-X-Received: by 2002:a63:c603:: with SMTP id w3mr65777252pgg.284.1594588249757;
-        Sun, 12 Jul 2020 14:10:49 -0700 (PDT)
-Received: from austin-fedora (IP-168-124.cs.nctu.edu.tw. [140.113.168.124])
-        by smtp.gmail.com with ESMTPSA id 204sm12275757pfx.3.2020.07.12.14.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 14:10:49 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 05:10:45 +0800
-From:   Austin Chang <austin880625@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dm-cache: document zeroing metadata device step
-Message-ID: <20200712211045.GA332416@austin-fedora>
-References: <20200712194039.329035-1-austin880625@gmail.com>
- <20200712195932.GV12769@casper.infradead.org>
+        Sun, 12 Jul 2020 17:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594588332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SzXcGBnJoMu6yQ1ekMwxkgwaybMWLM4JDF5m7XfzkWs=;
+        b=Ek0pibK7akd2VYJUKbKQpvVT3CDAjkFtvI+VRaeBwkdY4zFyBshuyZQQ1nIhWvRbOoU17/
+        JSiesXDNch8QaJYYtzwdhwsEbGgxV4ftnWfG+Tz5sCvptgBbTOR/YMx+inDwhhAuGTTDb5
+        vFeHyi55zYzAwLO7Cz+SEugpwRR/wwE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-UftfbY3ZOO-mm81bYCRcPg-1; Sun, 12 Jul 2020 17:12:08 -0400
+X-MC-Unique: UftfbY3ZOO-mm81bYCRcPg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D291210059A9;
+        Sun, 12 Jul 2020 21:12:06 +0000 (UTC)
+Received: from krava (unknown [10.40.192.24])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0E8CA1A836;
+        Sun, 12 Jul 2020 21:12:04 +0000 (UTC)
+Date:   Sun, 12 Jul 2020 23:12:04 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 00/15] perf: support enable and disable commands in
+ stat and record modes
+Message-ID: <20200712211204.GA156308@krava>
+References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200712195932.GV12769@casper.infradead.org>
+In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 08:59:32PM +0100, Matthew Wilcox wrote:
-> On Mon, Jul 13, 2020 at 03:40:39AM +0800, Austin Chang wrote:
-> > +  # When using dmsetup directly instead of volume manager like lvm2,
-> > +  # the first 4k of the metadata device should be zeroed to indicate
-> > +  # empty metadata.
-> > +  dd if=/dev/zero of=/dev/mapper/metadata bs=4k conv=notrunc
+On Wed, Jul 08, 2020 at 10:36:30AM +0300, Alexey Budankov wrote:
 > 
-> ... don't you need 'count=1' or you'll zero the entire device?
+> Changes in v10:
+> - reused struct priv, renamed props into flags and used unsigned int type as a storage
+> - implemented and adopted usage of evlist__ctlfd_initialized() function
+> - updated while condition with checking !(done || stop)
+> - implemented compute_tts() to calculate the remainder of timeout to wait in poll()
 
-Oops, I copied the command I just used since zeroing the whole metadata
-device didn't harm. But 'count=1' should match what I've just written.
-I will send a v2 patch later
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
