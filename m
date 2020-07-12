@@ -2,192 +2,137 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D039AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE60C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1482070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jZXCOE48"
+	by mail.kernel.org (Postfix) with ESMTP id 21FAB20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgGLITW (ORCPT
+        id S1728578AbgGLIY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 04:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgGLITW (ORCPT
+        Sun, 12 Jul 2020 04:24:58 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50330 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgGLIY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 04:19:22 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D172C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 01:19:21 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id el4so4473319qvb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 01:19:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MGwINlQgCbK7cpwpxpZe+If/M4ESfvkJJhKVPhatAlU=;
-        b=jZXCOE48SXImaeZdlJiq4vPp0Rp3n7iSLnYs+sdbkaNBou3U17dn5vlwZ8cvUHR0/s
-         fLI8lSGZrhVZK3dsCRSbv3oXaP7hBuws+Kj9p9D7RIWdxPSUlq//EPxVL3ZX1QjrLNuu
-         q4CYd7YKR3uWPPIO4Jb/tIbAhOx1Kog1KQpF+Z/ETHW93Cz58nDZTHT41AoSh+GC8RiR
-         wE+7pp9e/FP+dguSLrnmQgox2i8nVaRFWRn7ZF3G8B3QsHyIA5grkVOM38SmfIewJEjI
-         ++md5hYIkU2X/Yi9dE76+q97eM8lj11obz63zYW/HhAgEvo5MatZsyfZdClmcRu8V1I3
-         bVDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MGwINlQgCbK7cpwpxpZe+If/M4ESfvkJJhKVPhatAlU=;
-        b=PYF1O3BYUrdFYg54uKr7/ty3HYy5Ewzm4cg7Ti4uGPzFWyiGUJ7SiPlSVHmqpZ30gx
-         afSbd6upoKzz36hpMNSVpzU+b3xt6Z0z5ksN35tfjWgp7ftyZjIlFieJc0mTAs4YLArD
-         n5YBg5+maS1fj7s0DFbnEV4+L9BLVzXO3J2y8BkTvMnsJ2XKqEubdX9eI0WCSraoG3Hv
-         3jlZgHW0sTgo62XBmRYC2DS065hRh0vTqTFJRMfXgAhlwxfzKgJwr7T+AWVs3hAYmpIm
-         kZUxE3Vm/67NbqcIyy63VksftA4tMRV5vVRV5hd6XiR3o58rWUZeyECSlIg1O+nRnMyz
-         Mb7Q==
-X-Gm-Message-State: AOAM532XWq+ToEsicJ2rCUQ49/Vu5RlnY6SVElt6F7fI8WR5UeYVIYWP
-        5BUx7tG+YfRHuNm++YX4vJVKR1iAuLCa3HPu0tIScw==
-X-Google-Smtp-Source: ABdhPJxM7LrCDPZHbZbYu7ZdLOZATVDRxxTkWJh3awmIgacDx3Z/aXaXBBOIzRdcK0OahzmkNa2s8fQkmm7zDgeD4B4=
-X-Received: by 2002:ad4:4e07:: with SMTP id dl7mr73637317qvb.134.1594541960625;
- Sun, 12 Jul 2020 01:19:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200710161516.11625-1-brgl@bgdev.pl> <20200710161516.11625-2-brgl@bgdev.pl>
- <CAHp75VfTDmyWWxAAky-CmuvO2ge0T1q+woJ8MxjdRQqNJwHS4w@mail.gmail.com>
-In-Reply-To: <CAHp75VfTDmyWWxAAky-CmuvO2ge0T1q+woJ8MxjdRQqNJwHS4w@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sun, 12 Jul 2020 10:19:09 +0200
-Message-ID: <CAMpxmJXjhzYr5djfn5K9yxCOohtB76bbgY+Sh1ZLNzF7c0Gzmg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Sun, 12 Jul 2020 04:24:58 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 50FAD1C0BD2; Sun, 12 Jul 2020 10:24:54 +0200 (CEST)
+Date:   Sun, 12 Jul 2020 10:24:53 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Slaby <jslaby@suse.com>, kernel@pengutronix.de,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20200712082453.GI8295@amd>
+References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
+ <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HkMjoL2LAeBLhbFV"
+Content-Disposition: inline
+In-Reply-To: <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 5:08 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Jul 10, 2020 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Implement the managed variant of krealloc(). This function works with
-> > all memory allocated by devm_kmalloc() (or devres functions using it
-> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
-> >
-> > Managed realloc'ed chunks can be manually released with devm_kfree().
->
-> ...
->
-> >    devm_kfree()
-> >    devm_kmalloc()
-> >    devm_kmalloc_array()
-> > +  devm_krealloc()
-> >    devm_kmemdup()
-> >    devm_kstrdup()
-> >    devm_kvasprintf()
->
-> Order?
->
 
-I didn't notice these were ordered alphabetically, I thought it was by
-functionality.
+--HkMjoL2LAeBLhbFV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ...
->
-> > +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
->
-> Do we really need the 'new_' prefix in the parameter?
->
+Hi!
 
-Yes, I think this is a good name for a function that's meant to modify
-the size of a memory chunk.
+> +++ b/Documentation/ABI/testing/sysfs-class-led-trigger-tty
+> @@ -0,0 +1,6 @@
+> +What:		/sys/class/leds/<led>/ttyname
+> +Date:		Jul 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-leds@vger.kernel.org
+> +Description:
+> +		Specifies the tty device name of the triggering tty
+> diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
+> index ce9429ca6dde..40ff08c93f56 100644
+> --- a/drivers/leds/trigger/Kconfig
+> +++ b/drivers/leds/trigger/Kconfig
+> @@ -144,4 +144,11 @@ config LEDS_TRIGGER_AUDIO
+>  	  the audio mute and mic-mute changes.
+>  	  If unsure, say N
+> =20
+> +config LEDS_TRIGGER_TTY
+> +	tristate "LED Trigger for TTY devices"
+> +	depends on TTY
+> +	help
+> +	  This allows LEDs to be controlled by activity on ttys which includes
+> +	  serial devices like /dev/ttyS0.
 
-> > +{
-> > +       struct devres *old_dr, *new_dr;
-> > +       struct list_head old_head;
-> > +       unsigned long flags;
-> > +       void *ret = NULL;
-> > +       size_t tot_size;
->
-> tot -> total.
->
+"This driver can be built as a module, resulting module will be
+named.. If unsure, say N."
 
-Meh, ok.
+> +++ b/drivers/leds/trigger/ledtrig-tty.c
+> @@ -0,0 +1,192 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
-> > +
-> > +       if (unlikely(!new_size)) {
-> > +               devm_kfree(dev, ptr);
-> > +               return ZERO_SIZE_PTR;
-> > +       }
->
-> I guess here we need a comment of the possibilities below to have
-> ZERO_SIZE_PTR as input.
->
+2.0+ is preffered.
 
-Better yet: I'll just add a kernel doc for this function.
+> +
+> +	while (firstrun ||
+> +	       icount.rx !=3D trigger_data->rx ||
+> +	       icount.tx !=3D trigger_data->tx) {
+> +
+> +		led_set_brightness(trigger_data->led_cdev, LED_ON);
+> +
+> +		msleep(100);
+> +
+> +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
 
-> > +       if (unlikely(ZERO_OR_NULL_PTR(ptr)))
-> > +               return devm_kmalloc(dev, new_size, gfp);
-> > +
-> > +       if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
-> > +               /*
-> > +                * We cannot reliably realloc a const string returned by
-> > +                * devm_kstrdup_const().
-> > +                */
-> > +               return NULL;
-> > +
-> > +       if (!check_dr_size(new_size, &tot_size))
-> > +               return NULL;
-> > +
-> > +       spin_lock_irqsave(&dev->devres_lock, flags);
-> > +
-> > +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
->
-> > +       if (WARN_ON(!old_dr))
->
-> Under spin lock? I would rather see spin unlock followed by WARN.
->
+Is this good idea inside workqueue?
 
-Yeah, can be done.
+> +		trigger_data->rx =3D icount.rx;
+> +		trigger_data->tx =3D icount.tx;
+> +		firstrun =3D false;
+> +
+> +		ret =3D tty_get_icount(trigger_data->tty, &icount);
+> +		if (ret)
+> +			return;
 
-> > +               /* Memory chunk not managed or managed by a different device. */
-> > +               goto out;
-> > +
-> > +       old_head = old_dr->node.entry;
-> > +
-> > +       new_dr = krealloc(old_dr, tot_size, gfp);
-> > +       if (!new_dr)
-> > +               goto out;
-> > +
-> > +       if (new_dr != old_dr)
-> > +               list_replace(&old_head, &new_dr->node.entry);
-> > +
-> > +       ret = new_dr->data;
-> > +
-> > +out:
-> > +       spin_unlock_irqrestore(&dev->devres_lock, flags);
-> > +       return ret;
-> > +}
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Unbalanced locking.
 
-Bartosz
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&trigger_data->mutex);
+> +	schedule_delayed_work(&trigger_data->dwork, msecs_to_jiffies(100));
+> +}
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--HkMjoL2LAeBLhbFV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8KyNUACgkQMOfwapXb+vIRGQCfcetd56bS9agQaVauYv2lHkvb
+1s8An3uDX2YeCo929pVDkPHeyNch219x
+=NlJV
+-----END PGP SIGNATURE-----
+
+--HkMjoL2LAeBLhbFV--
