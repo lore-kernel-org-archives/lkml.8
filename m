@@ -2,118 +2,75 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C960C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AF3206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE7720722
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 08:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594543438;
+	bh=22sV2MagMmijC5jLGB+iBOFAm/AVasieEZPd64yd1fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tjAafCkDCqsFcbexl0EHTVq2IFkwUoxZ5N6N0e26jGRPBudeVvqGSMuXjbbv3HhGi
+	 6oNDQW9pEhPfgypceo8VFLLwiQtd474aCdXzmBdat8dx0wMOwuQGhaIg4pVxByl7pq
+	 o1QEPOvy8rBR9Dbul+hDT/xB+ZaXEgFiD8oW8Og0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgGLIoT (ORCPT
+        id S1728590AbgGLIn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 04:44:19 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36440 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgGLIoS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 04:44:18 -0400
-Received: by mail-io1-f70.google.com with SMTP id g17so6241496iob.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 01:44:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hNr1tIRlvbH20zaT/8dcl97UmNnkqXdA8xn65ajghas=;
-        b=gVE2AzvLzwznTaqfCzGZWeqFEyxxSHPXnCFQfNCmNJ4SZJDF+P47QUb3NMg+tQMSlt
-         CVO/r+jEny9YC3VSlef2HXGm/tgo2F61xiOOAcdLhzfibrojwS1W9xkYenEnWFYe+tWd
-         u95PVH5PLqd/bl4zkWw0ftN7phn2eacWrOD8KbaEYyiw23I+kjmqWIT7CRTS7P6UugBI
-         mVvk4QOWRztlwu3m8gI4P9CvE8oc8RvZRGPt6sqMRAz0XwrKxw7YU+BAVBkGb8h7r6u7
-         KKvOTRqqc9AAjIDf8M7AyRVqHV1R24Hs+q/YivENxNQ0i/sMNOO8Z+5yPTL7uM5zlb30
-         wcsw==
-X-Gm-Message-State: AOAM5325oR5x/9O/TpGVFwDrjjuPWJIsJUGPh/mb7vDFXVzR4Y5CSH7A
-        HQct9tE1s8O/7OuwDyNdZd04rJQdbYpvPqUO5MP+Ka7Lamv4
-X-Google-Smtp-Source: ABdhPJwkGhN2zTd+VnNCjMQ/aUmDoI4F0/coh3xZ0ddSMc0fv2nrT/LNkwAlbZj2Zk5PvNbTbuplIIDPg1K6yUtPrrbaV2gquIrw
+        Sun, 12 Jul 2020 04:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbgGLIn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 04:43:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FBEC206F4;
+        Sun, 12 Jul 2020 08:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594543435;
+        bh=22sV2MagMmijC5jLGB+iBOFAm/AVasieEZPd64yd1fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DRgGTQSSupucv9ZBmwj4sElmGyb4FjlfugP19PVIFD1FFuq1pgwDfzVOflaRp8vJD
+         jHMKXKq5T5jkc0r5FH5PPj2nshal6aI69KN+femZ0MXChU7hIBFPeaVwW6buCVx3dx
+         1OqlctSANgEK0KMa4otrP9XS6HxyXkVO/bcz2OhM=
+Date:   Sun, 12 Jul 2020 10:43:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
+        kernel@pengutronix.de, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20200712084352.GA175558@kroah.com>
+References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
+ <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
+ <20200712082453.GI8295@amd>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c80a:: with SMTP id y10mr55355839iof.67.1594543457754;
- Sun, 12 Jul 2020 01:44:17 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 01:44:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000060e43005aa3a9476@google.com>
-Subject: KMSAN: uninit-value in path_openat
-From:   syzbot <syzbot+4191a44ad556eacc1a7a@syzkaller.appspotmail.com>
-To:     glider@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200712082453.GI8295@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jul 12, 2020 at 10:24:53AM +0200, Pavel Machek wrote:
+> > +++ b/drivers/leds/trigger/ledtrig-tty.c
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> 2.0+ is preffered.
 
-syzbot found the following crash on:
+No it is not, that's up to the developer.
 
-HEAD commit:    f0d5ec90 kmsan: apply __no_sanitize_memory to dotraplinkag..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=159636b7100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=86e4f8af239686c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=4191a44ad556eacc1a7a
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1073c0bd100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13974b2f100000
+thanks,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4191a44ad556eacc1a7a@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in may_create_in_sticky fs/namei.c:1060 [inline]
-BUG: KMSAN: uninit-value in do_open fs/namei.c:3207 [inline]
-BUG: KMSAN: uninit-value in path_openat+0x48be/0x5d50 fs/namei.c:3346
-CPU: 1 PID: 8815 Comm: syz-executor333 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- may_create_in_sticky fs/namei.c:1060 [inline]
- do_open fs/namei.c:3207 [inline]
- path_openat+0x48be/0x5d50 fs/namei.c:3346
- do_file_open_root+0x469/0xb40 fs/namei.c:3401
- file_open_root+0x6f1/0x760 fs/open.c:1128
- do_handle_open+0xa11/0xe30 fs/fhandle.c:232
- __do_compat_sys_open_by_handle_at fs/fhandle.c:277 [inline]
- __se_compat_sys_open_by_handle_at+0x8e/0xa0 fs/fhandle.c:274
- __ia32_compat_sys_open_by_handle_at+0x4a/0x70 fs/fhandle.c:274
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f3bdd9
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ff8507fc EFLAGS: 00000207 ORIG_RAX: 0000000000000156
-RAX: ffffffffffffffda RBX: 00000000ffffff9c RCX: 0000000020000200
-RDX: 0000000000002f40 RSI: 0000000000000001 RDI: 00000000080bb4c8
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Local variable ----nd@do_file_open_root created at:
- do_file_open_root+0xa4/0xb40 fs/namei.c:3385
- do_file_open_root+0xa4/0xb40 fs/namei.c:3385
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+greg k-h
