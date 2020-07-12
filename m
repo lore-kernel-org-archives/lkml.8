@@ -2,250 +2,296 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F7C433FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883272063A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A150B2068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Nol66kkk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Slh8i6rW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgGLOKi (ORCPT
+        id S1728916AbgGLORB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 10:10:38 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:62596 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbgGLOJ3 (ORCPT
+        Sun, 12 Jul 2020 10:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbgGLORA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 10:09:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594562968; x=1626098968;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YrFb0GHYJSVnxx4wY0JWDfV+FNkiN88T+WCC0hZkD+w=;
-  b=Nol66kkk3Eg1DapphfHguOsotoEYnHHYTQSuEAuJvCUpNJUMw1szI/vp
-   fOGk4dIRYpRr5VIcrPRSwBD6ydzyhEFPEDYu9S/4jglB1MLVd/1tNOcXH
-   O0ZCouuGDA7gZv1stgRk4AXw6o06UHVlJeMyFspi3IcWN1togpqgNXvQz
-   csrmPbclRe3RF9Yg0Uj/asi7HA8XQ77HU3EHtwbl8SHx7C4u4j/RqiGee
-   K6VAj69o/B3H30skdFUST0yxc/gIHuQNdq7ZThhw3xj3jDxUi1ewoEq1p
-   YcWIZPGuwRaLXfjrAq++jaTIHx71Cg0QcYrnWAkrULX32MaZ0qiwuool4
-   w==;
-IronPort-SDR: jO5w6ZVw71kfNvBpi+EG+zST/MWkWxUvnH4b2mC6TsXV2e0nzdV0SOsK4Ww2gb0oDuFBJr4wMi
- EzSa5ScrAGsoaXp/loLAmE1JCRQEDct13pdMNZ0KanozSfCiIgOQ68qyNwUYr1hSdwNOdOZ0+A
- CQ0iCUEvKVkNnnuYM5EDRwDbiGpdDSuGTE2/OxEG8AnqFHYSYkAVsDd2cW7vMLz6oaNItMHeMW
- f7KUOh7AJmXlvObhcsLZbksBUs1m6lRAVkAvPfeJZK+0S9NF7EvqdBBb7HzRixVofrjwb6vi41
- Wco=
-X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="83514564"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2020 07:09:27 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 12 Jul 2020 07:08:58 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Sun, 12 Jul 2020 07:08:55 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 02/12] bridge: uapi: mrp: Extend MRP attributes for MRP interconnect
-Date:   Sun, 12 Jul 2020 16:05:46 +0200
-Message-ID: <20200712140556.1758725-3-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200712140556.1758725-1-horatiu.vultur@microchip.com>
-References: <20200712140556.1758725-1-horatiu.vultur@microchip.com>
+        Sun, 12 Jul 2020 10:17:00 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28940C061794;
+        Sun, 12 Jul 2020 07:17:00 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g139so5728191lfd.10;
+        Sun, 12 Jul 2020 07:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=LPicycpnJM7sePx564IeqVZ6I+CMVvaKcxYO2z8udBg=;
+        b=Slh8i6rWfCSu8Etyr9vJgSl9OIt4jq+3ChiZdQMOIsGs/QaJxOMU2XEtJVrGh06ijK
+         2ME1xstG0fk31vdT65SKUn32ZZK6hV7qONLIiezstOTuGvy/NdQzOh+1J+IKNxrfXKi6
+         gIjjObDw8c7nrayAgr5/oMSqlC2pYrH8ECKM71AdVe6dKu8MmkoJZdd6ez3INtxsDBxv
+         h1yVdWkSeP6208/P0oEHWKdbat6Q/W0iLlAWi6FzQjJV1STitdj96lj+rw7k6/0i03gS
+         52PYcQ2I4u4HdSnfntdvyUi889FNP440uyDSWFCyLM0YIKrhnaWEgObmTP7MMxAg9m50
+         n+fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=LPicycpnJM7sePx564IeqVZ6I+CMVvaKcxYO2z8udBg=;
+        b=ZSfn5PG0zsC+Qcivwh1aHDTH+MASfmg1UiiRyslE0NH1gUI9VzFEUYlYYHP9RGYT34
+         MpW+wztvyCcJy9NmU0bCVuM7dOjGHEA6hgrWN6YcIFNMIwD2+u1kdqI2Z7kFKCjI8Ofv
+         p3jMxBh+IVxxV/0hZuiQAUvgXSniM2128P4pTK53qHIqBI6Ir7QyFLO6hrKjzf/+O/nr
+         fWi24B6W3/NB1laTv+NJ5/WMPsJMzLIRSGrrzCVfBTuVSJkTAZu/aXyVd5Lz5AgWtLd9
+         z+A1ABo6NcjczOx5axfveQG30TBybvu1zytwivEywd9ah5ZYEt5rP7dLHXqmjCqzIOyt
+         ozxg==
+X-Gm-Message-State: AOAM533tmZFzB03ZaAYR2z0/zIv5Cz050VQdtpauoKlCSh5mp5Rx0HpP
+        tThqm3GtWN92S+WnkBNjDKY=
+X-Google-Smtp-Source: ABdhPJwGyatVg8ctVtcmFui3wxaiJwMBbgFahj1dAWOsI9tMQNaGR5/UMhOeTGjD+j28v0O1B+Wm1g==
+X-Received: by 2002:a19:c389:: with SMTP id t131mr36107606lff.130.1594563418310;
+        Sun, 12 Jul 2020 07:16:58 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id v11sm3508198ljh.119.2020.07.12.07.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 07:16:57 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
+ devices
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200711120842.2631-1-sorganov@gmail.com>
+        <20200711231937.wu2zrm5spn7a6u2o@skbuf>
+Date:   Sun, 12 Jul 2020 17:16:56 +0300
+In-Reply-To: <20200711231937.wu2zrm5spn7a6u2o@skbuf> (Vladimir Oltean's
+        message of "Sun, 12 Jul 2020 02:19:37 +0300")
+Message-ID: <87wo387r8n.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the existing MRP netlink attributes to allow to configure MRP
-Interconnect:
+Vladimir Oltean <olteanv@gmail.com> writes:
 
-IFLA_BRIDGE_MRP_IN_ROLE - the parameter type is br_mrp_in_role which
-  contains the interconnect id, the ring id, the interconnect role(MIM
-  or MIC) and the port ifindex that represents the interconnect port.
+> Hi Sergey,
+>
+> On Sat, Jul 11, 2020 at 03:08:42PM +0300, Sergey Organov wrote:
+>> Fix support for external PTP-aware devices such as DSA or PTP PHY:
+>> 
+>> Make sure we never time stamp tx packets when hardware time stamping
+>> is disabled.
+>> 
+>> Check for PTP PHY being in use and then pass ioctls related to time
+>> stamping of Ethernet packets to the PTP PHY rather than handle them
+>> ourselves. In addition, disable our own hardware time stamping in this
+>> case.
+>> 
+>> Fixes: 6605b73 ("FEC: Add time stamping code and a PTP hardware clock")
+>
+> Please use a 12-character sha1sum. Try to use the "pretty" format
+> specifier I gave you in the original thread, it saves you from
+> counting,
 
-IFLA_BRIDGE_MRP_IN_STATE - the parameter type is br_mrp_in_state which
-  contains the interconnect id and the interconnect state.
+I did as you suggested:
 
-IFLA_BRIDGE_MRP_IN_TEST - the parameter type is br_mrp_start_in_test
-  which contains the interconnect id, the interval at which to send
-  MRP_InTest frames, how many test frames can be missed before declaring
-  the interconnect ring open and the period which represents for how long
-  to send MRP_InTest frames.
+[pretty]
+        fixes = Fixes: %h (\"%s\")
+[alias]
+	fixes = show --no-patch --pretty='Fixes: %h (\"%s\")'
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/uapi/linux/if_bridge.h  | 53 +++++++++++++++++++++++++++++++++
- include/uapi/linux/mrp_bridge.h | 38 +++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
+And that's what it gave me. Dunno, maybe its Git version that is
+responsible?
 
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index c114c1c2bd533..d840a3e37a37c 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -167,6 +167,9 @@ enum {
- 	IFLA_BRIDGE_MRP_RING_ROLE,
- 	IFLA_BRIDGE_MRP_START_TEST,
- 	IFLA_BRIDGE_MRP_INFO,
-+	IFLA_BRIDGE_MRP_IN_ROLE,
-+	IFLA_BRIDGE_MRP_IN_STATE,
-+	IFLA_BRIDGE_MRP_START_IN_TEST,
- 	__IFLA_BRIDGE_MRP_MAX,
- };
- 
-@@ -245,6 +248,37 @@ enum {
- 
- #define IFLA_BRIDGE_MRP_INFO_MAX (__IFLA_BRIDGE_MRP_INFO_MAX - 1)
- 
-+enum {
-+	IFLA_BRIDGE_MRP_IN_STATE_UNSPEC,
-+	IFLA_BRIDGE_MRP_IN_STATE_IN_ID,
-+	IFLA_BRIDGE_MRP_IN_STATE_STATE,
-+	__IFLA_BRIDGE_MRP_IN_STATE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_IN_STATE_MAX (__IFLA_BRIDGE_MRP_IN_STATE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_IN_ROLE_UNSPEC,
-+	IFLA_BRIDGE_MRP_IN_ROLE_RING_ID,
-+	IFLA_BRIDGE_MRP_IN_ROLE_IN_ID,
-+	IFLA_BRIDGE_MRP_IN_ROLE_ROLE,
-+	IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX,
-+	__IFLA_BRIDGE_MRP_IN_ROLE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_IN_ROLE_MAX (__IFLA_BRIDGE_MRP_IN_ROLE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_START_IN_TEST_UNSPEC,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD,
-+	__IFLA_BRIDGE_MRP_START_IN_TEST_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_START_IN_TEST_MAX (__IFLA_BRIDGE_MRP_START_IN_TEST_MAX - 1)
-+
- struct br_mrp_instance {
- 	__u32 ring_id;
- 	__u32 p_ifindex;
-@@ -270,6 +304,25 @@ struct br_mrp_start_test {
- 	__u32 monitor;
- };
- 
-+struct br_mrp_in_state {
-+	__u32 in_state;
-+	__u16 in_id;
-+};
-+
-+struct br_mrp_in_role {
-+	__u32 ring_id;
-+	__u32 in_role;
-+	__u32 i_ifindex;
-+	__u16 in_id;
-+};
-+
-+struct br_mrp_start_in_test {
-+	__u32 interval;
-+	__u32 max_miss;
-+	__u32 period;
-+	__u16 in_id;
-+};
-+
- struct bridge_stp_xstats {
- 	__u64 transition_blk;
- 	__u64 transition_fwd;
-diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
-index bee3665402129..6aeb13ef0b1ec 100644
---- a/include/uapi/linux/mrp_bridge.h
-+++ b/include/uapi/linux/mrp_bridge.h
-@@ -21,11 +21,22 @@ enum br_mrp_ring_role_type {
- 	BR_MRP_RING_ROLE_MRA,
- };
- 
-+enum br_mrp_in_role_type {
-+	BR_MRP_IN_ROLE_DISABLED,
-+	BR_MRP_IN_ROLE_MIC,
-+	BR_MRP_IN_ROLE_MIM,
-+};
-+
- enum br_mrp_ring_state_type {
- 	BR_MRP_RING_STATE_OPEN,
- 	BR_MRP_RING_STATE_CLOSED,
- };
- 
-+enum br_mrp_in_state_type {
-+	BR_MRP_IN_STATE_OPEN,
-+	BR_MRP_IN_STATE_CLOSED,
-+};
-+
- enum br_mrp_port_state_type {
- 	BR_MRP_PORT_STATE_DISABLED,
- 	BR_MRP_PORT_STATE_BLOCKED,
-@@ -36,6 +47,7 @@ enum br_mrp_port_state_type {
- enum br_mrp_port_role_type {
- 	BR_MRP_PORT_ROLE_PRIMARY,
- 	BR_MRP_PORT_ROLE_SECONDARY,
-+	BR_MRP_PORT_ROLE_INTER,
- };
- 
- enum br_mrp_tlv_header_type {
-@@ -45,6 +57,10 @@ enum br_mrp_tlv_header_type {
- 	BR_MRP_TLV_HEADER_RING_TOPO = 0x3,
- 	BR_MRP_TLV_HEADER_RING_LINK_DOWN = 0x4,
- 	BR_MRP_TLV_HEADER_RING_LINK_UP = 0x5,
-+	BR_MRP_TLV_HEADER_IN_TEST = 0x6,
-+	BR_MRP_TLV_HEADER_IN_TOPO = 0x7,
-+	BR_MRP_TLV_HEADER_IN_LINK_DOWN = 0x8,
-+	BR_MRP_TLV_HEADER_IN_LINK_UP = 0x9,
- 	BR_MRP_TLV_HEADER_OPTION = 0x7f,
- };
- 
-@@ -118,4 +134,26 @@ struct br_mrp_oui_hdr {
- 	__u8 oui[MRP_OUI_LENGTH];
- };
- 
-+struct br_mrp_in_test_hdr {
-+	__be16 id;
-+	__u8 sa[ETH_ALEN];
-+	__be16 port_role;
-+	__be16 state;
-+	__be16 transitions;
-+	__be32 timestamp;
-+};
-+
-+struct br_mrp_in_topo_hdr {
-+	__u8 sa[ETH_ALEN];
-+	__be16 id;
-+	__be16 interval;
-+};
-+
-+struct br_mrp_in_link_hdr {
-+	__u8 sa[ETH_ALEN];
-+	__be16 port_role;
-+	__be16 id;
-+	__be16 interval;
-+};
-+
- #endif
--- 
-2.27.0
+I now tried to find a way to specify the number of digits in the
+abbreviated hash in the format, but failed. There is likely some global
+setting for minimum number of digits, but I'm yet to find it. Any idea?
 
+> and also from people complaining once it gets merged:
+>
+> https://www.google.com/search?q=stephen+rothwell+%22fixes+tag+needs+some+work%22
+>
+>> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+>> ---
+>> 
+>> v2:
+>>   - Extracted from larger patch series
+>>   - Description/comments updated according to discussions
+>>   - Added Fixes: tag
+>> 
+>>  drivers/net/ethernet/freescale/fec.h      |  1 +
+>>  drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
+>>  drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
+>>  3 files changed, 30 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+>> index d8d76da..832a217 100644
+>> --- a/drivers/net/ethernet/freescale/fec.h
+>> +++ b/drivers/net/ethernet/freescale/fec.h
+>> @@ -590,6 +590,7 @@ struct fec_enet_private {
+>>  void fec_ptp_init(struct platform_device *pdev, int irq_idx);
+>>  void fec_ptp_stop(struct platform_device *pdev);
+>>  void fec_ptp_start_cyclecounter(struct net_device *ndev);
+>> +void fec_ptp_disable_hwts(struct net_device *ndev);
+>>  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
+>>  int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
+>>  
+>> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+>> index 3982285..cc7fbfc 100644
+>> --- a/drivers/net/ethernet/freescale/fec_main.c
+>> +++ b/drivers/net/ethernet/freescale/fec_main.c
+>> @@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
+>>  			ndev->stats.tx_bytes += skb->len;
+>>  		}
+>>  
+>> -		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+>> -			fep->bufdesc_ex) {
+>> +		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
+>> +		 * are to time stamp the packet, so we still need to check time
+>> +		 * stamping enabled flag.
+>> +		 */
+>> +		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
+>> +			     fep->hwts_tx_en) &&
+>> +		    fep->bufdesc_ex) {
+>>  			struct skb_shared_hwtstamps shhwtstamps;
+>>  			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
+>>  
+>> @@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
+>>  		return -ENODEV;
+>>  
+>>  	if (fep->bufdesc_ex) {
+>> -		if (cmd == SIOCSHWTSTAMP)
+>> -			return fec_ptp_set(ndev, rq);
+>> -		if (cmd == SIOCGHWTSTAMP)
+>> -			return fec_ptp_get(ndev, rq);
+>> +		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
+>
+> I thought we were in agreement that FEC does not support PHY
+> timestamping at this point, and this patch would only be fixing DSA
+> switches (even though PHYs would need this fixed too, when support is
+> added for them)? I would definitely not introduce support (and
+> incomplete, at that) for a new feature in a bugfix patch.
+>
+> But it looks like we aren't.
+
+We were indeed, and, honestly, I did prepare the split version of the
+changes. But then I felt uneasy describing these commits, as I realized
+that I fix single source file and single original commit by adding
+proper support for a single feature that is described in your (single)
+recent document, but with 2 separate commits, each of which solves only
+half of the problem. I felt I need to somehow explain why could somebody
+want half a fix, and didn't know how, so I've merged them back into
+single commit.
+
+In case you insist they are to be separate, I do keep the split version
+in my git tree, but to finish it that way, I'd like to clarify a few
+details:
+
+1. Should it be patch series with 2 commits, or 2 entirely separate
+patches?
+
+2. If patch series, which change should go first? Here please notice
+that ioctl() change makes no sense without SKBTX fix unconditionally,
+while SKBTX fix makes no sense without ioctl() fix for PTP PHY users
+only.
+
+3. If entirely separate patches, should I somehow refer to SKBTX patch in
+ioctl() one (and/or vice versa), to make it explicit they are
+(inter)dependent? 
+
+4. How/if should I explain why anybody would benefit from applying
+SKBTX patch, yet be in trouble applying ioctl() one? 
+
+>
+>> +
+>> +		if (cmd == SIOCSHWTSTAMP) {
+>> +			if (use_fec_hwts)
+>> +				return fec_ptp_set(ndev, rq);
+>> +			fec_ptp_disable_hwts(ndev);
+>> +		} else if (cmd == SIOCGHWTSTAMP) {
+>> +			if (use_fec_hwts)
+>> +				return fec_ptp_get(ndev, rq);
+>> +		}
+>>  	}
+>>  
+>>  	return phy_mii_ioctl(phydev, rq, cmd);
+>> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
+>> index 945643c..f8a592c 100644
+>> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+>> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+>> @@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
+>>  	return -EOPNOTSUPP;
+>>  }
+>>  
+>> +/**
+>> + * fec_ptp_disable_hwts - disable hardware time stamping
+>> + * @ndev: pointer to net_device
+>> + */
+>> +void fec_ptp_disable_hwts(struct net_device *ndev)
+>
+> This is not really needed, is it?
+> - PHY ability of hwtstamping does not change across the runtime of the
+>   kernel (or do you have a "special" one where it does?)
+> - The initial values for hwts_tx_en and hwts_rx_en are already 0
+> - There is no code path for which it is possible for hwts_tx_en or
+>   hwts_rx_en to have been non-zero prior to this call making them
+>   zero.
+
+If everybody agree it is not needed, I'm fine getting it out of the
+patch, but please consider my worries below.
+
+I'm afraid your third statement might happen to be not exactly true.
+It's due to this same path the hwts_tx_en could end-up being set, as we
+have if() on phy_has_hwtstamp(phydev), so the path can set hwts_xx_en if
+this code gets somehow run when phydev->phy is set to 0, or attached PHY
+is not yet has PTP property.
+
+I'm not sure it can happen, but essential thing here is that I have no
+evidence it can't, and another place to ensure hwts_xx_en fields are
+cleared would be at the time of attachment of PTP-aware PHY, by check
+and clear and that time, yet even here it'd rely on PTP-awareness being
+already established at the moment.
+
+The second variant is harder for me to figure, yet is less reliable, so,
+overall, I preferred to keep the proposed solution that I believe should
+work no matter what, and let somebody who is more fluid in the code-base
+to get responsibility to remove it. For example, I didn't want to even
+start to consider how all this behaves on cable connect/disconnect, if
+up/down, or over hibernation.
+
+>
+> It is just "to be sure", in a very non-necessary way.
+
+It is "to be sure", without "just", as I tried to explain above. If it
+were my own code, I'd ask for an evidence that this part is not needed,
+before getting rid of this safety belt.
+
+>
+> But nonetheless, it shouldn't be present in this patch either way, due
+> to the fact that one patch should have one topic only, and the topic of
+> this patch should be solving a clearly defined bug.
+
+I actually don't care either way, but to be picky, the answer depends on
+particular definition of the bug, and the bug I have chased, and its
+definition I've used, even in the original series, requires simultaneous
+fixes in 2 places of the code.
+
+You have yet another bug in mind that part of my original patch happens
+to solve, yes, but that, by itself, doesn't necessarily mean the patch
+should be split. Nevertheless, I honestly tried to split it, according
+to our agreement, but failed, see above, and I still willing to try
+again, provided somebody actually needs it.
+
+Thanks,
+-- Sergey
