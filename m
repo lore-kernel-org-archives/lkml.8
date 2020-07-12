@@ -2,134 +2,92 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA119C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EA0C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B76F32070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:06:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKU6jc9/"
+	by mail.kernel.org (Postfix) with ESMTP id 5736920725
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 05:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgGLFG6 (ORCPT
+        id S1728234AbgGLFvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 01:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgGLFG6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 01:06:58 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2148C08C5DD;
-        Sat, 11 Jul 2020 22:06:57 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id j80so9280713qke.0;
-        Sat, 11 Jul 2020 22:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QAuIgUlyx0NcAgvFi4UCXRdkXlOyU9Eym+vjtofH6xc=;
-        b=NKU6jc9/eBK/JAe1uymTij9SwQNxCDVEKCiWujObLWCE44KEcDWFCMzs+e03rupU0E
-         7RID5Bp39ayXrgYWUdDN4pvGjiaukNoXk5+fd8aE6CuEpmQUsiy9U4bB9xSYO6hNBRlo
-         rIqp2xFOm7a/gzmLwjw9UFgTs4pRONzYa0Hk6StbWyim4CznqAPbG856BkMS1t7hdQSS
-         VFWVp2JhfN6j+rsnID7ZtBlbUlVokau75PzUtecZJt+ijrZnJa5nvAuvWg8O8IN2riPo
-         xyH7sAAFZpXtWoyWWU1ZMmVIcMW+H9eyf1Xm4E1cwlRFdo+1OFhzR3dLFQKCsvnX7faK
-         y0ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QAuIgUlyx0NcAgvFi4UCXRdkXlOyU9Eym+vjtofH6xc=;
-        b=NU1hRDFqZzHc4YY8SWzp7HB3FfBsdiGmJ8Bb0U2Ih9R6f6EAMxeCiRsFOtF79731kM
-         BJLzJ+gWafGFfSwRU0orKgAKiqSMolPjB+n2CRPeV2Q5Tj8XyoyK0+YRPvEpzeuny1R9
-         zTMnlgICQ/PFNUbYi8NtHDdZbsBAuvtnUqVGLO3cHOgJTzfgeJEbYg7ZC1d9I1UA8W4s
-         445CGydcJSJNIoi9b5xBASX2ZMABFCRXz0e/a1WukOAutjwMF5d8cSxgi9kSpokWKCu4
-         g6idMxTg8UQaOEgWpeAXdK4oAgz2JK8iGPMftRGBH026U1TD3UoUN2rl1cjP3e1rqxGf
-         6wTQ==
-X-Gm-Message-State: AOAM531DZFP4KtBkRk5pUt28iq4As8gcDW/zeZFUNL2lE+PccxE9pFnF
-        s1ODyIwsqOjcVIXNFMEv1Z9qp8Awh+bFs096Oq4=
-X-Google-Smtp-Source: ABdhPJzf/ifl2V0QHB4AVv/RcZCgAOwMyXpCjJUPLxlKuEGK/PBSadlSUeVbyxb8wVW2Ol0W7Ahi5HlEQB11hHF6wqY=
-X-Received: by 2002:a05:620a:1666:: with SMTP id d6mr78293499qko.449.1594530416664;
- Sat, 11 Jul 2020 22:06:56 -0700 (PDT)
+        Sun, 12 Jul 2020 01:51:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64366 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgGLFu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 01:50:59 -0400
+IronPort-SDR: PqrVqmkYA2Ua5G8qqPBCNGv7WEro90R1EarS04Nwx6v5YHsepxS716QSa0SKfrjZDNCCX3pij5
+ 7buOec5zd2Cw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149932010"
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="149932010"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2020 22:50:59 -0700
+IronPort-SDR: 6dIdGJ+V6iv5lTF00/dGQIFV7NJ7kgJvEJjz8QW2uFcxlA+MxeRH2jDsmK2S/OVKEYP3RWarmY
+ BVAZH/bmq31g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="268087447"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2020 22:50:58 -0700
+Received: from [10.255.131.188] (unknown [10.255.131.188])
+        by linux.intel.com (Postfix) with ESMTP id D44F65805F0;
+        Sat, 11 Jul 2020 22:50:55 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+To:     Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org,
+        robh@kernel.org, p.zabel@pengutronix.de
+Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com
+References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <87blknrjg6.fsf@kernel.org>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <04a2d471-168f-7769-895e-b390c64e95ad@linux.intel.com>
+Date:   Sun, 12 Jul 2020 13:50:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200711012639.3429622-1-songliubraving@fb.com>
- <20200711012639.3429622-2-songliubraving@fb.com> <CAEf4BzaHAFNdEPp38ZnKOYTy3CfRCwaxDykS_Xir_VqDm0Kiug@mail.gmail.com>
- <DEF050B0-E423-4442-9C95-02FB20F6BA57@fb.com>
-In-Reply-To: <DEF050B0-E423-4442-9C95-02FB20F6BA57@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sat, 11 Jul 2020 22:06:45 -0700
-Message-ID: <CAEf4Bzbur1KBM3aPMMtQmsYXbHTfwsx4ULbNxpzR-DF7g=HDeA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/5] bpf: block bpf_get_[stack|stackid] on
- perf_event with PEBS entries
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Peter Ziljstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87blknrjg6.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:28 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jul 10, 2020, at 8:53 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 6:30 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> Calling get_perf_callchain() on perf_events from PEBS entries may cause
-> >> unwinder errors. To fix this issue, the callchain is fetched early. Such
-> >> perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
-> >>
-> >> Similarly, calling bpf_get_[stack|stackid] on perf_events from PEBS may
-> >> also cause unwinder errors. To fix this, block bpf_get_[stack|stackid] on
-> >> these perf_events. Unfortunately, bpf verifier cannot tell whether the
-> >> program will be attached to perf_event with PEBS entries. Therefore,
-> >> block such programs during ioctl(PERF_EVENT_IOC_SET_BPF).
-> >>
-> >> Signed-off-by: Song Liu <songliubraving@fb.com>
-> >> ---
-> >
-> > Perhaps it's a stupid question, but why bpf_get_stack/bpf_get_stackid
-> > can't figure out automatically that they are called from
-> > __PERF_SAMPLE_CALLCHAIN_EARLY perf event and use different callchain,
-> > if necessary?
-> >
-> > It is quite suboptimal from a user experience point of view to require
-> > two different BPF helpers depending on PEBS or non-PEBS perf events.
->
-> I am not aware of an easy way to tell the difference in bpf_get_stack.
-> But I do agree that would be much better.
->
+Hi,
 
-Hm... Looking a bit more how all this is tied together in the kernel,
-I think it's actually quite easy. So, for perf_event BPF program type:
+On 10/7/2020 2:08 pm, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> writes:
+> 
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for USB PHY on Intel LGM SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   drivers/usb/phy/Kconfig       |  11 ++
+>>   drivers/usb/phy/Makefile      |   1 +
+>>   drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++++++++
+> 
+> new phy drivers should use drivers/phy instead.
+Noted, Will move to drivers/phy as per your suggestion, Thanks!
 
-1. return a special prototype for bpf_get_stack/bpf_get_stackid, which
-will have this extra bit of logic for callchain. All other program
-types with access to bpf_get_stack/bpf_get_stackid should use the
-current one, probably.
-2. For that special program, just like for bpf_read_branch_records(),
-we know that context is actually `struct bpf_perf_event_data_kern *`,
-and it has pt_regs, perf_sample_data and perf_event itself.
-3. With that, it seems like you'll have everything you need to
-automatically choose a proper callchain.
-
-All this absolutely transparently to the BPF program.
-
-Am I missing something?
-
-> Thanks,
-> Song
+Regards
+Vadivel
+> 
