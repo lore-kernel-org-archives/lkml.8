@@ -2,136 +2,97 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F22BC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D420C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECE42072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594546048;
-	bh=NQq5tQ5Tv0Dy7nOdr7LyJUeJ2lgk7kTvmCLrlv5YKvU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CR3ZCZGAl8RwmhW5urYDKbk5IWYsGTGWvsReEy0DHqxnMHhW2uNUawe7gESNHG3F/
-	 aogky4AK/El03v1IEGd2W2C6/K+NunL3rHcna4JRkf0G+OuQZclmQJsA68Rt6/ILov
-	 bgzFiO6RevJ3zXfMBl3ULHPD+MrJcoFxqGB4JUUo=
+	by mail.kernel.org (Postfix) with ESMTP id 50C9820720
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGLJ1Y (ORCPT
+        id S1728672AbgGLJ1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 05:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbgGLJ1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 05:27:24 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7996820720;
-        Sun, 12 Jul 2020 09:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594546043;
-        bh=NQq5tQ5Tv0Dy7nOdr7LyJUeJ2lgk7kTvmCLrlv5YKvU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FnfqlTIPhPUHeKn4C1xmFFqoiFgmT/grB5qd0iMAkgEhLzQI9urPVYpWXMq9YJ+hY
-         IsCLJfe/GTbPVCbQFl/zawg1qBZtCR8MabVM/z+jEyQ/Q2gmD1TruIbd9u+9Wf+G/X
-         VR30NAj/p7Jcqqkh9ovjdwfX4x6Vfk/gTJarQn0M=
-Received: from host109-149-250-171.range109-149.btcentralplus.com ([109.149.250.171] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1juYGX-00B6VP-Mg; Sun, 12 Jul 2020 10:27:21 +0100
-Date:   Sun, 12 Jul 2020 10:27:20 +0100
-Message-ID: <87r1thxevb.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
-In-Reply-To: <159442366514.1987609.434612639050774557@swboyd.mtv.corp.google.com>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
-        <20200625001039.56174-4-john.stultz@linaro.org>
-        <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
-        <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
-        <87wo3setn8.wl-maz@kernel.org>
-        <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
-        <CALAqxLW14f4Gn6Q3b89X10y7=Zct2NJSgjagUqxez_bObcp42w@mail.gmail.com>
-        <159442366514.1987609.434612639050774557@swboyd.mtv.corp.google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 109.149.250.171
-X-SA-Exim-Rcpt-To: swboyd@chromium.org, john.stultz@linaro.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, mkshah@codeaurora.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Sun, 12 Jul 2020 05:27:30 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54012 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728112AbgGLJ13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 05:27:29 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 5A1BF1C0BD2; Sun, 12 Jul 2020 11:27:27 +0200 (CEST)
+Date:   Sun, 12 Jul 2020 11:27:26 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     maemo-leste@lists.dyne.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz
+Subject: GPS fun on Droid 4 and leste
+Message-ID: <20200712092726.GC13495@amd>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jul 2020 00:27:45 +0100,
-Stephen Boyd <swboyd@chromium.org> wrote:
-> 
-> Quoting John Stultz (2020-07-10 15:44:18)
-> > On Thu, Jul 9, 2020 at 11:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Does it work? I haven't looked in detail but I worry that the child
-> > > irqdomain (i.e. pinctrl-msm) would need to delay probing until this
-> > > parent irqdomain is registered. Or has the hierarchical irqdomain code
-> > > been updated to handle the parent child relationship and wait for things
-> > > to probe or be loaded?
-> > 
-> > So I can't say I know the underlying hardware particularly well, but
-> > I've been using this successfully on the Dragonboard 845c with both
-> > static builds as well as module enabled builds.
-> > And the same patch has been in the android-mainline and android-5.4
-> > kernels for a while without objections from QCOM.
-> > 
-> > As to the probe ordering question, Saravana can maybe speak in more
-> > detail if it's involved in this case but the fw_devlink code has
-> > addressed many of these sorts of ordering issues.
-> > However, I'm not sure if I'm lucking into the right probe order, as we
-> > have been able to boot android-mainline w/ both fw_devlink=on and
-> > fw_devlink=off (though in the =off case, we need
-> > deferred_probe_timeout=30 to give us a bit more time for modules to
-> > load after init starts).
-> > 
-> 
-> Ok I looked at the code (sorry for not checking earlier) and I see this in
-> msm_gpio_init()
-> 
->         np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->         if (np) {
->                 chip->irq.parent_domain = irq_find_matching_host(np,
->                                                  DOMAIN_BUS_WAKEUP);
->                 of_node_put(np);
->                 if (!chip->irq.parent_domain)
->                         return -EPROBE_DEFER;
-> 
-> so it looks like we'll probe defer the pinctrl driver until the pdc module
-> loads. Meaning it should work to have pinctrl builtin and pdc as a module.
 
-What I hope is that eventually fw_devlink will become the norm (on by
-default), and that probe deferral will become a thing of the past.
+--L6iaP+gRLNZHKoI4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	M.
+Hi!
 
--- 
-Without deviation from the norm, progress is not possible.
+GPS on the droid 4 does not really work out of the box.
+
+gpsd is not in default installation, maybe it should be?
+
+What is worse, there's something broken with gpsd. Try:
+
+/usr/sbin/gpsd -N -D 5 /dev/gnss0
+gpspipe -w
+# this seems to work, but do ^C and restart
+gpspipe -w
+=2E..and it hangs.
+
+xgps from gpsd-clients is broken: probably missing dependency
+on gtk3 libraries.
+
+user@devuan-droid4:/my/tui/lib$ xgps
+Traceback (most recent call last):
+  File "/usr/bin/xgps", line 30, in <module>
+      gi.require_version('Gtk', '3.0')
+ File "/usr/lib/python2.7/dist-packages/gi/__init__.py", line
+ 129, in require_version
+ raise ValueError('Namespace %s not available' % namespace)
+ ValueError: Namespace Gtk not available
+
+Any ideas?
+
+Best regards,
+								Pavel
+	   =20
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--L6iaP+gRLNZHKoI4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8K134ACgkQMOfwapXb+vLzGgCgsei4ZZLbLbv/sMfBqswePsXX
+5/EAoLKw6NHpR+1u0Xz14KwX2P9CJipt
+=ioJe
+-----END PGP SIGNATURE-----
+
+--L6iaP+gRLNZHKoI4--
