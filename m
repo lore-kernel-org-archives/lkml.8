@@ -2,107 +2,219 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1986C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBBEC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F932067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F9C2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 19:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgGLTHu (ORCPT
+        id S1729243AbgGLTLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 15:07:50 -0400
-Received: from smtprelay0089.hostedemail.com ([216.40.44.89]:36418 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729122AbgGLTHt (ORCPT
+        Sun, 12 Jul 2020 15:11:18 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46962 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729122AbgGLTLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 15:07:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 55523182CED34;
-        Sun, 12 Jul 2020 19:07:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: smile07_53128a526ee2
-X-Filterd-Recvd-Size: 2996
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 Jul 2020 19:07:46 +0000 (UTC)
-Message-ID: <bc58f9b3f11c5da224187fac0eba33f769d0fb45.camel@perches.com>
-Subject: Re: [PATCH 0/4] drm: core: Convert logging to drm_* functions.
-From:   Joe Perches <joe@perches.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>, sam@ravnborg.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date:   Sun, 12 Jul 2020 12:07:45 -0700
-In-Reply-To: <20200712185416.GC12262@blackclown>
-References: <cover.1594136880.git.usuraj35@gmail.com>
-         <20200710175643.GF17565@ravnborg.org> <20200711151126.GA12262@blackclown>
-         <04ce5199522b4136909fa4926282b7da8abddc4a.camel@perches.com>
-         <20200712185416.GC12262@blackclown>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 12 Jul 2020 15:11:17 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id DDD1E1C0BD2; Sun, 12 Jul 2020 21:11:11 +0200 (CEST)
+Date:   Sun, 12 Jul 2020 21:11:11 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
+        marek.behun@nic.cz
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200712191111.GA20592@amd>
+References: <20200702144712.1994685-1-megous@megous.com>
+ <20200711100409.GA18901@amd>
+ <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+ <20200712072554.GC4721@duo.ucw.cz>
+ <20200712134911.r3lig4hgyqhmslth@core.my.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+In-Reply-To: <20200712134911.r3lig4hgyqhmslth@core.my.home>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-13 at 00:24 +0530, Suraj Upadhyay wrote:
-> On Sat, Jul 11, 2020 at 11:16:33AM -0700, Joe Perches wrote:
-[]
-> > Perhaps change the __drm_printk macro to not
-> > dereference the drm argument when NULL.
-> > 
-> > A trivial but perhaps inefficient way might be
-> > used like:
-> > 
-> > 	drm_<level>(NULL, fmt, ...)
-[]
-> > diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
-[]
-> > @@ -395,8 +395,8 @@ void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
-> >  
-> >  /* Helper for struct drm_device based logging. */
-> >  #define __drm_printk(drm, level, type, fmt, ...)			\
-> > -	dev_##level##type((drm)->dev, "[drm] " fmt, ##__VA_ARGS__)
-> > -
-> > +	dev_##level##type((drm) ? (drm)->dev : NULL, "[drm] " fmt,	\
-> > +			  ##__VA_ARGS__)
-> >  
-> >  #define drm_info(drm, fmt, ...)					\
-> >  	__drm_printk((drm), info,, fmt, ##__VA_ARGS__)
-> > 
-> 
-> Hi Joe,
-> 	Thanks for your input.
-> But I don't think that this change would be a good idea as we are
-> supposed to find or make a substitute of WARN_* macros which
-> take a `condition` as an argument and check for its truth.
-> And I guess passing a NULL to dev_<level> would cause a format warning.
-> 
-> Also, the WARN_* macros are doing their job fine, and passing a NULL
-> value everytime you want to warn about a certain condition at a
-> particular line, doesn't seem good to me.
-> 
-> Thus, I think that WARN_* macros should be untouched.
 
-So do I but the suggestion was not about WARN macros
-only about drm_<level> macros and possibly unnecessary
-conversions to dev_<level> when a drm_device context
-is unavailable.
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, you don't have to guess, the code is there for
-you to inspect.
+Hi!
 
-dev_<level> when a NULL is used as the first argument
-emits "(NULL device *)" instead of dev_driver_string(dev)
-and dev_name(dev).
+> > > > > Some LED controllers may come with an internal HW triggering mech=
+anism
+> > > > > for the LED and an ability to switch between user control of the =
+LED,
+> > > > > or the internal control. One such example is AXP20X PMIC, that al=
+lows
+> > > > > wither for user control of the LED, or for internal control based=
+ on
+> > > > > the state of the battery charger.
+> > > > >=20
+> > > > > Add support for registering per-LED device trigger.
+> > > > >=20
+> > > > > Names of private triggers need to be globally unique, but may cla=
+sh
+> > > > > with other private triggers. This is enforced during trigger
+> > > > > registration. Developers can register private triggers just like
+> > > > > the normal triggers, by setting private_led to a classdev
+> > > > > of the LED the trigger is associated with.
+> > > >=20
+> > > > What about this? Should address Marek's concerns about resource use=
+=2E..
+> > >=20
+> > > What concerns? Marek's concerns seem to be about case where we regist=
+er
+> > > a trigger for (each led * self-working configuration) which I admit
+> > > can be quite a lot of triggers if there are many functions. But that's
+> > > not my proposal.
+> > >=20
+> > > My proposal is to only register on trigger per LED at most. So on my
+> > > system that's 1 extra trigger and on Marek's system that'd be 48 new
+> > > triggers. Neither seems like a meaningful problem from resource
+> > > use perspective.
+> >=20
+> > So.. 48 triggers on Marek's systems means I'll not apply your patch.
+> >=20
+> > Please take a look at my version, it is as simple and avoids that
+> > problem.
+>=20
+> I would, but I don't see your version linked or mentioned in this
+> thread.
 
-See: drivers/base/core.c::__dev_printk()
+Ah! Sorry about that. Here it is. (I verified it compiles in the
+meantime).
 
+Best regards,
+								Pavel
 
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 79e30d2cb7a5..e8333675959c 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -27,6 +27,12 @@ LIST_HEAD(trigger_list);
+=20
+  /* Used by LED Class */
+=20
++static inline bool
++trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
++{
++	return !trig->trigger_type || trig->trigger_type =3D=3D led_cdev->trigger=
+_type;
++}
++
+ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+ 			  struct bin_attribute *bin_attr, char *buf,
+ 			  loff_t pos, size_t count)
+@@ -50,7 +56,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobje=
+ct *kobj,
+=20
+ 	down_read(&triggers_list_lock);
+ 	list_for_each_entry(trig, &trigger_list, next_trig) {
+-		if (sysfs_streq(buf, trig->name)) {
++		if (sysfs_streq(buf, trig->name) &&
++		    trigger_relevant(led_cdev, trig)) {
+ 			down_write(&led_cdev->trigger_lock);
+ 			led_trigger_set(led_cdev, trig);
+ 			up_write(&led_cdev->trigger_lock);
+@@ -96,6 +103,9 @@ static int led_trigger_format(char *buf, size_t size,
+ 		bool hit =3D led_cdev->trigger &&
+ 			!strcmp(led_cdev->trigger->name, trig->name);
+=20
++		if (!trigger_relevant(led_cdev, trig))
++			continue;
++
+ 		len +=3D led_trigger_snprintf(buf + len, size - len,
+ 					    " %s%s%s", hit ? "[" : "",
+ 					    trig->name, hit ? "]" : "");
+@@ -243,7 +253,8 @@ void led_trigger_set_default(struct led_classdev *led_c=
+dev)
+ 	down_read(&triggers_list_lock);
+ 	down_write(&led_cdev->trigger_lock);
+ 	list_for_each_entry(trig, &trigger_list, next_trig) {
+-		if (!strcmp(led_cdev->default_trigger, trig->name)) {
++		if (!strcmp(led_cdev->default_trigger, trig->name) &&
++		    trigger_relevant(led_cdev, trig)) {
+ 			led_cdev->flags |=3D LED_INIT_DEFAULT_TRIGGER;
+ 			led_trigger_set(led_cdev, trig);
+ 			break;
+@@ -280,7 +291,8 @@ int led_trigger_register(struct led_trigger *trig)
+ 	down_write(&triggers_list_lock);
+ 	/* Make sure the trigger's name isn't already in use */
+ 	list_for_each_entry(_trig, &trigger_list, next_trig) {
+-		if (!strcmp(_trig->name, trig->name)) {
++		if (!strcmp(_trig->name, trig->name) &&
++		    (!_trig->private_led || _trig->private_led =3D=3D trig->private_led)=
+) {
+ 			up_write(&triggers_list_lock);
+ 			return -EEXIST;
+ 		}
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 2451962d1ec5..cba52714558f 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -57,6 +57,10 @@ struct led_init_data {
+ 	bool devname_mandatory;
+ };
+=20
++struct led_hw_trigger_type {
++	int dummy;
++}
++
+ struct led_classdev {
+ 	const char		*name;
+ 	enum led_brightness	 brightness;
+@@ -150,6 +154,8 @@ struct led_classdev {
+=20
+ 	/* Ensures consistent access to the LED Flash Class device */
+ 	struct mutex		led_access;
++
++	struct led_hw_trigger_type *trigger_type;
+ };
+=20
+ /**
+@@ -345,6 +351,9 @@ struct led_trigger {
+ 	int		(*activate)(struct led_classdev *led_cdev);
+ 	void		(*deactivate)(struct led_classdev *led_cdev);
+=20
++	/* LED-private triggers have this set. */
++	struct led_hw_trigger_type *trigger_type;
++
+ 	/* LEDs under control by this trigger (for simple triggers) */
+ 	rwlock_t	  leddev_list_lock;
+ 	struct list_head  led_cdevs;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8LYE8ACgkQMOfwapXb+vJdiQCeJ4trCd2rs4k4OMeb0h+YAMBw
+ZUUAn1AK61+/gdi35YuNtLNw6hamB5Qb
+=3ItD
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
