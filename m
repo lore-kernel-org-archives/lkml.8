@@ -6,55 +6,75 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2D1C433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5399AC433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D3320720
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C71720674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgGLVC3 (ORCPT
+        id S1729471AbgGLVCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 17:02:29 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59228 "EHLO
+        Sun, 12 Jul 2020 17:02:53 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59304 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbgGLVC3 (ORCPT
+        with ESMTP id S1729020AbgGLVCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 17:02:29 -0400
+        Sun, 12 Jul 2020 17:02:52 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 97C8D1C0BDE; Sun, 12 Jul 2020 23:02:23 +0200 (CEST)
-Date:   Sun, 12 Jul 2020 23:02:22 +0200
+        id 100401C0BE0; Sun, 12 Jul 2020 23:02:50 +0200 (CEST)
+Date:   Sun, 12 Jul 2020 23:02:43 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for
- the vibrator motor
-Message-ID: <20200712210222.GA983@bug>
-References: <20200702112041.1942707-1-megous@megous.com>
- <20200702112041.1942707-4-megous@megous.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 10/16] exec: Remove do_execve_file
+Message-ID: <20200712210243.GB983@bug>
+References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+ <20200702164140.4468-10-ebiederm@xmission.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702112041.1942707-4-megous@megous.com>
+In-Reply-To: <20200702164140.4468-10-ebiederm@xmission.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Thu 2020-07-02 11:41:34, Eric W. Biederman wrote:
+> Now that the last callser has been removed remove this code from exec.
 
-> The board has a vibrator mottor. Hook it to the input subsystem.
+Typo "caller".
 
-motor, I believe.
+> For anyone thinking of resurrecing do_execve_file please note that
 
-Best regards,
+resurrecting?
+
+> the code was buggy in several fundamental ways.
+> 
+> - It did not ensure the file it was passed was read-only and that
+>   deny_write_access had been called on it.  Which subtlely breaks
+>   invaniants in exec.
+
+subtly, invariants?
+
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
