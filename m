@@ -2,249 +2,86 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE07C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C12C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEBC2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8998B2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgGLLKx (ORCPT
+        id S1728816AbgGLLLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 07:10:53 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50711 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGLLKw (ORCPT
+        Sun, 12 Jul 2020 07:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbgGLLL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 07:10:52 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06CBAKMo040327;
-        Sun, 12 Jul 2020 20:10:20 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Sun, 12 Jul 2020 20:10:20 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06CBAFJP040301
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sun, 12 Jul 2020 20:10:19 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
-Date:   Sun, 12 Jul 2020 20:10:13 +0900
-Message-Id: <20200712111013.11881-2-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
-References: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
- <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
+        Sun, 12 Jul 2020 07:11:29 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22AB0C061794;
+        Sun, 12 Jul 2020 04:11:29 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 0B839BC06E;
+        Sun, 12 Jul 2020 11:11:24 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ysato@users.sourceforge.jp, dalias@libc.org,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] sh: Replace HTTP links with HTTPS ones
+Date:   Sun, 12 Jul 2020 13:11:18 +0200
+Message-Id: <20200712111118.24916-1-grandmaster@al2klimov.de>
+In-Reply-To: <8b008a69-e73a-43cc-3dba-c1bce90c9902@landley.net>
+References: <8b008a69-e73a-43cc-3dba-c1bce90c9902@landley.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I found that
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-  const int fd = open("/dev/fb0", O_ACCMODE);
-  struct fb_var_screeninfo var = { };
-  ioctl(fd, FBIOGET_VSCREENINFO, &var);
-  var.xres = var.yres = 1;
-  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-causes general protection fault in bitfill_aligned(), for vc_do_resize()
-updates vc->vc_{cols,rows} only when vc_do_resize() will return 0.
-
-[   20.102222] BUG: unable to handle page fault for address: ffffb80500d7b000
-[   20.102225] #PF: supervisor write access in kernel mode
-[   20.102226] #PF: error_code(0x0002) - not-present page
-[   20.102227] PGD 13a48c067 P4D 13a48c067 PUD 13a48d067 PMD 132525067 PTE 0
-[   20.102230] Oops: 0002 [#1] SMP
-[   20.102232] CPU: 3 PID: 2786 Comm: a.out Not tainted 5.8.0-rc4+ #749
-[   20.102233] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-[   20.102237] RIP: 0010:bitfill_aligned+0x87/0x120 [cfbfillrect]
-[   20.102277] Call Trace:
-[   20.102281]  cfb_fillrect+0x159/0x340 [cfbfillrect]
-[   20.102747]  vmw_fb_fillrect+0x12/0x30 [vmwgfx]
-[   20.102755]  bit_clear_margins+0x92/0xf0 [fb]
-[   20.102760]  fbcon_clear_margins+0x4c/0x50 [fb]
-[   20.102763]  fbcon_switch+0x321/0x570 [fb]
-[   20.102771]  redraw_screen+0xe0/0x250
-[   20.102775]  fbcon_modechanged+0x164/0x1b0 [fb]
-[   20.102779]  fbcon_update_vcs+0x15/0x20 [fb]
-[   20.102781]  fb_set_var+0x364/0x3c0 [fb]
-[   20.102817]  do_fb_ioctl+0x2ff/0x3f0 [fb]
-[   20.103139]  fb_ioctl+0x2e/0x40 [fb]
-[   20.103141]  ksys_ioctl+0x86/0xc0
-[   20.103146]  __x64_sys_ioctl+0x15/0x20
-[   20.103148]  do_syscall_64+0x54/0xa0
-[   20.103151]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-If vc_do_resize() fails (e.g. kzalloc() failure) when var.xres or var.yres
-is going to shrink, bit_clear_margins() hits integer underflow bug due to
-info->var.xres < (vc->vc_cols * cw) or info->var.yres < (vc->vc_rows * ch).
-Unexpectedly large rw or bh will try to overrun the __iomem region and
-causes general protection fault.
-
-This crash is easily reproducible by calling vc_do_resize(vc, 0, 0)
-which the reproducer above will do. Since fbcon_modechanged() is doing
-
-  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
-  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
-  cols /= vc->vc_font.width;
-  rows /= vc->vc_font.height;
-  vc_resize(vc, cols, rows);
-  (...snipped...)
-  update_screen(vc);
-
-, var.xres < vc->vc_font.width makes cols = 0 and var.yres < vc->vc_font.height
-makes rows = 0. But vc_do_resize() does not set vc->vc_cols = vc->vc_rows = 0
-due to
-
-  new_cols = (cols ? cols : vc->vc_cols);
-  new_rows = (lines ? lines : vc->vc_rows);
-
-exception.
-
-Of course, the root problem is that callers of do_vc_resize() are not
-handling vc_do_resize() failures, but it might not be easy to handle
-them under complicated dependency. Therefore, as a band-aid workaround,
-this patch checks integer underflow in "struct fbcon_ops"->clear_margins
-call, assuming that vc->vc_cols * vc->vc_font.width and
-vc->vc_rows * vc->vc_font.heigh do not cause integer overflow.
-
-I hope that we can survive even if info->var.{xres,yres} were increased
-but vc->vc_{cols,rows} were not increased due to kzalloc() failure, for
-the __iomem memory for cfb_fillrect() seems to be allocated upon driver
-load.
-
-By the way, syzbot has several reports which are stalling inside filling
-functions. Although reproducer for [1] is not found yet, it has tried
-
-  r0 = openat$fb0(0xffffffffffffff9c, &(0x7f0000000180)='/dev/fb0\x00', 0x0, 0x0)
-  ioctl$FBIOPUT_VSCREENINFO(r0, 0x4601, &(0x7f0000000000)={0x0, 0x0, 0x0, 0x500, 0x0, 0x0, 0x4})
-
-which corresponds to
-
-  const int fd = open("/dev/fb0", O_ACCMODE);
-  struct fb_var_screeninfo var = { };
-  var.yres_virtual = 0x500;
-  var.bits_per_pixel = 4;
-  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
-
-and somehow hit unexpectedly long bit_clear_margins() loops. I don't know
-why syzbot does not hit general protection fault, but it would depend on
-environment because in my VMware environment ioctl(FBIOPUT_VSCREENINFO)
-returns -EINVAL if var.xres == var.yres == 0.
-
-[1] https://syzkaller.appspot.com/bug?id=91ecc3bf32ab1a551c33a39dab7fc0c8cd7b7e16
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/video/fbdev/core/bitblit.c   | 4 ++--
- drivers/video/fbdev/core/fbcon_ccw.c | 4 ++--
- drivers/video/fbdev/core/fbcon_cw.c  | 4 ++--
- drivers/video/fbdev/core/fbcon_ud.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ Strange... it seems something went wrong while scanning.
+ Now better?
 
-diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
-index ca935c09a261..35ebeeccde4d 100644
---- a/drivers/video/fbdev/core/bitblit.c
-+++ b/drivers/video/fbdev/core/bitblit.c
-@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
+ arch/sh/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 9fc2b010e938..2fb9233f031e 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -630,7 +630,7 @@ config SMP
+ 	  Y to "Enhanced Real Time Clock Support", below.
  
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = info->var.xoffset + rs;
- 		region.dy = 0;
- 		region.width = rw;
-@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
+ 	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
+-	  available at <http://www.tldp.org/docs.html#howto>.
++	  available at <https://www.tldp.org/docs.html#howto>.
  
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset;
- 		region.dy = info->var.yoffset + bs;
- 		region.width = rs;
-diff --git a/drivers/video/fbdev/core/fbcon_ccw.c b/drivers/video/fbdev/core/fbcon_ccw.c
-index dfa9a8aa4509..78f3a5621478 100644
---- a/drivers/video/fbdev/core/fbcon_ccw.c
-+++ b/drivers/video/fbdev/core/fbcon_ccw.c
-@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
+ 	  If you don't know what to do here, say N.
  
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = 0;
- 		region.dy = info->var.yoffset;
- 		region.height = rw;
-@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset + bs;
- 		region.dy = 0;
-                 region.height = info->var.yres_virtual;
-diff --git a/drivers/video/fbdev/core/fbcon_cw.c b/drivers/video/fbdev/core/fbcon_cw.c
-index ce08251bfd38..fd098ff17574 100644
---- a/drivers/video/fbdev/core/fbcon_cw.c
-+++ b/drivers/video/fbdev/core/fbcon_cw.c
-@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dx = 0;
- 		region.dy = info->var.yoffset + rs;
- 		region.height = rw;
-@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dx = info->var.xoffset;
- 		region.dy = info->var.yoffset;
-                 region.height = info->var.yres;
-diff --git a/drivers/video/fbdev/core/fbcon_ud.c b/drivers/video/fbdev/core/fbcon_ud.c
-index 1936afc78fec..e165a3fad29a 100644
---- a/drivers/video/fbdev/core/fbcon_ud.c
-+++ b/drivers/video/fbdev/core/fbcon_ud.c
-@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
- 	region.color = color;
- 	region.rop = ROP_COPY;
- 
--	if (rw && !bottom_only) {
-+	if ((int) rw > 0 && !bottom_only) {
- 		region.dy = 0;
- 		region.dx = info->var.xoffset;
- 		region.width  = rw;
-@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
- 		info->fbops->fb_fillrect(info, &region);
- 	}
- 
--	if (bh) {
-+	if ((int) bh > 0) {
- 		region.dy = info->var.yoffset;
- 		region.dx = info->var.xoffset;
-                 region.height  = bh;
 -- 
-2.18.4
+2.27.0
 
