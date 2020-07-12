@@ -2,134 +2,70 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D53C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3294320725
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8721B2065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgGLGLN (ORCPT
+        id S1728329AbgGLGcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 02:11:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14926 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728198AbgGLGLM (ORCPT
+        Sun, 12 Jul 2020 02:32:50 -0400
+Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:54016 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727777AbgGLGct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 02:11:12 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06C63FmQ121057;
-        Sun, 12 Jul 2020 02:09:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1fhwuq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 12 Jul 2020 02:09:43 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06C63Qvo121566;
-        Sun, 12 Jul 2020 02:09:42 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1fhwu5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 12 Jul 2020 02:09:42 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06C628b0007626;
-        Sun, 12 Jul 2020 06:09:40 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06fra.de.ibm.com with ESMTP id 327p0vr4ju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 12 Jul 2020 06:09:40 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06C69clI2031964
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 12 Jul 2020 06:09:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4098BAE051;
-        Sun, 12 Jul 2020 06:09:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41FB9AE04D;
-        Sun, 12 Jul 2020 06:09:33 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.40.119])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 12 Jul 2020 06:09:33 +0000 (GMT)
-Date:   Sun, 12 Jul 2020 09:09:31 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     zong.li@sifive.com, linux-riscv@lists.infradead.org,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, gxt@pku.edu.cn,
-        Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org,
-        akpm@linux-foundation.org, mchehab+samsung@kernel.org,
-        gregory.0xf0@gmail.com, masahiroy@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        bgolaszewski@baylibre.com, steve@sk2.org, tglx@linutronix.de,
-        keescook@chromium.org, alex@ghiti.fr, mcgrof@kernel.org,
-        mark.rutland@arm.com, james.morse@arm.com,
-        alex.shi@linux.alibaba.com, andriy.shevchenko@linux.intel.com,
-        broonie@kernel.org, rdunlap@infradead.org, davem@davemloft.net,
-        rostedt@goodmis.org, dan.j.williams@intel.com, mhiramat@kernel.org,
-        krzk@kernel.org, zaslonko@linux.ibm.com,
-        matti.vaittinen@fi.rohmeurope.com, uwe@kleine-koenig.org,
-        clabbe@baylibre.com, changbin.du@intel.com,
-        Greg KH <gregkh@linuxfoundation.org>, paulmck@kernel.org,
-        pmladek@suse.com, brendanhiggins@google.com, glider@google.com,
-        elver@google.com, davidgow@google.com, ardb@kernel.org,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: Add and use a generic version of devmem_is_allowed()
-Message-ID: <20200712060931.GM781326@linux.ibm.com>
-References: <20200709211925.1926557-1-palmer@dabbelt.com>
+        Sun, 12 Jul 2020 02:32:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 84F7C837F24A;
+        Sun, 12 Jul 2020 06:32:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bead16_0f1504526edd
+X-Filterd-Recvd-Size: 1575
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 12 Jul 2020 06:32:47 +0000 (UTC)
+Message-ID: <866325009f9ae73b3a563dd745f901260a372242.camel@perches.com>
+Subject: Re: [PATCH] net: sky2: switch from 'pci_' to 'dma_' API
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        mlindner@marvell.com, stephen@networkplumber.org,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Sat, 11 Jul 2020 23:32:45 -0700
+In-Reply-To: <8a3e5514-9cc9-18f3-9a98-81007419a20a@wanadoo.fr>
+References: <20200711204944.259152-1-christophe.jaillet@wanadoo.fr>
+         <2181026e68d2948c396cc7a7b6bfb7146c1cd5f6.camel@perches.com>
+         <8a3e5514-9cc9-18f3-9a98-81007419a20a@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709211925.1926557-1-palmer@dabbelt.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-11_17:2020-07-10,2020-07-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=764
- suspectscore=2 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007120047
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 02:19:20PM -0700, Palmer Dabbelt wrote:
-> As part of adding STRICT_DEVMEM support to the RISC-V port, Zong provided an
-> implementation of devmem_is_allowed() that's exactly the same as the version in
-> a handful of other ports.  Rather than duplicate code, I've put a generic
-> version of this in lib/ and used it for the RISC-V port.
-> 
-> I've put those first two patches on riscv/for-next, which I'm targeting for 5.9
-> (though this is the first version, so they're unreviewed).  The other three
-> obviously depend on the first one going on, but I'm not putting them in the
-> RISC-V tree as I don't want to step on anyone's toes.  If you want me to take
-> yours along with the others then please say something, as otherwise I'll
-> probably forget.
+On Sun, 2020-07-12 at 08:29 +0200, Christophe JAILLET wrote:
+> Le 11/07/2020 à 23:20, Joe Perches a écrit :
+> > On Sat, 2020-07-11 at 22:49 +0200, Christophe JAILLET wrote:
+> > > The wrappers in include/linux/pci-dma-compat.h should go away.
+> > why?
+> > 
+> > 
+>  From Christoph Hellwig 
+> https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
 
-For the series
+There's no why there.
+There's just an assertion a wrapper should "go away".
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+"the wrappers in include/linux/pci-dma-compat.h should go away"
 
-> I've put the whole thing at
-> ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git -b
-> generic-devmem .
-> 
-> Changes since v1 [<20200709200552.1910298-1-palmer@dabbelt.com]:
-> 
-> * Don't have GENERIC_LIB_DEVMEM_IS_ALLOWED select ARCH_HAS_DEVMEM_IS_ALLOWED,
->   instead just adapt the users.
-> * Remove ARCH_HAS_DEVMEM_IS_ALLOWED from the arch Kconfigs, as I forgot to do
->   so the first time.
-> 
-> 
+wrappers aren't all bad.
 
--- 
-Sincerely yours,
-Mike.
