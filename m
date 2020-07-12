@@ -2,101 +2,74 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8567C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2AC2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594589795;
-	bh=LaukERu2pv75LoRhGqzTdKknNVP0Uslzw4bshPJDjGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oPasV7ESP3Lz1A1zDaLIcL52Kc+5aPeAsFxu/w842R41NXOwHt6eIF9U6JyRbTdXp
-	 f4916Qz902EkuchWJRFppBIogtVltVKRfttWtyi4EB5X9O0r1+BM3dRetPAPowqhtx
-	 hLhmXgKWBelm9up4k/HD8ohUKczieE+yrWUG6AbY=
+	by mail.kernel.org (Postfix) with ESMTP id AD664206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgGLVge (ORCPT
+        id S1729500AbgGLVtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 17:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbgGLVgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 17:36:33 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 229BA20674;
-        Sun, 12 Jul 2020 21:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594589793;
-        bh=LaukERu2pv75LoRhGqzTdKknNVP0Uslzw4bshPJDjGU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kyM2cyiEITBrG5oIVpYyR4sxM6ZHAlQtrGYEedEQtuZUVF8OxssMF9d/SiWt2H7Bx
-         W7xyNnYvIxxfOVRxpUNs1t5hO9OZcEQorI5Qbom3a1RV3HcJwby6lDBJU2Fa+riMch
-         TW88A8oZWfecMj0VbvXNhDGfRK9kXwhaKsRQsXSc=
-Date:   Sun, 12 Jul 2020 14:36:31 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] qrtr: Fix ZERO_SIZE_PTR deref
- in qrtr_tun_write_iter()
-Message-ID: <20200712213631.GA809@sol.localdomain>
-References: <20200712210300.200399-1-yepeilin.cs@gmail.com>
+        Sun, 12 Jul 2020 17:49:47 -0400
+Received: from smtprelay0237.hostedemail.com ([216.40.44.237]:48406 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729249AbgGLVtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 17:49:47 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 4EAD8182CED28;
+        Sun, 12 Jul 2020 21:49:46 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: silk82_3d001b926ee3
+X-Filterd-Recvd-Size: 1701
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 12 Jul 2020 21:49:45 +0000 (UTC)
+Message-ID: <27660a3e38af43c9e741a4dfcdec50757c32f409.camel@perches.com>
+Subject: Re: [PATCH] decompress_bunzip2: fix sizeof type in start_bunzip
+From:   Joe Perches <joe@perches.com>
+To:     Tom Rix <trix@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        alain@knaff.lu
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date:   Sun, 12 Jul 2020 14:49:44 -0700
+In-Reply-To: <9af191c2-0f2c-7637-433a-b557a07590ca@redhat.com>
+References: <20200712125952.8809-1-trix@redhat.com>
+         <639c8ef5-2755-7172-fbb8-ce45c8637feb@zytor.com>
+         <9af191c2-0f2c-7637-433a-b557a07590ca@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200712210300.200399-1-yepeilin.cs@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 05:03:00PM -0400, Peilin Ye wrote:
-> qrtr_tun_write_iter() is dereferencing `ZERO_SIZE_PTR`s when `from->count`
-> equals to zero. Fix it by rejecting zero-length kzalloc() requests.
+On Sun, 2020-07-12 at 08:12 -0700, Tom Rix wrote:
+> On 7/12/20 6:09 AM, H. Peter Anvin wrote:
+> > On 2020-07-12 05:59, trix@redhat.com wrote:
+> > > From: Tom Rix <trix@redhat.com>
+[]
+> > > So change the type in sizeof to 'unsigned int'
+> > You must be kidding.
+> > 
+> > If you want to change it, change it to sizeof(bd->dbuf) instead, but this flag
+> > is at least in my opinion a total joke. For sizeof(int) != sizeof(unsigned
+> > int) is beyond bizarre, no matter how stupid the platform.
 > 
-> This patch fixes the following syzbot bug:
-> 
->     https://syzkaller.appspot.com/bug?id=f56bbe6668873ee245986bbd23312b895fa5a50a
-> 
-> Reported-by: syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
->  net/qrtr/tun.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/net/qrtr/tun.c b/net/qrtr/tun.c
-> index 15ce9b642b25..5465e94ba8e5 100644
-> --- a/net/qrtr/tun.c
-> +++ b/net/qrtr/tun.c
-> @@ -80,6 +80,9 @@ static ssize_t qrtr_tun_write_iter(struct kiocb *iocb, struct iov_iter *from)
->  	ssize_t ret;
->  	void *kbuf;
->  
-> +	if (!len)
-> +		return -EINVAL;
-> +
->  	kbuf = kzalloc(len, GFP_KERNEL);
->  	if (!kbuf)
->  		return -ENOMEM;
+> Using the actual type is more correct that using a type of the same size.
 
-Wasn't this already fixed by:
+Sure.
 
-    commit 8ff41cc21714704ef0158a546c3c4d07fae2c952
-    Author: Dan Carpenter <dan.carpenter@oracle.com>
-    Date:   Tue Jun 30 14:46:15 2020 +0300
+But this hardly matters as this same type conversion
+from signed to unsigned or the other way round is
+_everywhere_ in the kernel.
 
-        net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
+And especially the cc of stable is unnecessary.
+
+
