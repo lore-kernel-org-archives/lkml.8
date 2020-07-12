@@ -2,96 +2,110 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AE5C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A469C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747502068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BEA2068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wL78Wp6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgGLQ7d (ORCPT
+        id S1729190AbgGLQ7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 12:59:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:47884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbgGLQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 12:59:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9299D30E;
-        Sun, 12 Jul 2020 09:59:31 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B043E3F7D8;
-        Sun, 12 Jul 2020 09:59:29 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Sun, 12 Jul 2020 12:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbgGLQ7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 12:59:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27E9C061794;
+        Sun, 12 Jul 2020 09:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=hX/qK6z4n4CL1AKJ1RSUJle5mcIh3uNxPJ30TrVC8t8=; b=wL78Wp6PagFZFP78YDF0n5Iq2U
+        cXoVGoNqXQE7zkKirLb++lczoHV7wxqEPK2RQvpkx8o6MdrHhBzCgKWwY43YKgZ3JnnNtsrn9FBXp
+        fOAnfqn4KpKOFuEJ2T4ZB0pLSXvWUcLAf8TgrOxkn8luxMBPa3dN4L0nhMdPZmxtBE90hgw57oaF5
+        0vvWsUuoe04Gz+0LJbFRNfJKTfnzb7+Qcg+WKGnKNpytyiw2AXEx7rgeE1mLZzP4Z+ZoUez9RrTG9
+        W9+R0VSeF/S02OaUHcI3Ln+O+jeyKW0QOuJsrFyZ3tFZ804Y/v4WsWbtYcsWzQjkxiS+leLv+HO8f
+        uhdHc0Nw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jufJi-00017q-VJ; Sun, 12 Jul 2020 16:59:07 +0000
+Subject: Re: [PATCH v2 02/22] x86/numa: Add 'nohmat' option
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH v2 0/3] sched, arch_topology: Thermal pressure configuration cleanup
-Date:   Sun, 12 Jul 2020 17:59:14 +0100
-Message-Id: <20200712165917.9168-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, vishal.l.verma@intel.com,
+        ard.biesheuvel@linaro.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        hch@lst.de, joao.m.martins@oracle.com
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457117650.754248.15655699240005524226.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a869a6be-530f-573d-71dd-6a5b1a7ee939@infradead.org>
+Date:   Sun, 12 Jul 2020 09:58:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <159457117650.754248.15655699240005524226.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On 7/12/20 9:26 AM, Dan Williams wrote:
+> Disable parsing of the HMAT for debug, to workaround broken platform
+> instances, or cases where it is otherwise not wanted.
+> 
+> Cc: x86@kernel.org
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  arch/x86/mm/numa.c       |    2 ++
+>  drivers/acpi/numa/hmat.c |    8 +++++++-
+>  include/acpi/acpi_numa.h |    8 ++++++++
+>  3 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index ee24646dc44e..44fdf06d497e 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -41,6 +41,8 @@ static __init int numa_setup(char *opt)
+>  		return numa_emu_cmdline(opt + 5);
+>  	if (!strncmp(opt, "noacpi", 6))
+>  		disable_srat();
+> +	if (!strncmp(opt, "nohmat", 6))
+> +		disable_hmat();
+>  	return 0;
+>  }
+>  early_param("numa", numa_setup);
 
-This stems from this thread [1] on the list. TL;DR: the thermal pressure config
-has no helpful documentation, and figuring out if the right dependencies are in
-place is not easy for a regular user. 
+Please add that to
+Documentation/x86/x86_64/boot-options.rst.
 
-The current landscape also paints an odd picture: arch_set_thermal_pressure() is
-hardcoded in sched/core.c, and is *not* architecture-definable, while
-arch_get_thermal_pressure() is. Patch 1 is tackling this, the rest is Kconfig
-stuff.
-
-Cheers,
-Valentin
-
-[1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
-
-Revisions
-=========
-
-v1 -> v2
---------
-
-o Remove cpufreq_cooling.c weak function; use #define stub in sched/topology.h
-  (Vincent)
-o Hinge arm SCHED_THERMAL_PRESSURE selection on ARM_CPU_TOPOLOGY
-
-Valentin Schneider (3):
-  arch_topology, sched/core: Cleanup thermal pressure definition
-  sched: Cleanup SCHED_THERMAL_PRESSURE kconfig entry
-  arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE
-
- arch/arm/Kconfig                  |  1 +
- arch/arm/include/asm/topology.h   |  3 ++-
- arch/arm64/Kconfig                |  1 +
- arch/arm64/include/asm/topology.h |  3 ++-
- drivers/base/arch_topology.c      | 11 +++++++++++
- include/linux/arch_topology.h     |  4 ++--
- include/linux/sched/topology.h    |  7 +++++++
- init/Kconfig                      | 15 ++++++++++++++-
- kernel/sched/core.c               | 11 -----------
- 9 files changed, 40 insertions(+), 16 deletions(-)
-
---
-2.27.0
+thanks.
+-- 
+~Randy
 
