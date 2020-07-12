@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA38C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D986C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D626520702
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434A02068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594560461;
-	bh=i5rQBXCAa+ouq9ElHkoSLVOv5jsy255xFh4Lcwj7dI8=;
+	s=default; t=1594560472;
+	bh=zpZV3MLVwkR/P1a/1AwX/BlrIv/ijlQqU81pbu1VOy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cm9CnAJHl98vEN2+7kojMcNsUCgR56hnf980Mk0K2J2RCNNubA9pKxrub/DmvvFJV
-	 6szkPgRj1Id5pb7ITY6qPq63lVgmRjQ3zHimsqR8oPZmGpriAhrmcIkwX6UUGnV/69
-	 kSNyrQCFFeYBiulTsgc+qqsQrGdiB6Soq7mWma64=
+	b=R28Y/4SeXe2GdXyQahuMV2WA5iraqnS4e8J+qRStUzOJxKLdovPu0OzVMtaCevp63
+	 R2Pl1cEVwhhdcyyNDD0a70n9XXmuicB2C34c/3ZpftQm2gpyEb4pOzGB/VYaZptcse
+	 X2vBk4m//wLjsToKHact+yL+tGTbsWpWuSebcZZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgGLN1j convert rfc822-to-8bit (ORCPT
+        id S1729094AbgGLN1v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:27:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49370 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729009AbgGLN1Z (ORCPT
+        Sun, 12 Jul 2020 09:27:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23446 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729069AbgGLN1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:27:25 -0400
+        Sun, 12 Jul 2020 09:27:46 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-P2ZGzDMpNgqqGRBC6hUiDA-1; Sun, 12 Jul 2020 09:27:20 -0400
-X-MC-Unique: P2ZGzDMpNgqqGRBC6hUiDA-1
+ us-mta-345-xHU8eCUKO4eMoUtV0NBxrQ-1; Sun, 12 Jul 2020 09:27:40 -0400
+X-MC-Unique: xHU8eCUKO4eMoUtV0NBxrQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 941B31800D42;
-        Sun, 12 Jul 2020 13:27:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D91211087;
+        Sun, 12 Jul 2020 13:27:37 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.192.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7610C7EFB6;
-        Sun, 12 Jul 2020 13:27:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E32C1944D;
+        Sun, 12 Jul 2020 13:27:34 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -54,9 +54,9 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         "Paul A. Clarke" <pc@us.ibm.com>,
         Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
-Subject: [PATCH 12/18] perf metric: Compute referenced metrics
-Date:   Sun, 12 Jul 2020 15:26:28 +0200
-Message-Id: <20200712132634.138901-13-jolsa@kernel.org>
+Subject: [PATCH 18/18] perf metric: Rename group_list to list
+Date:   Sun, 12 Jul 2020 15:26:34 +0200
+Message-Id: <20200712132634.138901-19-jolsa@kernel.org>
 In-Reply-To: <20200712132634.138901-1-jolsa@kernel.org>
 References: <20200712132634.138901-1-jolsa@kernel.org>
 MIME-Version: 1.0
@@ -70,115 +70,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding computation (expr__parse call) of referenced metric at
-the point when it needs to be resolved during the 'master'
-metric computation.
-
-Once the inner metric is computed, the result is stored and
-used if there's another usage of that metric.
+Following the previous change that rename egroup
+to metric, there's no reason to call the list
+'group_list' anymore, renaming it to list.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/expr.c | 31 +++++++++++++++++++++++++++++++
- tools/perf/util/expr.h |  3 +++
- tools/perf/util/expr.y |  4 ++--
- 3 files changed, 36 insertions(+), 2 deletions(-)
+ tools/perf/util/metricgroup.c | 45 +++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 6bf8a21f5c53..2784df38f8c2 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -91,6 +91,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
- 
- 	data_ptr->ref.metric_name = ref->metric_name;
- 	data_ptr->ref.metric_expr = ref->metric_expr;
-+	data_ptr->ref.counted = false;
- 	data_ptr->is_ref = true;
- 
- 	ret = hashmap__set(&ctx->ids, name, data_ptr,
-@@ -110,6 +111,34 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
- 	return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 9b880a5fb52b..0645ac1031fe 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -613,7 +613,7 @@ int __weak arch_get_runtimeparam(void)
+ 	return 1;
  }
  
-+int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
-+		     struct expr_id_data **datap)
-+{
-+	struct expr_id_data *data;
-+
-+	if (expr__get_id(ctx, id, datap) || !*datap) {
-+		pr_debug("%s not found\n", id);
-+		return -1;
-+	}
-+
-+	data = *datap;
-+
-+	pr_debug2("lookup: is_ref %d, counted %d, val %f: %s\n",
-+		  data->is_ref, data->ref.counted, data->val, id);
-+
-+	if (data->is_ref && !data->ref.counted) {
-+		data->ref.counted = true;
-+		pr_debug("processing metric: %s ENTRY\n", id);
-+		if (expr__parse(&data->val, ctx, data->ref.metric_expr, 1)) {
-+			pr_debug("%s failed to count\n", id);
-+			return -1;
-+		}
-+		pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
-+	}
-+
-+	return 0;
-+}
-+
- void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
- {
- 	struct expr_id_data *old_val = NULL;
-@@ -150,6 +179,8 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	void *scanner;
- 	int ret;
+-static int __add_metric(struct list_head *group_list,
++static int __add_metric(struct list_head *list,
+ 			struct pmu_event *pe,
+ 			bool metric_no_group,
+ 			int runtime,
+@@ -691,13 +691,13 @@ static int __add_metric(struct list_head *group_list,
+ 	if (m->refs_cnt)
+ 		return 0;
  
-+	pr_debug2("parsing metric: %s\n", expr);
-+
- 	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
+-	if (list_empty(group_list))
+-		list_add(&m->nd, group_list);
++	if (list_empty(list))
++		list_add(&m->nd, list);
+ 	else {
+ 		struct list_head *pos;
+ 
+ 		/* Place the largest groups at the front. */
+-		list_for_each_prev(pos, group_list) {
++		list_for_each_prev(pos, list) {
+ 			struct metric *old = list_entry(pos, struct metric, nd);
+ 
+ 			if (hashmap__size(&m->pctx.ids) <=
+@@ -775,7 +775,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
+ 	return p->id ? 0 : -ENOMEM;
+ }
+ 
+-static int add_metric(struct list_head *group_list,
++static int add_metric(struct list_head *list,
+ 		      struct pmu_event *pe,
+ 		      bool metric_no_group,
+ 		      struct metric **mp,
+@@ -783,7 +783,7 @@ static int add_metric(struct list_head *group_list,
+ 
+ static int resolve_metric(struct metric *m,
+ 			  bool metric_no_group,
+-			  struct list_head *group_list,
++			  struct list_head *list,
+ 			  struct pmu_events_map *map)
+ {
+ 	struct hashmap_entry *cur;
+@@ -814,7 +814,7 @@ static int resolve_metric(struct metric *m,
+ 			expr__del_id(&m->pctx, cur->key);
+ 
+ 			/* ... and it gets resolved to the parent context. */
+-			ret = add_metric(group_list, pe, metric_no_group, &m, parent);
++			ret = add_metric(list, pe, metric_no_group, &m, parent);
+ 			if (ret)
+ 				return ret;
+ 
+@@ -829,7 +829,7 @@ static int resolve_metric(struct metric *m,
+ 	return 0;
+ }
+ 
+-static int add_metric(struct list_head *group_list,
++static int add_metric(struct list_head *list,
+ 		      struct pmu_event *pe,
+ 		      bool metric_no_group,
+ 		      struct metric **m,
+@@ -840,7 +840,7 @@ static int add_metric(struct list_head *group_list,
+ 	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+ 	if (!strstr(pe->metric_expr, "?")) {
+-		ret = __add_metric(group_list, pe, metric_no_group, 1, m, parent);
++		ret = __add_metric(list, pe, metric_no_group, 1, m, parent);
+ 	} else {
+ 		int j, count;
+ 
+@@ -848,11 +848,11 @@ static int add_metric(struct list_head *group_list,
+ 
+ 		/* This loop is added to create multiple
+ 		 * events depend on count value and add
+-		 * those events to group_list.
++		 * those events to list.
+ 		 */
+ 
+ 		for (j = 0; j < count && !ret; j++) {
+-			ret = __add_metric(group_list, pe, metric_no_group, j, m, parent);
++			ret = __add_metric(list, pe, metric_no_group, j, m, parent);
+ 		}
+ 	}
+ 
+@@ -861,7 +861,7 @@ static int add_metric(struct list_head *group_list,
+ 
+ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 				   struct strbuf *events,
+-				   struct list_head *group_list,
++				   struct list_head *list,
+ 				   struct pmu_events_map *map)
+ 
+ {
+@@ -873,7 +873,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 	if (!pe)
+ 		return -EINVAL;
+ 
+-	ret = add_metric(group_list, pe, metric_no_group, &m, NULL);
++	ret = add_metric(list, pe, metric_no_group, &m, NULL);
  	if (ret)
  		return ret;
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index d19e66915228..b6d1fba64eaa 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -25,6 +25,7 @@ struct expr_id_data {
- 		struct {
- 			const char *metric_name;
- 			const char *metric_expr;
-+			bool counted;
- 		} ref;
- 	};
- };
-@@ -42,6 +43,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
- int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
- int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
- 		 struct expr_id_data **data);
-+int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
-+		     struct expr_id_data **datap);
- int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
- 		const char *expr, int runtime);
- int expr__find_other(const char *expr, const char *one,
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 0d4f5d324be7..d34b370391c6 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -88,11 +88,11 @@ expr:	  NUMBER
- 	| ID			{
- 					struct expr_id_data *data;
  
--					if (expr__get_id(ctx, $1, &data) || !data) {
--						pr_debug("%s not found\n", $1);
-+					if (expr__resolve_id(ctx, $1, &data)) {
- 						free($1);
- 						YYABORT;
- 					}
-+
- 					$$ = data->val;
- 					free($1);
- 				}
+@@ -881,8 +881,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 	 * Process any possible referenced metrics
+ 	 * included in the expression.
+ 	 */
+-	ret = resolve_metric(m, metric_no_group,
+-			     group_list, map);
++	ret = resolve_metric(m, metric_no_group, list, map);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -905,7 +904,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 
+ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+ 					struct strbuf *events,
+-					struct list_head *group_list,
++					struct list_head *mlist,
+ 					struct pmu_events_map *map)
+ {
+ 	char *llist, *nlist, *p;
+@@ -921,7 +920,7 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+ 
+ 	while ((p = strsep(&llist, ",")) != NULL) {
+ 		ret = metricgroup__add_metric(p, metric_no_group, events,
+-					      group_list, map);
++					      mlist, map);
+ 		if (ret == -EINVAL) {
+ 			fprintf(stderr, "Cannot find metric or group `%s'\n",
+ 					p);
+@@ -955,11 +954,11 @@ static void metric__free_recursion(struct metric *metric)
+ 	}
+ }
+ 
+-static void metricgroup__free_metrics(struct list_head *group_list)
++static void metricgroup__free_metrics(struct list_head *list)
+ {
+ 	struct metric *m, *tmp;
+ 
+-	list_for_each_entry_safe (m, tmp, group_list, nd) {
++	list_for_each_entry_safe (m, tmp, list, nd) {
+ 		metric__free_recursion(m);
+ 		metric__free_refs(m);
+ 		expr__ctx_clear(&m->pctx);
+@@ -977,13 +976,13 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ {
+ 	struct parse_events_error parse_error;
+ 	struct strbuf extra_events;
+-	LIST_HEAD(group_list);
++	LIST_HEAD(list);
+ 	int ret;
+ 
+ 	if (metric_events->nr_entries == 0)
+ 		metricgroup__rblist_init(metric_events);
+ 	ret = metricgroup__add_metric_list(str, metric_no_group,
+-					   &extra_events, &group_list, map);
++					   &extra_events, &list, map);
+ 	if (ret)
+ 		return ret;
+ 	pr_debug("adding %s\n", extra_events.buf);
+@@ -994,10 +993,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 		goto out;
+ 	}
+ 	strbuf_release(&extra_events);
+-	ret = metricgroup__setup_events(&group_list, metric_no_merge,
++	ret = metricgroup__setup_events(&list, metric_no_merge,
+ 					perf_evlist, metric_events);
+ out:
+-	metricgroup__free_metrics(&group_list);
++	metricgroup__free_metrics(&list);
+ 	return ret;
+ }
+ 
 -- 
 2.25.4
 
