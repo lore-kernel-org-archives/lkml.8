@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1AEC43446
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F68C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFEB2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1472072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgGLLO6 (ORCPT
+        id S1728912AbgGLLOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 07:14:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45847 "EHLO mga09.intel.com"
+        Sun, 12 Jul 2020 07:14:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45844 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgGLLOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728839AbgGLLOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 Jul 2020 07:14:38 -0400
-IronPort-SDR: i13t6Gl8lHl/eFopOVbghdfg9qGTxVt4vekgLCe8kJBTYryEZ16IhnYCi5janBnu0Zmn6yRr55
- uMx54bsWtnqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149952687"
+IronPort-SDR: TwHThQacZRavYOtj41MNRdKuGxSNzWLH5vo2Ljc/45HXfLlqDUbr3PtMBxdj5C96RdrqfGaWaK
+ VPKfR1oScVJw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149952695"
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="149952687"
+   d="scan'208";a="149952695"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 04:14:29 -0700
-IronPort-SDR: 8ZHXqCPHhkj9gl49d4Y/geFAOCJCruWQL/o6gB/Ue+81wVT3GBbT/XJ5tXJka2gXe9cOFPITxc
- 8D+PBFB47p+Q==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 04:14:30 -0700
+IronPort-SDR: 5yAiOl0Wd+ssI/rYRfPswvB/HSl6aFpz59CVRp2VRXwLlhj5xM53BLj4aWQO9suL32XxjCu4BS
+ bCWctd+RlJaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="315788564"
+   d="scan'208";a="315788579"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 12 Jul 2020 04:14:29 -0700
+  by orsmga008.jf.intel.com with ESMTP; 12 Jul 2020 04:14:30 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, eric.auger@redhat.com,
         baolu.lu@linux.intel.com, joro@8bytes.org
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 05/15] vfio: Add PASID allocation/free support
-Date:   Sun, 12 Jul 2020 04:21:00 -0700
-Message-Id: <1594552870-55687-6-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v5 10/15] vfio/type1: Support binding guest page tables to PASID
+Date:   Sun, 12 Jul 2020 04:21:05 -0700
+Message-Id: <1594552870-55687-11-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
 References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
@@ -56,368 +56,376 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared Virtual Addressing (a.k.a Shared Virtual Memory) allows sharing
-multiple process virtual address spaces with the device for simplified
-programming model. PASID is used to tag an virtual address space in DMA
-requests and to identify the related translation structure in IOMMU. When
-a PASID-capable device is assigned to a VM, we want the same capability
-of using PASID to tag guest process virtual address spaces to achieve
-virtual SVA (vSVA).
-
-PASID management for guest is vendor specific. Some vendors (e.g. Intel
-VT-d) requires system-wide managed PASIDs cross all devices, regardless
-of whether a device is used by host or assigned to guest. Other vendors
-(e.g. ARM SMMU) may allow PASIDs managed per-device thus could be fully
-delegated to the guest for assigned devices.
-
-For system-wide managed PASIDs, this patch introduces a vfio module to
-handle explicit PASID alloc/free requests from guest. Allocated PASIDs
-are associated to a process (or, mm_struct) in IOASID core. A vfio_mm
-object is introduced to track mm_struct. Multiple VFIO containers within
-a process share the same vfio_mm object.
-
-A quota mechanism is provided to prevent malicious user from exhausting
-available PASIDs. Currently the quota is a global parameter applied to
-all VFIO devices. In the future per-device quota might be supported too.
+Nesting translation allows two-levels/stages page tables, with 1st level
+for guest translations (e.g. GVA->GPA), 2nd level for host translations
+(e.g. GPA->HPA). This patch adds interface for binding guest page tables
+to a PASID. This PASID must have been allocated to user space before the
+binding request.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
 Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
-v4 -> v5:
-*) address comments from Eric Auger.
-*) address the comments from Alex on the pasid free range support. Added
-   per vfio_mm pasid r-b tree.
-   https://lore.kernel.org/kvm/20200709082751.320742ab@x1.home/
-
 v3 -> v4:
-*) fix lock leam in vfio_mm_get_from_task()
-*) drop pasid_quota field in struct vfio_mm
-*) vfio_mm_get_from_task() returns ERR_PTR(-ENOTTY) when !CONFIG_VFIO_PASID
+*) address comments from Alex on v3
+
+v2 -> v3:
+*) use __iommu_sva_unbind_gpasid() for unbind call issued by VFIO
+   https://lore.kernel.org/linux-iommu/1592931837-58223-6-git-send-email-jacob.jun.pan@linux.intel.com/
 
 v1 -> v2:
-*) added in v2, split from the pasid alloc/free support of v1
+*) rename subject from "vfio/type1: Bind guest page tables to host"
+*) remove VFIO_IOMMU_BIND, introduce VFIO_IOMMU_NESTING_OP to support bind/
+   unbind guet page table
+*) replaced vfio_iommu_for_each_dev() with a group level loop since this
+   series enforces one group per container w/ nesting type as start.
+*) rename vfio_bind/unbind_gpasid_fn() to vfio_dev_bind/unbind_gpasid_fn()
+*) vfio_dev_unbind_gpasid() always successful
+*) use vfio_mm->pasid_lock to avoid race between PASID free and page table
+   bind/unbind
 ---
- drivers/vfio/Kconfig      |   5 +
- drivers/vfio/Makefile     |   1 +
- drivers/vfio/vfio_pasid.c | 235 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/vfio.h      |  28 ++++++
- 4 files changed, 269 insertions(+)
- create mode 100644 drivers/vfio/vfio_pasid.c
+ drivers/vfio/vfio_iommu_type1.c | 166 ++++++++++++++++++++++++++++++++++++++++
+ drivers/vfio/vfio_pasid.c       |  26 +++++++
+ include/linux/vfio.h            |  20 +++++
+ include/uapi/linux/vfio.h       |  31 ++++++++
+ 4 files changed, 243 insertions(+)
 
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index fd17db9..3d8a108 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -19,6 +19,11 @@ config VFIO_VIRQFD
- 	depends on VFIO && EVENTFD
- 	default n
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 55b4065..f0f21ff 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -149,6 +149,30 @@ struct vfio_regions {
+ #define DIRTY_BITMAP_PAGES_MAX	 ((u64)INT_MAX)
+ #define DIRTY_BITMAP_SIZE_MAX	 DIRTY_BITMAP_BYTES(DIRTY_BITMAP_PAGES_MAX)
  
-+config VFIO_PASID
-+	tristate
-+	depends on IOASID && VFIO
-+	default n
-+
- menuconfig VFIO
- 	tristate "VFIO Non-Privileged userspace driver framework"
- 	depends on IOMMU_API
-diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
-index de67c47..bb836a3 100644
---- a/drivers/vfio/Makefile
-+++ b/drivers/vfio/Makefile
-@@ -3,6 +3,7 @@ vfio_virqfd-y := virqfd.o
- 
- obj-$(CONFIG_VFIO) += vfio.o
- obj-$(CONFIG_VFIO_VIRQFD) += vfio_virqfd.o
-+obj-$(CONFIG_VFIO_PASID) += vfio_pasid.o
- obj-$(CONFIG_VFIO_IOMMU_TYPE1) += vfio_iommu_type1.o
- obj-$(CONFIG_VFIO_IOMMU_SPAPR_TCE) += vfio_iommu_spapr_tce.o
- obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
-diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-new file mode 100644
-index 0000000..66e6054e
---- /dev/null
-+++ b/drivers/vfio/vfio_pasid.c
-@@ -0,0 +1,235 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *     Author: Liu Yi L <yi.l.liu@intel.com>
-+ *
-+ */
-+
-+#include <linux/vfio.h>
-+#include <linux/eventfd.h>
-+#include <linux/file.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/sched/mm.h>
-+
-+#define DRIVER_VERSION  "0.1"
-+#define DRIVER_AUTHOR   "Liu Yi L <yi.l.liu@intel.com>"
-+#define DRIVER_DESC     "PASID management for VFIO bus drivers"
-+
-+#define VFIO_DEFAULT_PASID_QUOTA	1000
-+static int pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-+module_param_named(pasid_quota, pasid_quota, uint, 0444);
-+MODULE_PARM_DESC(pasid_quota,
-+		 " Set the quota for max number of PASIDs that an application is allowed to request (default 1000)");
-+
-+struct vfio_mm_token {
-+	unsigned long long val;
++struct domain_capsule {
++	struct vfio_group *group;
++	struct iommu_domain *domain;
++	void *data;
 +};
 +
-+struct vfio_mm {
-+	struct kref		kref;
-+	int			ioasid_sid;
-+	struct mutex		pasid_lock;
-+	struct rb_root		pasid_list;
-+	struct list_head	next;
-+	struct vfio_mm_token	token;
-+};
-+
-+static struct mutex		vfio_mm_lock;
-+static struct list_head		vfio_mm_list;
-+
-+struct vfio_pasid {
-+	struct rb_node		node;
-+	ioasid_t		pasid;
-+};
-+
-+static void vfio_remove_all_pasids(struct vfio_mm *vmm);
-+
-+/* called with vfio.vfio_mm_lock held */
-+static void vfio_mm_release(struct kref *kref)
++/* iommu->lock must be held */
++static struct vfio_group *vfio_find_nesting_group(struct vfio_iommu *iommu)
 +{
-+	struct vfio_mm *vmm = container_of(kref, struct vfio_mm, kref);
++	struct vfio_domain *d;
++	struct vfio_group *group = NULL;
 +
-+	list_del(&vmm->next);
-+	mutex_unlock(&vfio_mm_lock);
-+	vfio_remove_all_pasids(vmm);
-+	ioasid_free_set(vmm->ioasid_sid, true);
-+	kfree(vmm);
-+}
++	if (!iommu->nesting_info)
++		return NULL;
 +
-+void vfio_mm_put(struct vfio_mm *vmm)
-+{
-+	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_mm_lock);
-+}
-+
-+static void vfio_mm_get(struct vfio_mm *vmm)
-+{
-+	kref_get(&vmm->kref);
-+}
-+
-+struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-+{
-+	struct mm_struct *mm = get_task_mm(task);
-+	struct vfio_mm *vmm;
-+	unsigned long long val = (unsigned long long)mm;
-+	int ret;
-+
-+	mutex_lock(&vfio_mm_lock);
-+	/* Search existing vfio_mm with current mm pointer */
-+	list_for_each_entry(vmm, &vfio_mm_list, next) {
-+		if (vmm->token.val == val) {
-+			vfio_mm_get(vmm);
-+			goto out;
++	/* only support singleton container with nesting type */
++	list_for_each_entry(d, &iommu->domain_list, next) {
++		list_for_each_entry(group, &d->group_list, next) {
++			break;
 +		}
 +	}
-+
-+	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-+	if (!vmm) {
-+		vmm = ERR_PTR(-ENOMEM);
-+		goto out;
-+	}
-+
-+	/*
-+	 * IOASID core provides a 'IOASID set' concept to track all
-+	 * PASIDs associated with a token. Here we use mm_struct as
-+	 * the token and create a IOASID set per mm_struct. All the
-+	 * containers of the process share the same IOASID set.
-+	 */
-+	ret = ioasid_alloc_set((struct ioasid_set *)mm, pasid_quota,
-+			       &vmm->ioasid_sid);
-+	if (ret) {
-+		kfree(vmm);
-+		vmm = ERR_PTR(ret);
-+		goto out;
-+	}
-+
-+	kref_init(&vmm->kref);
-+	vmm->token.val = val;
-+	mutex_init(&vmm->pasid_lock);
-+	vmm->pasid_list = RB_ROOT;
-+
-+	list_add(&vmm->next, &vfio_mm_list);
-+out:
-+	mutex_unlock(&vfio_mm_lock);
-+	mmput(mm);
-+	return vmm;
++	return group;
 +}
 +
-+/*
-+ * Find PASID within @min and @max
-+ */
-+static struct vfio_pasid *vfio_find_pasid(struct vfio_mm *vmm,
-+					  ioasid_t min, ioasid_t max)
+ static int put_pfn(unsigned long pfn, int prot);
+ 
+ static struct vfio_group *vfio_iommu_find_iommu_group(struct vfio_iommu *iommu,
+@@ -2349,6 +2373,48 @@ static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
+ 	return ret;
+ }
+ 
++static int vfio_dev_bind_gpasid_fn(struct device *dev, void *data)
 +{
-+	struct rb_node *node = vmm->pasid_list.rb_node;
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	unsigned long arg = *(unsigned long *)dc->data;
 +
-+	while (node) {
-+		struct vfio_pasid *vid = rb_entry(node,
-+						struct vfio_pasid, node);
-+
-+		if (max < vid->pasid)
-+			node = node->rb_left;
-+		else if (min > vid->pasid)
-+			node = node->rb_right;
-+		else
-+			return vid;
-+	}
-+
-+	return NULL;
++	return iommu_sva_bind_gpasid(dc->domain, dev, (void __user *)arg);
 +}
 +
-+static void vfio_link_pasid(struct vfio_mm *vmm, struct vfio_pasid *new)
++static int vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
 +{
-+	struct rb_node **link = &vmm->pasid_list.rb_node, *parent = NULL;
-+	struct vfio_pasid *vid;
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	unsigned long arg = *(unsigned long *)dc->data;
 +
-+	while (*link) {
-+		parent = *link;
-+		vid = rb_entry(parent, struct vfio_pasid, node);
-+
-+		if (new->pasid <= vid->pasid)
-+			link = &(*link)->rb_left;
-+		else
-+			link = &(*link)->rb_right;
-+	}
-+
-+	rb_link_node(&new->node, parent, link);
-+	rb_insert_color(&new->node, &vmm->pasid_list);
-+}
-+
-+static void vfio_remove_pasid(struct vfio_mm *vmm, struct vfio_pasid *vid)
-+{
-+	rb_erase(&vid->node, &vmm->pasid_list); /* unlink pasid */
-+	ioasid_free(vid->pasid);
-+	kfree(vid);
-+}
-+
-+static void vfio_remove_all_pasids(struct vfio_mm *vmm)
-+{
-+	struct rb_node *node;
-+
-+	mutex_lock(&vmm->pasid_lock);
-+	while ((node = rb_first(&vmm->pasid_list)))
-+		vfio_remove_pasid(vmm, rb_entry(node, struct vfio_pasid, node));
-+	mutex_unlock(&vmm->pasid_lock);
-+}
-+
-+int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-+{
-+	ioasid_t pasid;
-+	struct vfio_pasid *vid;
-+
-+	pasid = ioasid_alloc(vmm->ioasid_sid, min, max, NULL);
-+	if (pasid == INVALID_IOASID)
-+		return -ENOSPC;
-+
-+	vid = kzalloc(sizeof(*vid), GFP_KERNEL);
-+	if (!vid) {
-+		ioasid_free(pasid);
-+		return -ENOMEM;
-+	}
-+
-+	vid->pasid = pasid;
-+
-+	mutex_lock(&vmm->pasid_lock);
-+	vfio_link_pasid(vmm, vid);
-+	mutex_unlock(&vmm->pasid_lock);
-+
-+	return pasid;
-+}
-+
-+void vfio_pasid_free_range(struct vfio_mm *vmm,
-+			   ioasid_t min, ioasid_t max)
-+{
-+	struct vfio_pasid *vid = NULL;
-+
-+	/*
-+	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
-+	 * teardown necessary structures depending on the to-be-freed
-+	 * PASID.
-+	 */
-+	mutex_lock(&vmm->pasid_lock);
-+	while ((vid = vfio_find_pasid(vmm, min, max)) != NULL)
-+		vfio_remove_pasid(vmm, vid);
-+	mutex_unlock(&vmm->pasid_lock);
-+}
-+
-+static int __init vfio_pasid_init(void)
-+{
-+	mutex_init(&vfio_mm_lock);
-+	INIT_LIST_HEAD(&vfio_mm_list);
++	iommu_sva_unbind_gpasid(dc->domain, dev, (void __user *)arg);
 +	return 0;
 +}
 +
-+static void __exit vfio_pasid_exit(void)
++static int __vfio_dev_unbind_gpasid_fn(struct device *dev, void *data)
 +{
-+	WARN_ON(!list_empty(&vfio_mm_list));
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	struct iommu_gpasid_bind_data *unbind_data =
++				(struct iommu_gpasid_bind_data *)dc->data;
++
++	__iommu_sva_unbind_gpasid(dc->domain, dev, unbind_data);
++	return 0;
 +}
 +
-+module_init(vfio_pasid_init);
-+module_exit(vfio_pasid_exit);
++static void vfio_group_unbind_gpasid_fn(ioasid_t pasid, void *data)
++{
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	struct iommu_gpasid_bind_data unbind_data;
 +
-+MODULE_VERSION(DRIVER_VERSION);
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR(DRIVER_AUTHOR);
-+MODULE_DESCRIPTION(DRIVER_DESC);
++	unbind_data.argsz = offsetof(struct iommu_gpasid_bind_data, vendor);
++	unbind_data.flags = 0;
++	unbind_data.hpasid = pasid;
++
++	dc->data = &unbind_data;
++
++	iommu_group_for_each_dev(dc->group->iommu_group,
++				 dc, __vfio_dev_unbind_gpasid_fn);
++}
++
+ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 					  struct iommu_group *iommu_group)
+ {
+@@ -2392,6 +2458,21 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 		if (!group)
+ 			continue;
+ 
++		if (iommu->nesting_info && iommu->vmm &&
++		    (iommu->nesting_info->features &
++					IOMMU_NESTING_FEAT_BIND_PGTBL)) {
++			struct domain_capsule dc = { .group = group,
++						     .domain = domain->domain,
++						     .data = NULL };
++
++			/*
++			 * Unbind page tables bound with system wide PASIDs
++			 * which are allocated to user space.
++			 */
++			vfio_mm_for_each_pasid(iommu->vmm, &dc,
++					       vfio_group_unbind_gpasid_fn);
++		}
++
+ 		vfio_iommu_detach_group(domain, group);
+ 		update_dirty_scope = !group->pinned_page_dirty_scope;
+ 		list_del(&group->next);
+@@ -2938,6 +3019,89 @@ static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
+ 	}
+ }
+ 
++static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
++				       bool is_bind, unsigned long arg)
++{
++	struct iommu_nesting_info *info;
++	struct domain_capsule dc = { .data = &arg };
++	struct vfio_group *group;
++	struct vfio_domain *domain;
++	int ret;
++
++	mutex_lock(&iommu->lock);
++
++	info = iommu->nesting_info;
++	if (!info || !(info->features & IOMMU_NESTING_FEAT_BIND_PGTBL)) {
++		ret = -EOPNOTSUPP;
++		goto out_unlock_iommu;
++	}
++
++	if (!iommu->vmm) {
++		ret = -EINVAL;
++		goto out_unlock_iommu;
++	}
++
++	group = vfio_find_nesting_group(iommu);
++	if (!group) {
++		ret = -EINVAL;
++		goto out_unlock_iommu;
++	}
++
++	domain = list_first_entry(&iommu->domain_list,
++				  struct vfio_domain, next);
++	dc.group = group;
++	dc.domain = domain->domain;
++
++	/* Avoid race with other containers within the same process */
++	vfio_mm_pasid_lock(iommu->vmm);
++
++	if (is_bind) {
++		ret = iommu_group_for_each_dev(group->iommu_group, &dc,
++					       vfio_dev_bind_gpasid_fn);
++		if (ret)
++			iommu_group_for_each_dev(group->iommu_group, &dc,
++						 vfio_dev_unbind_gpasid_fn);
++	} else {
++		iommu_group_for_each_dev(group->iommu_group,
++					 &dc, vfio_dev_unbind_gpasid_fn);
++		ret = 0;
++	}
++
++	vfio_mm_pasid_unlock(iommu->vmm);
++out_unlock_iommu:
++	mutex_unlock(&iommu->lock);
++	return ret;
++}
++
++static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
++					unsigned long arg)
++{
++	struct vfio_iommu_type1_nesting_op hdr;
++	unsigned int minsz;
++	int ret;
++
++	minsz = offsetofend(struct vfio_iommu_type1_nesting_op, flags);
++
++	if (copy_from_user(&hdr, (void __user *)arg, minsz))
++		return -EFAULT;
++
++	if (hdr.argsz < minsz || hdr.flags & ~VFIO_NESTING_OP_MASK)
++		return -EINVAL;
++
++	switch (hdr.flags & VFIO_NESTING_OP_MASK) {
++	case VFIO_IOMMU_NESTING_OP_BIND_PGTBL:
++		ret = vfio_iommu_handle_pgtbl_op(iommu, true, arg + minsz);
++		break;
++	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
++		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
+ static long vfio_iommu_type1_ioctl(void *iommu_data,
+ 				   unsigned int cmd, unsigned long arg)
+ {
+@@ -2956,6 +3120,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+ 		return vfio_iommu_type1_dirty_pages(iommu, arg);
+ 	case VFIO_IOMMU_PASID_REQUEST:
+ 		return vfio_iommu_type1_pasid_request(iommu, arg);
++	case VFIO_IOMMU_NESTING_OP:
++		return vfio_iommu_type1_nesting_op(iommu, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
+index ebec244..ecabaaa 100644
+--- a/drivers/vfio/vfio_pasid.c
++++ b/drivers/vfio/vfio_pasid.c
+@@ -216,6 +216,8 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
+ 	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
+ 	 * teardown necessary structures depending on the to-be-freed
+ 	 * PASID.
++	 * Hold pasid_lock also avoids race with PASID usages like bind/
++	 * unbind page tables to requested PASID.
+ 	 */
+ 	mutex_lock(&vmm->pasid_lock);
+ 	while ((vid = vfio_find_pasid(vmm, min, max)) != NULL)
+@@ -224,6 +226,30 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
+ }
+ EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
+ 
++int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
++			   void (*fn)(ioasid_t id, void *data))
++{
++	int ret;
++
++	mutex_lock(&vmm->pasid_lock);
++	ret = ioasid_set_for_each_ioasid(vmm->ioasid_sid, fn, data);
++	mutex_unlock(&vmm->pasid_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(vfio_mm_for_each_pasid);
++
++void vfio_mm_pasid_lock(struct vfio_mm *vmm)
++{
++	mutex_lock(&vmm->pasid_lock);
++}
++EXPORT_SYMBOL_GPL(vfio_mm_pasid_lock);
++
++void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
++{
++	mutex_unlock(&vmm->pasid_lock);
++}
++EXPORT_SYMBOL_GPL(vfio_mm_pasid_unlock);
++
+ static int __init vfio_pasid_init(void)
+ {
+ 	mutex_init(&vfio_mm_lock);
 diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 38d3c6a..31472a9 100644
+index a111108..2bc8347 100644
 --- a/include/linux/vfio.h
 +++ b/include/linux/vfio.h
-@@ -97,6 +97,34 @@ extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
- extern void vfio_unregister_iommu_driver(
- 				const struct vfio_iommu_driver_ops *ops);
- 
-+struct vfio_mm;
-+#if IS_ENABLED(CONFIG_VFIO_PASID)
-+extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
-+extern void vfio_mm_put(struct vfio_mm *vmm);
-+extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
-+extern void vfio_pasid_free_range(struct vfio_mm *vmm,
-+				  ioasid_t min, ioasid_t max);
-+#else
-+static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-+{
-+	return ERR_PTR(-ENOTTY);
-+}
+@@ -105,6 +105,11 @@ int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
+ extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
+ extern void vfio_pasid_free_range(struct vfio_mm *vmm,
+ 				  ioasid_t min, ioasid_t max);
++extern int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
++				  void (*fn)(ioasid_t id, void *data));
++extern void vfio_mm_pasid_lock(struct vfio_mm *vmm);
++extern void vfio_mm_pasid_unlock(struct vfio_mm *vmm);
 +
-+static inline void vfio_mm_put(struct vfio_mm *vmm)
-+{
-+}
+ #else
+ static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
+ {
+@@ -129,6 +134,21 @@ static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
+ 					  ioasid_t min, ioasid_t max)
+ {
+ }
 +
-+static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
++static inline int vfio_mm_for_each_pasid(struct vfio_mm *vmm, void *data,
++					 void (*fn)(ioasid_t id, void *data))
 +{
 +	return -ENOTTY;
 +}
 +
-+static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
-+					  ioasid_t min, ioasid_t max)
++static inline void vfio_mm_pasid_lock(struct vfio_mm *vmm)
 +{
 +}
-+#endif /* CONFIG_VFIO_PASID */
 +
++static inline void vfio_mm_pasid_unlock(struct vfio_mm *vmm)
++{
++}
++
+ #endif /* CONFIG_VFIO_PASID */
+ 
  /*
-  * External user API
-  */
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 96a115f..a8ad786 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1209,6 +1209,37 @@ struct vfio_iommu_type1_pasid_request {
+ 
+ #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
+ 
++/**
++ * VFIO_IOMMU_NESTING_OP - _IOW(VFIO_TYPE, VFIO_BASE + 19,
++ *				struct vfio_iommu_type1_nesting_op)
++ *
++ * This interface allows user space to utilize the nesting IOMMU
++ * capabilities as reported in VFIO_IOMMU_TYPE1_INFO_CAP_NESTING
++ * cap through VFIO_IOMMU_GET_INFO.
++ *
++ * @data[] types defined for each op:
++ * +=================+===============================================+
++ * | NESTING OP      |      @data[]                                  |
++ * +=================+===============================================+
++ * | BIND_PGTBL      |      struct iommu_gpasid_bind_data            |
++ * +-----------------+-----------------------------------------------+
++ * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
++ * +-----------------+-----------------------------------------------+
++ *
++ * returns: 0 on success, -errno on failure.
++ */
++struct vfio_iommu_type1_nesting_op {
++	__u32	argsz;
++	__u32	flags;
++#define VFIO_NESTING_OP_MASK	(0xffff) /* lower 16-bits for op */
++	__u8	data[];
++};
++
++#define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
++#define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
++
++#define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
++
+ /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+ 
+ /*
 -- 
 2.7.4
 
