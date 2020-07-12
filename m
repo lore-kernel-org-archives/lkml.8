@@ -6,101 +6,95 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B8EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B605C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584FD206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC616206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EpxDrpEA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hm2EhBt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgGLRbR (ORCPT
+        id S1729326AbgGLReA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 13:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60856 "EHLO
+        Sun, 12 Jul 2020 13:34:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgGLRbQ (ORCPT
+        with ESMTP id S1728882AbgGLReA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 13:31:16 -0400
+        Sun, 12 Jul 2020 13:34:00 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0706C061794;
-        Sun, 12 Jul 2020 10:31:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E791BC061794;
+        Sun, 12 Jul 2020 10:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0lZACZlm7hp7p3AuwMaMc3pMQx+Gf0OKUy9R5BwWajc=; b=EpxDrpEAuVkfls1cofHEt/ntsC
-        hHzEneuO2eVxHcRPwBtIExjx8O4Z/1xHFraQYVBrYFT3o9pwMaPdtIuEVvVTD+GrePjU5HdJBDyLU
-        ikdn0vwlBsmBCokv3BN6qLdTLdmkWygYGG9qmT0UvJOsGkjHujcq6vtI9ElBoFhqHTNjF3WyBpLHJ
-        lLlsuggQuh8TTZAUo5T7erp/SKaCGf91TAcho55w0gd5+j89GqUA1Zv2tlS+FOPj9xigaGs5N8Gma
-        Bf1E67MFWlMnvI+LHlTYI5GZ8VMDabrgeDnmRMoffKnq9ZjIEdICBMEIqXZOj8TsyHfEHn12gkl79
-        Ce8OXG8w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jufoS-0002Yv-FD; Sun, 12 Jul 2020 17:30:52 +0000
-Date:   Sun, 12 Jul 2020 18:30:52 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-Message-ID: <20200712173052.GU12769@casper.infradead.org>
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
- <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
- <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
- <CA+G9fYudT63yZrkWG+mfKHTcn5mP+Ay6hraEQy3G_4jufztrrA@mail.gmail.com>
- <CAHk-=whPrCRZpXYKois-0t8MibxH9KVXn=+-O1YVvOA016fqhw@mail.gmail.com>
- <CA+G9fYusSSrc5G_pZV6Lc-LjjkzQcc3EsLMo+ejSzvyRcMgbqw@mail.gmail.com>
- <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
+        bh=VjG5zlgh34sBQ3QQEiUxzk4P+1+7+KnailD04PiPvJU=; b=hm2EhBt4w/7UBueo8WsEQhva8L
+        medldEYPyasGvpj/2yk9mZzvcRZx2Cw9Yj6lS8n0Cy93tRlCGT1UPPLfpHcFx1hZzDNgBLPX816Lq
+        iTQB5zSZWlrnpVD3eTW2IvVWIVMB8DtlIYMLQw/+LV+6OzH+y49yfxb+tTEJwAWnusCpVCJ9rKQxl
+        bQVoEZjAjLIy23S3dP4Q/cFP/6a3z103W5VjTFilkBimCsb8j94AdXwmMTcJ2j7Ok3bNXIRieeV8o
+        2v6n815aYrT6RQKYkiAZ4Mm42z9Og6OxCYnpFIO5jgBxeoaVviOYun1bdQvCvMiMHjitUdpInupze
+        uLaNJeLg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jufrL-0002dD-A9; Sun, 12 Jul 2020 17:33:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC53D300F7A;
+        Sun, 12 Jul 2020 19:33:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0EF8D201C9154; Sun, 12 Jul 2020 19:33:48 +0200 (CEST)
+Date:   Sun, 12 Jul 2020 19:33:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 1/2] locking/qspinlock: Store lock holder cpu in lock if
+ feasible
+Message-ID: <20200712173348.GA10769@hirez.programming.kicks-ass.net>
+References: <20200711182128.29130-1-longman@redhat.com>
+ <20200711182128.29130-2-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj_Bqu5n3OJCnKiO_gs97fYEpdx6eSacEw2kv9YnnSv_w@mail.gmail.com>
+In-Reply-To: <20200711182128.29130-2-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 11:12:58AM -0700, Linus Torvalds wrote:
-> Yeah, that's just the commit that enables the code, not the commit
-> that introduces the fundamental problem.
-> 
-> That said, this is a prime example of why I absolutely detest patch
-> series that do this kind of thing, and are several patches that create
-> new functionality, followed by one patch to enable it.
-> 
-> If you can't get things working incrementally, maybe you shouldn't do
-> them at all. Doing a big series of "hidden work" and then enabling it
-> later is wrong.
+On Sat, Jul 11, 2020 at 02:21:27PM -0400, Waiman Long wrote:
 
-I'm struggling with exactly this for my current THP-in-pagecache patches.
-There are about fifty patches, each fixing something that won't work if
-the page is a THP.  And then there's the one patch which actually starts
-creating THPs, and that's the one patch any bisect will point to.
+> +static DEFINE_PER_CPU_READ_MOSTLY(u8, pcpu_lockval) = _Q_LOCKED_VAL;
+>  
+>  /*
+>   * We must be able to distinguish between no-tail and the tail at 0:0,
+> @@ -138,6 +139,19 @@ struct mcs_spinlock *grab_mcs_node(struct mcs_spinlock *base, int idx)
+>  
+>  #define _Q_LOCKED_PENDING_MASK (_Q_LOCKED_MASK | _Q_PENDING_MASK)
+>  
+> +static __init int __init_pcpu_lockval(void)
+> +{
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		u8 lockval = (cpu + 2 < _Q_LOCKED_MASK - 1) ? cpu + 2
+> +							    : _Q_LOCKED_VAL;
+> +		per_cpu(pcpu_lockval, cpu) = lockval;
+> +	}
+> +	return 0;
+> +}
+> +early_initcall(__init_pcpu_lockval);
 
-But I don't see any other way to do it.  It's not like I can put THPs
-in the page cache before fixing the things that won't work.
+> +	u8 lockval = this_cpu_read(pcpu_lockval);
 
-This probably wasn't the kind of thing you had in mind when you wrote
-the above, but if you had some advice for my situation, I'd welcome it.
+Urgh... so you'd rather read a guaranteed cold line than to use
+smp_processor_id(), which we already use anyway?
+
+I'm skeptical this helps anything, and it certainly makes the code more
+horrible :-(
