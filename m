@@ -7,171 +7,262 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB41C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CB8206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FCB206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iyiap90q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GC/HgKCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgGLW3I (ORCPT
+        id S1728167AbgGLWcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 18:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
+        Sun, 12 Jul 2020 18:32:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgGLW3I (ORCPT
+        with ESMTP id S1727785AbgGLWcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 18:29:08 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707DDC061794;
-        Sun, 12 Jul 2020 15:29:07 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id q3so9604417ilt.8;
-        Sun, 12 Jul 2020 15:29:07 -0700 (PDT)
+        Sun, 12 Jul 2020 18:32:13 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071E4C061794;
+        Sun, 12 Jul 2020 15:32:12 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c11so6975573lfh.8;
+        Sun, 12 Jul 2020 15:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=bc9H7wG06eBJ4TrlnRHHD81L3+Zw4OegZPi+FVCbxMw=;
-        b=Iyiap90qj1tlDLk0l+D2PaQcFywnJtrAH9DWAGoiCO6vkk5M4+Y/s4ZPhIdZo9tH2J
-         ymN6EEgMJIreMyjJ37xq0H40wgZqXy/eNBmUvY3wURlbBqmcEzr3LtxUspj/vyFK5r0Q
-         cxjUiBMGhhP3tKl0QVFS5mbqTI78u7baPECL1bmEwZodQO34W/HCY46OpnOqLoJHulX5
-         bsEkTt8ZdU9ySvOJ7t8+J5/BnggTmA9IXpjbswCffOdi5SHzbSfmffYX6TrGpOJuNhmM
-         XGn5LXAY6C0ijyb+JOznL242gcn/wOOGsLPQX9sdRUYURfv0IbGJa0pI+caju+6HkH6R
-         zmEw==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=hJ7YYatv7XFtmk6h2N6lfH8IMWrBAYsuzgWcKqB5bII=;
+        b=GC/HgKCnAEcpbfOmQIsVsYFn+1RF6/fz2ZllKOqnE6lLJUNLkecWD+cHYDfHM/6DCY
+         wjs8nEAI+0dm3RL2YwCWTeltX8u8i5oD8fwCJDSZ0RSwqzV7smr58bVvIyBFktvvn2OY
+         KOvIlZzrgq2ggG8s4sbWfu5W13yJ7h0EiM8lLbO5+ggBCVZfdxxACeP8MucgaFWNGxYj
+         wVzf4TVRloc4EZ3hGne5e5pcv6qBC61jTDjvyJUzVXfEMbB/BXD6PFYUiz4Q3KG2SXqC
+         WlhPFLdOdFhRvXcx8o0S4dxoHj6gDZrExcoxrn79O7yROMifAvz06I3H1jxkniiIRrUn
+         grcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=bc9H7wG06eBJ4TrlnRHHD81L3+Zw4OegZPi+FVCbxMw=;
-        b=ZeSG6x3kXQXF1kfmcAmLBB4QEwS8U6TQ46LOH27pFdHhQ2+zMSJ0+jci0qCYv80McZ
-         fJapNxwNpjQ578OedJLc/D02MLXLRXlnsEW89gsVGE3tF27MPQPqNiE1Pd3aiQc7HhR1
-         F4n0TSbeGtcAbuLd0thYauS84PRwLHe84NPaHFBinmVSbxtAd9oQ49Voio3qXFyb+p+E
-         Za4zOe7PU2qeY5V8t20scIehWs0jPgvM7iPbJezXLmuZYNvLK4pTWT6erNXEkracp2CW
-         0gOVn8/PF5uGKFWvcXR+IcNJNS0NOtYZAEulxq6YPepsR9ez0jljF9sso0wYD18GSlyy
-         J4jw==
-X-Gm-Message-State: AOAM531PofnoTZJ917pabN1GwYyz/pNzAKovAbyMvZiyh72XdDmn/Klt
-        Efd4RHRLyPfIpfdHbvgwid305+HpgVVphKddaq/CbwPF1yU=
-X-Google-Smtp-Source: ABdhPJxeD+4XJQVucbbixMTylYKcyKLRzWj7W/FbAtl1OJOaLpnkhJ9Waaqj55irfkkTkKn9NJ2fZg7qxo+AK+/DO4s=
-X-Received: by 2002:a92:c5cf:: with SMTP id s15mr57641008ilt.36.1594592946128;
- Sun, 12 Jul 2020 15:29:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=hJ7YYatv7XFtmk6h2N6lfH8IMWrBAYsuzgWcKqB5bII=;
+        b=qQru4O1PpYWwwKW4D+7CPgHbjWoFEmX4sWFYeUqdt17+7jMfKIADU0RNbvJe5yN4Yw
+         N2fhIobRnxGkvImdkVscAc8ecglW8eY8WkLVjJ0Ujp7uUl77yBckREjk2Q4Y7Uyj0qOF
+         RN2/pUqXnLHxv4S/AJbQBVtYvzaq5Ls8W3ViwTdXY93QSNMSZHOorpM/UfCrBrtw9vnt
+         8rHtBbZ3a7Z1V5aTM+mrHhAlwWV1krlYeVUfjIBcU4HzREJhWU/MH8tqt1MptYSWcOV4
+         +kakMBeyJytAkHz06UWTFcgw/LTZ8XyeTbEytIJhZ/LcvH/JjK/jhmqgIIxsp34nro95
+         /NEA==
+X-Gm-Message-State: AOAM530ppq21MreZhqGFawlLu4BzF+NdZzGCjAInR0IVaDWNjcwSUkc/
+        4WYyjTuunAZvGYRZivNXtbo=
+X-Google-Smtp-Source: ABdhPJzdxlKNI5NofCaDkiYdgOYRVCI9JO8J7QiGrIc1m+bvGfiuMcZyZJXdFywDZOuVrl91zt4+Xw==
+X-Received: by 2002:a19:691c:: with SMTP id e28mr51350167lfc.131.1594593131300;
+        Sun, 12 Jul 2020 15:32:11 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id f4sm4221041lfh.38.2020.07.12.15.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 15:32:10 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
+ devices
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200711120842.2631-1-sorganov@gmail.com>
+        <20200711231937.wu2zrm5spn7a6u2o@skbuf> <87wo387r8n.fsf@osv.gnss.ru>
+        <20200712150151.55jttxaf4emgqcpc@skbuf> <87r1tg7ib9.fsf@osv.gnss.ru>
+        <20200712193344.bgd5vpftaikwcptq@skbuf>
+Date:   Mon, 13 Jul 2020 01:32:09 +0300
+In-Reply-To: <20200712193344.bgd5vpftaikwcptq@skbuf> (Vladimir Oltean's
+        message of "Sun, 12 Jul 2020 22:33:44 +0300")
+Message-ID: <87365wgyae.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Mon, 13 Jul 2020 03:28:55 +0500
-Message-ID: <CABXGCsPPoeja2WxWQ7yhX+3EF1gtCHfjdFjx1CwuAyJcSVzz1g@mail.gmail.com>
-Subject: [5.8RC4][bugreport]WARNING: CPU: 28 PID: 211236 at
- fs/fuse/file.c:1684 tree_insert+0xaf/0xc0 [fuse]
-To:     linux-fsdevel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks.
-While testing 5.8 RCs I founded that kernel log flooded by the message
-"WARNING: CPU: 28 PID: 211236 at fs/fuse/file.c:1684 tree
-insert+0xaf/0xc0 [fuse]" when I start podman container.
-In kernel 5.7 not has such a problem.
+Vladimir Oltean <olteanv@gmail.com> writes:
 
-[92414.864536] ------------[ cut here ]------------
-[92414.864648] WARNING: CPU: 28 PID: 211236 at fs/fuse/file.c:1684
-tree_insert+0xaf/0xc0 [fuse]
-[92414.864652] Modules linked in: snd_seq_dummy snd_hrtimer uinput
-rfcomm xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_nat_tftp
-nf_conntrack_tftp tun bridge stp llc nft_objref
-nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet
-nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
-nf_reject_ipv6 nft_reject nft_ct nft_chain_nat ip6table_nat
-ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat
-nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw
-iptable_security ip_set nf_tables nfnetlink ip6table_filter ip6_tables
-iptable_filter cmac bnep sunrpc vfat fat snd_usb_audio snd_usbmidi_lib
-snd_rawmidi hid_logitech_hidpp gspca_zc3xx gspca_main
-videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2
-videobuf2_common mt76x2u mt76x2_common videodev mt76x02_usb mt76_usb
-mt76x02_lib xpad mc mt76 hid_logitech_dj ff_memless
-snd_hda_codec_realtek snd_hda_codec_generic iwlmvm ledtrig_audio
-snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg snd_hda_codec
-[92414.864697]  mac80211 snd_hda_core edac_mce_amd amd_energy
-snd_hwdep btusb btrtl btbcm snd_seq kvm_amd libarc4 btintel
-snd_seq_device bluetooth kvm snd_pcm iwlwifi eeepc_wmi asus_wmi
-snd_timer ecdh_generic irqbypass ecc snd sparse_keymap rapl cfg80211
-video wmi_bmof pcspkr soundcore sp5100_tco k10temp i2c_piix4 rfkill
-acpi_cpufreq binfmt_misc ip_tables amdgpu iommu_v2 gpu_sched ttm
-drm_kms_helper cec crct10dif_pclmul crc32_pclmul crc32c_intel drm igb
-ghash_clmulni_intel ccp nvme dca xhci_pci nvme_core xhci_pci_renesas
-i2c_algo_bit wmi pinctrl_amd fuse
-[92414.864738] CPU: 28 PID: 211236 Comm: sed Not tainted
-5.8.0-0.rc4.20200709git0bddd227f3dc.1.fc33.x86_64 #1
-[92414.864742] Hardware name: System manufacturer System Product
-Name/ROG STRIX X570-I GAMING, BIOS 1407 04/02/2020
-[92414.864749] RIP: 0010:tree_insert+0xaf/0xc0 [fuse]
-[92414.864753] Code: 80 c8 00 00 00 49 c7 80 d0 00 00 00 00 00 00 00
-49 c7 80 d8 00 00 00 00 00 00 00 48 89 39 e9 78 35 5f d7 0f 0b eb a5
-0f 0b c3 <0f> 0b e9 71 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44
-00 00
-[92414.864757] RSP: 0018:ffffb9b08b66f970 EFLAGS: 00010246
-[92414.864761] RAX: 000000000000001c RBX: ffffb9b08b66fac8 RCX: 8c6318c6318c6319
-[92414.864765] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9beac944fce8
-[92414.864768] RBP: ffffeef599772a80 R08: ffff9bee81360d00 R09: ffffffffffffffff
-[92414.864772] R10: ffff9beac944fce8 R11: 0000000000000000 R12: ffffeef584fe7b80
-[92414.864775] R13: ffff9beac944f800 R14: ffff9beac944fd98 R15: ffff9bee81360d00
-[92414.864780] FS:  00007f98023da840(0000) GS:ffff9bf1bda00000(0000)
-knlGS:0000000000000000
-[92414.864783] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[92414.864787] CR2: 00007ffc5071f080 CR3: 0000000030a0c000 CR4: 00000000003406e0
-[92414.864790] Call Trace:
-[92414.864798]  fuse_writepages_fill+0x5cc/0x690 [fuse]
-[92414.864810]  write_cache_pages+0x225/0x560
-[92414.864819]  ? fuse_writepages+0xe0/0xe0 [fuse]
-[92414.864828]  ? rcu_read_lock_sched_held+0x3f/0x80
-[92414.864835]  ? trace_kmalloc+0xf2/0x120
-[92414.864842]  ? __kmalloc+0x136/0x270
-[92414.864848]  ? fuse_writepages+0x5e/0xe0 [fuse]
-[92414.864857]  fuse_writepages+0x7d/0xe0 [fuse]
-[92414.864867]  do_writepages+0x28/0xb0
-[92414.864876]  __writeback_single_inode+0x60/0x6b0
-[92414.864884]  writeback_single_inode+0xa7/0x140
-[92414.864890]  write_inode_now+0x8b/0xb0
-[92414.864904]  fuse_do_setattr+0x42f/0x770 [fuse]
-[92414.864914]  ? _raw_spin_unlock+0x1f/0x30
-[92414.864921]  ? fuse_do_getattr+0x149/0x2c0 [fuse]
-[92414.864946]  fuse_setattr+0x99/0x140 [fuse]
-[92414.864954]  notify_change+0x333/0x4a0
-[92414.864964]  chown_common+0xec/0x190
-[92414.864978]  ksys_fchown+0x6c/0xb0
-[92414.864985]  __x64_sys_fchown+0x16/0x20
-[92414.864990]  do_syscall_64+0x52/0xb0
-[92414.864995]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[92414.865000] RIP: 0033:0x7f9801cc0cd7
-[92414.865003] Code: Bad RIP value.
-[92414.865007] RSP: 002b:00007ffc506abb18 EFLAGS: 00000206 ORIG_RAX:
-000000000000005d
-[92414.865011] RAX: ffffffffffffffda RBX: 00007ffc506abba0 RCX: 00007f9801cc0cd7
-[92414.865014] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-[92414.865018] RBP: 0000000000000004 R08: 0000000001cb9e70 R09: 00007f98023da840
-[92414.865021] R10: 00007ffc506ab5a0 R11: 0000000000000206 R12: 0000000000000003
-[92414.865025] R13: 00007ffc506acde1 R14: 0000000000000000 R15: 0000000000000000
-[92414.865040] irq event stamp: 7637
-[92414.865045] hardirqs last  enabled at (7645): [<ffffffff9716f2a7>]
-console_unlock+0x4b7/0x6c0
-[92414.865049] hardirqs last disabled at (7652): [<ffffffff9716ee9d>]
-console_unlock+0xad/0x6c0
-[92414.865103] softirqs last  enabled at (7668): [<ffffffff98000377>]
-__do_softirq+0x377/0x4a2
-[92414.865108] softirqs last disabled at (7659): [<ffffffff97e010d2>]
-asm_call_on_stack+0x12/0x20
-[92414.865111] ---[ end trace b83826add3a6ed4f ]---
+> On Sun, Jul 12, 2020 at 08:29:46PM +0300, Sergey Organov wrote:
+>> Vladimir Oltean <olteanv@gmail.com> writes:
+>> 
+>> > As far as I understand. the reason why SKBTX_IN_PROGRESS exists is for
+>> > skb_tx_timestamp() to only provide a software timestamp if the hardware
+>> > timestamping isn't going to. So hardware timestamping logic must signal
+>> > its intention. With SO_TIMESTAMPING, this should not be strictly
+>> > necessary, as this UAPI supports multiple sources of timestamping
+>> > (including software and hardware together),
+>> 
+>> As a side note, I tried, but didn't find a way to get 2 timestamps,
+>> software and hardware, for the same packet. It looks like once upon a
+>> time it was indeed supported by:
+>> 
+>> SOF_TIMESTAMPING_SYS_HARDWARE: This option is deprecated and ignored.
+>> 
+>
+> With SO_TIMESTAMPING, it is supported through
+> SOF_TIMESTAMPING_OPT_TX_SWHW.
 
-$ /usr/src/kernels/`uname -r`/scripts/faddr2line
-/lib/debug/lib/modules/5.8.0-0.rc4.20200709git0bddd227f3dc.1.fc33.x86_64/kernel/fs/fuse/fuse.ko.debug
-tree_insert+0xaf
-tree_insert+0xaf/0xc0:
-tree_insert at /usr/src/debug/kernel-20200709git0bddd227f3dc/linux-5.8.0-0.rc4.20200709git0bddd227f3dc.1.fc33.x86_64/fs/fuse/file.c:1684
-(discriminator 1)
+This one I overlooked, -- thanks for pointing!
 
-It looks like a problem in the kernel fuse driver.
+> With APIs pre-SO_TIMESTAMPING (such as SO_TIMESTAMPNS), my understanding
+> is that it is not supported. One timestamp would overwrite the other. So
+> this needs to be avoided somehow, and this is how SKBTX_IN_PROGRESS came
+> to be.
+>
+>
+>> > but I think
+>> > SKBTX_IN_PROGRESS predates this UAPI and timestamping should continue to
+>> > work with older socket options.
+>> 
+>> <rant>The UAPI to all this is rather messy, starting with ugly tricks to
+>> convert PTP file descriptors to clock IDs, followed by strange ways to
+>> figure correct PTP clock for given Ethernet interface, followed by
+>> entirely different methods of getting time stamping capabilities and
+>> configuring them, and so forth.</rant>
+>> 
+>
+> Yes, but I don't think this really matters in any way here.
 
---
-Best Regards,
-Mike Gavrilov.
+Surprisingly it does, as you've got a wrong premise that ethtool doesn't
+support external PTP PHY on FEC. And I think it's due to complexities of
+the current implementation, where ethtool has entirely separate path of
+doing things, with zero help from the FEC driver, see below.
+
+[...]
+
+>> I'll do as you suggest, but I want to say that I didn't question your
+>> claim that my proposed changes may fix some existing PTP/DSA setup.
+>> 
+>> What I still find doubtful is that this fact necessarily means that the
+>> part of the patch that fixes some other bug must be submitted
+>> separately. If it were the rule, almost no patch that needs to fix 2
+>> separate places would be accepted, as there might be some bug somewhere
+>> that could be fixed by 1 change, no?
+>> 
+>
+> So, I am asking you to flag this as a separate bugfix for DSA
+> timestamping for multiple reasons:
+
+OK, you want it, I'll do it, however:
+
+>
+> - because you are not "fixing PHY timestamping", more on that
+> separately
+
+I believe I do, more on that below.
+
+> - because I am looking at this problem from the perspective of a user
+>   who has a problem with DSA timestamping (aka code that already exists,
+>   and that is already claimed to work). They're going to be searching
+>   through the git log for potentially relevant changes, and even if they
+>   might notice a patch that "adds support for PHY timestamping in FEC"*,
+>   it might not register as something relevant to them, and skip it.
+>   Just as you don't care about DSA, neither does that hypothetical user
+>   care about PHY timestamping.
+
+I don't think it's fair. I believe I do care about both, please re-read
+the subject and description of the patch:
+
+"net: fec: fix hardware time stamping by external devices"
+
+that sure must be relevant for any external device, be it PHY or DSA,
+and then:
+
+"Fix support for external PTP-aware devices such as DSA or PTP PHY:"
+
+And while formally I do add "support for external PTP PHY in FEC", as
+you mention, I still consider it a bug-fix, as ethtool already correctly
+supports this, see below for more background.
+
+[...]
+
+>> > Nope. The PHY timestamping support will go to David's net-next, this
+>> > common PHY/DSA bugfix to net, and they'll meet sooner rather than
+>> > later.
+>> 
+>> I'll do as you suggest, separating the patches, yet I fail to see why
+>> PHY /time stamping bug fix/ should go to another tree than PHY/DSA /time
+>> stamping bug fix/? What's the essential difference? Could you please
+>> clarify?
+>> 
+>
+> The essential difference is that for PHY timestamping, there is no
+> feature that is claimed to work which doesn't work.
+
+I believe this is a feature that is supposed to work, yet it doesn't,
+see below.
+
+>
+> If you run "ethtool -T eth0" on a FEC network interface, it will always
+> report its own PHC, and never the PHC of a PHY. So, you cannot claim
+> that you are fixing PHY timestamping, since PHY timestamping is not
+> advertised. That's not what a bug fix is, at least not around here, with
+> its associated backporting efforts.
+
+You can't actually try it as you don't have the hardware, right? As for
+me, rather than running exactly ethtool, I do corresponding ioctl() in
+my program, and the kernel does report features of my external PTP PHY,
+not of internal one of the FEC, without my patches!
+
+> The only way you could have claimed that this was fixing PHY
+> timestamping was if "ethtool -T eth0" was reporting a PHY PHC, however
+> timestamps were not coming from the PHY.
+
+That's /exactly/ the case! Moreover, my original work is on 4.9.146
+kernel, so ethtool works correctly at least since then. Here is quote from
+my original question that I already gave reference to:
+
+<quote>
+Almost everything works fine out of the box, except hardware
+timestamping. The problems are that I apparently get timestamps from fec
+built-in PTP instead of external PHY, and that
+
+  ioctl(fd, SIOCSHWTSTAMP, &ifr)
+
+ends up being executed by fec1 built-in PTP code instead of being
+forwarded to the external PHY, and that this happens despite the call to
+
+   info.cmd = ETHTOOL_GET_TS_INFO;                                                                             
+   ioctl(fd, SIOCETHTOOL, &ifr);                                                                     
+
+returning phc_index = 1 that corresponds to external PHY, and reports
+features of the external PHY, leading to major inconsistency as seen
+from user-space.
+</quote>
+
+You see? This is exactly the case where I could claim fixing PHY time
+stamping even according to your own expertise!
+
+> From the perspective of the mainline kernel, that can never happen.
+
+Yet in happened to me, and in some way because of the UAPI deficiencies
+I've mentioned, as ethtool has entirely separate code path, that happens
+to be correct for a long time already.
+
+> From your perspective as a developer, in your private work tree, where
+> _you_ added the necessary wiring for PHY timestamping, I fully
+> understand that this is exactly what happened _to_you_.
+> I am not saying that PHY timestamping doesn't need this issue fixed. It
+> does, and if it weren't for DSA, it would have simply been a "new
+> feature", and it would have been ok to have everything in the same
+> patch.
+
+Except that it's not a "new feature", but a bug-fix of an existing one,
+as I see it.
+
+>
+> The fact that you figured out so quickly what's going on just means
+> you're very smart. It took me 2 months to find out the same bug coming
+> from the DSA side of things.
+
+Thanks, but I'd rather attribute this to the fact that in my case there
+was the code that worked correctly, so I was lucky to get support point
+to rely upon.
+
+Thanks,
+-- Sergey
