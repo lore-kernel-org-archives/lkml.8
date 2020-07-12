@@ -2,117 +2,508 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940A9C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F05C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72225206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDx8EbSN"
+	by mail.kernel.org (Postfix) with ESMTP id E8F7120674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594559998;
+	bh=9E3tQLRCdDUgJfPjksMYyiXomI8JvgQQSgtd02ZBDww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZS2rnJxzT+PqCNlXjFIGlLeoZw2RZDrIWv6qyFolVKcvDSNrds9qOyppBB+eL0la4
+	 mE5g/95586dllVNuOSlo6iMONcM+IA5359Pjgt3sDfIXzaEDNxoNxBOiykCByiY+e+
+	 Az9dki1EtKWocqqiUV9F5cGnAAStbltXhcQaEEKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgGLNKb (ORCPT
+        id S1728847AbgGLNTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgGLNK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:10:27 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36DCC061794;
-        Sun, 12 Jul 2020 06:10:27 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x72so4784506pfc.6;
-        Sun, 12 Jul 2020 06:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QlHdcq1NMFZUiVr/PWZTQMUwB+nApvKctneHSUoV9JI=;
-        b=CDx8EbSNzRbyCNhyw7LW1mm97sOqmMXjqAFWs4mxTiPuHBDb0GM1lk1UwKagomOVR5
-         pFVN5rAHmjjq0wHMbWdUctDF6J0OpGVsK21gv74z/DHVdqRe5Cv0V4OkzuaqOKRu0VDc
-         3tUtThRmTJNUYnY/olbPHMAUcalI2BDfArzx0sfEk26J8q21cHTwII/j0FwMwPCBNZyy
-         7ACuD6Ua+HhLe4dh9NmV0YWtHilYo+WvHMXXGIr8Lu3Sy7gHi1RC4Q8ehTMGvQ3DJq6+
-         hMcnS9E7DoQ/qiqvzI58Ye1eQ5fc2U3FyqXTfIRE+TQCDhRH6S7kaOUDIz8tmxyAaN2k
-         yCkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QlHdcq1NMFZUiVr/PWZTQMUwB+nApvKctneHSUoV9JI=;
-        b=BXGEm/TW7bWqZ8wZO/nYWXPy420IVu7s/mFp0HvEiYg8W4omPnY06C5Ps72oJ9CUI0
-         Qbqw8zvFEerjLWDJ6ansvx4vRa2Tj4mEJLI9Modox69LvmM3Dpix/ZiXlQuyFAtcz1Ve
-         izCZIg2C/1s4ATsIx+s28gdkaSiPe1N/c+8/IJIigfKD6UWcbzvVNb+GvUIk6bf2WWjj
-         AYv98ymZtz8vLYAJ4Ab+nDCtCl8ZdsGGo4fZcAktKo8d5HfoK6qoEJhI3HSitXHEoHM7
-         IDZIeMGgBwYv/svo8bgNv/Iwk06L2yQ2vyX4zO+g8xF9//UxenBv3sGi0ubzIIMZaUtQ
-         Z/eQ==
-X-Gm-Message-State: AOAM533DkuRoVrjx+dISyVlzc67zyclnv77C9Dhk6tTYipDNDhyqDmy9
-        5BaYaZNrNzFawgf5nabfzg==
-X-Google-Smtp-Source: ABdhPJzGCWqeGrl0pmni+0aENWLJwun+oPUDiRCIjS3IwjlN3XTVOCk6hJo4EVWSlnu21qMCqiR/Cg==
-X-Received: by 2002:a62:b413:: with SMTP id h19mr17778687pfn.142.1594559427253;
-        Sun, 12 Jul 2020 06:10:27 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4071:200a:9520:4919:edd3:5dbd:ffec])
-        by smtp.gmail.com with ESMTPSA id q24sm12093014pfg.95.2020.07.12.06.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 06:10:26 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     paulmck@kernel.org, josh@joshtriplett.org, joel@joelfernandes.org,
-        pbonzini@redhat.com
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        kvm@vger.kernel.org, frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
-Date:   Sun, 12 Jul 2020 18:40:03 +0530
-Message-Id: <20200712131003.23271-2-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
-References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+        Sun, 12 Jul 2020 09:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728339AbgGLNTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:19:52 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68A220674;
+        Sun, 12 Jul 2020 13:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594559990;
+        bh=9E3tQLRCdDUgJfPjksMYyiXomI8JvgQQSgtd02ZBDww=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S7612C9QCdgmXFceScenRdZvButbOXo763VR8Oe6Wng4gyBpkefPJ12Oaiw/J6ZwE
+         GVaH/SqhrwhC2o8cpzXa0/Q3oAJgf02ePg6W/nMyWGsYP58gGqAEOTDOKd+w7OSdWd
+         y6TJQaaSpnt1r0WrhqSurZ39TzKwj3N/Ur8+fmdE=
+Date:   Sun, 12 Jul 2020 14:19:46 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 6/6] IIO: Ingenic JZ47xx: Add touchscreen mode.
+Message-ID: <20200712141946.7d8f802f@archlinux>
+In-Reply-To: <20200709152200.10039-7-contact@artur-rojek.eu>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+        <20200709152200.10039-7-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu,  9 Jul 2020 17:22:00 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry_rcu()
-as it also checkes if the right lock is held.
-Using hlist_for_each_entry_rcu() with a condition argument will not
-report the cases where a SRCU protected list is traversed using
-rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
+> The SADC component in JZ47xx SoCs provides support for touchscreen
+> operations (pen position and pen down pressure) in single-ended and
+> differential modes.
+> 
+> The touchscreen component of SADC takes a significant time to stabilize
+> after first receiving the clock and a delay of 50ms has been empirically
+> proven to be a safe value before data sampling can begin.
+> 
+> Of the known hardware to use this controller, GCW Zero and Anbernic RG-350
+> utilize the touchscreen mode by having their joystick(s) attached to the
+> X/Y positive/negative input pins.
+> 
+> JZ4770 and later SoCs introduce a low-level command feature. With it, up
+> to 32 commands can be programmed, each one corresponding to a sampling
+> job. It allows to change the low-voltage reference, the high-voltage
+> reference, have them connected to VCC, GND, or one of the X-/X+ or Y-/Y+
+> pins.
+> 
+> This patch introduces support for 6 stream-capable channels:
+> - channel #0 samples X+/GND
+> - channel #1 samples Y+/GND
+> - channel #2 samples X-/GND
+> - channel #3 samples Y-/GND
+> - channel #4 samples X+/X-
+> - channel #5 samples Y+/Y-
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- arch/x86/kvm/mmu/page_track.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The one thing I noticed on this read was that we are slightly stretching
+the normal IIO channel definitions.  The claim is that each of these channels
+is a POSITIONREALTIVE channel, whereas that isn't really true.  They are
+related to the position, but as I understand it not directly measuring it
+(particularly X+ - X-) which is pretty much a reference voltage (I think!)
 
-diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-index a7bcde34d1f2..a9cd17625950 100644
---- a/arch/x86/kvm/mmu/page_track.c
-+++ b/arch/x86/kvm/mmu/page_track.c
-@@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
- 		return;
- 
- 	idx = srcu_read_lock(&head->track_srcu);
--	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-+	hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
-+				srcu_read_lock_held(&head->track_srcu))
- 		if (n->track_write)
- 			n->track_write(vcpu, gpa, new, bytes, n);
- 	srcu_read_unlock(&head->track_srcu, idx);
-@@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
- 		return;
- 
- 	idx = srcu_read_lock(&head->track_srcu);
--	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-+	hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
-+				srcu_read_lock_held(&head->track_srcu))
- 		if (n->track_flush_slot)
- 			n->track_flush_slot(kvm, slot, n);
- 	srcu_read_unlock(&head->track_srcu, idx);
--- 
-2.17.1
+We might be better off just describing these as voltage channels, with
+4 and 5 described as differential voltage channels.  The problem there
+being that it doesn't describe the fact that the measurements are with
+particular voltages also being applied to the touch screen.
+
+Perhaps we are best off just leaving it as you have it and being a bit
+'odd'.  What do you think?  Having written this down I think perhaps leaving
+it alone is the best plan :(
+
+Otherwise this all looks fine to me.
+
+Thanks,
+
+Jonathan
+
+> 
+> Being able to sample X-/GND and Y-/GND is useful on some devices, where
+> one joystick is connected to the X+/Y+ pins, and a second joystick is
+> connected to the X-/Y- pins.
+> 
+> All the boards which probe this driver have the interrupt provided from
+> Device Tree, with no need to handle a case where the IRQ was not provided.
+> 
+> Co-developed-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+> 
+>  Changes:
+> 
+>  v2: - improve description of the touchscreen mode,
+>      - get rid of the unneeded kfifo,
+>      - drop IIO_BUFFER_CB from Kconfig,
+>      - remove extended names from the touchscreen channels
+> 
+>  v3: remove unneeded `linux/iio/kfifo_buf.h` include
+> 
+>  v4: clarify irq provider source in the patch description
+> 
+>  v5: no change
+> 
+>  v6: - correct the spelling of Device Tree and IRQ in commit message
+>      - don't omit trailing commas from initializer lists
+>      - error check `clk_enable`
+>      - remove redundant `dev_err` from `platform_get_irq` error check
+> 
+>  v7: no change
+> 
+>  v8: add support for ADCMD low-level command feature
+> 
+>  drivers/iio/adc/Kconfig       |   1 +
+>  drivers/iio/adc/ingenic-adc.c | 250 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 249 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index ff3569635ce0..5b57437cef75 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -500,6 +500,7 @@ config INA2XX_ADC
+>  config INGENIC_ADC
+>  	tristate "Ingenic JZ47xx SoCs ADC driver"
+>  	depends on MIPS || COMPILE_TEST
+> +	select IIO_BUFFER
+>  	help
+>  	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC unit.
+>  
+> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+> index 0233a9055c86..976aea46fede 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -8,7 +8,9 @@
+>  
+>  #include <dt-bindings/iio/adc/ingenic,adc.h>
+>  #include <linux/clk.h>
+> +#include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> @@ -20,19 +22,46 @@
+>  #define JZ_ADC_REG_CFG			0x04
+>  #define JZ_ADC_REG_CTRL			0x08
+>  #define JZ_ADC_REG_STATUS		0x0c
+> +#define JZ_ADC_REG_ADSAME		0x10
+> +#define JZ_ADC_REG_ADWAIT		0x14
+>  #define JZ_ADC_REG_ADTCH		0x18
+>  #define JZ_ADC_REG_ADBDAT		0x1c
+>  #define JZ_ADC_REG_ADSDAT		0x20
+> +#define JZ_ADC_REG_ADCMD		0x24
+>  #define JZ_ADC_REG_ADCLK		0x28
+>  
+>  #define JZ_ADC_REG_ENABLE_PD		BIT(7)
+>  #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
+>  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+> +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
+> +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
+> +#define JZ_ADC_REG_CFG_CMD_SEL		BIT(22)
+> +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
+>  #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+>  #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+>  #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
+>  #define JZ4770_ADC_REG_ADCLK_CLKDIVMS_LSB	16
+>  
+> +#define JZ_ADC_REG_ADCMD_YNADC		BIT(7)
+> +#define JZ_ADC_REG_ADCMD_YPADC		BIT(8)
+> +#define JZ_ADC_REG_ADCMD_XNADC		BIT(9)
+> +#define JZ_ADC_REG_ADCMD_XPADC		BIT(10)
+> +#define JZ_ADC_REG_ADCMD_VREFPYP	BIT(11)
+> +#define JZ_ADC_REG_ADCMD_VREFPXP	BIT(12)
+> +#define JZ_ADC_REG_ADCMD_VREFPXN	BIT(13)
+> +#define JZ_ADC_REG_ADCMD_VREFPAUX	BIT(14)
+> +#define JZ_ADC_REG_ADCMD_VREFPVDD33	BIT(15)
+> +#define JZ_ADC_REG_ADCMD_VREFNYN	BIT(16)
+> +#define JZ_ADC_REG_ADCMD_VREFNXP	BIT(17)
+> +#define JZ_ADC_REG_ADCMD_VREFNXN	BIT(18)
+> +#define JZ_ADC_REG_ADCMD_VREFAUX	BIT(19)
+> +#define JZ_ADC_REG_ADCMD_YNGRU		BIT(20)
+> +#define JZ_ADC_REG_ADCMD_XNGRU		BIT(21)
+> +#define JZ_ADC_REG_ADCMD_XPGRU		BIT(22)
+> +#define JZ_ADC_REG_ADCMD_YPSUP		BIT(23)
+> +#define JZ_ADC_REG_ADCMD_XNSUP		BIT(24)
+> +#define JZ_ADC_REG_ADCMD_XPSUP		BIT(25)
+> +
+>  #define JZ_ADC_AUX_VREF				3300
+>  #define JZ_ADC_AUX_VREF_BITS			12
+>  #define JZ_ADC_BATTERY_LOW_VREF			2500
+> @@ -44,6 +73,14 @@
+>  #define JZ4770_ADC_BATTERY_VREF			6600
+>  #define JZ4770_ADC_BATTERY_VREF_BITS		12
+>  
+> +#define JZ_ADC_IRQ_AUX			BIT(0)
+> +#define JZ_ADC_IRQ_BATTERY		BIT(1)
+> +#define JZ_ADC_IRQ_TOUCH		BIT(2)
+> +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
+> +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
+> +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
+> +#define JZ_ADC_IRQ_SLEEP		BIT(7)
+> +
+>  struct ingenic_adc;
+>  
+>  struct ingenic_adc_soc_data {
+> @@ -69,6 +106,61 @@ struct ingenic_adc {
+>  	bool low_vref_mode;
+>  };
+>  
+> +static void ingenic_adc_set_adcmd(struct iio_dev *iio_dev, unsigned long mask)
+> +{
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +
+> +	mutex_lock(&adc->lock);
+> +
+> +	/* Init ADCMD */
+> +	readl(adc->base + JZ_ADC_REG_ADCMD);
+> +
+> +	if (mask & 0x3) {
+> +		/* Second channel (INGENIC_ADC_TOUCH_YP): sample YP vs. GND */
+> +		writel(JZ_ADC_REG_ADCMD_XNGRU
+> +		       | JZ_ADC_REG_ADCMD_VREFNXN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_YPADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +
+> +		/* First channel (INGENIC_ADC_TOUCH_XP): sample XP vs. GND */
+> +		writel(JZ_ADC_REG_ADCMD_YNGRU
+> +		       | JZ_ADC_REG_ADCMD_VREFNYN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_XPADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +	}
+> +
+> +	if (mask & 0xc) {
+> +		/* Fourth channel (INGENIC_ADC_TOUCH_YN): sample YN vs. GND */
+> +		writel(JZ_ADC_REG_ADCMD_XNGRU
+> +		       | JZ_ADC_REG_ADCMD_VREFNXN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_YNADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +
+> +		/* Third channel (INGENIC_ADC_TOUCH_XN): sample XN vs. GND */
+> +		writel(JZ_ADC_REG_ADCMD_YNGRU
+> +		       | JZ_ADC_REG_ADCMD_VREFNYN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_XNADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +	}
+> +
+> +	if (mask & 0x30) {
+> +		/* Sixth channel (INGENIC_ADC_TOUCH_YD): sample YP vs. YN */
+> +		writel(JZ_ADC_REG_ADCMD_VREFNYN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_YPADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +
+> +		/* Fifth channel (INGENIC_ADC_TOUCH_XD): sample XP vs. XN */
+> +		writel(JZ_ADC_REG_ADCMD_VREFNXN | JZ_ADC_REG_ADCMD_VREFPVDD33
+> +		       | JZ_ADC_REG_ADCMD_XPADC,
+> +		       adc->base + JZ_ADC_REG_ADCMD);
+> +	}
+> +
+> +	/* We're done */
+> +	writel(0, adc->base + JZ_ADC_REG_ADCMD);
+> +
+> +	mutex_unlock(&adc->lock);
+> +}
+> +
+>  static void ingenic_adc_set_config(struct ingenic_adc *adc,
+>  				   uint32_t mask,
+>  				   uint32_t val)
+> @@ -288,6 +380,72 @@ static const struct iio_chan_spec jz4740_channels[] = {
+>  };
+>  
+>  static const struct iio_chan_spec jz4770_channels[] = {
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_XP,
+
+Ah. sorry. I should have noticed this much earlier.
+
+These aren't position channels as such.  They are channels
+that are then processed into position in combination.  
+
+Problem is I'm not sure how we 'should' describe then.
+
+Perhaps this is the best we can do.
+
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_YP,
+> +		.scan_index = 1,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_XN,
+> +		.scan_index = 2,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_YN,
+> +		.scan_index = 3,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_XD,
+> +		.scan_index = 4,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_YD,
+> +		.scan_index = 5,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16,
+> +		},
+> +	},
+>  	{
+>  		.extend_name = "aux",
+>  		.type = IIO_VOLTAGE,
+> @@ -490,13 +648,89 @@ static const struct iio_info ingenic_adc_info = {
+>  	.of_xlate = ingenic_adc_of_xlate,
+>  };
+>  
+> +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+> +{
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +	int ret;
+> +
+> +	ret = clk_enable(adc->clk);
+> +	if (ret) {
+> +		dev_err(iio_dev->dev.parent, "Failed to enable clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	/* It takes significant time for the touchscreen hw to stabilize. */
+> +	msleep(50);
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+> +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+> +			       JZ_ADC_REG_CFG_PULL_UP(4));
+> +
+> +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+> +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
+> +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+> +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
+> +
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_CMD_SEL,
+> +			       JZ_ADC_REG_CFG_CMD_SEL);
+> +	ingenic_adc_set_adcmd(iio_dev, iio_dev->active_scan_mask[0]);
+> +
+> +	ingenic_adc_enable(adc, 2, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
+> +{
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +
+> +	ingenic_adc_enable(adc, 2, false);
+> +
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_CMD_SEL, 0);
+> +
+> +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+> +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
+> +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
+> +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
+> +	clk_disable(adc->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops = {
+> +	.postenable = &ingenic_adc_buffer_enable,
+> +	.predisable = &ingenic_adc_buffer_disable
+> +};
+> +
+> +static irqreturn_t ingenic_adc_irq(int irq, void *data)
+> +{
+> +	struct iio_dev *iio_dev = data;
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +	unsigned long mask = iio_dev->active_scan_mask[0];
+> +	unsigned int i;
+> +	u32 tdat[3];
+> +
+> +	for (i = 0; i < ARRAY_SIZE(tdat); mask >>= 2, i++) {
+> +		if (mask & 0x3)
+> +			tdat[i] = readl(adc->base + JZ_ADC_REG_ADTCH);
+> +		else
+> +			tdat[i] = 0;
+> +	}
+> +
+> +	iio_push_to_buffers(iio_dev, tdat);
+> +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int ingenic_adc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct iio_dev *iio_dev;
+>  	struct ingenic_adc *adc;
+>  	const struct ingenic_adc_soc_data *soc_data;
+> -	int ret;
+> +	int irq, ret;
+>  
+>  	soc_data = device_get_match_data(dev);
+>  	if (!soc_data)
+> @@ -511,6 +745,17 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  	mutex_init(&adc->aux_lock);
+>  	adc->soc_data = soc_data;
+>  
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	ret = devm_request_irq(dev, irq, ingenic_adc_irq, 0,
+> +			       dev_name(dev), iio_dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	adc->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(adc->base))
+>  		return PTR_ERR(adc->base);
+> @@ -550,7 +795,8 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  
+>  	iio_dev->dev.parent = dev;
+>  	iio_dev->name = "jz-adc";
+> -	iio_dev->modes = INDIO_DIRECT_MODE;
+> +	iio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
+> +	iio_dev->setup_ops = &ingenic_buffer_setup_ops;
+>  	iio_dev->channels = soc_data->channels;
+>  	iio_dev->num_channels = soc_data->num_channels;
+>  	iio_dev->info = &ingenic_adc_info;
 
