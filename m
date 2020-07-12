@@ -2,154 +2,121 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4881C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9D8C433EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884B6206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A75206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEL8vD79"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="MYtHsD7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgGLXLV (ORCPT
+        id S1728869AbgGLXPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
+        Sun, 12 Jul 2020 19:15:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgGLXLU (ORCPT
+        with ESMTP id S1728617AbgGLXPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:11:20 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4439DC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 16:11:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so12438604wrs.0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 16:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KOnODFdxaf/iGRsoCulw/4z2XvDjjoLo9EZO9SOI1jQ=;
-        b=kEL8vD79CZQ/XW95I8TiZ0Q8UtW05SD5TfoBnxWex2+5lGWpVB5J0Uik+Vjq5uBcrU
-         472HIWiUhpjQVT+jVp0OxjLBotfLCYDB93KT4uFOaGlQ9hmsFiguPeEJjP4EfS9mMEhz
-         T7ET/nXG4Y5etjeGTCQ0/CFUgm4E/DhjwJrkWpFWroeWOcRyiA5P2jFvZ7YbDHL0P3K+
-         CpDO2CJJAjfql3w8Hc1sqUZs2acOK5YuFP9Kaa4/9EEzzTBT5OnquMtPdXxsd5+aJcPG
-         59ZeSaETFpskptgN4yj+dy5gvKvDYt6nRLIlGZBqewrMrUcHu2IM74r5egKIvB/Cvq2R
-         A4rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KOnODFdxaf/iGRsoCulw/4z2XvDjjoLo9EZO9SOI1jQ=;
-        b=CEmFUtkMiowHzVPDhHt9HjOf+LxeZ7TOLPjfz9yESQipdfwN8pcRKbIQC2oVUZZGwi
-         BtwjMYQkt7nW8kmmFJtdGnl5mZeoPzkU5IoTsj2WggjeN1LyhQw0evMwavdWuuTluCkk
-         0xP0avBADWBzeeClq03cpjK8+K9vtDn62JnN1XulrgYBPNSJMcgM9jU1H2Pmtc5wvmEE
-         am50qQJruU6NKsgf71fD0Ns2tKs5LQ53Z00KhFpLPfizDcwCl09uFKYFp9PF75zIYCOu
-         bl18Ra19ChhEkJBLKgFD0tvSRPvItGl5rdpLLu6N8MWBzZZRnOnWGOKgLVN3hT8uYHUU
-         MCtA==
-X-Gm-Message-State: AOAM531k4frTGunM9yt4KMX4EW/NfH552I2ZjPj/RvCTtHHMQi7yKXY0
-        NxJIBw6w9IDlF/6xoVqe/SU=
-X-Google-Smtp-Source: ABdhPJzSYcWA/jMunUf5Itgr9tjo+KWGYssE4BRW8qieq8s5zZe6mVa3y5MkUfVsjgsmBwFvyzweZA==
-X-Received: by 2002:a5d:44d1:: with SMTP id z17mr76096451wrr.259.1594595478907;
-        Sun, 12 Jul 2020 16:11:18 -0700 (PDT)
-Received: from localhost.localdomain ([46.114.106.47])
-        by smtp.gmail.com with ESMTPSA id f9sm21238786wru.47.2020.07.12.16.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 16:11:18 -0700 (PDT)
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Jian Cai <caij2003@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
-Date:   Mon, 13 Jul 2020 01:10:50 +0200
-Message-Id: <20200712231050.5147-1-sedat.dilek@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 12 Jul 2020 19:15:47 -0400
+X-Greylist: delayed 7544 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Jul 2020 16:15:47 PDT
+Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E66C061794;
+        Sun, 12 Jul 2020 16:15:47 -0700 (PDT)
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 400AA13F657;
+        Mon, 13 Jul 2020 01:15:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1594595745; bh=a+el10ZHHG0H2equijCDFaZPRdBBA7n9Ne/c/r1f2V4=;
+        h=Date:From:To;
+        b=MYtHsD7V5T6iBMB/TjB/gxbpI8qNixefeNOZWiOQe+kf1pc5xoJQ8hd3dYPqaJLPh
+         67uU3bbb+/4dLe+0iCelvxb3b/HPiK4VYUPHU8UC5irGTQkj8eKZo/xW8wuhKT8Qcj
+         +rs3m0MU17c5Vll1eZDZahsfOKVbXtteKd41CyB8=
+Date:   Mon, 13 Jul 2020 01:15:44 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200713011544.0adc51f1@nic.cz>
+In-Reply-To: <20200712223821.742ljr4qxdrx3aqv@core.my.home>
+References: <20200702144712.1994685-1-megous@megous.com>
+        <20200711100409.GA18901@amd>
+        <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+        <20200712072554.GC4721@duo.ucw.cz>
+        <20200712134911.r3lig4hgyqhmslth@core.my.home>
+        <20200712191111.GA20592@amd>
+        <20200712223821.742ljr4qxdrx3aqv@core.my.home>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using Clang's Integrated Assembler (LLVM_IAS=1) we fell over
-ClangBuiltLinux (CBL) issue #1043 where Jian Cai provided a fix.
+On Mon, 13 Jul 2020 00:38:21 +0200
+Ond=C5=99ej Jirman <megous@megous.com> wrote:
 
-With Jian's fix applied another issue raised up when CONFIG_HYPERV=m.
+> Hello,
+>=20
+> On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
+> > Hi!
+> >  =20
+>=20
+> [....]
+>=20
+> >  		}
+> > diff --git a/include/linux/leds.h b/include/linux/leds.h
+> > index 2451962d1ec5..cba52714558f 100644
+> > --- a/include/linux/leds.h
+> > +++ b/include/linux/leds.h
+> > @@ -57,6 +57,10 @@ struct led_init_data {
+> >  	bool devname_mandatory;
+> >  };
+> > =20
+> > +struct led_hw_trigger_type {
+> > +	int dummy;
+> > +}
+> > +
+> >  struct led_classdev {
+> >  	const char		*name;
+> >  	enum led_brightness	 brightness;
+> > @@ -150,6 +154,8 @@ struct led_classdev {
+> > =20
+> >  	/* Ensures consistent access to the LED Flash Class device */
+> >  	struct mutex		led_access;
+> > +
+> > +	struct led_hw_trigger_type *trigger_type;
+> >  };
+> > =20
+> >  /**
+> > @@ -345,6 +351,9 @@ struct led_trigger {
+> >  	int		(*activate)(struct led_classdev *led_cdev);
+> >  	void		(*deactivate)(struct led_classdev *led_cdev);
+> > =20
+> > +	/* LED-private triggers have this set. */
+> > +	struct led_hw_trigger_type *trigger_type;
+> > +
+> >  	/* LEDs under control by this trigger (for simple triggers) */
+> >  	rwlock_t	  leddev_list_lock;
+> >  	struct list_head  led_cdevs; =20
+>=20
+> So after trying to use this, this seems to disallow the use of multiple HW
+> triggers per LED. That's fine by me, because using one HW sysfs configured
+> trigger per LED that use case is my proposal, but is it desireable in gen=
+eral?
 
-It turned out that the conversion of vectors to IDTENTRY_SYSVEC in
-case of CONFIG_HYPERV was incomplete and fails with a build error:
+Why? If you register one LED and several triggers, all sharing the same
+trigger_type pointer, I think it should work.
 
-<instantiation>:9:6: error: expected absolute expression
- .if HYPERVISOR_REENLIGHTENMENT_VECTOR == 3
-     ^
-<instantiation>:1:1: note: while in macro instantiation
-idtentry HYPERVISOR_REENLIGHTENMENT_VECTOR asm_sysvec_hyperv_reenlightenment sysvec_hyperv_reenlightenment has_error_code=0
-^
-./arch/x86/include/asm/idtentry.h:627:1: note: while in macro instantiation
-idtentry_sysvec HYPERVISOR_REENLIGHTENMENT_VECTOR sysvec_hyperv_reenlightenment;
-^
-<instantiation>:9:6: error: expected absolute expression
- .if HYPERVISOR_STIMER0_VECTOR == 3
-     ^
-<instantiation>:1:1: note: while in macro instantiation
-idtentry HYPERVISOR_STIMER0_VECTOR asm_sysvec_hyperv_stimer0 sysvec_hyperv_stimer0 has_error_code=0
-^
-./arch/x86/include/asm/idtentry.h:628:1: note: while in macro instantiation
-idtentry_sysvec HYPERVISOR_STIMER0_VECTOR sysvec_hyperv_stimer0;
-
-I and Nathan double-checked the hyperv(isor) vectors:
-
-$ rg --no-heading "HYPERVISOR_REENLIGHTENMENT_VECTOR|HYPERVISOR_STIMER0_VECTOR"
-$ rg --no-heading "HYPERV_REENLIGHTENMENT_VECTOR|HYPERV_STIMER0_VECTOR"
-
-Fix these typos in arch/x86/include/asm/idtentry.h:
-
-HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
-HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
-
-For more details see CBL issue #1088.
-
-With both fixes applied I was able to build/assemble with a snapshot
-version of LLVM/Clang from Debian/experimental.
-
-Cc: Jian Cai <caij2003@gmail.com>
-Cc: clang-built-linux@googlegroups.com
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Fixes: a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1043
-Link: https://github.com/ClangBuiltLinux/linux/issues/1088
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
----
- arch/x86/include/asm/idtentry.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 513eb2ccbdbf..a811f6c6cf15 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -624,8 +624,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested
- 
- #if IS_ENABLED(CONFIG_HYPERV)
- DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_hyperv_callback);
--DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
--DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
- #endif
- 
- #if IS_ENABLED(CONFIG_ACRN_GUEST)
--- 
-2.27.0
-
+Marek
