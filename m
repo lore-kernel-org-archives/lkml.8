@@ -2,103 +2,164 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C61CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58584207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E8520720
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 09:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgGLJHg (ORCPT
+        id S1728448AbgGLJUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 05:07:36 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52998 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgGLJHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 05:07:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7B1901C0BD2; Sun, 12 Jul 2020 11:07:32 +0200 (CEST)
-Date:   Sun, 12 Jul 2020 11:07:31 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
-        kernel@pengutronix.de, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20200712090731.GB13495@amd>
-References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
- <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
- <20200712082453.GI8295@amd>
- <20200712084352.GA175558@kroah.com>
- <20200712085059.GA13495@amd>
- <20200712090217.GA177304@kroah.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="z6Eq5LdranGa6ru8"
-Content-Disposition: inline
-In-Reply-To: <20200712090217.GA177304@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 12 Jul 2020 05:20:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38238 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728112AbgGLJUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 05:20:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ABF102008BF;
+        Sun, 12 Jul 2020 11:20:15 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D17872002AB;
+        Sun, 12 Jul 2020 11:20:11 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2ADD0402C8;
+        Sun, 12 Jul 2020 17:20:07 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RESEND PATCH] ARM: dts: imx6sx-sdb: Add MQS support
+Date:   Sun, 12 Jul 2020 17:16:42 +0800
+Message-Id: <1594545402-26815-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add MQS support. As the pin conflict with usdhc2, then need
+to add a separate dts.
 
---z6Eq5LdranGa6ru8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+changes in RESEND
+- resolve the conflict with latest tree.
 
-On Sun 2020-07-12 11:02:17, Greg Kroah-Hartman wrote:
-> On Sun, Jul 12, 2020 at 10:50:59AM +0200, Pavel Machek wrote:
-> > On Sun 2020-07-12 10:43:52, Greg Kroah-Hartman wrote:
-> > > On Sun, Jul 12, 2020 at 10:24:53AM +0200, Pavel Machek wrote:
-> > > > > +++ b/drivers/leds/trigger/ledtrig-tty.c
-> > > > > @@ -0,0 +1,192 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > >=20
-> > > > 2.0+ is preffered.
-> > >=20
-> > > No it is not, that's up to the developer.
-> >=20
-> > For code I maintain, yes it is.
->=20
-> That's up to the developer of the code, not the maintainer, as the
-> maintainer is not the copyright holder of it.  For new files, it is up
-> to the author of that code.  No maintainer should impose a license rule
-> like this on their subsystem, that's just not ok at all.  The only
-> "rule" is that it is compatible with GPLv2, nothing else.
+ arch/arm/boot/dts/Makefile           |  1 +
+ arch/arm/boot/dts/imx6sx-sdb-mqs.dts | 48 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi    |  7 ++++
+ arch/arm/boot/dts/imx6sx.dtsi        |  6 ++++
+ 4 files changed, 62 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-mqs.dts
 
-No, see for example device tree rules.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e6a1cac0bfc7..04f85d6a2af3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -592,6 +592,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+ 	imx6sx-sdb-reva.dtb \
+ 	imx6sx-sdb-sai.dtb \
+ 	imx6sx-sdb.dtb \
++	imx6sx-sdb-mqs.dtb \
+ 	imx6sx-softing-vining-2000.dtb \
+ 	imx6sx-udoo-neo-basic.dtb \
+ 	imx6sx-udoo-neo-extended.dtb \
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-mqs.dts b/arch/arm/boot/dts/imx6sx-sdb-mqs.dts
+new file mode 100644
+index 000000000000..a4ab2d3e960c
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6sx-sdb-mqs.dts
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (C) 2014 Freescale Semiconductor, Inc.
++
++#include "imx6sx-sdb.dts"
++/ {
++
++	sound {
++		status = "disabled";
++	};
++
++	sound-mqs {
++		compatible = "fsl,imx6sx-sdb-mqs",
++			     "fsl,imx-audio-mqs";
++		model = "mqs-audio";
++		audio-cpu = <&sai1>;
++		audio-asrc = <&asrc>;
++		audio-codec = <&mqs>;
++	};
++};
++
++&usdhc2 {
++	/* pin conflict with mqs*/
++	status = "disabled";
++};
++
++&mqs {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_mqs>;
++	clocks = <&clks IMX6SX_CLK_SAI1>;
++	clock-names = "mclk";
++	status = "okay";
++};
++
++&sai1 {
++	pinctrl-0 = <>;
++	status = "okay";
++};
++
++&ssi2 {
++	status = "disabled";
++};
++
++&sdma {
++	gpr = <&gpr>;
++	/* SDMA event remap for SAI1 */
++	fsl,sdma-event-remap = <0 15 1>, <0 16 1>;
++};
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index 6673532018b2..05d1e9d2efab 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -522,6 +522,13 @@ MX6SX_PAD_LCD1_RESET__GPIO3_IO_27 0x4001b0b0
+ 			>;
+ 		};
+ 
++		pinctrl_mqs: mqsgrp {
++			fsl,pins = <
++				MX6SX_PAD_SD2_CLK__MQS_RIGHT 0x120b0
++				MX6SX_PAD_SD2_CMD__MQS_LEFT  0x120b0
++			>;
++		};
++
+ 		pinctrl_pcie: pciegrp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_ENET1_COL__GPIO2_IO_0 0x10b0
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 5c2b78589aa5..fcb3d064d0cc 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -134,6 +134,12 @@ anaclk2: clock-anaclk2 {
+ 		clock-output-names = "anaclk2";
+ 	};
+ 
++	mqs: mqs {
++		compatible = "fsl,imx6sx-mqs";
++		gpr = <&gpr>;
++		status = "disabled";
++	};
++
+ 	pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&gpc>;
+-- 
+2.27.0
 
-Plus, IIRC it was you who asked the developer to "doublecheck with
-their legal" when you seen GPL-2.0+. You can't really prevent me from
-doing the same.
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---z6Eq5LdranGa6ru8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8K0tMACgkQMOfwapXb+vKCwgCgoseHv2o3muXSkuuEeyWG1IRH
-lDEAoJsXm8RXUZqWrnhXUF5oTf/5+DfD
-=P/sL
------END PGP SIGNATURE-----
-
---z6Eq5LdranGa6ru8--
