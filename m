@@ -2,91 +2,95 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606AC433EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB04C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8A22068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C5C2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594573848;
+	bh=a848+2Ogmip7OA1pq5ZWFjhMfOh9SLYFsM119KDBbhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JAkSrQP4KHUEc/TfJfVxXlVoXQuQD1RIEV5+d3GGGmExcoCiQdaN/+KxglVsdRwkG
+	 Ftv069jIIKqzKOoUUmmnWTdFG6QNWW5gCNzg4KqV8jNu7O9b7/GxQhylfZYFfLfDlh
+	 si7WuDpNbljANuaez1aw3/bq5bmLwGYag8EjIz3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgGLQ7n (ORCPT
+        id S1729168AbgGLRJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 12:59:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:47938 "EHLO foss.arm.com"
+        Sun, 12 Jul 2020 13:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgGLQ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 12:59:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE7FA11B3;
-        Sun, 12 Jul 2020 09:59:37 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 01F0F3F7D8;
-        Sun, 12 Jul 2020 09:59:35 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH v2 3/3] arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE
-Date:   Sun, 12 Jul 2020 17:59:17 +0100
-Message-Id: <20200712165917.9168-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200712165917.9168-1-valentin.schneider@arm.com>
-References: <20200712165917.9168-1-valentin.schneider@arm.com>
+        id S1728844AbgGLRJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 13:09:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DFDF20702;
+        Sun, 12 Jul 2020 17:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594573790;
+        bh=a848+2Ogmip7OA1pq5ZWFjhMfOh9SLYFsM119KDBbhQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OZqzQZEoZxSAGSrZFfXjXZQUtkypTiKs2Oet5qlnQPBEPa6ZT4u2d206gYnjrbJlG
+         BxemuBXiEumBOik0eAXItqnjOv/68W9VGr6zWzI0KQhtqMhYMb+hxYxeobXV6CpOk6
+         myjlUwl2om3T4Vi71OVbj9wKlmHuif0siks+8bGo=
+Date:   Sun, 12 Jul 2020 19:09:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        peterz@infradead.org, vishal.l.verma@intel.com,
+        dave.hansen@linux.intel.com, ard.biesheuvel@linaro.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, hch@lst.de, joao.m.martins@oracle.com
+Subject: Re: [PATCH v2 17/22] drivers/base: Make device_find_child_by_name()
+ compatible with sysfs inputs
+Message-ID: <20200712170945.GA194499@kroah.com>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457125753.754248.6000936585361264069.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159457125753.754248.6000936585361264069.stgit@dwillia2-desk3.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option now correctly depends on CPU_FREQ_THERMAL, so select it on the
-architectures that implement the required functions,
-arch_set_thermal_pressure() and arch_get_thermal_pressure().
+On Sun, Jul 12, 2020 at 09:27:37AM -0700, Dan Williams wrote:
+> Use sysfs_streq() in device_find_child_by_name() to allow it to use a
+> sysfs input string that might contain a trailing newline.
+> 
+> The other "device by name" interfaces,
+> {bus,driver,class}_find_device_by_name(), already account for sysfs
+> strings.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/base/core.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 67d39a90b45c..5d31b962c898 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3078,7 +3078,7 @@ struct device *device_find_child_by_name(struct device *parent,
+>  
+>  	klist_iter_init(&parent->p->klist_children, &i);
+>  	while ((child = next_device(&i)))
+> -		if (!strcmp(dev_name(child), name) && get_device(child))
+> +		if (sysfs_streq(dev_name(child), name) && get_device(child))
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- arch/arm/Kconfig   | 1 +
- arch/arm64/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
+Who wants to call this function with a name passed from userspace?
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2ac74904a3ce..939c4d6bbc2e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -46,6 +46,7 @@ config ARM
- 	select EDAC_ATOMIC_SCRUB
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
-+	select SCHED_THERMAL_PRESSURE if ARM_CPU_TOPOLOGY
- 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 66dc41fd49f2..96d478fb7a2e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -100,6 +100,7 @@ config ARM64
- 	select FRAME_POINTER
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY
-+	select SCHED_THERMAL_PRESSURE
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CLOCKEVENTS_BROADCAST
- 	select GENERIC_CPU_AUTOPROBE
--- 
-2.27.0
+Not objecting to it, just curious...
 
+thanks,
+
+greg k-h
