@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB4C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C591C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93DF20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB4E20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgGLN6B (ORCPT
+        id S1728946AbgGLN7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:58:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9347 "EHLO mga11.intel.com"
+        Sun, 12 Jul 2020 09:59:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8919 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgGLN6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:58:00 -0400
-IronPort-SDR: X3aMtkfgV5fdV4bqnKjDGQCt9wjN00G2FLPB0JDAbPjpYRBM5g3+RikTccvwHC/etuJxZhHaOi
- pnkvVUCXVY+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540920"
+        id S1729091AbgGLN7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:59:44 -0400
+IronPort-SDR: XRFMrsNE/KcEhu4gIipHnVL/U0s2LYyfjcgG8G+yJImtuvGThdmpk/qo6AAvu3QsyEiwr7yAoZ
+ AlRN8onzmHjA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540916"
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="146540920"
+   d="scan'208";a="146540916"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:54 -0700
-IronPort-SDR: CPFgiphKE4MXEPMSFb3XZtkn9jX38w6IxLeOTJm+b9g4AoZpNqft6wRgka9rEUdiP9FDTSQqdx
- f7lzByI+9ovA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:53 -0700
+IronPort-SDR: YfvpKv8OCrP+jn8gb0TibcxOGvaVZWfmCAR7RHucOtLLd4n6U6fXtD42wndP+Tg4Rjvh5Dsj4i
+ Fr3JAmQHPxMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="307148660"
+   d="scan'208";a="307148653"
 Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:53 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:52 -0700
 From:   Gage Eads <gage.eads@intel.com>
 To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
         gregkh@linuxfoundation.org
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: [PATCH 20/20] dlb2: add ingress error handling
-Date:   Sun, 12 Jul 2020 08:43:31 -0500
-Message-Id: <20200712134331.8169-21-gage.eads@intel.com>
+Subject: [PATCH 18/20] dlb2: add device FLR support
+Date:   Sun, 12 Jul 2020 08:43:29 -0500
+Message-Id: <20200712134331.8169-19-gage.eads@intel.com>
 X-Mailer: git-send-email 2.13.6
 In-Reply-To: <20200712134331.8169-1-gage.eads@intel.com>
 References: <20200712134331.8169-1-gage.eads@intel.com>
@@ -54,689 +54,837 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DLB 2.0 detects that an application enqueued an illegal QE, it fires
-an ingress error interrupt. The driver processes these errors and notifies
-user-space through a domain alert.
+A device FLR can be triggered while applications are actively using the
+device, which poses two problems:
+- If applications continue to enqueue to the hardware they will cause
+  hardware errors, because the FLR will have reset the scheduling domains,
+  ports, and queues.
+- When the applications end, they must not trigger the driver's domain
+  reset logic, which would fail because the device's registers will have
+  been reset by the FLR.
 
-A malicious application or virtual machine could attempt a
-denial-of-service attack by enqueueing illegal QEs at a high rate and tying
-up the PF driver, so the driver tracks the rate of ingress error alarms per
-second. If they exceed a threshold of 1000/second, the driver simply
-disables the interrupt. The interrupt is re-enabled when the device is
-reset, the driver is reloaded, or by a user through a sysfs interface.
+The driver needs to stop applications from using the device before the FLR
+begins, and detect when these applications exit (so they don't trigger the
+domain reset that occurs when their last file reference (or memory mapping)
+closes). The driver must also disallow applications from configuring the
+device while the reset is in progress.
+
+To avoid these problems, the driver handles unexpected resets as follows:
+1. Set the reset_active flag. This flag blocks new device files from being
+   opened and is used as a wakeup condition in the driver's wait queues.
+2. If this is a PF FLR and there are active VFs, send them a pre-reset
+   notification, so they can stop any VF applications. (Added in a later
+   commit.)
+3. Disable all device files (set the per-file valid flag to false, which
+   prevents the file from being used after FLR completes) and wake any
+   threads blocked on a wait queue.
+4. If the device is not in use -- i.e. no open device files or memory
+   mappings, and no VFs in use (PF FLR only) -- the FLR can begin.
+5. Else, the driver waits (up to a user-specified timeout, default 5s) for
+   software to stop using the driver and the device. If the timeout
+   elapses, the driver zaps any remaining MMIO mappings so the
+   extant applications can no longer use the device.
+6. Do not unlock the resource mutex at the end of the reset prepare
+   function, to prevent device access during the reset.
+
+The reset timeout is exposed as a module parameter.
+
+After the FLR:
+1. Clear the per-domain pointers (the memory is freed elsewhere).
+2. Release any remaining allocated port or CQ memory, now that it's
+   guaranteed the device is unconfigured and won't write to memory.
+3. Reset software and hardware state.
+4. Notify VFs that the FLR is complete. (Added in a later commit.)
+5. Set reset_active to false.
+6. Unlock the resource mutex.
 
 Signed-off-by: Gage Eads <gage.eads@intel.com>
 Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
 ---
- Documentation/ABI/testing/sysfs-driver-dlb2 |  15 ++
- drivers/misc/dlb2/dlb2_hw_types.h           |  17 ++
- drivers/misc/dlb2/dlb2_main.h               |  16 ++
- drivers/misc/dlb2/dlb2_pf_ops.c             | 177 ++++++++++++++++++++
- drivers/misc/dlb2/dlb2_resource.c           | 251 +++++++++++++++++++++++++++-
- drivers/misc/dlb2/dlb2_resource.h           |  45 +++++
- 6 files changed, 520 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-driver-dlb2 |  22 ++
+ drivers/misc/dlb2/dlb2_intr.c               |  13 +-
+ drivers/misc/dlb2/dlb2_intr.h               |   1 +
+ drivers/misc/dlb2/dlb2_ioctl.c              |  91 ++++++++
+ drivers/misc/dlb2/dlb2_main.c               | 327 +++++++++++++++++++++++++++-
+ drivers/misc/dlb2/dlb2_main.h               |   4 +
+ drivers/misc/dlb2/dlb2_resource.c           |  17 ++
+ drivers/misc/dlb2/dlb2_resource.h           |   9 +
+ 8 files changed, 475 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-dlb2
 
 diff --git a/Documentation/ABI/testing/sysfs-driver-dlb2 b/Documentation/ABI/testing/sysfs-driver-dlb2
-index c5cb1cbb70f4..3598ce9caa03 100644
---- a/Documentation/ABI/testing/sysfs-driver-dlb2
+new file mode 100644
+index 000000000000..38d0d3d92670
+--- /dev/null
 +++ b/Documentation/ABI/testing/sysfs-driver-dlb2
-@@ -185,3 +185,18 @@ Description:	Device ID used in /dev, i.e. /dev/dlb<device ID>
- 		/dev directory: /dev/dlb<device ID>. This sysfs file can be read
- 		to determine a device's ID, which allows the user to map a
- 		device file to a PCI BDF.
-+
-+What:		/sys/bus/pci/devices/.../ingress_err_en
+@@ -0,0 +1,22 @@
++What:		/sys/bus/pci/drivers/dlb2/module/parameters/reset_timeout_s
 +Date:		June 22, 2020
 +KernelVersion:	5.9
 +Contact:	gage.eads@intel.com
-+Description:	Interface for re-enabling ingress error interrupts
++Description:	Interface for setting the driver's reset timeout.
++		When a device reset (FLR) is issued, the driver waits for
++		user-space to stop using the device before allowing the FLR to
++		proceed, with a timeout. The device is considered in use if
++		there are any open domain device file descriptors or memory
++		mapped producer ports. (For PF device resets, this includes all
++		VF-owned domains and producer ports.)
 +
-+		If the PF driver detects an overload of ingress error
-+		interrupts, it will -- to prevent a possible denial-of-service
-+		attack -- disable them.
-+
-+		If the ingress error interrupt is disabled, they will be
-+		re-enabled when the device is reset or the driver is reloaded.
-+		This interface can be used to re-enable the interrupt as well,
-+		and can be read to determine whether the interrupt is enabled.
-diff --git a/drivers/misc/dlb2/dlb2_hw_types.h b/drivers/misc/dlb2/dlb2_hw_types.h
-index bcd7820b5f7f..e27f43e4c7b2 100644
---- a/drivers/misc/dlb2/dlb2_hw_types.h
-+++ b/drivers/misc/dlb2/dlb2_hw_types.h
-@@ -61,6 +61,23 @@
- #define DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID \
- 	DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS
++		The amount of time the driver waits for userspace to stop using
++		the device is controlled by the module parameter
++		reset_timeout_s, which is in units of seconds and defaults to
++		5. If reset_timeout_s seconds elapse and any user is still
++		using the device, the driver zaps those processes' memory
++		mappings and marks their device file descriptors as invalid.
++		This is necessary because user processes that do not relinquish
++		their device mappings can interfere with processes that use the
++		device after the reset completes. To ensure that user processes
++		have enough time to clean up, reset_timeout_s can be increased.
+diff --git a/drivers/misc/dlb2/dlb2_intr.c b/drivers/misc/dlb2/dlb2_intr.c
+index 88c936ab7c69..bcda045c6660 100644
+--- a/drivers/misc/dlb2/dlb2_intr.c
++++ b/drivers/misc/dlb2/dlb2_intr.c
+@@ -30,7 +30,10 @@ static inline bool wake_condition(struct dlb2_cq_intr *intr,
+ 				  struct dlb2_dev *dev,
+ 				  struct dlb2_domain *domain)
+ {
+-	return (READ_ONCE(intr->wake) || READ_ONCE(intr->disabled));
++	return (READ_ONCE(intr->wake) ||
++		READ_ONCE(dev->reset_active) ||
++		!READ_ONCE(domain->valid) ||
++		READ_ONCE(intr->disabled));
+ }
  
-+/* DLB non-CQ interrupts (alarm, mailbox, WDT) */
-+#define DLB2_INT_NON_CQ 0
-+
-+#define DLB2_ALARM_HW_SOURCE_SYS 0
-+#define DLB2_ALARM_HW_SOURCE_DLB 1
-+
-+#define DLB2_ALARM_HW_UNIT_CHP 4
-+
-+#define DLB2_ALARM_SYS_AID_ILLEGAL_QID 3
-+#define DLB2_ALARM_SYS_AID_DISABLED_QID 4
-+#define DLB2_ALARM_SYS_AID_ILLEGAL_HCW 5
-+#define DLB2_ALARM_HW_CHP_AID_ILLEGAL_ENQ 1
-+#define DLB2_ALARM_HW_CHP_AID_EXCESS_TOKEN_POPS 2
-+
-+#define DLB2_VF_NUM_NON_CQ_INTERRUPT_VECTORS 1
-+#define DLB2_VF_NUM_CQ_INTERRUPT_VECTORS 31
-+
- /*
-  * Hardware-defined base addresses. Those prefixed 'DLB2_DRV' are only used by
-  * the PF driver.
-diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
-index 05f6a9c976bf..ada5d96c1241 100644
---- a/drivers/misc/dlb2/dlb2_main.h
-+++ b/drivers/misc/dlb2/dlb2_main.h
-@@ -217,6 +217,21 @@ struct dlb2_intr {
- 	int mode;
+ struct dlb2_dequeue_qe {
+@@ -117,8 +120,12 @@ int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
+ 	ret = wait_event_interruptible(intr->wq_head,
+ 				       wake_condition(intr, dev, dom));
+ 
+-	if (ret == 0 && READ_ONCE(intr->disabled))
+-		ret = -EACCES;
++	if (ret == 0) {
++		if (READ_ONCE(dev->reset_active) || !READ_ONCE(dom->valid))
++			ret = -EINTR;
++		else if (READ_ONCE(intr->disabled))
++			ret = -EACCES;
++	}
+ 
+ 	WRITE_ONCE(intr->wake, false);
+ 
+diff --git a/drivers/misc/dlb2/dlb2_intr.h b/drivers/misc/dlb2/dlb2_intr.h
+index 613179795d8f..250c391d729e 100644
+--- a/drivers/misc/dlb2/dlb2_intr.h
++++ b/drivers/misc/dlb2/dlb2_intr.h
+@@ -20,6 +20,7 @@ int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
+ enum dlb2_wake_reason {
+ 	WAKE_CQ_INTR,
+ 	WAKE_PORT_DISABLED,
++	WAKE_DEV_RESET
  };
  
-+/*
-+ * ISR overload is defined as more than DLB2_ISR_OVERLOAD_THRESH interrupts
-+ * (of a particular type) occurring in a 1s period. If overload is detected,
-+ * the driver blocks that interrupt (exact mechanism depending on the
-+ * interrupt) from overloading the PF driver.
-+ */
-+#define DLB2_ISR_OVERLOAD_THRESH 1000
-+#define DLB2_ISR_OVERLOAD_PERIOD_S 1
-+
-+struct dlb2_alarm {
-+	ktime_t ts;
-+	unsigned int enabled;
-+	u32 count;
-+};
-+
- struct dlb2_dev {
- 	struct pci_dev *pdev;
- 	struct dlb2_hw hw;
-@@ -239,6 +254,7 @@ struct dlb2_dev {
- 	 */
- 	struct mutex resource_mutex;
- 	struct work_struct work;
-+	struct dlb2_alarm ingress_err;
- 	enum dlb2_device_type type;
- 	int id;
- 	dev_t dev_number;
-diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
-index f17be00ebc81..6b3042489e5d 100644
---- a/drivers/misc/dlb2/dlb2_pf_ops.c
-+++ b/drivers/misc/dlb2/dlb2_pf_ops.c
-@@ -96,6 +96,109 @@ dlb2_pf_map_pci_bar_space(struct dlb2_dev *dlb2_dev,
- /****** Interrupt management ******/
- /**********************************/
+ void dlb2_wake_thread(struct dlb2_dev *dev,
+diff --git a/drivers/misc/dlb2/dlb2_ioctl.c b/drivers/misc/dlb2/dlb2_ioctl.c
+index ce80cdd71af8..d0e87118bdc7 100644
+--- a/drivers/misc/dlb2/dlb2_ioctl.c
++++ b/drivers/misc/dlb2/dlb2_ioctl.c
+@@ -75,6 +75,14 @@ static int dlb2_domain_ioctl_##lower_name(struct dlb2_dev *dev,		   \
+ 									   \
+ 	mutex_lock(&dev->resource_mutex);				   \
+ 									   \
++	if (!domain->valid) {						   \
++		dev_err(dev->dlb2_device,				   \
++			"[%s()] Domain invalid (device reset)\n",	   \
++			__func__);					   \
++		mutex_unlock(&dev->resource_mutex);			   \
++		return -EINVAL;						   \
++	}								   \
++									   \
+ 	ret = dev->ops->lower_name(&dev->hw,				   \
+ 				   domain->id,				   \
+ 				   &arg,				   \
+@@ -127,6 +135,14 @@ static int dlb2_domain_ioctl_enable_ldb_port(struct dlb2_dev *dev,
  
-+static void dlb2_detect_ingress_err_overload(struct dlb2_dev *dev)
-+{
-+	s64 delta_us;
-+
-+	if (dev->ingress_err.count == 0)
-+		dev->ingress_err.ts = ktime_get();
-+
-+	dev->ingress_err.count++;
-+
-+	/* Don't check for overload until OVERLOAD_THRESH ISRs have run */
-+	if (dev->ingress_err.count < DLB2_ISR_OVERLOAD_THRESH)
-+		return;
-+
-+	delta_us = ktime_us_delta(ktime_get(), dev->ingress_err.ts);
-+
-+	/* Reset stats for next measurement period */
-+	dev->ingress_err.count = 0;
-+	dev->ingress_err.ts = ktime_get();
-+
-+	/* Check for overload during this measurement period */
-+	if (delta_us > DLB2_ISR_OVERLOAD_PERIOD_S * USEC_PER_SEC)
-+		return;
-+
-+	/*
-+	 * Alarm interrupt overload: disable software-generated alarms,
-+	 * so only hardware problems (e.g. ECC errors) interrupt the PF.
-+	 */
-+	dlb2_disable_ingress_error_alarms(&dev->hw);
-+
-+	dev->ingress_err.enabled = false;
-+
-+	dev_err(dev->dlb2_device,
-+		"[%s()] Overloaded detected: disabling ingress error interrupts",
-+		__func__);
-+}
-+
-+/*
-+ * The alarm handler logs the alarm syndrome and, for user-caused errors,
-+ * reports the alarm to user-space through the per-domain device file interface.
-+ *
-+ * This function runs as a bottom-half handler because it can call printk
-+ * and/or acquire a mutex. These alarms don't need to be handled immediately --
-+ * they represent a serious, unexpected error (either in hardware or software)
-+ * that can't be recovered without restarting the application or resetting the
-+ * device. The VF->PF operations are also non-trivial and require running in a
-+ * bottom-half handler.
-+ */
-+static irqreturn_t
-+dlb2_service_intr_handler(int irq, void *hdlr_ptr)
-+{
-+	struct dlb2_dev *dev = (struct dlb2_dev *)hdlr_ptr;
-+	union dlb2_sys_alarm_hw_synd r0;
-+
-+	dev_dbg(dev->dlb2_device, "DLB service interrupt fired\n");
-+
-+	mutex_lock(&dev->resource_mutex);
-+
-+	r0.val = DLB2_CSR_RD(&dev->hw, DLB2_SYS_ALARM_HW_SYND);
-+
-+	/*
-+	 * Clear the MSI-X ack bit before processing the VF->PF or watchdog
-+	 * timer interrupts. This order is necessary so that if an interrupt
-+	 * event arrives after reading the corresponding bit vector, the event
-+	 * won't be lost.
-+	 */
-+	dlb2_ack_msix_interrupt(&dev->hw, DLB2_INT_NON_CQ);
-+
-+	if (r0.field.alarm & r0.field.valid)
-+		dlb2_process_alarm_interrupt(&dev->hw);
-+
-+	if (dlb2_process_ingress_error_interrupt(&dev->hw))
-+		dlb2_detect_ingress_err_overload(dev);
-+
-+	mutex_unlock(&dev->resource_mutex);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int
-+dlb2_init_alarm_interrupts(struct dlb2_dev *dev,
-+			   struct pci_dev *pdev)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS; i++) {
-+		ret = devm_request_threaded_irq(&pdev->dev,
-+						pci_irq_vector(pdev, i),
-+						NULL,
-+						dlb2_service_intr_handler,
-+						IRQF_ONESHOT,
-+						"dlb2_alarm",
-+						dev);
-+		if (ret)
-+			return ret;
-+
-+		dev->intr.isr_registered[i] = true;
-+	}
-+
-+	dlb2_enable_ingress_error_alarms(&dev->hw);
-+
-+	return 0;
-+}
-+
- static irqreturn_t
- dlb2_compressed_cq_intr_handler(int irq, void *hdlr_ptr)
- {
-@@ -200,6 +303,12 @@ dlb2_pf_init_interrupts(struct dlb2_dev *dev, struct pci_dev *pdev)
- 	dev->intr.num_vectors = ret;
- 	dev->intr.base_vector = pci_irq_vector(pdev, 0);
+ 	mutex_lock(&dev->resource_mutex);
  
-+	ret = dlb2_init_alarm_interrupts(dev, pdev);
-+	if (ret) {
-+		dlb2_pf_free_interrupts(dev, pdev);
-+		return ret;
-+	}
-+
- 	ret = dlb2_init_compressed_mode_interrupts(dev, pdev);
- 	if (ret) {
- 		dlb2_pf_free_interrupts(dev, pdev);
-@@ -230,6 +339,16 @@ dlb2_pf_init_interrupts(struct dlb2_dev *dev, struct pci_dev *pdev)
- static void
- dlb2_pf_reinit_interrupts(struct dlb2_dev *dev)
- {
-+	/* Re-enable alarms after device reset */
-+	dlb2_enable_ingress_error_alarms(&dev->hw);
-+
-+	if (!dev->ingress_err.enabled)
++	if (!domain->valid) {
 +		dev_err(dev->dlb2_device,
-+			"[%s()] Re-enabling ingress error interrupts",
++			"[%s()] Domain invalid (device reset)\n",
 +			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+	dev->ingress_err.enabled = true;
+ 	ret = dev->ops->enable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/* Allow threads to block on this port's CQ interrupt */
+@@ -167,6 +183,14 @@ static int dlb2_domain_ioctl_enable_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
- 	dlb2_set_msix_mode(&dev->hw, DLB2_MSIX_MODE_COMPRESSED);
+ 	ret = dev->ops->enable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/* Allow threads to block on this port's CQ interrupt */
+@@ -207,6 +231,14 @@ static int dlb2_domain_ioctl_disable_ldb_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
++
+ 	ret = dev->ops->disable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/*
+@@ -252,6 +284,14 @@ static int dlb2_domain_ioctl_disable_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
++
+ 	ret = dev->ops->disable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/*
+@@ -303,6 +343,14 @@ static int dlb2_domain_ioctl_create_ldb_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
++
+ 	cq_base = dma_alloc_coherent(&dev->pdev->dev,
+ 				     DLB2_CQ_SIZE,
+ 				     &cq_dma_base,
+@@ -388,6 +436,14 @@ static int dlb2_domain_ioctl_create_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
++
+ 	cq_base = dma_alloc_coherent(&dev->pdev->dev,
+ 				     DLB2_CQ_SIZE,
+ 				     &cq_dma_base,
+@@ -469,6 +525,17 @@ static int dlb2_domain_ioctl_block_on_cq_interrupt(struct dlb2_dev *dev,
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Note: dlb2_block_on_cq_interrupt() checks domain->valid again when
++	 * it puts the thread on the waitqueue
++	 */
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		return -EINVAL;
++	}
++
+ 	ret = dlb2_block_on_cq_interrupt(dev,
+ 					 domain,
+ 					 arg.port_id,
+@@ -567,6 +634,14 @@ static int dlb2_domain_get_port_fd(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		dev_err(dev->dlb2_device,
++			"[%s()] Domain invalid (device reset)\n",
++			__func__);
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
++
+ 	if ((is_ldb &&
+ 	     dev->ops->ldb_port_owned_by_domain(&dev->hw,
+ 						domain->id,
+@@ -804,6 +879,14 @@ static int dlb2_ioctl_create_sched_domain(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (dev->reset_active) {
++		dev_err(dev->dlb2_device,
++			"[%s()] The DLB is being reset; applications cannot use it during this time.\n",
++			__func__);
++		ret = -EINVAL;
++		goto unlock;
++	}
++
+ 	if (dev->domain_reset_failed) {
+ 		response.status = DLB2_ST_DOMAIN_RESET_FAILED;
+ 		ret = -EINVAL;
+@@ -886,6 +969,14 @@ static int dlb2_ioctl_get_sched_domain_fd(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (dev->reset_active) {
++		dev_err(dev->dlb2_device,
++			"[%s()] The DLB is being reset; applications cannot use it during this time.\n",
++			__func__);
++		ret = -EINVAL;
++		goto unlock;
++	}
++
+ 	domain = dev->sched_domains[arg.domain_id];
+ 
+ 	if (!domain) {
+diff --git a/drivers/misc/dlb2/dlb2_main.c b/drivers/misc/dlb2/dlb2_main.c
+index ef964cb044f8..ade71ed2e66b 100644
+--- a/drivers/misc/dlb2/dlb2_main.c
++++ b/drivers/misc/dlb2/dlb2_main.c
+@@ -12,6 +12,7 @@
+ #include <linux/uaccess.h>
+ 
+ #include "dlb2_file.h"
++#include "dlb2_intr.h"
+ #include "dlb2_ioctl.h"
+ #include "dlb2_main.h"
+ #include "dlb2_resource.h"
+@@ -32,6 +33,11 @@ MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+ MODULE_DESCRIPTION("Intel(R) Dynamic Load Balancer 2.0 Driver");
+ MODULE_VERSION(DRV_VERSION);
+ 
++static unsigned int dlb2_reset_timeout_s = DLB2_DEFAULT_RESET_TIMEOUT_S;
++module_param_named(reset_timeout_s, dlb2_reset_timeout_s, uint, 0644);
++MODULE_PARM_DESC(reset_timeout_s,
++		 "Wait time (in seconds) after reset is requested given for app shutdown until driver zaps VMAs");
++
+ /* The driver lock protects data structures that used by multiple devices. */
+ static DEFINE_MUTEX(dlb2_driver_lock);
+ static struct list_head dlb2_dev_list = LIST_HEAD_INIT(dlb2_dev_list);
+@@ -68,6 +74,14 @@ static int dlb2_open(struct inode *i, struct file *f)
+ 
+ 	dev_dbg(dev->dlb2_device, "Opening DLB device file\n");
+ 
++	/* See dlb2_reset_prepare() for more details */
++	if (dev->reset_active) {
++		dev_err(dev->dlb2_device,
++			"[%s()] The DLB is being reset; applications cannot use it during this time.\n",
++			__func__);
++		return -EINVAL;
++	}
++
+ 	f->private_data = dev;
+ 
+ 	dev->ops->inc_pm_refcnt(dev->pdev, true);
+@@ -126,6 +140,7 @@ int dlb2_init_domain(struct dlb2_dev *dlb2_dev, u32 domain_id)
+ 
+ 	domain->id = domain_id;
+ 
++	domain->valid = true;
+ 	kref_init(&domain->refcnt);
+ 	domain->dlb2_dev = dlb2_dev;
+ 
+@@ -210,6 +225,22 @@ static int __dlb2_free_domain(struct dlb2_dev *dev, struct dlb2_domain *domain)
+ {
+ 	int i, ret = 0;
+ 
++	/*
++	 * Check if the domain was reset and its memory released during FLR
++	 * handling.
++	 */
++	if (!domain->valid) {
++		/*
++		 * Before clearing the sched_domains[] pointer, confirm the
++		 * slot isn't in use by a newer (valid) domain.
++		 */
++		if (dev->sched_domains[domain->id] == domain)
++			dev->sched_domains[domain->id] = NULL;
++
++		devm_kfree(dev->dlb2_device, domain);
++		return 0;
++	}
++
+ 	ret = dev->ops->reset_domain(&dev->hw, domain->id);
+ 
+ 	/* Unpin and free all memory pages associated with the domain */
+@@ -270,7 +301,7 @@ int dlb2_write_domain_alert(struct dlb2_dev *dev,
+ 	struct dlb2_domain_alert alert;
+ 	int idx;
+ 
+-	if (!domain) {
++	if (!domain || !domain->valid) {
+ 		dev_err(dev->dlb2_device,
+ 			"[%s()] Domain invalid (device reset)\n",
+ 			__func__);
+@@ -342,9 +373,16 @@ static int dlb2_read_domain_alert(struct dlb2_dev *dev,
+ 			current->pid, domain->id);
+ 
+ 		if (wait_event_interruptible(domain->wq_head,
+-					     dlb2_alerts_avail(domain)))
++					     dlb2_alerts_avail(domain) ||
++					     !READ_ONCE(domain->valid)))
+ 			return -ERESTARTSYS;
+ 
++		/* See dlb2_reset_prepare() for more details */
++		if (!READ_ONCE(domain->valid)) {
++			alert->alert_id = DLB2_DOMAIN_ALERT_DEVICE_RESET;
++			return 0;
++		}
++
+ 		spin_lock(&domain->alert_lock);
+ 	}
+ 
+@@ -373,6 +411,11 @@ static ssize_t dlb2_domain_read(struct file *f,
+ 	if (len != sizeof(alert))
+ 		return -EINVAL;
+ 
++	if (!domain->valid) {
++		alert.alert_id = DLB2_DOMAIN_ALERT_DEVICE_RESET;
++		goto copy;
++	}
++
+ 	/* See dlb2_user.h for details on domain alert notifications */
+ 
+ 	ret = dlb2_read_domain_alert(dev,
+@@ -382,6 +425,7 @@ static ssize_t dlb2_domain_read(struct file *f,
+ 	if (ret)
+ 		return ret;
+ 
++copy:
+ 	if (copy_to_user(buf, &alert, sizeof(alert)))
+ 		return -EFAULT;
+ 
+@@ -429,6 +473,11 @@ static int dlb2_pp_mmap(struct file *f, struct vm_area_struct *vma)
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		ret = -EINVAL;
++		goto end;
++	}
++
+ 	if ((vma->vm_end - vma->vm_start) != DLB2_PP_SIZE) {
+ 		ret = -EINVAL;
+ 		goto end;
+@@ -468,6 +517,11 @@ static int dlb2_cq_mmap(struct file *f, struct vm_area_struct *vma)
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		ret = -EINVAL;
++		goto end;
++	}
++
+ 	if ((vma->vm_end - vma->vm_start) != DLB2_CQ_SIZE) {
+ 		ret = -EINVAL;
+ 		goto end;
+@@ -724,10 +778,10 @@ static void dlb2_remove(struct pci_dev *pdev)
+ 	devm_kfree(&pdev->dev, dlb2_dev);
  }
  
-@@ -311,6 +430,9 @@ dlb2_pf_arm_cq_interrupt(struct dlb2_dev *dev,
- static int
- dlb2_pf_init_driver_state(struct dlb2_dev *dlb2_dev)
+-#ifdef CONFIG_PM
+-static void dlb2_reset_hardware_state(struct dlb2_dev *dev)
++static void dlb2_reset_hardware_state(struct dlb2_dev *dev, bool issue_flr)
  {
-+	dlb2_dev->ingress_err.count = 0;
-+	dlb2_dev->ingress_err.enabled = true;
-+
- 	mutex_init(&dlb2_dev->resource_mutex);
+-	dlb2_reset_device(dev->pdev);
++	if (issue_flr)
++		dlb2_reset_device(dev->pdev);
+ 
+ 	/* Reinitialize interrupt configuration */
+ 	dev->ops->reinit_interrupts(dev);
+@@ -736,6 +790,7 @@ static void dlb2_reset_hardware_state(struct dlb2_dev *dev)
+ 	dev->ops->init_hardware(dev);
+ }
+ 
++#ifdef CONFIG_PM
+ static int dlb2_runtime_suspend(struct device *dev)
+ {
+ 	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+@@ -766,7 +821,7 @@ static int dlb2_runtime_resume(struct device *dev)
+ 	dev_dbg(dlb2_dev->dlb2_device, "Resuming device operation\n");
+ 
+ 	/* Now reinitialize the device state. */
+-	dlb2_reset_hardware_state(dlb2_dev);
++	dlb2_reset_hardware_state(dlb2_dev, true);
  
  	return 0;
-@@ -788,6 +910,54 @@ static ssize_t dev_id_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(dev_id);
- 
-+static ssize_t ingress_err_en_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
-+	ssize_t ret;
-+
-+	mutex_lock(&dlb2_dev->resource_mutex);
-+
-+	ret = scnprintf(buf, PAGE_SIZE, "%d\n", dlb2_dev->ingress_err.enabled);
-+
-+	mutex_unlock(&dlb2_dev->resource_mutex);
-+
-+	return ret;
-+}
-+
-+static ssize_t ingress_err_en_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf,
-+				    size_t count)
-+{
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
-+	unsigned long num;
-+	ssize_t ret;
-+
-+	ret = kstrtoul(buf, 0, &num);
-+	if (ret)
-+		return -1;
-+
-+	mutex_lock(&dlb2_dev->resource_mutex);
-+
-+	if (!dlb2_dev->ingress_err.enabled && num) {
-+		dlb2_enable_ingress_error_alarms(&dlb2_dev->hw);
-+
-+		dev_err(dlb2_dev->dlb2_device,
-+			"[%s()] Re-enabling ingress error interrupts",
-+			__func__);
-+
-+		dlb2_dev->ingress_err.enabled = true;
-+	}
-+
-+	mutex_unlock(&dlb2_dev->resource_mutex);
-+
-+	return (ret == 0) ? count : ret;
-+}
-+
-+static DEVICE_ATTR_RW(ingress_err_en);
-+
- static int
- dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
- {
-@@ -796,6 +966,10 @@ dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
- 
- 	kobj = &dlb2_dev->pdev->dev.kobj;
- 
-+	ret = sysfs_create_file(kobj, &dev_attr_ingress_err_en.attr);
-+	if (ret)
-+		goto dlb2_ingress_err_en_attr_group_fail;
-+
- 	ret = sysfs_create_file(kobj, &dev_attr_dev_id.attr);
- 	if (ret)
- 		goto dlb2_dev_id_attr_group_fail;
-@@ -827,6 +1001,8 @@ dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
- dlb2_total_attr_group_fail:
- 	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
- dlb2_dev_id_attr_group_fail:
-+	sysfs_remove_file(kobj, &dev_attr_ingress_err_en.attr);
-+dlb2_ingress_err_en_attr_group_fail:
- 	return ret;
  }
+@@ -778,6 +833,265 @@ static struct pci_device_id dlb2_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, dlb2_id_table);
  
-@@ -842,6 +1018,7 @@ dlb2_pf_sysfs_destroy(struct dlb2_dev *dlb2_dev)
- 	sysfs_remove_group(kobj, &dlb2_avail_attr_group);
- 	sysfs_remove_group(kobj, &dlb2_total_attr_group);
- 	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
-+	sysfs_remove_file(kobj, &dev_attr_ingress_err_en.attr);
- }
- 
- static void
-diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
-index 023409022f39..c1ad34357b0a 100644
---- a/drivers/misc/dlb2/dlb2_resource.c
-+++ b/drivers/misc/dlb2/dlb2_resource.c
-@@ -4917,7 +4917,7 @@ void dlb2_read_compressed_cq_intr_status(struct dlb2_hw *hw,
- 					DLB2_SYS_DIR_CQ_63_32_OCC_INT_STS);
- }
- 
--static void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector)
-+void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector)
- {
- 	union dlb2_sys_msix_ack r0 = { {0} };
- 
-@@ -4994,6 +4994,255 @@ void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
- 	dlb2_ack_msix_interrupt(hw, DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID);
- }
- 
-+void dlb2_enable_ingress_error_alarms(struct dlb2_hw *hw)
++static unsigned int dlb2_total_device_file_refcnt(struct dlb2_dev *dev)
 +{
-+	union dlb2_sys_ingress_alarm_enbl r0;
-+
-+	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_INGRESS_ALARM_ENBL);
-+
-+	r0.field.illegal_hcw = 1;
-+	r0.field.illegal_pp = 1;
-+	r0.field.illegal_pasid = 1;
-+	r0.field.illegal_qid = 1;
-+	r0.field.disabled_qid = 1;
-+	r0.field.illegal_ldb_qid_cfg = 1;
-+
-+	DLB2_CSR_WR(hw, DLB2_SYS_INGRESS_ALARM_ENBL, r0.val);
-+}
-+
-+void dlb2_disable_ingress_error_alarms(struct dlb2_hw *hw)
-+{
-+	union dlb2_sys_ingress_alarm_enbl r0;
-+
-+	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_INGRESS_ALARM_ENBL);
-+
-+	r0.field.illegal_hcw = 0;
-+	r0.field.illegal_pp = 0;
-+	r0.field.illegal_pasid = 0;
-+	r0.field.illegal_qid = 0;
-+	r0.field.disabled_qid = 0;
-+	r0.field.illegal_ldb_qid_cfg = 0;
-+
-+	DLB2_CSR_WR(hw, DLB2_SYS_INGRESS_ALARM_ENBL, r0.val);
-+}
-+
-+static void dlb2_log_alarm_syndrome(struct dlb2_hw *hw,
-+				    const char *str,
-+				    union dlb2_sys_alarm_hw_synd r0)
-+{
-+	DLB2_HW_ERR(hw, "%s:\n", str);
-+	DLB2_HW_ERR(hw, "\tsyndrome: 0x%x\n", r0.field.syndrome);
-+	DLB2_HW_ERR(hw, "\trtype:    0x%x\n", r0.field.rtype);
-+	DLB2_HW_ERR(hw, "\talarm:    0x%x\n", r0.field.alarm);
-+	DLB2_HW_ERR(hw, "\tcwd:      0x%x\n", r0.field.cwd);
-+	DLB2_HW_ERR(hw, "\tvf_pf_mb: 0x%x\n", r0.field.vf_pf_mb);
-+	DLB2_HW_ERR(hw, "\tcls:      0x%x\n", r0.field.cls);
-+	DLB2_HW_ERR(hw, "\taid:      0x%x\n", r0.field.aid);
-+	DLB2_HW_ERR(hw, "\tunit:     0x%x\n", r0.field.unit);
-+	DLB2_HW_ERR(hw, "\tsource:   0x%x\n", r0.field.source);
-+	DLB2_HW_ERR(hw, "\tmore:     0x%x\n", r0.field.more);
-+	DLB2_HW_ERR(hw, "\tvalid:    0x%x\n", r0.field.valid);
-+}
-+
-+/* Note: this array's contents must match dlb2_alert_id() */
-+static const char dlb2_alert_strings[NUM_DLB2_DOMAIN_ALERTS][128] = {
-+	[DLB2_DOMAIN_ALERT_PP_ILLEGAL_ENQ] = "Illegal enqueue",
-+	[DLB2_DOMAIN_ALERT_PP_EXCESS_TOKEN_POPS] = "Excess token pops",
-+	[DLB2_DOMAIN_ALERT_ILLEGAL_HCW] = "Illegal HCW",
-+	[DLB2_DOMAIN_ALERT_ILLEGAL_QID] = "Illegal QID",
-+	[DLB2_DOMAIN_ALERT_DISABLED_QID] = "Disabled QID",
-+};
-+
-+static void dlb2_log_pf_vf_syndrome(struct dlb2_hw *hw,
-+				    const char *str,
-+				    union dlb2_sys_alarm_pf_synd0 r0,
-+				    union dlb2_sys_alarm_pf_synd1 r1,
-+				    union dlb2_sys_alarm_pf_synd2 r2,
-+				    u32 alert_id)
-+{
-+	DLB2_HW_ERR(hw, "%s:\n", str);
-+	if (alert_id < NUM_DLB2_DOMAIN_ALERTS)
-+		DLB2_HW_ERR(hw, "Alert: %s\n", dlb2_alert_strings[alert_id]);
-+	DLB2_HW_ERR(hw, "\tsyndrome:     0x%x\n", r0.field.syndrome);
-+	DLB2_HW_ERR(hw, "\trtype:        0x%x\n", r0.field.rtype);
-+	DLB2_HW_ERR(hw, "\tis_ldb:       0x%x\n", r0.field.is_ldb);
-+	DLB2_HW_ERR(hw, "\tcls:          0x%x\n", r0.field.cls);
-+	DLB2_HW_ERR(hw, "\taid:          0x%x\n", r0.field.aid);
-+	DLB2_HW_ERR(hw, "\tunit:         0x%x\n", r0.field.unit);
-+	DLB2_HW_ERR(hw, "\tsource:       0x%x\n", r0.field.source);
-+	DLB2_HW_ERR(hw, "\tmore:         0x%x\n", r0.field.more);
-+	DLB2_HW_ERR(hw, "\tvalid:        0x%x\n", r0.field.valid);
-+	DLB2_HW_ERR(hw, "\tdsi:          0x%x\n", r1.field.dsi);
-+	DLB2_HW_ERR(hw, "\tqid:          0x%x\n", r1.field.qid);
-+	DLB2_HW_ERR(hw, "\tqtype:        0x%x\n", r1.field.qtype);
-+	DLB2_HW_ERR(hw, "\tqpri:         0x%x\n", r1.field.qpri);
-+	DLB2_HW_ERR(hw, "\tmsg_type:     0x%x\n", r1.field.msg_type);
-+	DLB2_HW_ERR(hw, "\tlock_id:      0x%x\n", r2.field.lock_id);
-+	DLB2_HW_ERR(hw, "\tmeas:         0x%x\n", r2.field.meas);
-+	DLB2_HW_ERR(hw, "\tdebug:        0x%x\n", r2.field.debug);
-+	DLB2_HW_ERR(hw, "\tcq_pop:       0x%x\n", r2.field.cq_pop);
-+	DLB2_HW_ERR(hw, "\tqe_uhl:       0x%x\n", r2.field.qe_uhl);
-+	DLB2_HW_ERR(hw, "\tqe_orsp:      0x%x\n", r2.field.qe_orsp);
-+	DLB2_HW_ERR(hw, "\tqe_valid:     0x%x\n", r2.field.qe_valid);
-+	DLB2_HW_ERR(hw, "\tcq_int_rearm: 0x%x\n", r2.field.cq_int_rearm);
-+	DLB2_HW_ERR(hw, "\tdsi_error:    0x%x\n", r2.field.dsi_error);
-+}
-+
-+static void dlb2_clear_syndrome_register(struct dlb2_hw *hw, u32 offset)
-+{
-+	union dlb2_sys_alarm_hw_synd r0 = { {0} };
-+
-+	r0.field.valid = 1;
-+	r0.field.more = 1;
-+
-+	DLB2_CSR_WR(hw, offset, r0.val);
-+}
-+
-+void dlb2_process_alarm_interrupt(struct dlb2_hw *hw)
-+{
-+	union dlb2_sys_alarm_hw_synd r0;
-+
-+	DLB2_HW_DBG(hw, "Processing alarm interrupt\n");
-+
-+	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_HW_SYND);
-+
-+	dlb2_log_alarm_syndrome(hw, "HW alarm syndrome", r0);
-+
-+	dlb2_clear_syndrome_register(hw, DLB2_SYS_ALARM_HW_SYND);
-+}
-+
-+static void dlb2_process_ingress_error(struct dlb2_hw *hw,
-+				       union dlb2_sys_alarm_pf_synd0 r0,
-+				       u32 alert_id,
-+				       bool vf_error,
-+				       unsigned int vf_id)
-+{
-+	struct dlb2_dev *dev;
-+	u32 domain_id;
-+	bool is_ldb;
-+	u8 port_id;
-+	int ret;
-+
-+	port_id = r0.field.syndrome & 0x7F;
-+	if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS)
-+		is_ldb = r0.field.is_ldb;
-+	else
-+		is_ldb = (r0.field.syndrome & 0x80) != 0;
-+
-+	/* Get the domain ID and, if it's a VF domain, the virtual port ID */
-+	if (is_ldb) {
-+		struct dlb2_ldb_port *port;
-+
-+		port = dlb2_get_ldb_port_from_id(hw, port_id, vf_error, vf_id);
-+		if (!port) {
-+			DLB2_HW_ERR(hw,
-+				    "[%s()]: Internal error: unable to find LDB port\n\tport: %u, vf_error: %u, vf_id: %u\n",
-+				    __func__, port_id, vf_error, vf_id);
-+			return;
-+		}
-+
-+		domain_id = port->domain_id.phys_id;
-+	} else {
-+		struct dlb2_dir_pq_pair *port;
-+
-+		port = dlb2_get_dir_pq_from_id(hw, port_id, vf_error, vf_id);
-+		if (!port) {
-+			DLB2_HW_ERR(hw,
-+				    "[%s()]: Internal error: unable to find DIR port\n\tport: %u, vf_error: %u, vf_id: %u\n",
-+				    __func__, port_id, vf_error, vf_id);
-+			return;
-+		}
-+
-+		domain_id = port->domain_id.phys_id;
-+	}
-+
-+	dev = container_of(hw, struct dlb2_dev, hw);
-+
-+	ret = dlb2_write_domain_alert(dev,
-+				      dev->sched_domains[domain_id],
-+				      alert_id,
-+				      (is_ldb << 8) | port_id);
-+	if (ret)
-+		DLB2_HW_ERR(hw,
-+			    "[%s()] Internal error: failed to notify\n",
-+			    __func__);
-+}
-+
-+static u32 dlb2_alert_id(union dlb2_sys_alarm_pf_synd0 r0)
-+{
-+	if (r0.field.unit == DLB2_ALARM_HW_UNIT_CHP &&
-+	    r0.field.aid == DLB2_ALARM_HW_CHP_AID_ILLEGAL_ENQ)
-+		return DLB2_DOMAIN_ALERT_PP_ILLEGAL_ENQ;
-+	else if (r0.field.unit == DLB2_ALARM_HW_UNIT_CHP &&
-+		 r0.field.aid == DLB2_ALARM_HW_CHP_AID_EXCESS_TOKEN_POPS)
-+		return DLB2_DOMAIN_ALERT_PP_EXCESS_TOKEN_POPS;
-+	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
-+		 r0.field.aid == DLB2_ALARM_SYS_AID_ILLEGAL_HCW)
-+		return DLB2_DOMAIN_ALERT_ILLEGAL_HCW;
-+	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
-+		 r0.field.aid == DLB2_ALARM_SYS_AID_ILLEGAL_QID)
-+		return DLB2_DOMAIN_ALERT_ILLEGAL_QID;
-+	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
-+		 r0.field.aid == DLB2_ALARM_SYS_AID_DISABLED_QID)
-+		return DLB2_DOMAIN_ALERT_DISABLED_QID;
-+	else
-+		return NUM_DLB2_DOMAIN_ALERTS;
-+}
-+
-+bool dlb2_process_ingress_error_interrupt(struct dlb2_hw *hw)
-+{
-+	union dlb2_sys_alarm_pf_synd0 r0;
-+	union dlb2_sys_alarm_pf_synd1 r1;
-+	union dlb2_sys_alarm_pf_synd2 r2;
-+	u32 alert_id;
-+	bool valid;
++	unsigned int cnt = 0;
 +	int i;
 +
-+	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND0);
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++)
++		if (dev->sched_domains[i])
++			cnt += kref_read(&dev->sched_domains[i]->refcnt);
 +
-+	valid = r0.field.valid;
-+
-+	if (r0.field.valid) {
-+		r1.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND1);
-+		r2.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND2);
-+
-+		alert_id = dlb2_alert_id(r0);
-+
-+		dlb2_log_pf_vf_syndrome(hw,
-+					"PF Ingress error alarm",
-+					r0, r1, r2, alert_id);
-+
-+		dlb2_clear_syndrome_register(hw, DLB2_SYS_ALARM_PF_SYND0);
-+
-+		dlb2_process_ingress_error(hw, r0, alert_id, false, 0);
-+	}
-+
-+	for (i = 0; i < DLB2_MAX_NUM_VDEVS; i++) {
-+		r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND0(i));
-+
-+		valid |= r0.field.valid;
-+
-+		if (!r0.field.valid)
-+			continue;
-+
-+		r1.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND1(i));
-+		r2.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND2(i));
-+
-+		alert_id = dlb2_alert_id(r0);
-+
-+		dlb2_log_pf_vf_syndrome(hw,
-+					"VF Ingress error alarm",
-+					r0, r1, r2, alert_id);
-+
-+		dlb2_clear_syndrome_register(hw,
-+					     DLB2_SYS_ALARM_VF_SYND0(i));
-+
-+		dlb2_process_ingress_error(hw, r0, alert_id, true, i);
-+	}
-+
-+	return valid;
++	return cnt;
 +}
 +
- int dlb2_get_group_sequence_numbers(struct dlb2_hw *hw, unsigned int group_id)
++static bool dlb2_in_use(struct dlb2_dev *dev)
++{
++	return dlb2_total_device_file_refcnt(dev) != 0;
++}
++
++static void dlb2_wait_for_idle(struct dlb2_dev *dlb2_dev)
++{
++	int i;
++
++	for (i = 0; i < dlb2_reset_timeout_s * 10; i++) {
++		bool idle;
++
++		mutex_lock(&dlb2_dev->resource_mutex);
++
++		/*
++		 * Check for any application threads in the driver, extant
++		 * mmaps, or open device files.
++		 */
++		idle = !dlb2_in_use(dlb2_dev);
++
++		mutex_unlock(&dlb2_dev->resource_mutex);
++
++		if (idle)
++			return;
++
++		cond_resched();
++		msleep(100);
++	}
++
++	dev_err(dlb2_dev->dlb2_device,
++		"PF driver timed out waiting for applications to idle\n");
++}
++
++static void dlb2_unmap_all_mappings(struct dlb2_dev *dlb2_dev)
++{
++	dev_dbg(dlb2_dev->dlb2_device, "Zapping memory mappings\n");
++
++	if (dlb2_dev->inode)
++		unmap_mapping_range(dlb2_dev->inode->i_mapping, 0, 0, 1);
++}
++
++static void dlb2_disable_domain_files(struct dlb2_dev *dlb2_dev)
++{
++	int i;
++
++	/*
++	 * Set all domain->valid flags to false to prevent existing device
++	 * files from being used to enter the device driver.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++) {
++		if (dlb2_dev->sched_domains[i])
++			dlb2_dev->sched_domains[i]->valid = false;
++	}
++}
++
++static void dlb2_wake_threads(struct dlb2_dev *dlb2_dev)
++{
++	int i;
++
++	/*
++	 * Wake any blocked device file readers. These threads will return the
++	 * DLB2_DOMAIN_ALERT_DEVICE_RESET alert, and well-behaved applications
++	 * will close their fds and unmap DLB memory as a result.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++) {
++		if (!dlb2_dev->sched_domains[i])
++			continue;
++
++		wake_up_interruptible(&dlb2_dev->sched_domains[i]->wq_head);
++	}
++
++	/* Wake threads blocked on a CQ interrupt */
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++)
++		dlb2_wake_thread(dlb2_dev,
++				 &dlb2_dev->intr.ldb_cq_intr[i],
++				 WAKE_DEV_RESET);
++
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++)
++		dlb2_wake_thread(dlb2_dev,
++				 &dlb2_dev->intr.dir_cq_intr[i],
++				 WAKE_DEV_RESET);
++}
++
++static void dlb2_stop_users(struct dlb2_dev *dlb2_dev)
++{
++	/*
++	 * Disable existing domain files to prevent applications from enter the
++	 * device driver through file operations. (New files can't be opened
++	 * while the resource mutex is held.)
++	 */
++	dlb2_disable_domain_files(dlb2_dev);
++
++	/* Wake any threads blocked in the kernel */
++	dlb2_wake_threads(dlb2_dev);
++}
++
++static void dlb2_reset_prepare(struct pci_dev *pdev)
++{
++	/*
++	 * Unexpected FLR. Applications may be actively using the device at
++	 * the same time, which poses two problems:
++	 * - If applications continue to enqueue to the hardware they will
++	 *   cause hardware errors, because the FLR will have reset the
++	 *   scheduling domains, ports, and queues.
++	 * - When the applications end, they must not trigger the driver's
++	 *   domain reset code. The domain reset procedure would fail because
++	 *   the device's registers will have been reset by the FLR.
++	 *
++	 * To avoid these problems, the driver handles unexpected resets as
++	 * follows:
++	 * 1. Set the reset_active flag. This flag blocks new device files
++	 *    from being opened and is used as a wakeup condition in the
++	 *    driver's wait queues.
++	 * 2. If this is a PF FLR and there are active VFs, send them a
++	 *    pre-reset notification, so they can stop any VF applications.
++	 * 3. Disable all device files (set the per-file valid flag to false,
++	 *    which prevents the file from being used after FLR completes) and
++	 *    wake any threads on a wait queue.
++	 * 4. If the DLB is not in use -- i.e. no open device files or memory
++	 *    mappings, and no VFs in use (PF FLR only) -- the FLR can begin.
++	 * 5. Else, the driver waits (up to a user-specified timeout, default
++	 *    5s) for software to stop using the driver and the device. If the
++	 *    timeout elapses, the driver zaps any remaining MMIO mappings.
++	 *
++	 * After the FLR:
++	 * 1. Clear the per-domain pointers (the memory is freed in either
++	 *    dlb2_close or dlb2_stop_users).
++	 * 2. Release any remaining allocated port or CQ memory, now that it's
++	 *    guaranteed the device is unconfigured and won't write to memory.
++	 * 3. Reset software and hardware state
++	 * 4. Notify VFs that the FLR is complete.
++	 * 5. Set reset_active to false.
++	 */
++
++	struct dlb2_dev *dlb2_dev;
++
++	dlb2_dev = pci_get_drvdata(pdev);
++
++	dev_dbg(dlb2_dev->dlb2_device, "DLB driver reset prepare\n");
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	/* Block any new device files from being opened */
++	dlb2_dev->reset_active = true;
++
++	/*
++	 * If the device has 1+ VFs, even if they're not in use, it will not be
++	 * suspended. To avoid having to handle two cases (reset while device
++	 * suspended and reset while device active), increment the device's PM
++	 * refcnt here, to guarantee that the device is in D0 for the duration
++	 * of the reset.
++	 */
++	dlb2_dev->ops->inc_pm_refcnt(dlb2_dev->pdev, true);
++
++	/*
++	 * Stop existing applications from continuing to use the device by
++	 * blocking kernel driver interfaces and waking any threads on wait
++	 * queues, but don't zap VMA entries yet. If this is a PF FLR, notify
++	 * any VFs of the impending FLR so they can stop their users as well.
++	 */
++	dlb2_stop_users(dlb2_dev);
++
++	/* If no software is using the device, there's nothing to clean up. */
++	if (!dlb2_in_use(dlb2_dev))
++		return;
++
++	dev_dbg(dlb2_dev->dlb2_device, "Waiting for users to stop\n");
++
++	/*
++	 * Release the resource mutex so threads can complete their work and
++	 * exit the driver
++	 */
++	mutex_unlock(&dlb2_dev->resource_mutex);
++
++	/*
++	 * Wait until the device is idle or dlb2_reset_timeout_s seconds
++	 * elapse. If the timeout occurs, zap any remaining VMA entries to
++	 * guarantee applications can't reach the device.
++	 */
++	dlb2_wait_for_idle(dlb2_dev);
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	if (!dlb2_in_use(dlb2_dev))
++		return;
++
++	dlb2_unmap_all_mappings(dlb2_dev);
++
++	/*
++	 * Don't release resource_mutex until after the FLR occurs. This
++	 * prevents applications from accessing the device during reset.
++	 */
++}
++
++static void dlb2_reset_done(struct pci_dev *pdev)
++{
++	struct dlb2_dev *dlb2_dev;
++	int i;
++
++	dlb2_dev = pci_get_drvdata(pdev);
++
++	/*
++	 * Clear all domain pointers, to be filled in by post-FLR applications
++	 * using the device driver.
++	 *
++	 * Note that domain memory isn't leaked -- it is either freed during
++	 * dlb2_stop_users() or in the file close callback.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++)
++		dlb2_dev->sched_domains[i] = NULL;
++
++	/*
++	 * Free allocated CQ memory. These are no longer accessible to
++	 * user-space: either the applications closed, or their mappings were
++	 * zapped in dlb2_reset_prepare().
++	 */
++	dlb2_release_device_memory(dlb2_dev);
++
++	/* Reset interrupt state */
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++)
++		dlb2_dev->intr.ldb_cq_intr[i].configured = false;
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++)
++		dlb2_dev->intr.dir_cq_intr[i].configured = false;
++
++	/* Reset resource allocation state */
++	dlb2_resource_reset(&dlb2_dev->hw);
++
++	/* Reset the hardware state, but don't issue an additional FLR */
++	dlb2_reset_hardware_state(dlb2_dev, false);
++
++	dev_dbg(dlb2_dev->dlb2_device, "DLB driver reset done\n");
++
++	dlb2_dev->domain_reset_failed = false;
++
++	dlb2_dev->reset_active = false;
++
++	/* Undo the PM refcnt increment in dlb2_reset_prepare(). */
++	dlb2_dev->ops->dec_pm_refcnt(dlb2_dev->pdev);
++
++	mutex_unlock(&dlb2_dev->resource_mutex);
++}
++
++static const struct pci_error_handlers dlb2_err_handler = {
++	.reset_prepare = dlb2_reset_prepare,
++	.reset_done    = dlb2_reset_done,
++};
++
+ #ifdef CONFIG_PM
+ static const struct dev_pm_ops dlb2_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(dlb2_runtime_suspend, dlb2_runtime_resume, NULL)
+@@ -792,6 +1106,7 @@ static struct pci_driver dlb2_pci_driver = {
+ #ifdef CONFIG_PM
+ 	.driver.pm	 = &dlb2_pm_ops,
+ #endif
++	.err_handler     = &dlb2_err_handler,
+ };
+ 
+ static int __init dlb2_init_module(void)
+diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+index 4b7a430ffd86..e804639af0f8 100644
+--- a/drivers/misc/dlb2/dlb2_main.h
++++ b/drivers/misc/dlb2/dlb2_main.h
+@@ -31,6 +31,8 @@ static const char dlb2_driver_name[] = KBUILD_MODNAME;
+ #define DLB2_NUM_FUNCS_PER_DEVICE (1 + DLB2_MAX_NUM_VDEVS)
+ #define DLB2_MAX_NUM_DEVICES (DLB2_MAX_NUM_PFS * DLB2_NUM_FUNCS_PER_DEVICE)
+ 
++#define DLB2_DEFAULT_RESET_TIMEOUT_S 5
++
+ enum dlb2_device_type {
+ 	DLB2_PF,
+ 	DLB2_VF,
+@@ -182,6 +184,7 @@ struct dlb2_domain {
+ 	u8 alert_rd_idx;
+ 	u8 alert_wr_idx;
+ 	u8 id;
++	u8 valid;
+ };
+ 
+ struct dlb2_cq_intr {
+@@ -237,6 +240,7 @@ struct dlb2_dev {
+ 	int id;
+ 	dev_t dev_number;
+ 	u8 domain_reset_failed;
++	u8 reset_active;
+ 	u8 worker_launched;
+ };
+ 
+diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
+index 2c04c5164223..023409022f39 100644
+--- a/drivers/misc/dlb2/dlb2_resource.c
++++ b/drivers/misc/dlb2/dlb2_resource.c
+@@ -24,6 +24,9 @@
+ #define DLB2_DOM_LIST_FOR_SAFE(head, ptr, ptr_tmp) \
+ 	list_for_each_entry_safe(ptr, ptr_tmp, &(head), domain_list)
+ 
++#define DLB2_FUNC_LIST_FOR_SAFE(head, ptr, ptr_tmp) \
++	list_for_each_entry_safe(ptr, ptr_tmp, &(head), func_list)
++
+ /*
+  * The PF driver cannot assume that a register write will affect subsequent HCW
+  * writes. To ensure a write completes, the driver must read back a CSR. This
+@@ -5327,6 +5330,20 @@ static int dlb2_domain_reset_software_state(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++void dlb2_resource_reset(struct dlb2_hw *hw)
++{
++	struct dlb2_hw_domain *domain, *next __attribute__((unused));
++	int i;
++
++	for (i = 0; i < DLB2_MAX_NUM_VDEVS; i++) {
++		DLB2_FUNC_LIST_FOR_SAFE(hw->vdev[i].used_domains, domain, next)
++			dlb2_domain_reset_software_state(hw, domain);
++	}
++
++	DLB2_FUNC_LIST_FOR_SAFE(hw->pf.used_domains, domain, next)
++		dlb2_domain_reset_software_state(hw, domain);
++}
++
+ static u32 dlb2_dir_queue_depth(struct dlb2_hw *hw,
+ 				struct dlb2_dir_pq_pair *queue)
  {
- 	if (group_id >= DLB2_MAX_NUM_SEQUENCE_NUMBER_GROUPS)
 diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
-index 7570e02d37e5..c194778d88bc 100644
+index 430175efcd71..7570e02d37e5 100644
 --- a/drivers/misc/dlb2/dlb2_resource.h
 +++ b/drivers/misc/dlb2/dlb2_resource.h
-@@ -517,6 +517,18 @@ int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
- 				    u16 threshold);
+@@ -37,6 +37,15 @@ int dlb2_resource_init(struct dlb2_hw *hw);
+ void dlb2_resource_free(struct dlb2_hw *hw);
  
  /**
-+ * dlb2_enable_ingress_error_alarms() - enable ingress error alarm interrupts
++ * dlb2_resource_reset() - reset in-use resources to their initial state
 + * @hw: dlb2_hw handle for a particular device.
++ *
++ * This function resets in-use resources, and makes them available for use.
++ * All resources go back to their owning function, whether a PF or a VF.
 + */
-+void dlb2_enable_ingress_error_alarms(struct dlb2_hw *hw);
++void dlb2_resource_reset(struct dlb2_hw *hw);
 +
 +/**
-+ * dlb2_disable_ingress_error_alarms() - disable ingress error alarm interrupts
-+ * @hw: dlb2_hw handle for a particular device.
-+ */
-+void dlb2_disable_ingress_error_alarms(struct dlb2_hw *hw);
-+
-+/**
-  * dlb2_set_msix_mode() - enable certain hardware alarm interrupts
+  * dlb2_hw_create_sched_domain() - create a scheduling domain
   * @hw: dlb2_hw handle for a particular device.
-  * @mode: MSI-X mode (DLB2_MSIX_MODE_PACKED or DLB2_MSIX_MODE_COMPRESSED)
-@@ -527,6 +539,16 @@ int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
- void dlb2_set_msix_mode(struct dlb2_hw *hw, int mode);
- 
- /**
-+ * dlb2_ack_msix_interrupt() - Ack an MSI-X interrupt
-+ * @hw: dlb2_hw handle for a particular device.
-+ * @vector: interrupt vector.
-+ *
-+ * Note: Only needed for PF service interrupts (vector 0). CQ interrupts are
-+ * acked in dlb2_ack_compressed_cq_intr().
-+ */
-+void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector);
-+
-+/**
-  * dlb2_arm_cq_interrupt() - arm a CQ's interrupt
-  * @hw: dlb2_hw handle for a particular device.
-  * @port_id: port ID
-@@ -582,6 +604,29 @@ void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
- 				 u32 *dir_interrupts);
- 
- /**
-+ * dlb2_process_alarm_interrupt() - process an alarm interrupt
-+ * @hw: dlb2_hw handle for a particular device.
-+ *
-+ * This function reads the alarm syndrome, logs its, and acks the interrupt.
-+ * This function should be called from the alarm interrupt handler when
-+ * interrupt vector DLB2_INT_ALARM fires.
-+ */
-+void dlb2_process_alarm_interrupt(struct dlb2_hw *hw);
-+
-+/**
-+ * dlb2_process_ingress_error_interrupt() - process ingress error interrupts
-+ * @hw: dlb2_hw handle for a particular device.
-+ *
-+ * This function reads the alarm syndrome, logs it, notifies user-space, and
-+ * acks the interrupt. This function should be called from the alarm interrupt
-+ * handler when interrupt vector DLB2_INT_INGRESS_ERROR fires.
-+ *
-+ * Return:
-+ * Returns true if an ingress error interrupt occurred, false otherwise
-+ */
-+bool dlb2_process_ingress_error_interrupt(struct dlb2_hw *hw);
-+
-+/**
-  * dlb2_get_group_sequence_numbers() - return a group's number of SNs per queue
-  * @hw: dlb2_hw handle for a particular device.
-  * @group_id: sequence number group ID.
+  * @args: scheduling domain creation arguments.
 -- 
 2.13.6
 
