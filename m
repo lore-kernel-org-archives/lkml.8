@@ -2,177 +2,107 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C398CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B231FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA9720722
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E5920702
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DogPUd0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgGLRJT (ORCPT
+        id S1729146AbgGLRRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 13:09:19 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:49746 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgGLRJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 13:09:18 -0400
-Received: by mail-il1-f199.google.com with SMTP id w10so7900992ilm.16
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 10:09:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Yw72Y/dPha6dHvTp53M8GYTZT11pIsw/90iuY03eMJI=;
-        b=fPB7El2Po8Yp+DcHnx9R4pVTRHJnAQ9wkvblT0WSA65nV37wnC/TAnZSAjZMPXiAzJ
-         98TjBzCEFASVWFIRMusezLP7il2UdPJEfoag/XY+uMcZRqS2HPmtCBt8BRP+DgeUv61t
-         5nAru/eNCPMyIA0uwUtFbM9a087SCWvi21xVY2yq+XNd6hFOdvQH7YlSI3AcUfmvLkQj
-         ZrrKD2a0oJw9JT5cVT/sis+VWbqWKAl5d4zR+txp0rSdj0/H6lquIvBhcwzEUK3nZTZR
-         4C3k/g3UuQOrujYg8oBwSkhD4mniz+kgpRdUhX24zB3V7QZEBbeOzvCsvIpHAOxS3kN4
-         gcPw==
-X-Gm-Message-State: AOAM530hjUy45lFjTTUuN0YyrWdc1gE0uuVF+IecYtvKP4FQRwDanNz7
-        sC0KrPmSy0tnxaOhTHJgnKktb9yONI5/D8HREUln16kg/e5G
-X-Google-Smtp-Source: ABdhPJy1J+iM3TsWri9oqL/HigR5IMR4FFaNI4Eb9H0bjlox0GrWTqLa7z0a0hEFqIg1egEJA0B7f19WFWYF4q0ATy+0hnBpwaqH
+        Sun, 12 Jul 2020 13:17:12 -0400
+Received: from mout.gmx.net ([212.227.15.15]:36651 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728859AbgGLRRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 13:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1594574211;
+        bh=M2koFojxYZHpRAK0x2WQcPQc3sv3CjqDJzdHS3xYj14=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=DogPUd0g/Xo4tFUVHW7YB3R8cyR4qGaHP+vv+gWzcJVG24kMcr14Vww6tQ8o4cUZI
+         VR0UhMSQbzvCWs+mqF0S4nGIp3XwfFdnT0qEsfmfHiDjl+6dYUUwUhMtcm2+tl+S0q
+         DgRKlk93b/nhXgoacjvBXhrG6fN8rNjepPt0X2ao=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-s9 ([185.75.74.1]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M42jK-1jufas3Myu-0004bk; Sun, 12
+ Jul 2020 19:16:50 +0200
+Date:   Sun, 12 Jul 2020 19:16:43 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
+References: <20200707103412.1010823-1-enric.balletbo@collabora.com> <98369dbc-2e2a-a1bd-f3cd-68f33f66b882@gmail.com> <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:2401:: with SMTP id f1mr86680188jaa.66.1594573757391;
- Sun, 12 Jul 2020 10:09:17 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 10:09:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000060a7a405aa41a24b@google.com>
-Subject: stack segment fault in stack_depot_save
-From:   syzbot <syzbot+e85270bd0e2619ac6b0d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@gmail.com, edumazet@google.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        liuhangbin@gmail.com, mcroce@redhat.com, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] Revert "thermal: mediatek: fix register index error"
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+CC:     drinkcat@chromium.org, linux-pm@vger.kernel.org,
+        Michael Kao <michael.kao@mediatek.com>,
+        Eduardo Valentin <edubezval@gmail.com>, hsinyi@chromium.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <F97EEB5B-958A-4CA3-A3F2-7668B8E778FA@public-files.de>
+X-Provags-ID: V03:K1:mS6EkSIZOrghNWC5/SoCGSYcpQLUuJGPL1lv6FDvjKZ3vSgAhWI
+ BoxxaAmyLLri3QA4FRCwXpRFwYdxWw/SkIEdEMQCjFri9SEA0fKL/fuT+pQ14zircKQ7iSX
+ QaRZ/Uu9sy/7rwLrzWVsf6hnWK0LFJa5kHtC0KMdSLN5u2iPY/Dc7LPzDmIPy+kphwrdAgS
+ 6csCl11UWB5pslnyK1sjA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HJNgiWvLWzA=:nnam4Ncd9BQH2A8XBPDYYC
+ yXDY4h7e5EexShz33mvZYI1NriBhQL30tV3iuhqmGNiPeN7j3si4gQ3K33R7NXqFVthOqsYCG
+ QmaEMCqwak3H2aDJiN30XzyYVhI6chRob4Hr9Nhitig66S5+rm8BUtl+4FIXUZ7F6QQ3fv+eZ
+ RekOFNSH/69OXYk2Ijls3E2ntSGEAB7m90dolCJAtesp7hvqgSxQZ9LGPyAHRSkUoScuCmLxX
+ oZnUfxsAG/ajXJM6UUIurzxqHcVypPeyP90PD3x4imauCbLm8SXraG2KFvfa8boHbuTizas9X
+ zhuf3FU1CHugF96moHlsOm6yLtLIbftRNpYS3IssxwfFVy/gnYoUtSmIzA4HwZ1+Fb3DxHF4a
+ o4pf/3UQTwU5o/B87q7mcRf72fzTeyIZgFT6uhYgXEVcfnhsey1ESVFKyLkWh0rCT91UMIbPf
+ iTK2cp03I2/fYkIUJeh2PP9OSGqd4Xj62KoGJpYGcc6mYKcXenN6dbwNNMq1C6O/xKtLSlhNB
+ jjV8Bzd1p3bRPYl88Dho3wkZOcS+IgUhpDUMTpsjOJH8ZelrFeyjjMacry8D+RD7mFCGqt7+c
+ EXKJxVXBneQ9zXm0E5ZyAb3cyeTtsSIkg4gfDy57jWmqKHLJIVXMV1nUG4i/jptveVb2mO54/
+ W7Q06769OBF2mhPre8BZmnQCeXcxtFiyr9MLK9ZXRIxSxKuOcT+6LbXajd66QU463D4DT6Yne
+ +0n7TaB9rjwqQWFn/17lOxc4bA/Jks+Qyo5kO2VS6P5gYOXDUAD4jCTaiTxZeedMaDPovIQqu
+ VOXc6LAL0PYUt2sbo+/q7p0TAY6tb9YZn8ElEl/UmEdthoWYK29mK5I3yP5fCH/wnTZehrO6h
+ SJJQPEdQUNhw9GrF7LyLLRjPtVE+IAeJ7P2Y/9CicWZb1UJ1W/mUvj1wsk6cgvqbHywP4MEEg
+ xOjftfGRSF9LlyxSNpKm9NRgnsqMzNU2R92Ze7wxzPSGLcYDQPCj9xPB8pQypSqkqK0CEV40p
+ OmOCcBpewpnPTh4GKEhvXxBc2Mj5qryva5ZclDxwmst3Jcu6v6ncjELEmCqBbdqK1CYoZ5rlx
+ 0spiylqnX09IeMKt5TlPVwFYvBjuZ9k3BURy1uEr1FhvedpLH8z/pMgLRJODVlgCCaAx+nW3Q
+ aQPv5ByH/S6979+iq83GfENY6R6oHvU7uWgKLUAlp9pfTOb3zFYh59uTzOV1hkj+aZPjs2jkF
+ cu8P+i0uTPsTv285buK01icUGJUZ4Ao8DiyR2jQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e8af2f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=e85270bd0e2619ac6b0d
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e85270bd0e2619ac6b0d@syzkaller.appspotmail.com
-
-stack segment: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 6449 Comm: syz-executor.1 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:find_stack lib/stackdepot.c:185 [inline]
-RIP: 0010:stack_depot_save+0x109/0x400 lib/stackdepot.c:257
-Code: 00 41 89 df 41 81 e7 ff ff 0f 00 4a 8b 2c fd 40 72 be 8c 48 85 ed 75 12 e9 b0 00 00 00 48 8b 6d 00 48 85 ed 0f 84 a3 00 00 00 <39> 5d 08 75 ee 44 3b 6d 0c 75 e8 31 c0 48 8b 74 c5 18 49 39 34 c4
-RSP: 0018:ffffc900000070e0 EFLAGS: 00010202
-RAX: 00000000715ca103 RBX: 00000000a18ac32b RCX: 0000000000000b20
-RDX: 00000000e46675f4 RSI: 0000000000000003 RDI: 000000003e87a82a
-RBP: 0777777007777770 R08: 00000000597d27c0 R09: ffff88802b206908
-R10: fffffbfff155cb29 R11: 0000000000000000 R12: ffffc90000007130
-R13: 0000000000000012 R14: 0000000000000012 R15: 00000000000ac32b
-FS:  00007fbec16d5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b33629000 CR3: 0000000097e89000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- save_stack+0x32/0x40 mm/kasan/common.c:50
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x17a/0x340 mm/slab.c:3665
- kmalloc include/linux/slab.h:560 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- neigh_alloc net/core/neighbour.c:399 [inline]
- ___neigh_create+0x1320/0x2500 net/core/neighbour.c:577
- ip6_finish_output2+0xe3c/0x17b0 net/ipv6/ip6_output.c:114
- __ip6_finish_output net/ipv6/ip6_output.c:143 [inline]
- __ip6_finish_output+0x447/0xab0 net/ipv6/ip6_output.c:128
- ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip6_output+0x1db/0x520 net/ipv6/ip6_output.c:176
- dst_output include/net/dst.h:435 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_xmit+0x1258/0x1e80 net/ipv6/ip6_output.c:280
- sctp_v6_xmit+0x339/0x650 net/sctp/ipv6.c:217
- sctp_packet_transmit+0x20d7/0x3240 net/sctp/output.c:629
- sctp_outq_flush_transports net/sctp/outqueue.c:1147 [inline]
- sctp_outq_flush+0x2b7/0x2380 net/sctp/outqueue.c:1195
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1801 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
- sctp_do_sm+0x4d0/0x4d80 net/sctp/sm_sideeffect.c:1156
- sctp_generate_heartbeat_event+0x214/0x450 net/sctp/sm_sideeffect.c:391
- call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers.part.0+0x54c/0xa20 kernel/time/timer.c:1773
- __run_timers kernel/time/timer.c:1745 [inline]
- run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1786
- __do_softirq+0x34c/0xa60 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x111/0x170 arch/x86/kernel/irq_64.c:77
- do_softirq kernel/softirq.c:337 [inline]
- do_softirq+0x16b/0x1e0 kernel/softirq.c:324
- __local_bh_enable_ip+0x1f8/0x250 kernel/softirq.c:189
- lock_sock include/net/sock.h:1576 [inline]
- sctp_recvmsg+0x94/0xb00 net/sctp/socket.c:2111
- inet_recvmsg+0x121/0x5d0 net/ipv4/af_inet.c:845
- sock_recvmsg_nosec net/socket.c:886 [inline]
- ____sys_recvmsg+0x561/0x640 net/socket.c:2573
- ___sys_recvmsg+0x127/0x200 net/socket.c:2617
- do_recvmmsg+0x24d/0x6d0 net/socket.c:2715
- __sys_recvmmsg net/socket.c:2794 [inline]
- __do_sys_recvmmsg net/socket.c:2817 [inline]
- __se_sys_recvmmsg net/socket.c:2810 [inline]
- __x64_sys_recvmmsg+0x20b/0x260 net/socket.c:2810
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007fbec16d4c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-RAX: ffffffffffffffda RBX: 00000000004fc860 RCX: 000000000045cb29
-RDX: 00000000ffffff1f RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000008c7 R14: 00000000004cbb2f R15: 00007fbec16d56d4
-Modules linked in:
----[ end trace bf70b9b157f9c631 ]---
-RIP: 0010:find_stack lib/stackdepot.c:185 [inline]
-RIP: 0010:stack_depot_save+0x109/0x400 lib/stackdepot.c:257
-Code: 00 41 89 df 41 81 e7 ff ff 0f 00 4a 8b 2c fd 40 72 be 8c 48 85 ed 75 12 e9 b0 00 00 00 48 8b 6d 00 48 85 ed 0f 84 a3 00 00 00 <39> 5d 08 75 ee 44 3b 6d 0c 75 e8 31 c0 48 8b 74 c5 18 49 39 34 c4
-RSP: 0018:ffffc900000070e0 EFLAGS: 00010202
-RAX: 00000000715ca103 RBX: 00000000a18ac32b RCX: 0000000000000b20
-RDX: 00000000e46675f4 RSI: 0000000000000003 RDI: 000000003e87a82a
-RBP: 0777777007777770 R08: 00000000597d27c0 R09: ffff88802b206908
-R10: fffffbfff155cb29 R11: 0000000000000000 R12: ffffc90000007130
-R13: 0000000000000012 R14: 0000000000000012 R15: 00000000000ac32b
-FS:  00007fbec16d5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b33629000 CR3: 0000000097e89000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Am 12=2E Juli 2020 18:55:41 MESZ schrieb Matthias Brugger <matthias=2Ebgg@=
+gmail=2Ecom>:
+>On 10/07/2020 15:58, Matthias Brugger wrote:
+>Even more interesting, with and without the revert the
+>thermal=20
+>sensor returns always zero, so it seems it never actually worked=2E
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+The thermal driver works on bananapi-r2 till 5=2E6=2E Something in 5=2E7=
+=2E0 breaks it, but it's not caused by the reverted commit or the revert=2E=
+=2E=2Eneither the commit nor the revert has any effect on r2 (no crash/erro=
+r/functionality change)=2E
+
+Additionally there is no difference in mtk-thermal=2Ec between working 5=
+=2E6 and non-working 5=2E7=2E Thermal-merge in 5=2E7-rc1 shows also nothing=
+ suspicious and dts(i) is also same in relevant parts=2E
+
+Maybe anyone of the recipients have an idea about the broken mt7623/mt2701=
+ functionality=2E
+regards Frank
