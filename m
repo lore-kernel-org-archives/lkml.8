@@ -2,103 +2,192 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 10:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE466C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAA320720
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 10:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="jnOKsc4t"
+	by mail.kernel.org (Postfix) with ESMTP id A3C292070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgGLK63 (ORCPT
+        id S1728800AbgGLLKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 06:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbgGLK6Z (ORCPT
+        Sun, 12 Jul 2020 07:10:54 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:50713 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbgGLLKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 06:58:25 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4BFC08C5DD
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 03:58:25 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 72so7468044otc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 03:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=kYeWWIRHgqP9iYCDM/kn7rd9Gzo0YcxGmIkxYbaM0zU=;
-        b=jnOKsc4temx8BY1bZXriGMzkXDGWDzM+A3p2gSPw/T38j4sg4uUl68rloZRzH9wQTn
-         5pBKAmm6BtEfzotrdH5RR8X+2Rx2Jf1M6eTn2f7TJ1ZGrvuztUV4yKMMfObn06PHLm77
-         hzfOjIe7IRrMpfCOQBZUowdKjGGhgEu4MclJ60umiLnHxBmVQfmPonujqa/YcYppybJj
-         99gRA8PbYXeMYi42OVsfftCy/JV3XElm6c1NbDRrhGIZ/FX2QO/LF7t0r8TUgFjCczSL
-         buWIaafQJPXBuVrSbVxshXRbiHPxME0xgSo+687lnvjN6gh6BsbL4kUyN/3nYKsu6sGF
-         D2sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kYeWWIRHgqP9iYCDM/kn7rd9Gzo0YcxGmIkxYbaM0zU=;
-        b=SkjsOiUkX7VS2N9QpuCnr48SV36UGbSNC0ZIYubLjLJlXOH/sPY8IdtBVmRYIW+5oQ
-         6YJb/YcRs/XG9EiOqzrHTPKielWVXLyQ36+RhFCie8y193/jSikkPm0jMlC28YxkBmGc
-         EfPNLGfGkb8upywlns9m6KmNdULfDIrkjaOc+01hgh0mBkpsxX3OhVENZN49pJMdrWfh
-         hDKXS0AOUvQp6TBE+Lh9SDDmxC9G+MAJ1XoaHR0PFDQP/kGnxDpsuIynuhXa/ECaiToK
-         G0n6C55da7/pg0Io8QLATRf2RU6F8xyKBqd91ENzqJQbbGthKOfjU/7iHVsFcjcwKdhK
-         R/Kw==
-X-Gm-Message-State: AOAM533TOXjtSEjM2Ao43EFZJ1BHhL3atq+OmzZXYOqsKBFZWqpQWSrR
-        gGa9S3gv/za8C2A21ppYeiJRs8R/SFGJOQ==
-X-Google-Smtp-Source: ABdhPJzwfwdOwgM2gLBJlFbqVQR0Yco9rrVsUREuxxg8+EUgCLIrjo6neN/d90N0C2rDU0iewKLcng==
-X-Received: by 2002:a05:6830:1517:: with SMTP id k23mr4912550otp.217.1594551503692;
-        Sun, 12 Jul 2020 03:58:23 -0700 (PDT)
-Received: from ?IPv6:2607:fb90:95b7:945a:fceb:31ff:fed3:9377? ([2607:fb90:95b7:945a:fceb:31ff:fed3:9377])
-        by smtp.gmail.com with ESMTPSA id d11sm2488321oom.6.2020.07.12.03.58.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 03:58:23 -0700 (PDT)
-Subject: Re: [PATCH] SUPERH: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        ysato@users.sourceforge.jp, dalias@libc.org, broonie@kernel.org,
-        sboyd@kernel.org, arnd@arndb.de, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709021737.22667-1-grandmaster@al2klimov.de>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <8b008a69-e73a-43cc-3dba-c1bce90c9902@landley.net>
-Date:   Sun, 12 Jul 2020 06:06:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200709021737.22667-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 12 Jul 2020 07:10:52 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06CBAJlv040321;
+        Sun, 12 Jul 2020 20:10:19 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp);
+ Sun, 12 Jul 2020 20:10:19 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp)
+Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06CBAFJO040301
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Sun, 12 Jul 2020 20:10:19 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: [PATCH v3] vt: Reject zero-sized screen buffer size.
+Date:   Sun, 12 Jul 2020 20:10:12 +0900
+Message-Id: <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 2.18.4
+In-Reply-To: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
+References: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 9:17 PM, Alexander A. Klimov wrote:
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 9fc2b010e938..bc91bdb0b665 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -74,7 +74,7 @@ config SUPERH
->  	  The SuperH is a RISC processor targeted for use in embedded systems
->  	  and consumer electronics; it was also used in the Sega Dreamcast
->  	  gaming console.  The SuperH port has a home page at
-> -	  <http://www.linux-sh.org/>.
-> +	  <https://www.linux-sh.org/>.
+syzbot is reporting general protection fault in do_con_write() [1] caused
+by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
+caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 caused by
+fb_set_var() from ioctl(FBIOPUT_VSCREENINFO) on /dev/fb0 , for
+gotoxy(vc, 0, 0) from reset_terminal() from vc_init() from vc_allocate()
+ from con_install() from tty_init_dev() from tty_open() on such console
+causes vc->vc_pos == 0x10000000e due to
+((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
 
-That's a historical page last edited in 2006 (according to
-http://www.linux-sh.org/shwiki/RecentChanges/ anyway) with a self-signed
-certificate that pops up a full page warning on chrome about the certificate
-being invalid, in a wiki that can theoretically be edited by arbitrary third
-parties anyway.
+I don't think that a console with 0 column or 0 row makes sense. And it
+seems that vc_do_resize() does not intend to allow resizing a console to
+0 column or 0 row due to
 
-Not a huge man-in-the-middle target.
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-Rob
+exception.
+
+Theoretically, cols and rows can be any range as long as
+0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
+cols == 1048576 && rows == 2 is possible) because of
+
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+
+in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
+
+Since we can detect cols == 0 or rows == 0 via screenbuf_size = 0 in
+visual_init(), we can reject kzalloc(0). Then, vc_allocate() will return
+an error, and con_write() will not be called on a console with 0 column
+or 0 row.
+
+We need to make sure that integer overflow in visual_init() won't happen.
+Since vc_do_resize() restricts cols <= 32767 and rows <= 32767, applying
+1 <= cols <= 32767 and 1 <= rows <= 32767 restrictions to vc_allocate()
+will be practically fine.
+
+This patch does not touch con_init(), for returning -EINVAL there
+does not help when we are not returning -ENOMEM.
+
+[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
+
+Reported-and-tested-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ drivers/tty/vt/vt.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 48a8199f7845..42d8c67a481f 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1092,10 +1092,19 @@ static const struct tty_port_operations vc_port_ops = {
+ 	.destruct = vc_port_destruct,
+ };
+ 
++/*
++ * Change # of rows and columns (0 means unchanged/the size of fg_console)
++ * [this is to be used together with some user program
++ * like resize that changes the hardware videomode]
++ */
++#define VC_MAXCOL (32767)
++#define VC_MAXROW (32767)
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+ 	struct vc_data *vc;
++	int err;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -1125,6 +1134,11 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ 	if (!*vc->vc_uni_pagedir_loc)
+ 		con_set_default_unimap(vc);
+ 
++	err = -EINVAL;
++	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
++	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
++	err = -ENOMEM;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+@@ -1143,7 +1157,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ 	visual_deinit(vc);
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+-	return -ENOMEM;
++	return err;
+ }
+ 
+ static inline int resize_screen(struct vc_data *vc, int width, int height,
+@@ -1158,14 +1172,6 @@ static inline int resize_screen(struct vc_data *vc, int width, int height,
+ 	return err;
+ }
+ 
+-/*
+- * Change # of rows and columns (0 means unchanged/the size of fg_console)
+- * [this is to be used together with some user program
+- * like resize that changes the hardware videomode]
+- */
+-#define VC_RESIZE_MAXCOL (32767)
+-#define VC_RESIZE_MAXROW (32767)
+-
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+@@ -1201,7 +1207,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+ 	user = vc->vc_resize_user;
+ 	vc->vc_resize_user = 0;
+ 
+-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
++	if (cols > VC_MAXCOL || lines > VC_MAXROW)
+ 		return -EINVAL;
+ 
+ 	new_cols = (cols ? cols : vc->vc_cols);
+@@ -1212,7 +1218,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
+ 
+-	if (new_screen_size > KMALLOC_MAX_SIZE)
++	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
+@@ -3393,6 +3399,7 @@ static int __init con_init(void)
+ 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 		tty_port_init(&vc->port);
+ 		visual_init(vc, currcons, 1);
++		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
+ 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+ 		vc_init(vc, vc->vc_rows, vc->vc_cols,
+ 			currcons || !vc->vc_sw->con_save_screen);
+-- 
+2.18.4
+
