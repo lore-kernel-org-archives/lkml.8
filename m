@@ -2,90 +2,68 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8090CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92112068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:35:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ttG56pHq"
+	by mail.kernel.org (Postfix) with ESMTP id 640B92068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594575609;
+	bh=AtfBEdHa/4GZH8vVuyr0o+4ubDXXRcvdrZUNYTTNC70=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=pZCAvbj8nP4qecO79GBPibRkxjAxhN4kQoWqvRdOaRd2meDEQpwZik4XnUwLvImOi
+	 Z4B4ZKPcHN9ax9nCQCPZU4QL/NY37wm0bVMgfc+C/4WvXPpTaCCEV+cLGKZtcWvKv4
+	 TSNfNKhFScSsHnDTV06A62y0aQCQZrox1zlD8tXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgGLRfE (ORCPT
+        id S1729366AbgGLRkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 13:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729292AbgGLRfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 13:35:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C8FC061794;
-        Sun, 12 Jul 2020 10:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2P9s9WMHjuyrEVlD8c6vf66HLPRFfDPoW3FukDk9Arg=; b=ttG56pHqyraFByXHQtr1//3HmS
-        Jk3uOUBePyelh4BatScoFOFkK/APguqbt/FtLC2noBvglqUDMhf47ZvAa5gxxAqjvSYVqlWBMdaYz
-        xp6ODW9rUmRaMwsF9R8lcxj2Q02P4FXbFXlDxxOJJDjDJqnmy2Oxy09xvutYcbQEnqB3ZGgHFHAca
-        wJrDrqYX6cgzvkqUW0ySg9zPo/8wroo1LAk66uAWkDA4NzbjpUCz7/3gwPfWNxf+PF1ybYHdB9fD0
-        mJ6/M0025ALfYVNmHvEBC5IbhChYt9XAtBOxlKdPj2aO7eDmJMDXPJRbUOSQ1KdUACG1VpKM1r4Z8
-        U5yv19sQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jufsM-00010D-Gg; Sun, 12 Jul 2020 17:34:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B011730047A;
-        Sun, 12 Jul 2020 19:34:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A3BD4201C9154; Sun, 12 Jul 2020 19:34:52 +0200 (CEST)
-Date:   Sun, 12 Jul 2020 19:34:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH 2/2] locking/pvqspinlock: Optionally store lock holder
- cpu into lock
-Message-ID: <20200712173452.GB10769@hirez.programming.kicks-ass.net>
-References: <20200711182128.29130-1-longman@redhat.com>
- <20200711182128.29130-3-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200711182128.29130-3-longman@redhat.com>
+        Sun, 12 Jul 2020 13:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729303AbgGLRkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 13:40:03 -0400
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.8-rc5 (ideally)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594575603;
+        bh=AtfBEdHa/4GZH8vVuyr0o+4ubDXXRcvdrZUNYTTNC70=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=j4mgjY7Awa2G9onNZVMzHyVoLYQUgQVjBj8cX//OOTyUqUSRCatMTcLSOYOx+mJ1n
+         6xK0H0pjLxOehSRwGoZsJ4W+NB+/qNlMfG6cW5QL0yJEcVCDD7poY6O98F3+nK3aSA
+         b/RvblXl1+9OCME6bjvr8GQuvs4pJ5KKUfEdkQnU=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <mhng-f8b65a3e-17ea-448d-be82-0d1c42c0bf37@palmerdabbelt-glaptop1>
+References: <mhng-f8b65a3e-17ea-448d-be82-0d1c42c0bf37@palmerdabbelt-glaptop1>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <mhng-f8b65a3e-17ea-448d-be82-0d1c42c0bf37@palmerdabbelt-glaptop1>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
+ tags/riscv-for-linus-5.8-rc5
+X-PR-Tracked-Commit-Id: 70ee5731a40b1f07f151e52c3c4ed27d70d4f9fe
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9901a6bd157719f9f93186868c527c5ba5edf8e5
+Message-Id: <159457560337.22698.5375202992687678340.pr-tracker-bot@kernel.org>
+Date:   Sun, 12 Jul 2020 17:40:03 +0000
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 02:21:28PM -0400, Waiman Long wrote:
-> The previous patch enables native qspinlock to store lock holder cpu
-> number into the lock word when the lock is acquired via the slowpath.
-> Since PV qspinlock uses atomic unlock, allowing the fastpath and
-> slowpath to put different values into the lock word will further slow
-> down the performance. This is certainly undesirable.
-> 
-> The only way we can do that without too much performance impact is to
-> make fastpath and slowpath put in the same value. Still there is a slight
-> performance overhead in the additional access to a percpu variable in the
-> fastpath as well as the less optimized x86-64 PV qspinlock unlock path.
-> 
-> A new config option QUEUED_SPINLOCKS_CPUINFO is now added to enable
-> distros to decide if they want to enable lock holder cpu information in
-> the lock itself for both native and PV qspinlocks across both fastpath
-> and slowpath. If this option is not configureed, only native qspinlocks
-> in the slowpath will put the lock holder cpu information in the lock
-> word.
+The pull request you sent on Sat, 11 Jul 2020 13:24:01 -0700 (PDT):
 
-And this kills it,.. if it doesn't make unconditional sense, we're not
-going to do this. It's just too ugly.
+> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-rc5
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9901a6bd157719f9f93186868c527c5ba5edf8e5
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
