@@ -2,190 +2,220 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9732CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77497C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E23B206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C76E206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAUkLktO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2+aKNsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgGLSGW (ORCPT
+        id S1729281AbgGLSNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 14:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
+        Sun, 12 Jul 2020 14:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728923AbgGLSGV (ORCPT
+        with ESMTP id S1729002AbgGLSNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 14:06:21 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79653C061794;
-        Sun, 12 Jul 2020 11:06:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so10767591wmf.0;
-        Sun, 12 Jul 2020 11:06:21 -0700 (PDT)
+        Sun, 12 Jul 2020 14:13:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079F7C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:13:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so10772430wmf.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 11:13:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rXIYGf7nKP36lUXjPoJamlUt3MsApH6KmL+wKFQttL0=;
-        b=CAUkLktOBjEigcVSb5JNR+sboa7yimUHhD+N1nwWEE7TinAlC7ZJNpGfHK9TKMEE9l
-         0cFr2gf3pQ/bimZ8PBmiV4spwFLh9Iw1RO9rBcG7PFxWiFLYEPaPpCXAR/N4mc2dgcWB
-         tHCvoTJjzayOYqRC+WHHKpHlV4KrlUOlE88MtiGizREsb82J64QBr19uwQSN3z1M+FG/
-         Y1DxrB1lza/XDpoPjGgx4mOPJo6Spw3wTZgDtkYXXk8xppsrnxOQwrrSv7ubg5G92EFa
-         JRordYRXyQn25uLMcRP1ElTewWOqgggYgqRIBY6UWLtlTGtUn4j7sdy8qAdRtdv5ZVrs
-         W+eQ==
+        bh=eeOcB9pmMGk8mHjcVHnFiJN3rGVgIfLhswrzgdsAh1w=;
+        b=C2+aKNsi1srDRHdu2CaEs1W8hpiapnF7OMvdpOdeY9LANWWCGewcVjXjZeDaIhxZYX
+         +TLQKKmwE5uMzmZj1yIgvRJR4ST8opXxsMk1bDsq89Vxl8Dl6SnLdGqB17j3wuo9kljW
+         J+xKKgtctdcZy+Jw87dPvM11JJCnXEDt99yXyUZppnmVUWL0ngk1VPr+Au68Tmkx0ToH
+         +M5r5YYlmB7nKHFFWkQWuRSlWpPBiR+yJ5K5R4JmWevfDaVDqVWAHAeLVmxonHCRSQdr
+         3ksBQKkMcoZb/1gmHMFh/9mWgjKIMQ4ii7zOq7Z3qOjKgK7BFpxiYDofHWJvHSONi1JH
+         gsyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rXIYGf7nKP36lUXjPoJamlUt3MsApH6KmL+wKFQttL0=;
-        b=iofWVueEjgXHZ8vD9f7Tk0TEKQVkosuVzekrdWyT/Vs9rmuX9YOkGUDS0+Nv25V4OV
-         0ScJKD2JalS2ZqJsU1uvLGTQlUrZ/qKcPlz8DjFy5xKZb/w7rI/7HdHv3wgE191CCEO4
-         UZd7aYu5og/E24Z+5MtMPe3oVdbMfbSYQHgr5rAF9zpnqymmc61F9rzrWezRG8HHg/E6
-         kJ8eQksj5SH18JkQ7d+ayUdkIn/OFpw8p9guJtsxOGgTC1CMYyrh63/nKvqdg3WXtNbu
-         lY4nR6I55oVk5DTHh/xzbfgHV0TPjSNw+L/GImhZI3A6eblQBn3gg8GbI5yBgohhatjf
-         MbuQ==
-X-Gm-Message-State: AOAM533l4aYc8HEiwgWrZhEbDdUTWmY14hKr8MsdRHz6dfaUKId6FOCd
-        HoxDtcYo4EDwqQ7Ij+yJC6k=
-X-Google-Smtp-Source: ABdhPJzOUmPXUmNbjdA7jZ/Qn0aHiRAOlQ80hzDT623yYWJX8GnjOzvPMH7bEVZ6XQEHalOXvPDCZg==
-X-Received: by 2002:a1c:49d7:: with SMTP id w206mr15866960wma.181.1594577180061;
-        Sun, 12 Jul 2020 11:06:20 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id j6sm20823362wro.25.2020.07.12.11.06.18
+        bh=eeOcB9pmMGk8mHjcVHnFiJN3rGVgIfLhswrzgdsAh1w=;
+        b=EAGekZhJOnMajjLvykMybpzBTNJmUJoAgl1Ngy+HY707EvwtPtWx5Zxqcj8i8UCoyq
+         wZFbr03o+xf63xsQVg/AwyQVT1pY4JNV4zlBDXJSkyF3mdwE6y7vPJczgy5Pgwutd//B
+         xPtj0w1eiaqqYbxZbtCOLND4fSxYZ5vSr3cVrDmTT6Dk9mZrOAalr3c0ZAYru8YAICP6
+         u4tYpqQsfdqKsqERFBNGUa+FZFT20CPfkZUATRwWKVLflh217uTJ13xDCLC7ekf+1PCv
+         9TtkLUeh3y5gmxPvuMaz78pP2FVj8VxzhK8mmkWhpaxPCR2ioZqsBnkd95F43agKdiKI
+         o3nw==
+X-Gm-Message-State: AOAM532q61BUjPfSq44FOzRGIRrJGg7kFYBhzQNrxISJ5U7k9B1HgY/S
+        XwmwNIpL3PbwJTP2SNFcwy+qww==
+X-Google-Smtp-Source: ABdhPJzc5glWxfrQkcrn/Nn0iMfNJ1oyuY2P0V1jzPzVQhKtTk82MX3Jozx6f85g0prM1TCJXRqMLg==
+X-Received: by 2002:a1c:9a07:: with SMTP id c7mr15758081wme.147.1594577595493;
+        Sun, 12 Jul 2020 11:13:15 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:14f:a791:68cb:2264? ([2a01:e34:ed2f:f020:14f:a791:68cb:2264])
+        by smtp.googlemail.com with ESMTPSA id g3sm22875230wrb.59.2020.07.12.11.13.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 11:06:19 -0700 (PDT)
-Subject: Re: [PATCH 01/21] dt-binding: memory: mediatek: Add a common
- larb-port header file
-To:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sun, 12 Jul 2020 11:13:14 -0700 (PDT)
+Subject: Re: [PATCH] Revert "thermal: mediatek: fix register index error"
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Collabora Kernel ML <kernel@collabora.com>, drinkcat@chromium.org,
+        hsinyi@chromium.org, Michael Kao <michael.kao@mediatek.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        cui.zhang@mediatek.com, chao.hao@mediatek.com,
-        ming-fan.chen@mediatek.com
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
- <20200711064846.16007-2-yong.wu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <9e21288c-07da-88b0-2dbb-bd9a2a4d529b@gmail.com>
-Date:   Sun, 12 Jul 2020 20:06:17 +0200
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>
+References: <20200707103412.1010823-1-enric.balletbo@collabora.com>
+ <98369dbc-2e2a-a1bd-f3cd-68f33f66b882@gmail.com>
+ <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <c62fc116-b3e0-c47c-5606-df62b1d10a04@linaro.org>
+Date:   Sun, 12 Jul 2020 20:13:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200711064846.16007-2-yong.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/07/2020 08:48, Yong Wu wrote:
-> Put all the macros about smi larb/port togethers, this is a preparing
-> patch for extending LARB_NR and adding new dom-id support.
+On 12/07/2020 18:55, Matthias Brugger wrote:
+> On 10/07/2020 15:58, Matthias Brugger wrote:
+>>
+>>
+>> On 07/07/2020 12:34, Enric Balletbo i Serra wrote:
+>>> This reverts commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6
+>>>
+>>> The above patch is supposed to fix a register index error on mt2701. It
+>>> is not clear if the problem solved is a hang or just an invalid value
+>>> returned, my guess is the second. The patch introduces, though, a new
+>>> hang on MT8173 device making them unusable. So, seems reasonable, revert
+>>> the patch because introduces a worst issue.
+>>>
+>>> The reason I send a revert instead of trying to fix the issue for MT8173
+>>> is because the information needed to fix the issue is in the datasheet
+>>> and is not public. So I am not really able to fix it.
+>>>
+>>> Fixes the following bug when CONFIG_MTK_THERMAL is set on MT8173
+>>> devices.
+>>>
+>>> [    2.222488] Unable to handle kernel paging request at virtual
+>>> address ffff8000125f5001
+>>> [    2.230421] Mem abort info:
+>>> [    2.233207]   ESR = 0x96000021
+>>> [    2.236261]   EC = 0x25: DABT (current EL), IL = 32 bits
+>>> [    2.241571]   SET = 0, FnV = 0
+>>> [    2.244623]   EA = 0, S1PTW = 0
+>>> [    2.247762] Data abort info:
+>>> [    2.250640]   ISV = 0, ISS = 0x00000021
+>>> [    2.254473]   CM = 0, WnR = 0
+>>> [    2.257544] swapper pgtable: 4k pages, 48-bit VAs,
+>>> pgdp=0000000041850000
+>>> [    2.264251] [ffff8000125f5001] pgd=000000013ffff003,
+>>> pud=000000013fffe003, pmd=000000013fff9003, pte=006800001100b707
+>>> [    2.274867] Internal error: Oops: 96000021 [#1] PREEMPT SMP
+>>> [    2.280432] Modules linked in:
+>>> [    2.283483] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #162
+>>> [    2.289914] Hardware name: Google Elm (DT)
+>>> [    2.294003] pstate: 20000005 (nzCv daif -PAN -UAO)
+>>> [    2.298792] pc : mtk_read_temp+0xb8/0x1c8
+>>> [    2.302793] lr : mtk_read_temp+0x7c/0x1c8
+>>> [    2.306794] sp : ffff80001003b930
+>>> [    2.310100] x29: ffff80001003b930 x28: 0000000000000000
+>>> [    2.315404] x27: 0000000000000002 x26: ffff0000f9550b10
+>>> [    2.320709] x25: ffff0000f9550a80 x24: 0000000000000090
+>>> [    2.326014] x23: ffff80001003ba24 x22: 00000000610344c0
+>>> [    2.331318] x21: 0000000000002710 x20: 00000000000001f4
+>>> [    2.336622] x19: 0000000000030d40 x18: ffff800011742ec0
+>>> [    2.341926] x17: 0000000000000001 x16: 0000000000000001
+>>> [    2.347230] x15: ffffffffffffffff x14: ffffff0000000000
+>>> [    2.352535] x13: ffffffffffffffff x12: 0000000000000028
+>>> [    2.357839] x11: 0000000000000003 x10: ffff800011295ec8
+>>> [    2.363143] x9 : 000000000000291b x8 : 0000000000000002
+>>> [    2.368447] x7 : 00000000000000a8 x6 : 0000000000000004
+>>> [    2.373751] x5 : 0000000000000000 x4 : ffff800011295cb0
+>>> [    2.379055] x3 : 0000000000000002 x2 : ffff8000125f5001
+>>> [    2.384359] x1 : 0000000000000001 x0 : ffff0000f9550a80
+>>> [    2.389665] Call trace:
+>>> [    2.392105]  mtk_read_temp+0xb8/0x1c8
+>>> [    2.395760]  of_thermal_get_temp+0x2c/0x40
+>>> [    2.399849]  thermal_zone_get_temp+0x78/0x160
+>>> [    2.404198]  thermal_zone_device_update.part.0+0x3c/0x1f8
+>>> [    2.409589]  thermal_zone_device_update+0x34/0x48
+>>> [    2.414286]  of_thermal_set_mode+0x58/0x88
+>>> [    2.418375]  thermal_zone_of_sensor_register+0x1a8/0x1d8
+>>> [    2.423679]  devm_thermal_zone_of_sensor_register+0x64/0xb0
+>>> [    2.429242]  mtk_thermal_probe+0x690/0x7d0
+>>> [    2.433333]  platform_drv_probe+0x5c/0xb0
+>>> [    2.437335]  really_probe+0xe4/0x448
+>>> [    2.440901]  driver_probe_device+0xe8/0x140
+>>> [    2.445077]  device_driver_attach+0x7c/0x88
+>>> [    2.449252]  __driver_attach+0xac/0x178
+>>> [    2.453082]  bus_for_each_dev+0x78/0xc8
+>>> [    2.456909]  driver_attach+0x2c/0x38
+>>> [    2.460476]  bus_add_driver+0x14c/0x230
+>>> [    2.464304]  driver_register+0x6c/0x128
+>>> [    2.468131]  __platform_driver_register+0x50/0x60
+>>> [    2.472831]  mtk_thermal_driver_init+0x24/0x30
+>>> [    2.477268]  do_one_initcall+0x50/0x298
+>>> [    2.481098]  kernel_init_freeable+0x1ec/0x264
+>>> [    2.485450]  kernel_init+0x1c/0x110
+>>> [    2.488931]  ret_from_fork+0x10/0x1c
+>>> [    2.492502] Code: f9401081 f9400402 b8a67821 8b010042 (b9400042)
+>>> [    2.498599] ---[ end trace e43e3105ed27dc99 ]---
+>>> [    2.503367] Kernel panic - not syncing: Attempted to kill init!
+>>> exitcode=0x0000000b
+>>> [    2.511020] SMP: stopping secondary CPUs
+>>> [    2.514941] Kernel Offset: disabled
+>>> [    2.518421] CPU features: 0x090002,25006005
+>>> [    2.522595] Memory Limit: none
+>>> [    2.525644] ---[ end Kernel panic - not syncing: Attempted to kill
+>>> init! exitcode=0x0000000b ]--
+>>>
+>>> Cc: Michael Kao <michael.kao@mediatek.com>
+>>> Fixes: eb9aecd90d1a ("thermal: mediatek: fix register index error")
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>
+>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>
+>> Daniel, Zhang, Amit: can you take this as a bugfix for v5.8 please? We
+>> waited long enough to get a proper fix for the driver, but nothing was
+>> posted on the mailinglist. Also we don't know if this will break
+>> mt2701 or not, we prefer to have a working mt8173 as this is actually
+>> a SoC that is available to the general public (as a chromebook product).
+>>
+>> I propose to take this revert for now and hope that MediaTek will fix
+>> the driver for good in the near future.
+>>
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->   include/dt-bindings/memory/mt2712-larb-port.h  |  2 +-
->   include/dt-bindings/memory/mt6779-larb-port.h  |  2 +-
->   include/dt-bindings/memory/mt8173-larb-port.h  |  2 +-
->   include/dt-bindings/memory/mt8183-larb-port.h  |  2 +-
->   include/dt-bindings/memory/mtk-smi-larb-port.h | 15 +++++++++++++++
->   5 files changed, 19 insertions(+), 4 deletions(-)
->   create mode 100644 include/dt-bindings/memory/mtk-smi-larb-port.h
+> Frank tested the patch, with the only board that is affected and
+> available (apart from the mt8183 SoC), the BananaPi R2 (mt7623). The
+> revert does not break the driver. Even more interesting, with and
+> without the revert the thermal sensor returns always zero, so it seems
+> it never actually worked.
 > 
-> diff --git a/include/dt-bindings/memory/mt2712-larb-port.h b/include/dt-bindings/memory/mt2712-larb-port.h
-> index 6f9aa7349cef..b6b2c6bf4459 100644
-> --- a/include/dt-bindings/memory/mt2712-larb-port.h
-> +++ b/include/dt-bindings/memory/mt2712-larb-port.h
-> @@ -6,7 +6,7 @@
->   #ifndef __DTS_IOMMU_PORT_MT2712_H
->   #define __DTS_IOMMU_PORT_MT2712_H
->   
-> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
-> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
->   
->   #define M4U_LARB0_ID			0
->   #define M4U_LARB1_ID			1
-> diff --git a/include/dt-bindings/memory/mt6779-larb-port.h b/include/dt-bindings/memory/mt6779-larb-port.h
-> index 2ad0899fbf2f..60f57f54393e 100644
-> --- a/include/dt-bindings/memory/mt6779-larb-port.h
-> +++ b/include/dt-bindings/memory/mt6779-larb-port.h
-> @@ -7,7 +7,7 @@
->   #ifndef _DTS_IOMMU_PORT_MT6779_H_
->   #define _DTS_IOMMU_PORT_MT6779_H_
->   
-> -#define MTK_M4U_ID(larb, port)		 (((larb) << 5) | (port))
-> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
->   
->   #define M4U_LARB0_ID			 0
->   #define M4U_LARB1_ID			 1
-> diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
-> index 9f31ccfeca21..d8c99c946053 100644
-> --- a/include/dt-bindings/memory/mt8173-larb-port.h
-> +++ b/include/dt-bindings/memory/mt8173-larb-port.h
-> @@ -6,7 +6,7 @@
->   #ifndef __DTS_IOMMU_PORT_MT8173_H
->   #define __DTS_IOMMU_PORT_MT8173_H
->   
-> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
-> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
->   
->   #define M4U_LARB0_ID			0
->   #define M4U_LARB1_ID			1
-> diff --git a/include/dt-bindings/memory/mt8183-larb-port.h b/include/dt-bindings/memory/mt8183-larb-port.h
-> index 2c579f305162..275c095a6fd6 100644
-> --- a/include/dt-bindings/memory/mt8183-larb-port.h
-> +++ b/include/dt-bindings/memory/mt8183-larb-port.h
-> @@ -6,7 +6,7 @@
->   #ifndef __DTS_IOMMU_PORT_MT8183_H
->   #define __DTS_IOMMU_PORT_MT8183_H
->   
-> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
-> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
->   
->   #define M4U_LARB0_ID			0
->   #define M4U_LARB1_ID			1
-> diff --git a/include/dt-bindings/memory/mtk-smi-larb-port.h b/include/dt-bindings/memory/mtk-smi-larb-port.h
-> new file mode 100644
-> index 000000000000..2ec7fe5ce4e9
-> --- /dev/null
-> +++ b/include/dt-bindings/memory/mtk-smi-larb-port.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2020 MediaTek Inc.
-> + * Author: Yong Wu <yong.wu@mediatek.com>
-> + */
-> +#ifndef __DTS_MTK_IOMMU_PORT_H_
-> +#define __DTS_MTK_IOMMU_PORT_H_
-> +
-> +#define MTK_LARB_NR_MAX			16
+> So I think we are more then good, to go ahead with reverting the patch.
 
-include/soc/mediatek/smi.h has the very same define.
-Should smi.h include this file?
+Ok, I'll take care of it as a fix for 5.8.
 
-Regards,
-Matthias
+Thanks!
 
-> +
-> +#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
-> +#define MTK_M4U_TO_LARB(id)		(((id) >> 5) & 0xf)
-> +#define MTK_M4U_TO_PORT(id)		((id) & 0x1f)
-> +
-> +#endif
-> 
+  -- Daniel
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
