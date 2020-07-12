@@ -2,75 +2,112 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA46DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C267CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3311206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858312068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 16:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594569495;
-	bh=T50MoUDXCTgUobnkzSCiggjgrR6/+SkklTXlLKXrfnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W1P90tl/Tm5fBb74fjq39ePCi5PCp89++vfkC7TrUM2RR9AEXtAS5TZ6oEh0wdAGJ
-	 25rBFm6JQO/X7qtPCN53SQ6DRJILV0ulYEGUJwj5GXUpdMnHLOGnvmt8dtuArwptSk
-	 VsVAZ8dKRPuN3ISFAywynb4QH3UVWFyh6NEs9YJc=
+	s=default; t=1594570138;
+	bh=IjxKA104PBTV6rYMTFQjKnY3pbyLHFYG4ujpSbcRzzM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=puyqPDMBcGRZW6HnCejVG84khju1GWgpAZ6J3+Q36WsqGEUc76WzWLDeXDhoyLhL8
+	 fBxlQwhvgFzctSYbvtFQw4QrBN64KngZuFJWgeRW+z+ao81mgpN4xeIHAIBqKUIJXI
+	 /yOb3GpT6fspRfzlQJgSoeU4zgvp20/223PJ1NbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgGLP6O (ORCPT
+        id S1729089AbgGLQI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 11:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 12:08:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgGLP6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 11:58:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728844AbgGLQI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 12:08:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0F622068F;
-        Sun, 12 Jul 2020 15:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3176820702;
+        Sun, 12 Jul 2020 16:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594569493;
-        bh=T50MoUDXCTgUobnkzSCiggjgrR6/+SkklTXlLKXrfnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZXvJSsggwPMy7Y3puVS98YxQihy52sRicDRsD/d4da0d1hbL9oiae8cSgkr7J84P7
-         1NYOLr1STd7dfl4QbnHE6uazOIuzyhqCUdeecWAkkV0A6xHCQ9pPJZOyTCKOnOStJj
-         WjpWYKKMXrMT44UG18ign8QOKm5OX5UAOr+LIWmw=
-Date:   Sun, 12 Jul 2020 17:58:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gage Eads <gage.eads@intel.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: Re: [PATCH 01/20] dlb2: add skeleton for DLB 2.0 driver
-Message-ID: <20200712155810.GC186665@kroah.com>
-References: <20200712134331.8169-1-gage.eads@intel.com>
- <20200712134331.8169-2-gage.eads@intel.com>
+        s=default; t=1594570136;
+        bh=IjxKA104PBTV6rYMTFQjKnY3pbyLHFYG4ujpSbcRzzM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PP9B2G7OaMHY9x0QwoC8yRG5NYPF0b+HiNfn4yoO7QJL9aNOrpN3gVHmBDKGys1xj
+         aFEB3n1dMxVoqWZTg74k6j+2i+MRjdavFrMwxE3fK+vpLilB/nP034ZbVqjts96dXK
+         R6O9Lfaga6TGbp6+Wht6LXiZGWrEH0g8r4tPQ45g=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1753E3522A6D; Sun, 12 Jul 2020 09:08:56 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 09:08:56 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     josh@joshtriplett.org, joel@joelfernandes.org, pbonzini@redhat.com,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        kvm@vger.kernel.org, frextrite@gmail.com
+Subject: Re: [PATCH 2/2] kvm: mmu: page_track: Fix RCU list API usage
+Message-ID: <20200712160856.GW9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+ <20200712131003.23271-2-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200712134331.8169-2-gage.eads@intel.com>
+In-Reply-To: <20200712131003.23271-2-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 08:43:12AM -0500, Gage Eads wrote:
-> +static int dlb2_probe(struct pci_dev *pdev,
-> +		      const struct pci_device_id *pdev_id)
-> +{
-> +	struct dlb2_dev *dlb2_dev;
-> +	int ret;
-> +
-> +	dev_dbg(&pdev->dev, "probe\n");
+On Sun, Jul 12, 2020 at 06:40:03PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> Use hlist_for_each_entry_srcu() instead of hlist_for_each_entry_rcu()
+> as it also checkes if the right lock is held.
+> Using hlist_for_each_entry_rcu() with a condition argument will not
+> report the cases where a SRCU protected list is traversed using
+> rcu_read_lock(). Hence, use hlist_for_each_entry_srcu().
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-ftrace is your friend.  Remove all of your debugging code now, you don't
-need it anymore, especially for stuff like this where you didn't even
-need it in the first place :(
+I queued both for testing and review, thank you!
 
-Same for everywhere else in all of these patches.  I'll stop reviewing
-now, someone at Intel should have caught basic stuff like this before
-now, sad...
+In particular, this one needs an ack by the maintainer.
 
-greg k-h
+							Thanx, Paul
+
+> ---
+>  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+> index a7bcde34d1f2..a9cd17625950 100644
+> --- a/arch/x86/kvm/mmu/page_track.c
+> +++ b/arch/x86/kvm/mmu/page_track.c
+> @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
+>  		return;
+>  
+>  	idx = srcu_read_lock(&head->track_srcu);
+> -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> +	hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> +				srcu_read_lock_held(&head->track_srcu))
+>  		if (n->track_write)
+>  			n->track_write(vcpu, gpa, new, bytes, n);
+>  	srcu_read_unlock(&head->track_srcu, idx);
+> @@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
+>  		return;
+>  
+>  	idx = srcu_read_lock(&head->track_srcu);
+> -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> +	hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
+> +				srcu_read_lock_held(&head->track_srcu))
+>  		if (n->track_flush_slot)
+>  			n->track_flush_slot(kvm, slot, n);
+>  	srcu_read_unlock(&head->track_srcu, idx);
+> -- 
+> 2.17.1
+> 
