@@ -2,209 +2,741 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A3320674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZUYXIBZ"
+	by mail.kernel.org (Postfix) with ESMTP id D93DF20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgGLN5w (ORCPT
+        id S1728926AbgGLN6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgGLN5w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:57:52 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF4EC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 06:57:52 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d194so4814729pga.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 06:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=t1DD21hpudIl7FcxmIGxgkbZcJ2yGSiWAAezO5F79aU=;
-        b=CZUYXIBZoVXVChixa0O/K3kXm7Ewilu0RFQ7/4JPxQxJaX8gN28WnJm5kSrLnTpUsN
-         2KJbBZCFQ0tzbK1A/DjuWDwic1QLIYXrOpN19GqYSE4/k0C8Kada89vUPDEGb3Ik2opQ
-         RGauVFFXSonL5FOtD6hPw/SXjSbEtD6NkRjRcXYRBrhYLOrFQuJKRNlFSSHGyM/xtMnU
-         etnecfT2zZSfIaVJQqJnTymtuLYpBxi+dSoGcB5c5hemrNtV4j1S+qlL3LxA+70gDUKn
-         RIwGsPyQLjvqFEKa6IOStVyD04Ejj456//Ut7v7lyQ3FvjeBWYEeUDm1OQtfdrBDHGsT
-         zE8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t1DD21hpudIl7FcxmIGxgkbZcJ2yGSiWAAezO5F79aU=;
-        b=iQPHtYRZXH+gOII/Jdyi4ZBnbY2TcbRVvBJTTy1Z5x90sgzM9Ye8f4SOB+kXCyQgFF
-         nSrXGwi0+lcrxhJ3QHLNra9k1vNu1RnU0dilChbOD+PyxHIUYmE8hDgYAnbGnRebd1/+
-         7BaFlkKTX5NCMik03dq0XojVJKRX1o1AwTmDZkSKlY2cAtX4AbdZc6O7M69os+acpitD
-         4/XSI8W1BHRFjYfesX6PBfNOrNRI0qaTIqKJLMh0qy6dD9iULNgcffLdh0H1OC8JDync
-         9aIAUQjLunJBaLe2oPCdvC7ESPMHZntJRczR1qrW9gTmLSVDITAJQn2f+GTbH4uQurO8
-         SILQ==
-X-Gm-Message-State: AOAM5329NGhYXLt4SrbT0GRSfc2i5hDwSveUOI/yL1CPDEjfv5KtM31V
-        l6HDsC5gMFEmVxxM7LswahY=
-X-Google-Smtp-Source: ABdhPJw7BzcwvU8d0O+5AuIwLNw0BQrrJ8O1PDi9wenGTXVIm6dEfVg1zNrbKn7/ozhP/RJYPCcM0w==
-X-Received: by 2002:a63:b546:: with SMTP id u6mr28953675pgo.381.1594562271696;
-        Sun, 12 Jul 2020 06:57:51 -0700 (PDT)
-Received: from rapsodo.Rapsodo.com ([101.100.171.87])
-        by smtp.gmail.com with ESMTPSA id o4sm11682022pjo.16.2020.07.12.06.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 06:57:50 -0700 (PDT)
-From:   Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-Subject: [PATCH] mtd: spinand: micron: add support for MT29F2G01AAAED
-Date:   Sun, 12 Jul 2020 21:59:42 +0800
-Message-Id: <20200712135942.10904-1-nthirumalesha7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 12 Jul 2020 09:58:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9347 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728826AbgGLN6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:58:00 -0400
+IronPort-SDR: X3aMtkfgV5fdV4bqnKjDGQCt9wjN00G2FLPB0JDAbPjpYRBM5g3+RikTccvwHC/etuJxZhHaOi
+ pnkvVUCXVY+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146540920"
+X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
+   d="scan'208";a="146540920"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 06:46:54 -0700
+IronPort-SDR: CPFgiphKE4MXEPMSFb3XZtkn9jX38w6IxLeOTJm+b9g4AoZpNqft6wRgka9rEUdiP9FDTSQqdx
+ f7lzByI+9ovA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
+   d="scan'208";a="307148660"
+Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2020 06:46:53 -0700
+From:   Gage Eads <gage.eads@intel.com>
+To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
+Subject: [PATCH 20/20] dlb2: add ingress error handling
+Date:   Sun, 12 Jul 2020 08:43:31 -0500
+Message-Id: <20200712134331.8169-21-gage.eads@intel.com>
+X-Mailer: git-send-email 2.13.6
+In-Reply-To: <20200712134331.8169-1-gage.eads@intel.com>
+References: <20200712134331.8169-1-gage.eads@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MT29F2G01AAAED is a single die, 2Gb Micron SPI NAND Flash with 4-bit
-ECC
+When DLB 2.0 detects that an application enqueued an illegal QE, it fires
+an ingress error interrupt. The driver processes these errors and notifies
+user-space through a domain alert.
 
-Signed-off-by: Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
+A malicious application or virtual machine could attempt a
+denial-of-service attack by enqueueing illegal QEs at a high rate and tying
+up the PF driver, so the driver tracks the rate of ingress error alarms per
+second. If they exceed a threshold of 1000/second, the driver simply
+disables the interrupt. The interrupt is re-enabled when the device is
+reset, the driver is reloaded, or by a user through a sysfs interface.
+
+Signed-off-by: Gage Eads <gage.eads@intel.com>
+Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
 ---
- drivers/mtd/nand/spi/micron.c | 77 +++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ Documentation/ABI/testing/sysfs-driver-dlb2 |  15 ++
+ drivers/misc/dlb2/dlb2_hw_types.h           |  17 ++
+ drivers/misc/dlb2/dlb2_main.h               |  16 ++
+ drivers/misc/dlb2/dlb2_pf_ops.c             | 177 ++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.c           | 251 +++++++++++++++++++++++++++-
+ drivers/misc/dlb2/dlb2_resource.h           |  45 +++++
+ 6 files changed, 520 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index 5d370cfcdaaa..7e0b61d7b90f 100644
---- a/drivers/mtd/nand/spi/micron.c
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -17,6 +17,7 @@
- #define MICRON_STATUS_ECC_1TO3_BITFLIPS	(1 << 4)
- #define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
- #define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
-+#define MICRON_STATUS_ECC_1TO4_BITFLIPS	(1 << 4)
+diff --git a/Documentation/ABI/testing/sysfs-driver-dlb2 b/Documentation/ABI/testing/sysfs-driver-dlb2
+index c5cb1cbb70f4..3598ce9caa03 100644
+--- a/Documentation/ABI/testing/sysfs-driver-dlb2
++++ b/Documentation/ABI/testing/sysfs-driver-dlb2
+@@ -185,3 +185,18 @@ Description:	Device ID used in /dev, i.e. /dev/dlb<device ID>
+ 		/dev directory: /dev/dlb<device ID>. This sysfs file can be read
+ 		to determine a device's ID, which allows the user to map a
+ 		device file to a PCI BDF.
++
++What:		/sys/bus/pci/devices/.../ingress_err_en
++Date:		June 22, 2020
++KernelVersion:	5.9
++Contact:	gage.eads@intel.com
++Description:	Interface for re-enabling ingress error interrupts
++
++		If the PF driver detects an overload of ingress error
++		interrupts, it will -- to prevent a possible denial-of-service
++		attack -- disable them.
++
++		If the ingress error interrupt is disabled, they will be
++		re-enabled when the device is reset or the driver is reloaded.
++		This interface can be used to re-enable the interrupt as well,
++		and can be read to determine whether the interrupt is enabled.
+diff --git a/drivers/misc/dlb2/dlb2_hw_types.h b/drivers/misc/dlb2/dlb2_hw_types.h
+index bcd7820b5f7f..e27f43e4c7b2 100644
+--- a/drivers/misc/dlb2/dlb2_hw_types.h
++++ b/drivers/misc/dlb2/dlb2_hw_types.h
+@@ -61,6 +61,23 @@
+ #define DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID \
+ 	DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS
  
- #define MICRON_CFG_CR			BIT(0)
- 
-@@ -44,6 +45,19 @@ static SPINAND_OP_VARIANTS(update_cache_variants,
- 		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
- 		SPINAND_PROG_LOAD(false, 0, NULL, 0));
- 
-+/* Micron  MT29F2G01AAAED Device */
-+static SPINAND_OP_VARIANTS(read_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
++/* DLB non-CQ interrupts (alarm, mailbox, WDT) */
++#define DLB2_INT_NON_CQ 0
 +
-+static SPINAND_OP_VARIANTS(write_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
++#define DLB2_ALARM_HW_SOURCE_SYS 0
++#define DLB2_ALARM_HW_SOURCE_DLB 1
 +
-+static SPINAND_OP_VARIANTS(update_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
++#define DLB2_ALARM_HW_UNIT_CHP 4
 +
- static int micron_8_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				  struct mtd_oob_region *region)
- {
-@@ -69,11 +83,41 @@ static int micron_8_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
-+static int mt29f2g01aaaed_ooblayout_ecc(struct mtd_info *mtd, int section,
-+					struct mtd_oob_region *region)
-+{
-+	if (section >= 4)
-+		return -ERANGE;
++#define DLB2_ALARM_SYS_AID_ILLEGAL_QID 3
++#define DLB2_ALARM_SYS_AID_DISABLED_QID 4
++#define DLB2_ALARM_SYS_AID_ILLEGAL_HCW 5
++#define DLB2_ALARM_HW_CHP_AID_ILLEGAL_ENQ 1
++#define DLB2_ALARM_HW_CHP_AID_EXCESS_TOKEN_POPS 2
 +
-+	region->offset = (section * 16) + 8;
-+	region->length = 8;
++#define DLB2_VF_NUM_NON_CQ_INTERRUPT_VECTORS 1
++#define DLB2_VF_NUM_CQ_INTERRUPT_VECTORS 31
 +
-+	return 0;
-+}
-+
-+static int mt29f2g01aaaed_ooblayout_free(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *region)
-+{
-+	if (section >= 4)
-+		return -ERANGE;
-+
-+	/* Reserve 2 bytes for the BBM. */
-+	region->offset = (section * 16) + 2;
-+	region->length = 6;
-+
-+	return 0;
-+}
-+
- static const struct mtd_ooblayout_ops micron_8_ooblayout = {
- 	.ecc = micron_8_ooblayout_ecc,
- 	.free = micron_8_ooblayout_free,
+ /*
+  * Hardware-defined base addresses. Those prefixed 'DLB2_DRV' are only used by
+  * the PF driver.
+diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+index 05f6a9c976bf..ada5d96c1241 100644
+--- a/drivers/misc/dlb2/dlb2_main.h
++++ b/drivers/misc/dlb2/dlb2_main.h
+@@ -217,6 +217,21 @@ struct dlb2_intr {
+ 	int mode;
  };
  
-+static const struct mtd_ooblayout_ops mt29f2g01aaaed_ooblayout = {
-+	.ecc = mt29f2g01aaaed_ooblayout_ecc,
-+	.free = mt29f2g01aaaed_ooblayout_free,
++/*
++ * ISR overload is defined as more than DLB2_ISR_OVERLOAD_THRESH interrupts
++ * (of a particular type) occurring in a 1s period. If overload is detected,
++ * the driver blocks that interrupt (exact mechanism depending on the
++ * interrupt) from overloading the PF driver.
++ */
++#define DLB2_ISR_OVERLOAD_THRESH 1000
++#define DLB2_ISR_OVERLOAD_PERIOD_S 1
++
++struct dlb2_alarm {
++	ktime_t ts;
++	unsigned int enabled;
++	u32 count;
 +};
 +
- static int micron_select_target(struct spinand_device *spinand,
- 				unsigned int target)
- {
-@@ -114,6 +158,27 @@ static int micron_8_ecc_get_status(struct spinand_device *spinand,
- 	return -EINVAL;
- }
+ struct dlb2_dev {
+ 	struct pci_dev *pdev;
+ 	struct dlb2_hw hw;
+@@ -239,6 +254,7 @@ struct dlb2_dev {
+ 	 */
+ 	struct mutex resource_mutex;
+ 	struct work_struct work;
++	struct dlb2_alarm ingress_err;
+ 	enum dlb2_device_type type;
+ 	int id;
+ 	dev_t dev_number;
+diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
+index f17be00ebc81..6b3042489e5d 100644
+--- a/drivers/misc/dlb2/dlb2_pf_ops.c
++++ b/drivers/misc/dlb2/dlb2_pf_ops.c
+@@ -96,6 +96,109 @@ dlb2_pf_map_pci_bar_space(struct dlb2_dev *dlb2_dev,
+ /****** Interrupt management ******/
+ /**********************************/
  
-+static int mt29f2g01aaaed_ecc_get_status(struct spinand_device *spinand,
-+					 u8 status)
++static void dlb2_detect_ingress_err_overload(struct dlb2_dev *dev)
 +{
-+	switch (status & MICRON_STATUS_ECC_MASK) {
-+	case STATUS_ECC_NO_BITFLIPS:
-+		return 0;
++	s64 delta_us;
 +
-+	case STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
++	if (dev->ingress_err.count == 0)
++		dev->ingress_err.ts = ktime_get();
 +
-+	/* 1 to 4-bit error detected and corrected */
-+	case MICRON_STATUS_ECC_1TO4_BITFLIPS:
-+		return 4;
++	dev->ingress_err.count++;
 +
-+	default:
-+		break;
-+	}
++	/* Don't check for overload until OVERLOAD_THRESH ISRs have run */
++	if (dev->ingress_err.count < DLB2_ISR_OVERLOAD_THRESH)
++		return;
 +
-+	return -EINVAL;
++	delta_us = ktime_us_delta(ktime_get(), dev->ingress_err.ts);
++
++	/* Reset stats for next measurement period */
++	dev->ingress_err.count = 0;
++	dev->ingress_err.ts = ktime_get();
++
++	/* Check for overload during this measurement period */
++	if (delta_us > DLB2_ISR_OVERLOAD_PERIOD_S * USEC_PER_SEC)
++		return;
++
++	/*
++	 * Alarm interrupt overload: disable software-generated alarms,
++	 * so only hardware problems (e.g. ECC errors) interrupt the PF.
++	 */
++	dlb2_disable_ingress_error_alarms(&dev->hw);
++
++	dev->ingress_err.enabled = false;
++
++	dev_err(dev->dlb2_device,
++		"[%s()] Overloaded detected: disabling ingress error interrupts",
++		__func__);
 +}
 +
- static const struct spinand_info micron_spinand_table[] = {
- 	/* M79A 2Gb 3.3V */
- 	SPINAND_INFO("MT29F2G01ABAGD",
-@@ -217,6 +282,18 @@ static const struct spinand_info micron_spinand_table[] = {
- 		     SPINAND_ECCINFO(&micron_8_ooblayout,
- 				     micron_8_ecc_get_status),
- 		     SPINAND_SELECT_TARGET(micron_select_target)),
-+	/* M70A 2Gb 3.3V */
-+	SPINAND_INFO("MT29F2G01AAAED",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x9F),
-+		     NAND_MEMORG(1, 2048, 256, 64, 2048, 80, 2, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_mt29f2g01aaaed,
-+					      &write_cache_variants_mt29f2g01aaaed,
-+					      &update_cache_variants_mt29f2g01aaaed),
-+		     0,
-+		     SPINAND_ECCINFO(&mt29f2g01aaaed_ooblayout,
-+				     mt29f2g01aaaed_ecc_get_status),
-+		     SPINAND_SELECT_TARGET(micron_select_target)),
- };
++/*
++ * The alarm handler logs the alarm syndrome and, for user-caused errors,
++ * reports the alarm to user-space through the per-domain device file interface.
++ *
++ * This function runs as a bottom-half handler because it can call printk
++ * and/or acquire a mutex. These alarms don't need to be handled immediately --
++ * they represent a serious, unexpected error (either in hardware or software)
++ * that can't be recovered without restarting the application or resetting the
++ * device. The VF->PF operations are also non-trivial and require running in a
++ * bottom-half handler.
++ */
++static irqreturn_t
++dlb2_service_intr_handler(int irq, void *hdlr_ptr)
++{
++	struct dlb2_dev *dev = (struct dlb2_dev *)hdlr_ptr;
++	union dlb2_sys_alarm_hw_synd r0;
++
++	dev_dbg(dev->dlb2_device, "DLB service interrupt fired\n");
++
++	mutex_lock(&dev->resource_mutex);
++
++	r0.val = DLB2_CSR_RD(&dev->hw, DLB2_SYS_ALARM_HW_SYND);
++
++	/*
++	 * Clear the MSI-X ack bit before processing the VF->PF or watchdog
++	 * timer interrupts. This order is necessary so that if an interrupt
++	 * event arrives after reading the corresponding bit vector, the event
++	 * won't be lost.
++	 */
++	dlb2_ack_msix_interrupt(&dev->hw, DLB2_INT_NON_CQ);
++
++	if (r0.field.alarm & r0.field.valid)
++		dlb2_process_alarm_interrupt(&dev->hw);
++
++	if (dlb2_process_ingress_error_interrupt(&dev->hw))
++		dlb2_detect_ingress_err_overload(dev);
++
++	mutex_unlock(&dev->resource_mutex);
++
++	return IRQ_HANDLED;
++}
++
++static int
++dlb2_init_alarm_interrupts(struct dlb2_dev *dev,
++			   struct pci_dev *pdev)
++{
++	int i, ret;
++
++	for (i = 0; i < DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS; i++) {
++		ret = devm_request_threaded_irq(&pdev->dev,
++						pci_irq_vector(pdev, i),
++						NULL,
++						dlb2_service_intr_handler,
++						IRQF_ONESHOT,
++						"dlb2_alarm",
++						dev);
++		if (ret)
++			return ret;
++
++		dev->intr.isr_registered[i] = true;
++	}
++
++	dlb2_enable_ingress_error_alarms(&dev->hw);
++
++	return 0;
++}
++
+ static irqreturn_t
+ dlb2_compressed_cq_intr_handler(int irq, void *hdlr_ptr)
+ {
+@@ -200,6 +303,12 @@ dlb2_pf_init_interrupts(struct dlb2_dev *dev, struct pci_dev *pdev)
+ 	dev->intr.num_vectors = ret;
+ 	dev->intr.base_vector = pci_irq_vector(pdev, 0);
  
- static int micron_spinand_init(struct spinand_device *spinand)
++	ret = dlb2_init_alarm_interrupts(dev, pdev);
++	if (ret) {
++		dlb2_pf_free_interrupts(dev, pdev);
++		return ret;
++	}
++
+ 	ret = dlb2_init_compressed_mode_interrupts(dev, pdev);
+ 	if (ret) {
+ 		dlb2_pf_free_interrupts(dev, pdev);
+@@ -230,6 +339,16 @@ dlb2_pf_init_interrupts(struct dlb2_dev *dev, struct pci_dev *pdev)
+ static void
+ dlb2_pf_reinit_interrupts(struct dlb2_dev *dev)
+ {
++	/* Re-enable alarms after device reset */
++	dlb2_enable_ingress_error_alarms(&dev->hw);
++
++	if (!dev->ingress_err.enabled)
++		dev_err(dev->dlb2_device,
++			"[%s()] Re-enabling ingress error interrupts",
++			__func__);
++
++	dev->ingress_err.enabled = true;
++
+ 	dlb2_set_msix_mode(&dev->hw, DLB2_MSIX_MODE_COMPRESSED);
+ }
+ 
+@@ -311,6 +430,9 @@ dlb2_pf_arm_cq_interrupt(struct dlb2_dev *dev,
+ static int
+ dlb2_pf_init_driver_state(struct dlb2_dev *dlb2_dev)
+ {
++	dlb2_dev->ingress_err.count = 0;
++	dlb2_dev->ingress_err.enabled = true;
++
+ 	mutex_init(&dlb2_dev->resource_mutex);
+ 
+ 	return 0;
+@@ -788,6 +910,54 @@ static ssize_t dev_id_show(struct device *dev,
+ 
+ static DEVICE_ATTR_RO(dev_id);
+ 
++static ssize_t ingress_err_en_show(struct device *dev,
++				   struct device_attribute *attr,
++				   char *buf)
++{
++	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
++	ssize_t ret;
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	ret = scnprintf(buf, PAGE_SIZE, "%d\n", dlb2_dev->ingress_err.enabled);
++
++	mutex_unlock(&dlb2_dev->resource_mutex);
++
++	return ret;
++}
++
++static ssize_t ingress_err_en_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf,
++				    size_t count)
++{
++	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
++	unsigned long num;
++	ssize_t ret;
++
++	ret = kstrtoul(buf, 0, &num);
++	if (ret)
++		return -1;
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	if (!dlb2_dev->ingress_err.enabled && num) {
++		dlb2_enable_ingress_error_alarms(&dlb2_dev->hw);
++
++		dev_err(dlb2_dev->dlb2_device,
++			"[%s()] Re-enabling ingress error interrupts",
++			__func__);
++
++		dlb2_dev->ingress_err.enabled = true;
++	}
++
++	mutex_unlock(&dlb2_dev->resource_mutex);
++
++	return (ret == 0) ? count : ret;
++}
++
++static DEVICE_ATTR_RW(ingress_err_en);
++
+ static int
+ dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
+ {
+@@ -796,6 +966,10 @@ dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
+ 
+ 	kobj = &dlb2_dev->pdev->dev.kobj;
+ 
++	ret = sysfs_create_file(kobj, &dev_attr_ingress_err_en.attr);
++	if (ret)
++		goto dlb2_ingress_err_en_attr_group_fail;
++
+ 	ret = sysfs_create_file(kobj, &dev_attr_dev_id.attr);
+ 	if (ret)
+ 		goto dlb2_dev_id_attr_group_fail;
+@@ -827,6 +1001,8 @@ dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
+ dlb2_total_attr_group_fail:
+ 	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
+ dlb2_dev_id_attr_group_fail:
++	sysfs_remove_file(kobj, &dev_attr_ingress_err_en.attr);
++dlb2_ingress_err_en_attr_group_fail:
+ 	return ret;
+ }
+ 
+@@ -842,6 +1018,7 @@ dlb2_pf_sysfs_destroy(struct dlb2_dev *dlb2_dev)
+ 	sysfs_remove_group(kobj, &dlb2_avail_attr_group);
+ 	sysfs_remove_group(kobj, &dlb2_total_attr_group);
+ 	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
++	sysfs_remove_file(kobj, &dev_attr_ingress_err_en.attr);
+ }
+ 
+ static void
+diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
+index 023409022f39..c1ad34357b0a 100644
+--- a/drivers/misc/dlb2/dlb2_resource.c
++++ b/drivers/misc/dlb2/dlb2_resource.c
+@@ -4917,7 +4917,7 @@ void dlb2_read_compressed_cq_intr_status(struct dlb2_hw *hw,
+ 					DLB2_SYS_DIR_CQ_63_32_OCC_INT_STS);
+ }
+ 
+-static void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector)
++void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector)
+ {
+ 	union dlb2_sys_msix_ack r0 = { {0} };
+ 
+@@ -4994,6 +4994,255 @@ void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
+ 	dlb2_ack_msix_interrupt(hw, DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID);
+ }
+ 
++void dlb2_enable_ingress_error_alarms(struct dlb2_hw *hw)
++{
++	union dlb2_sys_ingress_alarm_enbl r0;
++
++	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_INGRESS_ALARM_ENBL);
++
++	r0.field.illegal_hcw = 1;
++	r0.field.illegal_pp = 1;
++	r0.field.illegal_pasid = 1;
++	r0.field.illegal_qid = 1;
++	r0.field.disabled_qid = 1;
++	r0.field.illegal_ldb_qid_cfg = 1;
++
++	DLB2_CSR_WR(hw, DLB2_SYS_INGRESS_ALARM_ENBL, r0.val);
++}
++
++void dlb2_disable_ingress_error_alarms(struct dlb2_hw *hw)
++{
++	union dlb2_sys_ingress_alarm_enbl r0;
++
++	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_INGRESS_ALARM_ENBL);
++
++	r0.field.illegal_hcw = 0;
++	r0.field.illegal_pp = 0;
++	r0.field.illegal_pasid = 0;
++	r0.field.illegal_qid = 0;
++	r0.field.disabled_qid = 0;
++	r0.field.illegal_ldb_qid_cfg = 0;
++
++	DLB2_CSR_WR(hw, DLB2_SYS_INGRESS_ALARM_ENBL, r0.val);
++}
++
++static void dlb2_log_alarm_syndrome(struct dlb2_hw *hw,
++				    const char *str,
++				    union dlb2_sys_alarm_hw_synd r0)
++{
++	DLB2_HW_ERR(hw, "%s:\n", str);
++	DLB2_HW_ERR(hw, "\tsyndrome: 0x%x\n", r0.field.syndrome);
++	DLB2_HW_ERR(hw, "\trtype:    0x%x\n", r0.field.rtype);
++	DLB2_HW_ERR(hw, "\talarm:    0x%x\n", r0.field.alarm);
++	DLB2_HW_ERR(hw, "\tcwd:      0x%x\n", r0.field.cwd);
++	DLB2_HW_ERR(hw, "\tvf_pf_mb: 0x%x\n", r0.field.vf_pf_mb);
++	DLB2_HW_ERR(hw, "\tcls:      0x%x\n", r0.field.cls);
++	DLB2_HW_ERR(hw, "\taid:      0x%x\n", r0.field.aid);
++	DLB2_HW_ERR(hw, "\tunit:     0x%x\n", r0.field.unit);
++	DLB2_HW_ERR(hw, "\tsource:   0x%x\n", r0.field.source);
++	DLB2_HW_ERR(hw, "\tmore:     0x%x\n", r0.field.more);
++	DLB2_HW_ERR(hw, "\tvalid:    0x%x\n", r0.field.valid);
++}
++
++/* Note: this array's contents must match dlb2_alert_id() */
++static const char dlb2_alert_strings[NUM_DLB2_DOMAIN_ALERTS][128] = {
++	[DLB2_DOMAIN_ALERT_PP_ILLEGAL_ENQ] = "Illegal enqueue",
++	[DLB2_DOMAIN_ALERT_PP_EXCESS_TOKEN_POPS] = "Excess token pops",
++	[DLB2_DOMAIN_ALERT_ILLEGAL_HCW] = "Illegal HCW",
++	[DLB2_DOMAIN_ALERT_ILLEGAL_QID] = "Illegal QID",
++	[DLB2_DOMAIN_ALERT_DISABLED_QID] = "Disabled QID",
++};
++
++static void dlb2_log_pf_vf_syndrome(struct dlb2_hw *hw,
++				    const char *str,
++				    union dlb2_sys_alarm_pf_synd0 r0,
++				    union dlb2_sys_alarm_pf_synd1 r1,
++				    union dlb2_sys_alarm_pf_synd2 r2,
++				    u32 alert_id)
++{
++	DLB2_HW_ERR(hw, "%s:\n", str);
++	if (alert_id < NUM_DLB2_DOMAIN_ALERTS)
++		DLB2_HW_ERR(hw, "Alert: %s\n", dlb2_alert_strings[alert_id]);
++	DLB2_HW_ERR(hw, "\tsyndrome:     0x%x\n", r0.field.syndrome);
++	DLB2_HW_ERR(hw, "\trtype:        0x%x\n", r0.field.rtype);
++	DLB2_HW_ERR(hw, "\tis_ldb:       0x%x\n", r0.field.is_ldb);
++	DLB2_HW_ERR(hw, "\tcls:          0x%x\n", r0.field.cls);
++	DLB2_HW_ERR(hw, "\taid:          0x%x\n", r0.field.aid);
++	DLB2_HW_ERR(hw, "\tunit:         0x%x\n", r0.field.unit);
++	DLB2_HW_ERR(hw, "\tsource:       0x%x\n", r0.field.source);
++	DLB2_HW_ERR(hw, "\tmore:         0x%x\n", r0.field.more);
++	DLB2_HW_ERR(hw, "\tvalid:        0x%x\n", r0.field.valid);
++	DLB2_HW_ERR(hw, "\tdsi:          0x%x\n", r1.field.dsi);
++	DLB2_HW_ERR(hw, "\tqid:          0x%x\n", r1.field.qid);
++	DLB2_HW_ERR(hw, "\tqtype:        0x%x\n", r1.field.qtype);
++	DLB2_HW_ERR(hw, "\tqpri:         0x%x\n", r1.field.qpri);
++	DLB2_HW_ERR(hw, "\tmsg_type:     0x%x\n", r1.field.msg_type);
++	DLB2_HW_ERR(hw, "\tlock_id:      0x%x\n", r2.field.lock_id);
++	DLB2_HW_ERR(hw, "\tmeas:         0x%x\n", r2.field.meas);
++	DLB2_HW_ERR(hw, "\tdebug:        0x%x\n", r2.field.debug);
++	DLB2_HW_ERR(hw, "\tcq_pop:       0x%x\n", r2.field.cq_pop);
++	DLB2_HW_ERR(hw, "\tqe_uhl:       0x%x\n", r2.field.qe_uhl);
++	DLB2_HW_ERR(hw, "\tqe_orsp:      0x%x\n", r2.field.qe_orsp);
++	DLB2_HW_ERR(hw, "\tqe_valid:     0x%x\n", r2.field.qe_valid);
++	DLB2_HW_ERR(hw, "\tcq_int_rearm: 0x%x\n", r2.field.cq_int_rearm);
++	DLB2_HW_ERR(hw, "\tdsi_error:    0x%x\n", r2.field.dsi_error);
++}
++
++static void dlb2_clear_syndrome_register(struct dlb2_hw *hw, u32 offset)
++{
++	union dlb2_sys_alarm_hw_synd r0 = { {0} };
++
++	r0.field.valid = 1;
++	r0.field.more = 1;
++
++	DLB2_CSR_WR(hw, offset, r0.val);
++}
++
++void dlb2_process_alarm_interrupt(struct dlb2_hw *hw)
++{
++	union dlb2_sys_alarm_hw_synd r0;
++
++	DLB2_HW_DBG(hw, "Processing alarm interrupt\n");
++
++	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_HW_SYND);
++
++	dlb2_log_alarm_syndrome(hw, "HW alarm syndrome", r0);
++
++	dlb2_clear_syndrome_register(hw, DLB2_SYS_ALARM_HW_SYND);
++}
++
++static void dlb2_process_ingress_error(struct dlb2_hw *hw,
++				       union dlb2_sys_alarm_pf_synd0 r0,
++				       u32 alert_id,
++				       bool vf_error,
++				       unsigned int vf_id)
++{
++	struct dlb2_dev *dev;
++	u32 domain_id;
++	bool is_ldb;
++	u8 port_id;
++	int ret;
++
++	port_id = r0.field.syndrome & 0x7F;
++	if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS)
++		is_ldb = r0.field.is_ldb;
++	else
++		is_ldb = (r0.field.syndrome & 0x80) != 0;
++
++	/* Get the domain ID and, if it's a VF domain, the virtual port ID */
++	if (is_ldb) {
++		struct dlb2_ldb_port *port;
++
++		port = dlb2_get_ldb_port_from_id(hw, port_id, vf_error, vf_id);
++		if (!port) {
++			DLB2_HW_ERR(hw,
++				    "[%s()]: Internal error: unable to find LDB port\n\tport: %u, vf_error: %u, vf_id: %u\n",
++				    __func__, port_id, vf_error, vf_id);
++			return;
++		}
++
++		domain_id = port->domain_id.phys_id;
++	} else {
++		struct dlb2_dir_pq_pair *port;
++
++		port = dlb2_get_dir_pq_from_id(hw, port_id, vf_error, vf_id);
++		if (!port) {
++			DLB2_HW_ERR(hw,
++				    "[%s()]: Internal error: unable to find DIR port\n\tport: %u, vf_error: %u, vf_id: %u\n",
++				    __func__, port_id, vf_error, vf_id);
++			return;
++		}
++
++		domain_id = port->domain_id.phys_id;
++	}
++
++	dev = container_of(hw, struct dlb2_dev, hw);
++
++	ret = dlb2_write_domain_alert(dev,
++				      dev->sched_domains[domain_id],
++				      alert_id,
++				      (is_ldb << 8) | port_id);
++	if (ret)
++		DLB2_HW_ERR(hw,
++			    "[%s()] Internal error: failed to notify\n",
++			    __func__);
++}
++
++static u32 dlb2_alert_id(union dlb2_sys_alarm_pf_synd0 r0)
++{
++	if (r0.field.unit == DLB2_ALARM_HW_UNIT_CHP &&
++	    r0.field.aid == DLB2_ALARM_HW_CHP_AID_ILLEGAL_ENQ)
++		return DLB2_DOMAIN_ALERT_PP_ILLEGAL_ENQ;
++	else if (r0.field.unit == DLB2_ALARM_HW_UNIT_CHP &&
++		 r0.field.aid == DLB2_ALARM_HW_CHP_AID_EXCESS_TOKEN_POPS)
++		return DLB2_DOMAIN_ALERT_PP_EXCESS_TOKEN_POPS;
++	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
++		 r0.field.aid == DLB2_ALARM_SYS_AID_ILLEGAL_HCW)
++		return DLB2_DOMAIN_ALERT_ILLEGAL_HCW;
++	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
++		 r0.field.aid == DLB2_ALARM_SYS_AID_ILLEGAL_QID)
++		return DLB2_DOMAIN_ALERT_ILLEGAL_QID;
++	else if (r0.field.source == DLB2_ALARM_HW_SOURCE_SYS &&
++		 r0.field.aid == DLB2_ALARM_SYS_AID_DISABLED_QID)
++		return DLB2_DOMAIN_ALERT_DISABLED_QID;
++	else
++		return NUM_DLB2_DOMAIN_ALERTS;
++}
++
++bool dlb2_process_ingress_error_interrupt(struct dlb2_hw *hw)
++{
++	union dlb2_sys_alarm_pf_synd0 r0;
++	union dlb2_sys_alarm_pf_synd1 r1;
++	union dlb2_sys_alarm_pf_synd2 r2;
++	u32 alert_id;
++	bool valid;
++	int i;
++
++	r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND0);
++
++	valid = r0.field.valid;
++
++	if (r0.field.valid) {
++		r1.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND1);
++		r2.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_PF_SYND2);
++
++		alert_id = dlb2_alert_id(r0);
++
++		dlb2_log_pf_vf_syndrome(hw,
++					"PF Ingress error alarm",
++					r0, r1, r2, alert_id);
++
++		dlb2_clear_syndrome_register(hw, DLB2_SYS_ALARM_PF_SYND0);
++
++		dlb2_process_ingress_error(hw, r0, alert_id, false, 0);
++	}
++
++	for (i = 0; i < DLB2_MAX_NUM_VDEVS; i++) {
++		r0.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND0(i));
++
++		valid |= r0.field.valid;
++
++		if (!r0.field.valid)
++			continue;
++
++		r1.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND1(i));
++		r2.val = DLB2_CSR_RD(hw, DLB2_SYS_ALARM_VF_SYND2(i));
++
++		alert_id = dlb2_alert_id(r0);
++
++		dlb2_log_pf_vf_syndrome(hw,
++					"VF Ingress error alarm",
++					r0, r1, r2, alert_id);
++
++		dlb2_clear_syndrome_register(hw,
++					     DLB2_SYS_ALARM_VF_SYND0(i));
++
++		dlb2_process_ingress_error(hw, r0, alert_id, true, i);
++	}
++
++	return valid;
++}
++
+ int dlb2_get_group_sequence_numbers(struct dlb2_hw *hw, unsigned int group_id)
+ {
+ 	if (group_id >= DLB2_MAX_NUM_SEQUENCE_NUMBER_GROUPS)
+diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
+index 7570e02d37e5..c194778d88bc 100644
+--- a/drivers/misc/dlb2/dlb2_resource.h
++++ b/drivers/misc/dlb2/dlb2_resource.h
+@@ -517,6 +517,18 @@ int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
+ 				    u16 threshold);
+ 
+ /**
++ * dlb2_enable_ingress_error_alarms() - enable ingress error alarm interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ */
++void dlb2_enable_ingress_error_alarms(struct dlb2_hw *hw);
++
++/**
++ * dlb2_disable_ingress_error_alarms() - disable ingress error alarm interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ */
++void dlb2_disable_ingress_error_alarms(struct dlb2_hw *hw);
++
++/**
+  * dlb2_set_msix_mode() - enable certain hardware alarm interrupts
+  * @hw: dlb2_hw handle for a particular device.
+  * @mode: MSI-X mode (DLB2_MSIX_MODE_PACKED or DLB2_MSIX_MODE_COMPRESSED)
+@@ -527,6 +539,16 @@ int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
+ void dlb2_set_msix_mode(struct dlb2_hw *hw, int mode);
+ 
+ /**
++ * dlb2_ack_msix_interrupt() - Ack an MSI-X interrupt
++ * @hw: dlb2_hw handle for a particular device.
++ * @vector: interrupt vector.
++ *
++ * Note: Only needed for PF service interrupts (vector 0). CQ interrupts are
++ * acked in dlb2_ack_compressed_cq_intr().
++ */
++void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector);
++
++/**
+  * dlb2_arm_cq_interrupt() - arm a CQ's interrupt
+  * @hw: dlb2_hw handle for a particular device.
+  * @port_id: port ID
+@@ -582,6 +604,29 @@ void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
+ 				 u32 *dir_interrupts);
+ 
+ /**
++ * dlb2_process_alarm_interrupt() - process an alarm interrupt
++ * @hw: dlb2_hw handle for a particular device.
++ *
++ * This function reads the alarm syndrome, logs its, and acks the interrupt.
++ * This function should be called from the alarm interrupt handler when
++ * interrupt vector DLB2_INT_ALARM fires.
++ */
++void dlb2_process_alarm_interrupt(struct dlb2_hw *hw);
++
++/**
++ * dlb2_process_ingress_error_interrupt() - process ingress error interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ *
++ * This function reads the alarm syndrome, logs it, notifies user-space, and
++ * acks the interrupt. This function should be called from the alarm interrupt
++ * handler when interrupt vector DLB2_INT_INGRESS_ERROR fires.
++ *
++ * Return:
++ * Returns true if an ingress error interrupt occurred, false otherwise
++ */
++bool dlb2_process_ingress_error_interrupt(struct dlb2_hw *hw);
++
++/**
+  * dlb2_get_group_sequence_numbers() - return a group's number of SNs per queue
+  * @hw: dlb2_hw handle for a particular device.
+  * @group_id: sequence number group ID.
 -- 
-2.17.1
+2.13.6
 
