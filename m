@@ -2,82 +2,75 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D29C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1046CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BA22067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ek0pibK7"
+	by mail.kernel.org (Postfix) with ESMTP id ED1392067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 21:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgGLVMN (ORCPT
+        id S1729486AbgGLVOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 17:12:13 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26362 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729020AbgGLVMN (ORCPT
+        Sun, 12 Jul 2020 17:14:20 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:47515 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729408AbgGLVOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 17:12:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594588332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SzXcGBnJoMu6yQ1ekMwxkgwaybMWLM4JDF5m7XfzkWs=;
-        b=Ek0pibK7akd2VYJUKbKQpvVT3CDAjkFtvI+VRaeBwkdY4zFyBshuyZQQ1nIhWvRbOoU17/
-        JSiesXDNch8QaJYYtzwdhwsEbGgxV4ftnWfG+Tz5sCvptgBbTOR/YMx+inDwhhAuGTTDb5
-        vFeHyi55zYzAwLO7Cz+SEugpwRR/wwE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-474-UftfbY3ZOO-mm81bYCRcPg-1; Sun, 12 Jul 2020 17:12:08 -0400
-X-MC-Unique: UftfbY3ZOO-mm81bYCRcPg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D291210059A9;
-        Sun, 12 Jul 2020 21:12:06 +0000 (UTC)
-Received: from krava (unknown [10.40.192.24])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0E8CA1A836;
-        Sun, 12 Jul 2020 21:12:04 +0000 (UTC)
-Date:   Sun, 12 Jul 2020 23:12:04 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 00/15] perf: support enable and disable commands in
- stat and record modes
-Message-ID: <20200712211204.GA156308@krava>
-References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+        Sun, 12 Jul 2020 17:14:19 -0400
+Received: from localhost.localdomain ([93.22.148.52])
+        by mwinf5d61 with ME
+        id 2ME52300f183tQl03ME6PW; Sun, 12 Jul 2020 23:14:16 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 12 Jul 2020 23:14:16 +0200
+X-ME-IP: 93.22.148.52
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     ayush.sawal@chelsio.com, vinay.yadav@chelsio.com,
+        rohitm@chelsio.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 1/2] Crypto/chcr: Avoid some code duplication
+Date:   Sun, 12 Jul 2020 23:14:04 +0200
+Message-Id: <20200712211404.276211-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 10:36:30AM +0300, Alexey Budankov wrote:
-> 
-> Changes in v10:
-> - reused struct priv, renamed props into flags and used unsigned int type as a storage
-> - implemented and adopted usage of evlist__ctlfd_initialized() function
-> - updated while condition with checking !(done || stop)
-> - implemented compute_tts() to calculate the remainder of timeout to wait in poll()
+The error handling path of 'chcr_authenc_setkey()' is the same as this
+error handling code.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+So just 'goto out' as done everywhere in the function to simplify the code.
 
-thanks,
-jirka
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/crypto/chelsio/chcr_algo.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 4c2553672b6f..ba2469008dd9 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -3609,9 +3609,7 @@ static int chcr_authenc_setkey(struct crypto_aead *authenc, const u8 *key,
+ 	base_hash  = chcr_alloc_shash(max_authsize);
+ 	if (IS_ERR(base_hash)) {
+ 		pr_err("chcr : Base driver cannot be loaded\n");
+-		aeadctx->enckey_len = 0;
+-		memzero_explicit(&keys, sizeof(keys));
+-		return -EINVAL;
++		goto out;
+ 	}
+ 	{
+ 		SHASH_DESC_ON_STACK(shash, base_hash);
+-- 
+2.25.1
 
