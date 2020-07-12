@@ -2,271 +2,208 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4197C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BED2068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E988206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 15:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kily82oy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/vUvPCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgGLPB4 (ORCPT
+        id S1728901AbgGLPKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 11:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728786AbgGLPBz (ORCPT
+        Sun, 12 Jul 2020 11:10:53 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24699 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728826AbgGLPKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 11:01:55 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7CDC061794;
-        Sun, 12 Jul 2020 08:01:55 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a1so11398416ejg.12;
-        Sun, 12 Jul 2020 08:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lgNUnkTyeGBs+S6AQcsSeWMybtOFf3sw9okmc9BlVSI=;
-        b=Kily82oybKD/xxOI35j/aOshNnJvbkhdUu8acB9DWvUQ81xe9rwFkQQIXCD89XtMBb
-         dSCb3ldF2ytwEGOSU4lFw69UueID2G4wXljWstYJ27nBN1onLbOxwzOwiDmDkPcmVwou
-         72Fg1j5iDZ5/uQFrtzSqUDfDnySMn3Hajf+4RhMuSU/Dgnb1+Ew+T5lHh/dT/21FWj1I
-         Enu2OnU8YdChx/YJjeNNASvEyHRnivLKLnY0rfEIMH9aMx/8SvEfa06FUFD+f1sMeeON
-         cA6kkUX2zvJAI3YmzjlA5w95uHBvCOz1EZj7JZh51ftxpO3J7IMcvoLIfGXsClZKBRsG
-         FeZA==
+        Sun, 12 Jul 2020 11:10:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594566606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8OGhukfjv0ZT/IXCaPKeBoNY1caG5ABn5f3vkuZHJ7E=;
+        b=g/vUvPCccaKVwuaOb2624AtWHUmQdV/B38bDYffs6j3gUUVuxlNHFtYb4OP4qID84Yjog6
+        NznMVKqoB4ceVWfy/g0RjudI9shgNP1oQGDv6zUqxOevGpaCwPhCqMXisoF+OwxwRc6SDH
+        8j6ncFFY4Zvu6SDFHclb3EFSyaQMUXw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-5tu-XNhwPya9ZbfJImOvLA-1; Sun, 12 Jul 2020 11:10:03 -0400
+X-MC-Unique: 5tu-XNhwPya9ZbfJImOvLA-1
+Received: by mail-wm1-f70.google.com with SMTP id v6so15192590wmg.1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 08:10:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lgNUnkTyeGBs+S6AQcsSeWMybtOFf3sw9okmc9BlVSI=;
-        b=WH4+pPmPaaCzX2KVh4DR3veFb9aWm+IACJoUzMTtaXFrMnKUYDWAbHBhJz6lFzRJQi
-         3BdA5kTYcRUGYCMi2zOP1Dh51ucyrLdY4EfD5I39XnmAKf1aWMzXTkmz/y15HwDGvrfy
-         ZstJ7TjwWW36oV0VWzHqj/AeL39TU9Ze2MbuyEj2PjPKzEdsuoGYiF/zN7VhH2u3SGbk
-         4Z/dN+H5R+qzn8ZIZHtEGI85BhyYvTiK6zq6Dq0xY0QGS02yrC/Py5U1dXtz2vNFS38w
-         hUh4oCv2lQziec6wZsueMId10zwyxbiSVvSVUkYUEs9IDIspxkYrX6fqKZeEwbHe+q6t
-         O3+w==
-X-Gm-Message-State: AOAM530O0+x+j5mDSHGXINtHqed2dxU2HEB+fdLm7ihuzSsEJtgspGps
-        3btV5LjEznprHL4ogGorq/U=
-X-Google-Smtp-Source: ABdhPJz6yVjS5VEog+aHysyHOtEc2rc0ATbXdP9hF4bOZaEIB8tHm7ZsgmdHLO0tEeyV0VSCbm6FGQ==
-X-Received: by 2002:a17:906:f98e:: with SMTP id li14mr69419503ejb.174.1594566113955;
-        Sun, 12 Jul 2020 08:01:53 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id ay27sm9436171edb.81.2020.07.12.08.01.52
+        bh=8OGhukfjv0ZT/IXCaPKeBoNY1caG5ABn5f3vkuZHJ7E=;
+        b=SVLbeSnGqkFDs5izvG9g/QuIlcvS0GBenSlGA/dx3X7EETMPPmjIcLcZwJzKPzjIcB
+         uMuZnPUpzjawfN6aCsEGoyYmRNAWAfQild52Do+kySZpS39HwfptqkRGHcd/gWru6g3W
+         lGKDoCLlQJ5RBJS0zXl77xKDPKJ8ItYLZdzuFqY5JL5MMQYhBsMXPEULDvKfnrO8fiqh
+         VCMepq8W+lOG53onNr2Y0p4mnUGXSCY1kA8kZIcQFBgAqc+6LmcXcCdX14nJUnJixroG
+         y4/CgwUa2zevoSsN80rOJnSdPGtqQ6fAdh/GzIKhfZjP1PRRi65DcM/dV2/WQJC84Qy3
+         q64Q==
+X-Gm-Message-State: AOAM532QgR/ejMU0Y4l1yaJjqYO0ye6Js9+Rei8N/PR13sS5xRwg5NSJ
+        l6pXGO93WXb+4kGONdj67Ab07zpwXPas1FIOXLepj109t+ElXWVP6TMRU6ZsJk1zR7eLwQRuBH+
+        zxmSUSaw5eMY3XBcqABhT911s
+X-Received: by 2002:adf:9404:: with SMTP id 4mr73970078wrq.367.1594566601777;
+        Sun, 12 Jul 2020 08:10:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsm5CJXrrhFiC8BebofMz/Wct0oboZrATjejrICMcEce7n68CC5UryJkF6nTNDsvN2cKhCKw==
+X-Received: by 2002:adf:9404:: with SMTP id 4mr73970062wrq.367.1594566601537;
+        Sun, 12 Jul 2020 08:10:01 -0700 (PDT)
+Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
+        by smtp.gmail.com with ESMTPSA id k18sm19676458wrx.34.2020.07.12.08.09.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 08:01:53 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 18:01:51 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
- devices
-Message-ID: <20200712150151.55jttxaf4emgqcpc@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200711120842.2631-1-sorganov@gmail.com>
- <20200711231937.wu2zrm5spn7a6u2o@skbuf>
- <87wo387r8n.fsf@osv.gnss.ru>
+        Sun, 12 Jul 2020 08:10:00 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 11:09:57 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
+Message-ID: <20200712105926-mutt-send-email-mst@kernel.org>
+References: <20200710113046.421366-1-mst@redhat.com>
+ <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wo387r8n.fsf@osv.gnss.ru>
+In-Reply-To: <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 05:16:56PM +0300, Sergey Organov wrote:
-> Vladimir Oltean <olteanv@gmail.com> writes:
-> 
-> > Hi Sergey,
+On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
+> On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
 > >
-> > On Sat, Jul 11, 2020 at 03:08:42PM +0300, Sergey Organov wrote:
-> >> Fix support for external PTP-aware devices such as DSA or PTP PHY:
-> >> 
-> >> Make sure we never time stamp tx packets when hardware time stamping
-> >> is disabled.
-> >> 
-> >> Check for PTP PHY being in use and then pass ioctls related to time
-> >> stamping of Ethernet packets to the PTP PHY rather than handle them
-> >> ourselves. In addition, disable our own hardware time stamping in this
-> >> case.
-> >> 
-> >> Fixes: 6605b73 ("FEC: Add time stamping code and a PTP hardware clock")
+> > Page reporting features were never supported by legacy hypervisors.
+> > Supporting them poses a problem: should we use native endian-ness (like
+> > current code assumes)? Or little endian-ness like the virtio spec says?
+> > Rather than try to figure out, and since results of
+> > incorrect endian-ness are dire, let's just block this configuration.
 > >
-> > Please use a 12-character sha1sum. Try to use the "pretty" format
-> > specifier I gave you in the original thread, it saves you from
-> > counting,
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > 
-> I did as you suggested:
+> So I am not sure about the patch description. In the case of page
+> poison and free page reporting I don't think we are defining anything
+> that doesn't already have a definition of how to use in legacy.
+> Specifically the virtio_balloon_config is already defined as having
+> all fields as little endian in legacy mode, and there is a definition
+> for all of the fields in a virtqueue and how they behave in legacy
+> mode.
 > 
-> [pretty]
->         fixes = Fixes: %h (\"%s\")
-> [alias]
-> 	fixes = show --no-patch --pretty='Fixes: %h (\"%s\")'
-> 
-> And that's what it gave me. Dunno, maybe its Git version that is
-> responsible?
-> 
-> I now tried to find a way to specify the number of digits in the
-> abbreviated hash in the format, but failed. There is likely some global
-> setting for minimum number of digits, but I'm yet to find it. Any idea?
-> 
+> As far as I can see the only item that may be an issue is the command
+> ID being supplied via the virtqueue for free page hinting, which
+> appears to be in native endian-ness. Otherwise it would have fallen
+> into the same category since it is making use of virtio_balloon_config
+> and a virtqueue for supplying the page location and length.
 
-Sorry, my fault. I gave you only partial settings. Use this:
 
-[core]
-	abbrev = 12
-[pretty]
-	fixes = Fixes: %h (\"%s\")
 
-> > and also from people complaining once it gets merged:
+So as you point out correctly balloon spec says all fields are little
+endian.  Fair enough.
+Problem is when virtio 1 is not negotiated, then this is not what the
+driver assumes for any except a handlful of fields.
+
+But yes it mostly works out.
+
+For example:
+
+
+static void update_balloon_size(struct virtio_balloon *vb)
+{
+        u32 actual = vb->num_pages;
+
+        /* Legacy balloon config space is LE, unlike all other devices. */
+        if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+                actual = (__force u32)cpu_to_le32(actual);
+
+        virtio_cwrite(vb->vdev, struct virtio_balloon_config, actual,
+                      &actual);
+}
+
+
+this is LE even without VIRTIO_F_VERSION_1, so matches spec.
+
+                /* Start with poison val of 0 representing general init */
+                __u32 poison_val = 0;
+
+                /*
+                 * Let the hypervisor know that we are expecting a
+                 * specific value to be written back in balloon pages.
+                 */
+                if (!want_init_on_free())
+                        memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+
+                virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+                              poison_val, &poison_val);
+
+
+actually this writes a native endian-ness value. All bytes happen to be
+the same though, and host only cares about 0 or non 0 ATM.
+
+As you say correctly the command id is actually assumed native endian:
+
+
+static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+{
+        if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+                               &vb->config_read_bitmap))
+                virtio_cread(vb->vdev, struct virtio_balloon_config,
+                             free_page_hint_cmd_id,
+                             &vb->cmd_id_received_cache);
+
+        return vb->cmd_id_received_cache;
+}
+
+
+So guest assumes native, host assumes LE.
+
+
+
+
+> > ---
+> >  drivers/virtio/virtio_balloon.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
 > >
-> > https://www.google.com/search?q=stephen+rothwell+%22fixes+tag+needs+some+work%22
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 5d4b891bf84f..b9bc03345157 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
 > >
-> >> Signed-off-by: Sergey Organov <sorganov@gmail.com>
-> >> ---
-> >> 
-> >> v2:
-> >>   - Extracted from larger patch series
-> >>   - Description/comments updated according to discussions
-> >>   - Added Fixes: tag
-> >> 
-> >>  drivers/net/ethernet/freescale/fec.h      |  1 +
-> >>  drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
-> >>  drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
-> >>  3 files changed, 30 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-> >> index d8d76da..832a217 100644
-> >> --- a/drivers/net/ethernet/freescale/fec.h
-> >> +++ b/drivers/net/ethernet/freescale/fec.h
-> >> @@ -590,6 +590,7 @@ struct fec_enet_private {
-> >>  void fec_ptp_init(struct platform_device *pdev, int irq_idx);
-> >>  void fec_ptp_stop(struct platform_device *pdev);
-> >>  void fec_ptp_start_cyclecounter(struct net_device *ndev);
-> >> +void fec_ptp_disable_hwts(struct net_device *ndev);
-> >>  int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
-> >>  int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
-> >>  
-> >> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> >> index 3982285..cc7fbfc 100644
-> >> --- a/drivers/net/ethernet/freescale/fec_main.c
-> >> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> >> @@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
-> >>  			ndev->stats.tx_bytes += skb->len;
-> >>  		}
-> >>  
-> >> -		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
-> >> -			fep->bufdesc_ex) {
-> >> +		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
-> >> +		 * are to time stamp the packet, so we still need to check time
-> >> +		 * stamping enabled flag.
-> >> +		 */
-> >> +		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
-> >> +			     fep->hwts_tx_en) &&
-> >> +		    fep->bufdesc_ex) {
-> >>  			struct skb_shared_hwtstamps shhwtstamps;
-> >>  			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
-> >>  
-> >> @@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
-> >>  		return -ENODEV;
-> >>  
-> >>  	if (fep->bufdesc_ex) {
-> >> -		if (cmd == SIOCSHWTSTAMP)
-> >> -			return fec_ptp_set(ndev, rq);
-> >> -		if (cmd == SIOCGHWTSTAMP)
-> >> -			return fec_ptp_get(ndev, rq);
-> >> +		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
-> >
-> > I thought we were in agreement that FEC does not support PHY
-> > timestamping at this point, and this patch would only be fixing DSA
-> > switches (even though PHYs would need this fixed too, when support is
-> > added for them)? I would definitely not introduce support (and
-> > incomplete, at that) for a new feature in a bugfix patch.
-> >
-> > But it looks like we aren't.
+> >  static int virtballoon_validate(struct virtio_device *vdev)
+> >  {
+> > +       /*
+> > +        * Legacy devices never specified how modern features should behave.
+> > +        * E.g. which endian-ness to use? Better not to assume anything.
+> > +        */
+> > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
+> > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
+> > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+> > +       }
+> >         /*
+> >          * Inform the hypervisor that our pages are poisoned or
+> >          * initialized. If we cannot do that then we should disable
 > 
-> We were indeed, and, honestly, I did prepare the split version of the
-> changes. But then I felt uneasy describing these commits, as I realized
-> that I fix single source file and single original commit by adding
-> proper support for a single feature that is described in your (single)
-> recent document, but with 2 separate commits, each of which solves only
-> half of the problem. I felt I need to somehow explain why could somebody
-> want half a fix, and didn't know how, so I've merged them back into
-> single commit.
+> The patch content itself I am fine with since odds are nobody would
+> expect to use these features with a legacy device.
 > 
+> Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Right now there are 2 mainline DSA timestamping drivers that could be
-paired with the FEC driver: mv88e6xxx and sja1105 (there is a third one,
-felix, which is an embedded L2 switch, so its DSA master is known and
-fixed, and it's not FEC). In practice, there are boards out there that
-use FEC in conjunction with both these DSA switch families.
+Hmm so now you pointed out it's just cmd id, maybe I should just fix it
+instead? what do you say?
 
-As far as I understand. the reason why SKBTX_IN_PROGRESS exists is for
-skb_tx_timestamp() to only provide a software timestamp if the hardware
-timestamping isn't going to. So hardware timestamping logic must signal
-its intention. With SO_TIMESTAMPING, this should not be strictly
-necessary, as this UAPI supports multiple sources of timestamping
-(including software and hardware together), but I think
-SKBTX_IN_PROGRESS predates this UAPI and timestamping should continue to
-work with older socket options.
+-- 
+MST
 
-Now, out of the 2 mainline DSA drivers, 1 of them isn't setting
-SKBTX_IN_PROGRESS, and that is mv88e6xxx. So mv88e6xxx isn't triggerring
-this bug. I'm not sure why it isn't setting the flag. It might very well
-be that the author of the patch had a board with a FEC DSA master, and
-setting this flag made bad things happen, so he just left it unset.
-Doesn't really matter.
-But sja1105 is setting the flag:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/sja1105/sja1105_ptp.c#n890
-
-So, at the very least, you are fixing PTP on DSA setups with FEC as
-master and sja1105 as switch. Boards like that do exist.
-
-> In case you insist they are to be separate, I do keep the split version
-> in my git tree, but to finish it that way, I'd like to clarify a few
-> details:
-> 
-> 1. Should it be patch series with 2 commits, or 2 entirely separate
-> patches?
-> 
-
-Entirely separate.
-
-> 2. If patch series, which change should go first? Here please notice
-> that ioctl() change makes no sense without SKBTX fix unconditionally,
-> while SKBTX fix makes no sense without ioctl() fix for PTP PHY users
-> only.
-> 
-
-Please look at the SKBTX fix from the perspective of code that currently
-exists in mainline, and not from the perspective of what you have in
-mind.
-
-> 3. If entirely separate patches, should I somehow refer to SKBTX patch in
-> ioctl() one (and/or vice versa), to make it explicit they are
-> (inter)dependent? 
-> 
-
-Nope. The PHY timestamping support will go to David's net-next, this
-common PHY/DSA bugfix to net, and they'll meet sooner rather than later.
-
-> 4. How/if should I explain why anybody would benefit from applying
-> SKBTX patch, yet be in trouble applying ioctl() one? 
-> 
-
-Could you please rephrase? I don't understand the part about being in
-trouble for applying the ioctl patch.
-
-Thanks,
--Vladimir
