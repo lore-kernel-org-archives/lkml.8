@@ -2,85 +2,180 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF09CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C6120674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D7020674
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 13:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WKLLzGtA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhlgiLXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgGLNJc (ORCPT
+        id S1728855AbgGLNKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:09:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49995 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728686AbgGLNJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:09:31 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06CD9KIY950515
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Sun, 12 Jul 2020 06:09:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06CD9KIY950515
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020062301; t=1594559361;
-        bh=DhxKjXp9j9Y+OP7wZRkqCMpDWKtGRRwN1/eUrDQnlI8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WKLLzGtAO5g2GMPmtY6lS1CTgbOzhjV3m5L2/acFl6QDxOTyosmNC90B6XvkuewMb
-         PAuFw/HKQi/AZpvid2yAJk9IjthOv8k674kf6sE0sUAUYaqt0IcbLy+CIvImqS2mA8
-         p51fRKaLqVA1FuIpsFFySaFLm2/dGns33TP2mpWj9VHIh6fuRsCablAIG1WSWLVhdR
-         RANZ2LZbVmuJhBoH2Mb5N8KnVUcMlqmYtxAsR0+F/c6aHhr5jrrmNEBQwOO39kx02G
-         svzSbowQgl+jSkUQAWnkRHh1zj5Slwq5RWubEo8RpJa8isCobD7o4HWJJAP9rX/nff
-         6oX/vRpIn6qHA==
-Subject: Re: [PATCH] decompress_bunzip2: fix sizeof type in start_bunzip
-To:     trix@redhat.com, alain@knaff.lu
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200712125952.8809-1-trix@redhat.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <639c8ef5-2755-7172-fbb8-ce45c8637feb@zytor.com>
-Date:   Sun, 12 Jul 2020 06:09:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200712125952.8809-1-trix@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 12 Jul 2020 09:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728686AbgGLNKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 09:10:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A2AC061794;
+        Sun, 12 Jul 2020 06:10:21 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z3so4763833pfn.12;
+        Sun, 12 Jul 2020 06:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NRP39QoMA7cboQj2MMbTyFFjYJ67xWA6XbsSY/jB4dA=;
+        b=JhlgiLXkD5O4zUGxXccVQPXMT+O9o31DADprV5OMtKmgXgwlyQDyU6AHHqfQhE5WDR
+         gh5b7kg1tMcyp7AboKcI3mVUn5/qm89WJOEiNibftq/jOQEKkxQzTk37RfP+SpFJJd9L
+         4TjLUq1DlQ19yLYAdhUXnAvimn3qmIX7ObMY5J2FOxASotv4BtIullWP63iJy4HsroOj
+         U65y23wASAoSP20WQ6BwLVSu8J3+lE8szV/mSTbI3FCCUX9/L/nBKqwJsdlrs8NbFA1A
+         ugtQV82lcIzXRaUNqb/D4kPjsUKXNmCZ5CTHMUXJ7R74r0HW9eEvKuqZUawq1z60LL84
+         IqZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NRP39QoMA7cboQj2MMbTyFFjYJ67xWA6XbsSY/jB4dA=;
+        b=d7PiObanZmbBIQ961R1LOM/mBvtnhEwtoK3Dj+wlkwr6Qu4ZXXF/oXspO8ao3k2R4e
+         bSEMrAzIz2DRCxk7lTbbWi39jqVV02VnfFZzGX7J9r41OzCXG6+wWxobOFGIf4AQX9Yj
+         ir59KuwdP39gJKanSAvM5J137RiwAqx5uxOyor6Bi3BWrtD9oHxMne3qHdydnCaINyGY
+         HzOICjSu1i8zLFBpqTCmdedXNJDBnoBiefOc9qxFIy6Yv9MtQugpj/WDs2jyEVN9aHuO
+         sVEYZqUqsOlNGU42kZkE9twbrcF7vxCuuam3F/igfc0ZaoLm+kzu599ICi8n1RF9/goq
+         BUPQ==
+X-Gm-Message-State: AOAM530JUACt+jbcqxdsK/NZvlJgGxcRY76OVkEl4vuezjjuTTvBgo1b
+        uuELXNo0tZVeQu+p4w386A==
+X-Google-Smtp-Source: ABdhPJyrr3l21D86j8HF4DyLsuHvOdUtkQkflxGYyEfr832mw/NrHe0iwr46Z+tErL/jQPKe027rGQ==
+X-Received: by 2002:a05:6a00:2286:: with SMTP id f6mr68025222pfe.303.1594559420452;
+        Sun, 12 Jul 2020 06:10:20 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4071:200a:9520:4919:edd3:5dbd:ffec])
+        by smtp.gmail.com with ESMTPSA id q24sm12093014pfg.95.2020.07.12.06.10.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 06:10:19 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     paulmck@kernel.org, josh@joshtriplett.org, joel@joelfernandes.org,
+        pbonzini@redhat.com
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        kvm@vger.kernel.org, frextrite@gmail.com,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 1/2] rculist : Introduce list/hlist_for_each_entry_srcu() macros
+Date:   Sun, 12 Jul 2020 18:40:02 +0530
+Message-Id: <20200712131003.23271-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-12 05:59, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analysis flags this error
-> 
-> lib/decompress_bunzip2.c:671:13: warning: Result of 'malloc' is converted
->   to a pointer of type 'unsigned int', which is incompatible with sizeof
->   operand type 'int' [unix.MallocSizeof]
->         bd->dbuf = large_malloc(bd->dbufSize * sizeof(int));
->                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Reviewing the bunzip_data structure, the element dbuf is type
-> 
-> 	/* Intermediate buffer and its size (in bytes) */
-> 	unsigned int *dbuf, dbufSize;
-> 
-> So change the type in sizeof to 'unsigned int'
-> 
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-You must be kidding.
+list/hlist_for_each_entry_rcu() provides an optional cond argument
+to specify the lock held in the updater side.
+However for SRCU read side, not providing the cond argument results
+into false positive as whether srcu_read_lock is held or not is not
+checked implicitly. Therefore, on read side the lockdep expression
+srcu_read_lock_held(srcu struct) can solve this issue.
 
-If you want to change it, change it to sizeof(bd->dbuf) instead, but this flag
-is at least in my opinion a total joke. For sizeof(int) != sizeof(unsigned
-int) is beyond bizarre, no matter how stupid the platform.
+However, the function still fails to check the cases where srcu
+protected list is traversed with rcu_read_lock() instead of
+srcu_read_lock(). Therefore, to remove the false negative,
+this patch introduces two new list traversal primitives :
+list_for_each_entry_srcu() and hlist_for_each_entry_srcu().
 
-	-hpa
+Both of the functions have non-optional cond argument
+as it is required for both read and update side, and simply checks
+if the cond is true. For regular read side the lockdep expression
+srcu_read_lock_head() can be passed as the cond argument to
+list/hlist_for_each_entry_srcu().
+
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ include/linux/rculist.h | 48 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index df587d181844..516b4feb2682 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -63,9 +63,17 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+ 	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
+ 			 "RCU-list traversed in non-reader section!");	\
+ 	})
++
++#define __list_check_srcu(cond)					 \
++	({								 \
++	RCU_LOCKDEP_WARN(!(cond),					 \
++		"RCU-list traversed without holding the required lock!");\
++	})
+ #else
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({ check_arg_count_one(extra); })
++
++#define __list_check_srcu(cond)
+ #endif
+ 
+ /*
+@@ -383,6 +391,25 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
+ 		&pos->member != (head);					\
+ 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
+ 
++/**
++ * list_for_each_entry_srcu	-	iterate over rcu list of given type
++ * @pos:	the type * to use as a loop cursor.
++ * @head:	the head for your list.
++ * @member:	the name of the list_head within the struct.
++ * @cond:	lockdep expression for the lock required to traverse the list.
++ *
++ * This list-traversal primitive may safely run concurrently with
++ * the _rcu list-mutation primitives such as list_add_rcu()
++ * as long as the traversal is guarded by srcu_read_lock().
++ * The lockdep expression srcu_read_lock_held() can be passed as the
++ * cond argument from read side.
++ */
++#define list_for_each_entry_srcu(pos, head, member, cond)		\
++	for (__list_check_srcu(cond),					\
++	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
++		&pos->member != (head);					\
++		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
++
+ /**
+  * list_entry_lockless - get the struct for this entry
+  * @ptr:        the &struct list_head pointer.
+@@ -681,6 +708,27 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
+ 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
+ 			&(pos)->member)), typeof(*(pos)), member))
+ 
++/**
++ * hlist_for_each_entry_srcu - iterate over rcu list of given type
++ * @pos:	the type * to use as a loop cursor.
++ * @head:	the head for your list.
++ * @member:	the name of the hlist_node within the struct.
++ * @cond:	lockdep expression for the lock required to traverse the list.
++ *
++ * This list-traversal primitive may safely run concurrently with
++ * the _rcu list-mutation primitives such as hlist_add_head_rcu()
++ * as long as the traversal is guarded by srcu_read_lock().
++ * The lockdep expression srcu_read_lock_held() can be passed as the
++ * cond argument from read side.
++ */
++#define hlist_for_each_entry_srcu(pos, head, member, cond)		\
++	for (__list_check_srcu(cond),					\
++	     pos = hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
++			typeof(*(pos)), member);			\
++		pos;							\
++		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
++			&(pos)->member)), typeof(*(pos)), member))
++
+ /**
+  * hlist_for_each_entry_rcu_notrace - iterate over rcu list of given type (for tracing)
+  * @pos:	the type * to use as a loop cursor.
+-- 
+2.17.1
 
