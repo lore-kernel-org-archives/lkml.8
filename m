@@ -2,130 +2,125 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D068BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E177206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA5420720
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="i9w/8Hsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgGLXTa (ORCPT
+        id S1728762AbgGLXUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:19:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:59674 "EHLO foss.arm.com"
+        Sun, 12 Jul 2020 19:20:05 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60446 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgGLXT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:19:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1465130E;
-        Sun, 12 Jul 2020 16:19:29 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAA443F7C3;
-        Sun, 12 Jul 2020 16:19:27 -0700 (PDT)
-Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for
- Cubieboard7
-To:     Amit Tomer <amittomer25@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        id S1727785AbgGLXUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:20:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594596003; bh=hO4xCkjUxhM7rmK+bUGTraRvUyv4jJ7Jl440PsXvssU=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=i9w/8Hsx1wwhoCwIdcamoOeWQxQP7J0lF6qsjenRYx5M1CPvaTrVn46tnwTtFbUSH
+         FyYgRCP2esFHWcjMEsPE5ltIzu3wqcnI51cnOI63CSfJ1yucmA/3bWR+t6+o6g0o0c
+         ZQFmxkO9rvi4Gu20iCn4DHMoZcfJh4OMdfSrkegU=
+Date:   Mon, 13 Jul 2020 01:20:03 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200712232003.qpogdep7xp4hfmu5@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>,
         linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
- <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
- <20200712173044.GL6110@Mani-XPS-13-9360>
- <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <5e2eb92e-eada-9b14-3f15-38717284bc92@arm.com>
-Date:   Mon, 13 Jul 2020 00:17:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+References: <20200702144712.1994685-1-megous@megous.com>
+ <20200711100409.GA18901@amd>
+ <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+ <20200712072554.GC4721@duo.ucw.cz>
+ <20200712134911.r3lig4hgyqhmslth@core.my.home>
+ <20200712191111.GA20592@amd>
+ <20200712223821.742ljr4qxdrx3aqv@core.my.home>
+ <20200713011544.0adc51f1@nic.cz>
 MIME-Version: 1.0
-In-Reply-To: <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713011544.0adc51f1@nic.cz>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/2020 19:45, Amit Tomer wrote:
-
-Hi,
-
-> On Sun, Jul 12, 2020 at 11:00 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
->>
->> On Thu, Jul 02, 2020 at 08:22:56PM +0530, Amit Singh Tomar wrote:
->>> This commit adds uSD support for Cubieboard7 board based on Actions Semi
->>> S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
->>> added yet, fixed regulator has been used as a regulator node.
->>>
->>> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
->>> ---
->>> Changes since v4:
->>>       * No change.
->>> Changes since v3:
->>>         * No change.
->>> Changes since v2:
->>>         * No change.
->>> Changes since v1:
->>>         * No change.
->>> Changes since RFC:
->>>         * No change.
->>> ---
->>>  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
->>>  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
->>>  2 files changed, 42 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->>> index 63e375cd9eb4..ec117eb12f3a 100644
->>> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->>> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->>> @@ -13,6 +13,7 @@
->>>
->>>       aliases {
->>>               serial3 = &uart3;
->>> +             mmc0 = &mmc0;
->>>       };
->>>
->>>       chosen {
->>> @@ -28,6 +29,23 @@
->>>               device_type = "memory";
->>>               reg = <0x1 0xe0000000 0x0 0x0>;
->>>       };
->>> +
->>> +     /* Fixed regulator used in the absence of PMIC */
->>> +     vcc_3v1: vcc-3v1 {
->>> +             compatible = "regulator-fixed";
->>> +             regulator-name = "fixed-3.1V";
->>> +             regulator-min-microvolt = <3100000>;
->>> +             regulator-max-microvolt = <3100000>;
->>> +     };
->>
->> Is this regulator used somewhere?
+On Mon, Jul 13, 2020 at 01:15:44AM +0200, Marek Behun wrote:
+> On Mon, 13 Jul 2020 00:38:21 +0200
+> Ondřej Jirman <megous@megous.com> wrote:
 > 
-> This is something I copied from bubblegum dts as I wasn't sure what is right way
-> to include these regulators.
+> > Hello,
+> > 
+> > On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
+> > > Hi!
+> > >   
+> > 
+> > [....]
+> > 
+> > >  		}
+> > > diff --git a/include/linux/leds.h b/include/linux/leds.h
+> > > index 2451962d1ec5..cba52714558f 100644
+> > > --- a/include/linux/leds.h
+> > > +++ b/include/linux/leds.h
+> > > @@ -57,6 +57,10 @@ struct led_init_data {
+> > >  	bool devname_mandatory;
+> > >  };
+> > >  
+> > > +struct led_hw_trigger_type {
+> > > +	int dummy;
+> > > +}
+> > > +
+> > >  struct led_classdev {
+> > >  	const char		*name;
+> > >  	enum led_brightness	 brightness;
+> > > @@ -150,6 +154,8 @@ struct led_classdev {
+> > >  
+> > >  	/* Ensures consistent access to the LED Flash Class device */
+> > >  	struct mutex		led_access;
+> > > +
+> > > +	struct led_hw_trigger_type *trigger_type;
+> > >  };
+> > >  
+> > >  /**
+> > > @@ -345,6 +351,9 @@ struct led_trigger {
+> > >  	int		(*activate)(struct led_classdev *led_cdev);
+> > >  	void		(*deactivate)(struct led_classdev *led_cdev);
+> > >  
+> > > +	/* LED-private triggers have this set. */
+> > > +	struct led_hw_trigger_type *trigger_type;
+> > > +
+> > >  	/* LEDs under control by this trigger (for simple triggers) */
+> > >  	rwlock_t	  leddev_list_lock;
+> > >  	struct list_head  led_cdevs;  
+> > 
+> > So after trying to use this, this seems to disallow the use of multiple HW
+> > triggers per LED. That's fine by me, because using one HW sysfs configured
+> > trigger per LED that use case is my proposal, but is it desireable in general?
+> 
+> Why? If you register one LED and several triggers, all sharing the same
+> trigger_type pointer, I think it should work.
 
-But this regulator is only used for the eMMC there, which we apparently
-don't have on the Cubieboard 7?
+Ah, you're right. :)
 
-> Also, another day tested it without having these regulators in , and
-> still it seems to
-> work.  So should these be removed ?
+thanks,
+	o.
 
-If there are not even referenced in the .dts, then fixed regulators are
-rather pointless. So yes, please remove this vcc-3v1 one.
-
-What is the story with the other regulator? Is there a PMIC or a power
-switch for the SD card? Or is the power supply actually hardwired?
-
-Cheers,
-Andre
+> Marek
