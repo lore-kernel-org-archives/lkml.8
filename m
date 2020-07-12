@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C9C433FC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FC4C43458
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9151020725
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5DE2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 11:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgGLLOs (ORCPT
+        id S1728927AbgGLLPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 07:14:48 -0400
+        Sun, 12 Jul 2020 07:15:00 -0400
 Received: from mga09.intel.com ([134.134.136.24]:45842 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbgGLLOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 07:14:38 -0400
-IronPort-SDR: wsR7g4+7jJII1LHBDnWl1//h3N+d6+TBk3VTpphjLz2zbtmsJbi65+hCtuXLqmgwHW6xR3IZhj
- QfBDI0/hXhPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149952697"
+        id S1728857AbgGLLOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 07:14:42 -0400
+IronPort-SDR: Zds/Nq9M4fu9M9OB0wadj7DaDw9PkYDhVcpftVkoeLuKm5saSRK+DXEf8eiWHEUynkTBLHrHS4
+ OQjGB52VWtLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149952707"
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="149952697"
+   d="scan'208";a="149952707"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 04:14:30 -0700
-IronPort-SDR: Umq7MJShKRqhhn0Bck9xEkoGtVeaWrnFSyUsEeKXVLQfwxry9is8TA6hZ3HKDMjKlbYbFnBOrV
- TLrfGzMuMYQg==
+IronPort-SDR: 03Gj6Zb8FCAKTGHfutw7cz8QK1SdZ/OLlD5h4XmGhZTuEVFTpSFsbQBEDUvrKJTOfl+99OkOz0
+ 7Mbw8cpyILpQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="315788575"
+   d="scan'208";a="315788591"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga008.jf.intel.com with ESMTP; 12 Jul 2020 04:14:30 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 08/15] iommu: Pass domain to sva_unbind_gpasid()
-Date:   Sun, 12 Jul 2020 04:21:03 -0700
-Message-Id: <1594552870-55687-9-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v5 14/15] vfio: Document dual stage control
+Date:   Sun, 12 Jul 2020 04:21:09 -0700
+Message-Id: <1594552870-55687-15-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
 References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
@@ -56,18 +56,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Sun <yi.y.sun@intel.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-Current interface is good enough for SVA virtualization on an assigned
-physical PCI device, but when it comes to mediated devices, a physical
-device may attached with multiple aux-domains. Also, for guest unbind,
-the PASID to be unbind should be allocated to the VM. This check requires
-to know the ioasid_set which is associated with the domain.
+The VFIO API was enhanced to support nested stage control: a bunch of
+new iotcls and usage guideline.
 
-So this interface needs to pass in domain info. Then the iommu driver is
-able to know which domain will be used for the 2nd stage translation of
-the nesting mode and also be able to do PASID ownership check. This patch
-passes @domain per the above reason.
+Let's document the process to follow to set up nested mode.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -76,76 +70,102 @@ Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Yi Sun <yi.y.sun@intel.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
+v3 -> v4:
+*) add review-by from Stefan Hajnoczi
+
 v2 -> v3:
-*) pass in domain info only
-*) use ioasid_t for pasid instead of int type
+*) address comments from Stefan Hajnoczi
 
 v1 -> v2:
-*) added in v2.
+*) new in v2, compared with Eric's original version, pasid table bind
+   and fault reporting is removed as this series doesn't cover them.
+   Original version from Eric.
+   https://lkml.org/lkml/2020/3/20/700
 ---
- drivers/iommu/intel/svm.c   | 3 ++-
- drivers/iommu/iommu.c       | 2 +-
- include/linux/intel-iommu.h | 3 ++-
- include/linux/iommu.h       | 3 ++-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/driver-api/vfio.rst | 67 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index b9a9c55..d2c0e1a 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -432,7 +432,8 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	return ret;
- }
+diff --git a/Documentation/driver-api/vfio.rst b/Documentation/driver-api/vfio.rst
+index f1a4d3c..0672c45 100644
+--- a/Documentation/driver-api/vfio.rst
++++ b/Documentation/driver-api/vfio.rst
+@@ -239,6 +239,73 @@ group and can access them as follows::
+ 	/* Gratuitous device reset and go... */
+ 	ioctl(device, VFIO_DEVICE_RESET);
  
--int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain,
-+			    struct device *dev, ioasid_t pasid)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
- 	struct intel_svm_dev *sdev;
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 7910249..d3e554c 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2151,7 +2151,7 @@ int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	if (unlikely(!domain->ops->sva_unbind_gpasid))
- 		return -ENODEV;
- 
--	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
-+	return domain->ops->sva_unbind_gpasid(domain, dev, data->hpasid);
- }
- EXPORT_SYMBOL_GPL(__iommu_sva_unbind_gpasid);
- 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 0d0ab32..18f292e 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -738,7 +738,8 @@ extern int intel_svm_enable_prq(struct intel_iommu *iommu);
- extern int intel_svm_finish_prq(struct intel_iommu *iommu);
- int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 			  struct iommu_gpasid_bind_data *data);
--int intel_svm_unbind_gpasid(struct device *dev, int pasid);
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain,
-+			    struct device *dev, ioasid_t pasid);
- struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
- 				 void *drvdata);
- void intel_svm_unbind(struct iommu_sva *handle);
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index e84a1d5..ca5edd8 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -303,7 +303,8 @@ struct iommu_ops {
- 	int (*sva_bind_gpasid)(struct iommu_domain *domain,
- 			struct device *dev, struct iommu_gpasid_bind_data *data);
- 
--	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
-+	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
-+				 struct device *dev, ioasid_t pasid);
- 
- 	int (*def_domain_type)(struct device *dev);
++IOMMU Dual Stage Control
++------------------------
++
++Some IOMMUs support 2 stages/levels of translation. Stage corresponds to
++the ARM terminology while level corresponds to Intel's VTD terminology.
++In the following text we use either without distinction.
++
++This is useful when the guest is exposed with a virtual IOMMU and some
++devices are assigned to the guest through VFIO. Then the guest OS can use
++stage 1 (GIOVA -> GPA or GVA->GPA), while the hypervisor uses stage 2 for
++VM isolation (GPA -> HPA).
++
++Under dual stage translation, the guest gets ownership of the stage 1 page
++tables and also owns stage 1 configuration structures. The hypervisor owns
++the root configuration structure (for security reason), including stage 2
++configuration. This works as long as configuration structures and page table
++formats are compatible between the virtual IOMMU and the physical IOMMU.
++
++Assuming the HW supports it, this nested mode is selected by choosing the
++VFIO_TYPE1_NESTING_IOMMU type through:
++
++    ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
++
++This forces the hypervisor to use the stage 2, leaving stage 1 available
++for guest usage. The guest stage 1 format depends on IOMMU vendor, and
++it is the same with the nesting configuration method. User space should
++check the format and configuration method after setting nesting type by
++using:
++
++    ioctl(container->fd, VFIO_IOMMU_GET_INFO, &nesting_info);
++
++Details can be found in Documentation/userspace-api/iommu.rst. For Intel
++VT-d, each stage 1 page table is bound to host by:
++
++    nesting_op->flags = VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
++    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
++    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
++
++As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA->GPA.
++GVA->GPA page tables are available when PASID (Process Address Space ID)
++is exposed to guest. e.g. guest with PASID-capable devices assigned. For
++such page table binding, the bind_data should include PASID info, which
++is allocated by guest itself or by host. This depends on hardware vendor.
++e.g. Intel VT-d requires to allocate PASID from host. This requirement is
++defined by the Virtual Command Support in VT-d 3.0 spec, guest software
++running on VT-d should allocate PASID from host kernel. To allocate PASID
++from host, user space should check the IOMMU_NESTING_FEAT_SYSWIDE_PASID
++bit of the nesting info reported from host kernel. VFIO reports the nesting
++info by VFIO_IOMMU_GET_INFO. User space could allocate PASID from host by:
++
++    req.flags = VFIO_IOMMU_ALLOC_PASID;
++    ioctl(container, VFIO_IOMMU_PASID_REQUEST, &req);
++
++With first stage/level page table bound to host, it allows to combine the
++guest stage 1 translation along with the hypervisor stage 2 translation to
++get final address.
++
++When the guest invalidates stage 1 related caches, invalidations must be
++forwarded to the host through
++
++    nesting_op->flags = VFIO_IOMMU_NESTING_OP_CACHE_INVLD;
++    memcpy(&nesting_op->data, &inv_data, sizeof(inv_data));
++    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
++
++Those invalidations can happen at various granularity levels, page, context,
++...
++
+ VFIO User API
+ -------------------------------------------------------------------------------
  
 -- 
 2.7.4
