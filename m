@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62584C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1B4C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339372068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1D02070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 14:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rVOv4fc1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tKlSmziw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgGLOJi (ORCPT
+        id S1729091AbgGLOJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 10:09:38 -0400
+        Sun, 12 Jul 2020 10:09:43 -0400
 Received: from esa4.microchip.iphmx.com ([68.232.154.123]:17389 "EHLO
         esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728962AbgGLOJe (ORCPT
+        with ESMTP id S1729053AbgGLOJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 10:09:34 -0400
+        Sun, 12 Jul 2020 10:09:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594562973; x=1626098973;
+  t=1594562979; x=1626098979;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KjQ2iHRIZX7SIVan+FkPjPmVkFfe4NagZdbP3cThDGA=;
-  b=rVOv4fc1GfaqxlZS8+05Y19ESlIF/RJJ1RTtPl6RTGl0i/XgaRklFwmU
-   dDkUNkdCLtHXGrUeAdPlMR7eBgIrZoLVuBVRkn0RosVaaU9T8VfUppiRp
-   7zwxrEglA+HnJ1Yw+zOGh9lJ3uWNlQVeRoeZkfV/bBEWq14Qc7P7BOIS5
-   JV2X9Z1jgX3Dd7KDPspFyHjfhg9zZKlajOvEk6qATc4qmhLtWDm4MqN/9
-   Hi800HbEvorQE3kLcV1vBphDx9s+a1GPGoAWI2ACevfr8xMIde/J7x3Us
-   C5RgOaDGinnE1KaklNSUY4/gA5PUBt0hN10AHWJFyrW2agDTcY7fq00xb
+  bh=c4X1KegbRVo2rPHVO+76/AY6f9Y7hMIp5vMhUVrwmVo=;
+  b=tKlSmziwLxD1OcvnL6kIyOAgPPUge10yuYfvNGnnlNYJkWGgsorhWzlD
+   keT/RY438uqPPg6tPj2tTkxg5xCjJoKmYY2zuKlyJYEctJ4nqO7SWWYBu
+   i+T2TFPWhpwU6EFNTg8OYN7BP1UzqR064cB+u9SFItCQultyX+IwhI2Ch
+   4zvD0zKpzCfky5/BEg0vyXUUDencMNmqEWuq34LHLcEdmO8kaTEdLdcg1
+   PHcTgiV+YWhc9bchxKguEZRN6LuJnCnrmI94K6TDzHuVCvSBac9db3Mpz
+   g+ua4D/Me8dBMBwsnuU5nEunl8GDauS2sKMpvJQTyDhiFlYFng8234tR2
    g==;
-IronPort-SDR: HLmm5GREKlNQrjtQRJjEmL0XbTNaUZY4kyFgLMTUUbqM351ffbKMHeG0sggGmOfUNk3tL4LFVv
- fTiioP9GcpuwDWNUx8FzuZ8W9hwkM4N7D29KnvVLGSpbdd++bRLodyVNLtZcbJdJggoCxo95LA
- 1nHWEzaWkENGugWH788/WKCbQ4nYe/Ra9WDeAE0Kw0KjqrktkmCrk3L2FzaU2AhsH7NI+O8DnK
- Gno1nrtLs6WXfOvGCONMeZD+nph4YSco7TnUduG03llCGeDmouii4Tmkc1W+RU1xEk28tv263b
- Xt0=
+IronPort-SDR: IIhRXN5eywu8Y5HscPBc1qgFlLQgSfhR4d/B5Y6mOdJ/aLtswbQIzx9Qadn7c5NenhxEJv7p4r
+ Kk3IMHxBabgGn/l/LY8yEvicM+A3kixKAsw3lFpdDpSKSC6pzU3yErM5/gd4nUqsIVMS4G+ZyV
+ AS9SufZOFChDDOhFd2Orsl+cQpP9DV+OJ7c9YBZlLU6TVSL4uUmQgG/fA0W6+x0Ea47gTOIah3
+ /PLIBKIK+FJZN3Vz21PvpssMbIcIeB3bq1T4GQaG3cjM/3cKzlZjfpVgy3L8YzaJyyNih+lp7E
+ 0fM=
 X-IronPort-AV: E=Sophos;i="5.75,343,1589266800"; 
-   d="scan'208";a="79604253"
+   d="scan'208";a="79604262"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2020 07:09:32 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2020 07:09:38 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 12 Jul 2020 07:09:32 -0700
+ 15.1.1979.3; Sun, 12 Jul 2020 07:09:38 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Sun, 12 Jul 2020 07:09:01 -0700
+ 15.1.1979.3 via Frontend Transport; Sun, 12 Jul 2020 07:09:06 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -59,9 +59,9 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 04/12] bridge: mrp: Extend br_mrp for MRP interconnect
-Date:   Sun, 12 Jul 2020 16:05:48 +0200
-Message-ID: <20200712140556.1758725-5-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v3 06/12] bridge: mrp: Add br_mrp_in_port_open function
+Date:   Sun, 12 Jul 2020 16:05:50 +0200
+Message-ID: <20200712140556.1758725-7-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200712140556.1758725-1-horatiu.vultur@microchip.com>
 References: <20200712140556.1758725-1-horatiu.vultur@microchip.com>
@@ -73,62 +73,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch extends the 'struct br_mrp' to contain information regarding
-the MRP interconnect. It contains the following:
-- the interconnect port 'i_port', which is NULL if the node doesn't have
-  a interconnect role
-- the interconnect id, which is similar with the ring id, but this field
-  is also part of the MRP_InTest frames.
-- the interconnect role, which can be MIM or MIC.
-- the interconnect state, which can be open or closed.
-- the interconnect delayed_work for sending MRP_InTest frames and check
-  for lost of continuity.
+This function notifies the userspace when the node lost the continuity
+of MRP_InTest frames.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- net/bridge/br_private_mrp.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/bridge/br_mrp_netlink.c | 22 ++++++++++++++++++++++
+ net/bridge/br_private_mrp.h |  1 +
+ 2 files changed, 23 insertions(+)
 
+diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+index acce300c0cc29..4bf7aaeb29152 100644
+--- a/net/bridge/br_mrp_netlink.c
++++ b/net/bridge/br_mrp_netlink.c
+@@ -389,3 +389,25 @@ int br_mrp_ring_port_open(struct net_device *dev, u8 loc)
+ out:
+ 	return err;
+ }
++
++int br_mrp_in_port_open(struct net_device *dev, u8 loc)
++{
++	struct net_bridge_port *p;
++	int err = 0;
++
++	p = br_port_get_rcu(dev);
++	if (!p) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	if (loc)
++		p->flags |= BR_MRP_LOST_IN_CONT;
++	else
++		p->flags &= ~BR_MRP_LOST_IN_CONT;
++
++	br_ifinfo_notify(RTM_NEWLINK, NULL, p);
++
++out:
++	return err;
++}
 diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-index 315eb37d89f0f..8841ba847fb29 100644
+index e93c8f9d4df58..23da2f956ad0e 100644
 --- a/net/bridge/br_private_mrp.h
 +++ b/net/bridge/br_private_mrp.h
-@@ -12,8 +12,10 @@ struct br_mrp {
+@@ -75,5 +75,6 @@ int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
  
- 	struct net_bridge_port __rcu	*p_port;
- 	struct net_bridge_port __rcu	*s_port;
-+	struct net_bridge_port __rcu	*i_port;
+ /* br_mrp_netlink.c  */
+ int br_mrp_ring_port_open(struct net_device *dev, u8 loc);
++int br_mrp_in_port_open(struct net_device *dev, u8 loc);
  
- 	u32				ring_id;
-+	u16				in_id;
- 	u16				prio;
- 
- 	enum br_mrp_ring_role_type	ring_role;
-@@ -21,6 +23,11 @@ struct br_mrp {
- 	enum br_mrp_ring_state_type	ring_state;
- 	u32				ring_transitions;
- 
-+	enum br_mrp_in_role_type	in_role;
-+	u8				in_role_offloaded;
-+	enum br_mrp_in_state_type	in_state;
-+	u32				in_transitions;
-+
- 	struct delayed_work		test_work;
- 	u32				test_interval;
- 	unsigned long			test_end;
-@@ -28,6 +35,12 @@ struct br_mrp {
- 	u32				test_max_miss;
- 	bool				test_monitor;
- 
-+	struct delayed_work		in_test_work;
-+	u32				in_test_interval;
-+	unsigned long			in_test_end;
-+	u32				in_test_count_miss;
-+	u32				in_test_max_miss;
-+
- 	u32				seq_id;
- 
- 	struct rcu_head			rcu;
+ #endif /* _BR_PRIVATE_MRP_H */
 -- 
 2.27.0
 
