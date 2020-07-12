@@ -2,98 +2,114 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C03C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 20:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 20:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79BA620674
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 20:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEB02063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 20:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594586065;
+	bh=7s/bXFPta5iGfrJYcoJlW5oI24AlmaeRgmhyxoTk4hk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dQhenet9IABq7/z+DVnvWE2o8wwgCHDz2HLDktMSSKcsSHHykjQkM/XE08TeBqe2b
+	 iHX05bnNugt+F9uRorT3RjP+kGFhgaOwDu+JA4ITKEkjweq6PEA2ZiLtl6ajgzxmuy
+	 dmNmUJvmKyNJY3jcKssA6lFZJxQF01mf6QPkme7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgGLUPf (ORCPT
+        id S1729434AbgGLUeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 16:15:35 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:55250 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgGLUPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 16:15:35 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 9124ABC07E;
-        Sun, 12 Jul 2020 20:15:30 +0000 (UTC)
-Subject: Re: [PATCH] SCSI RDMA PROTOCOL (SRP) TARGET: Replace HTTP links with
- HTTPS ones
-To:     Bart Van Assche <bvanassche@acm.org>, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200709194820.27032-1-grandmaster@al2klimov.de>
- <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
- <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
- <bf85e454-cccc-37ef-d55f-d44a5c5c51df@acm.org>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>
-Message-ID: <c6b97005-e4c7-0a46-37eb-b5bb187ee919@al2klimov.de>
-Date:   Sun, 12 Jul 2020 22:15:29 +0200
+        Sun, 12 Jul 2020 16:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbgGLUeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 16:34:17 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27689C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 13:34:17 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id s9so13144480ljm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 13:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M5WjRrnyhLOSbHqzwifF7Te2n7vimCY08qC27XUzpXI=;
+        b=YMyGELxAtRmy9FjeeEk7uVwcYjYoq2mBvgisQy8JZOxvY4g3Bz0EEBukkIZB9h2WDt
+         o5f4gSFHlse0x52UYJ8dJF9LafvSlVPybKv1y9cmVH8Fejf1LwYD3ntamxSNJxh16R/b
+         +YwTWpc1gg7WyUVJiEH6tMOkH+xXjyU4nCVtg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M5WjRrnyhLOSbHqzwifF7Te2n7vimCY08qC27XUzpXI=;
+        b=Bh64yNP15qtcTtph0ASi73UN2wCZNEFrOmZhZ7bhcXpxjQmD+qLJnzq8+4tQKVmMXk
+         8kQu3v84YcnqUT5WGd4TXsAOtqeTsp4f7RbQcWKmd9/bOZMtxSd/QvjqacK3y3/BfIQ7
+         K5nZBJYnYyD//hXLPqKmCO2UOXJeBHXeFzJEeAapx9LKhONTHh7/38ZoIx+3UKZDfjap
+         r+LaSA4Hk+OnL0y6kXtmKbYcG/KBLgJL5KuZSL6+kGjQZ9tKw5F+W3BjDz38rfp1dFec
+         tygBsOcYlcCYSvTbBoFQYmxa7DuVTwD+FZcFRtxsslR9rFCB0u148ZmOpKlvVBF8ElMl
+         SMUw==
+X-Gm-Message-State: AOAM530kCabDiVUyNx+VwyGXScmoZQf9nnvpHN/HtG3r6ZSwoVyAATK0
+        Ml7DaJZ4qZ2FFDcsN0t2p/sIHxnQues=
+X-Google-Smtp-Source: ABdhPJzpbys1ImyYl0UOXSBzzbD5bxGeeAjTUNxeE3I+bzoPJqLvoJfojPkLA+B0dlFgjbxxWqPrSw==
+X-Received: by 2002:a2e:8145:: with SMTP id t5mr43238190ljg.201.1594586055245;
+        Sun, 12 Jul 2020 13:34:15 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id u26sm5865143lfq.72.2020.07.12.13.34.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jul 2020 13:34:13 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id h22so13157237lji.9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 13:34:13 -0700 (PDT)
+X-Received: by 2002:a2e:9c92:: with SMTP id x18mr40262320lji.70.1594586052886;
+ Sun, 12 Jul 2020 13:34:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bf85e454-cccc-37ef-d55f-d44a5c5c51df@acm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200712123151.GB25970@localhost> <20200712193944.GA81641@localhost>
+In-Reply-To: <20200712193944.GA81641@localhost>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 12 Jul 2020 13:33:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi=xTmhnL4go0v5BaYRz_81kranLvniA5X8_zq_uCkaOA@mail.gmail.com>
+Message-ID: <CAHk-=wi=xTmhnL4go0v5BaYRz_81kranLvniA5X8_zq_uCkaOA@mail.gmail.com>
+Subject: Re: Linux kernel in-tree Rust support
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Adrian Bunk <bunk@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 12, 2020 at 12:39 PM Josh Triplett <josh@joshtriplett.org> wrote:
+>
+> Rust has hard stability guarantees when upgrading from one stable
+> version to the next.
 
+I think the worry is more about actual compiler bugs, not the set of
+exposed features.
 
-Am 12.07.20 um 21:52 schrieb Bart Van Assche:
-> On 2020-07-10 11:12, Alexander A. Klimov wrote:
->> Am 10.07.20 um 16:22 schrieb Bart Van Assche:
->>> On 2020-07-09 12:48, Alexander A. Klimov wrote:
->>>> diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
->>>> index 4b5d9b792cfa..f63b34d9ae32 100644
->>>> --- a/drivers/infiniband/ulp/srpt/Kconfig
->>>> +++ b/drivers/infiniband/ulp/srpt/Kconfig
->>>> @@ -10,4 +10,4 @@ config INFINIBAND_SRPT
->>>>          that supports the RDMA protocol. Currently the RDMA protocol is
->>>>          supported by InfiniBand and by iWarp network hardware. More
->>>>          information about the SRP protocol can be found on the website
->>>> -      of the INCITS T10 technical committee (http://www.t10.org/).
->>>> +      of the INCITS T10 technical committee (https://www.t10.org/).
->>>
->>> It is not clear to me how modifying an URL in a Kconfig file helps to
->>> reduce the attack surface on kernel devs?
->>
->> Not on all, just on the ones who open it.
-> 
-> Is changing every single HTTP URL in the kernel into a HTTPS URL the best
-> solution? Is this the only solution? Has it been considered to recommend
-> kernel developers who are concerned about MITM attacks to install a browser
-> extension like HTTPS Everywhere instead?
-I've installed that addon myself.
-But IMAO it's just a workaround which is (not available to all browsers, 
-not installed by default in any of them and) not even 100% secure unless 
-you tick a particular checkbox.
+That's always been the biggest pain point. Compiler bugs are very
+rare, but they are so incredibly hard to debug when they happen that
+they end up being extra special.
 
-Anyway the majority of maintainers and Torvalds himself agree with my 
-solution.
+Random "we need this compiler for this feature" is actually fairly
+rare. Yes, the most recent case of me just saying "let's use 4.9
+rather than 4.8" was due to that, but honestly, that's the exception
+rather than the rule, and is to occasionally simplify the code (and
+the test coverage).
 
-I mean, just look at
-git log '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' \
---oneline v5.7..master
+The most common case of compiler version checks are due to "compiler
+XYZ is known to mis-compile ABC on target IDK".
 
-Or (better) wait for v5.9-rc1 (and all the yet just applied patches it 
-will consist of) *and then* run the command.
-
-> 
-> Thanks,
-> 
-> Bart.
-> 
+                    Linus
