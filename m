@@ -2,163 +2,140 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93412C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E009CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70D34206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C239B2063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 18:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0HHcMjV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/N/BqnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgGLSkr (ORCPT
+        id S1729142AbgGLSqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 14:40:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
+        Sun, 12 Jul 2020 14:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgGLSkq (ORCPT
+        with ESMTP id S1727966AbgGLSqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 14:40:46 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 581C1C061794;
-        Sun, 12 Jul 2020 11:40:46 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so4964198pfq.11;
-        Sun, 12 Jul 2020 11:40:46 -0700 (PDT)
+        Sun, 12 Jul 2020 14:46:06 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DECC061794;
+        Sun, 12 Jul 2020 11:46:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n26so12460770ejx.0;
+        Sun, 12 Jul 2020 11:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5TJ+34sQAVUrawBXByyfuwrbgj6i1cli/YCTjxtCBqw=;
-        b=N0HHcMjVGeZLZKs6kySBi/kLjx//vGsHRhAgAn70NbsmCWAMm2ggej1XEym1TkTrI2
-         1RaGmxT5o0gLydjCDJGV76FDHQsG0/MeBmIbxTv5DSaT3TULK/IfbYlfepfNEkiMQmk9
-         pMxE7Rt2/EFgEH7Quq7GvESDdpvWY+RbR8tRKc/SElrWfewWr1bDfzmOZAel5bastYU4
-         l+o96BGwta1qZ7PRMbDolq2P/ebYU/wwwO2jQcK/mwQ0tlDCRPQ2vZa/eEBWU7Y6nUZT
-         K+Ku0Xl1nF8NMzl71Sss8yD4qs25ojddZtL3UAw9gfH97kt9dPHm6QwrFWkINM8fPBxh
-         i8Rg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d6Qek2fkCB/2CxHUEUFljSHTbzdbT53VAPl6aQJ65nc=;
+        b=U/N/BqnUCvWI0p7yxG2u7x1vPloQ9p/Em95pZUJPFerIQ2ouVRXGI8hZUnMn/VABwx
+         TXKgQCLaH7No+8qniaeGoOxzVPHABpfGm/urW4tnTUdewTx14NpliaxCjWWpfT1mtqYh
+         BQeNTcszQ7vOke9OlkuoxsGkDlZ4IAYdfrq3DQ2WGE8LjvWF1h2WFSmc1uoT6sGvaTdT
+         4IQQus/LxyRsRZMkQILkKsKUy5MhfM0USJIcMgPV4N51Jd5ZCwXkiKttJM5JfyDBBLUA
+         h08Qv9sQ9chSfLi1rwMSDtIgTEDxaXNiUCiEuC8a7gHt6lwSVkI0q1ToIgMwf/9F53CZ
+         DRlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5TJ+34sQAVUrawBXByyfuwrbgj6i1cli/YCTjxtCBqw=;
-        b=kAL1AeVGyXcUTUofp0qT+d9ROc/R+wNt8dkopupUEhPCuq/jc1Gt03KugsDzsJWjHE
-         kTbvdlXOS1ARfYblQhGYzP2k4WKWO0LXMsc+wHHI9i12AfcqztZwwFR4Mn0qL20CJSKd
-         5ko93DICDZ746tqkIMbQGw8Ux7fWnb65OK6njOnbUfhliP0sRSMF4zcZYnX/tzi4gbUH
-         rQWDCxSNJeEFTm75E+husyEjPvCYJehGLRPNrArLY8ngcYyGZuImcQGF9s9ZPPhf1Q1H
-         MthfEG4ZccIJvIibF+kJLndGP1qckdL8/swH10GRpYvfq0EvmjBu14MJ9PZroF+9bZWL
-         XS6A==
-X-Gm-Message-State: AOAM530cuBKZLMCPFlIHhYhM0C3cEo2tnJU+eT67XP7WKbV1JixTbzIl
-        54JQLAiWqfkDuySCN7QZqbE=
-X-Google-Smtp-Source: ABdhPJwaLeWOxzmuhJhjgAdmI0j3ddtpspQ4OkHVexe7PvXeW20GC370vRPp3GnVrW9KjIJcaky3VQ==
-X-Received: by 2002:a62:29c6:: with SMTP id p189mr52732155pfp.55.1594579245655;
-        Sun, 12 Jul 2020 11:40:45 -0700 (PDT)
-Received: from Ryzen-9-3900X.localdomain (ip98-167-246-98.ph.ph.cox.net. [98.167.246.98])
-        by smtp.gmail.com with ESMTPSA id ci23sm11966956pjb.29.2020.07.12.11.40.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 11:40:45 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 11:40:41 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200712184041.GA1838@Ryzen-9-3900X.localdomain>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
- <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6Qek2fkCB/2CxHUEUFljSHTbzdbT53VAPl6aQJ65nc=;
+        b=LTlksg3dK3iAO2bJnbk/hmcuk+7Wj0ZNK0TN4CDQqRNNJWkyABVVQj5ye9J3y7863I
+         Z/7CUOp5X+gb2UHsxC/S9vjUJ8XNTB48Bxk+yMEhyfRNdcVpjKCE0UAM0nlTLXv5j+6p
+         FrqvLPwXRRFeuqNvzuDxq2QE29IkL9cKBD17WklOEBWHiLbQC17QR4BmYBmtJ1hLv3/m
+         lADIIhqG10acUHwaMTo2t2Cda6EUjtARm6qkq5NYpq85F2tVgameGZsysbxzEp43z4U4
+         jYgcv6OW/us+B49dRIc+xLjJgR2jT8jYC+UcjIq185bCQ55gJXB4zG/sVY/vapuhJNFh
+         o4NA==
+X-Gm-Message-State: AOAM531XZRrHCis/mwSxqMoeb9i/HH4g49tK3+SSG86QLZZ3D+idlQql
+        uv6+9SdhnvMSLBMSDwDdOueJq25de0HyU3saRJQ=
+X-Google-Smtp-Source: ABdhPJwPn7kb6uSoDv+CUpFNn4npaWHCyaF2trLzwY77zvp/DeuKhGJnpDPtyB12EiCtBA3gqLudJYd+2yBlgvEE3k0=
+X-Received: by 2002:a17:906:1414:: with SMTP id p20mr69197044ejc.247.1594579564886;
+ Sun, 12 Jul 2020 11:46:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-11-git-send-email-amittomer25@gmail.com> <20200712173044.GL6110@Mani-XPS-13-9360>
+In-Reply-To: <20200712173044.GL6110@Mani-XPS-13-9360>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 13 Jul 2020 00:15:28 +0530
+Message-ID: <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
+Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 10:59:17AM +0200, Sedat Dilek wrote:
-> On Sat, Jul 11, 2020 at 6:32 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+Hi,
+
+On Sun, Jul 12, 2020 at 11:00 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Thu, Jul 02, 2020 at 08:22:56PM +0530, Amit Singh Tomar wrote:
+> > This commit adds uSD support for Cubieboard7 board based on Actions Semi
+> > S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
+> > added yet, fixed regulator has been used as a regulator node.
 > >
-> > Dear Sami,
+> > Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> > ---
+> > Changes since v4:
+> >       * No change.
+> > Changes since v3:
+> >         * No change.
+> > Changes since v2:
+> >         * No change.
+> > Changes since v1:
+> >         * No change.
+> > Changes since RFC:
+> >         * No change.
+> > ---
+> >  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
+> >  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
+> >  2 files changed, 42 insertions(+)
 > >
+> > diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > index 63e375cd9eb4..ec117eb12f3a 100644
+> > --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > @@ -13,6 +13,7 @@
 > >
-> > Am 24.06.20 um 22:31 schrieb Sami Tolvanen:
-> > > This patch series adds support for building x86_64 and arm64 kernels
-> > > with Clang's Link Time Optimization (LTO).
-> > >
-> > > In addition to performance, the primary motivation for LTO is to allow
-> > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
-> > > Pixel devices have shipped with LTO+CFI kernels since 2018.
-> > >
-> > > Most of the patches are build system changes for handling LLVM bitcode,
-> > > which Clang produces with LTO instead of ELF object files, postponing
-> > > ELF processing until a later stage, and ensuring initcall ordering.
-> > >
-> > > Note that first objtool patch in the series is already in linux-next,
-> > > but as it's needed with LTO, I'm including it also here to make testing
-> > > easier.
+> >       aliases {
+> >               serial3 = &uart3;
+> > +             mmc0 = &mmc0;
+> >       };
 > >
-> > […]
-> >
-> > Thank you very much for sending these changes.
-> >
-> > Do you have a branch, where your current work can be pulled from? Your
-> > branch on GitHub [1] seems 15 months old.
-> >
-> 
-> Agreed it's easier to git-pull.
-> I have seen [1] - not sure if this is the latest version.
-> Alternatively, you can check patchwork LKML by searching for $submitter.
-> ( You can open patch 01/22 and download the whole patch-series by
-> following the link "series", see [3]. )
-> 
-> - Sedat -
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git/log/?h=lto
-> [2] https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=19676
-> [3] https://lore.kernel.org/patchwork/series/450026/mbox/
-> 
+> >       chosen {
+> > @@ -28,6 +29,23 @@
+> >               device_type = "memory";
+> >               reg = <0x1 0xe0000000 0x0 0x0>;
+> >       };
+> > +
+> > +     /* Fixed regulator used in the absence of PMIC */
+> > +     vcc_3v1: vcc-3v1 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "fixed-3.1V";
+> > +             regulator-min-microvolt = <3100000>;
+> > +             regulator-max-microvolt = <3100000>;
+> > +     };
+>
+> Is this regulator used somewhere?
 
-Sami tagged this series on his GitHub:
+This is something I copied from bubblegum dts as I wasn't sure what is right way
+to include these regulators.
 
-https://github.com/samitolvanen/linux/releases/tag/lto-v1
+Also, another day tested it without having these regulators in , and
+still it seems to
+work.  So should these be removed ?
 
-git pull https://github.com/samitolvanen/linux lto-v1
-
-Otherwise, he is updating the clang-cfi branch that includes both the
-LTO and CFI patchsets. You can pull that and just turn on
-CONFIG_LTO_CLANG.
-
-Lastly, for the future, I would recommend grabbing b4 to easily apply
-patches (specifically full series) from lore.kernel.org.
-
-https://git.kernel.org/pub/scm/utils/b4/b4.git/
-https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/README.rst
-
-You could grab this series and apply it easily by either downloading the
-mbox file and following the instructions it gives for applying the mbox
-file:
-
-$ b4 am 20200624203200.78870-1-samitolvanen@google.com
-
-or I prefer piping so that I don't have to clean up later:
-
-$ b4 am -o - 20200624203200.78870-1-samitolvanen@google.com | git am
-
-Cheers,
-Nathan
+Thanks
+-Amit
