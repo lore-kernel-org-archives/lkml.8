@@ -2,212 +2,163 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2A6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2714A20672
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877FB20672
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 22:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="kheohcW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoEmDd5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgGLWM2 (ORCPT
+        id S1728273AbgGLWLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 18:12:28 -0400
-Received: from vps.xff.cz ([195.181.215.36]:59712 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbgGLWM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 18:12:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594591945; bh=p8Ou+/ReAlGiGL/G8va0szvgGl7G4nS7JBPLpKZvUPE=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=kheohcW0vIIzh6Sckg9Z6N+Japwgb2QBS7EhuClXZKloJZpCXBdK41vEJrMETogfY
-         K0KTjFC0xGon0vHFbjfCQYg5nX6/jmEj/41ZoIzSyyPB7LqOxDnq9CBrUdeYz4Mp6/
-         WybyvZDnqQAn4eGJQfSodbe/BO8lblAsK6griekU=
-Date:   Mon, 13 Jul 2020 00:12:25 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        marek.behun@nic.cz
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200712221225.jkfof4edsveoidhm@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        marek.behun@nic.cz
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200711100409.GA18901@amd>
- <20200711210111.5ysijhexgyzyr7u7@core.my.home>
- <20200712072554.GC4721@duo.ucw.cz>
- <20200712134911.r3lig4hgyqhmslth@core.my.home>
- <20200712191111.GA20592@amd>
+        Sun, 12 Jul 2020 18:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgGLWLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 18:11:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4C7C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 15:11:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id r22so10488217qke.13
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 15:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6GIa+L4BMOnigUNxnfxqvTRE/iHNXj+4A+Wyg9Hp5YY=;
+        b=GoEmDd5o3b7KKq9FLx3p1mEyzfk18JtXgmbxh1wBT+AuBSsIPdJCIQhdEq+xkQOwtb
+         +nJOQNF2aBcaPNp6HiFzy6Uv7PmCrXRu2fGbM9p8ZW7KJoSIovm5fqYat6OA8DXJ0Xj7
+         YHsrweiGWpA7B/+Sf8sp6jyR+Wq/+kIA/Lv0wI2zKoEngjzw/1D7MMoGLHM19K8/xaMX
+         i41XlNTMfLcGTCNkHfvRbH+pM7zIusMBiAyLr8L46g1raBbK2v6b25u+3S/d8IBNmOp8
+         oxsPsWEVaWLP8V4p85xBUTkCv5anvAuQy3snh4I91yE37E42tssXhpqgI1LJJKdLZqJ6
+         vceg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6GIa+L4BMOnigUNxnfxqvTRE/iHNXj+4A+Wyg9Hp5YY=;
+        b=K2UJdWD3gBjyaU/Ir5YZDA2/AYp1kS9Fo0Uz7/PqT4MoP/42C0TFrZGPTt/+GVruuP
+         ewZF433opY9czKApw64dTZjeqzMpnhKBohruzkVLhuJZU0CJdaNmavUTf5O4GmvpQVqc
+         ll2Fd7mix3if19Rz6jg7AbBk1pfqi8HMyiIF0N64IqGSZmEBEu6jNGzVbpmWylcNqIfm
+         eRik15OlEwqvGQDj2UB5EZV3iJ6tY6t0hGMTTE/83pM1ofLY+zhBhnGGl0p9lH3/GBoe
+         xI0Av/ZtCky8hJpZxP6ole1P3WdCxCdtjvWmGRdMu8lfD0vp/dcmTQFR7NUM0fV54cyD
+         S8Xw==
+X-Gm-Message-State: AOAM531rg36DWtxPZm4Vh1JYeLQG7H2uISof1/GQ15SSOYStXtUmH289
+        VbIzbhKI3GsfTxZYwWeXalw=
+X-Google-Smtp-Source: ABdhPJzQaaKRGivrc3/T8gulu3MyNqVAw7FrC2GLeaTrxt1shNYOgKH4DEdhaHFhrnaOBmww4rEHow==
+X-Received: by 2002:a37:bcb:: with SMTP id 194mr80843531qkl.103.1594591902504;
+        Sun, 12 Jul 2020 15:11:42 -0700 (PDT)
+Received: from smtp.gmail.com ([2607:fea8:56a0:8440::b10e])
+        by smtp.gmail.com with ESMTPSA id z4sm16309498qkb.66.2020.07.12.15.11.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 15:11:41 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 18:11:40 -0400
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com, twoerner@gmail.com
+Subject: Re: [PATCH] drm/vkms: change the max cursor width/height
+Message-ID: <20200712221140.7vzjh4nwtszpffa2@smtp.gmail.com>
+References: <20200710160313.xjoz6ereyma5vkc3@smtp.gmail.com>
+ <20200712220544.3zmyohuf7cj4y27y@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3p6wpas7gy73fiat"
 Content-Disposition: inline
-In-Reply-To: <20200712191111.GA20592@amd>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200712220544.3zmyohuf7cj4y27y@smtp.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel,
 
-On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > > > > > Some LED controllers may come with an internal HW triggering mechanism
-> > > > > > for the LED and an ability to switch between user control of the LED,
-> > > > > > or the internal control. One such example is AXP20X PMIC, that allows
-> > > > > > wither for user control of the LED, or for internal control based on
-> > > > > > the state of the battery charger.
-> > > > > > 
-> > > > > > Add support for registering per-LED device trigger.
-> > > > > > 
-> > > > > > Names of private triggers need to be globally unique, but may clash
-> > > > > > with other private triggers. This is enforced during trigger
-> > > > > > registration. Developers can register private triggers just like
-> > > > > > the normal triggers, by setting private_led to a classdev
-> > > > > > of the LED the trigger is associated with.
-> > > > > 
-> > > > > What about this? Should address Marek's concerns about resource use...
-> > > > 
-> > > > What concerns? Marek's concerns seem to be about case where we register
-> > > > a trigger for (each led * self-working configuration) which I admit
-> > > > can be quite a lot of triggers if there are many functions. But that's
-> > > > not my proposal.
-> > > > 
-> > > > My proposal is to only register on trigger per LED at most. So on my
-> > > > system that's 1 extra trigger and on Marek's system that'd be 48 new
-> > > > triggers. Neither seems like a meaningful problem from resource
-> > > > use perspective.
-> > > 
-> > > So.. 48 triggers on Marek's systems means I'll not apply your patch.
-> > > 
-> > > Please take a look at my version, it is as simple and avoids that
-> > > problem.
-> > 
-> > I would, but I don't see your version linked or mentioned in this
-> > thread.
-> 
-> Ah! Sorry about that. Here it is. (I verified it compiles in the
-> meantime).
-> 
-> Best regards,
-> 								Pavel
-> 
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 79e30d2cb7a5..e8333675959c 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -27,6 +27,12 @@ LIST_HEAD(trigger_list);
->  
->   /* Used by LED Class */
->  
-> +static inline bool
-> +trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
-> +{
-> +	return !trig->trigger_type || trig->trigger_type == led_cdev->trigger_type;
-> +}
-> +
->  ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->  			  struct bin_attribute *bin_attr, char *buf,
->  			  loff_t pos, size_t count)
-> @@ -50,7 +56,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->  
->  	down_read(&triggers_list_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (sysfs_streq(buf, trig->name)) {
-> +		if (sysfs_streq(buf, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->  			down_write(&led_cdev->trigger_lock);
->  			led_trigger_set(led_cdev, trig);
->  			up_write(&led_cdev->trigger_lock);
-> @@ -96,6 +103,9 @@ static int led_trigger_format(char *buf, size_t size,
->  		bool hit = led_cdev->trigger &&
->  			!strcmp(led_cdev->trigger->name, trig->name);
->  
-> +		if (!trigger_relevant(led_cdev, trig))
-> +			continue;
-> +
->  		len += led_trigger_snprintf(buf + len, size - len,
->  					    " %s%s%s", hit ? "[" : "",
->  					    trig->name, hit ? "]" : "");
-> @@ -243,7 +253,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
->  	down_read(&triggers_list_lock);
->  	down_write(&led_cdev->trigger_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
-> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
-> +		    trigger_relevant(led_cdev, trig)) {
->  			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
->  			led_trigger_set(led_cdev, trig);
->  			break;
-> @@ -280,7 +291,8 @@ int led_trigger_register(struct led_trigger *trig)
->  	down_write(&triggers_list_lock);
->  	/* Make sure the trigger's name isn't already in use */
->  	list_for_each_entry(_trig, &trigger_list, next_trig) {
-> -		if (!strcmp(_trig->name, trig->name)) {
-> +		if (!strcmp(_trig->name, trig->name) &&
-> +		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
->  			up_write(&triggers_list_lock);
->  			return -EEXIST;
->  		}
+--3p6wpas7gy73fiat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This would not compile, probably some stale code.
+Applied to drm-misc-next.
 
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 2451962d1ec5..cba52714558f 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -57,6 +57,10 @@ struct led_init_data {
->  	bool devname_mandatory;
->  };
->  
-> +struct led_hw_trigger_type {
-> +	int dummy;
-> +}
-> +
->  struct led_classdev {
->  	const char		*name;
->  	enum led_brightness	 brightness;
-> @@ -150,6 +154,8 @@ struct led_classdev {
->  
->  	/* Ensures consistent access to the LED Flash Class device */
->  	struct mutex		led_access;
-> +
-> +	struct led_hw_trigger_type *trigger_type;
->  };
->  
->  /**
-> @@ -345,6 +351,9 @@ struct led_trigger {
->  	int		(*activate)(struct led_classdev *led_cdev);
->  	void		(*deactivate)(struct led_classdev *led_cdev);
->  
-> +	/* LED-private triggers have this set. */
-> +	struct led_hw_trigger_type *trigger_type;
-> +
->  	/* LEDs under control by this trigger (for simple triggers) */
->  	rwlock_t	  leddev_list_lock;
->  	struct list_head  led_cdevs;
+Thanks
 
-I like this proposal. I'll try to use it in my code. Thank you!
-
-regards,
-	o.
-
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+On 07/12, Rodrigo Siqueira wrote:
+> Hi Melissa,
+>=20
+> First of all, thanks a lot for your patch! This is a nice change since
+> it increases the code coverage.
+>=20
+> Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+>=20
+> On 07/10, Melissa Wen wrote:
+> > This change expands the coverage for the IGT kms_cursor_crc test, where
+> > the size varies between 64 and 512 for a square cursor. With this, in
+> > addition to the cursor 64x64, this patch enables the test of cursors wi=
+th
+> > sizes: 128x128, 256x256, and 512x512.
+> >=20
+> > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_drv.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkm=
+s_drv.c
+> > index 1e8b2169d834..57a8a397d5e8 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > @@ -133,6 +133,8 @@ static int vkms_modeset_init(struct vkms_device *vk=
+msdev)
+> >  	dev->mode_config.min_height =3D YRES_MIN;
+> >  	dev->mode_config.max_width =3D XRES_MAX;
+> >  	dev->mode_config.max_height =3D YRES_MAX;
+> > +	dev->mode_config.cursor_width =3D 512;
+> > +	dev->mode_config.cursor_height =3D 512;
+> >  	dev->mode_config.preferred_depth =3D 24;
+> >  	dev->mode_config.helper_private =3D &vkms_mode_config_helpers;
+> > =20
+> > --=20
+> > 2.27.0
+> >=20
+>=20
+> --=20
+> Rodrigo Siqueira
+> https://siqueira.tech
 
 
+
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
+
+--3p6wpas7gy73fiat
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl8LipsACgkQWJzP/com
+vP/WiA//Svh6voj1NWikmjHgoMHl5xOM2QcqXLBhpDs8XufEaKX1ZxXqiDIE10d7
+43Tted37/PEygaVkJglz8EDxteoV2eupe5y73fLAt0Lbg37HswCw65fTnEJFpooq
+wiauUTQPOH3JxJbxb2KaIDw2rHLUWiX7SY+ZFg7jSHUZhuatHq9V7SJahttl7JE/
+vM/uj73pLVs54fQpjj+i+VkKg52Cbe0hji2igXzgnnJEDynqO/2wGn5WY+lWERb6
+Rwk3V+W/fS+Y/7G9KSpSzcpGDeXMzZN4fEUpDTozpIcI3QiGM1of2Vgck8hmLQ2m
+COEIYUMRkdJYiUWmq0TFic1QL1DGu7OiQzsGcTYE6qXJVKNnr7nKkb3Ydz56U6Ji
+8k3DQhirnE4zozrsX4e4Q4TWOG2V+wDB69c6vwLwE8s5GEH56h5bHka2mKZjV2CN
+jWafM7IXVd6JuxXewzNfvackxq95Jq0gRXxCQx/sF8paLkfRf8Z+mgVoICbSBxJp
+Jh0nkaoZgPv+uaIQf7aDqbtq51opYaa8JG+wQbHVuAXeb5fYp73Lks3EFpAwA+kz
+b+z7rFSl8IBbZl718/xwzKTgpxEyIgPILjQqx/nVCvHi1yPcXwCxqhxjBoSId7vP
+39x1a5OSoeKz3lj0piZwMAoMCB4rzV0vP9EDemfe53rR1OXTsNw=
+=tCmt
+-----END PGP SIGNATURE-----
+
+--3p6wpas7gy73fiat--
