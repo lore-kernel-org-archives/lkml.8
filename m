@@ -2,130 +2,109 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D30FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF554C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64252207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE4A206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a8UcIIWV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pBpXJX53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgGLX3p (ORCPT
+        id S1728273AbgGLXex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:29:45 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60550 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgGLX3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:29:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594596583; bh=mGpvPO69Sq3uBZZ4LMIGshZ9SukFLv4L6UJ+xxlTBSs=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=a8UcIIWVw0DeoiZqCVzEexyC+8qr0JumbaFjRMx1OAOluKaCH3YxXBxasO+UaKMU8
-         ty8DKLtX58uRK4+W5Zm3Gupkk/v/MT+stUCSjl2ykbPH0bw8U1MUhTufgu/Lz4Y1ER
-         5tZPLXAvIOIWqbEbF4N6Q7wcAtxSsgV0NMYKAJfo=
-Date:   Mon, 13 Jul 2020 01:29:42 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200712232942.eecoekr25i3wu2iq@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>, linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200708105527.868987-1-megous@megous.com>
- <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
- <20200708132924.r6f5id2evprhybec@core.my.home>
- <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
- <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
- <20200708135748.l4zncodhhggurp6s@gilmour.lan>
+        Sun, 12 Jul 2020 19:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbgGLXew (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:34:52 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AA6C08C5DD
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 16:34:52 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id w6so13382599ejq.6
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 16:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LVOtLwv/Cvl11tUYp50SksGWhQhY11SC0NIkGuc8zKg=;
+        b=pBpXJX539broCTWH17WgpJDxoLP0paWSlvb8A7h3fxHZadJbhqRCNtCFP25mX7XEJ4
+         /kwaDuWKopj4I8eO8SAvDGZq6F9j25nSGRAO0y6X2NGnu7izoh9SZwvHn6KFIILHenua
+         VZeZFZ0bZYIFUV+EEZeOEkkM7qjxY5RJIoRAIP4Ic1GB+xDjTjYg3z0lEPuNawED7EbA
+         MonmBQTmlvtQCqFgEnrnwFndAHCUOPLKAGIG3XWpeW0/Qr4qA0bZxFzdTlAkI2KH7b0F
+         rBajQRa/6JbzOq5B4AwXzh5PM1ZTZhssUaqSkDgJ7Yz0lPtz7xwa3hLHTGAXQMnzERV6
+         /O1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LVOtLwv/Cvl11tUYp50SksGWhQhY11SC0NIkGuc8zKg=;
+        b=RTKKKbWVu0aq/bIww8dT4MZSIS1VrwET0siSM5TRFheWndOKtMfiquvGZym4tkyyPl
+         wmbPM3KgHtmlqwlvNpW76cn289rvVhMMSG5d8+bVK/1qLN72quX+MxWqL6JHZEjcTK/c
+         08Bg9jYJuzPSgww3ILh0LnwoMHvJE4E0IZq3i8DC3GgSIgt1C+HcNuVT/XvZyc3r0B99
+         +Sw0Zo+Vx5ZqumAlb/7Pb/HYJ1q8xWUoHZf4G4gQ7ZHo3W6A+r0QZ8YphICwTgHrXVPS
+         mjo7YWhpup0mG1s0FvWwZFuLiStyyVMb36Pi4erIrlBHfQJcMUA99QjJV0kcJjiLrO8r
+         EDeg==
+X-Gm-Message-State: AOAM531fd21SRuS9Iig93IJqHGmGPwoZ0I3BgPrmCbRsPQZxRl5DhngZ
+        MyQR2Hp+zTjLyJ2i9ZzQm9f3mxFzHORVL9gB5a0yPQ==
+X-Google-Smtp-Source: ABdhPJytFy6lsxbxptEBJHanuAZiQiJRjagWMLPmEYrRnXLJYMLE9doc2W4BiVdJO1Ek3tqEEHDclPE0n0pEuhpOHu8=
+X-Received: by 2002:a17:906:94c4:: with SMTP id d4mr69283452ejy.232.1594596890894;
+ Sun, 12 Jul 2020 16:34:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200708135748.l4zncodhhggurp6s@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+References: <20200624203200.78870-1-samitolvanen@google.com> <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+In-Reply-To: <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Sun, 12 Jul 2020 16:34:39 -0700
+Message-ID: <CABCJKuedpxAqndgL=jHT22KtjnLkb1dsYaM6hQYyhqrWjkEe6A@mail.gmail.com>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Sat, Jul 11, 2020 at 9:32 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+> Thank you very much for sending these changes.
+>
+> Do you have a branch, where your current work can be pulled from? Your
+> branch on GitHub [1] seems 15 months old.
 
-On Wed, Jul 08, 2020 at 03:57:48PM +0200, Maxime Ripard wrote:
-> On Wed, Jul 08, 2020 at 03:44:41PM +0200, Ondřej Jirman wrote:
-> > >
+The clang-lto branch is rebased regularly on top of Linus' tree.
+GitHub just looks at the commit date of the last commit in the tree,
+which isn't all that informative.
 
-[...]
+> Out of curiosity, I applied the changes, allowed the selection for i386
+> (x86), and with Clang 1:11~++20200701093119+ffee8040534-1~exp1 from
+> Debian experimental, it failed with `Invalid absolute R_386_32
+> relocation: KERNEL_PAGES`:
 
-> > > Yeah, but on the other hand, we regularly have people that come up and
-> > > ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
-> > > wasn't there on the first attempt but was there on the second) is a
-> > > cause of concern or not.
-> > 
-> > That's why I also added a success message, to distinguish this case. 
-> 
-> That doesn't really help though. We have plenty of drivers that have
-> some sort of success message and people will still ask about that error
-> message earlier.
-> 
-> > > > And people run several distros for 3-4 months without anyone noticing any
-> > > > issues and that thermal regulation doesn't work. So it seems that lack of a
-> > > > success message is not enough.
-> > > 
-> > > I understand what the issue is, but do you really expect phone users to
-> > > monitor the kernel logs every time they boot their phone to see if the
-> > > thermal throttling is enabled?
-> > 
-> > Not phone users, but people making their own kernels/distributions. Those people
-> > monitor dmesg, and out of 4 distros or more nobody noticed there was an issue
-> > (despite the complaints of overheating by their users).
-> > 
-> > So I thought some warning may be in order, so that distro people more easily
-> > notice they have misconfigured the kernel or sometging.
-> 
-> I mean, then there's nothing we can do to properly address that then.
-> 
-> The configuration system is a gun, we can point at the target, but
-> anyone is definitely free to shot themself in the foot.
-> 
-> You would have exactly the same result if you left the thermal driver
-> disabled, or if you didn't have cpufreq support.
+I haven't looked at getting this to work on i386, which is why we only
+select ARCH_SUPPORTS_LTO for x86_64. I would expect there to be a few
+issues to address.
 
-Right. Though I hope there's some middle ground. I mean all of those dev_err
-in error paths of many drivers are there mostly to help debugging stuff.
+> >   arch/x86/tools/relocs vmlinux > arch/x86/boot/compressed/vmlinux.relocs;arch/x86/tools/relocs --abs-relocs vmlinux
+> > Invalid absolute R_386_32 relocation: KERNEL_PAGES
 
-And even though I was part of this driver's development, it took me quite
-some time to figure out it was the missing sunxi-sid driver causing the issue,
-with complete silence from the driver.
+KERNEL_PAGES looks like a constant, so it's probably safe to ignore
+the absolute relocation in tools/relocs.c.
 
-Maybe this can/will be solved at another level entirely, like having a device
-core report devices probes that failed with EPROBE_DEFER some time after
-the boot finished and modules had a chance to load, instead of immediately
-for each probe retry.
-
-regards,
-	o.
-
-> Maxime
+Sami
