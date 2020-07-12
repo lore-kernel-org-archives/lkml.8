@@ -2,107 +2,124 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B231FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E5920702
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864D2206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 17:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DogPUd0g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dKuT6xEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgGLRRM (ORCPT
+        id S1729186AbgGLRUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 13:17:12 -0400
-Received: from mout.gmx.net ([212.227.15.15]:36651 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbgGLRRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 13:17:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1594574211;
-        bh=M2koFojxYZHpRAK0x2WQcPQc3sv3CjqDJzdHS3xYj14=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=DogPUd0g/Xo4tFUVHW7YB3R8cyR4qGaHP+vv+gWzcJVG24kMcr14Vww6tQ8o4cUZI
-         VR0UhMSQbzvCWs+mqF0S4nGIp3XwfFdnT0qEsfmfHiDjl+6dYUUwUhMtcm2+tl+S0q
-         DgRKlk93b/nhXgoacjvBXhrG6fN8rNjepPt0X2ao=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([185.75.74.1]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M42jK-1jufas3Myu-0004bk; Sun, 12
- Jul 2020 19:16:50 +0200
-Date:   Sun, 12 Jul 2020 19:16:43 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
-References: <20200707103412.1010823-1-enric.balletbo@collabora.com> <98369dbc-2e2a-a1bd-f3cd-68f33f66b882@gmail.com> <f9c3cb16-ef6c-b7ff-6832-a858cb2c9b3d@gmail.com>
+        Sun, 12 Jul 2020 13:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbgGLRUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 13:20:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74736C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 10:20:25 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so4980848pjb.4
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 10:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2/BZBNLZm+qL2x6Ipr/wPnrawFw/bsrU0+BzXd5bhPM=;
+        b=dKuT6xEHUngz0aO2JjtirfwMibUZU1NVMNf+leerXt8IRt/C0eymExYgC9c4EVVaex
+         rYsAr7x3PrJLYuf+UjBD7AFi+quK/lkIMsZy+pfBbiKUzKEb+dadDsaBVWIO+bnuyzro
+         /Q7g0MfKOcE9Ja16tkepE+cUimZFrjXrXjs8XaOrsdCbfl4wokrto4Z3xxV/Zfc/93ba
+         XDNwOykrqI1kM6gEp+qQAVzjhPlXXJ1fbFyYH/gypLNJXDd46K1WSCauHsolI74Zjt4j
+         vGK262WRc3Xgu1ZGxNrDCJeAiC6rNsRe/VRjamQiS4IyqTZAEykAUktaYcm1bBHdROo2
+         ol+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2/BZBNLZm+qL2x6Ipr/wPnrawFw/bsrU0+BzXd5bhPM=;
+        b=Kjzs3ods4wza02OeOTC12V/uz/TQK44axGSbrWKofQ8QwtKoeR8B6cYMzqwbHxxYm+
+         qJiBZ66RtExUw5pzqMrQP5HWDxBXu3IpmheLIHVY6XutHXlvNMUVGbEJ8OEKzRqUTiu1
+         wQLyJBZsnj/lv70p1tOjZvDMcBIJB2lgyynUoirUtoRIJssUfJ1UBRnKgQEOMr50KxCR
+         MQZRe9ppOm2lKqfVozZRM1z+dBcaakh55G/pgNNuoQ5EQnOvaaKVGIH02N6n3YBlPK1k
+         XMzPZJa0ysFAN/PJU5u5iRpJPkcGUqHp/JpKmmPHB8nelZt3GEmI01PL7uEN1kElUCP+
+         EOjA==
+X-Gm-Message-State: AOAM533fDXlsGtm/fI/LCCfY2wXvMYNivjmwRjFUs7WFWhVRUhRW4FBh
+        PMgNfnY5Hy4QzOD88ilgXpJf
+X-Google-Smtp-Source: ABdhPJzyWDNBMzOIYvwj4t/ebwrznHyp3Nui5F9225YFChg9m+mRdAP7ZBtOuthH8pet6xjIwfjS6g==
+X-Received: by 2002:a17:90a:206a:: with SMTP id n97mr15782979pjc.94.1594574424759;
+        Sun, 12 Jul 2020 10:20:24 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6c81:c187:70f5:3123:b5de:e77f])
+        by smtp.gmail.com with ESMTPSA id y7sm12323276pjy.54.2020.07.12.10.20.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 Jul 2020 10:20:23 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 22:50:19 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     andre.przywara@arm.com, afaerber@suse.de, sboyd@kernel.org,
+        cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 04/10] clk: actions: Add MMC clock-register reset bits
+Message-ID: <20200712172019.GF6110@Mani-XPS-13-9360>
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-5-git-send-email-amittomer25@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] Revert "thermal: mediatek: fix register index error"
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>
-CC:     drinkcat@chromium.org, linux-pm@vger.kernel.org,
-        Michael Kao <michael.kao@mediatek.com>,
-        Eduardo Valentin <edubezval@gmail.com>, hsinyi@chromium.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <F97EEB5B-958A-4CA3-A3F2-7668B8E778FA@public-files.de>
-X-Provags-ID: V03:K1:mS6EkSIZOrghNWC5/SoCGSYcpQLUuJGPL1lv6FDvjKZ3vSgAhWI
- BoxxaAmyLLri3QA4FRCwXpRFwYdxWw/SkIEdEMQCjFri9SEA0fKL/fuT+pQ14zircKQ7iSX
- QaRZ/Uu9sy/7rwLrzWVsf6hnWK0LFJa5kHtC0KMdSLN5u2iPY/Dc7LPzDmIPy+kphwrdAgS
- 6csCl11UWB5pslnyK1sjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HJNgiWvLWzA=:nnam4Ncd9BQH2A8XBPDYYC
- yXDY4h7e5EexShz33mvZYI1NriBhQL30tV3iuhqmGNiPeN7j3si4gQ3K33R7NXqFVthOqsYCG
- QmaEMCqwak3H2aDJiN30XzyYVhI6chRob4Hr9Nhitig66S5+rm8BUtl+4FIXUZ7F6QQ3fv+eZ
- RekOFNSH/69OXYk2Ijls3E2ntSGEAB7m90dolCJAtesp7hvqgSxQZ9LGPyAHRSkUoScuCmLxX
- oZnUfxsAG/ajXJM6UUIurzxqHcVypPeyP90PD3x4imauCbLm8SXraG2KFvfa8boHbuTizas9X
- zhuf3FU1CHugF96moHlsOm6yLtLIbftRNpYS3IssxwfFVy/gnYoUtSmIzA4HwZ1+Fb3DxHF4a
- o4pf/3UQTwU5o/B87q7mcRf72fzTeyIZgFT6uhYgXEVcfnhsey1ESVFKyLkWh0rCT91UMIbPf
- iTK2cp03I2/fYkIUJeh2PP9OSGqd4Xj62KoGJpYGcc6mYKcXenN6dbwNNMq1C6O/xKtLSlhNB
- jjV8Bzd1p3bRPYl88Dho3wkZOcS+IgUhpDUMTpsjOJH8ZelrFeyjjMacry8D+RD7mFCGqt7+c
- EXKJxVXBneQ9zXm0E5ZyAb3cyeTtsSIkg4gfDy57jWmqKHLJIVXMV1nUG4i/jptveVb2mO54/
- W7Q06769OBF2mhPre8BZmnQCeXcxtFiyr9MLK9ZXRIxSxKuOcT+6LbXajd66QU463D4DT6Yne
- +0n7TaB9rjwqQWFn/17lOxc4bA/Jks+Qyo5kO2VS6P5gYOXDUAD4jCTaiTxZeedMaDPovIQqu
- VOXc6LAL0PYUt2sbo+/q7p0TAY6tb9YZn8ElEl/UmEdthoWYK29mK5I3yP5fCH/wnTZehrO6h
- SJJQPEdQUNhw9GrF7LyLLRjPtVE+IAeJ7P2Y/9CicWZb1UJ1W/mUvj1wsk6cgvqbHywP4MEEg
- xOjftfGRSF9LlyxSNpKm9NRgnsqMzNU2R92Ze7wxzPSGLcYDQPCj9xPB8pQypSqkqK0CEV40p
- OmOCcBpewpnPTh4GKEhvXxBc2Mj5qryva5ZclDxwmst3Jcu6v6ncjELEmCqBbdqK1CYoZ5rlx
- 0spiylqnX09IeMKt5TlPVwFYvBjuZ9k3BURy1uEr1FhvedpLH8z/pMgLRJODVlgCCaAx+nW3Q
- aQPv5ByH/S6979+iq83GfENY6R6oHvU7uWgKLUAlp9pfTOb3zFYh59uTzOV1hkj+aZPjs2jkF
- cu8P+i0uTPsTv285buK01icUGJUZ4Ao8DiyR2jQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593701576-28580-5-git-send-email-amittomer25@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 02, 2020 at 08:22:50PM +0530, Amit Singh Tomar wrote:
+> This commit adds reset bits needed for MMC clock registers present
+> on Actions S700 SoC.
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Am 12=2E Juli 2020 18:55:41 MESZ schrieb Matthias Brugger <matthias=2Ebgg@=
-gmail=2Ecom>:
->On 10/07/2020 15:58, Matthias Brugger wrote:
->Even more interesting, with and without the revert the
->thermal=20
->sensor returns always zero, so it seems it never actually worked=2E
+Thanks,
+Mani
 
-The thermal driver works on bananapi-r2 till 5=2E6=2E Something in 5=2E7=
-=2E0 breaks it, but it's not caused by the reverted commit or the revert=2E=
-=2E=2Eneither the commit nor the revert has any effect on r2 (no crash/erro=
-r/functionality change)=2E
-
-Additionally there is no difference in mtk-thermal=2Ec between working 5=
-=2E6 and non-working 5=2E7=2E Thermal-merge in 5=2E7-rc1 shows also nothing=
- suspicious and dts(i) is also same in relevant parts=2E
-
-Maybe anyone of the recipients have an idea about the broken mt7623/mt2701=
- functionality=2E
-regards Frank
+> ---
+> Changes from v4:
+> 	* Reordered it from 03/10 to 04/10.
+> Changes from v3:
+>         * NO change.
+> Changes from v2:
+>         * No change.
+> Changes from v1:
+>         * No change.
+> Changes from RFC:
+>         * No change.
+> ---
+>  drivers/clk/actions/owl-s700.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/clk/actions/owl-s700.c b/drivers/clk/actions/owl-s700.c
+> index a2f34d13fb54..cd60eca7727d 100644
+> --- a/drivers/clk/actions/owl-s700.c
+> +++ b/drivers/clk/actions/owl-s700.c
+> @@ -577,6 +577,9 @@ static const struct owl_reset_map s700_resets[] = {
+>  	[RESET_DSI]	= { CMU_DEVRST0, BIT(2) },
+>  	[RESET_CSI]	= { CMU_DEVRST0, BIT(13) },
+>  	[RESET_SI]	= { CMU_DEVRST0, BIT(14) },
+> +	[RESET_SD0]     = { CMU_DEVRST0, BIT(22) },
+> +	[RESET_SD1]     = { CMU_DEVRST0, BIT(23) },
+> +	[RESET_SD2]     = { CMU_DEVRST0, BIT(24) },
+>  	[RESET_I2C0]	= { CMU_DEVRST1, BIT(0) },
+>  	[RESET_I2C1]	= { CMU_DEVRST1, BIT(1) },
+>  	[RESET_I2C2]	= { CMU_DEVRST1, BIT(2) },
+> -- 
+> 2.7.4
+> 
