@@ -2,60 +2,68 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D068BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D30FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA5420720
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64252207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 23:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="i9w/8Hsx"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a8UcIIWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgGLXUF (ORCPT
+        id S1728290AbgGLX3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:20:05 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60446 "EHLO vps.xff.cz"
+        Sun, 12 Jul 2020 19:29:45 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60550 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgGLXUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:20:05 -0400
+        id S1727785AbgGLX3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:29:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594596003; bh=hO4xCkjUxhM7rmK+bUGTraRvUyv4jJ7Jl440PsXvssU=;
+        t=1594596583; bh=mGpvPO69Sq3uBZZ4LMIGshZ9SukFLv4L6UJ+xxlTBSs=;
         h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=i9w/8Hsx1wwhoCwIdcamoOeWQxQP7J0lF6qsjenRYx5M1CPvaTrVn46tnwTtFbUSH
-         FyYgRCP2esFHWcjMEsPE5ltIzu3wqcnI51cnOI63CSfJ1yucmA/3bWR+t6+o6g0o0c
-         ZQFmxkO9rvi4Gu20iCn4DHMoZcfJh4OMdfSrkegU=
-Date:   Mon, 13 Jul 2020 01:20:03 +0200
+        b=a8UcIIWVw0DeoiZqCVzEexyC+8qr0JumbaFjRMx1OAOluKaCH3YxXBxasO+UaKMU8
+         ty8DKLtX58uRK4+W5Zm3Gupkk/v/MT+stUCSjl2ykbPH0bw8U1MUhTufgu/Lz4Y1ER
+         5tZPLXAvIOIWqbEbF4N6Q7wcAtxSsgV0NMYKAJfo=
+Date:   Mon, 13 Jul 2020 01:29:42 +0200
 From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200712232003.qpogdep7xp4hfmu5@core.my.home>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200712232942.eecoekr25i3wu2iq@core.my.home>
 Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>,
-        linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200711100409.GA18901@amd>
- <20200711210111.5ysijhexgyzyr7u7@core.my.home>
- <20200712072554.GC4721@duo.ucw.cz>
- <20200712134911.r3lig4hgyqhmslth@core.my.home>
- <20200712191111.GA20592@amd>
- <20200712223821.742ljr4qxdrx3aqv@core.my.home>
- <20200713011544.0adc51f1@nic.cz>
+        Maxime Ripard <maxime@cerno.tech>, linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200708105527.868987-1-megous@megous.com>
+ <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
+ <20200708132924.r6f5id2evprhybec@core.my.home>
+ <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
+ <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
+ <20200708135748.l4zncodhhggurp6s@gilmour.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713011544.0adc51f1@nic.cz>
+In-Reply-To: <20200708135748.l4zncodhhggurp6s@gilmour.lan>
 X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
  <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,64 +71,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:15:44AM +0200, Marek Behun wrote:
-> On Mon, 13 Jul 2020 00:38:21 +0200
-> Ondřej Jirman <megous@megous.com> wrote:
-> 
-> > Hello,
-> > 
-> > On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
-> > > Hi!
-> > >   
-> > 
-> > [....]
-> > 
-> > >  		}
-> > > diff --git a/include/linux/leds.h b/include/linux/leds.h
-> > > index 2451962d1ec5..cba52714558f 100644
-> > > --- a/include/linux/leds.h
-> > > +++ b/include/linux/leds.h
-> > > @@ -57,6 +57,10 @@ struct led_init_data {
-> > >  	bool devname_mandatory;
-> > >  };
-> > >  
-> > > +struct led_hw_trigger_type {
-> > > +	int dummy;
-> > > +}
-> > > +
-> > >  struct led_classdev {
-> > >  	const char		*name;
-> > >  	enum led_brightness	 brightness;
-> > > @@ -150,6 +154,8 @@ struct led_classdev {
-> > >  
-> > >  	/* Ensures consistent access to the LED Flash Class device */
-> > >  	struct mutex		led_access;
-> > > +
-> > > +	struct led_hw_trigger_type *trigger_type;
-> > >  };
-> > >  
-> > >  /**
-> > > @@ -345,6 +351,9 @@ struct led_trigger {
-> > >  	int		(*activate)(struct led_classdev *led_cdev);
-> > >  	void		(*deactivate)(struct led_classdev *led_cdev);
-> > >  
-> > > +	/* LED-private triggers have this set. */
-> > > +	struct led_hw_trigger_type *trigger_type;
-> > > +
-> > >  	/* LEDs under control by this trigger (for simple triggers) */
-> > >  	rwlock_t	  leddev_list_lock;
-> > >  	struct list_head  led_cdevs;  
-> > 
-> > So after trying to use this, this seems to disallow the use of multiple HW
-> > triggers per LED. That's fine by me, because using one HW sysfs configured
-> > trigger per LED that use case is my proposal, but is it desireable in general?
-> 
-> Why? If you register one LED and several triggers, all sharing the same
-> trigger_type pointer, I think it should work.
+Hi Maxime,
 
-Ah, you're right. :)
+On Wed, Jul 08, 2020 at 03:57:48PM +0200, Maxime Ripard wrote:
+> On Wed, Jul 08, 2020 at 03:44:41PM +0200, Ondřej Jirman wrote:
+> > >
 
-thanks,
+[...]
+
+> > > Yeah, but on the other hand, we regularly have people that come up and
+> > > ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
+> > > wasn't there on the first attempt but was there on the second) is a
+> > > cause of concern or not.
+> > 
+> > That's why I also added a success message, to distinguish this case. 
+> 
+> That doesn't really help though. We have plenty of drivers that have
+> some sort of success message and people will still ask about that error
+> message earlier.
+> 
+> > > > And people run several distros for 3-4 months without anyone noticing any
+> > > > issues and that thermal regulation doesn't work. So it seems that lack of a
+> > > > success message is not enough.
+> > > 
+> > > I understand what the issue is, but do you really expect phone users to
+> > > monitor the kernel logs every time they boot their phone to see if the
+> > > thermal throttling is enabled?
+> > 
+> > Not phone users, but people making their own kernels/distributions. Those people
+> > monitor dmesg, and out of 4 distros or more nobody noticed there was an issue
+> > (despite the complaints of overheating by their users).
+> > 
+> > So I thought some warning may be in order, so that distro people more easily
+> > notice they have misconfigured the kernel or sometging.
+> 
+> I mean, then there's nothing we can do to properly address that then.
+> 
+> The configuration system is a gun, we can point at the target, but
+> anyone is definitely free to shot themself in the foot.
+> 
+> You would have exactly the same result if you left the thermal driver
+> disabled, or if you didn't have cpufreq support.
+
+Right. Though I hope there's some middle ground. I mean all of those dev_err
+in error paths of many drivers are there mostly to help debugging stuff.
+
+And even though I was part of this driver's development, it took me quite
+some time to figure out it was the missing sunxi-sid driver causing the issue,
+with complete silence from the driver.
+
+Maybe this can/will be solved at another level entirely, like having a device
+core report devices probes that failed with EPROBE_DEFER some time after
+the boot finished and modules had a chance to load, instead of immediately
+for each probe retry.
+
+regards,
 	o.
 
-> Marek
+> Maxime
