@@ -2,70 +2,105 @@ Return-Path: <SRS0=5Khs=AX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8721B2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69DC2064B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jul 2020 06:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgGLGcu (ORCPT
+        id S1728256AbgGLG2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 02:32:50 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:54016 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727777AbgGLGct (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 02:32:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 84F7C837F24A;
-        Sun, 12 Jul 2020 06:32:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bead16_0f1504526edd
-X-Filterd-Recvd-Size: 1575
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 Jul 2020 06:32:47 +0000 (UTC)
-Message-ID: <866325009f9ae73b3a563dd745f901260a372242.camel@perches.com>
-Subject: Re: [PATCH] net: sky2: switch from 'pci_' to 'dma_' API
-From:   Joe Perches <joe@perches.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        mlindner@marvell.com, stephen@networkplumber.org,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sat, 11 Jul 2020 23:32:45 -0700
-In-Reply-To: <8a3e5514-9cc9-18f3-9a98-81007419a20a@wanadoo.fr>
-References: <20200711204944.259152-1-christophe.jaillet@wanadoo.fr>
-         <2181026e68d2948c396cc7a7b6bfb7146c1cd5f6.camel@perches.com>
-         <8a3e5514-9cc9-18f3-9a98-81007419a20a@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 12 Jul 2020 02:28:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:2580 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727777AbgGLG2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 02:28:05 -0400
+IronPort-SDR: HFRbNzhrP6KBOK52Qo95GGT2hMIts0V5EkmVz6af6eU51o7k4lxICVynkuhy5wInu/x7jGjFPl
+ +AdR2Im9N3Sg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="145961691"
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="145961691"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2020 23:28:04 -0700
+IronPort-SDR: jta/V1Sug1pMVA1ET3+5ROYvLrxcNCtmfOK63Rq6vuxcaM/qA7wphpSOhaOx16Y/djzJ2x3AEG
+ YPfwgWyZe68Q==
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="323935304"
+Received: from kaiguo-mobl.ccr.corp.intel.com (HELO [10.255.29.88]) ([10.255.29.88])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2020 23:28:02 -0700
+Subject: Re: kvm crash on 5.7-rc1 and later
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Woody Suwalski <terraluna977@gmail.com>
+Cc:     pbonzini@redhat.com, LKML <linux-kernel@vger.kernel.org>,
+        fenghua.yu@intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <9178ae3e-db32-c64b-7caf-737f3bc3ba8e@gmail.com>
+ <20200711182158.GF597537@hirez.programming.kicks-ass.net>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <b1d4e747-0c6d-b9f8-d795-1f4ed9e2420b@intel.com>
+Date:   Sun, 12 Jul 2020 14:27:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200711182158.GF597537@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-12 at 08:29 +0200, Christophe JAILLET wrote:
-> Le 11/07/2020 � 23:20, Joe Perches a �crit :
-> > On Sat, 2020-07-11 at 22:49 +0200, Christophe JAILLET wrote:
-> > > The wrappers in include/linux/pci-dma-compat.h should go away.
-> > why?
-> > 
-> > 
->  From Christoph Hellwig 
-> https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+On 7/12/2020 2:21 AM, Peter Zijlstra wrote:
+> On Fri, Jul 03, 2020 at 11:15:31AM -0400, Woody Suwalski wrote:
+>> I am observing a 100% reproducible kvm crash on kernels starting with
+>> 5.7-rc1, always with the same opcode 0000.
+>> It happens during wake up from the host suspended state. Worked OK on 5.6
+>> and older.
+>> The host is based on Debian testing, Thinkpad T440, i5 cpu.
+>>
+>> [   61.576664] kernel BUG at arch/x86/kvm/x86.c:387!
+>> [   61.576672] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+>> [   61.576678] CPU: 0 PID: 3851 Comm: qemu-system-x86 Not tainted 5.7-pingu
+>> #0
+>> [   61.576680] Hardware name: LENOVO 20B6005JUS/20B6005JUS, BIOS GJETA4WW
+>> (2.54 ) 03/27/2020
+>> [   61.576700] RIP: 0010:kvm_spurious_fault+0xa/0x10 [kvm]
+>>
+>> Crash results in a dead kvm and occasionally a very unstable system.
+>>
+>> Bisecting the problem between v5.6 and v5.7-rc1 points to
+>>
+>> commit 6650cdd9a8ccf00555dbbe743d58541ad8feb6a7
+>> Author: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Date:   Sun Jan 26 12:05:35 2020 -0800
+>>
+>>      x86/split_lock: Enable split lock detection by kernel
+>>
+>> Reversing that patch seems to actually "cure" the issue.
+>>
+>> The problem is present in all kernels past 5.7-rc1, however the patch is not
+>> reversing directly in later source trees, so can not retest the logic on
+>> recent kernels.
+>>
+>> Peter, would you have idea how to debug that (or even better - would you
+>> happen to know the fix)?
+>>
+>> I have attached dmesg logs from a "good" 5.6.9 kernel, and then "bad" 5.7.0
+>> and 5.8-rc3
+> 
+> I have no clue about kvm. Nor do I actually have hardware with SLD on.
+> I've Cc'ed a bunch of folks who might have more ideas.
+> 
 
-There's no why there.
-There's just an assertion a wrapper should "go away".
+I think this bug is the same as the one found by Sean, and is already 
+fixed in 5.8-rc4.
 
-"the wrappers in include/linux/pci-dma-compat.h should go away"
-
-wrappers aren't all bad.
-
+https://lore.kernel.org/kvm/20200605192605.7439-1-sean.j.christopherson@intel.com/
