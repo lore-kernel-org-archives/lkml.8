@@ -2,214 +2,91 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7ABC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E87C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9591520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2447D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M5uPLARN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgGMNF0 (ORCPT
+        id S1729736AbgGMNH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:05:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50711 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbgGMNF0 (ORCPT
+        Mon, 13 Jul 2020 09:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbgGMNH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:05:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l17so13257975wmj.0;
-        Mon, 13 Jul 2020 06:05:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mYPVA3/IWlt5/iqZ14/INuvJMoGowNHfOcbfoeDX1w4=;
-        b=Z8+SOk+ddRMOxuGvqY//U2agvdda/z2FjAQsjbM7y8jpNdzw3pWsvFkBMdtXmJ3bU0
-         nRNLnnI0yqw/5V3OEaQhtI9fkp4P3f9FvPM2v/WneUA7T//pUg6+497e6OJfZJzcqYrd
-         yRI5A5P6QNTUIeWtKCNT8xM91/ejFHdD/2DVWhja3mrnNUlWKBiP92qY6uuS4BGWX/qx
-         AVgKRVdFGvPaJIg9SV3yjnEjJpK7c9cv7nNUMelw8tADlBliFV351UTOAMFQ8suF0gRN
-         PHOmwrF7YfY+YmtQsO3zHeA0xcVx2V0/2zwg83IdS4rnxfEq7s0U7Af9NXrTfYDBi4Ag
-         Tobg==
-X-Gm-Message-State: AOAM5304nFRzTRmv/rwnkS3zqaZlQcidBQqaLPy+DQXADeAEzyWkCbeV
-        B2/SxJXQ2lSwkZLYK3Zw9quW3Z9RJic=
-X-Google-Smtp-Source: ABdhPJz85xPwE/oBrRjnLqeI3v2s5MzJRWpQlOsdY+4ARsW45oGFKS9vsKmoCJp8fjwB/7owbWTW6g==
-X-Received: by 2002:a7b:c952:: with SMTP id i18mr20098254wml.65.1594645522770;
-        Mon, 13 Jul 2020 06:05:22 -0700 (PDT)
-Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
-        by smtp.gmail.com with ESMTPSA id g14sm24237208wrm.93.2020.07.13.06.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:05:21 -0700 (PDT)
-From:   Matteo Croce <mcroce@linux.microsoft.com>
-To:     bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH bpf-next] bpf: allow loading instructions from a fd
-Date:   Mon, 13 Jul 2020 15:05:11 +0200
-Message-Id: <20200713130511.6942-1-mcroce@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 13 Jul 2020 09:07:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5913FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OqcpgdOdGZwi6J+uiLg6n6Rw5mDd47NeVWUGd6LWGdM=; b=M5uPLARN24iL+ApD0GZi56Vlc5
+        Dty5/OdSlJsVN1jTIxk4HQKJcGhGAwSgX07MSHpP47Nv7DlaTsbWyKf3gzYEeCAwF1vbcZkuJfGdc
+        f52z2EO3vdO+OwPRfr2ozmWZc5NJ/ZrbF+jnXj10Jz90RfTaECMWPg8XFOuX/sfllFaQgRiRIDjZS
+        6V4JbqvNpNzaH7aPXz2UgJ5LeqHuZ+ZvchIw72KSHDzStVqlaaxgK3jACmrFmrwmwjPl4siGjHH9x
+        YCACeU6TrwZh5N6FncIFiQbO6BM62nmCh8pkBhSRaEu64gnTWoMolXtgUIb/7t9isChq1DT29vM1c
+        aLYz6yZw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juyAC-0000PB-3U; Mon, 13 Jul 2020 13:06:32 +0000
+Date:   Mon, 13 Jul 2020 14:06:32 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     mick@ics.forth.gr, mark.rutland@arm.com, gregory.0xf0@gmail.com,
+        peterz@infradead.org, catalin.marinas@arm.com,
+        linus.walleij@linaro.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        brendanhiggins@google.com, elver@google.com, glider@google.com,
+        krzk@kernel.org, mchehab+samsung@kernel.org, will@kernel.org,
+        mingo@kernel.org, uwe@kleine-koenig.org,
+        takahiro.akashi@linaro.org, paulmck@kernel.org,
+        masahiroy@kernel.org, linux@armlinux.org.uk, willy@infradead.org,
+        rppt@linux.ibm.com, bgolaszewski@baylibre.com,
+        kernel-team@android.com, pmladek@suse.com, zaslonko@linux.ibm.com,
+        keescook@chromium.org, Arnd Bergmann <arnd@arndb.de>,
+        broonie@kernel.org, matti.vaittinen@fi.rohmeurope.com,
+        ben-linux@fluff.org, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org, davidgow@google.com,
+        rdunlap@infradead.org, Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org, ardb@kernel.org,
+        akpm@linux-foundation.org, davem@davemloft.net
+Subject: Re: [PATCH 1/3] lib: Add a generic copy_oldmem_page()
+Message-ID: <20200713130632.GA29945@infradead.org>
+References: <20200711035544.2832154-1-palmer@dabbelt.com>
+ <20200711035544.2832154-2-palmer@dabbelt.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200711035544.2832154-2-palmer@dabbelt.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@microsoft.com>
+On Fri, Jul 10, 2020 at 08:55:42PM -0700, Palmer Dabbelt wrote:
+> +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> +			 size_t csize, unsigned long offset,
+> +			 int userbuf)
+> +{
+> +	void *vaddr;
+> +
+> +	if (!csize)
+> +		return 0;
+> +
+> +	vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+> +	if (!vaddr)
+> +		return -ENOMEM;
 
-Allow to load the BPF instructons from a file descriptor,
-other than a pointer.
-
-This is required by the Integrity Subsystem to validate the source of
-the instructions.
-
-In bpf_attr replace 'insns', which is an u64, to a union containing also
-the file descriptor as int.
-A new BPF_F_LOAD_BY_FD flag tells bpf_prog_load() to load
-the instructions from file descriptor and ignore the pointer.
-
-As BPF files usually are regular ELF files, start reading from the
-current file position, so the userspace can skip the ELF header and jump
-to the right section.
-
-Signed-off-by: Matteo Croce <mcroce@microsoft.com>
----
- include/uapi/linux/bpf.h | 10 +++++-
- kernel/bpf/syscall.c     | 69 +++++++++++++++++++++++++++++++++++++---
- 2 files changed, 73 insertions(+), 6 deletions(-)
-
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 8bd33050b7bb..4ef75198db21 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -332,6 +332,11 @@ enum bpf_link_type {
- /* The verifier internal test flag. Behavior is undefined */
- #define BPF_F_TEST_STATE_FREQ	(1U << 3)
- 
-+/* The BPF is loaded by the file descriptor in `prog_bpf_fd`
-+ * instead of the buffer pointed by `insns`.
-+ */
-+#define BPF_F_LOAD_BY_FD	(1U << 4)
-+
- /* When BPF ldimm64's insn[0].src_reg != 0 then this can have
-  * two extensions:
-  *
-@@ -482,7 +487,10 @@ union bpf_attr {
- 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
- 		__u32		prog_type;	/* one of enum bpf_prog_type */
- 		__u32		insn_cnt;
--		__aligned_u64	insns;
-+		union {
-+			__aligned_u64	insns;		/* BPF instructions */
-+			__u32		prog_bpf_fd;	/* fd pointing to BPF program */
-+		};
- 		__aligned_u64	license;
- 		__u32		log_level;	/* verbosity level of verifier */
- 		__u32		log_size;	/* size of user buffer */
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 0fd80ac81f70..b6b1ce34a72b 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -24,6 +24,7 @@
- #include <linux/ctype.h>
- #include <linux/nospec.h>
- #include <linux/audit.h>
-+#include <linux/stat.h>
- #include <uapi/linux/btf.h>
- #include <linux/pgtable.h>
- #include <linux/bpf_lsm.h>
-@@ -2082,6 +2083,55 @@ static bool is_perfmon_prog_type(enum bpf_prog_type prog_type)
- /* last field in 'union bpf_attr' used by this command */
- #define	BPF_PROG_LOAD_LAST_FIELD attach_prog_fd
- 
-+static int bpf_load_from_fd(u32 fd, void *buf, loff_t insn_cnt)
-+{
-+	ssize_t bytes, total = 0;
-+	struct fd f = fdget(fd);
-+	int ret = 0;
-+	loff_t pos;
-+
-+	if (!f.file)
-+		return -EBADF;
-+
-+	if (!S_ISREG(file_inode(f.file)->i_mode)) {
-+		ret = -EINVAL;
-+		goto out_fd;
-+	}
-+
-+	ret = deny_write_access(f.file);
-+	if (ret)
-+		goto out_fd;
-+
-+	ret = security_kernel_read_file(f.file, READING_UNKNOWN);
-+	if (ret)
-+		goto out;
-+
-+	pos = f.file->f_pos;
-+
-+	while (total < insn_cnt) {
-+		bytes = kernel_read(f.file, buf + total, insn_cnt - total, &pos);
-+		if (bytes < 0) {
-+			ret = bytes;
-+			goto out;
-+		}
-+
-+		if (bytes == 0)
-+			break;
-+
-+		total += bytes;
-+		pos += bytes;
-+	}
-+
-+	if (total != insn_cnt)
-+		ret = -EIO;
-+
-+out:
-+	allow_write_access(f.file);
-+out_fd:
-+	fdput(f);
-+	return ret;
-+}
-+
- static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- {
- 	enum bpf_prog_type type = attr->prog_type;
-@@ -2096,7 +2146,8 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 	if (attr->prog_flags & ~(BPF_F_STRICT_ALIGNMENT |
- 				 BPF_F_ANY_ALIGNMENT |
- 				 BPF_F_TEST_STATE_FREQ |
--				 BPF_F_TEST_RND_HI32))
-+				 BPF_F_TEST_RND_HI32 |
-+				 BPF_F_LOAD_BY_FD))
- 		return -EINVAL;
- 
- 	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS) &&
-@@ -2162,10 +2213,18 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 
- 	prog->len = attr->insn_cnt;
- 
--	err = -EFAULT;
--	if (copy_from_user(prog->insns, u64_to_user_ptr(attr->insns),
--			   bpf_prog_insn_size(prog)) != 0)
--		goto free_prog;
-+	if (attr->prog_flags & BPF_F_LOAD_BY_FD) {
-+		err = bpf_load_from_fd(attr->prog_bpf_fd, (void *)prog->insns,
-+				       bpf_prog_insn_size(prog));
-+		if (err)
-+			goto free_prog;
-+	} else {
-+		if (copy_from_user(prog->insns, u64_to_user_ptr(attr->insns),
-+				   bpf_prog_insn_size(prog)) != 0) {
-+			err = -EFAULT;
-+			goto free_prog;
-+		}
-+	}
- 
- 	prog->orig_prog = NULL;
- 	prog->jited = 0;
--- 
-2.26.2
-
+Doing a memremap for every page is very inefficient.  Also I don't see
+why you'd want to even do that.  All memory is in the direct mapping
+for RISC-V.  For other architecture that support highmem kmap_atomic_pfn
+would do the job, which is what I'd use in a generic version.
