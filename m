@@ -2,141 +2,199 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18AEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09650C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776A12065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05A1205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdxNVY0T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ges2wvHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgGMO0s (ORCPT
+        id S1730033AbgGMO1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMO0r (ORCPT
+        Mon, 13 Jul 2020 10:27:24 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42641 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729784AbgGMO1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:26:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C488C061755;
-        Mon, 13 Jul 2020 07:26:47 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id d17so18099370ljl.3;
-        Mon, 13 Jul 2020 07:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fn4s2vAs0+Q1HokEV2gE1g/EmhM//ct3bpOXDHCUDTs=;
-        b=DdxNVY0T1G1+mn2kAbIXTn1g/3BjiseG4dKs2sb1aVpjlNZ6aOV94yrCr5Zl6ADfAb
-         tzSv0PB5RPR8K6qyOeDOxNH58BP1qu3Fh1xicP1f5HILnBT6JYyDkosBXDQkK4nB/tV7
-         f94sLXwdnVmkWEbCKoBvnH90Y/KcfzMgbmSnzgAecwwoIiGbqsBPZzqJeNbpGz0K5ui5
-         TwJsE99k9rPoyCwMtna8BuBysCMaRTRY2vKNa4Kjmtxk793BegqnJ/+pcvn0bxO3YYkP
-         h/UMtswnZ+Vj0g8l2DXE5+YRwQ+RTkCgDX/5ulv2A8zEfjqaDx1TKbd6vozMO7+K0Kxk
-         9UpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fn4s2vAs0+Q1HokEV2gE1g/EmhM//ct3bpOXDHCUDTs=;
-        b=QJ0DZc0df43xYYVDTHI4FMn2LmHGXgfbd4p3EODdEB8+6zSoSzz6r+gHROJHQcRvyC
-         DDJEMqQIz0tpAwtHsajP5Fpn6RP3qj+bnPwzYM5A+CDbHb5IFGv8DQULyzESdcp6Ptb1
-         HVadW6xF/2JB0VWUy4hkeKvfkaRdMU+mDDDq96Iz2k9sAJub4K5SvKOT+LH2tTYUUdM0
-         MIpJjrOl3ZDXxUT+TyydpyMwBuVk/L+8JnRL+BZSXJGL1RJd4i2mZ4Rez5xvWZTeJVd+
-         CxIeZxD6NO9Zx0pn9jryjHMhVpX5zWtC628T7WADiEt1ExP8X2BOYzjZdvjbWYbXLhah
-         3XFQ==
-X-Gm-Message-State: AOAM530AkLHKLtAZdooN63gixbw1qv90QAcx406JtF0Qy3h8vHU00ZXP
-        rjZb/f4QY31Ttuh6n6J0iXlJdboL
-X-Google-Smtp-Source: ABdhPJwr2PFXOt+b3R3iMyzM9LnuWUMT6Dk2EssiYoQRzB145JYWNtDHIg5SQZWiKAug25GXMtuL4Q==
-X-Received: by 2002:a2e:910c:: with SMTP id m12mr25215ljg.274.1594650405357;
-        Mon, 13 Jul 2020 07:26:45 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id c6sm4678357lff.77.2020.07.13.07.26.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 07:26:44 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] PM / devfreq: Add governor flags to clarify the
- features
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
-        enric.balletbo@collabora.com, hl@rock-chips.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20200713083113.5595-1-cw00.choi@samsung.com>
- <CGME20200713081944epcas1p22871b6d8a9455226e6cccd08ac0baa73@epcas1p2.samsung.com>
- <20200713083113.5595-3-cw00.choi@samsung.com>
- <746837bc-6734-3e52-453f-2b59bbca0230@gmail.com>
- <69ae2524-22d0-2444-da13-fae199392029@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3c327421-0533-c657-1887-9036e525960d@gmail.com>
-Date:   Mon, 13 Jul 2020 17:26:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 10:27:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594650443; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=49GatlMmRBeX4TYUjyWJvtJZH9uZkExUvhxMzl1/Ch8=; b=Ges2wvHKA/754Fc1HdTlQ515w014rV26wiSbn9oVMxq6XEYyJ7VGF+FltwfR8yZDf0JnIV2p
+ 5XhT9fwhpWBNRjiloRzceEMbE2nSzYYzbprHTez1HRgjMHmZDTzU9VeTTe22OWyg0Ezwa7e/
+ T7LJmQLbdvBmf/BzAN+K5j0Yjmk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f0c6f351e603dbb44a915b2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 14:27:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 00436C43387; Mon, 13 Jul 2020 14:26:59 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 385D7C433C8;
+        Mon, 13 Jul 2020 14:26:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 385D7C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
+        <viktor_jaegerskuepper@freenet.de>
+Cc:     Roman Mamedov <rm@romanrm.net>, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
+References: <20200404041838.10426-1-hqjagain@gmail.com>
+        <20200404041838.10426-6-hqjagain@gmail.com>
+        <20200621020428.6417d6fb@natsu> <87lfkff9qe.fsf@codeaurora.org>
+        <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de>
+        <87imf6beo0.fsf@codeaurora.org>
+        <abb99acd-e001-6e80-4d46-fae5ad3887f6@freenet.de>
+Date:   Mon, 13 Jul 2020 17:26:54 +0300
+In-Reply-To: <abb99acd-e001-6e80-4d46-fae5ad3887f6@freenet.de> ("Viktor
+        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Thu, 9 Jul 2020
+ 16:36:24 +0200")
+Message-ID: <87sgdva3td.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <69ae2524-22d0-2444-da13-fae199392029@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.07.2020 15:26, Chanwoo Choi пишет:
-...
->> BTW, I'm curious what do you think about hiding the unsupported debugfs
-> 
-> Do you mean that sysfs?
+Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
 
-Yes, sysfs :)
+> Kalle Valo wrote:
+>> Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
+>>=20
+>>> Kalle Valo writes:
+>>>> Roman Mamedov <rm@romanrm.net> writes:
+>>>>
+>>>>> On Sat,  4 Apr 2020 12:18:38 +0800
+>>>>> Qiujun Huang <hqjagain@gmail.com> wrote:
+>>>>>
+>>>>>> In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
+>>>>>> usb_ifnum_to_if(urb->dev, 0)
+>>>>>> But it isn't always true.
+>>>>>>
+>>>>>> The case reported by syzbot:
+>>>>>> https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@googl=
+e.com
+>>>>>> usb 2-1: new high-speed USB device number 2 using dummy_hcd
+>>>>>> usb 2-1: config 1 has an invalid interface number: 2 but max is 0
+>>>>>> usb 2-1: config 1 has no interface number 0
+>>>>>> usb 2-1: New USB device found, idVendor=3D0cf3, idProduct=3D9271, bc=
+dDevice=3D
+>>>>>> 1.08
+>>>>>> usb 2-1: New USB device strings: Mfr=3D1, Product=3D2, SerialNumber=
+=3D3
+>>>>>> general protection fault, probably for non-canonical address
+>>>>>> 0xdffffc0000000015: 0000 [#1] SMP KASAN
+>>>>>> KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000a=
+f]
+>>>>>> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+>>>>>>
+>>>>>> Call Trace
+>>>>>> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+>>>>>> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+>>>>>> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+>>>>>> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+>>>>>> expire_timers kernel/time/timer.c:1449 [inline]
+>>>>>> __run_timers kernel/time/timer.c:1773 [inline]
+>>>>>> __run_timers kernel/time/timer.c:1740 [inline]
+>>>>>> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+>>>>>> __do_softirq+0x21e/0x950 kernel/softirq.c:292
+>>>>>> invoke_softirq kernel/softirq.c:373 [inline]
+>>>>>> irq_exit+0x178/0x1a0 kernel/softirq.c:413
+>>>>>> exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+>>>>>> smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+>>>>>> apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>>>>>>
+>>>>>> Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspo=
+tmail.com
+>>>>>> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+>>>>>
+>>>>> This causes complete breakage of ath9k operation across all the stabl=
+e kernel
+>>>>> series it got backported to, and I guess the mainline as well. Please=
+ see:
+>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
+>>>>> https://bugzilla.redhat.com/show_bug.cgi?id=3D1848631
+>>>>
+>>>> So there's no fix for this? I was under impression that someone fixed
+>>>> this, but maybe I'm mixing with something else.
+>>>>
+>>>> If this is not fixed can someone please submit a patch to revert the
+>>>> offending commit (or commits) so that we get ath9k working again?
+>>>>
+>>>
+>>> This reverts commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
+>>> ("ath9k: Fix general protection fault
+>>> in ath9k_hif_usb_rx_cb") because the driver gets stuck like this:
+>>>
+>>>   [    5.778803] usb 1-5: Manufacturer: ATHEROS
+>>>   [   21.697488] usb 1-5: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.=
+fw requested
+>>>   [   21.701377] usbcore: registered new interface driver ath9k_htc
+>>>   [ 22.053705] usb 1-5: ath9k_htc: Transferred FW:
+>>> ath9k_htc/htc_9271-1.4.0.fw, size: 51008
+>>>   [   22.306182] ath9k_htc 1-5:1.0: ath9k_htc: HTC initialized with 33 =
+credits
+>>>   [  115.708513] ath9k_htc: Failed to initialize the device
+>>>   [  115.708683] usb 1-5: ath9k_htc: USB layer deinitialized
+>>>
+>>> Reported-by: Roman Mamedov <rm@romanrm.net>
+>>> Ref: https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
+>>> Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_=
+usb_rx_cb")
+>>> Tested-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet=
+.de>
+>>> Signed-off-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@fre=
+enet.de>
+>>> ---
+>>>
+>>> I couldn't find any fix for this, so here is the patch which reverts the
+>>> offending commit. I have tested it with 5.8.0-rc3 and with 5.7.4.
+>>>
+>>> Feel free to change the commit message if it is necessary or appropriat=
+e, I am
+>>> just a user affected by this bug.
+>>=20
+>> This was badly formatted:
+>>=20
+>> https://patchwork.kernel.org/patch/11636783/
+>>=20
+>> But v2 looks correct:
+>>=20
+>> https://patchwork.kernel.org/patch/11637341/
+>>=20
+>> Thanks, I'll take a closer look at this as soon as I can.
+>>=20
+>
+> Hi Kalle,
+>
+> it seems you didn't have time for this so far. If you don't have time at =
+the
+> moment, is there someone else who can fix this? Reverting the commit is j=
+ust the
+> first and easy option and fixing this properly can be done after that.
 
->> attributes per-device instead of returning the -EACCES?
-> 
-> I considered the hiding of sysfs node too instead of -EACCES.
+I was on vacation, I will get to your patch in the next few days.
 
-If there is no real userspace (used by a non-developer crowd) that
-relies on the attributes presence, then it could be fine to change the
-behaviour, IMO.
-
-I know that PowerTOP utility uses the 'trans_stat' attribute, but not
-sure about the other attributes.
-
-> But,
-> For a long time, devfreq showed the sysfs interface of all devfreq devices
-> regardless of the kind of devfreq governor. It means that devfreq keeps
-> the ABI interface. If devfreq hides the unsupported sysfs node
-> according to the type of governor, it will break the ABI.
-
-I didn't notice that it's an ABI already [1]. Should be better not to
-change the ABI if there is userspace already relying on the old
-behaviour, otherwise it may be okay to make changes until it will be too
-late, also given that this is still a "testing" ABI.
-
-[1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-devfreq
-
-Although, the doc doesn't say anything about -EACCES/-EINVAL, so isn't
-it an ABI change already? Doesn't doc need to be updated in order to
-reflect the ABI change?
-
-For example, doc says that userspace shouldn't care about attribute
-values which are irrelevant for a selected governor, like in the case of
-the 'polling_interval' attribute. The doc doesn't say that userspace may
-get a error.
-
-> Although I knew that maybe performance/powersave/userspace didn't use
-> the 'polling_interval' node, I just returned -EACCESS.
-
-The 'polling_interval', 'min/max_freq' and the new 'timer' attributes
-are all the governor attributes.
-
-Would be nice to have a per-device `governor/` directory containing all
-the governor-specific attributes (without the unrelated attributes), but
-perhaps it's a bit too late to change it now?
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
