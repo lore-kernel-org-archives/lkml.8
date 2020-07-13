@@ -2,87 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC8CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EE92075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh9vyhfD"
+	by mail.kernel.org (Postfix) with ESMTP id 7441F20791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgGMHLt (ORCPT
+        id S1728950AbgGMHL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMHLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:11:48 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A95C061794;
-        Mon, 13 Jul 2020 00:11:48 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id t27so10257907ill.9;
-        Mon, 13 Jul 2020 00:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=2mnaiTo0qGcxFq6+IdGd44zv8ruDj4yCsqDxq42cVIE=;
-        b=lh9vyhfD/gQLtRklaoZwaMnc+pg6vafrhhSbbdJrlmaWEQwxaM6368jQOyDsJ53a7S
-         iXsU+1M5MIXR0V6FAo+PlYFqSiYjjSQlIw36K02f50JuJu6BbCRy/qB9rdIj7wLX+y5O
-         b9qiX75PQoPcFi0D3Vwkyi9FZLTWFakkrF24fMpsyhswPPiCj2TA+1+Ds2GxKn0nXU2z
-         OpNbpDBIPj0zN3UlBFJRuyTAafXzTZ7Jb0yEUkwCJhQLZCII+RL/gurTUfx/jw+C+jrP
-         lh40S1YlckFMR+uQvp0oq7HaHPLrl7jWGyWce/YXbZOJE1gLrjOgIJW61ymBzPhz+nW8
-         i0xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=2mnaiTo0qGcxFq6+IdGd44zv8ruDj4yCsqDxq42cVIE=;
-        b=RBJ8pFROCH2wNC7ADpasVsZOX9BnJbibN7Sfg+yk28Rox9QoNvq/F81z201dxRos1U
-         OgBoSaySQ4vjoU4bQw8DUtrXCNi1hvzjQeRwyxp/+54DCYTftpOfQsWamaHETFXBdO9z
-         SgxHl0JKwCIfB8710mLAyZK7naW8JBhr5vySC1wjBOC6MNnPx9CUuuvIcnooF+U62JJa
-         0itFBIBwRFyoj+svmJO4OytWLTYS8CU3sDmZqmJEqY2eYxDU/VVSCgmvapYIWgXf1Vyz
-         NScJh/IdXJ0cwT64aPuAjZhbKTvUETryUfzYLhVT4zy6jnX6bqGUp1L0CNc6SFmyK0a+
-         OjgA==
-X-Gm-Message-State: AOAM533TArFTC6pa45BNrBwVc8drO6aPfsdIqALSUQr39BcPcZ/imnVH
-        tvee0iUECMJR1aXVTmSRweQxx1PmQhEGMCr3xgnmPCR3W0Y=
-X-Google-Smtp-Source: ABdhPJzM4AQOKnlqaA6HZcec9ptnZzQHqqGvZCkaM4HYxAtDxf4PS4f+0Tj/jzdwNy8KC1VDj83DjesLV+jaEheyXRw=
-X-Received: by 2002:a92:dc4a:: with SMTP id x10mr64252865ilq.111.1594624307565;
- Mon, 13 Jul 2020 00:11:47 -0700 (PDT)
+        Mon, 13 Jul 2020 03:11:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44866 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725818AbgGMHLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 03:11:54 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5C1546865253C73CC8A3;
+        Mon, 13 Jul 2020 15:11:51 +0800 (CST)
+Received: from localhost (10.175.101.6) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 15:11:42 +0800
+From:   Weilong Chen <chenweilong@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
+        <edumazet@google.com>, <chenweilong@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] rtnetlink: Fix memory(net_device) leak when ->newlink fails
+Date:   Mon, 13 Jul 2020 15:55:28 +0800
+Message-ID: <20200713075528.141235-1-chenweilong@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <CABXGCsPPoeja2WxWQ7yhX+3EF1gtCHfjdFjx1CwuAyJcSVzz1g@mail.gmail.com>
-In-Reply-To: <CABXGCsPPoeja2WxWQ7yhX+3EF1gtCHfjdFjx1CwuAyJcSVzz1g@mail.gmail.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Mon, 13 Jul 2020 12:11:36 +0500
-Message-ID: <CABXGCsP3ytiGTt4bepZp2A=rzZzOKbMv62dXpe26f57OCYPnvQ@mail.gmail.com>
-Subject: Re: [5.8RC4][bugreport]WARNING: CPU: 28 PID: 211236 at
- fs/fuse/file.c:1684 tree_insert+0xaf/0xc0 [fuse]
-To:     linux-fsdevel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        mpatlasov@virtuozzo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 at 03:28, Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> Hi folks.
-> While testing 5.8 RCs I founded that kernel log flooded by the message
-> "WARNING: CPU: 28 PID: 211236 at fs/fuse/file.c:1684 tree
-> insert+0xaf/0xc0 [fuse]" when I start podman container.
-> In kernel 5.7 not has such a problem.
+When vlan_newlink call register_vlan_dev fails, it might return error
+with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
+free the memory. But currently rtnl_newlink only free the memory which
+state is NETREG_UNINITIALIZED.
 
-Maxim, I suppose you leave `WARN_ON(!wpa->ia.ap.num_pages);` for debug purpose?
-Now this line is often called when I start the container.
+BUG: memory leak
+unreferenced object 0xffff8881051de000 (size 4096):
+  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
+  hex dump (first 32 bytes):
+    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
+    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
+  backtrace:
+    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
+    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
+    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
+    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
+    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
+    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
+    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
+    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
+    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
+    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
+    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
+    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
+    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
+    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
+    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
+    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
---
-Best Regards,
-Mike Gavrilov.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+---
+ net/core/rtnetlink.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index 9aedc15736ad..85a4b0101f76 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3343,7 +3343,8 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		 */
+ 		if (err < 0) {
+ 			/* If device is not registered at all, free it now */
+-			if (dev->reg_state == NETREG_UNINITIALIZED)
++			if (dev->reg_state == NETREG_UNINITIALIZED ||
++			    dev->reg_state == NETREG_UNREGISTERED)
+ 				free_netdev(dev);
+ 			goto out;
+ 		}
+-- 
+2.17.1
+
