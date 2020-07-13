@@ -2,105 +2,245 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081F1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC152065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ATDuV7yh"
+	by mail.kernel.org (Postfix) with ESMTP id D373C2137B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594681297;
+	bh=pGmE3zM4bDPwR1JlwQTRegBHIlBycLVI0HoxuE+FlRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QGV4VADHJqXa0mtfhMbuglalS/zdmCS55m3CxE2fv23Yn0HjRJOiCtGWHP27NAtsC
+	 /mNTLLGHaXX3MMUsIQW8Yx0aeel6vzIEIvCxDUu+qEqgZlpwCtd/d/rMHuSzX1HbmK
+	 0WqpWxW56sxfrD4oVSy/W7EjwZjq6QM0GxAaDPRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGMW6r (ORCPT
+        id S1726786AbgGMXBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGMW6q (ORCPT
+        Mon, 13 Jul 2020 19:01:36 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35525 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgGMXBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:58:46 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFF8C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:58:46 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 1so6690113pfn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CMa3nnO5KaoJ4bHARK9iJcAUNODTUZQxMuVvwY7m8WI=;
-        b=ATDuV7yhLeocSSqXWB9OVSb61s6+cSY09CNr7jW6WVE/r8f1DZmAahLb8wVmPIDis8
-         j0kB16+b3h5Cuo9E5Dfv2H7pUp3pc2Q5jgYzRokro3I7Q+h/hSJXAei8aX5eEajffzcN
-         MFL+hktCdglOsECO+Ez2Ujb5Puwz09elYYadmXImhag41nldn/dAIq8MWD1m+LEXoZH+
-         G9yTpnTftpvdHp9Q/CWoLqJQRvaAJ+AZXSiDy46y+GDfq6g+PFEE+RneViBTYt2LJgqH
-         wLqymBcMxmKVJ0lBJhYMuihIyUUZeylK0EwVUocG2LMlhQ++JJj5mWOGwB/DKM7UQ/6w
-         q3jQ==
+        Mon, 13 Jul 2020 19:01:35 -0400
+Received: by mail-io1-f65.google.com with SMTP id v8so15347354iox.2;
+        Mon, 13 Jul 2020 16:01:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CMa3nnO5KaoJ4bHARK9iJcAUNODTUZQxMuVvwY7m8WI=;
-        b=QDmKI1l9r3JcSZLZ2pjxATba0RPzx9NweOlkbSqySkYcmLnS+wZUDgJXHV+OhItVHF
-         CH3wM3M6DJFe+woS1gfxYq7GSD1xxuuZFrQsRrnkL1IBpsvLSbHypNqKvK4APF7Bpniy
-         6I7TFnRMIQ+EhM5DjIeBmXRLdFzkiRiYV/JE8GGAAGwrxareLlVl0Yvq/2cRfZsPmDnc
-         mRjHErj4uhtbWWsvzDzy7y+qnuc8HJWPAtL7AK+z4ONnCoUYxswAk9NbHN4IR7QS3+zw
-         3B7F255Bs0nDaNHHswq9f+yBNjsc+SHPcQ+Q6eiXXycPi0W867wHIH/fo+IcztSNjNmI
-         /+Vg==
-X-Gm-Message-State: AOAM533DpODsvQ6Av3fm853EjQLGC3sxpAq9ounWgsPDIk4S7lPF5Cbe
-        6a0IL9/Z4gpU/GDXl1K6bFAsAXGYD/wInj7Is4q/eg==
-X-Google-Smtp-Source: ABdhPJyL6NMed/UdNI+6KTXlhAZYdUc1Fxbl4nD0DjU8gBhC53KAnMMSzttjgPpg6NowA4RmITPbag6nI28LT482vrU=
-X-Received: by 2002:a63:a119:: with SMTP id b25mr1118617pgf.10.1594681125577;
- Mon, 13 Jul 2020 15:58:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rEM2k8uDu6wNpoJYOHurqvj/7if6gaGt94wx89r0Kh8=;
+        b=lAfKnpXEr3WfP+2wUNJVEDLzJub/bHUvv0Je9YsEHrPxwya2zi0IogKtuku1QLKXi1
+         ylL7w41LuWc1V8mKPTAF7e3iW1nukwX4mFdoUApyjv8taNbtyi/t1Xsi15F0UCprhfm3
+         ZA0D1zrASo8xqL2bbkiHjocb1iuIMOprQammmmaI8PP9YeuhSgWpzYjPSzOovvRCXM63
+         RRWfNIVjkBq0cZoH8O4mEwtSSzaNJhKRVVQYowAb1NTJnDiRbh7TSXKqfjOTgo4tgKOC
+         otOs93e6w/6rdNrieWCS3gNNjWtpVSy1a2boJ2kl8G0KCjLO89p+npUMiutSj6+Ivkq/
+         DF9Q==
+X-Gm-Message-State: AOAM5315V8GkLoWxVs1uEX8J0YUvN1ZQI70xaVcntK+pJH0RJliIdp3n
+        bpfHnrOzDRHpkDm/Li9/uHiFDDu5Ym1G
+X-Google-Smtp-Source: ABdhPJzitorPXcF0bFX7xRNpmgTS4ftYPc0PfK6f0HOeq7fu4Bmtfs4az6Nwch3uwiUL5xTcLGCWcA==
+X-Received: by 2002:a05:6602:2fd5:: with SMTP id v21mr2073969iow.41.1594681293949;
+        Mon, 13 Jul 2020 16:01:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t1sm8482566iob.16.2020.07.13.16.01.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 16:01:33 -0700 (PDT)
+Received: (nullmailer pid 883186 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:01:29 -0000
+Date:   Mon, 13 Jul 2020 17:01:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
+        bage@linutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+Subject: Re: [PATCH v3 03/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl
+ bindings
+Message-ID: <20200713230129.GA875173@bogus>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-4-frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
- <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
- <CAKwvOdmGtZtqF5f-5x0n4GNCWLOnrk2r6e3X2XHGmoOL7f7u0g@mail.gmail.com> <CAHk-=winDAeDTAe33QVoRvTJELMDjQpYPqSPcNwSk+SwPrav=g@mail.gmail.com>
-In-Reply-To: <CAHk-=winDAeDTAe33QVoRvTJELMDjQpYPqSPcNwSk+SwPrav=g@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 13 Jul 2020 15:58:33 -0700
-Message-ID: <CAKwvOdmsap8iB+H5JXiHYwSJFrtQ_krjNH7eQCGe7p-LjK7ftA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] x86: Clean up percpu operations
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Alistair Delva <adelva@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708071942.22595-4-frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 3:40 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Jul 13, 2020 at 3:24 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > Otherwise, is there any additional feedback on this series or is it good to go?
->
-> I've lost sight of the series. I'm sure it is fine, but maybe you can
-> resend it to me (in private, if it's already been going out on the
-> mailing lists and everybody else is completely fed up with it).
+On Wed, Jul 08, 2020 at 03:19:29PM +0800, Frank Lee wrote:
+> Add device tree binding Documentation details for A100 pinctrl driver,
+> whic has an r pin controller and a pin controller with more irq lines.
 
-Is there a fast way that maintainters amend ACKs to each commit in a series?
+s/whic/which/
 
->
-> And no, pointing to the "plus this hunk" with a web link isn't what I
-> was looking for ;)
+'an r pin controller'?
 
-So you're not accepting pull requests yet on github? I jest.
--- 
-Thanks,
-~Nick Desaulniers
+> 
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml       | 74 +++++++++++++---------
+>  1 file changed, 44 insertions(+), 30 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> index bfefd09..226aba0 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> @@ -48,6 +48,8 @@ properties:
+>        - allwinner,sun9i-a80-r-pinctrl
+>        - allwinner,sun50i-a64-pinctrl
+>        - allwinner,sun50i-a64-r-pinctrl
+> +      - allwinner,sun50i-a100-pinctrl
+> +      - allwinner,sun50i-a100-r-pinctrl
+>        - allwinner,sun50i-h5-pinctrl
+>        - allwinner,sun50i-h6-pinctrl
+>        - allwinner,sun50i-h6-r-pinctrl
+> @@ -59,7 +61,7 @@ properties:
+>  
+>    interrupts:
+>      minItems: 1
+> -    maxItems: 5
+> +    maxItems: 7
+>      description:
+>        One interrupt per external interrupt bank supported on the
+>        controller, sorted by bank number ascending order.
+> @@ -144,75 +146,87 @@ allOf:
+>    # FIXME: We should have the pin bank supplies here, but not a lot of
+>    # boards are defining it at the moment so it would generate a lot of
+>    # warnings.
+> -
+>    - if:
+>        properties:
+>          compatible:
+>            enum:
+> -            - allwinner,sun9i-a80-pinctrl
+> +            - allwinner,sun50i-a100-pinctrl
+>  
+>      then:
+>        properties:
+>          interrupts:
+> -          minItems: 5
+> -          maxItems: 5
+> +          minItems: 7
+> +          maxItems: 7
+>  
+>      else:
+>        if:
+
+This diff is hard to follow. Rather than a continual nesting of 'else' 
+clauses, just make each 'if' a new entry under 'allOf' and get rid of 
+the else. Perhaps do that in a separate patch first, then this change 
+will be easier to review.
+
+>          properties:
+>            compatible:
+>              enum:
+> -              - allwinner,sun6i-a31-pinctrl
+> -              - allwinner,sun6i-a31s-pinctrl
+> -              - allwinner,sun50i-h6-pinctrl
+> +              - allwinner,sun9i-a80-pinctrl
+>  
+>        then:
+>          properties:
+>            interrupts:
+> -            minItems: 4
+> -            maxItems: 4
+> +            minItems: 5
+> +            maxItems: 5
+>  
+>        else:
+>          if:
+>            properties:
+>              compatible:
+>                enum:
+> -                - allwinner,sun8i-a23-pinctrl
+> -                - allwinner,sun8i-a83t-pinctrl
+> -                - allwinner,sun50i-a64-pinctrl
+> -                - allwinner,sun50i-h5-pinctrl
+> -                - allwinner,suniv-f1c100s-pinctrl
+> +                - allwinner,sun6i-a31-pinctrl
+> +                - allwinner,sun6i-a31s-pinctrl
+> +                - allwinner,sun50i-h6-pinctrl
+>  
+>          then:
+>            properties:
+>              interrupts:
+> -              minItems: 3
+> -              maxItems: 3
+> +              minItems: 4
+> +              maxItems: 4
+>  
+>          else:
+>            if:
+>              properties:
+>                compatible:
+>                  enum:
+> -                  - allwinner,sun6i-a31-r-pinctrl
+> -                  - allwinner,sun8i-a33-pinctrl
+> -                  - allwinner,sun8i-h3-pinctrl
+> -                  - allwinner,sun8i-v3-pinctrl
+> -                  - allwinner,sun8i-v3s-pinctrl
+> -                  - allwinner,sun9i-a80-r-pinctrl
+> -                  - allwinner,sun50i-h6-r-pinctrl
+> +                  - allwinner,sun8i-a23-pinctrl
+> +                  - allwinner,sun8i-a83t-pinctrl
+> +                  - allwinner,sun50i-a64-pinctrl
+> +                  - allwinner,sun50i-h5-pinctrl
+> +                  - allwinner,suniv-f1c100s-pinctrl
+>  
+>            then:
+>              properties:
+>                interrupts:
+> -                minItems: 2
+> -                maxItems: 2
+> +                minItems: 3
+> +                maxItems: 3
+>  
+>            else:
+> -            properties:
+> -              interrupts:
+> -                minItems: 1
+> -                maxItems: 1
+> +            if:
+> +              properties:
+> +                compatible:
+> +                  enum:
+> +                    - allwinner,sun6i-a31-r-pinctrl
+> +                    - allwinner,sun8i-a33-pinctrl
+> +                    - allwinner,sun8i-h3-pinctrl
+> +                    - allwinner,sun8i-v3-pinctrl
+> +                    - allwinner,sun8i-v3s-pinctrl
+> +                    - allwinner,sun9i-a80-r-pinctrl
+> +                    - allwinner,sun50i-h6-r-pinctrl
+> +
+> +            then:
+> +              properties:
+> +                interrupts:
+> +                  minItems: 2
+> +                  maxItems: 2
+> +
+> +            else:
+> +              properties:
+> +                interrupts:
+> +                  minItems: 1
+> +                  maxItems: 1
+>  
+>  additionalProperties: false
+>  
+> -- 
+> 1.9.1
+> 
