@@ -2,160 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E54C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52DA1206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KIkhB1X7"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC8B2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594647329;
+	bh=/wWVErS8bBU0BhjE2vfVnNzcXafBwMZc5v+u2jYiyxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D+vEhwo+VJAsS9HuQ1uKfjj84hIDy2vd8A2cGi0wyEc1pCX/L1HVYlJ6pJnA5pVKM
+	 8S8b7jea35u5i9lrqZtMUHy0hvvSSWdwTEGhclH9YZb9omlb432hY3DUU7CUp3DkQc
+	 /N1VjljeeguFBLE2d4V/67+KbY23b2q41zGD2Tw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgGMNer (ORCPT
+        id S1729905AbgGMNf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:34:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47312 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729805AbgGMNeq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:34:46 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DDIU8K004504;
-        Mon, 13 Jul 2020 08:18:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594646310;
-        bh=1f8QGphM1gDJrV+uk7tlCewgRrYPd1fn7gpp9JJzAS0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KIkhB1X7dcl7x9LcoRqn8toc2ycDYj5+Kbfg7XSFguYO72MNSNFsOTt0DESx50jzK
-         IZ+bPWfgNb/w7+2nLFei4sw2DquMXM07mHRTyvvozMUmiDkPnXYe5fNZ+e46JhvQbA
-         e94pp2YCJD0t3jsipuh06z1KIqkgH0p/MdzV4jb0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DDIUdO042001
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 08:18:30 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 08:18:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 08:18:29 -0500
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DDIOXq015417;
-        Mon, 13 Jul 2020 08:18:28 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
-Subject: [PATCHv3 2/4] watchdog: add support for adjusting last known HW keepalive time
-Date:   Mon, 13 Jul 2020 16:18:16 +0300
-Message-ID: <20200713131818.825-3-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713131818.825-1-t-kristo@ti.com>
-References: <20200713131818.825-1-t-kristo@ti.com>
+        Mon, 13 Jul 2020 09:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729613AbgGMNf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:35:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35EAA2072D;
+        Mon, 13 Jul 2020 13:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594647327;
+        bh=/wWVErS8bBU0BhjE2vfVnNzcXafBwMZc5v+u2jYiyxg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OmuGEAAR4usiwresNCHmUSga3+1CuU80WweZcaHM+yq/FjJE2JTKibfYFw8elRZ6D
+         NKNdru5+VP0A4XNpAwiAh82dyQLZlYT8mik0p90AaqUd9xZrUMQB9LjTXcG4Q02llN
+         Iex0kE//A73LVNRQaFphsMkORjAMfVq+eeg5uabg=
+Date:   Mon, 13 Jul 2020 15:35:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Baidyanath Kundu <kundubaidya99@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] Staging: vc04_services: Fix code indent error
+Message-ID: <20200713133527.GB3122574@kroah.com>
+References: <20200713072224.7648-1-kundubaidya99@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713072224.7648-1-kundubaidya99@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain watchdogs require the watchdog only to be pinged within a
-specific time window, pinging too early or too late cause the watchdog
-to fire. In cases where this sort of watchdog has been started before
-kernel comes up, we must adjust the watchdog keepalive window to match
-the actually running timer, so add a new driver API for this purpose.
+On Mon, Jul 13, 2020 at 12:52:24PM +0530, Baidyanath Kundu wrote:
+> This patch fixes the checkpatch.pl error:
+> 
+> ERROR: code indent should use tabs where possible
+> 
+> Signed-off-by: Baidyanath Kundu <kundubaidya99@gmail.com>
+> ---
+>  .../staging/vc04_services/vchiq-mmal/mmal-vchiq.c  | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> index a075cd63da7f..86c00b68f099 100644
+> --- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> +++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> @@ -294,13 +294,13 @@ static void buffer_to_host_work_cb(struct work_struct *work)
+>  	/* queue the bulk submission */
+>  	vchiq_use_service(instance->service_handle);
+>  	ret = vchiq_bulk_receive(instance->service_handle,
+> -				 msg_context->u.bulk.buffer->buffer,
+> -			         /* Actual receive needs to be a multiple
+> -			          * of 4 bytes
+> -			          */
+> -			         (len + 3) & ~3,
+> -			         msg_context,
+> -			         VCHIQ_BULK_MODE_CALLBACK);
+> +				msg_context->u.bulk.buffer->buffer,
+> +				/* Actual receive needs to be a multiple
+> +				 * of 4 bytes
+> +				 */
+> +				(len + 3) & ~3,
+> +				msg_context,
+> +				VCHIQ_BULK_MODE_CALLBACK);
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- .../watchdog/watchdog-kernel-api.rst          | 12 ++++++++
- drivers/watchdog/watchdog_dev.c               | 30 +++++++++++++++++++
- include/linux/watchdog.h                      |  2 ++
- 3 files changed, 44 insertions(+)
+Close, you need one more space for these lines, right?
 
-diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
-index 068a55ee0d4a..baf44e986b07 100644
---- a/Documentation/watchdog/watchdog-kernel-api.rst
-+++ b/Documentation/watchdog/watchdog-kernel-api.rst
-@@ -336,3 +336,15 @@ an action is taken by a preconfigured pretimeout governor preassigned to
- the watchdog device. If watchdog pretimeout governor framework is not
- enabled, watchdog_notify_pretimeout() prints a notification message to
- the kernel log buffer.
-+
-+To set the last known HW keepalive time for a watchdog, the following function
-+should be used::
-+
-+  int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
-+                                     unsigned int last_ping_ms)
-+
-+This function must be called immediately after watchdog registration. It
-+sets the last known hardware heartbeat to have happened last_ping_ms before
-+current time. Calling this is only needed if the watchdog is already running
-+when probe is called, and the watchdog can only be pinged after the
-+min_hw_heartbeat_ms time has passed from the last ping.
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index bc1cfa288553..e74a0c6811b5 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -1138,6 +1138,36 @@ void watchdog_dev_unregister(struct watchdog_device *wdd)
- 	watchdog_cdev_unregister(wdd);
- }
- 
-+/*
-+ *	watchdog_set_last_hw_keepalive: set last HW keepalive time for watchdog
-+ *	@wdd: watchdog device
-+ *	@last_ping_ms: time since last HW heartbeat
-+ *
-+ *	Adjusts the last known HW keepalive time for a watchdog timer.
-+ *	This is needed if the watchdog is already running when the probe
-+ *	function is called, and it can't be pinged immediately. This
-+ *	function must be called immediately after watchdog registration,
-+ *	and min_hw_heartbeat_ms must be set for this to be useful.
-+ */
-+int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
-+				   unsigned int last_ping_ms)
-+{
-+	struct watchdog_core_data *wd_data;
-+	ktime_t now;
-+
-+	if (!wdd)
-+		return -EINVAL;
-+
-+	wd_data = wdd->wd_data;
-+
-+	now = ktime_get();
-+
-+	wd_data->last_hw_keepalive = ktime_sub(now, ms_to_ktime(last_ping_ms));
-+
-+	return __watchdog_ping(wdd);
-+}
-+EXPORT_SYMBOL_GPL(watchdog_set_last_hw_keepalive);
-+
- /*
-  *	watchdog_dev_init: init dev part of watchdog core
-  *
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 1464ce6ffa31..9b19e6bb68b5 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -210,6 +210,8 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
- extern int watchdog_register_device(struct watchdog_device *);
- extern void watchdog_unregister_device(struct watchdog_device *);
- 
-+int watchdog_set_last_hw_keepalive(struct watchdog_device *, unsigned int);
-+
- /* devres register variant */
- int devm_watchdog_register_device(struct device *dev, struct watchdog_device *);
- 
--- 
-2.17.1
+thanks,
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+greg k-h
