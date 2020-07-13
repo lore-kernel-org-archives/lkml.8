@@ -2,213 +2,126 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97352C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743052075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FDF206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kz1L2isO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgGMOLj (ORCPT
+        id S1729961AbgGMOG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:11:39 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2460 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729792AbgGMOLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:11:35 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id B82FC6C2F24B99080241;
-        Mon, 13 Jul 2020 15:11:33 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.82.58) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 13 Jul 2020 15:11:33 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <lenb@kernel.org>, <tony.luck@intel.com>,
-        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
-Subject: [PATCH v12 1/2] ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
-Date:   Mon, 13 Jul 2020 15:09:00 +0100
-Message-ID: <20200713140901.853-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200713140901.853-1-shiju.jose@huawei.com>
-References: <20200713140901.853-1-shiju.jose@huawei.com>
+        Mon, 13 Jul 2020 10:06:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10119 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbgGMOG6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:06:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c6a750000>; Mon, 13 Jul 2020 07:06:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 07:06:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:06:57 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 14:06:56 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 13 Jul 2020 14:06:57 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0c6a7c0001>; Mon, 13 Jul 2020 07:06:56 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
+        <jonathanh@nvidia.com>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v5 0/4] Add cpufreq driver for Tegra194
+Date:   Mon, 13 Jul 2020 19:36:45 +0530
+Message-ID: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.82.58]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594649205; bh=U4gKmB4y0qNEJQMMMEmw5DHftEyFtcpFURIRDyOumOk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Kz1L2isODkhL7vhii4ky6KnxDsBSmnVexTLc0pN1iEyCi5kOFc0Y7ZRJZKLWsEu9W
+         l2Laqyjlo97zDxK4gDNTU0eiwPNTsAGe2xyXuhUk+KyXFYNGuXlmRSq7m6FRrAQOAN
+         f2w6oTG4/tCB8+q8KBXlj9BcwJobPjPTrtxudKGExSHhJnBk9ysojvHmFkt2B1TyFU
+         TOEfI8RPCYpQvTjl6tjQZVbCQ3GfnigVHzP5t504hDhBciaX8RtTEgWIDjm86pasKF
+         V18pGIDdRpFkHWnDBkJ9y/3d4W7X6bfFd+jCZsm3rxZ8MYxkmPIOE/fkCPn9caOCFl
+         OcO7aqbFrehDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPER records describing a firmware-first error are identified by GUID.
-The ghes driver currently logs, but ignores any unknown CPER records.
-This prevents describing errors that can't be represented by a standard
-entry, that would otherwise allow a driver to recover from an error.
-The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-version 2.8).
+Hi Viresh,
 
-Add a notifier chain for these non-standard/vendor-records. Callers
-must identify their type of records by GUID.
+The patch series adds cpufreq driver for Tegra194 SOC.
+Incorporated the feedback on previous version of patchset.
+Please consider this patch series for merging in 5.9.
 
-Record data is copied to memory from the ghes_estatus_pool to allow
-us to keep it until after the notifier has run.
+Hi Rob,
+Can you please review/ack DT patches (1-2).
 
-Co-developed-by: James Morse <james.morse@arm.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/acpi/apei/ghes.c | 63 ++++++++++++++++++++++++++++++++++++++++
- include/acpi/ghes.h      | 27 +++++++++++++++++
- 2 files changed, 90 insertions(+)
+v4[4] -> v5
+- Don't call destroy_workqueue() if alloc_workqueue() fails[Viresh]
+- Move CONFIG_ARM_TEGRA194_CPUFREQ enabling to soc/tegra/Kconfig[Viresh]
+- Add dependency of 'nvidia,bpmp' on 'compatible' in yaml file[Michal]
+- Fix typo in description causing dt_binding_check bot failure[Rob]
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 81bf71b10d44..99df00f64306 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -79,6 +79,12 @@
- 	((struct acpi_hest_generic_status *)				\
- 	 ((struct ghes_estatus_node *)(estatus_node) + 1))
- 
-+#define GHES_VENDOR_ENTRY_LEN(gdata_len)                               \
-+	(sizeof(struct ghes_vendor_record_entry) + (gdata_len))
-+#define GHES_GDATA_FROM_VENDOR_ENTRY(vendor_entry)                     \
-+	((struct acpi_hest_generic_data *)                              \
-+	((struct ghes_vendor_record_entry *)(vendor_entry) + 1))
-+
- /*
-  *  NMI-like notifications vary by architecture, before the compiler can prune
-  *  unused static functions it needs a value for these enums.
-@@ -123,6 +129,12 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
-+struct ghes_vendor_record_entry {
-+	struct work_struct work;
-+	int error_severity;
-+	char vendor_record[];
-+};
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
- 
-@@ -511,6 +523,56 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
- }
- 
-+static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
-+
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_vendor_record_notifier);
-+
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
-+
-+static void ghes_vendor_record_work_func(struct work_struct *work)
-+{
-+	struct ghes_vendor_record_entry *entry;
-+	struct acpi_hest_generic_data *gdata;
-+	u32 len;
-+
-+	entry = container_of(work, struct ghes_vendor_record_entry, work);
-+	gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+
-+	blocking_notifier_call_chain(&vendor_record_notify_list,
-+				     entry->error_severity, gdata);
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	gen_pool_free(ghes_estatus_pool, (unsigned long)entry, len);
-+}
-+
-+static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					  int sev)
-+{
-+	struct acpi_hest_generic_data *copied_gdata;
-+	struct ghes_vendor_record_entry *entry;
-+	u32 len;
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	entry = (void *)gen_pool_alloc(ghes_estatus_pool, len);
-+	if (!entry)
-+		return;
-+
-+	copied_gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+	memcpy(copied_gdata, gdata, acpi_hest_get_record_size(gdata));
-+	entry->error_severity = sev;
-+
-+	INIT_WORK(&entry->work, ghes_vendor_record_work_func);
-+	schedule_work(&entry->work);
-+}
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -549,6 +611,7 @@ static bool ghes_do_proc(struct ghes *ghes,
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-+			ghes_defer_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 517a5231cc1b..ae0e8847fdd5 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -53,6 +53,33 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
- 
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_vendor_record_notifier - register a notifier for vendor
-+ * records that the kernel would otherwise ignore.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_vendor_record_notifier - unregister the previously
-+ * registered vendor record notifier.
-+ * @nb: pointer to the notifier_block structure of the vendor record handler.
-+ */
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-+{
-+}
-+#endif
-+
- int ghes_estatus_pool_init(int num_ghes);
- 
- /* From drivers/edac/ghes_edac.c */
+v3[3] -> v4
+- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
+- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
+- Remove flush_workqueue from free_resources[Viresh]
+
+v2[2] -> v3
+- Set same policy for all cpus in a cluster[Viresh].
+- Add compatible string for CPU Complex under cpus node[Thierry].
+- Add reference to bpmp node under cpus node[Thierry].
+- Bind cpufreq driver to CPU Complex compatible string[Thierry].
+- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
+
+v1[1] -> v2:
+- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+- Rename opp_table to freq_table [Viresh].
+
+Sumit Gupta (4):
+  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
+  arm64: tegra: Add t194 ccplex compatible and bpmp property
+  cpufreq: Add Tegra194 cpufreq driver
+  soc/tegra: cpufreq: select cpufreq for Tegra194
+
+ Documentation/devicetree/bindings/arm/cpus.yaml |  11 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
+ drivers/cpufreq/Kconfig.arm                     |   6 +
+ drivers/cpufreq/Makefile                        |   1 +
+ drivers/cpufreq/tegra194-cpufreq.c              | 397 ++++++++++++++++++++++++
+ drivers/soc/tegra/Kconfig                       |   1 +
+ 6 files changed, 418 insertions(+)
+ create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+
+[1] https://marc.info/?t=157539452300001&r=1&w=2
+[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
+[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
+[4] https://marc.info/?l=linux-tegra&m=159318640622917&w=2
 -- 
-2.17.1
-
+2.7.4
 
