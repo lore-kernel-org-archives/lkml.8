@@ -2,126 +2,226 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52F4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CFFC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A484E2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sA0I0Ytv"
+	by mail.kernel.org (Postfix) with ESMTP id F0A3E2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgGMFYt (ORCPT
+        id S1728979AbgGMFYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGMFYs (ORCPT
+        Mon, 13 Jul 2020 01:24:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24712 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725804AbgGMFYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:24:53 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06D52NSF180904;
         Mon, 13 Jul 2020 01:24:48 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD59C061794;
-        Sun, 12 Jul 2020 22:24:48 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4sXX4fR0z9sDX;
-        Mon, 13 Jul 2020 15:24:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594617886;
-        bh=JLMrLsEFZFAdmvA4txh24SkbKNk+Xj+qzEtYAUIFtUc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sA0I0YtvSMhmE8SOA7Yh2tCmHmV4g4KpBfqo4rblBVRgNADwvjgCHP4yNibGpBJH+
-         yXOuOqS97P1naQUy56kJvulZOkUG6cpW/AjLsDNDvX4Jvs11IeXRkQWpFVuM2s/XER
-         yNloHjnb9TvY/7bQRxc3BYduxEj2ZTzhpOPLqnrM7Wq2A+j+x2T34TpE+sPIiJNIhG
-         jZbxB2pvqtgO906fwdydFYcGtwr0yRCuotMa2BlrnNXM72VgrMO+JMF2Xw+cYXLCkG
-         CuXrrSxENfm2VBfaV59d6i3I6XrBiSyU+kqdFOAG+S4X/Ksu7iS6V/IXrIW+Ltm6ve
-         RF2Wd+qm2kb3Q==
-Date:   Mon, 13 Jul 2020 15:24:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: linux-next: manual merge of the tty tree with the drm-misc tree
-Message-ID: <20200713152443.12a5449a@canb.auug.org.au>
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32771wj11j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 01:24:47 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D5OkOI014335;
+        Mon, 13 Jul 2020 05:24:46 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 327527stsb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 05:24:46 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06D5Ohdk63832220
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 05:24:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4AAA4C044;
+        Mon, 13 Jul 2020 05:24:43 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F3CB34C050;
+        Mon, 13 Jul 2020 05:24:40 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.102.23.34])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 05:24:40 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
+Subject: [PATCH v6] powerpc/fadump: fix race between pstore write and fadump crash trigger
+Date:   Mon, 13 Jul 2020 10:54:35 +0530
+Message-Id: <20200713052435.183750-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/haWNAIYhOEWfM4Dw6SlggMf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_03:2020-07-10,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/haWNAIYhOEWfM4Dw6SlggMf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When we enter into fadump crash path via system reset we fail to update
+the pstore.
 
-Hi all,
+On the system reset path we first update the pstore then we go for fadump
+crash. But the problem here is when all the CPUs try to get the pstore
+lock to initiate the pstore write, only one CPUs will acquire the lock
+and proceed with the pstore write. Since it in NMI context CPUs that fail
+to get lock do not wait for their turn to write to the pstore and simply
+proceed with the next operation which is fadump crash. One of the CPU who
+proceeded with fadump crash path triggers the crash and does not wait for
+the CPU who gets the pstore lock to complete the pstore update.
 
-Today's linux-next merge of the tty tree got a conflict in:
+Timeline diagram to depicts the sequence of events that leads to an
+unsuccessful pstore update when we hit fadump crash path via system reset.
 
-  drivers/video/fbdev/core/fbcon.c
+                 1    2     3    ...      n   CPU Threads
+                 |    |     |             |
+                 |    |     |             |
+ Reached to   -->|--->|---->| ----------->|
+ system reset    |    |     |             |
+ path            |    |     |             |
+                 |    |     |             |
+ Try to       -->|--->|---->|------------>|
+ acquire the     |    |     |             |
+ pstore lock     |    |     |             |
+                 |    |     |             |
+                 |    |     |             |
+ Got the      -->| +->|     |             |<-+
+ pstore lock     | |  |     |             |  |-->  Didn't get the
+                 | --------------------------+     lock and moving
+                 |    |     |             |        ahead on fadump
+                 |    |     |             |        crash path
+                 |    |     |             |
+  Begins the  -->|    |     |             |
+  process to     |    |     |             |<-- Got the chance to
+  update the     |    |     |             |    trigger the crash
+  pstore         | -> |     |    ... <-   |
+                 | |  |     |         |   |
+                 | |  |     |         |   |<-- Triggers the
+                 | |  |     |         |   |    crash
+                 | |  |     |         |   |      ^
+                 | |  |     |         |   |      |
+  Writing to  -->| |  |     |         |   |      |
+  pstore         | |  |     |         |   |      |
+                   |                  |          |
+       ^           |__________________|          |
+       |               CPU Relax                 |
+       |                                         |
+       +-----------------------------------------+
+                          |
+                          v
+            Race: crash triggered before pstore
+                  update completes
 
-between commit:
+To avoid this race condition a barrier is added on crash_fadump path, it
+prevents the CPU to trigger the crash until all the online CPUs completes
+their task.
 
-  fcf918b96662 ("fbcon: Use array3_size() helper in scr_memcpyw()")
+A barrier is added to make sure all the secondary CPUs hit the
+crash_fadump function before we initiates the crash. A timeout is kept to
+ensure the primary CPU (one who initiates the crash) do not wait for
+secondary CPUs indefinitely.
 
-from the drm-misc tree and commit:
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/kernel/fadump.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-  28bc24fc46f9 ("vc: separate state")
+---
+Chanagelog:
 
-from the tty tree.
+v1 -> v3:
+   - https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-April/208267.html
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+v3 -> v4:
 
---=20
-Cheers,
-Stephen Rothwell
+   - Now the primary CPU (one who triggers dump) waits for all secondary
+     CPUs to enter and then initiates the crash.
 
-diff --cc drivers/video/fbdev/core/fbcon.c
-index af9f5ab96f74,86fe41b1deb8..000000000000
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@@ -676,8 -676,8 +676,8 @@@ static void fbcon_prepare_logo(struct v
-  		q =3D (unsigned short *) (vc->vc_origin +
-  					vc->vc_size_row *
-  					rows);
- -		scr_memcpyw(q, save, logo_lines * new_cols * 2);
- +		scr_memcpyw(q, save, array3_size(logo_lines, new_cols, 2));
-- 		vc->vc_y +=3D logo_lines;
-+ 		vc->state.y +=3D logo_lines;
-  		vc->vc_pos +=3D logo_lines * vc->vc_size_row;
-  		kfree(save);
-  	}
+v4 -> v5:
+    - Fixed a build failure reported by kernel test robot <lkp at intel.com>
+      Now the cpus_in_crash variable is defined outside CONFIG_CMA
+      config option.
 
---Sig_/haWNAIYhOEWfM4Dw6SlggMf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+v5 -> v6
+    - Changed a variable name cpus_in_crash -> cpus_in_fadump.
+---
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 78ab9a6ee6ac..1858896d6809 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -32,11 +32,20 @@
+ #include <asm/fadump-internal.h>
+ #include <asm/setup.h>
+ 
++/*
++ * The CPU who acquired the lock to trigger the fadump crash should
++ * wait for other CPUs to enter.
++ *
++ * The timeout is in milliseconds.
++ */
++#define CRASH_TIMEOUT		500
++
+ static struct fw_dump fw_dump;
+ 
+ static void __init fadump_reserve_crash_area(u64 base);
+ 
+ struct kobject *fadump_kobj;
++static atomic_t cpus_in_fadump;
+ 
+ #ifndef CONFIG_PRESERVE_FA_DUMP
+ static DEFINE_MUTEX(fadump_mutex);
+@@ -668,8 +677,11 @@ early_param("fadump_reserve_mem", early_fadump_reserve_mem);
+ 
+ void crash_fadump(struct pt_regs *regs, const char *str)
+ {
++	unsigned int msecs;
+ 	struct fadump_crash_info_header *fdh = NULL;
+ 	int old_cpu, this_cpu;
++	/* Do not include first CPU */
++	unsigned int ncpus = num_online_cpus() - 1;
+ 
+ 	if (!should_fadump_crash())
+ 		return;
+@@ -685,6 +697,8 @@ void crash_fadump(struct pt_regs *regs, const char *str)
+ 	old_cpu = cmpxchg(&crashing_cpu, -1, this_cpu);
+ 
+ 	if (old_cpu != -1) {
++		atomic_inc(&cpus_in_fadump);
++
+ 		/*
+ 		 * We can't loop here indefinitely. Wait as long as fadump
+ 		 * is in force. If we race with fadump un-registration this
+@@ -708,6 +722,16 @@ void crash_fadump(struct pt_regs *regs, const char *str)
+ 
+ 	fdh->online_mask = *cpu_online_mask;
+ 
++	/*
++	 * If we came in via system reset, wait a while for the secondary
++	 * CPUs to enter.
++	 */
++	if (TRAP(&(fdh->regs)) == 0x100) {
++		msecs = CRASH_TIMEOUT;
++		while ((atomic_read(&cpus_in_fadump) < ncpus) && (--msecs > 0))
++			mdelay(1);
++	}
++
+ 	fw_dump.ops->fadump_trigger(fdh, str);
+ }
+ 
+-- 
+2.25.4
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8L8BsACgkQAVBC80lX
-0GzyDQgAhscNOpxmGNkv4WeNqnKFiLiF64IREaN7Eq/NRR/Pc7wLupLwkb/WUpID
-yxY1NvgGr16W/J5ovPJEN1PnbOTtm/R0WoVp51tYHWD9BFwowrhtxLyX+ukRlSCN
-NE8yC+wH7BzLQJR8uPdonWKdg4kVKf7Yc7cGtYPajJvCHy/Zru+Z7Bi6djmQTx+M
-/G7/+MlVr3945SyWh3LTv+0/koHi4QflMMnSENQrG4n672S1Pk02NuMI2SmYEVTZ
-O56BcypkSGXuSz+Pl7c4ZPsMusponpNNdVa1EXGL1wHO4EMvKhKR/T9D4OkrUYwS
-5VL9bF24IDfGLEmWpM6pL3DLbISRkg==
-=B9WA
------END PGP SIGNATURE-----
-
---Sig_/haWNAIYhOEWfM4Dw6SlggMf--
