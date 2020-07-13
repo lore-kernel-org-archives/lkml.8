@@ -2,60 +2,60 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E676C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706C1206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12444206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgGMRUr (ORCPT
+        id S1730374AbgGMRVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:20:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18292 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729659AbgGMRUq (ORCPT
+        Mon, 13 Jul 2020 13:21:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8078 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729644AbgGMRVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:20:46 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DH2GjJ038119;
-        Mon, 13 Jul 2020 13:20:34 -0400
+        Mon, 13 Jul 2020 13:21:38 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DH2lAT023491;
+        Mon, 13 Jul 2020 13:21:28 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 327tn9hgtu-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3279x8a3qf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 13:20:34 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DHCAus071917;
-        Mon, 13 Jul 2020 13:20:34 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 327tn9hgsu-1
+        Mon, 13 Jul 2020 13:21:28 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DHH5Wp080634;
+        Mon, 13 Jul 2020 13:21:27 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3279x8a3pg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 13:20:34 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DH9Cvg009168;
-        Mon, 13 Jul 2020 17:20:32 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 327527tfaw-1
+        Mon, 13 Jul 2020 13:21:27 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DHLPhM032544;
+        Mon, 13 Jul 2020 17:21:25 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 327527h7sq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 17:20:32 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DHJ7er55705994
+        Mon, 13 Jul 2020 17:21:25 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DHLMV441222536
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 17:19:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57DEB42047;
-        Mon, 13 Jul 2020 17:20:29 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC7BF42045;
-        Mon, 13 Jul 2020 17:20:25 +0000 (GMT)
+        Mon, 13 Jul 2020 17:21:22 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B5D6A404D;
+        Mon, 13 Jul 2020 17:21:22 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DE5EA4040;
+        Mon, 13 Jul 2020 17:21:19 +0000 (GMT)
 Received: from hbathini.in.ibm.com (unknown [9.102.3.11])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jul 2020 17:20:25 +0000 (GMT)
-Subject: [PATCH v3 00/12] ppc64: enable kdump support for kexec_file_load
- syscall
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 17:21:18 +0000 (GMT)
+Subject: [PATCH v3 03/12] powerpc/kexec_file: add helper functions for
+ getting memory ranges
 From:   Hari Bathini <hbathini@linux.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -71,8 +71,10 @@ Cc:     Pingfan Liu <piliu@redhat.com>,
         Eric Biederman <ebiederm@xmission.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Date:   Mon, 13 Jul 2020 22:50:24 +0530
-Message-ID: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
+Date:   Mon, 13 Jul 2020 22:51:18 +0530
+Message-ID: <159466087136.24747.16494497863685481495.stgit@hbathini.in.ibm.com>
+In-Reply-To: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -80,128 +82,496 @@ Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-13_15:2020-07-13,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
- impostorscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
+ phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007130120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series enables kdump support for kexec_file_load system
-call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-code but heavily modified for kernel consumption. There is scope to
-expand purgatory to verify sha256 digest along with other improvements
-in purgatory code. Will deal with those changes in a separate patch
-series later.
+In kexec case, the kernel to be loaded uses the same memory layout as
+the running kernel. So, passing on the DT of the running kernel would
+be good enough.
 
-The first patch adds a weak arch_kexec_locate_mem_hole() function to
-override locate memory hole logic suiting arch needs. There are some
-special regions in ppc64 which should be avoided while loading buffer
-& there are multiple callers to kexec_add_buffer making it complicated
-to maintain range sanity and using generic lookup at the same time.
+But in case of kdump, different memory ranges are needed to manage
+loading the kdump kernel, booting into it and exporting the elfcore
+of the crashing kernel. The ranges are exlude memory ranges, usable
+memory ranges, reserved memory ranges and crash memory ranges.
 
-The second patch marks ppc64 specific code within arch/powerpc/kexec
-and arch/powerpc/purgatory to make the subsequent code changes easy
-to understand.
+Exclude memory ranges specify the list of memory ranges to avoid while
+loading kdump segments. Usable memory ranges list the memory ranges
+that could be used for booting kdump kernel. Reserved memory ranges
+list the memory regions for the loading kernel's reserve map. Crash
+memory ranges list the memory ranges to be exported as the crashing
+kernel's elfcore.
 
-The next patch adds helper function to setup different memory ranges
-needed for loading kdump kernel, booting into it and exporting the
-crashing kernel's elfcore.
+Add helper functions for setting up the above mentioned memory ranges.
+This helpers facilitate in understanding the subsequent changes better
+and make it easy to setup the different memory ranges listed above, as
+and when appropriate.
 
-The fourth patch overrides arch_kexec_locate_mem_hole() function to
-locate memory hole for kdump segments by accounting for the special
-memory regions, referred to as excluded memory ranges, and sets
-kbuf->mem when a suitable memory region is found.
-
-The fifth patch moves walk_drmem_lmbs() out of .init section with
-a few changes to reuse it for setting up kdump kernel's usable memory
-ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
-and set linux,drconf-usable-memory & linux,usable-memory properties
-in order to restrict kdump kernel's memory usage.
-
-The seventh patch adds relocation support for the purgatory. Patch 8
-helps setup the stack for the purgatory. The next patch setups up
-backup region as a segment while loading kdump kernel and teaches
-purgatory to copy it from source to destination.
-
-Patch 10 builds the elfcore header for the running kernel & passes
-the info to kdump kernel via "elfcorehdr=" parameter to export as
-/proc/vmcore file. The next patch sets up the memory reserve map
-for the kexec kernel and also claims kdump support for kdump as
-all the necessary changes are added.
-
-The last patch fixes a lookup issue for `kexec -l -s` case when
-memory is reserved for crashkernel.
-
-Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
-boxes, one with secureboot enabled and a simulator.
-
-v2 -> v3:
-* Fixed TOC pointer calculation for purgatory by using section info
-  that has relocations applied.
-* Fixed arch_kexec_locate_mem_hole() function to fallback to generic
-  kexec_locate_mem_hole() lookup if exclude ranges list is empty.
-* Dropped check for backup_start in trampoline_64.S as purgatory()
-  function takes care of it anyway.
-
-v1 -> v2:
-* Introduced arch_kexec_locate_mem_hole() for override and dropped
-  weak arch_kexec_add_buffer().
-* Addressed warnings reported by lkp.
-* Added patch to address kexec load issue when memory is reserved
-  for crashkernel.
-* Used the appropriate license header for the new files added.
-* Added an option to merge ranges to minimize reallocations while
-  adding memory ranges.
-* Dropped within_crashkernel parameter for add_opal_mem_range() &
-  add_rtas_mem_range() functions as it is not really needed.
-
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+Tested-by: Pingfan Liu <piliu@redhat.com>
 ---
 
-Hari Bathini (12):
-      kexec_file: allow archs to handle special regions while locating memory hole
-      powerpc/kexec_file: mark PPC64 specific code
-      powerpc/kexec_file: add helper functions for getting memory ranges
-      ppc64/kexec_file: avoid stomping memory used by special regions
-      powerpc/drmem: make lmb walk a bit more flexible
-      ppc64/kexec_file: restrict memory usage of kdump kernel
-      ppc64/kexec_file: add support to relocate purgatory
-      ppc64/kexec_file: setup the stack for purgatory
-      ppc64/kexec_file: setup backup region for kdump kernel
-      ppc64/kexec_file: prepare elfcore header for crashing kernel
-      ppc64/kexec_file: add appropriate regions for memory reserve map
-      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+v2 -> v3:
+* Unchanged. Added Tested-by tag from Pingfan.
+
+v1 -> v2:
+* Added an option to merge ranges while sorting to minimize reallocations
+  for memory ranges list.
+* Dropped within_crashkernel option for add_opal_mem_range() &
+  add_rtas_mem_range() as it is not really needed.
 
 
- arch/powerpc/include/asm/crashdump-ppc64.h |   15 
- arch/powerpc/include/asm/drmem.h           |    9 
- arch/powerpc/include/asm/kexec.h           |   35 +
- arch/powerpc/include/asm/kexec_ranges.h    |   18 
- arch/powerpc/include/asm/purgatory.h       |   11 
- arch/powerpc/kernel/prom.c                 |   13 
- arch/powerpc/kexec/Makefile                |    2 
- arch/powerpc/kexec/elf_64.c                |   35 +
- arch/powerpc/kexec/file_load.c             |   78 +
- arch/powerpc/kexec/file_load_64.c          | 1508 ++++++++++++++++++++++++++++
- arch/powerpc/kexec/ranges.c                |  397 +++++++
- arch/powerpc/mm/drmem.c                    |   87 +-
- arch/powerpc/mm/numa.c                     |   13 
- arch/powerpc/purgatory/Makefile            |   28 -
- arch/powerpc/purgatory/purgatory_64.c      |   36 +
- arch/powerpc/purgatory/trampoline.S        |  117 --
- arch/powerpc/purgatory/trampoline_64.S     |  170 +++
- include/linux/kexec.h                      |   29 -
- kernel/kexec_file.c                        |   16 
- 19 files changed, 2407 insertions(+), 210 deletions(-)
- create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ arch/powerpc/include/asm/kexec_ranges.h |   18 +
+ arch/powerpc/kexec/Makefile             |    2 
+ arch/powerpc/kexec/ranges.c             |  397 +++++++++++++++++++++++++++++++
+ 3 files changed, 416 insertions(+), 1 deletion(-)
  create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/include/asm/purgatory.h
- create mode 100644 arch/powerpc/kexec/file_load_64.c
  create mode 100644 arch/powerpc/kexec/ranges.c
- create mode 100644 arch/powerpc/purgatory/purgatory_64.c
- delete mode 100644 arch/powerpc/purgatory/trampoline.S
- create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+
+diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
+new file mode 100644
+index 0000000..799dc40
+--- /dev/null
++++ b/arch/powerpc/include/asm/kexec_ranges.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _ASM_POWERPC_KEXEC_RANGES_H
++#define _ASM_POWERPC_KEXEC_RANGES_H
++
++#define MEM_RANGE_CHUNK_SZ		2048	/* Memory ranges size chunk */
++
++struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
++int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
++int add_tce_mem_ranges(struct crash_mem **mem_ranges);
++int add_initrd_mem_range(struct crash_mem **mem_ranges);
++int add_htab_mem_range(struct crash_mem **mem_ranges);
++int add_kernel_mem_range(struct crash_mem **mem_ranges);
++int add_rtas_mem_range(struct crash_mem **mem_ranges);
++int add_opal_mem_range(struct crash_mem **mem_ranges);
++int add_reserved_ranges(struct crash_mem **mem_ranges);
++void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
++
++#endif /* _ASM_POWERPC_KEXEC_RANGES_H */
+diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
+index 67c3553..4aff684 100644
+--- a/arch/powerpc/kexec/Makefile
++++ b/arch/powerpc/kexec/Makefile
+@@ -7,7 +7,7 @@ obj-y				+= core.o crash.o core_$(BITS).o
+ 
+ obj-$(CONFIG_PPC32)		+= relocate_32.o
+ 
+-obj-$(CONFIG_KEXEC_FILE)	+= file_load.o file_load_$(BITS).o elf_$(BITS).o
++obj-$(CONFIG_KEXEC_FILE)	+= file_load.o ranges.o file_load_$(BITS).o elf_$(BITS).o
+ 
+ ifdef CONFIG_HAVE_IMA_KEXEC
+ ifdef CONFIG_IMA
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+new file mode 100644
+index 0000000..a704819
+--- /dev/null
++++ b/arch/powerpc/kexec/ranges.c
+@@ -0,0 +1,397 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * powerpc code to implement the kexec_file_load syscall
++ *
++ * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
++ * Copyright (C) 2004  IBM Corp.
++ * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
++ * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
++ * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
++ * Copyright (C) 2020  IBM Corporation
++ *
++ * Based on kexec-tools' kexec-ppc64.c, fs2dt.c.
++ * Heavily modified for the kernel by
++ * Hari Bathini <hbathini@linux.ibm.com>.
++ */
++
++#include <linux/kexec.h>
++#include <linux/of_device.h>
++#include <linux/slab.h>
++#include <asm/sections.h>
++#include <asm/kexec_ranges.h>
++
++/**
++ * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
++ *                     could hold, given the size allocated for it.
++ * @size:              Allocation size of crash_mem structure.
++ *
++ * Returns the maximum no. of ranges.
++ */
++static inline unsigned int get_max_nr_ranges(size_t size)
++{
++	return ((size - sizeof(struct crash_mem)) /
++		sizeof(struct crash_mem_range));
++}
++
++/**
++ * get_mem_rngs_size - Get the allocated size of mrngs based on
++ *                     max_nr_ranges and chunk size.
++ * @mrngs:             Memory ranges.
++ *
++ * Returns the maximum no. of ranges.
++ */
++static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
++{
++	size_t size;
++
++	if (!mrngs)
++		return 0;
++
++	size = (sizeof(struct crash_mem) +
++		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
++
++	/*
++	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
++	 * So, align to get the actual length.
++	 */
++	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
++}
++
++/**
++ * __add_mem_range - add a memory range to memory ranges list.
++ * @mem_ranges:      Range list to add the memory range to.
++ * @base:            Base address of the range to add.
++ * @size:            Size of the memory range to add.
++ *
++ * (Re)allocates memory, if needed.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
++{
++	struct crash_mem *mrngs = *mem_ranges;
++
++	if ((mrngs == NULL) || (mrngs->nr_ranges == mrngs->max_nr_ranges)) {
++		mrngs = realloc_mem_ranges(mem_ranges);
++		if (!mrngs)
++			return -ENOMEM;
++	}
++
++	mrngs->ranges[mrngs->nr_ranges].start = base;
++	mrngs->ranges[mrngs->nr_ranges].end = base + size - 1;
++	mrngs->nr_ranges++;
++	return 0;
++}
++
++/**
++ * __merge_memory_ranges - Merges the given memory ranges list.
++ * @mem_ranges:            Range list to merge.
++ *
++ * Assumes a sorted range list.
++ *
++ * Returns nothing.
++ */
++static void __merge_memory_ranges(struct crash_mem *mrngs)
++{
++	struct crash_mem_range *rngs;
++	int i, idx;
++
++	if (!mrngs)
++		return;
++
++	idx = 0;
++	rngs = &mrngs->ranges[0];
++	for (i = 1; i < mrngs->nr_ranges; i++) {
++		if (rngs[i].start <= (rngs[i-1].end + 1))
++			rngs[idx].end = rngs[i].end;
++		else {
++			idx++;
++			if (i == idx)
++				continue;
++
++			rngs[idx] = rngs[i];
++		}
++	}
++	mrngs->nr_ranges = idx + 1;
++}
++
++/**
++ * realloc_mem_ranges - reallocate mem_ranges with size incremented
++ *                      by MEM_RANGE_CHUNK_SZ. Frees up the old memory,
++ *                      if memory allocation fails.
++ * @mem_ranges:         Memory ranges to reallocate.
++ *
++ * Returns pointer to reallocated memory on success, NULL otherwise.
++ */
++struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges)
++{
++	struct crash_mem *mrngs = *mem_ranges;
++	unsigned int nr_ranges;
++	size_t size;
++
++	size = get_mem_rngs_size(mrngs);
++	nr_ranges = mrngs ? mrngs->nr_ranges : 0;
++
++	size += MEM_RANGE_CHUNK_SZ;
++	mrngs = krealloc(*mem_ranges, size, GFP_KERNEL);
++	if (!mrngs) {
++		kfree(*mem_ranges);
++		*mem_ranges = NULL;
++		return NULL;
++	}
++
++	mrngs->nr_ranges = nr_ranges;
++	mrngs->max_nr_ranges = get_max_nr_ranges(size);
++	*mem_ranges = mrngs;
++
++	return mrngs;
++}
++
++/**
++ * add_mem_range - Updates existing memory range, if there is an overlap.
++ *                 Else, adds a new memory range.
++ * @mem_ranges:    Range list to add the memory range to.
++ * @base:          Base address of the range to add.
++ * @size:          Size of the memory range to add.
++ *
++ * (Re)allocates memory, if needed.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
++{
++	struct crash_mem *mrngs = *mem_ranges;
++	u64 mstart, mend, end;
++	unsigned int i;
++
++	if (!size)
++		return 0;
++
++	end = base + size - 1;
++
++	if ((mrngs == NULL) || (mrngs->nr_ranges == 0))
++		return __add_mem_range(mem_ranges, base, size);
++
++	for (i = 0; i < mrngs->nr_ranges; i++) {
++		mstart = mrngs->ranges[i].start;
++		mend = mrngs->ranges[i].end;
++		if (base < mend && end > mstart) {
++			if (base < mstart)
++				mrngs->ranges[i].start = base;
++			if (end > mend)
++				mrngs->ranges[i].end = end;
++			return 0;
++		}
++	}
++
++	return __add_mem_range(mem_ranges, base, size);
++}
++
++/**
++ * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
++ * @mem_ranges:         Range list to add the memory range(s) to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_tce_mem_ranges(struct crash_mem **mem_ranges)
++{
++	struct device_node *dn;
++	int ret;
++
++	for_each_node_by_type(dn, "pci") {
++		u64 base;
++		u32 size;
++
++		ret = of_property_read_u64(dn, "linux,tce-base", &base);
++		ret |= of_property_read_u32(dn, "linux,tce-size", &size);
++		if (!ret)
++			continue;
++
++		ret = add_mem_range(mem_ranges, base, size);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++/**
++ * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
++ *                        if the initrd was retained.
++ * @mem_ranges:           Range list to add the memory range to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_initrd_mem_range(struct crash_mem **mem_ranges)
++{
++	u64 base, end;
++	int ret = 0;
++	char *str;
++
++	/* This range means something only if initrd was retained */
++	str = strstr(saved_command_line, "retain_initrd");
++	if (!str)
++		return 0;
++
++	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
++	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
++	if (!ret)
++		ret = add_mem_range(mem_ranges, base, end - base + 1);
++	return ret;
++}
++
++/**
++ * add_htab_mem_range - Adds htab range to the given memory ranges list,
++ *                      if it exists
++ * @mem_ranges:         Range list to add the memory range to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_htab_mem_range(struct crash_mem **mem_ranges)
++{
++#ifdef CONFIG_PPC_BOOK3S_64
++	int ret;
++
++	if (!htab_address)
++		return 0;
++
++	ret = add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
++	return ret;
++#else
++	return 0;
++#endif
++}
++
++/**
++ * add_kernel_mem_range - Adds kernel text region to the given
++ *                        memory ranges list.
++ * @mem_ranges:           Range list to add the memory range to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_kernel_mem_range(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	ret = add_mem_range(mem_ranges, 0, __pa(_end));
++	return ret;
++}
++
++/**
++ * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
++ * @mem_ranges:         Range list to add the memory range to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_rtas_mem_range(struct crash_mem **mem_ranges)
++{
++	struct device_node *dn;
++	int ret = 0;
++
++	dn = of_find_node_by_path("/rtas");
++	if (dn) {
++		u32 base, size;
++
++		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
++		ret |= of_property_read_u32(dn, "rtas-size", &size);
++		if (ret)
++			return ret;
++
++		ret = add_mem_range(mem_ranges, base, size);
++	}
++	return ret;
++}
++
++/**
++ * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
++ * @mem_ranges:         Range list to add the memory range to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_opal_mem_range(struct crash_mem **mem_ranges)
++{
++	struct device_node *dn;
++	int ret = 0;
++
++	dn = of_find_node_by_path("/ibm,opal");
++	if (dn) {
++		u64 base, size;
++
++		ret = of_property_read_u64(dn, "opal-base-address", &base);
++		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
++		if (ret)
++			return ret;
++
++		ret = add_mem_range(mem_ranges, base, size);
++	}
++	return ret;
++}
++
++/**
++ * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
++ *                       to the given memory ranges list.
++ * @mem_ranges:          Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int add_reserved_ranges(struct crash_mem **mem_ranges)
++{
++	int i, len, ret = 0;
++	const __be32 *prop;
++
++	prop = of_get_property(of_root, "reserved-ranges", &len);
++	if (!prop)
++		return 0;
++
++	/*
++	 * Each reserved range is an (address,size) pair, 2 cells each,
++	 * totalling 4 cells per range.
++	 */
++	for (i = 0; i < len / (sizeof(*prop) * 4); i++) {
++		u64 base, size;
++
++		base = of_read_number(prop + (i * 4) + 0, 2);
++		size = of_read_number(prop + (i * 4) + 2, 2);
++
++		ret = add_mem_range(mem_ranges, base, size);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++/**
++ * sort_memory_ranges - Sorts the given memory ranges list.
++ * @mem_ranges:         Range list to sort.
++ * @merge:              If true, merge the list after sorting.
++ *
++ * Returns nothing.
++ */
++void sort_memory_ranges(struct crash_mem *mrngs, bool merge)
++{
++	struct crash_mem_range *rngs;
++	struct crash_mem_range rng;
++	int i, j, idx;
++
++	if (!mrngs)
++		return;
++
++	/* Sort the ranges in-place */
++	rngs = &mrngs->ranges[0];
++	for (i = 0; i < mrngs->nr_ranges; i++) {
++		idx = i;
++		for (j = (i + 1); j < mrngs->nr_ranges; j++) {
++			if (rngs[idx].start > rngs[j].start)
++				idx = j;
++		}
++		if (idx != i) {
++			rng = rngs[idx];
++			rngs[idx] = rngs[i];
++			rngs[i] = rng;
++		}
++	}
++
++	if (merge)
++		__merge_memory_ranges(mrngs);
++}
 
