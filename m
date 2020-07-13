@@ -2,122 +2,142 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA85EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0651DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EF4206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aEcItKWw"
+	by mail.kernel.org (Postfix) with ESMTP id E376A20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgGMTvz (ORCPT
+        id S1726818AbgGMT5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:51:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51395 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGMTvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:51:55 -0400
-Received: from [IPv6:2601:646:8600:3281:dcc1:f8b3:2766:5f92] ([IPv6:2601:646:8600:3281:dcc1:f8b3:2766:5f92])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06DJpdJE1976736
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 13 Jul 2020 12:51:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06DJpdJE1976736
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020062301; t=1594669902;
-        bh=xsbJbZCdYxgAVLE9/erfYMtoi9stuou0k1pR0NinwvU=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=aEcItKWwPyhV0FS1rLyTeoj17iXzSEJsBZReuYGCs9al2tqbKSm+GMoKIwSXdm94Y
-         U3Bt5JO+5j7sG6/c8CS/uw18vK43k0z8iFs+nD7gnhutfLMXd0aAYiiMQN2tLXzEzC
-         /CoahDO5+K1/8rUTf0ys4gtSpNFvwlESNe7Fyx/sZ9IQhQoRZMxdgfCf4vECfjwfxn
-         BvZrDAgQimYCfMeT6+L45rmV79C2lARAqGYWu/cNUjMM9RcDIuhdgMiOpzPYO75avT
-         9otjsvoASBbOH2BR99Wh1h+E/jpTOVsLMdRyPo0uK4FESZYaDvhMuFjKt07A7KsqNt
-         55ym9cR+HAlMQ==
-Date:   Mon, 13 Jul 2020 12:51:30 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <6a73bb96-1390-ecca-2429-12b71e2aefc2@redhat.com>
-References: <20200712125952.8809-1-trix@redhat.com> <639c8ef5-2755-7172-fbb8-ce45c8637feb@zytor.com> <9af191c2-0f2c-7637-433a-b557a07590ca@redhat.com> <EE11D4F0-8DA4-4030-800E-516423293987@zytor.com> <6a73bb96-1390-ecca-2429-12b71e2aefc2@redhat.com>
+        Mon, 13 Jul 2020 15:57:40 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:41756 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgGMT5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 15:57:39 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 58DA3BC0C2;
+        Mon, 13 Jul 2020 19:57:35 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     shuah@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, ravi.bangoria@linux.ibm.com, broonie@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] selftests: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 21:57:29 +0200
+Message-Id: <20200713195729.37666-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] decompress_bunzip2: fix sizeof type in start_bunzip
-To:     Tom Rix <trix@redhat.com>, alain@knaff.lu
-CC:     linux-kernel@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <D21C36E5-964B-4492-8104-3F56559D30FD@zytor.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On July 13, 2020 12:27:02 PM PDT, Tom Rix <trix@redhat=2Ecom> wrote:
->
->On 7/12/20 3:21 PM, hpa@zytor=2Ecom wrote:
->> On July 12, 2020 8:12:43 AM PDT, Tom Rix <trix@redhat=2Ecom> wrote:
->>> On 7/12/20 6:09 AM, H=2E Peter Anvin wrote:
->>>> On 2020-07-12 05:59, trix@redhat=2Ecom wrote:
->>>>> From: Tom Rix <trix@redhat=2Ecom>
->>>>>
->>>>> clang static analysis flags this error
->>>>>
->>>>> lib/decompress_bunzip2=2Ec:671:13: warning: Result of 'malloc' is
->>> converted
->>>>>   to a pointer of type 'unsigned int', which is incompatible with
->>> sizeof
->>>>>   operand type 'int' [unix=2EMallocSizeof]
->>>>>         bd->dbuf =3D large_malloc(bd->dbufSize * sizeof(int));
->>>>>                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>>
->>>>> Reviewing the bunzip_data structure, the element dbuf is type
->>>>>
->>>>> 	/* Intermediate buffer and its size (in bytes) */
->>>>> 	unsigned int *dbuf, dbufSize;
->>>>>
->>>>> So change the type in sizeof to 'unsigned int'
->>>>>
->>>> You must be kidding=2E
->>>>
->>>> If you want to change it, change it to sizeof(bd->dbuf) instead,
->but
->>> this flag
->>>> is at least in my opinion a total joke=2E For sizeof(int) !=3D
->>> sizeof(unsigned
->>>> int) is beyond bizarre, no matter how stupid the platform=2E
->>> Using the actual type is more correct that using a type of the same
->>> size=2E
->>>
->>> trix
->>>
->>>> 	-hpa
->>>>
->> "More correct?" All it is is more verbose=2E
->>
->> Using the sizeof of the actual object at least adds some actual
->safety=2E
->
->Sorry, I am being pedantic, I mean anything that produces the correct
->assembly is correct=2E But there are different path to being correct=2E=
-=C2=A0
->The path I was suggesting to follow the type of the element/final
->pointer when allocating an memory=2E
->
->large_malloc(bd->dbufSize * sizeof(*bd->dbuf)) would also work
->
->I will respin=2E
->
->trix
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-This isn't Linux style, but in the NASM source I have been migrating to ma=
-cros:
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-nasm_new(ptr);
-nasm_newn(ptr,n);
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-=2E=2E=2E using sizeof() in exactly this manner=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ tools/testing/selftests/futex/include/atomic.h        | 2 +-
+ tools/testing/selftests/futex/include/futextest.h     | 2 +-
+ tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c | 2 +-
+ tools/testing/selftests/vDSO/parse_vdso.c             | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/futex/include/atomic.h b/tools/testing/selftests/futex/include/atomic.h
+index 428bcd921bb5..23703ecfcd68 100644
+--- a/tools/testing/selftests/futex/include/atomic.h
++++ b/tools/testing/selftests/futex/include/atomic.h
+@@ -5,7 +5,7 @@
+  *
+  * DESCRIPTION
+  *      GCC atomic builtin wrappers
+- *      http://gcc.gnu.org/onlinedocs/gcc-4.1.0/gcc/Atomic-Builtins.html
++ *      https://gcc.gnu.org/onlinedocs/gcc-4.1.0/gcc/Atomic-Builtins.html
+  *
+  * AUTHOR
+  *      Darren Hart <dvhart@linux.intel.com>
+diff --git a/tools/testing/selftests/futex/include/futextest.h b/tools/testing/selftests/futex/include/futextest.h
+index ddbcfc9b7bac..2a210c482f7b 100644
+--- a/tools/testing/selftests/futex/include/futextest.h
++++ b/tools/testing/selftests/futex/include/futextest.h
+@@ -211,7 +211,7 @@ futex_cmp_requeue_pi(futex_t *uaddr, futex_t val, futex_t *uaddr2, int nr_wake,
+  * @newval:	The new value to try and assign the futex
+  *
+  * Implement cmpxchg using gcc atomic builtins.
+- * http://gcc.gnu.org/onlinedocs/gcc-4.1.0/gcc/Atomic-Builtins.html
++ * https://gcc.gnu.org/onlinedocs/gcc-4.1.0/gcc/Atomic-Builtins.html
+  *
+  * Return the old futex value.
+  */
+diff --git a/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c b/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
+index c1f324afdbf3..946c52e1f327 100644
+--- a/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
++++ b/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
+@@ -12,7 +12,7 @@
+  * times. Then check the output count from perf is as expected.
+  *
+  * Based on:
+- *   http://ozlabs.org/~anton/junkcode/perf_events_example1.c
++ *   https://ozlabs.org/~anton/junkcode/perf_events_example1.c
+  *
+  * Copyright (C) 2018 Michael Neuling, IBM Corporation.
+  */
+diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
+index 413f75620a35..3413fc00c835 100644
+--- a/tools/testing/selftests/vDSO/parse_vdso.c
++++ b/tools/testing/selftests/vDSO/parse_vdso.c
+@@ -5,7 +5,7 @@
+  * This code is meant to be linked in to various programs that run on Linux.
+  * As such, it is available with as few restrictions as possible.  This file
+  * is licensed under the Creative Commons Zero License, version 1.0,
+- * available at http://creativecommons.org/publicdomain/zero/1.0/legalcode
++ * available at https://creativecommons.org/publicdomain/zero/1.0/legalcode
+  *
+  * The vDSO is a regular ELF DSO that the kernel maps into user space when
+  * it starts a program.  It works equally well in statically and dynamically
+-- 
+2.27.0
+
