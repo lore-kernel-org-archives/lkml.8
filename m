@@ -2,138 +2,131 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976ABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6691EC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761792065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZrupG7ls"
+	by mail.kernel.org (Postfix) with ESMTP id 4F02F205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgGMO2F (ORCPT
+        id S1730100AbgGMO2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:28:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18609 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730072AbgGMO2D (ORCPT
+        Mon, 13 Jul 2020 10:28:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729782AbgGMO2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:28:03 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c6f390000>; Mon, 13 Jul 2020 07:27:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 07:28:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 13 Jul 2020 07:28:02 -0700
-Received: from [10.26.72.101] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 14:27:52 +0000
-Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-To:     Zhenyu Ye <yezhenyu2@huawei.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <20200710094420.517-3-yezhenyu2@huawei.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
-Date:   Mon, 13 Jul 2020 15:27:50 +0100
+        Mon, 13 Jul 2020 10:28:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DE3bC7109961;
+        Mon, 13 Jul 2020 10:28:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 328s0c8tjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 10:28:36 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DE4UES114776;
+        Mon, 13 Jul 2020 10:28:35 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 328s0c8thf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 10:28:35 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DEETXs015468;
+        Mon, 13 Jul 2020 14:28:34 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 327urs9mkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 14:28:34 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DESUi730998968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 14:28:30 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6018A78064;
+        Mon, 13 Jul 2020 14:28:33 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0455D7805C;
+        Mon, 13 Jul 2020 14:28:32 +0000 (GMT)
+Received: from [9.163.41.130] (unknown [9.163.41.130])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 14:28:32 +0000 (GMT)
+Subject: Re: [PATCH 1/2] dt-bindings: leds: pca955x: Add IBM implementation
+ compatible string
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, dmurphy@ti.com,
+        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com
+References: <20200709201220.13736-1-eajames@linux.ibm.com>
+ <20200709201220.13736-2-eajames@linux.ibm.com> <20200711134814.GB6407@amd>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <ad50a2a7-0b06-420e-baa7-dec2787ab30d@linux.ibm.com>
+Date:   Mon, 13 Jul 2020 09:28:32 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200710094420.517-3-yezhenyu2@huawei.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200711134814.GB6407@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594650425; bh=HKOHpLE5QAbthKg1avx0uHfseiNDsGrp0ztSIZ7XjfM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZrupG7lsamJd5qBWDiVu5tanfnOkChiY7EMX9otXKowsejZA/Qj+d97asaCg7R8Vt
-         5RjhO/9DQmvleGFJj9NOcFhX48dyvrryPU9Vte5BqWjLb5aSQxoTmLR1GtIqmlkLDm
-         LKDhzoQU9vFrK6tfVqURsr+W5JueRjnxzJUCvuOhBbXWWGcLyhywRmPFH/8eXPYcyK
-         8mVtpmTLCm+0YlDVaTNLb2ECKb4G26OSRplUFEnTlN5XQOgf+QGkB4Efid+rFXg9L4
-         Ym9ZsQjaMzwAQ0l5XtI8BVo9dnZm024Ihb4H3cb/M7Q7RpABZEjWI+Qk0W6reqK3ys
-         TY6PyGYX+IRAg==
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_11:2020-07-13,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 10/07/2020 10:44, Zhenyu Ye wrote:
-> Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
-> 
-> When cpu supports TLBI feature, the minimum range granularity is
-> decided by 'scale', so we can not flush all pages by one instruction
-> in some cases.
-> 
-> For example, when the pages = 0xe81a, let's start 'scale' from
-> maximum, and find right 'num' for each 'scale':
-> 
-> 1. scale = 3, we can flush no pages because the minimum range is
->    2^(5*3 + 1) = 0x10000.
-> 2. scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
->    flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
->    Remaining pages is 0x1a;
-> 3. scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
->    can be flushed.
-> 4. scale = 0, we flush the remaining 0x1a pages, the num =
->    0x1a/0x2 - 1 = 0xd.
-> 
-> However, in most scenarios, the pages = 1 when flush_tlb_range() is
-> called. Start from scale = 3 or other proper value (such as scale =
-> ilog2(pages)), will incur extra overhead.
-> So increase 'scale' from 0 to maximum, the flush order is exactly
-> opposite to the example.
-> 
-> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+On 7/11/20 8:48 AM, Pavel Machek wrote:
+> Hi!
+>
+>> IBM created an implementation of the PCA9552 on a PIC16F
+>> microcontroller. Document the new compatible string for this device.
+> Is the implementation opensource?
 
 
-After this change I am seeing the following build errors ...
+Hi, no it is not.
 
-/tmp/cckzq3FT.s: Assembler messages:
-/tmp/cckzq3FT.s:854: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:870: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:1095: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:1111: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:1964: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:1980: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:2286: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:2302: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-/tmp/cckzq3FT.s:4833: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-/tmp/cckzq3FT.s:4849: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-/tmp/cckzq3FT.s:5090: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-/tmp/cckzq3FT.s:5106: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-/tmp/cckzq3FT.s:874: Error: attempt to move .org backwards
-/tmp/cckzq3FT.s:1115: Error: attempt to move .org backwards
-/tmp/cckzq3FT.s:1984: Error: attempt to move .org backwards
-/tmp/cckzq3FT.s:2306: Error: attempt to move .org backwards
-/tmp/cckzq3FT.s:4853: Error: attempt to move .org backwards
-/tmp/cckzq3FT.s:5110: Error: attempt to move .org backwards
-scripts/Makefile.build:280: recipe for target 'arch/arm64/mm/hugetlbpage.o' failed
-make[3]: *** [arch/arm64/mm/hugetlbpage.o] Error 1
-scripts/Makefile.build:497: recipe for target 'arch/arm64/mm' failed
-make[2]: *** [arch/arm64/mm] Error 2
 
-Cheers
-Jon
+>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+>> @@ -9,6 +9,7 @@ Required properties:
+>>   	"nxp,pca9550"
+>>   	"nxp,pca9551"
+>>   	"nxp,pca9552"
+>> +	"nxp,pca9552-ibm"
+>>   	"nxp,pca9553"
+> Is it good idea to use nxp prefix for something that is
+> software-defined and not built by nxp?
 
--- 
-nvpublic
+
+Yea I suppose not...
+
+>
+> Would ibm,pca9552 be better, or maybe even sw,pca9552 to indicate that
+> is not real hardware, but software emulation?
+
+
+How about ibm,pca9552-sw? Someone suggested that just adding "sw" could 
+be a problem if another company does the same thing but it isn't compatible.
+
+
+Thanks for taking a look!
+
+Eddie
+
+
+>
+> Best regards,
+> 									Pavel
