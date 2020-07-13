@@ -2,85 +2,105 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E778EC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA78C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCD902075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4622075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594675587;
+	bh=4tUNGMCF5cW3WvYy5Oyj4NnCSXP7PdlHE63oRtm9reA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=eJBEtZIU1T3v7NiXofzFsO1GOykgFCHBVtyws/bqz7H9XUb44Rt6P55gEMYXivdJ7
+	 UfR37XRhYDUcpwdzRDhqRd1Ixv5xtygSVN8Rb4TEvAYEZFWc2HmqpSGxyCd83HQ31v
+	 ukLeo1Z7FLkkB7FQ+VHlJYzbml94Zz/3igRO0h80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGMV03 (ORCPT
+        id S1726660AbgGMV0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:26:29 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63516 "EHLO mga04.intel.com"
+        Mon, 13 Jul 2020 17:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbgGMV02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:26:28 -0400
-IronPort-SDR: y+v7CrR6hX72XtDjVYxSzwN1LklNNeowvNrq9/7wUm48ZlgcvPbmTR8lQMG6ZhgFVlrKa7kArP
- QA+jCz3AJnyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146213709"
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="146213709"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 14:26:28 -0700
-IronPort-SDR: wl6dTmbNOz5n9G3weeYoKBT1IgauYfprPYVf8slN86O+c9kPvftuaseYdwg/g/Gm0/gS+0CdwF
- MBp6gZHTxhSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="285534434"
-Received: from lkp-server02.sh.intel.com (HELO fb03a464a2e3) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 13 Jul 2020 14:26:25 -0700
-Received: from kbuild by fb03a464a2e3 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jv5xw-0000zQ-Cf; Mon, 13 Jul 2020 21:26:24 +0000
-Date:   Tue, 14 Jul 2020 05:25:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     kbuild-all@lists.01.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm@vger.kernel.org
-Subject: [RFC PATCH] iommu/arm-smmu: arm_smmu_setup_identity() can be static
-Message-ID: <20200713212530.GA87620@1f5a2ab6ad98>
-References: <20200709050145.3520931-2-bjorn.andersson@linaro.org>
+        id S1726416AbgGMV0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 17:26:25 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D465B2075D;
+        Mon, 13 Jul 2020 21:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594675584;
+        bh=4tUNGMCF5cW3WvYy5Oyj4NnCSXP7PdlHE63oRtm9reA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=pwBuZmEkWd1xrIcMGIDTl6jVxbApAv1id8vru1Df38dQdn24oGMwpVKoZVTcqQ49l
+         1aDlQegYbMr+7XEjVfkgYxhrzBRosDXvGNoy/vqpqFQpbvyubwjx3+6ETBj5n/Vqw8
+         rSI0e46aiguQXPNYJiday+ZKlQNj/KE6ydiyoSqw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B5DB835226AF; Mon, 13 Jul 2020 14:26:24 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 14:26:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rculist: Fix _list_check_srcu() macro
+Message-ID: <20200713212624.GM9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200713174846.8681-1-madhuparnabhowmik10@gmail.com>
+ <20200713210244.GL9247@paulmck-ThinkPad-P72>
+ <20200713211315.GA19516@madhuparna-HP-Notebook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709050145.3520931-2-bjorn.andersson@linaro.org>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200713211315.GA19516@madhuparna-HP-Notebook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 02:43:16AM +0530, Madhuparna Bhowmik wrote:
+> On Mon, Jul 13, 2020 at 02:02:44PM -0700, Paul E. McKenney wrote:
+> > On Mon, Jul 13, 2020 at 11:18:46PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > 
+> > > This patch fixes the macro _list_check_srcu() for CONFIG_PROVE_RCU_LIST =
+> > > False.
+> > > 
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > Thank you, Madhuparna!  I am folding this into your original, but
+> > with lowercase "true".
+> >
+> I am really sorry and thanks for applying this with the correction.
 
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- arm-smmu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No worries!  Just thought that I should mention it in case there was
+some subtle reason why TRUE was needed in this case.  ;-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 2e27cf9815ab6..fb85e716ae9ac 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1924,7 +1924,7 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 	return 0;
- }
- 
--int arm_smmu_setup_identity(struct arm_smmu_device *smmu)
-+static int arm_smmu_setup_identity(struct arm_smmu_device *smmu)
- {
- 	int i;
- 
+							Thanx, Paul
+
+> > > ---
+> > >  include/linux/rculist.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > > index 516b4feb2682..a435ad62b90b 100644
+> > > --- a/include/linux/rculist.h
+> > > +++ b/include/linux/rculist.h
+> > > @@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+> > >  #define __list_check_rcu(dummy, cond, extra...)				\
+> > >  	({ check_arg_count_one(extra); })
+> > >  
+> > > -#define __list_check_srcu(cond)
+> > > +#define __list_check_srcu(cond)	TRUE
+> > >  #endif
+> > >  
+> > >  /*
+> > > -- 
+> > > 2.17.1
+> > > 
