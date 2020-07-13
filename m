@@ -2,115 +2,83 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD2FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2141C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8BF2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:02:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rr2m+A6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 9254E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594613074;
+	bh=O+jw074gG5NLA3KWbpk115l+I7y00D2c/QoGxkEJctc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eVsJaXUZTORvMg//lZ8+c4d2yn+Dwby3yNi4UBc2iTGBtqF/os3NXTIh0JzimOUYP
+	 188hOlptldRlV966CAC/WVwBInhYwjVUjRk2ldq9zHx/btYrL6xE+IqA9S2NITuUbT
+	 OOZc3CSOvLP498xWbL8GCCJe1W/ni/UdcoBh6k3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgGMECm (ORCPT
+        id S1726867AbgGMEEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 00:02:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37043 "EHLO ozlabs.org"
+        Mon, 13 Jul 2020 00:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgGMECm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 00:02:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725554AbgGMEEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 00:04:32 -0400
+Received: from localhost.localdomain (unknown [42.120.72.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4qjp6mDkz9sR4;
-        Mon, 13 Jul 2020 14:02:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594612959;
-        bh=vWeQzD85atpg+LjMgT4McIZoQRyk/+HkVAXmS4w/2c0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Rr2m+A6YFY7yH7vjsBrmHnpkNQ2Pw/szNrPHXda2KEkIAbCML+ZoPE4Cs/l85Yyh4
-         F4tIdB4UcV5S3rNa9sbeTXB29a+n1uGqn510Za7aMK/h/eIafM32XNggwG/1V5nz/J
-         BoGwmHFbAEjhs1Exrv4g//EY5PJ4FNyD3UM8gvWz5wJhmnrTep54XfdDojC3/HYH5O
-         wtvCg7CXvrxW18YbtC+/0NS0ABznm/LEJsBZCwc195wEcjKL6q+6OmG9fS4HU0HVYF
-         EFxtvV/8HkDdAYgS14yup5Iv0ir3n5/GW1yV3IgBWNjt08KFu3cK7OTll1N0OTLWft
-         TJD4wRChymSxw==
-Date:   Mon, 13 Jul 2020 14:02:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: Re: mmotm 2020-07-09-21-00 uploaded
- (drivers/net/ethernet/mellanox/mlx5/core/en_main.c)
-Message-ID: <20200713140238.72649525@canb.auug.org.au>
-In-Reply-To: <8a6f8902-c36c-b46c-8e6f-05ae612d25ea@infradead.org>
-References: <20200710040047.md-jEb0TK%akpm@linux-foundation.org>
-        <8a6f8902-c36c-b46c-8e6f-05ae612d25ea@infradead.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/a.F=98_FQpFriK6K_UyZ8YF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id F36B72068F;
+        Mon, 13 Jul 2020 04:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594613072;
+        bh=O+jw074gG5NLA3KWbpk115l+I7y00D2c/QoGxkEJctc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZSOc14oG4hnaC9gnGlXBLjLgW1e7oh/AvMg/2wPkCUZzMJGGrShuTD6vsnG3CTxTN
+         UBXEh0zKh2Hqnjy+Wuc6vn/LXAc4YBYbAx6myCXZ4pBdOoIPKelbE8Qw0U6f5uPP3n
+         Y/ZoqpjsdMnEhdfqQ1Mn/MQN74AftungizjGvFi4=
+From:   guoren@kernel.org
+To:     catalin.marinas@arm.com, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH] arm64: Make TSK_STACK_CANARY more accurate defined
+Date:   Mon, 13 Jul 2020 04:03:33 +0000
+Message-Id: <1594613013-13059-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a.F=98_FQpFriK6K_UyZ8YF
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Hi Randy,
+TSK_STACK_CANARY only used in arm64/Makefile with
+CONFIG_STACKPROTECTOR_PER_TASK wrap. So use the same policy in
+asm-offset.c.
 
-On Fri, 10 Jul 2020 10:40:29 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on i386:
->=20
-> In file included from ../drivers/net/ethernet/mellanox/mlx5/core/en_main.=
-c:49:0:
-> ../drivers/net/ethernet/mellanox/mlx5/core/en_accel/en_accel.h: In functi=
-on =E2=80=98mlx5e_accel_sk_get_rxq=E2=80=99:
-> ../drivers/net/ethernet/mellanox/mlx5/core/en_accel/en_accel.h:153:12: er=
-ror: implicit declaration of function =E2=80=98sk_rx_queue_get=E2=80=99; di=
-d you mean =E2=80=98sk_rx_queue_set=E2=80=99? [-Werror=3Dimplicit-function-=
-declaration]
->   int rxq =3D sk_rx_queue_get(sk);
->             ^~~~~~~~~~~~~~~
->             sk_rx_queue_set
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+---
+ arch/arm64/kernel/asm-offsets.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Caused by commit
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 0577e21..37d5d3d 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -39,7 +39,7 @@ int main(void)
+   DEFINE(TSK_TI_SCS_SP,		offsetof(struct task_struct, thread_info.scs_sp));
+ #endif
+   DEFINE(TSK_STACK,		offsetof(struct task_struct, stack));
+-#ifdef CONFIG_STACKPROTECTOR
++#ifdef CONFIG_STACKPROTECTOR_PER_TASK
+   DEFINE(TSK_STACK_CANARY,	offsetof(struct task_struct, stack_canary));
+ #endif
+   BLANK();
+-- 
+2.7.4
 
-  1182f3659357 ("net/mlx5e: kTLS, Add kTLS RX HW offload support")
-
-from the net-next tree.  Presumably CONFIG_XPS is not set.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/a.F=98_FQpFriK6K_UyZ8YF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8L3N4ACgkQAVBC80lX
-0GxeJQf/f6Wyg7WRuxi4cpGEg9Z6M6hlgGSMFlkj3ZiCJ+L9O0HC3d21ZBJm8oOS
-PQBMbSZI8KnWqWIlIW922w82Wz3plpENMPiQZFo7rqAev47OHt/6ICuHLBcVyvVk
-REoOq5rp4cAIVrynBaOpldxRfiA+ympEdq8Mefz3/LYB60FRAoXIHe2G1xbXiv/x
-v9TPVFNef5TOurprjSmv4UkBz2myohPfn5m57Ps9veUrZldgB49eoTUTIOwrLUGz
-alWdiIW5hCAXttqNqnpMhtQJUNLxuR52gIxOBhPgm7f+8J0BT2lqvFtLGLghFVkg
-9VjdxhP5ut4zxxHzMzurJuSAR/XvHA==
-=M9pq
------END PGP SIGNATURE-----
-
---Sig_/a.F=98_FQpFriK6K_UyZ8YF--
