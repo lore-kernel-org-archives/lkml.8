@@ -2,95 +2,80 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C1FC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07342C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F1020738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2EE120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgGMMZo (ORCPT
+        id S1729683AbgGMM0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:25:44 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37296 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729646AbgGMMZo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:25:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w17so9374478otl.4;
-        Mon, 13 Jul 2020 05:25:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ngQqrXWqBxko6JtBE6sOb/BLJIUDqiUQnKCnbuzn+TQ=;
-        b=JmrdkBN7R6wb69xG9d7LwiOaJldc+6ACCT8EkQtjuInnYkV5+2na2UrUSZ70Njjhid
-         SZ5UBT/ApOus7mObz07QpwGXokQDr/FUSNf9Djp0I2yDAW9y96R7AlvSrQE1SjudnYxk
-         VsAckqUC4FQGZPadVaFYVECV2BQFUXFlJV1ZSVm4BlF+cfFSFunGxsy26SSe9zmGT7E7
-         5ia1pxqjYzhgsFtDuebzikCD83RSKwpbpyH7q4CVUkGQ+8Yo5oOW1qopUo3uBz/zH2Ii
-         ejQ1UA6LAcXhvdxv6OGjfyRCCTv0m6kYgwT3RenN9/l7roNdtEqi9zd4Olu4UuHC7rVW
-         c0DA==
-X-Gm-Message-State: AOAM5303Q8xJnky7cHB6QF56aA5aJbRG3qwdLoLFKZ5cmL1Fi5Zpfl0Z
-        AmKpKdOv+dekfrRS/UKKa0xMQxmjIRveNmKO8MM=
-X-Google-Smtp-Source: ABdhPJzZ7jGk83XfCIDNOcc26Jsxe8/Z0kqkWINTZY1+NJCMaRBt957GP2gBQfs3bj7Fb0KscTISiJUWI7W1/V3CD8k=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr65288809otb.107.1594643142951;
- Mon, 13 Jul 2020 05:25:42 -0700 (PDT)
+        Mon, 13 Jul 2020 08:26:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:59566 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729259AbgGMM0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:26:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78D3930E;
+        Mon, 13 Jul 2020 05:26:40 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F05E3F887;
+        Mon, 13 Jul 2020 05:26:38 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 13:26:37 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] uaccess: add force_uaccess_{begin,end} helpers
+Message-ID: <20200713122636.GB51007@lakrids.cambridge.arm.com>
+References: <20200710135706.537715-1-hch@lst.de>
+ <20200710135706.537715-6-hch@lst.de>
 MIME-Version: 1.0
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594230511-24790-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jul 2020 14:25:32 +0200
-Message-ID: <CAMuHMdXw-rgKJUCz-eoqEQJbRuwdRfyrZj+Ot=Zrg6e4_9cWLg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: Add HiHope RZ/G2H sub board support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710135706.537715-6-hch@lst.de>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 7:49 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> The HiHope RZ/G2H sub board sits below the HiHope RZ/G2H main board.
-> These boards are identical with the ones for RZ/G2M[N].
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, Jul 10, 2020 at 03:57:05PM +0200, Christoph Hellwig wrote:
+> Add helpers to wraper the get_fs/set_fs magic for undoing any damange
+> done by set_fs(KERNEL_DS).  There is no real functional benefit, but this
+> documents the intent of these calls better, and will allow stubbing the
+> functions out easily for kernels builds that do not allow address space
+> overrides in the future.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm64/kernel/sdei.c         |  2 +-
+>  arch/m68k/include/asm/tlbflush.h | 12 ++++++------
+>  arch/mips/kernel/unaligned.c     | 27 +++++++++++++--------------
+>  arch/nds32/mm/alignment.c        |  7 +++----
+>  arch/sh/kernel/traps_32.c        | 18 ++++++++----------
+>  drivers/firmware/arm_sdei.c      |  5 ++---
+>  include/linux/uaccess.h          | 18 ++++++++++++++++++
+>  kernel/events/callchain.c        |  5 ++---
+>  kernel/events/core.c             |  5 ++---
+>  kernel/kthread.c                 |  5 ++---
+>  kernel/stacktrace.c              |  5 ++---
+>  mm/maccess.c                     | 22 ++++++++++------------
+>  12 files changed, 69 insertions(+), 62 deletions(-)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+The perf core and arm64/sdei bits look sound. FWIW:
 
-Gr{oetje,eeting}s,
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Mark.
