@@ -2,254 +2,138 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E338C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1384C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A689206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906EE2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZu0j+Oe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFumKTxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbgGMQeM (ORCPT
+        id S1730490AbgGMQeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:34:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34606 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729764AbgGMQeL (ORCPT
+        Mon, 13 Jul 2020 12:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730098AbgGMQeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:34:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594658049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lf5rjM3anbmEp+kGNpjumlt4jhnWFjEVtbFDwzCTHok=;
-        b=fZu0j+OeCi1Taiyl66aMddSmdv3Wj/BX1XPsJwV9eyq3yR1dpcHUfPv21A3SDQNKVcbsJm
-        1oTTP6G3tB/sZXtyS3p6MAsF1F1isA8LuHuipdCmmb8zrhTgO2sQ49H2ISbJa5CT9aOQh1
-        WKBEzhl3q9OQeZghHAqYqVUoHoyjsh0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-uEmelj5vOq2Y9IVLSz-tIQ-1; Mon, 13 Jul 2020 12:34:07 -0400
-X-MC-Unique: uEmelj5vOq2Y9IVLSz-tIQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0E1710059B5;
-        Mon, 13 Jul 2020 16:34:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E79BC19D7D;
-        Mon, 13 Jul 2020 16:33:59 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 18/32] cachefiles: Merge object->backer into object->dentry
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:33:59 +0100
-Message-ID: <159465803914.1376674.8451362224962725376.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
-References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Mon, 13 Jul 2020 12:34:20 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB8FC061755;
+        Mon, 13 Jul 2020 09:34:20 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g20so14250772edm.4;
+        Mon, 13 Jul 2020 09:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V6b1O4MyWF2YQ9VWkwh6P/hFU91Nmi+FIyFbjRLkhJI=;
+        b=cFumKTxl7VcmaHbAmDbBuCFeyS5aaYGlic1hGm6OQg2qB3yegdxJsgVF0Od3kh35LV
+         SHFqfesglpBzFaNn6nxDG1W75nr6xkpXL/IBk5XRCppee6h1j6w7w+I3gcp2BiHlZqtD
+         h5qHVPpH6TN63txgza3zdYKERIwME3ryejipcwnPQ3RuVJrktXl32qr03GMqf6cxoIdo
+         B+6j1DKD6rcmpzv75ZIMO09KLU3m2PFGg7GUN5zPRlp0VinPJrLE6RKKjh/ELGR5c0Mn
+         8eM5aPDoBHuhT1s6k/8pciqXW/+VrFUjpF1j0mEAHJa2PhNeA2C1aVClOjo/jGxU64m3
+         iMow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V6b1O4MyWF2YQ9VWkwh6P/hFU91Nmi+FIyFbjRLkhJI=;
+        b=RdUms0Bgslslpqw7OxNFmFUyUc/SJks2EC+9NjHXHzoXWKwvSqwdZBcL0iUuN/yzVu
+         /CI/s+G0cSbjeMSaN2TDty0P0jGphTsi4z+n+r65fdBh7v8nYcini+FEicTLyePU6y9d
+         f3QgX55tsjDCTwz+WEY+Mq9yeIUfepawWC0QXLkuoTOWqqt9Ng/USw4xPQ42Q7Zbhjsh
+         mg3fdIpEzRv1D4OAOQg3/nCbRUGbr8qLU5bjVApgDOgloOQUoEw8RkvajOalKYDYi2+F
+         E2m3mjuzRwAEGEYD/6Icn8nPJC0D6E17c/YK1fxQ644iCqH9Jias0ZHUazVTYiHsEyZf
+         wMvw==
+X-Gm-Message-State: AOAM53324OJKTkzfi/QNVHdWD1R9WBHnEudFQkGyOFm5L2jzvHoA4/79
+        HpPkp4kk91g8s+Ks6AcSfIE=
+X-Google-Smtp-Source: ABdhPJyyyZn1l+Y7K+tZsJbus/U2Qm7dTtd/iJwlnnpbKEDamQ3eqqvII8Uhw9ahUjrQQi0gZ1800A==
+X-Received: by 2002:aa7:cf94:: with SMTP id z20mr283749edx.82.1594658059250;
+        Mon, 13 Jul 2020 09:34:19 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id yj16sm9653772ejb.122.2020.07.13.09.34.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 09:34:18 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 19:34:16 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
+ ability constants
+Message-ID: <20200713163416.3fegjdbrp6ccoqdm@skbuf>
+References: <20200709213526.21972-1-michael@walle.cc>
+ <20200709213526.21972-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709213526.21972-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the object->backer pointer into the object->dentry pointer and assume
-that data objects are always going to be just regular files.
+On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
+> The constants are taken from the USXGMII Singleport Copper Interface
+> specification. The naming are based on the SGMII ones, but with an MDIO_
+> prefix.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
 
-object->dentry can then more easily be overridden later by invalidation
-without having two different things to update the xattrs on.
+Somebody would need to review this patch, as it is introducing UAPI.
 
-object->old maintains a pointer to the old file so that we can unlink the
-it later.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/cachefiles/interface.c |   35 +++++++++++++++++------------------
- fs/cachefiles/internal.h  |    2 +-
- fs/cachefiles/io.c        |    4 ++--
- fs/cachefiles/namei.c     |    4 +++-
- 4 files changed, 23 insertions(+), 22 deletions(-)
-
-diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
-index 4ce7ab5c75db..6384fba652eb 100644
---- a/fs/cachefiles/interface.c
-+++ b/fs/cachefiles/interface.c
-@@ -171,16 +171,16 @@ static void cachefiles_update_object(struct fscache_object *_object)
- 	cachefiles_begin_secure(cache, &saved_cred);
- 
- 	object_size = object->fscache.cookie->object_size;
--	if (i_size_read(d_inode(object->backer)) > object_size) {
-+	if (i_size_read(d_inode(object->dentry)) > object_size) {
- 		struct path path = {
- 			.mnt	= cache->mnt,
--			.dentry	= object->backer
-+			.dentry	= object->dentry
- 		};
--		_debug("trunc %llx -> %llx", i_size_read(d_inode(object->backer)), object_size);
-+		_debug("trunc %llx -> %llx", i_size_read(d_inode(object->dentry)), object_size);
- 		ret = vfs_truncate(&path, object_size);
- 		if (ret < 0) {
- 			cachefiles_io_error_obj(object, "Trunc-to-size failed");
--			cachefiles_remove_object_xattr(cache, object->backer);
-+			cachefiles_remove_object_xattr(cache, object->dentry);
- 			goto out;
- 		}
- 	}
-@@ -219,9 +219,8 @@ static void cachefiles_clean_up_object(struct cachefiles_object *object,
- 		fput(object->backing_file);
- 	object->backing_file = NULL;
- 
--	if (object->backer != object->dentry)
--		dput(object->backer);
--	object->backer = NULL;
-+	dput(object->old);
-+	object->old = NULL;
- 
- 	cachefiles_unmark_inode_in_use(object, object->dentry);
- 	dput(object->dentry);
-@@ -295,7 +294,7 @@ static void cachefiles_put_object(struct fscache_object *_object,
- 	if (u == 0) {
- 		_debug("- kill object OBJ%x", object->fscache.debug_id);
- 
--		ASSERTCMP(object->backer, ==, NULL);
-+		ASSERTCMP(object->old, ==, NULL);
- 		ASSERTCMP(object->dentry, ==, NULL);
- 		ASSERTCMP(object->fscache.n_children, ==, 0);
- 
-@@ -360,17 +359,17 @@ static int cachefiles_attr_changed(struct cachefiles_object *object)
- 	if (ni_size == object->i_size)
- 		return 0;
- 
--	if (!object->backer)
-+	if (!object->dentry)
- 		return -ENOBUFS;
- 
--	ASSERT(d_is_reg(object->backer));
-+	ASSERT(d_is_reg(object->dentry));
- 
--	oi_size = i_size_read(d_backing_inode(object->backer));
-+	oi_size = i_size_read(d_backing_inode(object->dentry));
- 	if (oi_size == ni_size)
- 		return 0;
- 
- 	cachefiles_begin_secure(cache, &saved_cred);
--	inode_lock(d_inode(object->backer));
-+	inode_lock(d_inode(object->dentry));
- 
- 	/* if there's an extension to a partial page at the end of the backing
- 	 * file, we need to discard the partial page so that we pick up new
-@@ -379,17 +378,17 @@ static int cachefiles_attr_changed(struct cachefiles_object *object)
- 		_debug("discard tail %llx", oi_size);
- 		newattrs.ia_valid = ATTR_SIZE;
- 		newattrs.ia_size = oi_size & PAGE_MASK;
--		ret = notify_change(object->backer, &newattrs, NULL);
-+		ret = notify_change(object->dentry, &newattrs, NULL);
- 		if (ret < 0)
- 			goto truncate_failed;
- 	}
- 
- 	newattrs.ia_valid = ATTR_SIZE;
- 	newattrs.ia_size = ni_size;
--	ret = notify_change(object->backer, &newattrs, NULL);
-+	ret = notify_change(object->dentry, &newattrs, NULL);
- 
- truncate_failed:
--	inode_unlock(d_inode(object->backer));
-+	inode_unlock(d_inode(object->dentry));
- 	cachefiles_end_secure(cache, saved_cred);
- 
- 	if (ret == -EIO) {
-@@ -422,10 +421,10 @@ static void cachefiles_invalidate_object(struct fscache_object *_object)
- 	_enter("{OBJ%x},[%llu]",
- 	       object->fscache.debug_id, (unsigned long long)ni_size);
- 
--	if (object->backer) {
--		ASSERT(d_is_reg(object->backer));
-+	if (object->dentry) {
-+		ASSERT(d_is_reg(object->dentry));
- 
--		path.dentry = object->backer;
-+		path.dentry = object->dentry;
- 		path.mnt = cache->mnt;
- 
- 		cachefiles_begin_secure(cache, &saved_cred);
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index b82e7f8b00bd..a00ffb63baf4 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -35,7 +35,7 @@ extern unsigned cachefiles_debug;
- struct cachefiles_object {
- 	struct fscache_object		fscache;	/* fscache handle */
- 	struct dentry			*dentry;	/* the file/dir representing this object */
--	struct dentry			*backer;	/* backing file */
-+	struct dentry			*old;		/* backing file */
- 	struct file			*backing_file;	/* File open on backing storage */
- 	loff_t				i_size;		/* object size */
- 	atomic_t			usage;		/* object usage count */
-diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-index 89fd4a24e613..d17734455af2 100644
---- a/fs/cachefiles/io.c
-+++ b/fs/cachefiles/io.c
-@@ -59,11 +59,11 @@ bool cachefiles_open_object(struct cachefiles_object *object)
- 	struct path path;
- 
- 	path.mnt = cache->mnt;
--	path.dentry = object->backer;
-+	path.dentry = object->dentry;
- 
- 	file = open_with_fake_path(&path,
- 				   O_RDWR | O_LARGEFILE | O_DIRECT,
--				   d_backing_inode(object->backer),
-+				   d_backing_inode(object->dentry),
- 				   cache->cache_cred);
- 	if (IS_ERR(file))
- 		goto error;
-diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-index d9c9a7d7eb8a..3dc64ae5dde8 100644
---- a/fs/cachefiles/namei.c
-+++ b/fs/cachefiles/namei.c
-@@ -488,7 +488,7 @@ bool cachefiles_walk_to_object(struct cachefiles_object *parent,
- 				goto check_error;
- 			}
- 
--			object->backer = object->dentry;
-+			object->old = dget(object->dentry);
- 		} else {
- 			BUG(); // TODO: open file in data-class subdir
- 		}
-@@ -523,7 +523,9 @@ bool cachefiles_walk_to_object(struct cachefiles_object *parent,
- 		cachefiles_unmark_inode_in_use(object, object->dentry);
- 	cachefiles_mark_object_inactive(cache, object);
- 	dput(object->dentry);
-+	dput(object->old);
- 	object->dentry = NULL;
-+	object->old = NULL;
- 	goto error_out;
- 
- lookup_error:
-
-
+>  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
+> index 4bcb41c71b8c..784723072578 100644
+> --- a/include/uapi/linux/mdio.h
+> +++ b/include/uapi/linux/mdio.h
+> @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int prtad, int devad)
+>  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
+>  }
+>  
+> +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
+> +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop supported */
+> +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
+> +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
+> +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full duplex */
+> +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex and speed bits */
+> +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
+> +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
+> +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
+> +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
+> +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
+> +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
+> +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
+> +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
+> +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with copper-side partner */
+> +
+>  #endif /* _UAPI__LINUX_MDIO_H__ */
+> -- 
+> 2.20.1
+> 
