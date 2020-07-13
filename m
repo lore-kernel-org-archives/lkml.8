@@ -2,137 +2,91 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED52C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3984A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594658540;
-	bh=DTwgxtmu5cArvIbVuTDaWQ3jATFmx/Wxz91NZAUKkV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTs/AWVjp9OJXAf7gYADliaI7t2d6Ypn8u4S9VfL7RoqWCOqGYqEqnPwugukxiqhd
-	 5cYuMW0Jvn3lb02G4S9PzaErz96NsCaMJ8rFRut4IM24PcXyEO0SDfiVKgTBEKKJ9A
-	 mOadCemOO5P/5ww9b5u+1/3PsQ05Vafv2mC7/BVo=
+	by mail.kernel.org (Postfix) with ESMTP id 8C3E2206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgGMQmT (ORCPT
+        id S1730185AbgGMQmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:42:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43471 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbgGMQmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:42:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so14145762iom.10;
-        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=95u4XQbiBNEbmUiVqX+fo8bOSxhI7i+gaxCn3lXTzqc=;
-        b=Ki0uiu2WF5elAO9m6oh5urkF4YdhJXVhuAs6vnZIEkE/bjpVpw/MvddAHdv0GfZbho
-         9OUc6KJUuV5hji8Z66oYdcrgWzaWx1x4g3txsCfqU0tVr1fRc5gRRv3Dy+y3qQ9InpNB
-         uX4tD6CLOgvFFHeBM1Q5Y10ZZV5y7H1XJEmM96mWie9+hTYq57ExRoEr/huMXMLAMqf9
-         JyYrzTD//2sxBrZXI5aSz/qDDFG8zrajvHkGTWSgEX29OGN6dQrtHuFUbLrosPNwZDlw
-         hIk4ybwk99nSh9mafPqHPS7Yk5yIV6ZzuTM8kzs0yrpn7zYX6FsT050Fr7/b3l5dfaTj
-         1dFw==
-X-Gm-Message-State: AOAM533pn5he9VOvmcE/t30BLR2HFmk8vzHgNTV/zCwHWv63MhU4cAEg
-        KzN3BCdp2urAmHTUSsOW3A==
-X-Google-Smtp-Source: ABdhPJw6zyKQhU2fGmPHQI3+yP7QiHYYcgQrgUA4qyagqHgLVfTS4YB+9LdplG/eDrMeToQieLohgw==
-X-Received: by 2002:a02:6c07:: with SMTP id w7mr1034168jab.33.1594658536188;
-        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b13sm7889364iof.21.2020.07.13.09.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:42:15 -0700 (PDT)
-Received: (nullmailer pid 359058 invoked by uid 1000);
-        Mon, 13 Jul 2020 16:42:14 -0000
-Date:   Mon, 13 Jul 2020 10:42:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
-        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194
- ccplex compatible and bpmp property
-Message-ID: <20200713164214.GA341271@bogus>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+        Mon, 13 Jul 2020 12:42:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34296 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgGMQmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:42:53 -0400
+IronPort-SDR: DjaGoNfh/oEYmOpW5z49J9nMo0Zrp5jqJ4TSHlwR/npKUs9xLPEtwPUspAoSLsqMQgdPfapGL+
+ P39NRixrti8w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146141285"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="146141285"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 09:42:53 -0700
+IronPort-SDR: dQgS6KRxXnZehQ6xSY5bScIB1NbPYyLT4+zopdkg5S3fiuf5XsC0QhqYiX7EJ72qjhdGaDOB1f
+ Vf9essvY4UOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="485064335"
+Received: from rrajashe-mobl1.amr.corp.intel.com (HELO [10.212.135.176]) ([10.212.135.176])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jul 2020 09:42:52 -0700
+Subject: Re: [RFC PATCH 09/35] nvme-pci: Change PCIBIOS_SUCCESSFUL to 0
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        helgaas@kernel.org, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-10-refactormyself@gmail.com>
+From:   "Rajashekar, Revanth" <revanth.rajashekar@intel.com>
+Message-ID: <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
+Date:   Mon, 13 Jul 2020 10:42:51 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+In-Reply-To: <20200713122247.10985-10-refactormyself@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
-> To do frequency scaling on all CPUs within T194 CPU Complex, we need
-> to query BPMP for data on valid operating points. Document a compatible
-> string under 'cpus' node to represent the CPU Complex for binding drivers
-> like cpufreq which don't have their node or CPU Complex node to bind to.
-> Also, document a property to point to the BPMP device that can be queried
-> for all CPUs.
+Hi,
 
-The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus' 
-node. AIUI, the latter is what you want. You should do your own schema 
-file here.
-
-> 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+On 7/13/2020 6:22 AM, Saheed O. Bolarinwa wrote:
+> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+> Their scope should be limited within arch/x86.
+>
+> Change all PCIBIOS_SUCCESSFUL to 0
+>
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index a018147..9b328e3 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -162,6 +162,7 @@ properties:
->        - nvidia,tegra132-denver
->        - nvidia,tegra186-denver
->        - nvidia,tegra194-carmel
-> +      - nvidia,tegra194-ccplex
-
-Tegra194 has 2 different CPUs?
-
->        - qcom,krait
->        - qcom,kryo
->        - qcom,kryo260
-> @@ -255,6 +256,15 @@ properties:
+>  drivers/nvme/host/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index b1d18f0633c7..d426efb53f44 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -1185,7 +1185,7 @@ static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
 >  
->        where voltage is in V, frequency is in MHz.
->  
-> +  nvidia,bpmp:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: |
-> +      Specifies the bpmp node that needs to be queried to get
-> +      operating point data for all CPUs.
-> +
-> +      Optional for systems that have a "compatible"
-> +      property value of "nvidia,tegra194-ccplex".
-> +
->    power-domains:
->      $ref: '/schemas/types.yaml#/definitions/phandle-array'
->      description:
-> @@ -340,6 +350,7 @@ required:
->  
->  dependencies:
->    rockchip,pmu: [enable-method]
-> +  nvidia,bpmp: [compatible]
->  
->  examples:
->    - |
-> -- 
-> 2.7.4
-> 
+>  	result = pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
+>  				      &pci_status);
+> -	if (result == PCIBIOS_SUCCESSFUL)
+> +	if (result == 0)
+How about simplifying the check to if (!result)?
+>  		dev_warn(dev->ctrl.device,
+>  			 "controller is down; will reset: CSTS=0x%x, PCI_STATUS=0x%hx\n",
+>  			 csts, pci_status);
+Thanks!
+Revanth
