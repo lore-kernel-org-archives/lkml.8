@@ -2,114 +2,101 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208D0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF41520771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZaSFTqH"
+	by mail.kernel.org (Postfix) with ESMTP id 0CF442067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGMUxt (ORCPT
+        id S1726758AbgGMUzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgGMUxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:53:45 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DF5C061755;
-        Mon, 13 Jul 2020 13:53:44 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o2so1316328wmh.2;
-        Mon, 13 Jul 2020 13:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ALurGzrJJ9wqkP2ke4uTKprfGDnx2zaAQBFzAuepUB4=;
-        b=QZaSFTqHdagHJdkMYHPypk8cFC/5FtmTQkGnZ4jgNm69WsJW5rwpDbQqDBInBpO4Ku
-         rLSLuXMoRXWxm1KVRHinFg5/kT6aj/3zlewCGDL2THtVzrhGlHDGOxavNY3KXR7oZab/
-         UC3MMrG2u6YWtUn21ItZjxZ6+cOW+dgTf6/2FAkI6FA3RHlv2kIR8oMYjRogSWRP1Ixm
-         tkf9YgDXo/+D4Evh2U5Td/zJq03vQvZgw/1BJZIi5sThIlxKFQIAiqmtkVNOtUvsCSlC
-         GHbVGcmxBPuhkGQK9P7h1qjWyYXx3DZ/vZ9JPZfBpmikhWaUAZL4ixXyIXp33cxLrEKR
-         /zCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ALurGzrJJ9wqkP2ke4uTKprfGDnx2zaAQBFzAuepUB4=;
-        b=bAC+7iRLhVtvuswNBF87HtYEF/WZ0GyAAfGOlFvMBCiJoTSsIyAs0eZGgCqfci/9nC
-         0ZvccCiLZ/3h07L4KVubBKWO90uQp91bLw8yHbNndGDSKXZQ+8eSRMbVmkgmEiSwDKV8
-         +IA3lC9nJcoeOXu4G9Rc2urOlv8x9ia2mXmo+9kXxyZmEmT1YcEXMWiyEJewTt8OpMSM
-         SJQX0XQkLMa8EMdK6KuH7xZxwGS2FNGP/YDLhhpgYlnEHoKSKa7AhZk6yLXwf/97/XzB
-         GiDG5Otc7wmYfCLxLLQE8a0E/7dgAoP0TXK96uDctbwJKsAx9C/HSFKHzBBueDbnMWDl
-         psQQ==
-X-Gm-Message-State: AOAM533XimZ1zvyyyBRLki8C906kZMBfbyz+HBEFQneilfohL0xQ6gCJ
-        mD3snP+qDsxtSeOJowCKUmW/OG6U
-X-Google-Smtp-Source: ABdhPJzEX/tt0TMQMf+TPx9VPK4TeJsjDGIiyPDidh58RrSuPoa5tp7YEZ4O2oiNcvM7Dzp8Wh/5og==
-X-Received: by 2002:a1c:a4c6:: with SMTP id n189mr1099908wme.173.1594673623480;
-        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
-Received: from cluster5 ([80.76.206.81])
-        by smtp.gmail.com with ESMTPSA id u20sm1019921wmm.15.2020.07.13.13.53.43
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
-From:   Matthew Hagan <mnhagan88@gmail.com>
-Cc:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL properties
-Date:   Mon, 13 Jul 2020 21:50:26 +0100
-Message-Id: <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+        Mon, 13 Jul 2020 16:55:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49219 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgGMUzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:55:17 -0400
+IronPort-SDR: EbeLArq4HkKuXrlRxYpB/WS2qvAXL+eK3WEI4G9/favHK5tDRXMs139ILa9JUq6sYcrvGIBs++
+ dPhiTZl6KmIg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213545772"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="213545772"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 13:55:16 -0700
+IronPort-SDR: 7szJfcXPONfImWsDE0U1Og3oR6gRPzY9NXu27bBlEUhLsXyTzhLMHYMpnGwjaJkpOUSxedhjvm
+ WmmYlkewsJUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="390288665"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.172.11]) ([10.212.172.11])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 13:55:15 -0700
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+Date:   Mon, 13 Jul 2020 13:55:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200710093834.su3nsjesnhntpd6d@mobilestation>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add names and decriptions of additional PORT0_PAD_CTRL properties.
 
-Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
----
- Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-index ccbc6d89325d..3d34c4f2e891 100644
---- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-@@ -13,6 +13,14 @@ Optional properties:
- 
- - reset-gpios: GPIO to be used to reset the whole device
- 
-+Optional MAC configuration properties:
-+
-+- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
-+- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
-+				falling edge.
-+- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
-+				falling edge.
-+
- Subnodes:
- 
- The integrated switch subnode should be specified according to the binding
--- 
-2.25.4
+On 7/10/2020 2:38 AM, Serge Semin wrote:
+> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+>> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+>>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
+>>> DMA capabilities non-uniformly redistributed between the device channels.
+>>> In order to provide a way of exposing the channel-specific parameters to
+>>> the DMA engine consumers, we introduce a new DMA-device callback. In case
+>>> if provided it gets called from the dma_get_slave_caps() method and is
+>>> able to override the generic DMA-device capabilities.
+>>
+> 
+>> In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> 
+> As long as the 'slave' word is used in the name of the dma_slave_caps
+> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> to use some else terminology. If renaming needs to be done, then it should be
+> done synchronously for the whole subsystem.
 
+What about just calling it dma_device_caps? Consider this is a useful function 
+not only slave DMA will utilize this. I can see this being useful for some of my 
+future code with idxd driver.
+
+> 
+> -Sergey
+> 
+>>
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
