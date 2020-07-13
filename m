@@ -2,588 +2,157 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44391C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6607EC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7C12065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386252065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QOlV0R5/"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="mXAsuZ2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgGMIpd (ORCPT
+        id S1729538AbgGMIpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:45:33 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:22770 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbgGMIpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:45:32 -0400
+        Mon, 13 Jul 2020 04:45:42 -0400
+Received: from mail-db8eur05on2072.outbound.protection.outlook.com ([40.107.20.72]:15836
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727834AbgGMIpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:45:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B+4tLt8Mwhhco3OhfYp3ZMHvBnWt/VMLwkYZaHqNCGJ2M7Yxf9ODVJKmp1FOWyF1S8iL4EsvpfjqpR+VJd1q/gaM89yh04S/Hcg0DBL++fmMbx9CqzyY/W4OVH+NhvgMeDyGP1/V2+11GlDVT7mwoWY9uZ4iRU7jwCoLaK217qDfcG1Y2Yqi8JQ0P4N11nKX9enBdvQ6xjqjvjxMN4Az5G9yO+AyMnzPj5Cv6Dz9GN6+Dv9Q3yZvrCkKwC/oixeiZnHNiud+GE3Ceon5OEu20rbcMV7dnCQlOtd5Ma3tsOAzN7ZUC+4jzf9T9iVNfKWnLvTXKtp6TKyV6KS3OP9jEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJwUT5S+YE1A/su5q5q3JdJxgmj8h5pXAxgSsT9FS8M=;
+ b=glkt5CZSdyHj+IqZsA0itW2oAQAWnLn1EqS5N7fltTpIpE9kCKhHYkqQsNBDP0wKAxssm/mHGM8UPa7zaHKMFOiaEc6JKEvE0v8/htK3HnN+EXC38pqJpjMceF3AMs2P84hZIT9GmBLOYgXbWAIwvnZY2WhL8Yy7uOh3mlj7G5ESSPXd8B37VjWArask550PuhpyDNFrSBOyV0EjZvPmGg17Ku3gI5l9QhIz8BQ4rmkopO/X1M2TS9aX5rx7HMOHt8VhtD6IgBTFPEzon1HbQUTi3knHOGmkBvq1lvfghPf6ilrEk0p+TuCviI7wydHs1CwqmQG2Jlh2moc2XA4rTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594629928; x=1626165928;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=9wWFctwv9PRi3nAfe8DKlLbThVB591xpO1WsSLFJMOk=;
-  b=QOlV0R5/8/A53ikJdHVmHnbUW/jigW9SnO24af3hzmL9tdXLA15RWkFf
-   H0dxs/Ml1J8rCo2fvCTM0DBaNOQO30614qPqDx++g4I01v+bfd7PRBEK1
-   Nfc2zJ5kvUP+Zzabwy5e8Mw+jUK+UKbnMePQi7ckYAGN0wU9nbQbM2Jwh
-   M=;
-IronPort-SDR: Y79Cqykdu3SjbFC4p3ui+uh9JxfDOLzFZJfRDcH6a0HVvZL7sDR8wM/It0X3Re1dedTRiMtzXI
- 5vwj2eTZVPYw==
-X-IronPort-AV: E=Sophos;i="5.75,346,1589241600"; 
-   d="scan'208";a="42915319"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 13 Jul 2020 08:45:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 499DEA1BDF;
-        Mon, 13 Jul 2020 08:45:22 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 13 Jul 2020 08:45:21 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.146) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 13 Jul 2020 08:45:05 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v18 09/14] mm/damon: Implement a debugfs interface
-Date:   Mon, 13 Jul 2020 10:41:39 +0200
-Message-ID: <20200713084144.4430-10-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713084144.4430-1-sjpark@amazon.com>
-References: <20200713084144.4430-1-sjpark@amazon.com>
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJwUT5S+YE1A/su5q5q3JdJxgmj8h5pXAxgSsT9FS8M=;
+ b=mXAsuZ2cKiOHb5wOSVdE8+B4NUhvw+Vw5iibVzesqtHwyGrw2fcKfwxa1hTsnMcoL3GE7e3MH2b0lZuZrMfG0oV9/e3DZIWdwLsGfq6pNRukl+s5i2m0OGFk/sh8AhNApF+uNq3fGPcgCdRHEyU/1DwN7vxndKILKjlg4pZydsI=
+Received: from VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:802:31::26)
+ by VI1PR10MB2320.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:81::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Mon, 13 Jul
+ 2020 08:45:36 +0000
+Received: from VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f97b:2363:7cfc:9150]) by VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f97b:2363:7cfc:9150%4]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
+ 08:45:36 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Replace HTTP links with HTTPS ones: Dialog Semiconductor
+ drivers
+Thread-Topic: [PATCH] Replace HTTP links with HTTPS ones: Dialog Semiconductor
+ drivers
+Thread-Index: AQHWUqG3NenvGbZLWUeE5MxT8HaZlakFPnUw
+Date:   Mon, 13 Jul 2020 08:45:36 +0000
+Message-ID: <VI1PR10MB1662457FD0D0B6549C1DDB6B80600@VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200705075542.22728-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200705075542.22728-1-grandmaster@al2klimov.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: al2klimov.de; dkim=none (message not signed)
+ header.d=none;al2klimov.de; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.85]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1d9bb325-81b2-4cab-90a5-08d827091cf0
+x-ms-traffictypediagnostic: VI1PR10MB2320:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR10MB2320475785D3D47868674A39A7600@VI1PR10MB2320.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m5h02he1Jba/0BQLzi2Ij2epARz/pSJ6kGWKeayVALe8QGTrD18FZJVUEnt3L9gAXbDfVN2L3O3T9hTqqGKijXwa+O4jD4/svNX8kzqclovptF4JcDvTf0gg3g6CstdtQx2qZUjTy7p9woStw6kVAwDgaGfEiuXK0DJnBrAdTiCmqrYGb8Ec8I5VfATU8C2oRpPMpKb7WK0/Fx3UmgR7mLRLE87s+RpjGl3w3YwKJR0sbSGzaUGaSu82ET5kHO/g5viAcqZedVc8YvJrX1Ie2ElbeLO2wmOLAW3xGSh0V+KsRtzAKlpSsCZu7Ck6E/7zWQZI7c5k2iEzFD8RCTvL7QBNhPKfj2KnqerRhVl/O4m9dETJ+ZQOKMYmIfuPP2JJH8Rmg0gzxvoQE7y17zWZvw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(396003)(39850400004)(376002)(136003)(55236004)(8936002)(2906002)(33656002)(6506007)(53546011)(316002)(71200400001)(52536014)(8676002)(110136005)(86362001)(186003)(478600001)(26005)(9686003)(66446008)(64756008)(66556008)(66476007)(66946007)(5660300002)(76116006)(55016002)(7696005)(966005)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: C5GOEagkaQT/sWjhu8C2Qf27T9Qci4sASP6Oqle2/xmBZlcWSd1BqrtRtZPjXnAwI7FxVtdeT8JNaYRvlxZKilupQGJq4YWliGduLt5bS/UrgsgOwqRs9tvVhAOhTB6aSHw1t5yi3QLNnMm4Kf2bztzCicINRsb4xq6R4WCLzC/i9yZZPq49ilEYPDA0OjG9MRdVS9JRJOXD95+tnXvJ9KhJpXJgNGUYJL6Yxk38ifFph3D/mUTs13CkwRUNihnnUm0soq7dULoduxRml4/CDavIb82rcdmDDedXDACAEdzD0JqkAf9KHMIPTccu0e7nsEzZP/KqdYhGyEUzXbZEpTH3mEsULCOfnehITC+kENPKl9e1UozmgL6krU28WXSXHNegdUrew+LiHLl0MG9mp4R/K4HFRP8kdJa9d03/JlvUdMz67s8vACdr/Rr53pVSPIsJJ2y53qsxAFu1EDYT1jDPPpiVIOYXeZJbUeBxKO8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.146]
-X-ClientProxiedBy: EX13P01UWA002.ant.amazon.com (10.43.160.46) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d9bb325-81b2-4cab-90a5-08d827091cf0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 08:45:36.5662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ndQY4Nn7AHHMy+S6e6TWYAg4P2v38eXYFiuwRBG9MM+umLi4xPl23KPzwu7P6VU4Jl0Ds1xY31QHR8MCa/7KFS0YvLzRSXKN29ZwVNP66Zk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 05 July 2020 08:56, Alexander A. Klimov wrote:
 
-This commit implements a debugfs interface for DAMON.  It works for the
-virtual address spaces monitoring.
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>=20
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+>=20
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-DAMON exports four files, ``attrs``, ``pids``, ``record``, and
-``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
-Attributes
-----------
-
-Users can read and write the ``sampling interval``, ``aggregation
-interval``, ``regions update interval``, and min/max number of
-monitoring target regions by reading from and writing to the ``attrs``
-file.  For example, below commands set those values to 5 ms, 100 ms,
-1,000 ms, 10, 1000 and check it again::
-
-    # cd <debugfs>/damon
-    # echo 5000 100000 1000000 10 1000 > attrs
-    # cat attrs
-    5000 100000 1000000 10 1000
-
-Target PIDs
------------
-
-Users can read and write the pids of current monitoring target processes
-by reading from and writing to the ``pids`` file.  For example, below
-commands set processes having pids 42 and 4242 as the processes to be
-monitored and check it again::
-
-    # cd <debugfs>/damon
-    # echo 42 4242 > pids
-    # cat pids
-    42 4242
-
-Note that setting the pids doesn't start the monitoring.
-
-Record
-------
-
-DAMON supports direct monitoring result record feature.  The recorded
-results are first written to a buffer and flushed to a file in batch.
-Users can set the size of the buffer and the path to the result file by
-reading from and writing to the ``record`` file.  For example, below
-commands set the buffer to be 4 KiB and the result to be saved in
-'/damon.data'.
-
-    # cd <debugfs>/damon
-    # echo 4096 /damon.data > pids
-    # cat record
-    4096 /damon.data
-
-Turning On/Off
---------------
-
-You can check current status, start and stop the monitoring by reading
-from and writing to the ``monitor_on`` file.  Writing ``on`` to the file
-starts DAMON to monitor the target processes with the attributes.
-Writing ``off`` to the file stops DAMON.  DAMON also stops if every
-target processes is terminated.  Below example commands turn on, off,
-and check status of DAMON::
-
-    # cd <debugfs>/damon
-    # echo on > monitor_on
-    # echo off > monitor_on
-    # cat monitor_on
-    off
-
-Please note that you cannot write to the ``attrs`` and ``pids`` files
-while the monitoring is turned on.  If you write to the files while
-DAMON is running, ``-EINVAL`` will be returned.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
----
- mm/damon.c | 381 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 380 insertions(+), 1 deletion(-)
-
-diff --git a/mm/damon.c b/mm/damon.c
-index 00df1a4c3d5c..df05bd821ff8 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -14,6 +14,7 @@
-  * - Functions for the access checking of the regions
-  * - Functions for DAMON core logics and features
-  * - Functions for the DAMON programming interface
-+ * - Functions for the DAMON debugfs interface
-  * - Functions for the module loading/unloading
-  */
- 
-@@ -22,6 +23,7 @@
- #define CREATE_TRACE_POINTS
- 
- #include <linux/damon.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/kthread.h>
- #include <linux/mm.h>
-@@ -68,6 +70,20 @@
- /* Get a random number in [l, r) */
- #define damon_rand(l, r) (l + prandom_u32() % (r - l))
- 
-+/* A monitoring context for debugfs interface users. */
-+static struct damon_ctx damon_user_ctx = {
-+	.sample_interval = 5 * 1000,
-+	.aggr_interval = 100 * 1000,
-+	.regions_update_interval = 1000 * 1000,
-+	.min_nr_regions = 10,
-+	.max_nr_regions = 1000,
-+
-+	.init_target_regions = kdamond_init_vm_regions,
-+	.update_target_regions = kdamond_update_vm_regions,
-+	.prepare_access_checks = kdamond_prepare_vm_access_checks,
-+	.check_accesses = kdamond_check_vm_accesses,
-+};
-+
- /*
-  * Construct a damon_region struct
-  *
-@@ -1228,17 +1244,380 @@ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 	return 0;
- }
- 
-+/*
-+ * Functions for the DAMON debugfs interface
-+ */
-+
-+static ssize_t debugfs_monitor_on_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char monitor_on_buf[5];
-+	bool monitor_on;
-+	int len;
-+
-+	monitor_on = damon_kdamond_running(ctx);
-+	len = snprintf(monitor_on_buf, 5, monitor_on ? "on\n" : "off\n");
-+
-+	return simple_read_from_buffer(buf, count, ppos, monitor_on_buf, len);
-+}
-+
-+/*
-+ * Returns non-empty string on success, negarive error code otherwise.
-+ */
-+static char *user_input_str(const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	char *kbuf;
-+	ssize_t ret;
-+
-+	/* We do not accept continuous write */
-+	if (*ppos)
-+		return ERR_PTR(-EINVAL);
-+
-+	kbuf = kmalloc(count + 1, GFP_KERNEL);
-+	if (!kbuf)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = simple_write_to_buffer(kbuf, count + 1, ppos, buf, count);
-+	if (ret != count) {
-+		kfree(kbuf);
-+		return ERR_PTR(-EIO);
-+	}
-+	kbuf[ret] = '\0';
-+
-+	return kbuf;
-+}
-+
-+static ssize_t debugfs_monitor_on_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	ssize_t ret = count;
-+	char *kbuf;
-+	int err;
-+
-+	kbuf = user_input_str(buf, count, ppos);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	/* Remove white space */
-+	if (sscanf(kbuf, "%s", kbuf) != 1)
-+		return -EINVAL;
-+	if (!strncmp(kbuf, "on", count))
-+		err = damon_start(ctx);
-+	else if (!strncmp(kbuf, "off", count))
-+		err = damon_stop(ctx);
-+	else
-+		return -EINVAL;
-+
-+	if (err)
-+		ret = err;
-+	return ret;
-+}
-+
-+static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
-+{
-+	struct damon_task *t;
-+	int written = 0;
-+	int rc;
-+
-+	damon_for_each_task(t, ctx) {
-+		rc = snprintf(&buf[written], len - written, "%d ", t->pid);
-+		if (!rc)
-+			return -ENOMEM;
-+		written += rc;
-+	}
-+	if (written)
-+		written -= 1;
-+	written += snprintf(&buf[written], len - written, "\n");
-+	return written;
-+}
-+
-+static ssize_t debugfs_pids_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	ssize_t len;
-+	char pids_buf[320];
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	len = damon_sprint_pids(ctx, pids_buf, 320);
-+	mutex_unlock(&ctx->kdamond_lock);
-+	if (len < 0)
-+		return len;
-+
-+	return simple_read_from_buffer(buf, count, ppos, pids_buf, len);
-+}
-+
-+/*
-+ * Converts a string into an array of unsigned long integers
-+ *
-+ * Returns an array of unsigned long integers if the conversion success, or
-+ * NULL otherwise.
-+ */
-+static int *str_to_pids(const char *str, ssize_t len, ssize_t *nr_pids)
-+{
-+	int *pids;
-+	const int max_nr_pids = 32;
-+	int pid;
-+	int pos = 0, parsed, ret;
-+
-+	*nr_pids = 0;
-+	pids = kmalloc_array(max_nr_pids, sizeof(pid), GFP_KERNEL);
-+	if (!pids)
-+		return NULL;
-+	while (*nr_pids < max_nr_pids && pos < len) {
-+		ret = sscanf(&str[pos], "%d%n", &pid, &parsed);
-+		pos += parsed;
-+		if (ret != 1)
-+			break;
-+		pids[*nr_pids] = pid;
-+		*nr_pids += 1;
-+	}
-+	if (*nr_pids == 0) {
-+		kfree(pids);
-+		pids = NULL;
-+	}
-+
-+	return pids;
-+}
-+
-+static ssize_t debugfs_pids_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	int *targets;
-+	ssize_t nr_targets;
-+	ssize_t ret = count;
-+	int err;
-+
-+	kbuf = user_input_str(buf, count, ppos);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	targets = str_to_pids(kbuf, ret, &nr_targets);
-+	if (!targets) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond) {
-+		ret = -EINVAL;
-+		goto unlock_out;
-+	}
-+
-+	err = damon_set_pids(ctx, targets, nr_targets);
-+	if (err)
-+		ret = err;
-+unlock_out:
-+	mutex_unlock(&ctx->kdamond_lock);
-+	kfree(targets);
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
-+static ssize_t debugfs_record_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char record_buf[20 + MAX_RFILE_PATH_LEN];
-+	int ret;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	ret = snprintf(record_buf, ARRAY_SIZE(record_buf), "%u %s\n",
-+			ctx->rbuf_len, ctx->rfile_path);
-+	mutex_unlock(&ctx->kdamond_lock);
-+	return simple_read_from_buffer(buf, count, ppos, record_buf, ret);
-+}
-+
-+static ssize_t debugfs_record_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	unsigned int rbuf_len;
-+	char rfile_path[MAX_RFILE_PATH_LEN];
-+	ssize_t ret = count;
-+	int err;
-+
-+	kbuf = user_input_str(buf, count, ppos);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	if (sscanf(kbuf, "%u %s",
-+				&rbuf_len, rfile_path) != 2) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond) {
-+		ret = -EBUSY;
-+		goto unlock_out;
-+	}
-+
-+	err = damon_set_recording(ctx, rbuf_len, rfile_path);
-+	if (err)
-+		ret = err;
-+unlock_out:
-+	mutex_unlock(&ctx->kdamond_lock);
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
-+static ssize_t debugfs_attrs_read(struct file *file,
-+		char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char kbuf[128];
-+	int ret;
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	ret = snprintf(kbuf, ARRAY_SIZE(kbuf), "%lu %lu %lu %lu %lu\n",
-+			ctx->sample_interval, ctx->aggr_interval,
-+			ctx->regions_update_interval, ctx->min_nr_regions,
-+			ctx->max_nr_regions);
-+	mutex_unlock(&ctx->kdamond_lock);
-+
-+	return simple_read_from_buffer(buf, count, ppos, kbuf, ret);
-+}
-+
-+static ssize_t debugfs_attrs_write(struct file *file,
-+		const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	unsigned long s, a, r, minr, maxr;
-+	char *kbuf;
-+	ssize_t ret = count;
-+	int err;
-+
-+	kbuf = user_input_str(buf, count, ppos);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	if (sscanf(kbuf, "%lu %lu %lu %lu %lu",
-+				&s, &a, &r, &minr, &maxr) != 5) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	mutex_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond) {
-+		ret = -EBUSY;
-+		goto unlock_out;
-+	}
-+
-+	err = damon_set_attrs(ctx, s, a, r, minr, maxr);
-+	if (err)
-+		ret = err;
-+unlock_out:
-+	mutex_unlock(&ctx->kdamond_lock);
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
-+static const struct file_operations monitor_on_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_monitor_on_read,
-+	.write = debugfs_monitor_on_write,
-+};
-+
-+static const struct file_operations pids_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_pids_read,
-+	.write = debugfs_pids_write,
-+};
-+
-+static const struct file_operations record_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_record_read,
-+	.write = debugfs_record_write,
-+};
-+
-+static const struct file_operations attrs_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_attrs_read,
-+	.write = debugfs_attrs_write,
-+};
-+
-+static struct dentry *debugfs_root;
-+
-+static int __init damon_debugfs_init(void)
-+{
-+	const char * const file_names[] = {"attrs", "record",
-+		"pids", "monitor_on"};
-+	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
-+		&pids_fops, &monitor_on_fops};
-+	int i;
-+
-+	debugfs_root = debugfs_create_dir("damon", NULL);
-+	if (!debugfs_root) {
-+		pr_err("failed to create the debugfs dir\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(file_names); i++) {
-+		if (!debugfs_create_file(file_names[i], 0600, debugfs_root,
-+					NULL, fops[i])) {
-+			pr_err("failed to create %s file\n", file_names[i]);
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init damon_init_user_ctx(void)
-+{
-+	int rc;
-+
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+
-+	ktime_get_coarse_ts64(&ctx->last_aggregation);
-+	ctx->last_regions_update = ctx->last_aggregation;
-+
-+	rc = damon_set_recording(ctx, 1024 * 1024, "/damon.data");
-+	if (rc)
-+		return rc;
-+
-+	mutex_init(&ctx->kdamond_lock);
-+
-+	INIT_LIST_HEAD(&ctx->tasks_list);
-+
-+	return 0;
-+}
-+
- /*
-  * Functions for the module loading/unloading
-  */
- 
- static int __init damon_init(void)
- {
--	return 0;
-+	int rc;
-+
-+	rc = damon_init_user_ctx();
-+	if (rc)
-+		return rc;
-+
-+	rc = damon_debugfs_init();
-+	if (rc)
-+		pr_err("%s: debugfs init failed\n", __func__);
-+
-+	return rc;
- }
- 
- static void __exit damon_exit(void)
- {
-+	damon_stop(&damon_user_ctx);
-+	debugfs_remove_recursive(debugfs_root);
-+
-+	kfree(damon_user_ctx.rbuf);
-+	kfree(damon_user_ctx.rfile_path);
- }
- 
- module_init(damon_init);
--- 
-2.17.1
+> ---
+>  Continuing my work started at 93431e0607e5.
+>=20
+>  If there are any URLs to be removed completely or at least not HTTPSifie=
+d:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+>=20
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+>=20
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> b/Documentation/devicetree/bindings/mfd/da9062.txt
+> index 857af982c88f..bab0d0e66cb3 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> @@ -1,8 +1,8 @@
+>  * Dialog DA9062 Power Management Integrated Circuit (PMIC)
+>=20
+>  Product information for the DA9062 and DA9061 devices can be found here:
+> -- http://www.dialog-semiconductor.com/products/da9062
+> -- http://www.dialog-semiconductor.com/products/da9061
+> +- https://www.dialog-semiconductor.com/products/da9062
+> +- https://www.dialog-semiconductor.com/products/da9061
+>=20
+>  The DA9062 PMIC consists of:
+>=20
+> --
+> 2.27.0
 
