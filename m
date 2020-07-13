@@ -2,135 +2,109 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B3AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1914DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6EBF2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C962070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qMk5iC49"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PAtzzUaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGMBQq (ORCPT
+        id S1727932AbgGMB2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:16:46 -0400
-Received: from mail-bn8nam11on2067.outbound.protection.outlook.com ([40.107.236.67]:6054
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725765AbgGMBQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:16:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0sRBJxy2uBAubkomYwxwZVI9YqlU6n3eoHoKEHLp+aX+NZu8TtgPjhg1sGnrm6hF9dRGJsHLpTYf0Jjw/Vlr8Kv94FuPJEZTYYaBF9f3jjuIBRSxT2DPLYN4VMTGXuP5dBshidI/FhZmgN1DJfesqLZ5z/TxbK+KmW9oajr7U5sj/eZIEjPVlDDfCkZlB6tKfuEaFPQkkd34abo4zyal97MGpLcvJ2ez+BJAWcePWhqJ5V+/DvMqtRrbUS15lPZ+BOxyMyI+QdDOTeejjXGvUS4KnXTzuV7OHmqYFGtyiuALYpCnmki7c0hftUbB3cfoBo9Z39rbvtzAm1BMvwhAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpDrshVHXqNAA06mJqpKdST8NgabgdfvCB6qbi01dHI=;
- b=PrmKNDr6j7QwGmsC9XmxOeGRPxD9eKlxOHgGY6vDWRaM8Ydw59ZVuiHBt4DN1c7Bo8het4cuVzlXc4ISZs8ddEQflfqPOPvEItQDtnIg8g30R73o3QRaqBDA+XSME93a/h4rgP8bkB49T2Ws/Yz4u6Uafy8AL0dH4sWfJ7I3cNGyrvG/Z8HPHeGMFsZ5MG+DJKweWCC9AwSuHzbrjlA2gn69qpiGWlkN/WwvWH7RT150LAOfVfywdrPB4vn000heRFomHBgKkd1fDF4ViBj/V8yENgy7FZKnEoT0Uj0fgrFCj7GKg0v3Hmba7c4VTaMN9p9g0wZA0xoSXEKahvw80w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpDrshVHXqNAA06mJqpKdST8NgabgdfvCB6qbi01dHI=;
- b=qMk5iC49UkhwDs3cDe8IAeqWzZl0INoEukJk3Xeg1DKbol5mhuCTq6+EeOiwPo8XyNPNIp8d0KY0XYQvdwyqmuR6v6gt9HlYV4Kxrwh/4INkAickN+psr6F0s7kL8rZ0/RsIbi1GXnzl4/G9a7ibAyJfRUJu30p13ZZMimCwGT0=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
- by MW2PR12MB2523.namprd12.prod.outlook.com (2603:10b6:907:11::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Mon, 13 Jul
- 2020 01:16:40 +0000
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::25b9:83b0:4b17:2c63]) by MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::25b9:83b0:4b17:2c63%12]) with mapi id 15.20.3174.025; Mon, 13 Jul
- 2020 01:16:40 +0000
-Subject: Re: [PATCH] ASoC: rt5682: Add fmw property to get name of mclk
-To:     Mark Brown <broonie@kernel.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     Oder Chiou <oder_chiou@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200707100825.24792-1-akshu.agrawal@amd.com>
- <20200707103053.GF4870@sirena.org.uk>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <a2cf09b4-5f49-ba74-060f-bec9a49d21a6@amd.com>
-Date:   Mon, 13 Jul 2020 06:46:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200707103053.GF4870@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Sun, 12 Jul 2020 21:28:06 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:54652 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgGMB2F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:28:05 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200713012802epoutp03aa0244700c210333695484e2151ff6f3~hK5nECVfy0437304373epoutp03g
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:28:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200713012802epoutp03aa0244700c210333695484e2151ff6f3~hK5nECVfy0437304373epoutp03g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594603682;
+        bh=CLT1OPkpGw1YjUHnIfrbYqXwcJBpjvqV4GFZIs43Tkc=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=PAtzzUaOfXzSe3lfvOa9VgpIjXXFqlgYp1tBMjxNAB08alge2F0XaEnA0zRNW4spL
+         l/0zr11UMd9GYLdzufQmXDoo3aQl8t6nOzCNT2N5/1xsgQdiG+pcRp5DUqtx2nVVKg
+         jAm+z3690rxz4SfI2xWKZxEeWa/MaJ40YeOuop/4=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p4.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200713012801epcas1p4b12b1038a5f2c4f926a5aa7eb88d13e1~hK5mm-H4Z0233102331epcas1p44;
+        Mon, 13 Jul 2020 01:28:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <91dcecde-dd0d-c930-7c45-56ba144e748c@acm.org>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21594603681971.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 13 Jul 2020 10:27:17 +0900
+X-CMS-MailID: 20200713012717epcms2p78e1607a05f5aa19a2aa22399f10f116c
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: PN1PR0101CA0012.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:e::22) To MWHPR12MB1599.namprd12.prod.outlook.com
- (2603:10b6:301:10::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.32.35] (165.204.159.242) by PN1PR0101CA0012.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:e::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Mon, 13 Jul 2020 01:16:37 +0000
-X-Originating-IP: [165.204.159.242]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 25408979-4206-43f3-b3c5-08d826ca657b
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2523:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW2PR12MB25230F5E97CE571E0303B864F8600@MW2PR12MB2523.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9fJ2Gt1sBxkgeM7qRjZnwVj5rsghPESa+b9qCs/mHiocx9yhfMohqxjj9tIcaXiXUOozllHe2hw13PA5KPHQPGm8Zmvc8gYG0/Y+XbfmPMwn2DCCr7yYhvU2IwGrpvTC46U5EwUPjtnFGJPpYAKxviFkc4UJJTNFEZNRD51Sv/ORIYps/uhGWEz3bi/+bT7iFA2EDUQxswe09+nu5RhTPMgNL4ONRIIBqE83SFhHsPuQINTwZjLTtxRuPtKH1adAHM4rTVC6cT7eYmQlBR9EKtKGX6Z5WCeEymCMj5Y1qCIOasZnXjJieSHwL1fY7gi5RoL7W8SvT1bPGxOCMeO2JaqOyZ8yYTcg7/aq6egvSKO6Y46YTZGfqZx3bzIE/GYQs0EwqQ6UPrSV0Og+esKYjFY0XfUcBvWVn8GpGgmoOEl8qZF7HfdPw/bhrx5RYlcBRO/SMYuTN52N2GGu5svgwg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(316002)(5660300002)(52116002)(31696002)(966005)(186003)(16526019)(2906002)(26005)(53546011)(478600001)(36756003)(6636002)(66556008)(66476007)(6486002)(956004)(4326008)(66946007)(2616005)(4744005)(6666004)(83380400001)(31686004)(8936002)(16576012)(110136005)(8676002)(54906003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ZUCYnmpM4FKn+lyoWADz77KNHRpUqucm4j2jrO7EKpEUgLJH5+m1J+oqe1aV8SpNuR17uuLXJo17WB7ZkXhoc+JJbCs+t+ISdsM4Wl8qK4um81PKJ5Sffi1WndzA99+YFtAOD8d93USFOQudTD00d+tbzoWyGLIW0lBzLdLkW9GIL/TwLQwOVthsTcqhosS0d10H0KajoufswyCO0+UkWPBhGSSNi2jCmRPIuomHEEFKwGmCbeJzWxIdLNYeAa6YQdTzDRA7t+gm4lh/UwA7gjw2HSnvEf4GtX5BsnsASlObv+gVYkFFv2rgMqmr8r8AY2wnbh6GTFuTu/2D9YAzDYPO4X1pLyFDNfhPJbRgE5Q32HtSh4nTPOAaCergsuZF9e3LDkMDx/+vQNnc0P80TRU1E6p4VsFVVccnE2WkmN4TWwHZavQXB5ME1+MOZryyy5JzHo+GFfhlVVcFQ7RJ7qIU0TohnuYLP4TCkoTMNPc=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25408979-4206-43f3-b3c5-08d826ca657b
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2020 01:16:40.4538
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rkbt+3nxlmteEWi7bf+CAWtXjg+EXViD3EOV+vgd97DSn1lLIICvknwuy9gWvdmetg2kIJLc+RF7zuUHzMLv3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2523
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
+References: <91dcecde-dd0d-c930-7c45-56ba144e748c@acm.org>
+        <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
+        <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
+        <336371513.41594280882718.JavaMail.epsvc@epcpadp2>
+        <SN6PR04MB464021F98E8EDF7C79D6CB4FFC640@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bart,
 
-On 7/7/2020 4:00 PM, Mark Brown wrote:
-> On Tue, Jul 07, 2020 at 03:38:25PM +0530, Akshu Agrawal wrote:
->> Non-dts based systems can use ACPI DSDT to pass on the mclk.
->> Thus add fmw property mclk-name to get the name of the system clk
->> and link it to rt5682 mclk.
-> ACPI doesn't support clocks at all, you need to add a clock binding to
-> ACPI first.  The idiomatic way to do this would be to have board
-> specific quirks.
+> > Bart - how do you want to proceed?
+> 
+> Hi Avri and Daejun,
+> 
+> As far as I can see none of the five patches have Reviewed-by tags yet. I
+> think that Martin expects formal reviews for this patch series from one or
+> more reviewers who are not colleagues of the author of this patch series.
+> 
+> Note: recently I have been more busy than usual, hence the delayed reply.
+Thank you for replying to the email even though you are busy.
 
-clk binding is present for AMD ST platform and using the same.
-
-With recent submitted patches I am making them generic for all AMD 
-platforms.
-
-Please refer patches:
-
-https://patchwork.kernel.org/patch/11658505/
-
-https://patchwork.kernel.org/patch/11658507/
+Arvi, Bean - if patches looks ok, can this series have your reviewed-by tag?
 
 Thanks,
-
-Akshu
-
->
->> +	device_property_read_string(dev, "realtek,mclk-name", &rt5682->pdata.mclk_name);
->> +
-> No, this is not at all OK - you're adding this via a device property
-> which means that this will show up in the DT bindings too.
+Daejun
