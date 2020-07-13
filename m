@@ -2,79 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9223EC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81657C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1BA20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A26120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ScekaUzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgGMPts (ORCPT
+        id S1730138AbgGMPum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:49:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMPtr (ORCPT
+        Mon, 13 Jul 2020 11:50:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55690 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbgGMPum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:49:47 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDB3C061755;
-        Mon, 13 Jul 2020 08:49:47 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8234B60C;
-        Mon, 13 Jul 2020 15:49:47 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 09:49:46 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 00/11] Documentation: userspace-api/media: eliminate
- duplicated words
-Message-ID: <20200713094946.26971d3b@lwn.net>
-In-Reply-To: <20200703235536.30416-1-rdunlap@infradead.org>
-References: <20200703235536.30416-1-rdunlap@infradead.org>
-Organization: LWN.net
+        Mon, 13 Jul 2020 11:50:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFoZm7040441;
+        Mon, 13 Jul 2020 10:50:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594655435;
+        bh=UP8gUaK9xzAkhH7w+bk3utyGDEWK8nP4G8Haxvi0cTQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ScekaUzrbaORIdLjpDoS6wmlw8wwWpYf5PkR1593q1pOSxRxSLV8RebfwBfG+M3rN
+         6kktOvbB18iFIb1WbfbJNgT8JMRw1AERIHqvEdeDjTsECzwbqL7RwSGJVwCeBWEfgL
+         OdbvaRJDU+NjbL3KwgND66BmtcfiAbj+O0ofVvL8=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DFoZtf074057
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 10:50:35 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 10:50:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 10:50:34 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFoYKa042533;
+        Mon, 13 Jul 2020 10:50:34 -0500
+Subject: Re: [PATCH net-next v2 2/2] net: phy: DP83822: Add ability to
+ advertise Fiber connection
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200710143733.30751-1-dmurphy@ti.com>
+ <20200710143733.30751-3-dmurphy@ti.com> <20200711185421.GS1014141@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2d1d297c-e252-98df-bf96-d6630dd9a423@ti.com>
+Date:   Mon, 13 Jul 2020 10:50:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200711185421.GS1014141@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Jul 2020 16:55:25 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+Andrew
 
-> Drop all doubled words in Documenation/userspace-api/media/ files.
-> 
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> 
->  Documentation/userspace-api/media/dvb/audio.rst                       |    2 +-
->  Documentation/userspace-api/media/dvb/ca.rst                          |    2 +-
->  Documentation/userspace-api/media/dvb/demux.rst                       |    2 +-
->  Documentation/userspace-api/media/dvb/dmx-qbuf.rst                    |    2 +-
->  Documentation/userspace-api/media/dvb/net.rst                         |    2 +-
->  Documentation/userspace-api/media/dvb/video.rst                       |    2 +-
->  Documentation/userspace-api/media/v4l/buffer.rst                      |    2 +-
->  Documentation/userspace-api/media/v4l/selection-api-configuration.rst |    2 +-
->  Documentation/userspace-api/media/v4l/vidioc-g-ext-ctrls.rst          |    2 +-
->  Documentation/userspace-api/media/v4l/vidioc-g-output.rst             |    2 +-
->  Documentation/userspace-api/media/v4l/vidioc-qbuf.rst                 |    2 +-
->  11 files changed, 11 insertions(+), 11 deletions(-)
-> 
-Mauro, I've been assuming you'll grab these; let me know if you'd rather I
-just pick them up.
+On 7/11/20 1:54 PM, Andrew Lunn wrote:
+>> @@ -302,6 +357,48 @@ static int dp83822_config_init(struct phy_device *phydev)
+>>   		}
+>>   	}
+>>   
+>> +	if (dp83822->fx_enabled) {
+>> +		err = phy_modify(phydev, MII_DP83822_CTRL_2,
+>> +				 DP83822_FX_ENABLE, 1);
+>> +		if (err < 0)
+>> +			return err;
+>> +
+>> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+>> +				 phydev->supported);
+>> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+>> +				 phydev->advertising);
+>> +
+>> +		/* Auto neg is not supported in fiber mode */
+>> +		bmcr = phy_read(phydev, MII_BMCR);
+>> +		if (bmcr < 0)
+>> +			return bmcr;
+>> +
+>> +		if (bmcr & BMCR_ANENABLE) {
+>> +			err =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
+>> +			if (err < 0)
+>> +				return err;
+>> +		}
+>> +		phydev->autoneg = AUTONEG_DISABLE;
+> You should also be removing ETHTOOL_LINK_MODE_Autoneg_BIT from
+> phydev->supported, to make it clear autoneg is not supported. Assuming
+> genphy_read_abilities() cannot figure this out for itself.
 
-Thanks,
+In our testing we are finding that it cannot determine that for itself 
+so I will have to clear the bit.
 
-jon
+Dan
+
