@@ -2,88 +2,106 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEABC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA5D02068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F86206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:54:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ktLlyuBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGMBv5 (ORCPT
+        id S1728100AbgGMByV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:51:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20262 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMBv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:51:57 -0400
-IronPort-SDR: 0e71ysOWhlUbK/qYthGl6qXBCi2ZW2UwmGNcXNmRS33mIn6c5j1aNaKSd3dCQvCsDHPguSVTej
- Dr1sare8bq0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="147660851"
-X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
-   d="scan'208";a="147660851"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 18:51:56 -0700
-IronPort-SDR: T3rQIr2AvbUkUYA0Lr1/+D8PwdSqBWaDwtZ7A0BFDgFJoEgilqL0zg0V6QkI0sQuVjbE+rCC3L
- KqS7DZnOoSCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
-   d="scan'208";a="484847589"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Jul 2020 18:51:54 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH v2] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Date:   Mon, 13 Jul 2020 09:47:46 +0800
-Message-Id: <1594604866-30877-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 12 Jul 2020 21:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgGMByU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:54:20 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F507C061794;
+        Sun, 12 Jul 2020 18:54:20 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4msg4jsVz9sDX;
+        Mon, 13 Jul 2020 11:54:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594605256;
+        bh=jrjCvMTcjkrp5HFa2/PbO/nfMjWZFR1zrU8zP/HMwc8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ktLlyuBotZxHsUbyZRb3/GDvW4tQf1Y+agM2xcPvX1Hc03y4I9lVefnD3HQX0rBAy
+         srXolpUTtxa+F+yXhZOVBqg2G1nOV+BlZRiw1mOWxTaucYpxZrT7c2+RKqWJ8+IEj6
+         vdPjZRtezUJFS1zGHvMclv7y6nxzCM6+5QHXERnwb3kNqjcSod7dWch4BcV/9GosPI
+         LdCTz5ZYt9Y4wDs4x3CuwGTK/Swq+jM3Bv/Th9up1UOGR/qvWahUcRsoWCQbiyzlBJ
+         s6CaSTgsQhltPvHI8jlXgyp35ceNmzpfgMfoniqZIMJ/Ndp1mjLOjISKK1LeNTzebV
+         aquSggRVxW8Ug==
+Date:   Mon, 13 Jul 2020 11:54:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20200713115412.28aac287@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/vrR5qWedZlO8KpSvwGFY_D4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe Device ID for Intel FPGA PAC N3000.
+--Sig_/vrR5qWedZlO8KpSvwGFY_D4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-Reviewed-by: Wu Hao <hao.wu@intel.com>
-Reviewed-by: Tom Rix <trix@redhat.com>
----
- drivers/fpga/dfl-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi all,
 
-diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-index 73b5153..e220bec 100644
---- a/drivers/fpga/dfl-pci.c
-+++ b/drivers/fpga/dfl-pci.c
-@@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
- #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
- #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
- #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
-+#define PCIE_DEVICE_ID_INTEL_PAC_N3000	0x0B30
- /* VF Device */
- #define PCIE_DEVICE_ID_VF_INT_5_X	0xBCBF
- #define PCIE_DEVICE_ID_VF_INT_6_X	0xBCC1
-@@ -76,6 +77,7 @@ static struct pci_device_id cci_pcie_id_tbl[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_INT_6_X),},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_PF_DSC_1_X),},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_DSC_1_X),},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_INTEL_PAC_N3000),},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, cci_pcie_id_tbl);
--- 
-2.7.4
+After merging the net-next tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
+net/bridge/br_netlink_tunnel.c: In function '__vlan_tunnel_handle_range':
+net/bridge/br_netlink_tunnel.c:271:26: error: implicit declaration of funct=
+ion 'br_vlan_can_enter_range'; did you mean 'br_vlan_valid_range'? [-Werror=
+=3Dimplicit-function-declaration]
+  271 |  if (v && curr_change && br_vlan_can_enter_range(v, *v_end)) {
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~
+      |                          br_vlan_valid_range
+
+Caused by commit
+
+  94339443686b ("net: bridge: notify on vlan tunnel changes done via the ol=
+d api")
+
+CONFIG_BRIDGE_VLAN_FILTERING is not set for this build.
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vrR5qWedZlO8KpSvwGFY_D4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8LvsQACgkQAVBC80lX
+0GwFMAf9FF94vzPkkmTbIMN1a7Mer6wM9dgJZSXTtE7xSs7QwgLnYFd8HKiAJwLs
+O9sCFHO3RETmYnjqy4h3qWXzbTfakDBIRDABGZdJ9I/h0FHZXjp8LGWdid2B/Pw6
+ftmBG0ckgAgfW+k5/MpK9eTMMbRozi1eBTtgJBoqH69VNrdAt6V6YinxB2F2xbXg
+sIfv1DENzsggguY3v72cXiU4YfUUnwXJooiXQaxW40rmHlncm9XJnMJOKbwpNxnv
+INLZSEy0y+0j2AzdoCsSTJcrHbiIujexGKeMmnlXeXxNPwvjfGCp08448aCaxdgc
+VxFwm6+uFoqOe0BmQEwFtcYyAoYj6g==
+=z+Mo
+-----END PGP SIGNATURE-----
+
+--Sig_/vrR5qWedZlO8KpSvwGFY_D4--
