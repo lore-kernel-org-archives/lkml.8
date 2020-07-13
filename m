@@ -2,117 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1756C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A589420725
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B95C20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rP9X1uOX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEeOUmDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgGMD2H (ORCPT
+        id S1728686AbgGMD3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgGMD2H (ORCPT
+        Sun, 12 Jul 2020 23:29:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53393 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726267AbgGMD3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:28:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11FBC08C5DB
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:28:06 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f16so5545787pjt.0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CTRBBv9blTaUsrYeb0eeu5TKswQZvXFg2/jonGMy2rU=;
-        b=rP9X1uOXiqLwidmJBZxTFvX5cQiI++9UHNsUbK7PYnSdO9zCGjE7R7rLZJS+VyM0iC
-         5ZewOS37vO8J+gE4x6Fd5o08WlGg/KSSScSrm6jdllMjnLFMDTvc8Di5d5a+Jth0DrTJ
-         8zRet+UlU7MW0qQF79Psuxt7FIoJ2jW3gf5c1VsPZmEjKEE4CR38/2Eip5HoqU1inzmL
-         xuWuQcwm/rRxibkpwV8jRNHG7EvPiHM6clPK2v8qd+tx+0TPTUpGYDjsKg8/ZczV3r96
-         glom65IBjbPdc+gN6GWIfeBEucxUcyJYcCctOIKQ/VG+BmgTieQZkCsq7sf53CI1RqYN
-         UB6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CTRBBv9blTaUsrYeb0eeu5TKswQZvXFg2/jonGMy2rU=;
-        b=dFomispr4YwLQIdkiDkgdZoIpjUexKkyuvpcslw26QtdPLXJR5WcOiOk1NPKcn6wjv
-         WuTOpZrZz9eySQoQAhyoOAPyVDQnNIOb9eWTncuYelCdFJoBcXfGSk7RglROugOZLR1U
-         LW4K5OOK8AuvkeyUGDKT5kTeqVUUBGMhnTVJEJfArczUrA+yKPu8yYA/0iWR6XTu+HxM
-         sVwzFLgCOIZ829qfYbjdqgapNZ+iYpxdkvQAka8PwsEJuilohwZ9mhKSi/BN6t53+Gpr
-         lBBGO7QllDElbnvu5rHCL3UyQBIPe90CmI1lSUX5Yp1STiWUeIORqZpggZujFQ26hOdP
-         PbOA==
-X-Gm-Message-State: AOAM530L0XrMKv4IZqzsLWk5YUwW43tmt/S8Gy0XFfOyDNwxQYrI4m0a
-        WnO8jGv5ysbb2sPoXvOYJBPhLQ==
-X-Google-Smtp-Source: ABdhPJyM9mzXA2I+RbttNKXr3SC2AFKXo95OQNQ40YPbj1juxkhiADn/VmgtLqUtjhcydj2jv9T5Mg==
-X-Received: by 2002:a17:90a:c70e:: with SMTP id o14mr19352504pjt.70.1594610885294;
-        Sun, 12 Jul 2020 20:28:05 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id j2sm32266589pjy.1.2020.07.12.20.28.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Jul 2020 20:28:04 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 08:58:02 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cpufreq: tegra186: Simplify probe return path
-Message-ID: <20200713032802.u4ubftfgwtixkaj3@vireshk-i7>
-References: <20200712100645.13927-1-jonathanh@nvidia.com>
- <20200712100645.13927-2-jonathanh@nvidia.com>
+        Sun, 12 Jul 2020 23:29:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594610952;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5sqmIa3FOThqJ2P5OGh1edrqCIvFDayENPyYWhN4VO0=;
+        b=EEeOUmDzDxG/uNx89SYC7UDU5Ub5PWd07Pg6cLxbj24QTN1IpVkGFn0zlWSwtryDOMNiii
+        QsyhFjsajeRWQJeeDI9F2ZeEky9qEpMZu6IE6IsikzZ6DMerFfAXxdMsSD1EdO3f2qkOpU
+        6x1h3NexXki+eIxzhJikDOzsRfll6nk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-cgnKb0z2Mb-co7CYRgTzmw-1; Sun, 12 Jul 2020 23:29:11 -0400
+X-MC-Unique: cgnKb0z2Mb-co7CYRgTzmw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E1441086;
+        Mon, 13 Jul 2020 03:29:10 +0000 (UTC)
+Received: from [10.72.13.177] (ovpn-13-177.pek2.redhat.com [10.72.13.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F2FE74F75;
+        Mon, 13 Jul 2020 03:29:02 +0000 (UTC)
+Subject: Re: [PATCH] virtio_balloon: fix sparse warning
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        virtualization@lists.linux-foundation.org
+References: <20200710104837.405966-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2c3b61df-c5c8-536a-01d4-c468e958f6d7@redhat.com>
+Date:   Mon, 13 Jul 2020 11:29:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200712100645.13927-2-jonathanh@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200710104837.405966-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-07-20, 11:06, Jon Hunter wrote:
-> We always put the reference to BPMP device on exit of the Tegra186
-> CPUFREQ driver and so there is no need to have separate exit paths
-> for success and failure. Therefore, simplify the probe return path
-> in the Tegra186 CPUFREQ driver by combining the success and failure
-> paths.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+
+On 2020/7/10 下午6:48, Michael S. Tsirkin wrote:
+> balloon uses virtio32_to_cpu instead of cpu_to_virtio32
+> to convert a native endian number to virtio.
+> No practical difference but makes sparse warn.
+> Fix it up.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > ---
->  drivers/cpufreq/tegra186-cpufreq.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
-> index c44190ce3f03..bf8cab357277 100644
-> --- a/drivers/cpufreq/tegra186-cpufreq.c
-> +++ b/drivers/cpufreq/tegra186-cpufreq.c
-> @@ -231,15 +231,9 @@ static int tegra186_cpufreq_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	tegra_bpmp_put(bpmp);
-> -
->  	tegra186_cpufreq_driver.driver_data = data;
->  
->  	err = cpufreq_register_driver(&tegra186_cpufreq_driver);
-> -	if (err)
-> -		return err;
-> -
-> -	return 0;
->  
->  put_bpmp:
->  	tegra_bpmp_put(bpmp);
+>   drivers/virtio/virtio_balloon.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index fc7301406540..5d4b891bf84f 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -596,7 +596,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb)
+>   	while (virtqueue_get_buf(vq, &unused))
+>   		;
+>   
+> -	vb->cmd_id_active = virtio32_to_cpu(vb->vdev,
+> +	vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
+>   					virtio_balloon_cmd_id_received(vb));
+>   	sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
+>   	err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
 
-Applied. Thanks.
 
--- 
-viresh
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
