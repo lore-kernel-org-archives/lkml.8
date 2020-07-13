@@ -2,131 +2,120 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49139C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45818C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB7320724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1YTVsAO"
+	by mail.kernel.org (Postfix) with ESMTP id 23D442073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594617432;
+	bh=aDIzWAOIaa0QdRb3SomcHX9OzL94Axn7+kd+SCdMNdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dLbGnVlHCENr7XvZ1kychS3yOW318RW4PBhUKFxyUwmEL4XR+A+vhi94+gMaU6obU
+	 kG4mAjbcrrVAH8Jsx3S+ceioY9Ax7/McmFZSrjFzYlPTFwFXyL5BitBDK/u2i5mRa8
+	 e6PGBXdKupXXC9zH7ygqWJP0GI8S1qyMU5oEaWbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgGMFO6 (ORCPT
+        id S1728628AbgGMFRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgGMFO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:14:58 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38958C061794;
-        Sun, 12 Jul 2020 22:14:58 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b185so11119104qkg.1;
-        Sun, 12 Jul 2020 22:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HJfMKkuixe8TcFmSgPVFQeX2ebVBk2NIfALDJvpOegk=;
-        b=t1YTVsAOG7g2piVPzr9XqfcOnf1nl6fNsrPCzOhU25jJur4I0iJE19KVWcxP9TixlH
-         hA57KrAkQoI5IRkXUIwJDb5X00QSGkNpOaOxcD3Nan/XQTZVduQjrEg9Z14YNRooh0xq
-         YkYJUAB1lMa26uVrPQtmfvx05NKveu8jVXhT7ISzvFaojV/IuhzB9juQsNLM3nZX6QQD
-         /qypLMf6oZvwdlxwTxzwIwzH7E9u7lNMkYjJAceAoVyAthjE9BnK7zA8TE7Rk6oyIh60
-         ynOFniFe80hCUQ6h5+qkWRhJ8BTalGQHjoywwL3/780fkljffvktE9z46d8S7NnRo8NP
-         Pcrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HJfMKkuixe8TcFmSgPVFQeX2ebVBk2NIfALDJvpOegk=;
-        b=RNSKVmAOg6thIvBcvJUq6+3eFdcH5xiFQhlXG6eDRxyKu1jh76dauF/Wcf8Gfr4Szj
-         0mc0eBddzEBohWpVuIgzBXm+J3ucz7Uy/NZYrT3Kak9DHqdXsJ7L5xF+auWrBltrNpJE
-         1ECRdrdmD3ujcWZKz9VC2KX6O7JV2riVu117BsaYF1WXKixyRsO05faBSCspLOjQ7A5W
-         SuaLmRt1j7HQu5N65MUeW/CQOYEIenkt8L7eZPkTlKtf9YERTlTS/+6n/IJYbTaSXOUz
-         QAs3n4P7vSqNjQe569CGCueTbwgqDKnLYUsqKWYmWZ2u702THHU71nTv6wSbEfMzgVeI
-         G/Ew==
-X-Gm-Message-State: AOAM530TRfWQQe0FuEMnTWGtHnCTIpHvAmpfk4oaAuE7NRB7AVjM1dDp
-        rPt0QacZWdkpgA0zh26YNvuW9A2R841sMg9WzhU=
-X-Google-Smtp-Source: ABdhPJzZeRI4Vo+yZmNHHCrZWhnaKiX6BuWRvS5dt2QggK3l73mOoFiEQTzrVHTr+lD9cXIK0pQuLgSHhO8q2rUM2KU=
-X-Received: by 2002:a37:ec7:: with SMTP id 190mr75015576qko.421.1594617297477;
- Sun, 12 Jul 2020 22:14:57 -0700 (PDT)
+        Mon, 13 Jul 2020 01:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgGMFRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:17:10 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2120720724;
+        Mon, 13 Jul 2020 05:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594617430;
+        bh=aDIzWAOIaa0QdRb3SomcHX9OzL94Axn7+kd+SCdMNdw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0EsVqJ0Hy2e8BkgzejMc/xP2d9JNGv5W2rAiPkNMDrRgeotK8f8mO38If88/WUmW2
+         8UaILDeySzlj8/SaZvijSSKWKbgkdklC95JvSirBl+976h/tVGWKjtFtAXpR+Wiy7W
+         jt6Ty+7S+2vU6z3rEMFAPP8NSbYsyyVGpWt32MIo=
+Date:   Mon, 13 Jul 2020 10:47:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, wsa+renesas@sang-engineering.com,
+        geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: renesas: rcar-gen3-usb2: fix SError happen if
+ DEBUG_SHIRQ is enabled
+Message-ID: <20200713051705.GX34333@vkoul-mobl>
+References: <1594290978-8205-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-References: <20200705195110.405139-1-anarsoul@gmail.com> <20200705195110.405139-4-anarsoul@gmail.com>
- <20200706114709.l6poszepqsmg5p5r@gilmour.lan>
-In-Reply-To: <20200706114709.l6poszepqsmg5p5r@gilmour.lan>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Sun, 12 Jul 2020 22:14:31 -0700
-Message-ID: <CA+E=qVe30AEocwi62sJSX7=tRUJ3LeKdgEwtA8trQN4xtMpgTA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: allwinner: a64: enable Bluetooth On Pinebook
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594290978-8205-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 4:47 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Sun, Jul 05, 2020 at 12:51:10PM -0700, Vasily Khoruzhick wrote:
-> > Pinebook has an RTL8723CS WiFi + BT chip, BT is connected to UART1
-> > and uses PL5 as device wake GPIO, PL6 as host wake GPIO the I2C
-> > controlling signals are connected to R_I2C bus.
-> >
-> > Enable it in the device tree.
-> >
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > ---
-> >  .../arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > index 64b1c54f87c0..e63ff271be4e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > @@ -408,6 +408,18 @@ &uart0 {
-> >       status = "okay";
-> >  };
-> >
-> > +&uart1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-> > +     status = "okay";
->
-> You probably need uart-has-rtscts here
+Hi Yoshihiro,
 
-Will add in v2
+On 09-07-20, 19:36, Yoshihiro Shimoda wrote:
+> If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
+> correctly. If we appended "earlycon keep_bootcon" to the kernel
+> command like, we could get kernel log like below.
+> 
+>     SError Interrupt on CPU0, code 0xbf000002 -- SError
+>     CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
+>     Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+>     pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
+>     pc : rcar_gen3_phy_usb2_irq+0x14/0x54
+>     lr : free_irq+0xf4/0x27c
+> 
+> This means free_irq() calls the interrupt handler while PM runtime
+> is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
+> failed. To fix the issue, add a condition into the interrupt
+> handler to avoid register access if any phys are not initialized.
+> 
+> Note that rcar_gen3_is_any_rphy_initialized() was introduced on v5.2.
+> So, if we backports this patch to v5.1 or less, we need to make
+> other way.
 
-> > +
-> > +     bluetooth {
-> > +             compatible = "realtek,rtl8723cs-bt";
-> > +             device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
-> > +             host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> > +     };
->
-> And max-speed I guess?
+Should we really check phy is initialized? I think the issue here is
+that you register irq first, so your handler can be invoked. Right fix
+for this would be to move the irq registration to later in the probe
+when we are ready to handle interrupts
 
-There's no max-speed in the schema for this bluetooth controller.
-Moreover it reads uart settings from firmware config. See
-btrtl_get_uart_settings() in drivers/bluetooth/btrtl.c
+> 
+> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> index bfb22f8..91c732d 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -507,9 +507,13 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+>  {
+>  	struct rcar_gen3_chan *ch = _ch;
+>  	void __iomem *usb2_base = ch->base;
+> -	u32 status = readl(usb2_base + USB2_OBINTSTA);
+> +	u32 status;
+>  	irqreturn_t ret = IRQ_NONE;
+>  
+> +	if (!rcar_gen3_is_any_rphy_initialized(ch))
+> +		return ret;
+> +
+> +	status = readl(usb2_base + USB2_OBINTSTA);
+>  	if (status & USB2_OBINT_BITS) {
+>  		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+>  		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+> -- 
+> 2.7.4
 
-> Maxime
-> >
+-- 
+~Vinod
