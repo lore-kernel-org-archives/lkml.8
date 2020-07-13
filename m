@@ -7,148 +7,106 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39F7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5BCC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8709D2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A780C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/YUcN3S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vrMUz80P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgGMOuY (ORCPT
+        id S1730312AbgGMOug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
+        Mon, 13 Jul 2020 10:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730217AbgGMOt6 (ORCPT
+        with ESMTP id S1730188AbgGMOty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA95C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:58 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so16874194wrw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:58 -0700 (PDT)
+        Mon, 13 Jul 2020 10:49:54 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EEEC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so16858128wrl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uKRsk38fGN1JQaMOEwt3q4K2iQCr73XGMAa+Q9xdB5Q=;
-        b=K/YUcN3S/tmWmQag6LOp3T4Wg5FcOqEZ2W68vMLFZnK3d2+l3OM3sJbS1KNAwxvObA
-         yhgx0ONPgbSIqN29/qTMXHszJo+yhnWHubNp4XhN/Y0Oh43t6VCWnvQqZAIET/tQ+0SZ
-         oxMCUDvbWGHGL+WpFqB25XsXSsgB7tBgo/DIAxHg6rK9I+BNgxOjBAkIxXpyV7UNeYB7
-         QwOcvXHkd+2h8aNEugFElcNM4xoYN3H8MAk2A689KKaO9ZPujjAjcGwMPgidWkRfMhjB
-         +V1enrSSdKh7uQfFPqGYlTFLnQadmk+yy8A+RDLqeWd6K64kdG/9w67b0Fu1XZUZfazE
-         kjSw==
+        bh=uvpgFvNf+4M0KT7vkEQvPhnEsrG9RGiG3boyv4KDsto=;
+        b=vrMUz80PGSbZwbmV+F7PV6yfcb4vbzA1BBwlGt7IOvaW2FLCyErAgUbgh3NA5AFTZT
+         rg3rxyp5lxg+M2A/pXuyCzTDM3TWNfmw0x+5eph50aQQIqiP44NLYEPZwhNtkqrXaN+n
+         EBxjJwdd3KlXlVgXOULY8K+XRuA45z14kJsz2+GoJaD2bwX6l1UPH0l0FesqMXKQO5qy
+         gRs5C5COfiGZqTR7lsqJHfO8L0wnv0kfJw65ZLZ5Rro4d6AhtvU+udBUrlxwgynjyKH0
+         cVH1XUiAqpYNFua+pzHpcO5Dl/yZC8SC7cpvPSId9A4hOyJnKWA/htNJMI3HFuLIH4C9
+         DqLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uKRsk38fGN1JQaMOEwt3q4K2iQCr73XGMAa+Q9xdB5Q=;
-        b=AjCzA4YA7liCmuyX0euzR0BS4eGD3wK1pYpvTP5sVmlvhDkq9Fzg2ECFxdkvBP1Mf0
-         3RFOpHmru0u4fHmZbzpWsm1GV6RnMKIHeW5YhBlKeflhSJPqPMb0RR6yddrXjUVcewon
-         TOgjv9T9mfVPz+XYZMZSCDDzw/0rH+FpJjini7pO50uA1H6VmvwZJbod6LtLxyT1Brdj
-         RIiVwmiaqJxzWeO+iyPbXe2CEa99LILmaKNypCMLb3HiBRcgWiCsglxdB8juauxkJ7PN
-         WM62BtZ2OTeNo+aqUy7twZ/rk9K/16NH0FdrngSUg8ngxeevK0PrNfstBOittd05z5tU
-         Bfxg==
-X-Gm-Message-State: AOAM530lZz1O7s2UVBNEvBpufYqQq4hz/wUBGAiqn2g5pUWXF9eaeNEv
-        huESl8OEs4K5HLryXomxUia7YyOls4o=
-X-Google-Smtp-Source: ABdhPJwYqJX6ZuguLwM5+Ec2ZSKGU8tVwoL3QG+hSSQkxpib9RseQ+txAS/pJjRxq/vdPiCOcH8kxA==
-X-Received: by 2002:adf:f608:: with SMTP id t8mr81988741wrp.308.1594651797153;
-        Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
+        bh=uvpgFvNf+4M0KT7vkEQvPhnEsrG9RGiG3boyv4KDsto=;
+        b=KQ+n0774c8/QCdXLNfmBIYTEyL0WpcUMOzRq9z4jKSu5CIh4jQPfFu/gFqAdaFE/E1
+         73bLwKjoftceHT8tHiyQB3j3Tv3TR1BAjB2uM/MW4g7QEZZTzpmPRKOLynVgC/8iTTO9
+         tna3NU8Vm4s72hOODubgEHn/LyJdjduy+nBeurKToTMmrHHD0d9FuVx5Me9BL2VnwIqQ
+         /nOOSnYSLLyMfkH36rAp88B5xT0XZJwwiFX8bfI+adlvslXUO2x82FDBjNvW145S9anF
+         scPsQ6rFJIakyPmQkN7jXIHoHQAXa+XDHJmMADXzpztPIXaOgA0Jsplcj2Zx3VI/9s70
+         aoAg==
+X-Gm-Message-State: AOAM531cnpaaNrW623cKRWivgpPgEHisCA7ZxjfovF6s67kdNo/sdab0
+        6ZrUuYCFzeRAHM1JDk5rQ9E3bQ==
+X-Google-Smtp-Source: ABdhPJxU7YOLp/XuHhUGNd2gC1eVG/AmN1zoITJziRxn5KRKhhZfe4M9AxA1e308qH/mPnzjiVsCOA==
+X-Received: by 2002:adf:9524:: with SMTP id 33mr79455557wrs.156.1594651792520;
+        Mon, 13 Jul 2020 07:49:52 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.56
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:56 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:52 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH 22/25] pinctrl: tegra: pinctrl-tegra194: Do not initialise field twice
-Date:   Mon, 13 Jul 2020 15:49:27 +0100
-Message-Id: <20200713144930.1034632-23-lee.jones@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 18/25] pinctrl: pinctrl-bm1880: Rename ill documented struct attribute entries
+Date:   Mon, 13 Jul 2020 15:49:23 +0100
+Message-Id: <20200713144930.1034632-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both PIN_PINGROUP_ENTRY_Y() and DRV_PINGROUP_ENTRY_Y() macros are
-called for each of the 2 pin groups defined here, and both of them
-initialise 'drv_reg', causing the compiler to complain.
-
-Only initialise 'drv_reg' once.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized field overwritten [-Woverride-init]
- 71 | .drv_reg = ((r)), | ^
- drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of macro ‘DRV_PINGROUP_ENTRY_Y’
- 105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
- | ^~~~~~~~~~~~~~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of macro ‘drive_pex_l5_clkreq_n_pgg0’
- 124 | drive_##pg_name, | ^~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of macro ‘PINGROUP’
- 128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, 0,
- | ^~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initialization for ‘tegra194_groups[0].drv_reg’)
- 71 | .drv_reg = ((r)), | ^
- drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of macro ‘DRV_PINGROUP_ENTRY_Y’
- 105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
- | ^~~~~~~~~~~~~~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of macro ‘drive_pex_l5_clkreq_n_pgg0’
- 124 | drive_##pg_name, | ^~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of macro ‘PINGROUP’
- 128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, 0,
- | ^~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized field overwritten [-Woverride-init]
- 71 | .drv_reg = ((r)), | ^
- drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of macro ‘DRV_PINGROUP_ENTRY_Y’
- 107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
- | ^~~~~~~~~~~~~~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of macro ‘drive_pex_l5_rst_n_pgg1’
- 124 | drive_##pg_name, | ^~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of macro ‘PINGROUP’
- 130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
- | ^~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initialization for ‘tegra194_groups[1].drv_reg’)
- 71 | .drv_reg = ((r)), | ^
- drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of macro ‘DRV_PINGROUP_ENTRY_Y’
- 107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
- | ^~~~~~~~~~~~~~~~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of macro ‘drive_pex_l5_rst_n_pgg1’
- 124 | drive_##pg_name, | ^~~~~~
- drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of macro ‘PINGROUP’
- 130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
- | ^~~~~~~~
+ drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pctrldev' not described in 'bm1880_pinctrl'
+ drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pinconf' not described in 'bm1880_pinctrl'
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra194.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/pinctrl-bm1880.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-index 2e0b5f7bb095b..c94ba17243c87 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra194.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-@@ -98,7 +98,6 @@ static struct tegra_function tegra194_functions[] = {
- 		.sfsel_bit = 10,				\
- 		.schmitt_bit = schmitt_b,			\
- 		.drvtype_bit = 13,				\
--		.drv_reg = -1,					\
- 		.parked_bitmask = 0
- 
- #define drive_pex_l5_clkreq_n_pgg0				\
+diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+index d1a7d98367870..a8e267237435f 100644
+--- a/drivers/pinctrl/pinctrl-bm1880.c
++++ b/drivers/pinctrl/pinctrl-bm1880.c
+@@ -22,12 +22,12 @@
+ /**
+  * struct bm1880_pinctrl - driver data
+  * @base:	Pinctrl base address
+- * @pctrl:	Pinctrl device
++ * @pctrldev:	Pinctrl device
+  * @groups:	Pingroups
+  * @ngroups:	Number of @groups
+  * @funcs:	Pinmux functions
+  * @nfuncs:	Number of @funcs
+- * @pconf:	Pinconf data
++ * @pinconf:	Pinconf data
+  */
+ struct bm1880_pinctrl {
+ 	void __iomem *base;
 -- 
 2.25.1
 
