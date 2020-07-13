@@ -2,113 +2,127 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D599CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA85206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F00720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgGMKY3 (ORCPT
+        id S1729341AbgGMK0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:24:29 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:45180 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgGMKY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:24:29 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id C3EE4BC0E4;
-        Mon, 13 Jul 2020 10:24:25 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     3chas3@gmail.com, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] atm: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 12:24:18 +0200
-Message-Id: <20200713102418.33201-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 06:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbgGMK0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 06:26:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520ADC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 03:26:08 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1juves-0006lX-6S; Mon, 13 Jul 2020 12:26:02 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1juver-0008D8-6D; Mon, 13 Jul 2020 12:26:01 +0200
+Date:   Mon, 13 Jul 2020 12:26:00 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     kernel@pengutronix.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20200713102600.ts672o72krjky5gi@pengutronix.de>
+References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
+ <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
+ <20200712082453.GI8295@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p7sgu6f4s3srokfq"
+Content-Disposition: inline
+In-Reply-To: <20200712082453.GI8295@amd>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+--p7sgu6f4s3srokfq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Hello Pavel,
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+On Sun, Jul 12, 2020 at 10:24:53AM +0200, Pavel Machek wrote:
+> > +++ b/drivers/leds/trigger/ledtrig-tty.c
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+>=20
+> 2.0+ is preffered.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+My employer requests GPL-2.0-only for kernel code.
 
- If you apply the patch, please let me know.
+> > +	while (firstrun ||
+> > +	       icount.rx !=3D trigger_data->rx ||
+> > +	       icount.tx !=3D trigger_data->tx) {
+> > +
+> > +		led_set_brightness(trigger_data->led_cdev, LED_ON);
+> > +
+> > +		msleep(100);
+> > +
+> > +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
+>=20
+> Is this good idea inside workqueue?
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+What is "this"? The msleep? Calling led_set_brightness? What would you
+recommend instead? Maybe led_set_brightness_nosleep()?
 
+> > +		trigger_data->rx =3D icount.rx;
+> > +		trigger_data->tx =3D icount.tx;
+> > +		firstrun =3D false;
+> > +
+> > +		ret =3D tty_get_icount(trigger_data->tty, &icount);
+> > +		if (ret)
+> > +			return;
+>=20
+> Unbalanced locking.
 
- drivers/atm/solos-pci.c     | 2 +-
- include/uapi/linux/atmioc.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+indeed, will fix and resend after the above issues are resolved.
 
-diff --git a/drivers/atm/solos-pci.c b/drivers/atm/solos-pci.c
-index c32f7dd9879a..b7646ae55942 100644
---- a/drivers/atm/solos-pci.c
-+++ b/drivers/atm/solos-pci.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Driver for the Solos PCI ADSL2+ card, designed to support Linux by
-- *  Traverse Technologies -- http://www.traverse.com.au/
-+ *  Traverse Technologies -- https://www.traverse.com.au/
-  *  Xrio Limited          -- http://www.xrio.com/
-  *
-  * Copyright © 2008 Traverse Technologies
-diff --git a/include/uapi/linux/atmioc.h b/include/uapi/linux/atmioc.h
-index cd7655e40c77..a9030bcc8d56 100644
---- a/include/uapi/linux/atmioc.h
-+++ b/include/uapi/linux/atmioc.h
-@@ -5,7 +5,7 @@
- 
- 
- /*
-- * See http://icawww1.epfl.ch/linux-atm/magic.html for the complete list of
-+ * See https://icawww1.epfl.ch/linux-atm/magic.html for the complete list of
-  * "magic" ioctl numbers.
-  */
- 
--- 
-2.27.0
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--p7sgu6f4s3srokfq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8MNrYACgkQwfwUeK3K
+7AmjaAgAhJ4ZfU4c7r1CzUjNGOMKD/u6/lkeH+6PbKNRLQA7PLSdkfAvfUitzLVH
+p7CsYj4YavhWXRO9i3p7PDgMUUPeUWdpMq1pYBPOKspahP5hSDjI7ncvgOwhI4Ot
+ANXhLG4jvYlMXa5054nHcPzSkPi5d30If4bg9et+F0+2dTRuVgiIibc5SDXHeOpJ
+a0XKR6gLIog9F4ufu8H71Rz+eA/qK26xbvksv8OWpupLmi+EIg4ijsXiA1Iqgc4R
+gnHYG7cu2oeyXJSXrHitK0415ZT0S//vMZrMPRQvWHiiLhjpYqJTHHpiP3oFTTyu
+REWG/lIOh2q0yDn7dE7+yFG4oQt8sg==
+=lxZ0
+-----END PGP SIGNATURE-----
+
+--p7sgu6f4s3srokfq--
