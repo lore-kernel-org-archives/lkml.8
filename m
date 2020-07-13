@@ -2,203 +2,116 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44846C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B906D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6942068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgGMIxJ (ORCPT
+        id S1727890AbgGMIzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:53:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13696 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726360AbgGMIxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:53:08 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06D8WGmr108228;
-        Mon, 13 Jul 2020 04:53:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3277rcp7a1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 04:53:02 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06D8WHYs108318;
-        Mon, 13 Jul 2020 04:53:02 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3277rcp796-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 04:53:02 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D8nqjp011262;
-        Mon, 13 Jul 2020 08:53:00 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32752820c7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 08:52:59 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06D8qv7n11272682
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 08:52:57 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4E725204E;
-        Mon, 13 Jul 2020 08:52:57 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.49.56])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E4BD85204F;
-        Mon, 13 Jul 2020 08:52:55 +0000 (GMT)
-Subject: Re: [PATCH] selftests/livepatch: adopt to newer sysctl error format
-To:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, Shuah Khan <shuah@kernel.org>,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710051043.899291-1-kamalesh@linux.vnet.ibm.com>
- <20200710152735.GA20226@alley> <20200710183108.GA17581@redhat.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Message-ID: <58df4b1b-9a5a-4ce4-08f0-0b962c8d40e0@linux.vnet.ibm.com>
-Date:   Mon, 13 Jul 2020 14:22:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 13 Jul 2020 04:55:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:48364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbgGMIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:55:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0267E30E;
+        Mon, 13 Jul 2020 01:55:30 -0700 (PDT)
+Received: from [10.37.12.45] (unknown [10.37.12.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95A343F7D8;
+        Mon, 13 Jul 2020 01:55:26 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
+To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>, k.konieczny@samsung.com,
+        krzk@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com,
+        b.zolnierkie@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
+ <20200703062622.11773-1-cw00.choi@samsung.com>
+ <20200703123346.6fy6i33ks6nox46a@macmini.local>
+ <a3339c58-6350-9298-6053-9dc021170048@arm.com>
+ <20200710151233.ci5c4rgwb64eswy7@macmini.local>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <fd482a4b-305b-5332-2f3e-f204018cc7b1@arm.com>
+Date:   Mon, 13 Jul 2020 09:55:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200710183108.GA17581@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200710151233.ci5c4rgwb64eswy7@macmini.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_04:2020-07-10,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 mlxscore=0 spamscore=0
- bulkscore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007130061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/07/20 12:01 am, Joe Lawrence wrote:
-> On Fri, Jul 10, 2020 at 05:27:35PM +0200, Petr Mladek wrote:
->> On Fri 2020-07-10 10:40:43, Kamalesh Babulal wrote:
->>> With procfs v3.3.16, the sysctl command doesn't prints the set key and
->>> value on error.  This change breaks livepatch selftest test-ftrace.sh,
->>> that tests the interaction of sysctl ftrace_enabled:
+Hi Willy
+
+On 7/10/20 4:12 PM, Willy Wolff wrote:
+> Hi Lukasz,
+> 
+> On 2020-07-08-15-25-03, Lukasz Luba wrote:
+>> Hi Willy,
+>>
+>> On 7/3/20 1:33 PM, Willy Wolff wrote:
+>>> Hi Chanwoo,
 >>>
-> 
-> Good catch, it looks like it was this procps commit that modified that
-> behavior:
-> 
->   commit da82fe49b1476d227874905068adb69577e11d96
->   Author: Patrick Steinhardt <ps@pks.im>
->   Date:   Tue May 29 13:29:03 2018 +0200
->   
->       sysctl: do not report set key in case `close_stream` fails
->       
->       As we're using buffered I/O when writing kernel parameters, write errors
->       may get delayed until we close the `FILE` stream. As we are currently
->       outputting the key that is to be set disregarding the return value of
->       `close_stream`, we may end up in a situation where we report error and
->       success:
->       
->           $ sysctl kernel.printk_ratelimit=100000000000000
->           sysctl: setting key "kernel.printk_ratelimit": error code 22
->           kernel.printk_ratelimit = 100000000000000
->       
->       Fix the issue by only outputting the updated value in case
->       `close_stream` does not report an error.
->       
->       Signed-off-by: Patrick Steinhardt <ps@pks.im>
-> 
-> And I'd agree that echoing the failed new value was confusing to see
-> from a user's perspective.
-> 
->>>  # selftests: livepatch: test-ftrace.sh
->>>  # TEST: livepatch interaction with ftrace_enabled sysctl ... not ok
->>>  #
->>>  # --- expected
->>>  # +++ result
->>>  # @@ -16,7 +16,7 @@ livepatch: 'test_klp_livepatch': initial
->>>  #  livepatch: 'test_klp_livepatch': starting patching transition
->>>  #  livepatch: 'test_klp_livepatch': completing patching transition
->>>  #  livepatch: 'test_klp_livepatch': patching complete
->>>  # -livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
->>>     resource busy kernel.ftrace_enabled = 0
->>>  # +livepatch: sysctl: setting key "kernel.ftrace_enabled": Device or
->>>     resource busy
->>>  #  % echo 0 > /sys/kernel/livepatch/test_klp_livepatch/enabled
->>>  #  livepatch: 'test_klp_livepatch': initializing unpatching transition
->>>  #  livepatch: 'test_klp_livepatch': starting unpatching transition
->>>  #
->>>  # ERROR: livepatch kselftest(s) failed
+>>> I think it doesn't help on the benchmark I suggested that is doing only memory
+>>> accesses. With both timer, I have the same timing.
 >>>
->>> on setting sysctl kernel.ftrace_enabled={0,1} value successfully, the
->>> set key and value is displayed.
+>>> To test the benchmark with these new patches about timer:
 >>>
->>> This patch fixes it by limiting the output from both the cases to eight
->>> words, that includes the error message or set key and value on failure
->>> and success. The upper bound of eight words is enough to display the
->>> only tracked error message. Also, adjust the check_result string in
->>> test-ftrace.sh to match the expected output.
+>>> git clone https://github.com/wwilly/benchmark.git \
+>>>     && cd benchmark \
+>>>     && source env.sh \
+>>>     && ./bench_build.sh \
+>>>     && bash source/scripts/test_dvfs_mem_patched.sh
+>>>
+>>> The benchmark is set by default to run for 1s, but you can increase this by
+>>> tweaking the script as:
+>>>
+>>> taskset 8 ./bench_install/bin/microbe_cache 33554431 0 9722222 <TIME in sec> ${little_freq}
+>>>
+>>>
+>>> Also, as I reported the issue, would it be possible to add a
+>>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com> ?
+>>> Many thanks in advance.
 >>
->> This looks really tricky.
->>
->> I wonder if we could use "sysctl -q" to refuse printing the value
->> even with older versions. The following patch works here with
->> sysctl 3.3.15:
-
-Agree, "sysctl -q" is more robust, I tested it with sysctl v3.3.16 and the test
-passes.  Can you please send the patch?
-
->>
-> 
-> FWIW, --quiet was added to procps way back in 2004, so it should be safe
-> to use... and there's already a bunch of net selftests using it.
-
-a couple of tests is using the "-q" options to set the sysctl values.
-
-> 
->> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
->> index 2aab9791791d..47aa4c762bb4 100644
->> --- a/tools/testing/selftests/livepatch/functions.sh
->> +++ b/tools/testing/selftests/livepatch/functions.sh
->> @@ -64,7 +64,8 @@ function set_dynamic_debug() {
->>  }
->>  
->>  function set_ftrace_enabled() {
->> -	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
->> +	result=$(sysctl -q kernel.ftrace_enabled="$1" 2>&1 && \
->> +		 sysctl kernel.ftrace_enabled 2>&1)
->>  	echo "livepatch: $result" > /dev/kmsg
->>  }
->>  
->> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
->> index e2a76887f40a..aa967c5d0558 100755
->> --- a/tools/testing/selftests/livepatch/test-ftrace.sh
->> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
->> @@ -53,7 +53,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
->>  livepatch: '$MOD_LIVEPATCH': starting patching transition
->>  livepatch: '$MOD_LIVEPATCH': completing patching transition
->>  livepatch: '$MOD_LIVEPATCH': patching complete
->> -livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
->> +livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
->>  % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
->>  livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
->>  livepatch: '$MOD_LIVEPATCH': starting unpatching transition
->>
+>> Thank you for your good work and the benchmark. I hope you will continue
+>> to use it and report some issues. I am going to send a follow up patches
+>> for the DMC and I will add your 'Reported-by'. In the tests I can see
+>> the improvements, but it's worth to consult with you if I understand
+>> the new results correctly.
 >>
 > 
-> I think this method is less fragile than word count / cutting and we get
-> to drop that strange 'paste' invocation (I had to look that up in the
-> mapages to remember why we used it).
+> Thanks for that. I will follow on the other patch thread discussion.
+> 
+>> I think there is still some area for improvements in the devfreq and you
+>> could find the interesting bits to contribute.
+> 
+> In fact, this benchmark is motivated about part of my PhD research that has just
+> been accepted at LCTES2020: "Performance Optimization on big.LITTLE Architectures:
+> A Memory-latency Aware Approach" at https://dl.acm.org/doi/10.1145/3372799.3394370
 > 
 
--- 
-Kamalesh
+Congrats and thank you for the link (I will read it).
+
+> Basically, it's about snooping latency with "bad" CPU DVFS choice on big.LITTLE
+> systems or more generally SMP/AMP architecture. I'm cleaning up my code and will
+> propose patches as an RFC later. It introduces a new CPU DVFS governor to limit
+> snooping latency.
+
+This is interesting, please add me on CC in the patch set.
+
+Regards,
+Lukasz
