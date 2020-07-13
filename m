@@ -2,140 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F595C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C1820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561B920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LOn2ya0S"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hcTBR1V0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgGMG7g (ORCPT
+        id S1728711AbgGMGzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgGMG7f (ORCPT
+        Mon, 13 Jul 2020 02:55:54 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:35030 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725830AbgGMGzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:59:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57391C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:59:35 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so14382314wrw.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
-        b=LOn2ya0S5OB7Y5uvhFHYl/XEYXEVgKVvfjwGLeRxcYVK8kubTPZZMct7qQYidJpeJo
-         5RUTN+UHsk4k/Qyma5I22GYlfRjlugEU7XomNMheUP3bbRuVS3/7SVVRaLlvSvu9kIv0
-         zNERj4P/Ai70ommBpNcyUDpRDqCTUpmukH7M8y7dkrOPktVxKlk2m9rIEQYdjNL4DXJf
-         3dHT+wE8SFOp+bWdrs5z8K/msRqurH1sHrU/3qxb9ytCFJsAv3jeVQCpy/h6kbMLwWvc
-         JUuFw3rEpW2tqWqGZlQUKhB2PfFXs+/fxA6PhzCBkW1019Sgorg6Uw2dk03Ajt6NceSh
-         +oMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
-        b=Cq5vDh062vGUQNZZ2WvXry6+UrfieLRxs+W3FsB4Qo2J/xI5Z/JYf8ys2o3fcGcvKt
-         6gORFRpKauLOSSzdEQygRwh0EoBriyo8qMl9+w6LGp037LsqsZDb2bMpJTF7hHfVOnHs
-         zOqFnFkP1+GFfbDJpaoBn7t1lssI5PTDVc//2WGGHCKwBfi13kjVKqNTY9pfTt/UZCpf
-         lni7gL3AFcxH6xaAE9HvsGCGpXYTTsyX4i2wDQg0Njr7HeLSIcplLhzyLRyE47v6z2E2
-         t8rauqPt4rpZbiD2XSEd9ClFe6KdLPmMj7TUcubjit513vO2Eo5khlSK3LOvUzQQWLNT
-         52QQ==
-X-Gm-Message-State: AOAM5305Zw+lhEdhwONUojuPYSBWTpEkGt9f0zBYnFDFoFFGzt8lV26G
-        1fqhBnLsjLz/p4FUQEARiWmK6w==
-X-Google-Smtp-Source: ABdhPJyVPeQ7ShrahAXpJcoWO4VTZySPJoqio9Q2uZh9sFtU3rbW6xzIeLZOkXeBF0Flfj7vAttPig==
-X-Received: by 2002:a5d:404e:: with SMTP id w14mr76901144wrp.268.1594623573901;
-        Sun, 12 Jul 2020 23:59:33 -0700 (PDT)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 92sm24394143wrr.96.2020.07.12.23.59.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:59:33 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
-Date:   Mon, 13 Jul 2020 08:59:31 +0200
-Message-Id: <20200713065931.19845-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 13 Jul 2020 02:55:54 -0400
+X-UUID: 474391b0ea3341caa0a2e701608106dd-20200713
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+Ge9G9rSePdPEHWfzy1cfUe7vMpgioTYIlHODRFrwkk=;
+        b=hcTBR1V01BvFVOcL44C3w3YSZLGRuq/FvLGwAt6XomEoV1yYRvZFBkRHNVTx1M6WesSiSY+7aPclKNgqNZreRNhgIQQH1hrtVBa890fnkMCBgKoDvX3mQ0TuwNdKE4VmlkYnEZiKMDMG3wGuxdINFJ4nq/X6ys/epgshYJ/Jt1s=;
+X-UUID: 474391b0ea3341caa0a2e701608106dd-20200713
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1177699355; Mon, 13 Jul 2020 14:55:48 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 13 Jul
+ 2020 14:55:47 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 13 Jul 2020 14:55:45 +0800
+Message-ID: <1594623300.23885.36.camel@mhfsdcap03>
+Subject: Re: [v2 PATCH] usb: gadget: bdc: use readl_poll_timeout() to
+ simplify code
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Mon, 13 Jul 2020 14:55:00 +0800
+In-Reply-To: <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
+References: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
+         <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 5DE5EC88EF47CDA1AC3C74117593930ACC115D18580B92FF06D31A130EB8FCEE2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Khadas MCU node with active FAN thermal nodes for all the
-Khadas VIM3 variants.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Hi Kevin,
-
-The bindings has been reviewed and merged by Lee,
-could you apply this one via the amlogic tree ?
-
-Thanks,
-Neil
-
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 1ef1e3672b96..27408c10a811 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -183,6 +183,23 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&cpu_thermal {
-+	trips {
-+		cpu_active: cpu-active {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "active";
-+		};
-+	};
-+
-+	cooling-maps {
-+		map {
-+			trip = <&cpu_active>;
-+			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */
-@@ -222,6 +239,12 @@
- 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
- 	pinctrl-names = "default";
- 
-+	khadas_mcu: system-controller@18 {
-+		compatible = "khadas,mcu";
-+		reg = <0x18>;
-+		#cooling-cells = <2>;
-+	};
-+
- 	gpio_expander: gpio-controller@20 {
- 		compatible = "ti,tca6408";
- 		reg = <0x20>;
--- 
-2.22.0
+T24gU3VuLCAyMDIwLTA3LTEyIGF0IDIwOjUzIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
+Og0KPiANCj4gT24gNy8xMi8yMDIwIDg6MzAgUE0sIENodW5mZW5nIFl1biB3cm90ZToNCj4gPiBV
+c2UgcmVhZGxfcG9sbF90aW1lb3V0KCkgdG8gcG9sbCByZWdpc3RlciBzdGF0dXMNCj4gPiANCj4g
+PiBDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KPiA+IC0t
+LQ0KPiA+IHYyIGNoYW5nZXMsIHN1Z2dlc3RlZCBieSBTdGVwaGVuOg0KPiA+ICAgMS4gdXNlIHVu
+c2lnbmVkIGludCBpbnN0ZWFkIG9mIGludCBmb3IgQHVzZWMgcGFyYW1ldGVyDQo+ID4gICAyLiBh
+ZGQgZGV2X2xvZygpIGJhY2sNCj4gPiAgIDMuIGRyb3AgIkVyciIgaW4gZXJyb3IgbG9nDQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19jb3JlLmMgfCAyNiArKysr
+KysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9u
+cygrKSwgMTUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
+L2dhZGdldC91ZGMvYmRjL2JkY19jb3JlLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9i
+ZGNfY29yZS5jDQo+ID4gaW5kZXggMDJhM2E3Ny4uNTNkY2NiMSAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy91
+c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NvcmUuYw0KPiA+IEBAIC0xMiw2ICsxMiw3IEBADQo+ID4g
+ICNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZv
+cm1fZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPiArI2lu
+Y2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW9wb3J0Lmg+DQo+
+ID4gICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0K
+PiA+IEBAIC0yOSwyNCArMzAsMTkgQEANCj4gPiAgI2luY2x1ZGUgImJkY19kYmcuaCINCj4gPiAg
+DQo+ID4gIC8qIFBvbGwgdGlsbCBjb250cm9sbGVyIHN0YXR1cyBpcyBub3QgT0lQICovDQo+ID4g
+LXN0YXRpYyBpbnQgcG9sbF9vaXAoc3RydWN0IGJkYyAqYmRjLCBpbnQgdXNlYykNCj4gPiArc3Rh
+dGljIGludCBwb2xsX29pcChzdHJ1Y3QgYmRjICpiZGMsIHUzMiB1c2VjKQ0KPiA+ICB7DQo+ID4g
+IAl1MzIgc3RhdHVzOw0KPiA+IC0JLyogUG9sbCB0aWxsIFNUUyE9IE9JUCAqLw0KPiA+IC0Jd2hp
+bGUgKHVzZWMpIHsNCj4gPiAtCQlzdGF0dXMgPSBiZGNfcmVhZGwoYmRjLT5yZWdzLCBCRENfQkRD
+U0MpOw0KPiA+IC0JCWlmIChCRENfQ1NUUyhzdGF0dXMpICE9IEJEQ19PSVApIHsNCj4gPiAtCQkJ
+ZGV2X2RiZyhiZGMtPmRldiwNCj4gPiAtCQkJCSJwb2xsX29pcCBjb21wbGV0ZSBzdGF0dXM9JWQi
+LA0KPiA+IC0JCQkJQkRDX0NTVFMoc3RhdHVzKSk7DQo+ID4gLQkJCXJldHVybiAwOw0KPiA+IC0J
+CX0NCj4gPiAtCQl1ZGVsYXkoMTApOw0KPiA+IC0JCXVzZWMgLT0gMTA7DQo+ID4gLQl9DQo+ID4g
+LQlkZXZfZXJyKGJkYy0+ZGV2LCAiRXJyOiBvcGVyYXRpb24gdGltZWRvdXQgQkRDU0M6IDB4JTA4
+eFxuIiwgc3RhdHVzKTsNCj4gPiArCWludCByZXQ7DQo+ID4gIA0KPiA+IC0JcmV0dXJuIC1FVElN
+RURPVVQ7DQo+ID4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoYmRjLT5yZWdzICsgQkRDX0JE
+Q1NDLCBzdGF0dXMsDQo+ID4gKwkJKEJEQ19DU1RTKHN0YXR1cykgIT0gQkRDX09JUCksIDEwLCB1
+c2VjKTsNCj4gDQo+IFlvdSBjb3VsZCBwcm9iYWJseSBpbmRlbnQgdGhpcyB0byB0aGUgb3Blbmlu
+ZyBwYXJlbnRoZXNpcywgDQpEb25lLCB2MyBpcyBzZW50IG91dCwgdGhhbmtzDQoNCj4gYnV0IHdp
+dGggb3INCj4gd2l0aG91dCBpdDoNCj4gDQo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxp
+IDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCj4gDQo+IGFuZCB0aGFua3MgZm9yIHBpY2tpbmcgdXAg
+dGhlIE1BSU5UQUlORVJTIGZpbGUgdXBkYXRlIDspDQo+IA0KPiA+ICsJaWYgKHJldCkNCj4gPiAr
+CQlkZXZfZXJyKGJkYy0+ZGV2LCAib3BlcmF0aW9uIHRpbWVkb3V0IEJEQ1NDOiAweCUwOHhcbiIs
+IHN0YXR1cyk7DQo+ID4gKwllbHNlDQo+ID4gKwkJZGV2X2RiZyhiZGMtPmRldiwgIiVzIGNvbXBs
+ZXRlIHN0YXR1cz0lZCIsIF9fZnVuY19fLCBCRENfQ1NUUyhzdGF0dXMpKTsNCj4gPiArDQo+ID4g
+KwlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4gIA0KPiA+ICAvKiBTdG9wIHRoZSBCREMgY29udHJv
+bGxlciAqLw0KPiA+IA0KPiANCg0K
 
