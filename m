@@ -3,136 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CAEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3836C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01F8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rq8Rk1Kv"
+	by mail.kernel.org (Postfix) with ESMTP id A3680206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594632292;
+	bh=EH5TrWdmq6I1jgYbH1HZ5kpFdNMmEWTWCUX1Y6ss3iA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1mmXv8yuwIdgYf1zhAd38PRUu9sleJrPRFZlRVvpnGzq1ealtm4/2KEGBX9zeaqU3
+	 fXiKG49XmnaWP6tLoJ1hw/cdYzM2SKge8LXJM27vNJw7QVI3i+iAMvCKhzaNPESpBa
+	 QCV+46sFOfFI8eAj14wVprLenkDWhvPM1f3Na6SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgGMJYp (ORCPT
+        id S1729352AbgGMJYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:24:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33087 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727035AbgGMJYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:24:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594632283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8taBpeNWfYvGCIuu+3RcwP8mgr+DtPBfUd45yt6a9tM=;
-        b=Rq8Rk1KvIVnuE9eYYjiOeQ8iU3fgbPSFk90s3TDWA9aFuTBE8OBVmFP+MhQcogqy2KPiIp
-        n4B1bUjXZ/e6csGYxU3jBi/I6JnRvkXBEIq/Ue/FjoC8HwdZhAuO/Mow+MXbqhBQsv6+p+
-        OchEItMGSsA09QWziXFLwaqw098zjqA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-p6tDz3eYNamNtlQUM20UWg-1; Mon, 13 Jul 2020 05:24:39 -0400
-X-MC-Unique: p6tDz3eYNamNtlQUM20UWg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 13 Jul 2020 05:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgGMJYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:24:51 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3A3F19200C3;
-        Mon, 13 Jul 2020 09:24:37 +0000 (UTC)
-Received: from localhost (ovpn-114-66.ams2.redhat.com [10.36.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C68C719D61;
-        Mon, 13 Jul 2020 09:24:36 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 10:24:35 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200713092435.GC28639@stefanha-x1.localdomain>
-References: <20200710141945.129329-1-sgarzare@redhat.com>
- <20200710153309.GA4699@char.us.oracle.com>
- <20200710162017.qdu34ermtxh3rfgl@steredhat>
+        by mail.kernel.org (Postfix) with ESMTPSA id 377CC2076D;
+        Mon, 13 Jul 2020 09:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594632290;
+        bh=EH5TrWdmq6I1jgYbH1HZ5kpFdNMmEWTWCUX1Y6ss3iA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SaaK99rF2HP7TKwycgbM63GKNl3Q3bd18O4sRxKaBGhqzmtguyP756uJYsXv7c3lt
+         g6l9QbunOWXoxLu5ZAd8eWU74L36C/pXJikzoJRfP7CVMRt5V0+gWNHWOA+aLXEUIQ
+         UUk/ZMIhSIyYdmd2XuMc7q+1K9VKM/4dybY1l//c=
+Date:   Mon, 13 Jul 2020 14:54:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Swathi Kovvuri <swathi.kovvuri@intel.com>,
+        peter.ujfalusi@ti.com,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dmaengine: check device and channel list for empty
+Message-ID: <20200713092445.GH34333@vkoul-mobl>
+References: <159319496403.69045.16298280729899651363.stgit@djiang5-desk3.ch.intel.com>
+ <ea3ef860-0b7a-e8da-8cf9-5930a8f3b7ed@kernel.org>
+ <b9e8f171-6961-b483-c698-18a89e58f361@intel.com>
+ <852318ec-9e18-3dee-a91d-1cf4dddb8906@kernel.org>
+ <83932426-d52a-2e62-9d4b-5abb134a64df@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710162017.qdu34ermtxh3rfgl@steredhat>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <83932426-d52a-2e62-9d4b-5abb134a64df@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---ZwgA9U+XZDXt4+m+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09-07-20, 08:23, Dave Jiang wrote:
+> 
+> 
+> On 7/8/2020 10:35 PM, Jiri Slaby wrote:
+> > On 07. 07. 20, 17:42, Dave Jiang wrote:
+> > > On 7/6/2020 11:05 PM, Jiri Slaby wrote:
+> > > > On 26. 06. 20, 20:09, Dave Jiang wrote:
+> > > > > Check dma device list and channel list for empty before iterate as the
+> > > > > iteration function assume the list to be not empty. With devices and
+> > > > > channels now being hot pluggable this is a condition that needs to be
+> > > > > checked. Otherwise it can cause the iterator to spin forever.
+> > > > 
+> > > > Could you be a little bit more specific how this can spin forever? I.e.
+> > > > can you attach a stacktrace of such a behaviour?
+> > > 
+> > > I can't seem to find the original splat that lead me to the conclusion
+> > > of it's spinning forever. As I recall, the issue seems to produce
+> > > different splats and not always consistent in being reproduced. Here's a
+> > > partial splat that was tracked by the internal bug database. Since with
+> > > the dma device and channel list being are hot added and removed, the
+> > > device and channel lists can be empty. The list_entry() and friends
+> > > expect the list to not be empty (according to header comment), I added
+> > > the check to ensure that isn't the case before using them in dmaengine.
+> > 
+> > Yes, the comment states that as it is true: you receive a
+> > wild/non-checkable pointer if you do list_entry on an empty list. BUT
+> > have you actually read what I wrote:
+> > 
+> > > > As in the empty case, "&pos->member" is "head" (look into
+> > > > list_for_each_entry) and the for loop should loop exactly zero times.
+> > 
+> > HERE ^^^^
+> > 
+> > > With the fix, we can no longer produce any of the splats. So maybe the
+> > > above was a bad description of the issue.
+> > 
+> > No, not only the description, worse, the patch proper looks wrong.
+> > 
+> > > [ 4216.048375]  ? dma_channel_rebalance+0x7b/0x250
+> > > [ 4216.056360]  dma_async_device_register+0x349/0x3a0
+> > > [ 4216.064604]  idxd_register_dma_device+0x90/0xc0 [idxd]
+> > > [ 4216.073175]  idxd_config_bus_probe.cold+0x7d/0x1fc [idxd]
+> > 
+> > So, the good part in the patch is the fixed locking in
+> > dma_async_device_register. Otherwise it adds nonsense checks. So you
+> > fixed the issue only by a chance, by a side effect as Peter pointed out.
+> > Leaving aside that you broke dma_request_chan -- that could happen to
+> > anybody.
+> > 
+> > Vinod, please drop/revert this patch. Then start over only with
+> > dma_async_device_register fixed locking.
+> 
+> I'll start on the proper fix.
 
-On Fri, Jul 10, 2020 at 06:20:17PM +0200, Stefano Garzarella wrote:
-> On Fri, Jul 10, 2020 at 11:33:09AM -0400, Konrad Rzeszutek Wilk wrote:
-> > .snip..
-> > > Just to recap the proposal, the idea is to add some restrictions to t=
-he
-> > > operations (sqe, register, fixed file) to safely allow untrusted appl=
-ications
-> > > or guests to use io_uring queues.
-> >=20
-> > Hi!
-> >=20
-> > This is neat and quite cool - but one thing that keeps nagging me is
-> > what how much overhead does this cut from the existing setup when you u=
-se
-> > virtio (with guests obviously)?
->=20
-> I need to do more tests, but the preliminary results that I reported on
-> the original proposal [1] show an overhead of ~ 4.17 uS (with iodepth=3D1=
-)
-> when I'm using virtio ring processed in a dedicated iothread:
->=20
->   - 73 kIOPS using virtio-blk + QEMU iothread + io_uring backend
->   - 104 kIOPS using io_uring passthrough
->=20
-> >                                 That is from a high level view the
-> > beaty of io_uring being passed in the guest is you don't have the
-> > virtio ring -> io_uring processing, right?
->=20
-> Right, and potentially we can share the io_uring queues directly to the
-> guest userspace applications, cutting down the cost of Linux block
-> layer in the guest.
+Dropped
 
-Another factor is that the guest submits requests directly to the host
-kernel sqpoll thread. When a virtqueue is used the sqpoll thread cannot
-poll it directly so another host thread (QEMU) needs to poll the
-virtqueue. The same applies for the completion code path.
-
-Stefan
-
---ZwgA9U+XZDXt4+m+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl8MKFMACgkQnKSrs4Gr
-c8iWaQgAkvf4Ga+PHPaSTucaASbYCgeYbSgiUPCLRsOB0g2+3HM6buSTHpdfYoUk
-Fy1Y3Yl7cDqGmCCHdTx9rYTQCd6SYSElqylNNnn6yEMiMgvcYcK4xn+wgY8BxVGy
-yIv0Rl52ucmtkQ4Iry5mA/vSNZiiVnDyP5Mq9EahEKDO9RtC0duf4xJeR1Lhyk9G
-QDbDx9I2/TZgsxar1+Tettaf6vbC1d8S5WCSSktvMl7Jn2zP/uyJg9DyuMCRWMVl
-YPX8SPGK/Kr0uKRWkWtBdbK0TuDJtM5i8hdD59ppdQaSwt7JrmowOFDKg9iznl4r
-Z9f95iJ6QD2dHTtGo4Yc5WKyhZ9BmA==
-=KoLY
------END PGP SIGNATURE-----
-
---ZwgA9U+XZDXt4+m+--
-
+-- 
+~Vinod
