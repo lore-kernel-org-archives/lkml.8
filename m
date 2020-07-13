@@ -2,126 +2,215 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25F5C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19418C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B982075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594652949;
-	bh=vngHFPy6JLQna7o2+Dx1IPDqHMOEQth8MnxQOxW04yA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0DRJ4QEnAP6acTkek/hfztt+0x1FM9v2MtNbYg25eGgH1S39ea1cG0PtKlPyiaEvd
-	 UfSLSY80nraAyqVCuy+QahgxxwV/A8Bvps50ih2K6lig1HWFoSLLTX9LZ1pxXGZ3mO
-	 D33ft8NfjT0ab77aSoYcG0vwuxeFgwkhHHuc6vpc=
+	by mail.kernel.org (Postfix) with ESMTP id DF2B62075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/QxOz4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgGMPJI (ORCPT
+        id S1729884AbgGMPK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729782AbgGMPJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:09:07 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A14205CB;
-        Mon, 13 Jul 2020 15:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594652947;
-        bh=vngHFPy6JLQna7o2+Dx1IPDqHMOEQth8MnxQOxW04yA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E040T9qhClnKRLJxdVpFYW9R6VpwPxG9f7y42Fa2tHvqsGskw4NuW6j0cd3ObUudq
-         C88NkzK3mA+1rIsiiflU4VV5PwpEa7I2V/YQEyD1t8Tu42WQKdA1ZFog36C6ESpbNV
-         57ZOU5atVZ7mjGB1ufC8p0H5F1tiOPa8sFPjAVqs=
-Date:   Mon, 13 Jul 2020 16:09:02 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/7] iommu/arm-smmu: Add a pointer to the attached
- device to smmu_domain
-Message-ID: <20200713150901.GA3072@willie-the-truck>
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
- <20200626200042.13713-5-jcrouse@codeaurora.org>
+        Mon, 13 Jul 2020 11:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729308AbgGMPK0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:10:26 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD50C061755;
+        Mon, 13 Jul 2020 08:10:26 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id h16so11412034ilj.11;
+        Mon, 13 Jul 2020 08:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0aLviF1Tp3qA2WKh5TL8kBFDCcYaBAEuv96ryJ3BdEQ=;
+        b=D/QxOz4WvIUD4B3lvyIkXS7SAxqk0KrEw76vSE31m21XfLI1cegHHImvvF+qnfZzcd
+         JaG5NzQJvqKNc9Dl+lQrD5TNco65lp04gJqJCfVB1t1nPN/3lnzwtk17EhR2ow/XIwhM
+         lbwHRGsF+Shk9P3STfL2y6N9Vu6d1qPBjQS8E+rQroQa7fYNBA3uvzdQQ02T3BfAJrlS
+         PfhhLQS8IA/tRuFgaNOgoYwN3adcsEAbjJX8AlAz+LO04Am3SqhL69WdkNlICCAx4vAH
+         D/pIj3pyS22Q5KDpgUqJF0AKw8J+SILPn0Ga7E2/wLxBae/MWIFCb2r9GG2vivkhw5bl
+         Ta/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0aLviF1Tp3qA2WKh5TL8kBFDCcYaBAEuv96ryJ3BdEQ=;
+        b=UEF+M/FYf/eXvvjA5W5hhyroySc0DJrxozk3Lg9XJCjq/JDfHAEqtXS5thLpcQw8/9
+         tZDUm7TYdDX67tt1RXsh5hZiJ4sq+izjsSwxADV0nXg74IA7CtY7SHfdXRwIpGQKg4lr
+         NcR7EV8e1i5BRAFWnmY+LpuGRElzLov/MVGeNp0w01TFOId9YPKLcqSFZt6VK/FN9wX8
+         zD79bf94HYoLg0jDY++Xt+mxzUiY/bPp+yHnyW4Q2AZi+yL4JgTMzekbeHHgrx8vNMFP
+         o3EwYbjJikZrFRC5CTyuS8M6+CizxwtOai7lg8EZyN8Ce2UP+xl/bPWyjqm4p7GITibu
+         cIYg==
+X-Gm-Message-State: AOAM5320mnpTrpjlFmYey1cCbKrPz/ly1mPrPOkOlhzgymzIfbViJF8U
+        MdpYQaOQFUQa4a/foFPfWsJMb6Y+OQFD9sy82W4Up6Sb
+X-Google-Smtp-Source: ABdhPJz7fEoAdjaSgaCNKEkg33tHudeh5sEOS1URoEDTxPr92qH0X2OfEk+7e2oQcfcZ76Rxra0Ar6VviU2oCqYGB8c=
+X-Received: by 2002:a92:bd0f:: with SMTP id c15mr113475ile.95.1594653025301;
+ Mon, 13 Jul 2020 08:10:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626200042.13713-5-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200710113046.421366-1-mst@redhat.com> <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
+ <20200712105926-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200712105926-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 13 Jul 2020 08:10:14 -0700
+Message-ID: <CAKgT0UdY1xpEH1Hg4HWJEkGwH5s64sm1y4O_XmHe8P_f=tDhpg@mail.gmail.com>
+Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 02:00:38PM -0600, Jordan Crouse wrote:
-> Add a link to the pointer to the struct device that is attached to a
-> domain. This makes it easy to get the pointer if it is needed in the
-> implementation specific code.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->  drivers/iommu/arm-smmu.c | 6 ++++--
->  drivers/iommu/arm-smmu.h | 1 +
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 048de2681670..060139452c54 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -668,7 +668,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
->  }
->  
->  static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> -					struct arm_smmu_device *smmu)
-> +					struct arm_smmu_device *smmu,
-> +					struct device *dev)
->  {
->  	int irq, start, ret = 0;
->  	unsigned long ias, oas;
-> @@ -801,6 +802,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  		cfg->asid = cfg->cbndx;
->  
->  	smmu_domain->smmu = smmu;
-> +	smmu_domain->dev = dev;
->  
->  	pgtbl_cfg = (struct io_pgtable_cfg) {
->  		.pgsize_bitmap	= smmu->pgsize_bitmap,
-> @@ -1190,7 +1192,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  		return ret;
->  
->  	/* Ensure that the domain is finalised */
-> -	ret = arm_smmu_init_domain_context(domain, smmu);
-> +	ret = arm_smmu_init_domain_context(domain, smmu, dev);
->  	if (ret < 0)
->  		goto rpm_put;
->  
-> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> index 5f2de20e883b..d33cfe26b2f5 100644
-> --- a/drivers/iommu/arm-smmu.h
-> +++ b/drivers/iommu/arm-smmu.h
-> @@ -345,6 +345,7 @@ struct arm_smmu_domain {
->  	struct mutex			init_mutex; /* Protects smmu pointer */
->  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
->  	struct iommu_domain		domain;
-> +	struct device			*dev;	/* Device attached to this domain */
+On Sun, Jul 12, 2020 at 8:10 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
+> > On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > Page reporting features were never supported by legacy hypervisors.
+> > > Supporting them poses a problem: should we use native endian-ness (like
+> > > current code assumes)? Or little endian-ness like the virtio spec says?
+> > > Rather than try to figure out, and since results of
+> > > incorrect endian-ness are dire, let's just block this configuration.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >
+> > So I am not sure about the patch description. In the case of page
+> > poison and free page reporting I don't think we are defining anything
+> > that doesn't already have a definition of how to use in legacy.
+> > Specifically the virtio_balloon_config is already defined as having
+> > all fields as little endian in legacy mode, and there is a definition
+> > for all of the fields in a virtqueue and how they behave in legacy
+> > mode.
+> >
+> > As far as I can see the only item that may be an issue is the command
+> > ID being supplied via the virtqueue for free page hinting, which
+> > appears to be in native endian-ness. Otherwise it would have fallen
+> > into the same category since it is making use of virtio_balloon_config
+> > and a virtqueue for supplying the page location and length.
+>
+>
+>
+> So as you point out correctly balloon spec says all fields are little
+> endian.  Fair enough.
+> Problem is when virtio 1 is not negotiated, then this is not what the
+> driver assumes for any except a handlful of fields.
+>
+> But yes it mostly works out.
+>
+> For example:
+>
+>
+> static void update_balloon_size(struct virtio_balloon *vb)
+> {
+>         u32 actual = vb->num_pages;
+>
+>         /* Legacy balloon config space is LE, unlike all other devices. */
+>         if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+>                 actual = (__force u32)cpu_to_le32(actual);
+>
+>         virtio_cwrite(vb->vdev, struct virtio_balloon_config, actual,
+>                       &actual);
+> }
+>
+>
+> this is LE even without VIRTIO_F_VERSION_1, so matches spec.
+>
+>                 /* Start with poison val of 0 representing general init */
+>                 __u32 poison_val = 0;
+>
+>                 /*
+>                  * Let the hypervisor know that we are expecting a
+>                  * specific value to be written back in balloon pages.
+>                  */
+>                 if (!want_init_on_free())
+>                         memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+>
+>                 virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+>                               poison_val, &poison_val);
+>
+>
+> actually this writes a native endian-ness value. All bytes happen to be
+> the same though, and host only cares about 0 or non 0 ATM.
 
-This really doesn't feel right to me -- you can generally have multiple
-devices attached to a domain and they can come and go without the domain
-being destroyed. Perhaps you could instead identify the GPU during
-cfg_probe() and squirrel that information away somewhere?
+So we are safe assuming it is a repeating value, but for correctness
+maybe we should make certain to cast this as a le32 value. I can
+submit a patch to do that.
 
-The rest of the series looks ok to me.
+> As you say correctly the command id is actually assumed native endian:
+>
+>
+> static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+> {
+>         if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+>                                &vb->config_read_bitmap))
+>                 virtio_cread(vb->vdev, struct virtio_balloon_config,
+>                              free_page_hint_cmd_id,
+>                              &vb->cmd_id_received_cache);
+>
+>         return vb->cmd_id_received_cache;
+> }
+>
+>
+> So guest assumes native, host assumes LE.
 
-Will
+This wasn't even the one I was talking about, but now that you point
+it out this is definately bug. The command ID I was talking about was
+the one being passed via the descriptor ring. That one I believe is
+native on both sides.
+
+>
+>
+>
+> > > ---
+> > >  drivers/virtio/virtio_balloon.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > >
+> > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > > index 5d4b891bf84f..b9bc03345157 100644
+> > > --- a/drivers/virtio/virtio_balloon.c
+> > > +++ b/drivers/virtio/virtio_balloon.c
+> > > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
+> > >
+> > >  static int virtballoon_validate(struct virtio_device *vdev)
+> > >  {
+> > > +       /*
+> > > +        * Legacy devices never specified how modern features should behave.
+> > > +        * E.g. which endian-ness to use? Better not to assume anything.
+> > > +        */
+> > > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
+> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
+> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+> > > +       }
+> > >         /*
+> > >          * Inform the hypervisor that our pages are poisoned or
+> > >          * initialized. If we cannot do that then we should disable
+> >
+> > The patch content itself I am fine with since odds are nobody would
+> > expect to use these features with a legacy device.
+> >
+> > Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>
+> Hmm so now you pointed out it's just cmd id, maybe I should just fix it
+> instead? what do you say?
+
+So the config issues are bugs, but I don't think you saw the one I was
+talking about. In the function send_cmd_id_start the cmd_id_active
+value which is initialized as a virtio32 is added as a sg entry and
+then sent as an outbuf to the device. I'm assuming virtio32 is a host
+native byte ordering.
