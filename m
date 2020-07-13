@@ -2,110 +2,365 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6696DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE42C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4662A2089D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6A42089D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGMVdi (ORCPT
+        id S1726762AbgGMVao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:33:38 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59947 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGMVdi (ORCPT
+        Mon, 13 Jul 2020 17:30:44 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:65298 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbgGMVao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:33:38 -0400
-X-Originating-IP: 50.39.163.217
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9F75F1C0002;
-        Mon, 13 Jul 2020 21:33:30 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 14:33:26 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
-        geofft@ldpreload.com, jbaublitz@redhat.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Linux kernel in-tree Rust support
-Message-ID: <20200713213326.GA16462@localhost>
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
- <875zarb7zy.fsf@x220.int.ebiederm.org>
+        Mon, 13 Jul 2020 17:30:44 -0400
+Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DLGjN5031271;
+        Mon, 13 Jul 2020 21:29:58 GMT
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 328ux71eda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 21:29:58 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 77D4D77;
+        Mon, 13 Jul 2020 21:29:56 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+        id E90C220099B3A; Mon, 13 Jul 2020 16:29:54 -0500 (CDT)
+Message-ID: <20200713212954.846026992@hpe.com>
+User-Agent: quilt/0.66
+Date:   Mon, 13 Jul 2020 16:29:57 -0500
+From:   steve.wahl@hpe.com
+To:     Steve Wahl <steve.wahl@hpe.com>, Jonathan Corbet <corbet@lwn.net>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Austin Kim <austindh.kim@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Cc:     Russ Anderson <rja@hpe.com>
+Subject: [patch v3 03/13] x86: Remove support for UV1 platform from x2apic_uv_x.c
+References: <20200713212954.444086564@hpe.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zarb7zy.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_17:2020-07-13,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:11:13PM -0500, Eric W. Biederman wrote:
-> Nick Desaulniers <ndesaulniers@google.com> writes:
-> 
-> > Hello folks,
-> > I'm working on putting together an LLVM "Micro Conference" for the
-> > upcoming Linux Plumbers Conf
-> > (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
-> > solidified yet, but I would really like to run a session on support
-> > for Rust "in tree."  I suspect we could cover technical aspects of
-> > what that might look like (I have a prototype of that, was trivial to
-> > wire up KBuild support), but also a larger question of "should we do
-> > this?" or "how might we place limits on where this can be used?"
-> >
-> > Question to folks explicitly in To:, are you planning on attending plumbers?
-> >
-> > If so, would this be an interesting topic that you'd participate in?
-> 
-> I have two big concerns about actually using rust.
-> 
-> 1) How large is the rust language support, and will each rust module
->    need to duplicate it.  I seem to remember someone mentioning it is
->    noticable in size.
+arch/x86/kernel/apic/x2apic_uv_x.c: remove UV1 support
 
-There should only be a single copy, which could either be in the kernel
-(if there's Rust code compiled into the kernel) or be in a "rust.ko"
-support module. As long as you use the same version of Rust for the
-kernel and all modules, you can supply symbols dynamically.
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c |  122 +++++++------------------------------
+ 1 file changed, 26 insertions(+), 96 deletions(-)
 
-There are a few other steps we can take to control code size, as well.
-In particular, there are tradeoffs between performance and size, such as
-the amount of code in generics vs non-generics. (We also need to get
-some further optimizations into Rust on that front, such as tail
-merging.)
+--- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c	2020-07-07 10:49:50.397510217 -0500
++++ linux/arch/x86/kernel/apic/x2apic_uv_x.c	2020-07-07 10:56:13.857047362 -0500
+@@ -24,8 +24,6 @@
+ #include <asm/uv/uv.h>
+ #include <asm/apic.h>
+ 
+-static DEFINE_PER_CPU(int, x2apic_extra_bits);
+-
+ static enum uv_system_type	uv_system_type;
+ static int			uv_hubbed_system;
+ static int			uv_hubless_system;
+@@ -40,7 +38,7 @@ static u8 oem_table_id[ACPI_OEM_TABLE_ID
+ static struct {
+ 	unsigned int apicid_shift;
+ 	unsigned int apicid_mask;
+-	unsigned int socketid_shift;	/* aka pnode_shift for UV1/2/3 */
++	unsigned int socketid_shift;	/* aka pnode_shift for UV2/3 */
+ 	unsigned int pnode_mask;
+ 	unsigned int gpa_shift;
+ 	unsigned int gnode_shift;
+@@ -48,8 +46,6 @@ static struct {
+ 
+ static int uv_min_hub_revision_id;
+ 
+-unsigned int uv_apicid_hibits;
+-
+ static struct apic apic_x2apic_uv_x;
+ static struct uv_hub_info_s uv_hub_info_node0;
+ 
+@@ -139,12 +135,8 @@ static void __init uv_tsc_check_sync(voi
+ 	/* Accommodate different UV arch BIOSes */
+ 	mmr = uv_early_read_mmr(UVH_TSC_SYNC_MMR);
+ 	mmr_shift =
+-		is_uv1_hub() ? 0 :
+ 		is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
+-	if (mmr_shift)
+-		sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
+-	else
+-		sync_state = 0;
++	sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
+ 
+ 	switch (sync_state) {
+ 	case UVH_TSC_SYNC_VALID:
+@@ -223,21 +215,6 @@ static void __init early_get_apic_socket
+ 	pr_info("UV: socketid_shift:%d pnode_mask:0x%x\n", uv_cpuid.socketid_shift, uv_cpuid.pnode_mask);
+ }
+ 
+-/*
+- * Add an extra bit as dictated by bios to the destination apicid of
+- * interrupts potentially passing through the UV HUB.  This prevents
+- * a deadlock between interrupts and IO port operations.
+- */
+-static void __init uv_set_apicid_hibit(void)
+-{
+-	union uv1h_lb_target_physical_apic_id_mask_u apicid_mask;
+-
+-	if (is_uv1_hub()) {
+-		apicid_mask.v = uv_early_read_mmr(UV1H_LB_TARGET_PHYSICAL_APIC_ID_MASK);
+-		uv_apicid_hibits = apicid_mask.s1.bit_enables & UV_APICID_HIBIT_MASK;
+-	}
+-}
+-
+ static void __init uv_stringify(int len, char *to, char *from)
+ {
+ 	/* Relies on 'to' being NULL chars so result will be NULL terminated */
+@@ -280,36 +257,25 @@ static int __init uv_acpi_madt_oem_check
+ 
+ 	/*
+ 	 * Determine UV arch type.
+-	 *   SGI:  UV100/1000
+ 	 *   SGI2: UV2000/3000
+ 	 *   SGI3: UV300 (truncated to 4 chars because of different varieties)
+ 	 *   SGI4: UV400 (truncated to 4 chars because of different varieties)
+ 	 */
+-	uv_hub_info->hub_revision =
+-		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
+-		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI") ? UV1_HUB_REVISION_BASE : 0;
+-
+-	if (uv_hub_info->hub_revision == 0)
+-		goto badbios;
+-
+-	switch (uv_hub_info->hub_revision) {
+-	case UV4_HUB_REVISION_BASE:
++	if (!strncmp(oem_id, "SGI4", 4)) {
++		uv_hub_info->hub_revision = UV4_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x11;
+-		break;
+ 
+-	case UV3_HUB_REVISION_BASE:
++	} else if (!strncmp(oem_id, "SGI3", 4)) {
++		uv_hub_info->hub_revision = UV3_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x9;
+-		break;
+ 
+-	case UV2_HUB_REVISION_BASE:
++	} else if (!strcmp(oem_id, "SGI2")) {
++		uv_hub_info->hub_revision = UV2_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x5;
+-		break;
+ 
+-	case UV1_HUB_REVISION_BASE:
+-		uv_hubbed_system = 0x3;
+-		break;
++	} else {
++		uv_hub_info->hub_revision = 0;
++		goto badbios;
+ 	}
+ 
+ 	pnodeid = early_get_pnodeid();
+@@ -323,14 +289,6 @@ static int __init uv_acpi_madt_oem_check
+ 		uv_system_type = UV_X2APIC;
+ 		uv_apic = 0;
+ 
+-	} else if (!strcmp(oem_table_id, "UVH")) {
+-		/* Only UV1 systems: */
+-		uv_system_type = UV_NON_UNIQUE_APIC;
+-		x86_platform.legacy.warm_reset = 0;
+-		__this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
+-		uv_set_apicid_hibit();
+-		uv_apic = 1;
+-
+ 	} else if (!strcmp(oem_table_id, "UVL")) {
+ 		/* Only used for very small systems:  */
+ 		uv_system_type = UV_LEGACY_APIC;
+@@ -347,7 +305,7 @@ static int __init uv_acpi_madt_oem_check
+ 
+ badbios:
+ 	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
+-	pr_err("Current BIOS not supported, update kernel and/or BIOS\n");
++	pr_err("Current UV Type or BIOS not supported\n");
+ 	BUG();
+ }
+ 
+@@ -545,7 +503,6 @@ static int uv_wakeup_secondary(int phys_
+ 	int pnode;
+ 
+ 	pnode = uv_apicid_to_pnode(phys_apicid);
+-	phys_apicid |= uv_apicid_hibits;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+ 	    (phys_apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+@@ -576,7 +533,7 @@ static void uv_send_IPI_one(int cpu, int
+ 		dmode = dest_Fixed;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+-		((apicid | uv_apicid_hibits) << UVH_IPI_INT_APIC_ID_SHFT) |
++		(apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+ 		(dmode << UVH_IPI_INT_DELIVERY_MODE_SHFT) |
+ 		(vector << UVH_IPI_INT_VECTOR_SHFT);
+ 
+@@ -634,22 +591,16 @@ static void uv_init_apic_ldr(void)
+ 
+ static u32 apic_uv_calc_apicid(unsigned int cpu)
+ {
+-	return apic_default_calc_apicid(cpu) | uv_apicid_hibits;
++	return apic_default_calc_apicid(cpu);
+ }
+ 
+-static unsigned int x2apic_get_apic_id(unsigned long x)
++static unsigned int x2apic_get_apic_id(unsigned long id)
+ {
+-	unsigned int id;
+-
+-	WARN_ON(preemptible() && num_online_cpus() > 1);
+-	id = x | __this_cpu_read(x2apic_extra_bits);
+-
+ 	return id;
+ }
+ 
+ static u32 set_apic_id(unsigned int id)
+ {
+-	/* CHECKME: Do we need to mask out the xapic extra bits? */
+ 	return id;
+ }
+ 
+@@ -721,11 +672,6 @@ static struct apic apic_x2apic_uv_x __ro
+ 	.safe_wait_icr_idle		= native_safe_x2apic_wait_icr_idle,
+ };
+ 
+-static void set_x2apic_extra_bits(int pnode)
+-{
+-	__this_cpu_write(x2apic_extra_bits, pnode << uvh_apicid.s.pnode_shift);
+-}
+-
+ #define	UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_LENGTH	3
+ #define DEST_SHIFT UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT
+ 
+@@ -920,15 +866,7 @@ static __init void map_mmioh_high(int mi
+ 		return;
+ 	}
+ 
+-	if (is_uv1_hub()) {
+-		mmr	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+-		shift	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+-		mmioh.v	= uv_read_local_mmr(mmr);
+-		enable	= !!mmioh.s1.enable;
+-		base	= mmioh.s1.base;
+-		m_io	= mmioh.s1.m_io;
+-		n_io	= mmioh.s1.n_io;
+-	} else if (is_uv2_hub()) {
++	if (is_uv2_hub()) {
+ 		mmr	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+ 		shift	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+ 		mmioh.v	= uv_read_local_mmr(mmr);
+@@ -936,16 +874,15 @@ static __init void map_mmioh_high(int mi
+ 		base	= mmioh.s2.base;
+ 		m_io	= mmioh.s2.m_io;
+ 		n_io	= mmioh.s2.n_io;
+-	} else {
+-		return;
+-	}
+ 
+-	if (enable) {
+-		max_pnode &= (1 << n_io) - 1;
+-		pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n", base, shift, m_io, n_io, max_pnode);
+-		map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
+-	} else {
+-		pr_info("UV: MMIOH disabled\n");
++		if (enable) {
++			max_pnode &= (1 << n_io) - 1;
++			pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n",
++				base, shift, m_io, n_io, max_pnode);
++			map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
++		} else {
++			pr_info("UV: MMIOH disabled\n");
++		}
+ 	}
+ }
+ 
+@@ -1081,9 +1018,6 @@ void uv_cpu_init(void)
+ 		return;
+ 
+ 	uv_hub_info->nr_online_cpus++;
+-
+-	if (get_uv_system_type() == UV_NON_UNIQUE_APIC)
+-		set_x2apic_extra_bits(uv_hub_info->pnode);
+ }
+ 
+ struct mn {
+@@ -1114,9 +1048,6 @@ static void get_mn(struct mn *mnp)
+ 	} else if (is_uv2_hub()) {
+ 		mnp->m_val	= m_n_config.s2.m_skt;
+ 		mnp->n_lshift	= mnp->m_val == 40 ? 40 : 39;
+-	} else if (is_uv1_hub()) {
+-		mnp->m_val	= m_n_config.s1.m_skt;
+-		mnp->n_lshift	= mnp->m_val;
+ 	}
+ 	mnp->m_shift = mnp->m_val ? 64 - mnp->m_val : 0;
+ }
+@@ -1318,7 +1249,7 @@ static void __init build_socket_tables(v
+ 	size_t bytes;
+ 
+ 	if (!gre) {
+-		if (is_uv1_hub() || is_uv2_hub() || is_uv3_hub()) {
++		if (is_uv2_hub() || is_uv3_hub()) {
+ 			pr_info("UV: No UVsystab socket table, ignoring\n");
+ 			return;
+ 		}
+@@ -1500,8 +1431,7 @@ static void __init uv_system_init_hub(vo
+ 	unsigned short min_pnode = 9999, max_pnode = 0;
+ 	char *hub = is_uv4_hub() ? "UV400" :
+ 		    is_uv3_hub() ? "UV300" :
+-		    is_uv2_hub() ? "UV2000/3000" :
+-		    is_uv1_hub() ? "UV100/1000" : NULL;
++		    is_uv2_hub() ? "UV2000/3000" : NULL;
+ 
+ 	if (!hub) {
+ 		pr_err("UV: Unknown/unsupported UV hub\n");
 
-As for the size overall, given that we'll just be providing the portions
-of "core" and "alloc" that the built code actually uses, and likely not
-providing "std" at all, I would expect the size to remain relatively
-small.
-
-I very much care about overall kernel size, and I'm happy to help make
-sure it remains reasonable.
-
-> 2) What is rust usable for?  The rust type system will not admit
->    doubly linked lists (or anything where two pointers point at the
->    same memory) unless you are using an unsafe block.
-
-There are libraries like intrusive-collections which implement
-kernel-style structures with potentially multiple nodes in the structure
-that put them into multiple lists at once. I would expect us to use
-those (or in some cases implement our own). They don't need to be
-written in C, just unsafe Rust that's wrapped up in a safe interface.
-
-Just as the kernel has a variety of higher-level interfaces and data
-structures that make working in the kernel sometimes *easier* than the
-average C program, I'd expect that we'll end up with common Rust
-structures that do what people need, rather than people reimplementing
-their own.
-
-- Josh Triplett
