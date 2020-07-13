@@ -2,88 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0CEC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50EFD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F39C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgGMJNJ (ORCPT
+        id S1729437AbgGMJNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:13:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42757 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGMJNI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:13:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g37so8992259otb.9;
-        Mon, 13 Jul 2020 02:13:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Kvnn1U97jZEFNfOWUSAsH/gkQzeVqu192LUXU0iCy4=;
-        b=t3Dsv0rpGcYRgtqb6ZOQlxcLFQUqVYy4my2L7w6LZpqG3/5ZKsTdc0VCIxRF6kg0nj
-         mMIOngGZM/aTS6lDsjh4m82jlhR4v367v/z5ItIBol6hxOWwl/jxlBfGeqeq4xzi+yBK
-         Y1Dv1FY8ZgBcpRCk91vh8UwZ9B2czwKU9usuy1fhp0OdDf5KKtKwb4mMUt1ZUq4XGyo2
-         8MKT9UNpUn8Osz/YItM/w1u+/YYZVOzstp4SSh7KJhN0CALHv5x4WkAaYBtmzLf7TSjk
-         MnU006iFt3QaU+1CienqYHYQu5GCmy1/VC7yM5SOc5cgaQu/H/KWg+2DtPvJbIMj6j7s
-         tCIQ==
-X-Gm-Message-State: AOAM533fLQE40oN/MY2fOLQBxc+s4Crm1J5LMV7NFJHPFEU1DejoQIIb
-        RGSSaGjsMmDhnpgP7RvvubJQz/cq28kPNnNdcHI=
-X-Google-Smtp-Source: ABdhPJzCNB4z3cnwFxg40yF0vD7KxhFEnVze7JJzdymORNXy473eBLB/B4cnQoGYWPXmt7S7GLNnpSjsEbLKguPGOEk=
-X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr56644751otp.250.1594631587724;
- Mon, 13 Jul 2020 02:13:07 -0700 (PDT)
+        Mon, 13 Jul 2020 05:13:16 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:48106 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgGMJNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:13:15 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 18357BC078;
+        Mon, 13 Jul 2020 09:13:11 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     w.d.hubbs@gmail.com, chris@the-brannons.com, kirk@reisers.ca,
+        samuel.thibault@ens-lyon.org, gregkh@linuxfoundation.org,
+        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Staging: speakup: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 11:13:05 +0200
+Message-Id: <20200713091305.32708-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200710135706.537715-1-hch@lst.de> <20200710135706.537715-6-hch@lst.de>
-In-Reply-To: <20200710135706.537715-6-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jul 2020 11:12:56 +0200
-Message-ID: <CAMuHMdVyy+cj+mpRJAW=1=3aOJWvUrLhXjJxKvVFdFcGr_RJRA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] uaccess: add force_uaccess_{begin,end} helpers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 3:57 PM Christoph Hellwig <hch@lst.de> wrote:
-> Add helpers to wraper the get_fs/set_fs magic for undoing any damage
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-to wrap
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-> done by set_fs(KERNEL_DS).  There is no real functional benefit, but this
-> documents the intent of these calls better, and will allow stubbing the
-> functions out easily for kernels builds that do not allow address space
-> overrides in the future.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
->  arch/m68k/include/asm/tlbflush.h | 12 ++++++------
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-Gr{oetje,eeting}s,
+ If you apply the patch, please let me know.
 
-                        Geert
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
+
+ drivers/staging/speakup/spkguide.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/speakup/spkguide.txt b/drivers/staging/speakup/spkguide.txt
+index 1e622cd34363..3782f6a09e97 100644
+--- a/drivers/staging/speakup/spkguide.txt
++++ b/drivers/staging/speakup/spkguide.txt
+@@ -1531,7 +1531,7 @@ The Free Software Foundation may publish new, revised versions
+ of the GNU Free Documentation License from time to time.  Such new
+ versions will be similar in spirit to the present version, but may
+ differ in detail to address new problems or concerns.  See
+-http://www.gnu.org/copyleft/.
++https://www.gnu.org/copyleft/.
+ 
+ Each version of the License is given a distinguishing version number.
+ If the Document specifies that a particular numbered version of this
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.27.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
