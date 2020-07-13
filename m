@@ -2,92 +2,86 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA33C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9450DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5DC2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716E1206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgGMJDZ (ORCPT
+        id S1729362AbgGMI6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:03:25 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62216 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbgGMJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:03:24 -0400
-IronPort-SDR: FKCxaN1pN5/QCgaJ8gWMOclLRWVaE1NdRCtLlRgAZNJm62rJfwoFViblSllRzyPVSU20BHqdW9
- ReA4+oFRFCag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146613402"
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="146613402"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 02:03:23 -0700
-IronPort-SDR: UE4MUmNowr4zmxZPYlPAOi4ANrMT2reqcJZxqE4OVXjKiZBFqHzcmqsodXz9YrwexhAtUeGbiW
- qQkWxPT+XivA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="325440370"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 02:03:21 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1juuMr-001ZBW-PN; Mon, 13 Jul 2020 12:03:21 +0300
-Date:   Mon, 13 Jul 2020 12:03:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        malliamireddy009@gmail.com
-Subject: Re: [PATCH v4 2/2] Add Intel LGM soc DMA support.
-Message-ID: <20200713090321.GA3703480@smile.fi.intel.com>
-References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <20200709110914.GW3703480@smile.fi.intel.com>
- <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
+        Mon, 13 Jul 2020 04:58:33 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:62342
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726077AbgGMI6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:58:33 -0400
+X-Greylist: delayed 491 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jul 2020 04:58:32 EDT
+Received: from feckert.dev.tdt.de (unknown [10.2.3.40])
+        by mail.dev.tdt.de (Postfix) with ESMTPSA id 035D1204FC;
+        Mon, 13 Jul 2020 08:50:20 +0000 (UTC)
+From:   Florian Eckert <fe@dev.tdt.de>
+To:     info@metux.net, vhart@infradead.org, andy@infradead.org,
+        Eckert.Florian@googlemail.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Eckert <fe@dev.tdt.de>
+Subject: [PATCH 1/1] platform/x86: revert pcengines-apuv2 wire up simswitch gpio as led
+Date:   Mon, 13 Jul 2020 10:50:10 +0200
+Message-Id: <20200713085010.26394-1-fe@dev.tdt.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:41:31PM +0800, Reddy, MallikarjunaX wrote:
-> On 7/9/2020 7:09 PM, Andy Shevchenko wrote:
-> > On Thu, Jul 09, 2020 at 02:01:06PM +0800, Amireddy Mallikarjuna reddy wrote:
-> > > Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
-> > > 
-> > > The main function of the DMA controller is the transfer of data from/to any
-> > > DPlus compliant peripheral to/from the memory. A memory to memory copy
-> > > capability can also be configured.
-> > > 
-> > > This ldma driver is used for configure the device and channnels for data
-> > > and control paths.
-> > > +#include "../virt-dma.h"
-> > I didn't find any evidence this driver utilizes virt-dma API in full.
-> > For example, there is a virt_dma_desc structure and descriptor management around it.
-> > Why don't you use it?
-> Lgm dma soc has its own hardware descriptor.
-> and each dma channel is associated with a peripheral, it is one to one
-> mapping between channel and associated peripheral.
+This reverts commit 5037d4ddda31c2dbbb018109655f61054b1756dc.
 
-And this neither objects nor answers to my question.
+Explanation why this does not work:
+This change connects the simswap to the LED subsystem of the kernel.
+From my point of view, it's nonsense. If we do it this way, then this
+can be switched relatively easily via the LED subsystem (trigger:
+none/default-on) and that is dangerous! If this is used, it would be
+unfavorable, since there is also another trigger (trigger:
+heartbeat/netdev).
 
-Hint: above mentioned structure is an abstraction of hardware descriptors for
-easier management in Linux kernel.
+Therefore, this simswap GPIO should remain in the GPIO
+subsystem and be switched via it and not be connected to the LED
+subsystem. To avoid the problems mentioned above. The LED subsystem is
+not made for this and it is not a good compromise, but rather dangerous.
 
+Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+---
+ drivers/platform/x86/pcengines-apuv2.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index 9b11ef1a401f..6aff6cf41414 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -78,7 +78,6 @@ static const struct gpio_led apu2_leds[] = {
+ 	{ .name = "apu:green:1" },
+ 	{ .name = "apu:green:2" },
+ 	{ .name = "apu:green:3" },
+-	{ .name = "apu:simswap" },
+ };
+ 
+ static const struct gpio_led_platform_data apu2_leds_pdata = {
+@@ -95,8 +94,6 @@ static struct gpiod_lookup_table gpios_led_table = {
+ 				NULL, 1, GPIO_ACTIVE_LOW),
+ 		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED3,
+ 				NULL, 2, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_SIMSWAP,
+-				NULL, 3, GPIO_ACTIVE_LOW),
+ 	}
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
