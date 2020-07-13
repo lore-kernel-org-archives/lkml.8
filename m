@@ -2,111 +2,102 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F857C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D8C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FE02075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:11:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="e/NsNBEU"
+	by mail.kernel.org (Postfix) with ESMTP id 13FE220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGMULH (ORCPT
+        id S1727024AbgGMUNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgGMULH (ORCPT
+        Mon, 13 Jul 2020 16:13:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58364 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgGMUNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:11:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323ABC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:11:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 1so6496378pfn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=09LknHY9dkU2M2OX/SgfAySnftMBQc2JUvSKGgKRJCQ=;
-        b=e/NsNBEUiK2c9tIx0w5Wa2nFM/f6fn0Dm1wPMhDzZoNngENUVV+uLYf/RdwYXo0OWg
-         pqMuzaqoK6PBQ47TV56KgWEUB7BSCB6NWS91anQRwBTg6NN6jVoiCntB7R1NGAa7IMEu
-         pOYVUaJ8BPj5TB7BsSxZhZW7ekzkxmN8XVvVg6jTa4Tdknmq6EZXKeF/ZeZjg8x8T80c
-         3r3GH5P20vEZf1P6edjZ1pnfbhof/ZafcmoyiXZ34pcNiPunHTpuBMl3lX7B46shBCdI
-         xMvJofQ6An2Xe8pGb9uTXECGFHIQ1+hWY6YWIxdVTJZPt3vxpDuWeJ6OmeEdQsHWKXXm
-         40gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=09LknHY9dkU2M2OX/SgfAySnftMBQc2JUvSKGgKRJCQ=;
-        b=ByhISB6LPmT1ZXZ8kW3dpVxFa8MBxVGuwVEKalun/SCTl7fyEwo3BtQKCVK3vASCo5
-         i4/t6wDmdiiEBbCrEYnCSdf+P+0OOSOcELMGX1Kk3hww1HI9pbH0r9Ks05b8WHvjOT8z
-         k05N3uAi0E08ViI+209o21qnBvN1j9ONcKJOMFHZyyLTlsYpclL5g4aL9C78ewoCunjG
-         v1qfre1RKhvO/4c2bm5Dk5BVLxhUL376ryTE5yC+tONryvXyR0c+P+GCteMAv6pW3dwX
-         sBRKiP1N74xbGnDQRRFS20sBNjwwvU8LV99Qbi1ab+zImePH+45MuoIwPg95TkoV/Sw3
-         mP2Q==
-X-Gm-Message-State: AOAM530MkQZEOuQ6+dM0TsaKIGLENIKTRoWOkByBEvko9LWnPYom2iDE
-        HZ2UNX+wxLiHPQjcWWwwmHUwtQ==
-X-Google-Smtp-Source: ABdhPJyIavVroDJAFXHGVH3iAha82aBR6fPl20kp6ciqNkYezNXkt68WOlU0Q8ksIhyn8H06/JbttQ==
-X-Received: by 2002:a05:6a00:224c:: with SMTP id i12mr1417007pfu.18.1594671066404;
-        Mon, 13 Jul 2020 13:11:06 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d16sm15290442pfo.156.2020.07.13.13.11.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 13:11:05 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 13:11:05 -0700 (PDT)
-X-Google-Original-Date: Mon, 13 Jul 2020 13:11:03 PDT (-0700)
-Subject:     Re: [PATCH 1/2] riscv: Fix building error in entry.S when CONFIG_RISCV_M_MODE is enabled
-In-Reply-To: <742f0a82a9d4ab62d8616784db5a88a95d8b5389.1594629047.git.greentime.hu@sifive.com>
-CC:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        Paul Walmsley <paul.walmsley@sifive.com>, lkp@intel.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     greentime.hu@sifive.com
-Message-ID: <mhng-f7d831a1-d892-4c55-82e9-4427539f1337@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jul 2020 16:13:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 51EBA8030866;
+        Mon, 13 Jul 2020 20:13:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RqU2vW_Nx0sU; Mon, 13 Jul 2020 23:13:07 +0300 (MSK)
+Date:   Mon, 13 Jul 2020 23:13:06 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200713201306.4rfmvtjzklcldajc@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <20200713065131.GG34333@vkoul-mobl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200713065131.GG34333@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 01:32:15 PDT (-0700), greentime.hu@sifive.com wrote:
-> arch/riscv/kernel/entry.S: Assembler messages:
-> arch/riscv/kernel/entry.S:106: Error: illegal operands `andi a0,s1,0x00001800'
->
-> This building error is because of the SR_MPP value is too large to be used
-> as an immediate value for andi. To fix this issue I use li to set the
-> immediate value to t0, then it can use t0 and s1 to do and operation.
+Hello Vinod,
+  
+Could you please keep on this patchset review? Really, the patchset isn't that
+big and complicated to be working on it for such a long time. I've sent it out
+at the time of the kernel 5.6. I've considered all the Andy's comments since
+then. There is going to be 5.9 merge window soon, but the patchset still under
+review procedure, while I still have some work, which depends on the changes
+provided by this patchset. It would be great to at least submit it for review
+before the next merge window, and super-great have it merged in before that.
 
-Thanks.  I guess I must have something wrong with my build tests, as it's
-supposed to be building the NOMMU stuff.  I was just about to fix this up in
-the patch, looks like I also lost my own Signed-off-by so I have to ammend it
-anyway.
+There is a Peter Ujfalusi comment to the patch
+"[PATCH v7 04/11] dmaengine: Introduce max SG list entries capability", which
+needs your attention. Could you please take a look at that? So I could submit
+the next patchset revision if you agree with the Peter' suggestion.
 
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> ---
->  arch/riscv/kernel/entry.S | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 6ed579fc1073..000984695cd6 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -99,7 +99,8 @@ _save_context:
->
->  #ifdef CONFIG_CONTEXT_TRACKING
->  	/* If previous state is in user mode, call context_tracking_user_exit. */
-> -	andi a0, s1, SR_SPP
-> +	li t0, SR_PP
-> +	and a0, s1, t0
->  	bnez a0, skip_context_tracking
->  	call context_tracking_user_exit
+-Sergey
+
+On Mon, Jul 13, 2020 at 12:21:31PM +0530, Vinod Koul wrote:
+> On 10-07-20, 12:38, Serge Semin wrote:
+> > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > > > DMA capabilities non-uniformly redistributed between the device channels.
+> > > > In order to provide a way of exposing the channel-specific parameters to
+> > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > > > if provided it gets called from the dma_get_slave_caps() method and is
+> > > > able to override the generic DMA-device capabilities.
+> > > 
+> > 
+> > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> > 
+> > As long as the 'slave' word is used in the name of the dma_slave_caps
+> > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> > to use some else terminology. If renaming needs to be done, then it should be
+> > done synchronously for the whole subsystem.
+> 
+> Right, I have plans to tackle that during next merge window and have
+> started changes. Thankfully slave_dma can be replaced by peripheral dma
+> easily. But getting that in would be tricky as we need to change users
+> too.
+> 
+> -- 
+> ~Vinod
