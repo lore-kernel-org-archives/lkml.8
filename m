@@ -2,107 +2,71 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D0E206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BE9206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594606531;
+	bh=E3+c5kljqoqNsRLxsFojcCBmSVCwAZ2wSSbGAjIGrms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PhpRYb4zdtSeMLTyiEPI8wLd1QwRG8L7wlKBJrDpnt44jvICKHPRYuMil/xOxxNc5
+	 ahpQxMmxLNJjCuZk31EvTAZJTozaxfI5gvZzd6Gch0LCvRfW11wU7lym3JoI2u7Ps9
+	 /YbxcevcXVBFqhP1Tzbk+Mz9uhxe0l4JinOZfa0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgGMCNl (ORCPT
+        id S1728110AbgGMCPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:13:41 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58281 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGMCNj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:13:39 -0400
-Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06D2D8mK060769;
-        Mon, 13 Jul 2020 11:13:08 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp);
- Mon, 13 Jul 2020 11:13:08 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06D2Cv1J060718
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 13 Jul 2020 11:13:07 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        syzbot <syzbot+805f5f6ae37411f15b64@syzkaller.appspotmail.com>
-Subject: [PATCH] driver core: Fix probe_count imbalance in really_probe()
-Date:   Mon, 13 Jul 2020 11:12:54 +0900
-Message-Id: <20200713021254.3444-1-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.4
+        Sun, 12 Jul 2020 22:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgGMCPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 22:15:23 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F306206D9;
+        Mon, 13 Jul 2020 02:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594606523;
+        bh=E3+c5kljqoqNsRLxsFojcCBmSVCwAZ2wSSbGAjIGrms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iomCkNnga4XFvjJcetTdijdrsrIDdqExtCg+NkgA7pUjYCWcicQ0t5ioW3x/pcVrL
+         QexDACviCGeSPNinUyBxc4ZGSn92Z1T6Zq6rPfoRqjk39+1Oht1Yk5JMVFl3GICI34
+         o9jyWXzmX1rBGoCofqI/Lvwjd7IiwZU+43x/z2nM=
+Date:   Mon, 13 Jul 2020 10:15:19 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leoyang.li@nxp.com, Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [Patch V2] arm64: dts: ls1028a: Add DSPI flash nodes for
+ LS1028a-qds
+Message-ID: <20200713021518.GU21277@dragon>
+References: <20200629024634.14582-1-qiang.zhao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629024634.14582-1-qiang.zhao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting hung task in wait_for_device_probe() [1]. At least,
-we always need to decrement probe_count if we incremented probe_count in
-really_probe().
+On Mon, Jun 29, 2020 at 10:46:34AM +0800, Qiang Zhao wrote:
+> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+> 
+> Add the DSPI flash nodes into fsl-ls1028a-qds.dts
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 
-However, since I can't find "Resources present before probing" message in
-the console log, both "this message simply flowed off" and "syzbot is not
-hitting this path" will be possible. Therefore, while we are at it, let's
-also prepare for concurrent wait_for_device_probe() calls by replacing
-wake_up() with wake_up_all().
+Updated subject as 'arm64: dts: ls1028a-qds: Add DSPI flash nodes' and
+applied the patch.
 
-[1] https://syzkaller.appspot.com/bug?id=25c833f1983c9c1d512f4ff860dd0d7f5a2e2c0f
-
-Reported-by: syzbot <syzbot+805f5f6ae37411f15b64@syzkaller.appspotmail.com>
-Fixes: 7c35e699c88bd607 ("driver core: Print device when resources present in really_probe()")
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- drivers/base/dd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 9a1d940342ac..c0fb9a2ff6f5 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -281,7 +281,7 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
- 
- 	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
- 		dev_info(private->device, "deferred probe pending\n");
--	wake_up(&probe_timeout_waitqueue);
-+	wake_up_all(&probe_timeout_waitqueue);
- }
- static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
- 
-@@ -492,7 +492,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
- 	if (!list_empty(&dev->devres_head)) {
- 		dev_crit(dev, "Resources present before probing\n");
--		return -EBUSY;
-+		ret = -EBUSY;
-+		goto done;
- 	}
- 
- re_probe:
-@@ -612,7 +613,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	ret = 0;
- done:
- 	atomic_dec(&probe_count);
--	wake_up(&probe_waitqueue);
-+	wake_up_all(&probe_waitqueue);
- 	return ret;
- }
- 
--- 
-2.18.4
-
+Shawn
