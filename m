@@ -2,94 +2,455 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89670C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F410EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6044720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f+s0XeUd"
+	by mail.kernel.org (Postfix) with ESMTP id C78CC2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgGMOMw (ORCPT
+        id S1730064AbgGMOMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:12:52 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33314 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMOMv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:12:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DECJdl098089;
-        Mon, 13 Jul 2020 14:12:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=WyYsli8fqJKfYyX1azr1UjWckt1Wk+/8MvW65fU7r7g=;
- b=f+s0XeUdUgOROnrFZx0wvSX/DtX0Kds3Xhe8Y8RLQudTyx1+a3JCnbacI/6Qjw98vf1q
- e1+2IYleEmEhvrZMi5jbvTeOsDj7ZKNVRzE0eQM/nyQj0r6iB6wIlnqNVgvxVjfR3WkP
- qe5fyweGu3rVirj4+unHdrKs2wr1X6Jl/XeRdb7kjM7q0Zza4pKgG8x39zvqVM4Ltmi2
- Ng34zT/vX/fVQMWLqMVoBUpR1sfGdyw74vigwXSX3Vj1qXu+QoaB111FK6i/AkVOeRXU
- naSiTl8TKs5DCvIzGBil6f8+6LOUqF/ub32MlFjVvipkZwkFSv9Q+CI0Sp6z6B4pvbGj MQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274uqyacb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 14:12:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DE3YqJ146361;
-        Mon, 13 Jul 2020 14:12:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 327q6qbgmc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 14:12:43 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06DECglu012869;
-        Mon, 13 Jul 2020 14:12:42 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 07:12:41 -0700
-Date:   Mon, 13 Jul 2020 17:12:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] staging: qlge: qlge_main: Simplify while statements.
-Message-ID: <20200713141235.GT2549@kadam>
-References: <cover.1594642213.git.usuraj35@gmail.com>
- <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
+        Mon, 13 Jul 2020 10:12:45 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2461 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729649AbgGMOMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:12:45 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id C37D157152239309710F;
+        Mon, 13 Jul 2020 15:12:43 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.82.58) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 15:12:43 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
+        <lenb@kernel.org>, <tony.luck@intel.com>,
+        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
+        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
+        <jroedel@suse.de>
+CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
+Subject: [PATCH v12 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+Date:   Mon, 13 Jul 2020 15:10:19 +0100
+Message-ID: <20200713141019.904-3-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxlogscore=949 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=970 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007130107
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.82.58]
+X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 05:50:14PM +0530, Suraj Upadhyay wrote:
-> Simplify while loops into more readable and simple for loops.
-> 
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-I don't think either is more clear that the other.  Walter Harms hates
-count down loops and he's not entirely wrong...
+The HiSilicon HIP PCIe controller is capable of handling errors
+on root port and perform port reset separately at each root port.
 
-regards,
-dan carpenter
+Add error handling driver for HIP PCIe controller to log
+and report recoverable errors. Perform root port reset and restore
+link status after the recovery.
+
+Following are some of the PCIe controller's recoverable errors
+1. completion transmission timeout error.
+2. CRS retry counter over the threshold error.
+3. ECC 2 bit errors
+4. AXI bresponse/rresponse errors etc.
+
+The driver placed in the drivers/pci/controller/ because the
+HIP PCIe controller does not use DWC ip.
+
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+--
+drivers/pci/controller/Kconfig           |   8 +
+drivers/pci/controller/Makefile          |   1 +
+drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
+3 files changed, 345 insertions(+)
+create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+---
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+ 3 files changed, 336 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..b7949b37c029 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -286,6 +286,14 @@ config PCI_LOONGSON
+ 	  Say Y here if you want to enable PCI controller support on
+ 	  Loongson systems.
+ 
++config PCIE_HISI_ERR
++	depends on ARM64 || COMPILE_TEST
++	depends on ACPI
++	bool "HiSilicon HIP PCIe controller error handling driver"
++	help
++	  Say Y here if you want error handling support
++	  for the PCIe controller's errors on HiSilicon HIP SoCs
++
+ source "drivers/pci/controller/dwc/Kconfig"
+ source "drivers/pci/controller/mobiveil/Kconfig"
+ source "drivers/pci/controller/cadence/Kconfig"
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index efd9733ead26..90afd865bf6b 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+ obj-$(CONFIG_VMD) += vmd.o
+ obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+ obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
++obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
+ # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+ obj-y				+= dwc/
+ obj-y				+= mobiveil/
+diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
+new file mode 100644
+index 000000000000..9bd050cadb31
+--- /dev/null
++++ b/drivers/pci/controller/pcie-hisi-error.c
+@@ -0,0 +1,327 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for handling the PCIe controller errors on
++ * HiSilicon HIP SoCs.
++ *
++ * Copyright (c) 2020 HiSilicon Limited.
++ */
++
++#include <linux/acpi.h>
++#include <acpi/ghes.h>
++#include <linux/bitops.h>
++#include <linux/delay.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/kfifo.h>
++#include <linux/spinlock.h>
++
++/* HISI PCIe controller error definitions */
++#define HISI_PCIE_ERR_MISC_REGS	33
++
++#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
++#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
++#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
++#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
++#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
++#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
++#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
++#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
++#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
++#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
++
++static guid_t hisi_pcie_sec_guid =
++	GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
++		  0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
++
++/*
++ * We pass core id and core port id to the ACPI reset method to identify
++ * certain root port to reset, while the firmware reports sockets port
++ * id which occurs an error. Use the macros here to do the conversion
++ */
++#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
++#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
++#define HISI_PCIE_CORE_PORT_ID(v)        (((v) & 7) << 1)
++
++struct hisi_pcie_error_data {
++	u64	val_bits;
++	u8	version;
++	u8	soc_id;
++	u8	socket_id;
++	u8	nimbus_id;
++	u8	sub_module_id;
++	u8	core_id;
++	u8	port_id;
++	u8	err_severity;
++	u16	err_type;
++	u8	reserv[2];
++	u32	err_misc[HISI_PCIE_ERR_MISC_REGS];
++};
++
++struct hisi_pcie_error_private {
++	struct notifier_block	nb;
++	struct device *dev;
++};
++
++enum hisi_pcie_submodule_id {
++	HISI_PCIE_SUB_MODULE_ID_AP,
++	HISI_PCIE_SUB_MODULE_ID_TL,
++	HISI_PCIE_SUB_MODULE_ID_MAC,
++	HISI_PCIE_SUB_MODULE_ID_DL,
++	HISI_PCIE_SUB_MODULE_ID_SDI,
++};
++
++static const char * const hisi_pcie_sub_module[] = {
++	[HISI_PCIE_SUB_MODULE_ID_AP]	= "AP Layer",
++	[HISI_PCIE_SUB_MODULE_ID_TL]	= "TL Layer",
++	[HISI_PCIE_SUB_MODULE_ID_MAC]	= "MAC Layer",
++	[HISI_PCIE_SUB_MODULE_ID_DL]	= "DL Layer",
++	[HISI_PCIE_SUB_MODULE_ID_SDI]	= "SDI Layer",
++};
++
++enum hisi_pcie_err_severity {
++	HISI_PCIE_ERR_SEV_RECOVERABLE,
++	HISI_PCIE_ERR_SEV_FATAL,
++	HISI_PCIE_ERR_SEV_CORRECTED,
++	HISI_PCIE_ERR_SEV_NONE,
++};
++
++static const char * const hisi_pcie_error_sev[] = {
++	[HISI_PCIE_ERR_SEV_RECOVERABLE]	= "recoverable",
++	[HISI_PCIE_ERR_SEV_FATAL]	= "fatal",
++	[HISI_PCIE_ERR_SEV_CORRECTED]	= "corrected",
++	[HISI_PCIE_ERR_SEV_NONE]	= "none",
++};
++
++static const char *hisi_pcie_get_string(const char * const *array,
++					size_t n, u32 id)
++{
++	u32 index;
++
++	for (index = 0; index < n; index++) {
++		if (index == id && array[index])
++			return array[index];
++	}
++
++	return "unknown";
++}
++
++static int hisi_pcie_port_reset(struct platform_device *pdev,
++				u32 chip_id, u32 port_id)
++{
++	struct device *dev = &pdev->dev;
++	acpi_handle handle = ACPI_HANDLE(dev);
++	union acpi_object arg[3];
++	struct acpi_object_list arg_list;
++	acpi_status s;
++	unsigned long long data = 0;
++
++	arg[0].type = ACPI_TYPE_INTEGER;
++	arg[0].integer.value = chip_id;
++	arg[1].type = ACPI_TYPE_INTEGER;
++	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
++	arg[2].type = ACPI_TYPE_INTEGER;
++	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
++
++	arg_list.count = 3;
++	arg_list.pointer = arg;
++
++	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
++	if (ACPI_FAILURE(s)) {
++		dev_err(dev, "No RST method\n");
++		return -EIO;
++	}
++
++	if (data) {
++		dev_err(dev, "Failed to Reset\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int hisi_pcie_port_do_recovery(struct platform_device *dev,
++				      u32 chip_id, u32 port_id)
++{
++	acpi_status s;
++	struct device *device = &dev->dev;
++	acpi_handle root_handle = ACPI_HANDLE(device);
++	struct acpi_pci_root *pci_root;
++	struct pci_bus *root_bus;
++	struct pci_dev *pdev;
++	u32 domain, busnr, devfn;
++
++	s = acpi_get_parent(root_handle, &root_handle);
++	if (ACPI_FAILURE(s))
++		return -ENODEV;
++	pci_root = acpi_pci_find_root(root_handle);
++	if (!pci_root)
++		return -ENODEV;
++	root_bus = pci_root->bus;
++	domain = pci_root->segment;
++
++	busnr = root_bus->number;
++	devfn = PCI_DEVFN(port_id, 0);
++	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
++	if (!pdev) {
++		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
++			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
++		return -ENODEV;
++	}
++
++	pci_stop_and_remove_bus_device_locked(pdev);
++	pci_dev_put(pdev);
++
++	if (hisi_pcie_port_reset(dev, chip_id, port_id))
++		return -EIO;
++
++	/*
++	 * The initialization time of subordinate devices after
++	 * hot reset is no more than 1s, which is required by
++	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
++	 * if Readiness Notifications mechanisms are used. But
++	 * wait 1s here to adapt any conditions.
++	 */
++	ssleep(1UL);
++
++	/* add root port and downstream devices */
++	pci_lock_rescan_remove();
++	pci_rescan_bus(root_bus);
++	pci_unlock_rescan_remove();
++
++	return 0;
++}
++
++static void hisi_pcie_handle_error(struct platform_device *pdev,
++				   const struct hisi_pcie_error_data *edata)
++{
++	struct device *dev = &pdev->dev;
++	int idx, rc;
++	const unsigned long valid_bits[] = {BITMAP_FROM_U64(edata->val_bits)};
++
++	if (edata->val_bits == 0) {
++		dev_warn(dev, "%s: no valid error information\n", __func__);
++		return;
++	}
++
++	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
++		dev_info(dev, "Table version = %d\n", edata->version);
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
++		dev_info(dev, "Socket ID = %d\n", edata->socket_id);
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
++		dev_info(dev, "Nimbus ID = %d\n", edata->nimbus_id);
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
++		dev_info(dev, "Sub Module = %s\n",
++			 hisi_pcie_get_string(hisi_pcie_sub_module,
++					      ARRAY_SIZE(hisi_pcie_sub_module),
++					      edata->sub_module_id));
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
++		dev_info(dev, "Core ID = core%d\n", edata->core_id);
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
++		dev_info(dev, "Port ID = port%d\n", edata->port_id);
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
++		dev_info(dev, "Error severity = %s\n",
++			 hisi_pcie_get_string(hisi_pcie_error_sev,
++					      ARRAY_SIZE(hisi_pcie_error_sev),
++					      edata->err_severity));
++	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
++		dev_info(dev, "Error type = 0x%x\n", edata->err_type);
++
++	dev_info(dev, "Reg Dump:\n");
++	idx = HISI_PCIE_LOCAL_VALID_ERR_MISC;
++	for_each_set_bit_from(idx, valid_bits,
++			      HISI_PCIE_LOCAL_VALID_ERR_MISC + HISI_PCIE_ERR_MISC_REGS)
++		dev_info(dev, "ERR_MISC_%d = 0x%x\n", idx - HISI_PCIE_LOCAL_VALID_ERR_MISC,
++			 edata->err_misc[idx]);
++
++	if (edata->err_severity != HISI_PCIE_ERR_SEV_RECOVERABLE)
++		return;
++
++	/* Recovery for the PCIe controller errors, try reset
++	 * PCI port for the error recovery
++	 */
++	rc = hisi_pcie_port_do_recovery(pdev, edata->socket_id,
++			HISI_PCIE_PORT_ID(edata->core_id, edata->port_id));
++	if (rc)
++		dev_info(dev, "fail to do hisi pcie port reset\n");
++}
++
++static int hisi_pcie_notify_error(struct notifier_block *nb,
++				  unsigned long event, void *data)
++{
++	struct acpi_hest_generic_data *gdata = data;
++	const struct hisi_pcie_error_data *error_data = acpi_hest_get_payload(gdata);
++	struct hisi_pcie_error_private *priv;
++	struct device *dev;
++	struct platform_device *pdev;
++	guid_t err_sec_guid;
++	u8 socket;
++
++	import_guid(&err_sec_guid, gdata->section_type);
++	if (!guid_equal(&err_sec_guid, &hisi_pcie_sec_guid))
++		return NOTIFY_DONE;
++
++	priv = container_of(nb, struct hisi_pcie_error_private, nb);
++	dev = priv->dev;
++
++	if (device_property_read_u8(dev, "socket", &socket))
++		return NOTIFY_DONE;
++
++	if (error_data->socket_id != socket)
++		return NOTIFY_DONE;
++
++	pdev = container_of(dev, struct platform_device, dev);
++	hisi_pcie_handle_error(pdev, error_data);
++
++	return NOTIFY_OK;
++}
++
++static int hisi_pcie_error_handler_probe(struct platform_device *pdev)
++{
++	struct hisi_pcie_error_private *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->nb.notifier_call = hisi_pcie_notify_error;
++	priv->dev = &pdev->dev;
++	ret = ghes_register_vendor_record_notifier(&priv->nb);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"Failed to register hisi pcie controller error handler with apei\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return 0;
++}
++
++static int hisi_pcie_error_handler_remove(struct platform_device *pdev)
++{
++	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
++
++	ghes_unregister_vendor_record_notifier(&priv->nb);
++
++	return 0;
++}
++
++static const struct acpi_device_id hisi_pcie_acpi_match[] = {
++	{ "HISI0361", 0 },
++	{ }
++};
++
++static struct platform_driver hisi_pcie_error_handler_driver = {
++	.driver = {
++		.name	= "hisi-pcie-error-handler",
++		.acpi_match_table = hisi_pcie_acpi_match,
++	},
++	.probe		= hisi_pcie_error_handler_probe,
++	.remove		= hisi_pcie_error_handler_remove,
++};
++module_platform_driver(hisi_pcie_error_handler_driver);
++
++MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
+
 
