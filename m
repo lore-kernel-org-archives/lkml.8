@@ -2,145 +2,425 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B89C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639772075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FC5205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Flus2iJ+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HUyZCZat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgGMOXU (ORCPT
+        id S1729930AbgGMOZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:23:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38114 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMOXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:23:19 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DEGrGb130500;
-        Mon, 13 Jul 2020 14:23:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=YEAfbMaiJQNUK2CZcdliAlyWaSUy6CyK7Y8B/WS5gRc=;
- b=Flus2iJ+y1ks2p8psdjbUGD8p6yoT2UfipH8SnPyUruCadbYc/yF0kkwM+t41u7COU22
- rJQ6Ddun3CVRPMwqz5tQQWZyPMEC3uJMghfmVpEgnEmNs4/lZQ6JkkNZkQGwyN71K2yv
- UCUxYFGWWjtJsEq5ROiallikO1BGJtnf6BOSZ0JQYyfMYNlLBqbfckJu+nU6QIccvQjp
- pmdeq6iHygDvsHm0B6BMkyjhtXoIVmE3FyUWSS5RKsu1l7ZSa5SGuycvTvDDWhUOiZ1I
- FXQ2Xmzvv3EWO3WLrbBJsa/2gy6i1LgXY+eXKmYgOTQ4UkP3NBIJQEbfV1+B9hvUF37C yw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 32762n76ys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 14:23:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DEIZED145532;
-        Mon, 13 Jul 2020 14:23:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 327qbvngfa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 14:23:13 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DENCne013570;
-        Mon, 13 Jul 2020 14:23:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 07:23:12 -0700
-Date:   Mon, 13 Jul 2020 17:23:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ivan Safonov <insafonov@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Soumyajit Deb <debsoumyajit100@gmail.com>
-Subject: Re: [PATCH] staging: r8188eu: remove unused members of struct
- xmit_buf
-Message-ID: <20200713142305.GV2549@kadam>
-References: <20200712123821.553420-1-insafonov@gmail.com>
- <20200713131607.GR2549@kadam>
+        Mon, 13 Jul 2020 10:25:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34268 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729659AbgGMOZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:25:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594650331; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=AQuZlc3Pf01pJh7p2nQbdckojHbN+4Aci0RCHz5v5Bo=; b=HUyZCZatiCzS0MZVnVEu0F41M7Na0QNxP4+fSq4IOdsP8X3nTxD3QTz0woriSSXWhsfMRvpg
+ Lt+jEVo8jBHmZ9kjQ7Nz9RG0hbzjrkdjZsP+sPw3Noi92dXYdxhKdf7AlAT4HlMXZ2FXsP5W
+ oTxIofVZ/KQDoPxFSuiFwPQL79k=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f0c6ec8ee86618575ed5d35 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 14:25:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 01171C43391; Mon, 13 Jul 2020 14:25:11 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.75.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 753B2C433C8;
+        Mon, 13 Jul 2020 14:25:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 753B2C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
+To:     Doug Anderson <dianders@chromium.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+ <87lfjreo7m.wl-maz@kernel.org>
+ <CAD=FV=VzhdL67ocBPmAngxbZJsq-dSjhV2QjA8=7Ry+9oYxXHw@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <83922c83-a8ae-1b2a-29c8-cb5ccb1d72d8@codeaurora.org>
+Date:   Mon, 13 Jul 2020 19:55:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713131607.GR2549@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=977 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=991 lowpriorityscore=0
- bulkscore=0 suspectscore=0 phishscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007130108
+In-Reply-To: <CAD=FV=VzhdL67ocBPmAngxbZJsq-dSjhV2QjA8=7Ry+9oYxXHw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:16:07PM +0300, Dan Carpenter wrote:
-> On Sun, Jul 12, 2020 at 03:38:21PM +0300, Ivan Safonov wrote:
-> > Remove unused members of struct xmit_buf: alloc_sz, ff_hwaddr,
-> > dma_transfer_addr, bpending and last.
-> > 
-> > Signed-off-by: Ivan Safonov <insafonov@gmail.com>
-> > ---
-> >  drivers/staging/rtl8188eu/include/rtw_xmit.h  | 5 -----
-> >  drivers/staging/rtl8188eu/os_dep/xmit_linux.c | 1 -
-> >  2 files changed, 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/rtl8188eu/include/rtw_xmit.h b/drivers/staging/rtl8188eu/include/rtw_xmit.h
-> > index 12d16e98176a..3c03987c81a1 100644
-> > --- a/drivers/staging/rtl8188eu/include/rtw_xmit.h
-> > +++ b/drivers/staging/rtl8188eu/include/rtw_xmit.h
-> > @@ -193,14 +193,9 @@ struct xmit_buf {
-> >  	void *priv_data;
-> >  	u16 ext_tag; /*  0: Normal xmitbuf, 1: extension xmitbuf. */
-> >  	u16 flags;
-> > -	u32 alloc_sz;
-> >  	u32  len;
-> >  	struct submit_ctx *sctx;
-> > -	u32	ff_hwaddr;
-> >  	struct urb *pxmit_urb[8];
-> > -	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
-> > -	u8 bpending[8];
-> > -	int last[8];
-> >  };
-> >  
-> >  struct xmit_frame {
-> > diff --git a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
-> > index 017e1d628461..61ced1160951 100644
-> > --- a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
-> > +++ b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
-> > @@ -24,7 +24,6 @@ int rtw_os_xmit_resource_alloc(struct adapter *padapter,
-> >  		return _FAIL;
-> >  
-> >  	pxmitbuf->pbuf = PTR_ALIGN(pxmitbuf->pallocated_buf, XMITBUF_ALIGN_SZ);
-> 
-> Not related to this patch but kmalloc always returns data which is at
-> least ARCH_KMALLOC_MINALIGN aligned which is never less than
-> XMITBUF_ALIGN_SZ (4) so this is a no-op.
+Hi,
 
-The alignment in the driver is pretty crazy because it's all unnecessary
-and so complicated.  Every allocation is 4 bytes extra so we can align
-it later.
+On 7/10/2020 9:40 PM, Doug Anderson wrote:
+> Hi,
+>
+> On Fri, Jul 10, 2020 at 2:03 AM Marc Zyngier <maz@kernel.org> wrote:
+>> Hi Doug,
+>>
+>> On Wed, 08 Jul 2020 22:16:25 +0100,
+>> Douglas Anderson <dianders@chromium.org> wrote:
+>>> As per Qualcomm, there is a PDC hardware issue (with the specific IP
+>>> rev that exists on sc7180) that causes the PDC not to work properly
+>>> when configured to handle dual edges.
+>>>
+>>> Let's work around this by emulating only ever letting our parent see
+>>> requests for single edge interrupts on affected hardware.
+>>>
+>>> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>> ---
+>>> As far as I can tell everything here should work and the limited
+>>> testing I'm able to give it shows that, in fact, I can detect both
+>>> edges.
+>>>
+>>> Please give this an extra thorough review since it's trying to find
+>>> the exact right place to insert this code and I'm not massively
+>>> familiar with all the frameworks.
+>>>
+>>> If someone has hardware where it's easy to stress test this that'd be
+>>> wonderful too.  The board I happen to have in front of me doesn't have
+>>> any easy-to-toggle GPIOs where I can just poke a button or a switch to
+>>> generate edges.  My testing was done by hacking the "write protect"
+>>> GPIO on my board into gpio-keys as a dual-edge interrupt and then
+>>> sending commands to our security chip to toggle it--not exactly great
+>>> for testing to make sure there are no race conditions if the interrupt
+>>> bounces a lot.
+>> This looks positively awful (the erratum, not the patch). Is there an
+>> actual description of the problem, outlining the circumstances that
+>> triggers this issue? The PDC really never fails to disappoint...
+> Hopefully someone from Qualcomm can chime in here.  My entire
+> knowledge of the errata comes from:
+>
+> https://lore.kernel.org/r/c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org
+>
+> ...and I tried to copy the exact phrasing that Rajendra gave.
+PDC irqchip not detecting dual edge interrupts is not really a bug. PDC 
+closely works in hierarchy with
+GIC and GIC also doesn't support dual edge IRQs.  Dual edge feature is 
+added in later HW revisions to support
+similar usecases.
 
-Also every buffer is called "pbuf" which stands for pointer to buffer.
-"pallocated_buf" is not really useful either.
+Regardless of dual edge feature,  as i mentioned in below link
+if the drivers requests the intended edge of the interrupt then it works 
+as expected.
+(Drivers never need/use both the edges at a same time).
+but if we are not intending to change/update each driver which use dual 
+edge, this patch takes care of
+same by requesting only one edge at a time, albeit its done from irqchip 
+driver as opposed to client driver.
 
-I tried to look at this to see if we could change the alignment, and
-it's complicated because of the naming and the alignment.
+https://lore.kernel.org/linux-arm-msm/56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org/
 
-regards,
-dan carpenter
+Thanks,
+Maulik
+>
+>>>   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
+>>>   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
+>>>   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
+>>>   3 files changed, 85 insertions(+)
+>>>
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>>> index 83b7d64bc4c1..45ca09ebb7b3 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>>> @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+>>>        raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>>>   }
+>>>
+>>> +/**
+>>> + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
+>>> + * @d: The irq dta.
+>>> + *
+>>> + * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
+>>> + * normally handled by the parent irqchip.  The logic here is slightly
+>>> + * different due to what's easy to do with our parent, but in principle it's
+>>> + * the same.
+>>> + */
+>>> +static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
+>>> +{
+>>> +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>> +     struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+>>> +     const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
+>>> +     unsigned long flags;
+>>> +     int loop_limit = 100;
+>> I guess this is a "finger up in the air" type of limit?
+> Yes, the same "finger up in the air" as
+> msm_gpio_update_dual_edge_pos() in the same file.  My function comment
+> refers to the other function to try to tie them together at least a
+> little.
+>
+>
+>>> +     unsigned int val;
+>>> +     unsigned int type;
+>>> +
+>>> +     /* Read the value and make a guess about what edge we need to catch */
+>>> +     val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+>> What does this value represent? The input line value?
+> Yes.  Coped from msm_gpio_update_dual_edge_pos().
+>
+>
+>>> +     type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
+>>> +
+>>> +     raw_spin_lock_irqsave(&pctrl->lock, flags);
+>> What is this lock protecting you against? In both cases, you are
+>> already under the irq_desc lock, with interrupts disabled.
+> We are?  I put a breakpoint when the IRQ hits and did a bt.  I see
+> this (I happen to be on 5.4 at the moment, so hopefully the same as
+> mainline):
+>
+>   kgdb_breakpoint+0x3c/0x74
+>   msm_gpio_update_dual_edge_parent+0x58/0x17c
+>   msm_gpio_handle_dual_edge_parent_irq+0x1c/0x30
+>   __handle_domain_irq+0x84/0xc4
+>   gic_handle_irq+0x170/0x220
+>   el1_irq+0xd0/0x180
+>
+> I think the stack is missing a few things due to aggressive inlining
+> from my compiler, so the true backtrace would be:
+>
+> msm_gpio_handle_dual_edge_parent_irq()
+> generic_handle_irq_desc()
+> generic_handle_irq()
+> __handle_domain_irq()
+> handle_domain_irq()
+> gic_handle_irq()
+>
+> The first place that got the "desc" was generic_handle_irq() and it
+> got it via irq_to_desc().  That doesn't seem to do any locking.  Then
+> generic_handle_irq_desc() just calls a function pointer so no locking
+> there either.
+>
+> ...ah, but maybe what you're saying is that
+> msm_gpio_handle_dual_edge_parent_irq() should be holding "desc->lock"
+> around the call to msm_gpio_update_dual_edge_parent()?  I can do that.
+>
+>
+>>> +     do {
+>>> +             /* Set the parent to catch the next edge */
+>>> +             irq_chip_set_type_parent(d, type);
+>>> +
+>>> +             /*
+>>> +              * Possibly the line changed between when we last read "val"
+>>> +              * (and decided what edge we needed) and when set the edge.
+>>> +              * If the value didn't change (or changed and then changed
+>>> +              * back) then we're done.
+>>> +              */
+>> If the line changed, shouldn't you actually inject a new interrupt
+>> altogether? By changing the polarity more than once, you are
+>> effectively loosing edges that should have triggered an interrupt.
+> Are you sure this is needed?  My understanding of edge triggered
+> interrupts is that until the interrupt handler is called that all
+> edges can be coalesced into a single interrupt.  It's only after the
+> interrupt handler is called that it's important to capture new edges.
+> So if you have this:
+>
+> a) Be busy processing another unrelated interrupt
+> b) 5 edges happen on the line
+> c) Other interrupt finishes
+> d) Edge interrupt is acked and handler is called
+>
+> You'll only get one call to the interrupt handler even though there
+> were 5 edges, right?  It's only important that you queue another
+> interrupt if that interrupt happens after the true interrupt handler
+> (the one acting on the edge) has started.
+>
+> ...actually, in theory you'll get _either_ one or two calls to the
+> interrupt handler depending on timing, since the above could also
+> happen as:
+>
+> a) Be busy processing another unrelated interrupt
+> b) 4 edges happen on the line
+> c) Other interrupt finishes
+> d) Edge interrupt is acked and ...
+> e) 1 more edge happens on the line
+> f) ...handler is called
+> g) Edge interrupt is acked and handler is called
+>
+>
+> As long as msm_gpio_update_dual_edge_parent() is called _before_ the
+> true interrupt handler is called then what I have should be fine,
+> right?
+>
+>
+>>> +             val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+>>> +             if (type == IRQ_TYPE_EDGE_RISING) {
+>>> +                     if (!val)
+>>> +                             break;
+>>> +                     type = IRQ_TYPE_EDGE_FALLING;
+>>> +             } else if (type == IRQ_TYPE_EDGE_FALLING) {
+>>> +                     if (val)
+>>> +                             break;
+>>> +                     type = IRQ_TYPE_EDGE_RISING;
+>>> +             }
+>>> +     } while (loop_limit-- > 0);
+>>> +     raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>>> +
+>>> +     if (!loop_limit)
+>>> +             dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+>>> +}
+>>> +
+>>> +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
+>>> +{
+>>> +     struct irq_data *d = &desc->irq_data;
+>>> +
+>>> +     /* Make sure we're primed for the next edge */
+>>> +     msm_gpio_update_dual_edge_parent(d);
+>> I would have expected this to happen on EOI or ACK, rather than before
+>> the flow is actually handled, once you have told the interrupt
+>> controller that you were dealing with this interrupt.
+> Having it on Ack would be ideal, but it appears that the Ack function
+> isn't called in this case.  That's only called if our handler is
+> handle_edge_irq() or handle_level_irq().  See more below.
+>
+> ...I'm pretty sure I don't want it on EOI.  Specifically, if I did it
+> on EOI then I think I _would_ need to re-queue another interrupt if an
+> edge came in msm_gpio_update_dual_edge_parent().  Doing all the edge
+> adjustment before calling the true interrupt handler avoids all that.
+>
+>
+>>> +
+>>> +     /* Pass on to the normal interrupt handler */
+>>> +     handle_fasteoi_irq(desc);
+>> Is that the right flow? It seems that the current code is using
+>> handle_edge_irq. I guess it has been broken so far, and that this
+>> patch actually fixes it by forcing a fasteoi flow...
+> The code today only uses handle_level_irq() / handle_edge_irq() if
+> "skip_wake_irqs" wasn't set for this IRQ.  In the case that
+> "skip_wake_irqs" wasn't set then it leaves the handler alone.  I
+> definitely had a hard time following all the flow and interactions
+> between the pinctrl, PDC, and the GICv3 but I definitely did confirm
+> that handle_fasteoi_irq() was the handler that was running when
+> "skip_wake_irqs" was set before I stuck mine in the middle.
+>
+> I believe how things work today with the "skip_wake_irqs" case is
+> that, for the most part, the pinctrl driver stays out of the way for
+> setting up and handling IRQs and just passes some calls onto its
+> parent (the PDC).  The PDC driver is actually quite minimal.  There's
+> no "Ack" in there and no calls to set an IRQ handler--it seems to just
+> rely on the GICv3 doing all that.  It looks there is an implicit Ack
+> as part of gic_handle_irq() since reading the IAR counts as an Ack.
+>
+>
+> So to try to sum up my understanding:
+>
+> 1. In the case of "skip_wake_irqs" today there is no acking / handling
+> code that is part of pinctrl-msm or the PDC.  They just configure
+> things to direct to the GICv3.
+>
+> 2. For my workaround I just need to make sure to intercept myself and
+> prime the next edge _before_ the end-user interrupt handler gets
+> called.  If edges are coalesced before the end-user interrupt handler
+> is called then that's OK.
+>
+>
+> I'll await your reply before sending out the next version.  Thanks
+> much for all your time looking at this!
+>
+>
+>>> +}
+>>> +
+>>> +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
+>>> +                                                    unsigned int type)
+>>> +{
+>>> +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>> +     struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+>>> +
+>>> +     return type == IRQ_TYPE_EDGE_BOTH &&
+>>> +            pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
+>>> +            test_bit(d->hwirq, pctrl->skip_wake_irqs);
+>>> +}
+>>> +
+>>>   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>>   {
+>>>        struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>> @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>>>        unsigned long flags;
+>>>        u32 val;
+>>>
+>>> +     if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
+>>> +             irq_set_handler_locked(d, msm_gpio_handle_dual_edge_parent_irq);
+>>> +             msm_gpio_update_dual_edge_parent(d);
+>>> +
+>>> +             return 0;
+>>> +     }
+>>> +
+>>>        if (d->parent_data)
+>>>                irq_chip_set_type_parent(d, type);
+>>>
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+>>> index 9452da18a78b..7486fe08eb9b 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+>>> @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
+>>>    * @pull_no_keeper: The SoC does not support keeper bias.
+>>>    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
+>>>    * @nwakeirq_map:   The number of entries in @wakeirq_map
+>>> + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
+>>> + *                            to be aware that their parent can't handle dual
+>>> + *                            edge interrupts.
+>>>    */
+>>>   struct msm_pinctrl_soc_data {
+>>>        const struct pinctrl_pin_desc *pins;
+>>> @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
+>>>        const int *reserved_gpios;
+>>>        const struct msm_gpio_wakeirq_map *wakeirq_map;
+>>>        unsigned int nwakeirq_map;
+>>> +     bool wakeirq_dual_edge_errata;
+>>>   };
+>>>
+>>>   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>>> index 1b6465a882f2..1d9acad3c1ce 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>>> @@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+>>>        .ntiles = ARRAY_SIZE(sc7180_tiles),
+>>>        .wakeirq_map = sc7180_pdc_map,
+>>>        .nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
+>>> +     .wakeirq_dual_edge_errata = true,
+>>>   };
+>>>
+>>>   static int sc7180_pinctrl_probe(struct platform_device *pdev)
+>>> --
+>>> 2.27.0.383.g050319c2ae-goog
+>>>
+>>>
+>> Thanks,
+>>
+>>          M.
+>>
+>> --
+>> Without deviation from the norm, progress is not possible.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
