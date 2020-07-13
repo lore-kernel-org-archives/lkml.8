@@ -2,119 +2,145 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D33C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA6FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C97502076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0492075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Eqq3AWLt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiAjnY2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgGMRjH (ORCPT
+        id S1730146AbgGMRj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:39:07 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:65407 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMRjH (ORCPT
+        Mon, 13 Jul 2020 13:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729703AbgGMRj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:39:07 -0400
+        Mon, 13 Jul 2020 13:39:28 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F07C061755;
+        Mon, 13 Jul 2020 10:39:28 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so6330832pgb.6;
+        Mon, 13 Jul 2020 10:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594661947; x=1626197947;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=T3joC21Q3WsUvBmyUsXIOnge1qxcYWwsALm+sfFme2I=;
-  b=Eqq3AWLtZx6DCU0DcUcreaXpEtTRaubKTxkJ3D9SmL0TLvkswOEwD1+q
-   mEAjhgGzZyyzULzG8354QuUjfLG03ptnoZCikjmd1KA1x8nj85W19I6vZ
-   CgDXNV/OWlFmD6OwP8Q0oYmV4WLmAwq5/nHgOLYn6Fd8KDRDH3DgW4dTb
-   M=;
-IronPort-SDR: toR5kVyvDSeaPz16GNmjn+07qfTDjOYYC+IiceMsuH1Ar9qMnz4Njk3bbgQhO/5vr8DWUdLfRV
- MTY6B5FW3shA==
-X-IronPort-AV: E=Sophos;i="5.75,348,1589241600"; 
-   d="scan'208";a="41570660"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 13 Jul 2020 17:39:02 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 384CDA23D0;
-        Mon, 13 Jul 2020 17:38:58 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 13 Jul 2020 17:38:58 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 13 Jul 2020 17:38:37 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Mike Rapoport <rppt@kernel.org>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Re: [PATCH v18 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 13 Jul 2020 19:38:05 +0200
-Message-ID: <20200713173805.31923-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713171909.GD707159@kernel.org> (raw)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dsCSO99ajVdezhsvt46VhG304K0QmMvZ1SLvNQqxCN4=;
+        b=DiAjnY2UF2Ft32HWCeObIacUewyoVucUpWt+zmCyKymcSy2Tsolq8SL/ZuwMUcdXYF
+         UAJkTypS/GsEjJgsC2LuQCTmrKn4t6KBviNwNFx0SI861QbQSPRRWobmEMzGwcWG302T
+         4QTnwskLtNwxZbO1x01R/YlaygK2dcZ/UeGLpA8tFJkFw30Qwwet8GEYzZYtZRVQ0MLa
+         C9Vft6vQXPd83Bx7mDHuSucaH0to/LlDYAb7Jfw+HxeJrzZpt4hUGMixo5DbkqJTiuQv
+         qRHEQgpzANLRtDvZHx4k7URY7br2LHqFeOYS3qO4XyjxEKGF8mI0GOaNaZcOKDcYZMe7
+         0YnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dsCSO99ajVdezhsvt46VhG304K0QmMvZ1SLvNQqxCN4=;
+        b=hGFUMWcqSh4Zl5yNO/M73bB/BTHc4P9c3sI4r+x8rANAtqMgqjN0Oib2Pjse27Lcun
+         NOhofXhkUEj64b3Rdle+lGmOiFwQfR0H/LI388igNBdIHsGyoAeb5zjYtc4hvdDQq3YC
+         RVS1Xrt3IAygHmKOZRn4fZOKGiALcYaVo5AXj4E4RPWnUOqFcgyMLHPQKXdszb0uE56V
+         nDvKWwBv/9GsIe5UHIHXtFCRBjHZD/aWa4BfdHpbPSk1rsSNgV6O0U5xV7WgQBv8rPXY
+         O6HnX/tTBaVSocVTE2B+CkRK3MKrAOVbVPOt1eVFUA72qN6L8cmnz9Yj4QVdjslHh8qK
+         hNhg==
+X-Gm-Message-State: AOAM533+ddzk9roarDao2skFavIc+A5lzg1wEYje7y3H3QX6NgTmPMzD
+        k+6OVb/szZK42w4gJTmN0E0=
+X-Google-Smtp-Source: ABdhPJxLjkfeTM6u2EPFb0xNzbO7HD66zJ2C9DTOFC/K2UT2od5SKnwJX1jfcQRUGjEjdIYTXhMKFg==
+X-Received: by 2002:a62:1716:: with SMTP id 22mr797676pfx.99.1594661967413;
+        Mon, 13 Jul 2020 10:39:27 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id w9sm186540pja.39.2020.07.13.10.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 10:39:26 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-ide@vger.kernel.org
+Subject: [PATCH v3 0/3] drivers: ide: use generic power management
+Date:   Mon, 13 Jul 2020 23:06:10 +0530
+Message-Id: <20200713173613.2095-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D40UWA002.ant.amazon.com (10.43.160.149) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 20:19:09 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-> On Mon, Jul 13, 2020 at 02:21:43PM +0200, SeongJae Park wrote:
-> > On Mon, 13 Jul 2020 15:08:42 +0300 Mike Rapoport <rppt@kernel.org> wrote:
-> > 
-> > > Hi,
-> > > 
-> > > On Mon, Jul 13, 2020 at 10:41:31AM +0200, SeongJae Park wrote:
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > > 
-> > > > This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
-> > > > by DAMON in following commit for the implementation of the region based
-> > > > sampling.
-> > > 
-> > > Maybe I'm missing something, but why is DAMON a module?
-> > 
-> > I made it loadable just for easier adoption from downstream kernels.  I could
-> > drop the module build support if asked.
->  
-> Well, exporting core mm symbols to modules should be considred very
-> carefully. 
+The purpose of this patch series is to remove legacy power management callbacks
+from ide drivers.
 
-Agreed.  I will drop the module support from the next spin.
+The suspend() and resume() callbacks operations are still invoking
+pci_save/restore_state(), pci_set_power_state(), pci_enable/disable_state(),
+etc. and handling the power management themselves, which is not recommended.
 
-> 
-> Why lookup_page_ext() is required for DAMON? It is not used anywhere in
-> this patchset.
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
 
-It's indirectly used.  In the 6th patch, DAMON uses 'set_page_young()' to not
-interfere with other PTE Accessed bit users.  And, 'set_page_young()' uses
-'lookup_page_ext()' if !CONFIG_64BIT.  That's why I exported it.
+All patches are compile-tested only.
 
+v3:
+    - Modpost error for undefined reference by Kbuild in v1.
+    - Another approach to disable PM in drivers/ide/triflex.c suggested by
+      Bjorn Helgaas in v2.
 
-Thanks,
-SeongJae Park
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (3):
+  ide: use generic power management
+  ide: sc1200: use generic power management
+  ide: delkin_cb: use generic power management
+
+ drivers/ide/aec62xx.c         |  3 +--
+ drivers/ide/alim15x3.c        |  3 +--
+ drivers/ide/amd74xx.c         |  3 +--
+ drivers/ide/atiixp.c          |  3 +--
+ drivers/ide/cmd64x.c          |  3 +--
+ drivers/ide/cs5520.c          |  3 +--
+ drivers/ide/cs5530.c          |  3 +--
+ drivers/ide/cs5535.c          |  3 +--
+ drivers/ide/cs5536.c          |  3 +--
+ drivers/ide/cy82c693.c        |  3 +--
+ drivers/ide/delkin_cb.c       | 32 +++++---------------------
+ drivers/ide/hpt366.c          |  3 +--
+ drivers/ide/ide-pci-generic.c |  3 +--
+ drivers/ide/it8172.c          |  3 +--
+ drivers/ide/it8213.c          |  3 +--
+ drivers/ide/it821x.c          |  3 +--
+ drivers/ide/jmicron.c         |  3 +--
+ drivers/ide/ns87415.c         |  3 +--
+ drivers/ide/opti621.c         |  3 +--
+ drivers/ide/pdc202xx_new.c    |  3 +--
+ drivers/ide/pdc202xx_old.c    |  3 +--
+ drivers/ide/piix.c            |  3 +--
+ drivers/ide/sc1200.c          | 43 ++++++++++++-----------------------
+ drivers/ide/serverworks.c     |  3 +--
+ drivers/ide/setup-pci.c       | 29 +++++------------------
+ drivers/ide/siimage.c         |  3 +--
+ drivers/ide/sis5513.c         |  3 +--
+ drivers/ide/sl82c105.c        |  3 +--
+ drivers/ide/slc90e66.c        |  3 +--
+ drivers/ide/triflex.c         | 24 +++++++------------
+ drivers/ide/via82cxxx.c       |  3 +--
+ include/linux/ide.h           |  8 +------
+ 32 files changed, 62 insertions(+), 155 deletions(-)
+
+-- 
+2.27.0
+
