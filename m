@@ -2,102 +2,61 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A99C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCC0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0494320809
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594637548;
-	bh=ADqVZRWZ/51fjjRPcMqetiQetPZ84+yWUeey/gb/nUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l/sUKvNBmg+a4YGb6UP/imt0xJKu5prVtU7I1AHrMJ689G/+vBvzwYAw3EHO282nE
-	 pXrBkO7txDPmKjBqzf18yHOZ5HwfLe+yKPmAxeu/3CZyQFUlothCgo7MRzWgPTBk/C
-	 97N29P3LKma6DWEGnu8CIowXcafzhbK6147u4MiI=
+	by mail.kernel.org (Postfix) with ESMTP id 48FF82077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgGMKw1 (ORCPT
+        id S1729583AbgGMKwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbgGMKw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:52:26 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4933020773;
-        Mon, 13 Jul 2020 10:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594637546;
-        bh=ADqVZRWZ/51fjjRPcMqetiQetPZ84+yWUeey/gb/nUU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IpC2uSQJRwoNT6hkjWdSmS6Qn5EDAzTySC6hz2Sj0WilIDu3UOC7m1U2k2p8l2DcV
-         adnQd6KIIyxKLh52sebskcVgxdGfQzuo3gqnKMHSSMdVaw6UFodxwXuEwND/keqv1y
-         krEFqpxgDguMEYS3qRh3XxHN0YzdgYGdeWzExU6I=
-Date:   Mon, 13 Jul 2020 18:52:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Message-ID: <20200713105219.GN15718@dragon>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
- <20200710132423.497230-3-philippe.schenker@toradex.com>
- <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
+        Mon, 13 Jul 2020 06:52:18 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:42935 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728883AbgGMKwP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 06:52:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U2ZrLm8_1594637531;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2ZrLm8_1594637531)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Jul 2020 18:52:12 +0800
+Subject: Re: [PATCH] doc/zh_CN: add Chinese translation prefer section
+To:     corbet@lwn.net
+Cc:     Harry Wei <harryxiyou@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200713093123.45269-1-alex.shi@linux.alibaba.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <3d618299-9b45-7aca-afbd-8513fba021b4@linux.alibaba.com>
+Date:   Mon, 13 Jul 2020 18:51:27 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200713093123.45269-1-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:46:04AM +0200, Ahmad Fatoum wrote:
-> Hello Philippe,
-> 
-> On 7/10/20 3:24 PM, Philippe Schenker wrote:
-> > Since the runtime-pm wakeup bug was fixed in
-> > drivers/usb/chipidea/core.c usb dual-role host/device switching is
-> > working. So make use of it.
-> > 
-> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> > 
-> > ---
-> > 
-> >  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 9 +++++++++
-> >  arch/arm/boot/dts/imx7-colibri.dtsi         | 4 ++--
-> >  2 files changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> > index 97601375f264..db56a532a34a 100644
-> > --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> > +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> > @@ -20,6 +20,14 @@ clk16m: clk16m {
-> >  		clock-frequency = <16000000>;
-> >  	};
-> >  
-> > +	extcon_usbc_det: usbc_det {
-> > +		compatible = "linux,extcon-usb-gpio";
-> 
-> According to 4602f3bff266 ("usb: common: add USB GPIO based connection detection driver"):
-> "the old way using extcon to support USB Dual-Role switch is now deprecated
->  when use Type-B connector."
-> 
-> Have you considered using a compatible = "gpio-usb-b-connector" child node instead?
 
-I dropped patch #2 and #3 for now.
 
-Shawn
+在 2020/7/13 下午5:31, Alex Shi 写道:
+> diff --git a/Documentation/conf.py b/Documentation/conf.py
+> index c503188880d9..b5b2be8eec22 100644
+> --- a/Documentation/conf.py
+> +++ b/Documentation/conf.py
+> @@ -36,7 +36,7 @@ needs_sphinx = '1.3'
+>  # Add any Sphinx extension module names here, as strings. They can be
+>  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+>  # ones.
+> -extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
+> +extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
+
+Sorry, this part was included mistaken. I will remove it in next version.
+Thanks!
