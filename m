@@ -2,100 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDADC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFE1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFCC20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110F520791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qt1TWq5Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uk8E7BLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgGMRtC (ORCPT
+        id S1729969AbgGMRxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:49:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729700AbgGMRtB (ORCPT
+        Mon, 13 Jul 2020 13:53:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41203 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729689AbgGMRxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:49:01 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C050C061755;
-        Mon, 13 Jul 2020 10:49:01 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w2so6332304pgg.10;
-        Mon, 13 Jul 2020 10:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=X/UxR11zWpZM3dbb73YevVQANqUAYVi8RjwQuOTkMCo=;
-        b=qt1TWq5QiAZsW+kN/girNvQwxa3x0b4OAYSIpoeUCUafTZd4E5czr1zKjYGoCJFSub
-         kjTJtt6rwWcQdZGl+rcusVj1KS387Fz5RnTthae1+U6pj4QrQwsBTriLvFsPyNOSGN2a
-         ngUzt+ukykhkRKLN/Qv06eR8AlUbiq2qZlaUK7Kh74YiCqjihvyH7shr+F5FwfGsHgma
-         b3FYbJXy07F+N/I2PQ01CQugQ/aXuchwgjwgkGJ0Rr8E7RbeAms+f7ubcsJI9Yb0a3n9
-         WvUQB0a1hFtmMKe+4YY+00KfsTuDl2E2CcRC4l5w2FtfxgBg4qXuvMRj1+38fCaHjzET
-         yOtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=X/UxR11zWpZM3dbb73YevVQANqUAYVi8RjwQuOTkMCo=;
-        b=b+tHvHRNT8rVdtCN0OX6BpDfeMZ07pON5fftLtusT11uOdwR0f8sm9ccNxMWYn0CvU
-         2fe5HZMBUqxfulOQmyyLFlUWH9zdzVUtYV1Xga4FhrWG2EeYEol2+pm5U9ZHUDYz5FBP
-         67mOId8sEmm1aCQSN0qcV2CC6e0jenOfMPrQgmoBAW81OLu39QXtswgg13/0mQ//vKCU
-         DgAXIMxNrfTk4amFKoqc5KLqG0fKSnrOGQQqYBwRB1ikIhvF5n3jntluXUy6LuTjwrjb
-         0Kl/LPqFBbQtI4NDvgNzHreKlwpW/YNb6uSmkujba+zDFI6F0nVZ3LB0rB1lqr+5R450
-         4UFA==
-X-Gm-Message-State: AOAM5326OcyD/YzqOqHKy898QYWEROXfG9bpdOVXo0OUMOPle+4U2QXN
-        L25vBxfWSC2kxqUgCUeq5A==
-X-Google-Smtp-Source: ABdhPJw936w1c/xiB+NeR+z/vaLStkZCWsDmuwxIveK4yIDPUBtWVB3kDrhG/GkdlS48rj+DKoqHfQ==
-X-Received: by 2002:a63:1119:: with SMTP id g25mr287078pgl.126.1594662540867;
-        Mon, 13 Jul 2020 10:49:00 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4071:200a:9520:4919:edd3:5dbd:ffec])
-        by smtp.gmail.com with ESMTPSA id e10sm230186pjw.22.2020.07.13.10.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 10:48:59 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     paulmck@kernel.org
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] rculist: Fix _list_check_srcu() macro
-Date:   Mon, 13 Jul 2020 23:18:46 +0530
-Message-Id: <20200713174846.8681-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jul 2020 13:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594662831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0XvTABMJSNC09lO5NyQLA0ucrlVh1ae0kKBVgF9YYZ0=;
+        b=Uk8E7BLDo6jkIliA1vqtCtgXcCJMGYFvLvmLQfWQvJAL83woii2nG9/k9ccGTkoIiUzqz3
+        JTjLtswpQsymiL0QFh/gtOVNeQKfVTjC0YYA5g8Tbd3l1t+xLq1CpN1OAHHgXHz37/lNsA
+        8Ah2o+jdGD169IbFteOM/rWpogkeQAU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-UJ3xn4ouMdK1Dg7aSPI-Ig-1; Mon, 13 Jul 2020 13:53:46 -0400
+X-MC-Unique: UJ3xn4ouMdK1Dg7aSPI-Ig-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD3601091;
+        Mon, 13 Jul 2020 17:53:38 +0000 (UTC)
+Received: from ovpn-113-77.phx2.redhat.com (ovpn-113-77.phx2.redhat.com [10.3.113.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D14535C1BB;
+        Mon, 13 Jul 2020 17:53:37 +0000 (UTC)
+Message-ID: <d1fa9e60b559b6bf3a37ef5a6aef2bd7bd6e1681.camel@redhat.com>
+Subject: Re: [PATCH v2] scsi: fcoe: add missed kfree() in an error path
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, hare@suse.de,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        robert.w.love@intel.com, Neerav.Parikh@intel.com,
+        Markus.Elfring@web.de
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jul 2020 13:53:37 -0400
+In-Reply-To: <20200709120546.38453-1-jingxiangfeng@huawei.com>
+References: <20200709120546.38453-1-jingxiangfeng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+See below.
 
-This patch fixes the macro _list_check_srcu() for CONFIG_PROVE_RCU_LIST =
-False.
+On Thu, 2020-07-09 at 20:05 +0800, Jing Xiangfeng wrote:
+> fcoe_fdmi_info() misses to call kfree() in an error path.
+> Add a label 'free_fdmi' and jump to it.
+> 
+> Fixes: f07d46bbc9ba ("fcoe: Fix smatch warning in fcoe_fdmi_info
+> function")
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> ---
+>  drivers/scsi/fcoe/fcoe.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+> index 25dae9f0b205..a63057a03772 100644
+> --- a/drivers/scsi/fcoe/fcoe.c
+> +++ b/drivers/scsi/fcoe/fcoe.c
+> @@ -830,7 +830,7 @@ static void fcoe_fdmi_info(struct fc_lport
+> *lport, struct net_device *netdev)
+>  		if (rc) {
+>  			printk(KERN_INFO "fcoe: Failed to retrieve FDMI
+> "
+>  					"information from netdev.\n");
+> -			return;
+> +			goto free_fdmi;
+>  		}
+>  
+>  		snprintf(fc_host_serial_number(lport->host),
+> @@ -868,6 +868,7 @@ static void fcoe_fdmi_info(struct fc_lport
+> *lport, struct net_device *netdev)
+>  
+>  		/* Enable FDMI lport states */
+>  		lport->fdmi_enabled = 1;
+> +free_fdmi:
+>  		kfree(fdmi);
+>  	} else {
+>  		lport->fdmi_enabled = 0;
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- include/linux/rculist.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Normally I would like to see goto labels for error paths outside
+conditionals and at the end of the function.  In this case it would
+seem to be cleaner to put an else { } clause in the if (rc) above
+around the snprintf() calls.
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 516b4feb2682..a435ad62b90b 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({ check_arg_count_one(extra); })
- 
--#define __list_check_srcu(cond)
-+#define __list_check_srcu(cond)	TRUE
- #endif
- 
- /*
--- 
-2.17.1
+-Ewan 
 
