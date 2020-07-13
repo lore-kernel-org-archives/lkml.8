@@ -2,135 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBD2C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5916FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E19E520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rrp2MoFa"
+	by mail.kernel.org (Postfix) with ESMTP id 40ABD20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgGMLgS (ORCPT
+        id S1729689AbgGMLhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMLgR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:36:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633B4C061755;
-        Mon, 13 Jul 2020 04:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=e4mWSockMrHYbs1YPCBcxolKsfl3ywIczR6j7zoK7Fk=; b=Rrp2MoFaYyCYIte0PtkIcZ1FTZ
-        MoSi4TD90kRTacj3VNqgEthpf25v6++DqVWCTLUCCUIJy2C2ZOLLLWsDjP+qLQn65OabUpDFB7Y9a
-        w9dcH/7q9GE1V/blLC6eFCrYlsa5PaY5DZOPyBTTsUqVw+ck61Lmz3W3MeqQHHaBwu8PBde+s10EL
-        BWS/EL8F/urrTrF/D2Rt6/2kkoOu4S7mhOtRV+wt3GdoWoP2caHZ0D4r1aB+0zBlSJprDCbtpMAxW
-        bdbLccfPsJ1/yAvJqX45ca/K+gESVha4EHgJ8ZvEvxN2l0FZ6z+3rBQi9hSMHnm1WFHJl8n5F2F1L
-        N47wrrSA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juwkb-0003hh-Cg; Mon, 13 Jul 2020 11:36:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 865D0300F7A;
-        Mon, 13 Jul 2020 13:36:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6D38F20D28B50; Mon, 13 Jul 2020 13:36:00 +0200 (CEST)
-Date:   Mon, 13 Jul 2020 13:36:00 +0200
-From:   peterz@infradead.org
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200713113600.GA43129@hirez.programming.kicks-ass.net>
-References: <20200706142839.26629-1-qais.yousef@arm.com>
- <20200706142839.26629-2-qais.yousef@arm.com>
- <20200713112125.GG10769@hirez.programming.kicks-ass.net>
+        Mon, 13 Jul 2020 07:37:21 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:42366 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728382AbgGMLhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:37:20 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 37E1ABC053;
+        Mon, 13 Jul 2020 11:37:16 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     dhowells@redhat.com, corbet@lwn.net, linux-cachefs@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] docs: filesystems: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 13:37:05 +0200
+Message-Id: <20200713113705.33773-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713112125.GG10769@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:21:25PM +0200, Peter Zijlstra wrote:
-> +	 * copy_process()			sysctl_uclamp
-> +	 *					  uclamp_min_rt = X;
-> +	 *   write_lock(&tasklist_lock)		  read_lock(&tasklist_lock)
-> +	 *   // link thread			  smp_mb__after_spinlock()
-> +	 *   write_unlock(&tasklist_lock)	  read_unlock(&tasklist_lock);
-> +	 *   sched_post_fork()			  for_each_process_thread()
-> +	 *     __uclamp_sync_rt()		    __uclamp_sync_rt()
-> +	 *
-> +	 * Ensures that either sched_post_fork() will observe the new
-> +	 * uclamp_min_rt or for_each_process_thread() will observe the new
-> +	 * task.
-> +	 */
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-more specifically this has the cases:
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-A)
+ Documentation/filesystems/caching/cachefiles.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	   copy_process()			sysctl_uclamp
-						  uclamp_min_rt = X;
-	     write_lock(&tasklist_lock)
-	     // link thread
-	     write_unlock(&tasklist_lock)
-	     sched_post_fork()			  read_lock(&tasklist_lock)
-	       __uclamp_sync_rt()		  smp_mb__after_spinlock()
-                                                  read_unlock(&tasklist_lock);
-                                                  for_each_process_thread()
-                                                    __uclamp_sync_rt()
+diff --git a/Documentation/filesystems/caching/cachefiles.rst b/Documentation/filesystems/caching/cachefiles.rst
+index 65d3db476765..e58bc1fd312a 100644
+--- a/Documentation/filesystems/caching/cachefiles.rst
++++ b/Documentation/filesystems/caching/cachefiles.rst
+@@ -348,7 +348,7 @@ data cached therein; nor is it permitted to create new files in the cache.
+ 
+ There are policy source files available in:
+ 
+-	http://people.redhat.com/~dhowells/fscache/cachefilesd-0.8.tar.bz2
++	https://people.redhat.com/~dhowells/fscache/cachefilesd-0.8.tar.bz2
+ 
+ and later versions.  In that tarball, see the files::
+ 
+-- 
+2.27.0
 
-
-Where write_unlock()'s RELEASE matches read_lock() ACQUIRE and
-guarantees for_each_process_thread() must observe the new thread.
-
-
-B)
-
-
-	   copy_process()			sysctl_uclamp
-						  uclamp_min_rt = X;
-						  read_lock(&tasklist_lock)
-						  smp_mb__after_spinlock()
-						  read_unlock(&tasklist_lock);
-	     write_lock(&tasklist_lock)		  for_each_process_thread()
-	     // link thread			    __uclamp_sync_rt()
-             write_unlock(&tasklist_lock)
-             sched_post_fork()
-               __uclamp_sync_rt()
-
-Where read_unlock()'s RELEASE matches write_lock()'s ACQUIRE and
-sched_post_fork() must observe the uclamp_min_t STORE.
-
-The smp_mb__after_spinlock() might be superfluous, but like said, brain
-isn't working.
