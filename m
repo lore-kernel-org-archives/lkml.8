@@ -2,180 +2,164 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B98BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D28C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A5E20C56
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j5dRr0Sn"
+	by mail.kernel.org (Postfix) with ESMTP id AEED220899
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGMWUE (ORCPT
+        id S1726778AbgGMWUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
+        Mon, 13 Jul 2020 18:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGMWR1 (ORCPT
+        with ESMTP id S1726568AbgGMWSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:17:27 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1DCC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:27 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id d198so7500131vsc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+LFCA43BGkxjqrYbBGY+idjvRsLf5O6PPbK27q7D0Bw=;
-        b=j5dRr0SnqpA2dV+P7/JOdcquxtibjP73/WoGMAUQ6ir6wX9NsomAfNw8Cp/IweTjcr
-         k7ddPDpour2+rZA3/zGoLTfyDEB+kLj1pLDMU2vXS08vsdr8rr8wKFKvlwgf42ki3KaP
-         Bj0xMElNbV/1LB37z0Bm+sogFPP5R7uwghD0U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+LFCA43BGkxjqrYbBGY+idjvRsLf5O6PPbK27q7D0Bw=;
-        b=TzRQpvI2/GtRdtfAg4SQ0kKBvdU4x9S/06HsG+KuGkKkG5ARzWTgqk2dc/e/8dXmZ/
-         FaHC0XKUizPAKo3x1NLBqJzdggU1WKibSUx0GB1n6fB/WmuwSp7qphNLhcYILLwJOFqX
-         KV42O4FgAEUqYocurzldWQ6mktRjw2iF5B93KRHIbC0TUFGBqIUHyaDPDmhIItnQAS09
-         JmOgH5NlkQ/dbaOQDsM0LbpNCNt5MQD47QJXQlFAB8gDXgpORp754c17I1Vhop0KuxK9
-         0bBm2u+eq7CH88S8NJSaz+JOjjmy7Y9LEOVcRKttsrlNiNw80l467jFzvBpKbY2bklSS
-         M5Zw==
-X-Gm-Message-State: AOAM530uotCVI4GS1ahVeKLJrlDKkslmlB0ZOeuUTkVsDlHvNbiGWxzq
-        jW3oah/7tUjBpvJXifBzT1WT/1XjdKM=
-X-Google-Smtp-Source: ABdhPJwu6ZhoGQ3mfQuiSpPlm1/7KLy4Cyen/teBh0/rjI8HU/7aHxbIUyPjL5KirgMFB6bSfKocZg==
-X-Received: by 2002:a67:f9cf:: with SMTP id c15mr1175605vsq.185.1594678645896;
-        Mon, 13 Jul 2020 15:17:25 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id d3sm2300581vko.51.2020.07.13.15.17.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 15:17:25 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id u6so4749112uau.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:23 -0700 (PDT)
-X-Received: by 2002:ab0:150c:: with SMTP id o12mr1419016uae.90.1594678643349;
- Mon, 13 Jul 2020 15:17:23 -0700 (PDT)
+        Mon, 13 Jul 2020 18:18:08 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBDAC08C5DB;
+        Mon, 13 Jul 2020 15:18:07 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 58F1EBC0E4;
+        Mon, 13 Jul 2020 22:18:03 +0000 (UTC)
+Subject: Re: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200713184606.37033-1-grandmaster@al2klimov.de>
+ <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <490226b0-754e-f5a4-8daf-96e6e33c0ae8@al2klimov.de>
+Date:   Tue, 14 Jul 2020 00:18:02 +0200
 MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-6-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1592818308-23001-6-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 15:17:11 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X=0yqDMeWSUAM4D6o_6JsOU4hm8Q2XFbOSEVQcRzRN6A@mail.gmail.com>
-Message-ID: <CAD=FV=X=0yqDMeWSUAM4D6o_6JsOU4hm8Q2XFbOSEVQcRzRN6A@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] irqchip: qcom-pdc: Reset all pdc interrupts during init
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: +
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 22, 2020 at 2:33 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Clear previous kernel's configuration during init by resetting
-> all interrupts in enable bank to zero.
->
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/irqchip/qcom-pdc.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 8beb6f7..11a9d3a 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->
-> +#define PDC_MAX_IRQS_PER_REG   32
->  #define PDC_MAX_IRQS           168
->  #define PDC_MAX_GPIO_IRQS      256
->
-> @@ -339,6 +340,7 @@ static const struct irq_domain_ops qcom_pdc_gpio_ops = {
->  static int pdc_setup_pin_mapping(struct device_node *np)
->  {
->         int ret, n;
-> +       u32 reg, max_regs, max_pins = 0;
->
->         n = of_property_count_elems_of_size(np, "qcom,pdc-ranges", sizeof(u32));
->         if (n <= 0 || n % 3)
-> @@ -367,8 +369,19 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->                                                  &pdc_region[n].cnt);
->                 if (ret)
->                         return ret;
-> +               max_pins += pdc_region[n].cnt;
->         }
->
-> +       if (max_pins > PDC_MAX_IRQS)
-> +               return -EINVAL;
-> +
-> +       max_regs = max_pins / PDC_MAX_IRQS_PER_REG;
-> +       if (max_pins % PDC_MAX_IRQS_PER_REG)
-> +               max_regs++;
-
-nit: max_regs = DIV_ROUND_UP(max_pins, PDC_MAX_IRQS_PER_REG)
 
 
-> +       for (reg = 0; reg < max_regs; reg++)
-> +               pdc_reg_write(IRQ_ENABLE_BANK, reg, 0);
+Am 13.07.20 um 21:17 schrieb Andy Shevchenko:
+> On Mon, Jul 13, 2020 at 9:46 PM Alexander A. Klimov
+> <grandmaster@al2klimov.de> wrote:
+>>
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>>              If both the HTTP and HTTPS versions
+>>              return 200 OK and serve the same content:
+>>                Replace HTTP with HTTPS.
+> 
+> Please split per driver basis.
+Am I completely blind or is there only one driver affected by my patch?
 
-This doesn't feel correct to me, but maybe I'm misunderstanding the
-hardware (I don't think I have access to a reference manual).  Looking
-at the example in the bindings, I see:
-
-qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-
-In that example we have mappings for PDC ports:
-0 - 93 (count = 94)
-94 - 108 (count = 15)
-115 - 121 (count = 7)
-
-Notice the slight discontinuity there.  I presume that discontinuity
-is normal / allowed?  If so, if there is enough of it then I think
-your math could be wrong, though with the example you get lucky and it
-works out OK.  It's easy to see the problem with a slightly different
-example:  Imagine that you had this:
-
-0 - 33 (count = 34)
-94 - 108 (count = 15)
-115 - 121 (count = 7)
-
-...now max_pins = 56 and max_regs = 2.  So you'll init reg 0 and 1.
-...but (IIUC) you actually should be initting 0, 1, 2, and 3.
-
-I have no idea what might be in those discontinuous ranges and if it's
-always OK to clear, but (assuming it is) one fix is to put your
-clearing loop _inside_ the other "for" loop in this function, AKA:
-
-for (reg = pdc_region[n].pin_base / PDC_MAX_IRQS_PER_REG;
-     reg < DIV_ROUND_UP(pdc_region[n].pin_base + pdc_region[n].cnt),
-                        PDC_MAX_IRQS_PER_REG)
-     reg++)
-
-...or another option is to keep track of the max "pin_base + cnt" and
-loop from 0 to there?  I just don't know your hardware well enough to
-tell which would be right.
+> 
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>> ---
+>>   Continuing my work started at 93431e0607e5.
+>>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>>   (Actually letting a shell for loop submit all this stuff for me.)
+>>
+>>   If there are any URLs to be removed completely or at least not just HTTPSified:
+>>   Just clearly say so and I'll *undo my change*.
+>>   See also: https://lkml.org/lkml/2020/6/27/64
+>>
+>>   If there are any valid, but yet not changed URLs:
+>>   See: https://lkml.org/lkml/2020/6/26/837
+>>
+>>   If you apply the patch, please let me know.
+>>
+>>   Sorry again to all maintainers who complained about subject lines.
+>>   Now I realized that you want an actually perfect prefixes,
+>>   not just subsystem ones.
+>>   I tried my best...
+>>   And yes, *I could* (at least half-)automate it.
+>>   Impossible is nothing! :)
+>>
+>>
+>>   drivers/platform/x86/Kconfig      |  2 +-
+>>   drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+>>   2 files changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index 0581a54cf562..1d96e07b2a02 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -140,7 +140,7 @@ config ACERHDF
+>>            in the same node directory will tell you if it is "acerhdf".
+>>
+>>            For more information about this driver see
+>> -         <http://piie.net/files/acerhdf_README.txt>
+>> +         <https://piie.net/files/acerhdf_README.txt>
+>>
+>>            If you have an Acer Aspire One netbook, say Y or M
+>>            here.
+>> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+>> index 7e3083deb1c5..9aae45a45200 100644
+>> --- a/drivers/platform/x86/apple-gmux.c
+>> +++ b/drivers/platform/x86/apple-gmux.c
+>> @@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+>>    * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+>>    * use a `TI LP8545`_.
+>>    *
+>> - * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+>> - * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
+>> + * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
+>> + * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+>>    */
+>>
+>>   static int gmux_get_brightness(struct backlight_device *bd)
+>> @@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+>>    * switch the panel and the external DP connector and allocates a framebuffer
+>>    * for the selected GPU.
+>>    *
+>> - * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+>> - * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+>> - * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+>> - * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+>> + * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+>> + * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+>> + * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+>> + * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+>>    * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+>> - * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+>> + * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+>>    * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+>> - * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+>> + * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+>>    */
+>>
+>>   static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
+>> --
+>> 2.27.0
+>>
+> 
+> 
