@@ -8,68 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F946C43466
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DC5C43467
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CDC20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE14C207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="va14DwSp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sor0wqfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgGMNXK (ORCPT
+        id S1729997AbgGMNXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
+        Mon, 13 Jul 2020 09:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729952AbgGMNXC (ORCPT
+        with ESMTP id S1729983AbgGMNXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:23:02 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 234E9C061755;
-        Mon, 13 Jul 2020 06:23:02 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id ga4so17129725ejb.11;
-        Mon, 13 Jul 2020 06:23:02 -0700 (PDT)
+        Mon, 13 Jul 2020 09:23:08 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD7AC061755;
+        Mon, 13 Jul 2020 06:23:08 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f12so17132138eja.9;
+        Mon, 13 Jul 2020 06:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WeyIeoPZJMXK7vhLHL5c0YV2wwYi5JPUEFrxzTX8RvU=;
-        b=va14DwSpJTk8Hv73zRY2TzzhxmZEFmEKBsfKXWnt/tzVTOr74i7qtpDWIp4vmQMCAk
-         wxYB0bW9tYz22zJj8OOtOi6N6bWeBzWo3lSiWKmps+V96kj1qxSE3QFi9C2Gzqd5YZaX
-         6cOeVRPEPWamg1UBvZrCC3b9/xKGFeZ/lvllDTgYQ67sZ6eseA6VrCI4nMR9ipMAdB5V
-         8IjA/EOJGUyLhipxOaXpWCoZTwBGBotZf2uFyOnPyLWJMxn4IAzBLMREPrQdOH3U+WJK
-         Lo/IdoSaucGHkIZCHDI2TlTI3UEyeqroXs5xoA5KQ2KdyUlT+5/nUpNxnknP4tFcEAJy
-         jB2w==
+        bh=EKTGQqjFsfzqPPjmNL4aUYY57OLmCsGI5alt5eIAZQo=;
+        b=sor0wqfVidp46y23ExI3rsc2tAIgirfY+l2lliUu1vrr+cY4AhVxnL0vWpCtDi/pa5
+         0P/FVcGFyX2Y+3pe62aArh19MEj55T95wEF+4oO9/2bmfXNg6ZpcRhj2+xOarQfnO3Yi
+         ClS6N9vgqqhyfuzzULu1HTxbdxjEJ3PCZ1/fQN6Vq9ipdpD8QA7XBzpGnmHXYxqzfHy7
+         Im6YnfbXdPENwK0Tv/Tr3ewida6YiRbYRqw18+LV8NcOyemhUVamZyfUC87ZztrdJOXo
+         rpPZAOHjeXFIcgipzq9CQ0IbGmW/5P7Avm2qQZKpCVxQroZ2vCz5Rp2R9aSL5UYVBjCw
+         lWAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=WeyIeoPZJMXK7vhLHL5c0YV2wwYi5JPUEFrxzTX8RvU=;
-        b=LGg7jsKXoaN+pSGau4pwB+fE4mRTgpbIYaSznKlPphSlWwFXGJG+gOQgLtI47bU+nI
-         39MH1Qwq6tcRw9WeKrC/L7NojJ5wIkG72YUqxVGzsQc8ebjhn7/Mc/RPspsYSahoZ0kO
-         A2PwotGPL1+lccwWnkom4gQ9I97aw3+VBRfjQGlcViCVu1ejtlViHmaW9mcc0acQwBCj
-         +gtDQ+rRSO5QQQ95Psee0F7jwo+d2/ffYCrTcOksKp8Vf4uflld6+VsMModbvXkvv8Bl
-         JV/oNm+gBP3aVq5f8JICACaHbvbGmm5GchHlLsfLXoCO2hlXkAIphnAfXilhChJJbQkC
-         sEkg==
-X-Gm-Message-State: AOAM531cOrjuGO8j92TLQY4S96Ul1MdFEHh5ghhgMLpc0Hf71NiipaAD
-        MZwJpwI8Wa+pxm3nx4P1mrEvMrEtjiC+hQ==
-X-Google-Smtp-Source: ABdhPJwUjqmZeNSlCTAl57KxA+cutsVpR1kCU85dk+qzkHj4E1FjAK7/IQ+7zYeHb5tZSd31kCRd1A==
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr77156370ejw.170.1594646580813;
-        Mon, 13 Jul 2020 06:23:00 -0700 (PDT)
+        bh=EKTGQqjFsfzqPPjmNL4aUYY57OLmCsGI5alt5eIAZQo=;
+        b=ZO8HLpHhnoCRiAD8nBfO4PJEHW5HNrAgbVJeFrLkou6S5uswkGOEE2hPysI2pwIf0t
+         lxag01xPu5xeL2Ds0lvGQxU73zhhvHiA4zTaZokxO60I4rxYTxROG1LNdY7LgJVYmmNN
+         auZnQZL3lT5guNoV0P8SiaAVGkd4qoDlWi3dDUKOOUmUY1eON+fXdy/9aLiwkkXFG3I7
+         DT0GwlwrLDpP2fojnEEHviigKgeZ08ClCq+xncp6t4KiEjwOv/2Y3buY8peb4SreZ/WX
+         AdOLocVSeQuN0FJ0wxNcrLTbWzMWBjw/CQnHVTWLbAwrxTQZC/JXHU3FJ77+qnCMPzV/
+         7umg==
+X-Gm-Message-State: AOAM532/cP/NCxSSxnyTppgJwAnZiH0qlVPXB3CkCo6wnAPZoEA/gIbX
+        JX+x4VDAWpEwIt+07kQ7kcY=
+X-Google-Smtp-Source: ABdhPJzOwIZGspjLgMaEq365pJ5/qMDFTMQ2+msioD//dAatGjVwqe5nQfPgFpq7fjw/LM34pCqEZA==
+X-Received: by 2002:a17:906:3c42:: with SMTP id i2mr78330767ejg.14.1594646587072;
+        Mon, 13 Jul 2020 06:23:07 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.22.59
+        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.23.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:23:00 -0700 (PDT)
+        Mon, 13 Jul 2020 06:23:06 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
+To:     helgaas@kernel.org, Guan Xuetao <gxt@pku.edu.cn>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: [RFC PATCH 17/35] hwmon: (sis5595) Tidy Success/Failure checks
-Date:   Mon, 13 Jul 2020 14:22:29 +0200
-Message-Id: <20200713122247.10985-18-refactormyself@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 22/35] unicore32: Change PCIBIOS_SUCCESSFUL to 0
+Date:   Mon, 13 Jul 2020 14:22:34 +0200
+Message-Id: <20200713122247.10985-23-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200713122247.10985-1-refactormyself@gmail.com>
 References: <20200713122247.10985-1-refactormyself@gmail.com>
@@ -78,130 +77,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary check for 0.
+In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+Their scope should be limited within arch/x86.
+
+Change all PCIBIOS_SUCCESSFUL to 0
 
 Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 ---
-This patch depends on PATCH 16/35
+ arch/unicore32/kernel/pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/hwmon/sis5595.c | 13 ++++---------
- drivers/hwmon/via686a.c | 13 ++++---------
- drivers/hwmon/vt8231.c  | 13 ++++---------
- 3 files changed, 12 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/hwmon/sis5595.c b/drivers/hwmon/sis5595.c
-index 0ea174fb3048..91fdddaa4136 100644
---- a/drivers/hwmon/sis5595.c
-+++ b/drivers/hwmon/sis5595.c
-@@ -825,8 +825,7 @@ static int sis5595_pci_probe(struct pci_dev *dev,
- 		pci_write_config_word(dev, SIS5595_BASE_REG, force_addr);
+diff --git a/arch/unicore32/kernel/pci.c b/arch/unicore32/kernel/pci.c
+index 0d098aa05b47..401ab356c814 100644
+--- a/arch/unicore32/kernel/pci.c
++++ b/arch/unicore32/kernel/pci.c
+@@ -37,7 +37,7 @@ puv3_read_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		*value = readl(PCICFG_DATA);
+ 		break;
  	}
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
  
--	if (0 !=
--	    pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
-+	if (pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
- 		dev_err(&dev->dev, "Failed to read ISA address\n");
- 		return -ENODEV;
+ static int
+@@ -58,7 +58,7 @@ puv3_write_config(struct pci_bus *bus, unsigned int devfn, int where,
+ 		writel(value, PCICFG_DATA);
+ 		break;
  	}
-@@ -843,17 +842,13 @@ static int sis5595_pci_probe(struct pci_dev *dev,
- 		return -ENODEV;
- 	}
+-	return PCIBIOS_SUCCESSFUL;
++	return 0;
+ }
  
--	if (0 !=
--	    pci_read_config_byte(dev, SIS5595_ENABLE_REG, &enable)) {
-+	if (pci_read_config_byte(dev, SIS5595_ENABLE_REG, &enable)) {
- 		dev_err(&dev->dev, "Failed to read enable register\n");
- 		return -ENODEV;
- 	}
- 	if (!(enable & 0x80)) {
--		if ((0 !=
--		     pci_write_config_byte(dev, SIS5595_ENABLE_REG,
--					   enable | 0x80))
--		 || (0 !=
--		     pci_read_config_byte(dev, SIS5595_ENABLE_REG, &enable))
-+		if ((pci_write_config_byte(dev, SIS5595_ENABLE_REG, enable | 0x80))
-+		 || (pci_read_config_byte(dev, SIS5595_ENABLE_REG, &enable))
- 		 || (!(enable & 0x80))) {
- 			/* doesn't work for some chips! */
- 			dev_err(&dev->dev, "Failed to enable HWM device\n");
-diff --git a/drivers/hwmon/via686a.c b/drivers/hwmon/via686a.c
-index cffea688878f..b8466e2e1435 100644
---- a/drivers/hwmon/via686a.c
-+++ b/drivers/hwmon/via686a.c
-@@ -863,12 +863,10 @@ static int via686a_pci_probe(struct pci_dev *dev,
- 	if (force_addr) {
- 		address = force_addr & ~(VIA686A_EXTENT - 1);
- 		dev_warn(&dev->dev, "Forcing ISA address 0x%x\n", address);
--		if (0 !=
--		    pci_write_config_word(dev, VIA686A_BASE_REG, address | 1))
-+		if (pci_write_config_word(dev, VIA686A_BASE_REG, address | 1))
- 			return -ENODEV;
- 	}
--	if (0 !=
--	    pci_read_config_word(dev, VIA686A_BASE_REG, &val))
-+	if (pci_read_config_word(dev, VIA686A_BASE_REG, &val))
- 		return -ENODEV;
- 
- 	address = val & ~(VIA686A_EXTENT - 1);
-@@ -878,8 +876,7 @@ static int via686a_pci_probe(struct pci_dev *dev,
- 		return -ENODEV;
- 	}
- 
--	if (0 !=
--	    pci_read_config_word(dev, VIA686A_ENABLE_REG, &val))
-+	if (pci_read_config_word(dev, VIA686A_ENABLE_REG, &val))
- 		return -ENODEV;
- 	if (!(val & 0x0001)) {
- 		if (!force_addr) {
-@@ -890,9 +887,7 @@ static int via686a_pci_probe(struct pci_dev *dev,
- 		}
- 
- 		dev_warn(&dev->dev, "Enabling sensors\n");
--		if (0 !=
--		    pci_write_config_word(dev, VIA686A_ENABLE_REG,
--					  val | 0x0001))
-+		if (pci_write_config_word(dev, VIA686A_ENABLE_REG, val | 0x0001))
- 			return -ENODEV;
- 	}
- 
-diff --git a/drivers/hwmon/vt8231.c b/drivers/hwmon/vt8231.c
-index cc1d24c2a2c8..ee6cd6b85f91 100644
---- a/drivers/hwmon/vt8231.c
-+++ b/drivers/hwmon/vt8231.c
-@@ -987,13 +987,11 @@ static int vt8231_pci_probe(struct pci_dev *dev,
- 		dev_warn(&dev->dev, "Forcing ISA address 0x%x\n",
- 			 address);
- 
--		if (0 !=
--		    pci_write_config_word(dev, VT8231_BASE_REG, address | 1))
-+		if (pci_write_config_word(dev, VT8231_BASE_REG, address | 1))
- 			return -ENODEV;
- 	}
- 
--	if (0 != pci_read_config_word(dev, VT8231_BASE_REG,
--							&val))
-+	if (pci_read_config_word(dev, VT8231_BASE_REG, &val))
- 		return -ENODEV;
- 
- 	address = val & ~(VT8231_EXTENT - 1);
-@@ -1002,15 +1000,12 @@ static int vt8231_pci_probe(struct pci_dev *dev,
- 		return -ENODEV;
- 	}
- 
--	if (0 != pci_read_config_word(dev, VT8231_ENABLE_REG,
--							&val))
-+	if (pci_read_config_word(dev, VT8231_ENABLE_REG, &val))
- 		return -ENODEV;
- 
- 	if (!(val & 0x0001)) {
- 		dev_warn(&dev->dev, "enabling sensors\n");
--		if (0 !=
--			pci_write_config_word(dev, VT8231_ENABLE_REG,
--							val | 0x0001))
-+		if (pci_write_config_word(dev, VT8231_ENABLE_REG, val | 0x0001))
- 			return -ENODEV;
- 	}
- 
+ struct pci_ops pci_puv3_ops = {
 -- 
 2.18.2
 
