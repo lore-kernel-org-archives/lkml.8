@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36538C43465
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD344C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1497520791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCE020791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mQneNRTv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DzaaXGKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgGMGKC (ORCPT
+        id S1729414AbgGMGKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35434 "EHLO
+        Mon, 13 Jul 2020 02:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgGMGKA (ORCPT
+        with ESMTP id S1729397AbgGMGJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:10:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7480CC08C5DD
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:10:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e18so5584406pgn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:10:00 -0700 (PDT)
+        Mon, 13 Jul 2020 02:09:57 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A67DC08C5DB
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:57 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 72so5067397ple.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gB83jD2FpTYfBDRkUJH8DvVVofs2yRFQbXc2yeSZvmk=;
-        b=mQneNRTvRh7TEV8oSckX8BzrplvT9JWTPgTge++Ykp1B5RphqvW7GoZJ7CuLCG5NUG
-         ALY50gHRt/NcNRLiQoXmQFstFkEHgQkNYkl7cQQe6wc1diyCVsgb0FDopMACd33C9vqe
-         SGZDpkH8trEfdC9w/dw0KWhHA4PTUTO9iYCas=
+        bh=bQh/36jCZcDByG+9nx4Kj3oZ/1DPecGh3s/vB7rmmZs=;
+        b=DzaaXGKEpgVhqKOYBrv2Ua3uko6Tg//W4TOh35bm6GY9/BkI0zqcEeLc6TZXpm7Sfm
+         /XgTqZwkYtLSEtoNNHrfGrLK/G/na3RKiExc3Z/NTkrILxC1ZYUiffZ4XZ29QZ9QsAFB
+         V9RuE+kPzERAWf/+jzRmBghIJRvi65l8g9G+Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gB83jD2FpTYfBDRkUJH8DvVVofs2yRFQbXc2yeSZvmk=;
-        b=F15U7A+NNei0IOHM7XzDftcYvl3VTxVLU5CjZ6gFO1bdmecXD3lc/JLDDlwpQina4x
-         y7T5ARS50opDPdWYDpYCWocBmAMvF/PZm/GHx+dwm8NHANMHiBoGuSkoL5Hrlaj0/N0b
-         Nit93qj9ukyOL99GGcZMS1vVcQRkeJnYBVaJpqnbWpnHn61cirhZ6WjhrW3Sd3CpU60Z
-         pE0IQCI6gXwNTXj/6oxArlJX6XsNbmq3BDZ9z+K6CN18VxIDZzhcaS/2uFZyLh0TA+Ip
-         l0S0Ge9VFQv3gm7A0keOmpDcCMLd7W1vTWT/aoW/+kLTQ8sxzTnYpat6ew2lcjIzbsoc
-         ESQg==
-X-Gm-Message-State: AOAM531OV65a9/4IDN/0mjnGMjklW+ErFH2O4zEqmPWOJDUSAekJ3PEt
-        3FPbbFG5s6Rnv8spLLcloFd8Og==
-X-Google-Smtp-Source: ABdhPJw7xh/m0JWlcTmFBX/gTdG+Hj4V1YLkVAmb10CsnxvzrbYdCbIFz51djjnYzpvhScMv8yE81Q==
-X-Received: by 2002:a63:fe0a:: with SMTP id p10mr66187991pgh.255.1594620600025;
-        Sun, 12 Jul 2020 23:10:00 -0700 (PDT)
+        bh=bQh/36jCZcDByG+9nx4Kj3oZ/1DPecGh3s/vB7rmmZs=;
+        b=dk2Qs5EZY+wyXqJbsK5kOlmHbxcswkuyawX5dXRra2OHAiDxP544OehDMmVmMKiDsU
+         bwPxwWbKsZjDdJUTV0Ta/DZ4owU78lh+r61Ovaf/KFFudHkUa2WSLT3FNgQfzAz3yyJf
+         pqiNlCNe69e5e5FLhdIaGrmYz07vYCuqnVZMmgYPd1n8WFLtAkq6j3hKL00eaJ5B4Kx2
+         Cs1sg+H3TfU4LFLabc6xIYu9m1wHbDSFRQlbifW/+NjrX8cqNJJQjxwBMAq2febLoZGT
+         24ftgQUH+u5ZZJm8os0tyQTyQQwsvowH2QyEeimgPRpxEY7ONm4Hr1ULvfpCaCtbPgq6
+         PbGQ==
+X-Gm-Message-State: AOAM5326LA2CbqRtM5Xe31HaVZEL0K6lWkSasENsWOfokdxcg6ilpZxC
+        4hfazV4d/eCQaJ5eInzEaaNKCw==
+X-Google-Smtp-Source: ABdhPJxi6dRFSoNOfpe8svPhA4stIApLXMgBoBr29yqAkj6fN7ebrXCw8Sp2gNNc+/KJEwH9NIvggg==
+X-Received: by 2002:a17:90a:71c1:: with SMTP id m1mr18559733pjs.22.1594620596992;
+        Sun, 12 Jul 2020 23:09:56 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.57
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:59 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:56 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -66,9 +66,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 16/16] media: mtk-vcodec: venc: fix invalid time per frame in S_PARM
-Date:   Mon, 13 Jul 2020 15:08:42 +0900
-Message-Id: <20200713060842.471356-17-acourbot@chromium.org>
+Subject: [PATCH v3 15/16] media: mtk-vcodec: venc: set default time per frame
+Date:   Mon, 13 Jul 2020 15:08:41 +0900
+Message-Id: <20200713060842.471356-16-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -79,42 +79,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2-compliance expects the driver to adjust the time per frame if it is
-invalid (numerator or denominator set to 0). Adjust it to the default
-value in these cases.
+The time per frame was left initialized to 0/0, which make the driver
+fail v4l2-compliance, and also leaves it potentially exposed to doing a
+division by zero.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index 09baac2dbc36..82b04714f750 100644
+index 1b79185cf922..09baac2dbc36 100644
 --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
 +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -200,14 +200,18 @@ static int vidioc_venc_s_parm(struct file *file, void *priv,
- 			      struct v4l2_streamparm *a)
- {
- 	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-+	struct v4l2_fract *timeperframe = &a->parm.output.timeperframe;
+@@ -24,6 +24,9 @@
+ #define DFT_CFG_HEIGHT	MTK_VENC_MIN_H
+ #define MTK_MAX_CTRLS_HINT	20
  
- 	if (a->type != V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
- 		return -EINVAL;
- 
--	ctx->enc_params.framerate_num =
--			a->parm.output.timeperframe.denominator;
--	ctx->enc_params.framerate_denom =
--			a->parm.output.timeperframe.numerator;
-+	if (timeperframe->numerator == 0 || timeperframe->denominator == 0) {
-+		timeperframe->numerator = MTK_DEFAULT_FRAMERATE_NUM;
-+		timeperframe->denominator = MTK_DEFAULT_FRAMERATE_DENOM;
-+	}
++#define MTK_DEFAULT_FRAMERATE_NUM 1001
++#define MTK_DEFAULT_FRAMERATE_DENOM 30000
 +
-+	ctx->enc_params.framerate_num = timeperframe->denominator;
-+	ctx->enc_params.framerate_denom = timeperframe->numerator;
- 	ctx->param_change |= MTK_ENCODE_PARAM_FRAMERATE;
+ static void mtk_venc_worker(struct work_struct *work);
  
- 	a->parm.output.capability = V4L2_CAP_TIMEPERFRAME;
+ static const struct v4l2_frmsize_stepwise mtk_venc_framesizes = {
+@@ -1197,6 +1200,8 @@ void mtk_vcodec_enc_set_default_params(struct mtk_vcodec_ctx *ctx)
+ 		DFT_CFG_WIDTH * DFT_CFG_HEIGHT;
+ 	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] = 0;
+ 
++	ctx->enc_params.framerate_num = MTK_DEFAULT_FRAMERATE_NUM;
++	ctx->enc_params.framerate_denom = MTK_DEFAULT_FRAMERATE_DENOM;
+ }
+ 
+ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
 -- 
 2.27.0.383.g050319c2ae-goog
 
