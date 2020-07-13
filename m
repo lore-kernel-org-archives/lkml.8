@@ -2,68 +2,128 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3966AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FF4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1497B206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594629872;
-	bh=nCn6KLtowL+Z2VGZqiDZtOX/k4cPWGWYXEH+Yjoe2ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DRbESNGGWGHLHPqvD/kImvtoubrUilqTEJy+Li1Qq6UqOp2IZEZIddj1OqynT4HhB
-	 i/nlXd2YHRKuYI3T/8tAs2rbOWiNHumKTLWkpoQpcPP09VdzxY+uoQxExLciwpNwb/
-	 cVHUoEHqNk75DmPmos0fAF+4PNA9X8iY5tAxYBqU=
+	by mail.kernel.org (Postfix) with ESMTP id 763532065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RiOn6I7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgGMIoa (ORCPT
+        id S1729460AbgGMIod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:44:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgGMIo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:44:29 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22A4A2065D;
-        Mon, 13 Jul 2020 08:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594629869;
-        bh=nCn6KLtowL+Z2VGZqiDZtOX/k4cPWGWYXEH+Yjoe2ws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dkRcHsIjd0l4Dp7Du9NEDGIXb+ThB2tm8kUa68ZIHPt+4BoIEYsKcb9VsxmDRHFxP
-         5ImgOe+Kfe7Yfl+SkKZWUq7JFvcWPx9kT7xCEHDFHCAqCsdcsNMp+3Tw0sr2N/PoVp
-         E/+2z4P/G86rNBw9orB026wOc7rBQCkjlwu6G8/Q=
-Date:   Mon, 13 Jul 2020 16:44:25 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     s.hauer@pengutronix.de, arnd@arndb.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: imx_v6_v7_defconfig: Support i.MX8MM
-Message-ID: <20200713084424.GF15718@dragon>
-References: <1594347053-30361-1-git-send-email-peng.fan@nxp.com>
+        Mon, 13 Jul 2020 04:44:33 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58524 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728990AbgGMIob (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:44:31 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06D8i8LC035856;
+        Mon, 13 Jul 2020 03:44:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594629848;
+        bh=hc/peTOixENW/5RknENNSQ8QPO6aSJCkieTWWNvpw3Y=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=RiOn6I7UAoefbVY+ump2mVvJBh726Nlp5zQUifkvi1INJN4357vuUQcpLQjKBjnsP
+         czaY18nthI+Z8a7cJg7QMDQTCyXbpot+dtyLhf1BwIk/Tlqq8jivDwC+lCd0pJekdg
+         FSakcvGSObZxORLocehKgWiubzx1H3PezuqWTbdA=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06D8i8T9055417
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 03:44:08 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 03:44:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 03:44:08 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06D8hxFq002965;
+        Mon, 13 Jul 2020 03:44:01 -0500
+Subject: Re: [PATCH] EDAC-TI: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <rrichter@marvell.com>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200709174724.24570-1-grandmaster@al2klimov.de>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <10ba229b-66fb-7570-33e0-a39b95a5daec@ti.com>
+Date:   Mon, 13 Jul 2020 11:43:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594347053-30361-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200709174724.24570-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 10:10:53AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 09/07/2020 20:47, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> i.MX8MM is built with AArch64 hardware, this is to support
-> it could run in Aarch32 mode with clock and pinctrl driver enabled.
+> Deterministic algorithm:
+> For each file:
+>    If not .svg:
+>      For each line:
+>        If doesn't contain `\bxmlns\b`:
+>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>              If both the HTTP and HTTPS versions
+>              return 200 OK and serve the same content:
+>                Replace HTTP with HTTPS.
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Applied, thanks.
+Looks fine to me.
+
+Acked-by: Tero Kristo <t-kristo@ti.com>
+
+> ---
+>   Continuing my work started at 93431e0607e5.
+>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>   (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>   If there are any URLs to be removed completely or at least not HTTPSified:
+>   Just clearly say so and I'll *undo my change*.
+>   See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>   If there are any valid, but yet not changed URLs:
+>   See: https://lkml.org/lkml/2020/6/26/837
+> 
+>   If you apply the patch, please let me know.
+> 
+> 
+>   drivers/edac/ti_edac.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/edac/ti_edac.c b/drivers/edac/ti_edac.c
+> index 8be3e89a510e..6e52796a0b41 100644
+> --- a/drivers/edac/ti_edac.c
+> +++ b/drivers/edac/ti_edac.c
+> @@ -1,6 +1,6 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /*
+> - * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com/
+>    *
+>    * Texas Instruments DDR3 ECC error correction and detection driver
+>    *
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
