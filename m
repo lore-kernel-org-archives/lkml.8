@@ -2,111 +2,129 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD29520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43887206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWUE/yBT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VnzPzzMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgGMSWf (ORCPT
+        id S1726517AbgGMSXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:22:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41302 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726364AbgGMSWf (ORCPT
+        Mon, 13 Jul 2020 14:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGMSXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594664553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2oYyaWcgfJiqLq1WHDsrJOK0cX6P8HhkN2BpaAn4h60=;
-        b=BWUE/yBTMYFRJM5nFQESxauTdpZWLrG4G5ZreG1guhEqxS4iBJGN2bOfpctislp/rKpVNI
-        qkAKvH5qVztzwRQ0Se0YI2sBkFCt3Yiu3pmj6VZ8Ji4bJ30EvRBQ93QglPNCzA4v7UVYcD
-        Uv6PYmDkM8zv3lPiNyj2gxDW4kqyhNg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-WZBatit_NiGP-1IXs3KhyA-1; Mon, 13 Jul 2020 14:22:31 -0400
-X-MC-Unique: WZBatit_NiGP-1IXs3KhyA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 023648014D4;
-        Mon, 13 Jul 2020 18:22:30 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD65779222;
-        Mon, 13 Jul 2020 18:22:28 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 12:22:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
- affected memslot
-Message-ID: <20200713122226.28188f93@x1.home>
-In-Reply-To: <20200710042922.GA24919@linux.intel.com>
-References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
-        <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
-        <20200709211253.GW24919@linux.intel.com>
-        <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
-        <20200710042922.GA24919@linux.intel.com>
-Organization: Red Hat
+        Mon, 13 Jul 2020 14:23:17 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF825C061755;
+        Mon, 13 Jul 2020 11:23:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lO9SNS6YsfaUQOCZkP1HtouHsm7dL5FEWnQ2Zsu00Fw=; b=VnzPzzMIRvVltLkYbCmYOLEgN
+        yN2UHvTCldbDymh3fso14zkGiBaHSAOKn9VT8tjBWYFVNTdFF4a1lM494fV2f+RZt8cSpM86p+BHs
+        ZH+NkaC4bi4p2EpBuM/LHOCT2MSqEddufJR7isXfoQo9Ea2QzTXyM6SVSjzT5ubInR+vSq8M6uix3
+        nb6VeeWZqT/+r5n8zDTqld9vPlm0ycx7ijUvi36gXw6AvDK8vib6ODW9SkW/+OjF5fWfd3r74dHo/
+        3/tIZEz/3VJatDOwEnkvrlUxsNMLOrjZzmRyFSLVeG1tTdBl63WDlPBJNuM1/nEqla9xZC/zipFiQ
+        SrR/7ijTQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39074)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jv36g-0004Dv-L8; Mon, 13 Jul 2020 19:23:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jv36g-0006V0-4S; Mon, 13 Jul 2020 19:23:14 +0100
+Date:   Mon, 13 Jul 2020 19:23:14 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
+ ability constants
+Message-ID: <20200713182314.GW1551@shell.armlinux.org.uk>
+References: <20200709213526.21972-1-michael@walle.cc>
+ <20200709213526.21972-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709213526.21972-2-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 21:29:22 -0700
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> +Alex, whom I completely spaced on Cc'ing.
+On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
+> The constants are taken from the USXGMII Singleport Copper Interface
+> specification. The naming are based on the SGMII ones, but with an MDIO_
+> prefix.
 > 
-> Alex, this is related to the dreaded VFIO memslot zapping issue from last
-> year.  Start of thread: https://patchwork.kernel.org/patch/11640719/.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> The TL;DR of below: can you try the attached patch with your reproducer
-> from the original bug[*]?  I honestly don't know whether it has a legitimate
-> chance of working, but it's the one thing in all of this that I know was
-> definitely a bug.  I'd like to test it out if only to sate my curiosity.
-> Absolutely no rush.
+> diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
+> index 4bcb41c71b8c..784723072578 100644
+> --- a/include/uapi/linux/mdio.h
+> +++ b/include/uapi/linux/mdio.h
+> @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int prtad, int devad)
+>  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
+>  }
+>  
+> +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
+> +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop supported */
+> +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
+> +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
+> +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full duplex */
+> +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex and speed bits */
+> +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
+> +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
+> +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
+> +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
+> +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
+> +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
+> +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
+> +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
+> +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
+> +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
+> +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with copper-side partner */
 
-Mixed results, maybe you can provide some guidance.  Running this
-against v5.8-rc4, I haven't reproduced the glitch.  But it's been a
-long time since I tested this previously, so I went back to v5.3-rc5 to
-make sure I still have a recipe to trigger it.  I can still get the
-failure there as the selective flush commit was reverted in rc6.  Then
-I wondered, can I take broken v5.3-rc5 and apply this fix to prove that
-it works?  No, v5.3-rc5 + this patch still glitches.  So I thought
-maybe I could make v5.8-rc4 break by s/true/false/ in this patch.
-Nope.  Then I applied the original patch from[1] to try to break it.
-Nope.  So if anything, I think the evidence suggests this was broken
-elsewhere and is now fixed, or maybe it is a timing issue that I can't
-trigger on newer kernels.  If the reproducer wasn't so touchy and time
-consuming, I'd try to bisect, but I don't have that sort of bandwidth.
-Thanks,
+btw, the only thing which is missing from this is bit 0.
 
-Alex
+One other point - in the USXGMII specification, this appears to be
+somewhat symmetrical - the same definitions are listed as being
+used for PHY to MAC as for MAC to PHY (presumably as part of the
+acknowledgement that the MAC actually switched to that speed.)
+So, it probably makes sense to drop the LPA_ infix.
 
-[1] https://patchwork.kernel.org/patch/10798453/
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
