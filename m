@@ -2,126 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F002072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130042072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DhQCXK0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgGMMlo (ORCPT
+        id S1729700AbgGMMmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:41:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7296 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbgGMMll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:41:41 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C32079BA0D8FA8D4044F;
-        Mon, 13 Jul 2020 20:41:38 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.75) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
- 20:41:32 +0800
-Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
- instructions
-To:     Catalin Marinas <catalin.marinas@arm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <guohanjun@huawei.com>, <will@kernel.org>,
-        <olof@lixom.net>, <suzuki.poulose@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <zhangshaokun@hisilicon.com>, <prime.zeng@hisilicon.com>,
-        <linux-arch@vger.kernel.org>, <kuhn.chenqun@huawei.com>,
-        <xiexiangyou@huawei.com>, <linux-mm@kvack.org>, <arm@kernel.org>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <159440712962.27784.4664678472466095995.b4-ty@arm.com>
- <20200713122123.GC15829@gaia>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
-Date:   Mon, 13 Jul 2020 20:41:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200713122123.GC15829@gaia>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+        Mon, 13 Jul 2020 08:42:01 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29963 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgGMMmA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:42:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594644119; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=n+H8qsu8A2eN0qoFysCP3JyT/AZw34OjCJZOpkdVaGM=; b=DhQCXK0da3gAeH0hD8ONJD+msExPtiA6eLQuy+4clKfIQSwYby8Bgpl1C9UoJyIy0KY1xGG3
+ HHcCdpsjoRBn9l8TkyvcrjX2kJGiggsxh8jroNOM9Ji18yZd75C4dcqY5LFSN9rXZVQDJXHC
+ dw3Q8LvzEv6YNXVliCpe0/Smh9k=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5f0c5696ee6926bb4fff0fa2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 12:41:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F3E27C433AD; Mon, 13 Jul 2020 12:41:57 +0000 (UTC)
+Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEC02C433C8;
+        Mon, 13 Jul 2020 12:41:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEC02C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com
+Subject: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+Date:   Mon, 13 Jul 2020 18:11:40 +0530
+Message-Id: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+This series adds support for GPU DDR bandwidth scaling and is based on the
+bindings from Georgi [1]. This is mostly a rebase of Sharat's patches [2] on the
+tip of msm-next branch.
 
-On 2020/7/13 20:21, Catalin Marinas wrote:
-> On Fri, Jul 10, 2020 at 08:11:19PM +0100, Catalin Marinas wrote:
->> On Fri, 10 Jul 2020 17:44:18 +0800, Zhenyu Ye wrote:
->>> NOTICE: this series are based on the arm64 for-next/tlbi branch:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
->>>
->>> --
->>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
->>> range of input addresses. This series add support for this feature.
->>>
->>> [...]
->>
->> Applied to arm64 (for-next/tlbi), thanks!
->>
->> [1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
->>       https://git.kernel.org/arm64/c/a2fd755f77ff
->> [2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
->>       https://git.kernel.org/arm64/c/db34a081d273
-> 
-> I'm dropping these two patches from for-next/tlbi and for-next/core.
-> They need a check on whether binutils supports the new "tlbi rva*"
-> instructions, otherwise the build mail fail.
-> 
-> I kept the latest incarnation of these patches on devel/tlbi-range for
-> reference.
-> 
+Changes from v4:
+- Squashed a patch to another one to fix Jonathan's comment
+- Add back the pm_runtime_get_if_in_use() check
 
-Should we add a check for the binutils version? Just like:
+Changes from v3:
+- Rebased on top of Jonathan's patch which adds support for changing gpu freq
+through hfi on newer targets
+- As suggested by Rob, left the icc_path intact for pre-a6xx GPUs
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fad573883e89..d5fb6567e0d2 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1300,6 +1300,20 @@ config ARM64_AMU_EXTN
- 	  correctly reflect reality. Most commonly, the value read will be 0,
- 	  indicating that the counter is not enabled.
+[1] https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+log/opp/linux-next/
+[2] https://patchwork.freedesktop.org/series/75291/
 
-+config ARM64_TLBI_RANGE
-+	bool "Enable support for tlbi range feature"
-+	default y
-+	depends on AS_HAS_TLBI_RANGE
-+	help
-+	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-+	  range of input addresses.
-+
-+	  The feature introduces new assembly instructions, and they were
-+	  support when binutils >= 2.30.
-+
-+config AS_HAS_TLBI_RANGE
-+	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
-+
- endmenu
+Sharat Masetty (6):
+  dt-bindings: drm/msm/gpu: Document gpu opp table
+  drm: msm: a6xx: send opp instead of a frequency
+  drm: msm: a6xx: use dev_pm_opp_set_bw to scale DDR
+  arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
+  arm64: dts: qcom: sc7180: Add interconnects property for GPU
+  arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
 
- menu "ARMv8.5 architectural features"
+ .../devicetree/bindings/display/msm/gpu.txt        |  28 ++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |   9 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |   9 ++
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 108 ++++++++++++---------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   2 +-
+ drivers/gpu/drm/msm/msm_gpu.c                      |   3 +-
+ drivers/gpu/drm/msm/msm_gpu.h                      |   3 +-
+ 7 files changed, 112 insertions(+), 50 deletions(-)
 
-Then uses the check in the loop:
-
-	while (pages > 0) {
-		if (!IS_ENABLED(CONFIG_ARM64_TLBI_RANGE) ||
-		   !cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) ||
-
-
-If this is ok, I could send a new series soon.
-
-Thanks,
-Zhenyu
-
+-- 
+2.7.4
 
