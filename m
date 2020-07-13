@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B2C4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D57C4345C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827DC217A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C582217A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGMXta (ORCPT
+        id S1727913AbgGMXtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:49:30 -0400
+        Mon, 13 Jul 2020 19:49:36 -0400
 Received: from mga03.intel.com ([134.134.136.65]:36778 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgGMXsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:48:46 -0400
-IronPort-SDR: Xa2XKEdnu6YxjGVXRGpTw8IF+z2ca96JVvD246gV/r8MAumWv/5bBIPXxaK/dg14Z/bUOnFQSY
- k0IOf3WgDeoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148748421"
+        id S1726823AbgGMXso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 19:48:44 -0400
+IronPort-SDR: nJUZ+fCf4ug7CP28xoWUuqulojSJvZjUGDDnBLV9lUXKEeOM9FXWxKiCq1KsEprGfWX2t8S7Le
+ bQkmxH83NcmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148748419"
 X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="148748421"
+   d="scan'208";a="148748419"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 16:48:44 -0700
-IronPort-SDR: 0havjBUgSXgKnYCwONegdjWVzMspwMAWNjIzAMoCeTN9tjmCBbxhy3a0Iw+Lt7bGLn/5EdjR8q
- spVo+PNPnSUA==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 16:48:43 -0700
+IronPort-SDR: L+Dhg0Wclq3RFr++in/oMW1yRzogJL8GL71tVItUeixpZH4pbL89uXZYA/HJfQYIQM7/uNKuA5
+ zYxfc+qUdk3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="281570450"
+   d="scan'208";a="281570442"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 16:48:44 -0700
+  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 16:48:43 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         "amd-gfx" <amd-gfx@lists.freedesktop.org>,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v6 06/12] x86/msr-index: Define IA32_PASID MSR
-Date:   Mon, 13 Jul 2020 16:48:01 -0700
-Message-Id: <1594684087-61184-7-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v6 04/12] x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+Date:   Mon, 13 Jul 2020 16:47:59 -0700
+Message-Id: <1594684087-61184-5-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
 References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
@@ -69,35 +69,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IA32_PASID MSR (0xd93) contains the Process Address Space Identifier
-(PASID), a 20-bit value. Bit 31 must be set to indicate the value
-programmed in the MSR is valid. Hardware uses PASID to identify process
-address space and direct responses to the right address space.
+Work submission instruction comes in two flavors. ENQCMD can be called
+both in ring 3 and ring 0 and always uses the contents of PASID MSR when
+shipping the command to the device. ENQCMDS allows a kernel driver to
+submit commands on behalf of a user process. The driver supplies the
+PASID value in ENQCMDS. There isn't any usage of ENQCMD in the kernel
+as of now.
+
+The CPU feature flag is shown as "enqcmd" in /proc/cpuinfo.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v2:
-- Change "identify process" to "identify process address space" in the
-  commit message (Thomas)
+- Re-write commit message (Thomas)
 
- arch/x86/include/asm/msr-index.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e8370e64a155..e5f699ff1dd6 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -237,6 +237,9 @@
- #define MSR_IA32_LASTINTFROMIP		0x000001dd
- #define MSR_IA32_LASTINTTOIP		0x000001de
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9e77b0..4469618c410f 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -351,6 +351,7 @@
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
+ #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
+ #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
++#define X86_FEATURE_ENQCMD		(16*32+29) /* ENQCMD and ENQCMDS instructions */
  
-+#define MSR_IA32_PASID			0x00000d93
-+#define MSR_IA32_PASID_VALID		BIT_ULL(31)
-+
- /* DEBUGCTLMSR bits (others vary by model): */
- #define DEBUGCTLMSR_LBR			(1UL <<  0) /* last branch recording */
- #define DEBUGCTLMSR_BTF_SHIFT		1
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 3cbe24ca80ab..3a02707c1f4d 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -69,6 +69,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_AVX512_BF16,		X86_FEATURE_AVX512VL  },
++	{ X86_FEATURE_ENQCMD,			X86_FEATURE_XSAVES    },
+ 	{}
+ };
+ 
 -- 
 2.19.1
 
