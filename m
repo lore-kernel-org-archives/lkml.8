@@ -2,137 +2,331 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB657C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B192AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB5D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3ojp220"
+	by mail.kernel.org (Postfix) with ESMTP id 92825206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgGMMDV (ORCPT
+        id S1729597AbgGMMHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbgGMMDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:03:20 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6245FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:03:20 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y18so8844376lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y5KMHDUl0dP2/yxULAu5/b1d01e8D1X8yaqLPXL7OeY=;
-        b=H3ojp220B2LkylmsATbkDKYAr9c9hzVaK8lhZCLxcDV3QcBMkL80V2xjQUHeAQu4ky
-         PWfn+Md+nsxFTihVKzDV8rTq5f4ormyVJW+rU7RAeuJyAv4Hnn43qqztrTig1KEl7h7I
-         pnpNN1yXLQsl+bXWAageYi1x2LeAIYT5Lo7aoYzJCC998Y/kA4Rgo1rLKWhI2XC/fAX8
-         tbLdXDwe90hvOvzyPZnqkCra7xZR3M5Os1BimwS6Zh1XxeESLNXjAD3Zb8ftjXmr7l6c
-         XOob7orM0tvlEoox2rDKGz20MBGTwumQ20xbUuqy5oMduu/LjxfdJUMNQouwAETRxG6V
-         nI5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y5KMHDUl0dP2/yxULAu5/b1d01e8D1X8yaqLPXL7OeY=;
-        b=sWynaTBS6+M0rKKdEFMkrV1YVIRIxAwQKIcPNT7v4bkn5Vc9FBLWwBoDAckQSJtCTt
-         gly5kmFNpoGYxtbaHM11xnic/K00DupyJi4EZY1w/NbiQDHAshlRpXk2zi2BhcQlhZKW
-         MjJx1eT3Q7rVKz9DbnXzz/6PExjfjJaG2bekRD7XQ6dMgeIf9yM3SXmXMbGqZNdz+VC2
-         x0EfZALM8b9uBdLySZfuEOmM+SesBWqK4gxN3/NFOP2EWAcmN/XrXltnjOj6j1Z6lVLG
-         HRoDzHlhtD608N6tpQHCGbP0skJA0D2iqnmmEGo3I5r1FqmBkvrOTrOO5bhYKHavGq1p
-         q//Q==
-X-Gm-Message-State: AOAM533+iTOqrFNwC/tbU5DFmSWUD7ytSU5aaSGpdClJRKRWUO88iTOz
-        onNmDmh8O7wEVN7Al1lBYSqDa23VlVkbrHc6g22sTg==
-X-Google-Smtp-Source: ABdhPJxeeTVOBjzNfFPpHLHGDWpCLW18lUobuuQt7/W9ElRbsNZuZOxfCtntGelZjeemcLqJCveTFhKFSh5BaKmul5M=
-X-Received: by 2002:a19:7d84:: with SMTP id y126mr53124241lfc.149.1594641798626;
- Mon, 13 Jul 2020 05:03:18 -0700 (PDT)
+        Mon, 13 Jul 2020 08:07:50 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:53196 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728714AbgGMMHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:07:49 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 02322BC053;
+        Mon, 13 Jul 2020 12:07:43 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, corbet@lwn.net, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] docs: rcu: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 14:07:37 +0200
+Message-Id: <20200713120737.33971-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200712165917.9168-1-valentin.schneider@arm.com>
-In-Reply-To: <20200712165917.9168-1-valentin.schneider@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 13 Jul 2020 14:03:06 +0200
-Message-ID: <CAKfTPtCWEb=Dh12GSyYSG6nsqSciyDmcev62ntexXuFDtO_+ng@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] sched, arch_topology: Thermal pressure
- configuration cleanup
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Jul 2020 at 18:59, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> Hi folks,
->
-> This stems from this thread [1] on the list. TL;DR: the thermal pressure config
-> has no helpful documentation, and figuring out if the right dependencies are in
-> place is not easy for a regular user.
->
-> The current landscape also paints an odd picture: arch_set_thermal_pressure() is
-> hardcoded in sched/core.c, and is *not* architecture-definable, while
-> arch_get_thermal_pressure() is. Patch 1 is tackling this, the rest is Kconfig
-> stuff.
->
-> Cheers,
-> Valentin
->
-> [1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
->
-> Revisions
-> =========
->
-> v1 -> v2
-> --------
->
-> o Remove cpufreq_cooling.c weak function; use #define stub in sched/topology.h
->   (Vincent)
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Looks good to me.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-> o Hinge arm SCHED_THERMAL_PRESSURE selection on ARM_CPU_TOPOLOGY
->
-> Valentin Schneider (3):
->   arch_topology, sched/core: Cleanup thermal pressure definition
->   sched: Cleanup SCHED_THERMAL_PRESSURE kconfig entry
->   arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE
->
->  arch/arm/Kconfig                  |  1 +
->  arch/arm/include/asm/topology.h   |  3 ++-
->  arch/arm64/Kconfig                |  1 +
->  arch/arm64/include/asm/topology.h |  3 ++-
->  drivers/base/arch_topology.c      | 11 +++++++++++
->  include/linux/arch_topology.h     |  4 ++--
->  include/linux/sched/topology.h    |  7 +++++++
->  init/Kconfig                      | 15 ++++++++++++++-
->  kernel/sched/core.c               | 11 -----------
->  9 files changed, 40 insertions(+), 16 deletions(-)
->
-> --
-> 2.27.0
->
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/RCU/RTFP.txt       | 46 ++++++++++++++++----------------
+ Documentation/RCU/rcubarrier.rst |  4 +--
+ Documentation/RCU/whatisRCU.rst  |  4 +--
+ 3 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/Documentation/RCU/RTFP.txt b/Documentation/RCU/RTFP.txt
+index 9bccf16736f7..fab2870f59cb 100644
+--- a/Documentation/RCU/RTFP.txt
++++ b/Documentation/RCU/RTFP.txt
+@@ -566,7 +566,7 @@ Operating System Design and Implementation}"
+ 	Use of RCU-like facility in K42/Tornado.  Another independent
+ 	invention of RCU.
+ 	See especially pages 7-9 (Section 5).
+-	http://www.usenix.org/events/osdi99/full_papers/gamsa/gamsa.pdf
++	https://www.usenix.org/events/osdi99/full_papers/gamsa/gamsa.pdf
+ 	[Viewed August 30, 2006]
+ }
+ }
+@@ -921,7 +921,7 @@ Michal Ostrowski and Bryan Rosenburg and Jimi Xenidis"
+ ,number="114"
+ ,pages="18-26"
+ ,note="Available:
+-\url{http://www.linuxjournal.com/article/6993}
++\url{https://www.linuxjournal.com/article/6993}
+ [Viewed November 14, 2007]"
+ ,annotation={
+ 	Reader-friendly intro to RCU, with the infamous old-man-and-brat
+@@ -967,7 +967,7 @@ Michal Ostrowski and Bryan Rosenburg and Jimi Xenidis"
+ ,pages="38-46"
+ ,annotation={
+ 	Reader friendly intro to dcache and RCU.
+-	http://www.linuxjournal.com/node/7124
++	https://www.linuxjournal.com/node/7124
+ 	[Viewed December 26, 2010]
+ }
+ }
+@@ -1134,7 +1134,7 @@ Oregon Health and Sciences University"
+ ,month="October"
+ ,year="2004"
+ ,note="Available:
+-\url{http://www.cs.toronto.edu/~tomhart/masters_thesis.html}
++\url{https://www.cs.toronto.edu/~tomhart/masters_thesis.html}
+ [Viewed October 15, 2004]"
+ ,annotation={
+ 	Proposes comparing RCU to lock-free methods for the Linux kernel.
+@@ -1288,7 +1288,7 @@ Data Structures"
+ ,day="3"
+ ,year="2005"
+ ,note="Available:
+-\url{http://lwn.net/Articles/134484/}
++\url{https://lwn.net/Articles/134484/}
+ [Viewed May 3, 2005]"
+ ,annotation={
+ 	Jon Corbet describes deprecation of synchronize_kernel()
+@@ -1322,7 +1322,7 @@ Data Structures"
+ [Viewed May 13, 2005]"
+ ,annotation={
+ 	Realtime turns into making RCU yet more realtime friendly.
+-	http://lca2005.linux.org.au/Papers/Paul%20McKenney/Towards%20Hard%20Realtime%20Response%20from%20the%20Linux%20Kernel/LKS.2005.04.22a.pdf
++	https://lca2005.linux.org.au/Papers/Paul%20McKenney/Towards%20Hard%20Realtime%20Response%20from%20the%20Linux%20Kernel/LKS.2005.04.22a.pdf
+ }
+ }
+ 
+@@ -1453,7 +1453,7 @@ Distributed Processing Symposium"
+ [Viewed April 28, 2008]"
+ ,annotation={
+ 	Compares QSBR, HPBR, EBR, and lock-free reference counting.
+-	http://www.cs.toronto.edu/~tomhart/perflab/ipdps06.tgz
++	https://www.cs.toronto.edu/~tomhart/perflab/ipdps06.tgz
+ }
+ }
+ 
+@@ -1540,7 +1540,7 @@ Revised:
+ ,month="August"
+ ,day="18"
+ ,year="2006"
+-,note="\url{http://www.nada.kth.se/~snilsson/publications/TRASH/trash.pdf}"
++,note="\url{https://www.nada.kth.se/~snilsson/publications/TRASH/trash.pdf}"
+ ,annotation={
+ 	RCU-protected dynamic trie-hash combination.
+ 	[Viewed March 4, 2011]
+@@ -1723,7 +1723,7 @@ Revised:
+ ,day="14"
+ ,year="2007"
+ ,note="Available:
+-\url{http://lwn.net/Articles/217484/}
++\url{https://lwn.net/Articles/217484/}
+ [Viewed November 22, 2007]"
+ ,annotation={
+ 	LWN article introducing the rcu_barrier() primitive.
+@@ -2057,7 +2057,7 @@ lot of {Linux} into your technology!!!"
+ ,day="24"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lwn.net/Articles/279077/}
++\url{https://lwn.net/Articles/279077/}
+ [Viewed April 24, 2008]"
+ ,annotation={
+ 	Describes use of Promela and Spin to validate (and fix!) the
+@@ -2229,7 +2229,7 @@ lot of {Linux} into your technology!!!"
+ ,day="17"
+ ,year="2009"
+ ,note="Available:
+-\url{http://lwn.net/Articles/323929/}
++\url{https://lwn.net/Articles/323929/}
+ [Viewed March 20, 2009]"
+ ,annotation={
+ 	Uniprocessor assumptions allow simplified RCU implementation.
+@@ -2298,7 +2298,7 @@ lot of {Linux} into your technology!!!"
+ , month  = "December"
+ , year   = 2009
+ ,note="Available:
+-\url{http://www.lttng.org/pub/thesis/desnoyers-dissertation-2009-12.pdf}
++\url{https://www.lttng.org/pub/thesis/desnoyers-dissertation-2009-12.pdf}
+ [Viewed December 9, 2009]"
+ ,annotation={
+ 	Chapter 6 (page 97) covers user-level RCU.
+@@ -2375,7 +2375,7 @@ lot of {Linux} into your technology!!!"
+ ,Title="User-Level Implementations of Read-Copy Update"
+ ,month="December"
+ ,year="2010"
+-,url={\url{http://www.computer.org/csdl/trans/td/2012/02/ttd2012020375-abs.html}}
++,url={\url{https://www.computer.org/csdl/trans/td/2012/02/ttd2012020375-abs.html}}
+ ,annotation={
+ 	RCU overview, desiderata, semi-formal semantics, user-level RCU
+ 	usage scenarios, three classes of RCU implementation, wait-free
+@@ -2437,7 +2437,7 @@ lot of {Linux} into your technology!!!"
+ ,month="February"
+ ,year="2010"
+ ,note="Available:
+-\url{http://www.mail-archive.com/kvm@vger.kernel.org/msg28640.html}
++\url{https://www.mail-archive.com/kvm@vger.kernel.org/msg28640.html}
+ [Viewed March 20, 2010]"
+ ,annotation={
+ 	Use of RCU permits KVM to increase the size of guest OSes from
+@@ -2466,7 +2466,7 @@ lot of {Linux} into your technology!!!"
+ ,year="2010"
+ ,annotation={
+ 	Data-race detector incorporating RCU.
+-	http://www.filesystems.org/docs/abhinav-thesis/abhinav_thesis.pdf
++	https://www.filesystems.org/docs/abhinav-thesis/abhinav_thesis.pdf
+ }
+ }
+ 
+@@ -2551,7 +2551,7 @@ lot of {Linux} into your technology!!!"
+ ,location = {Berkeley, CA}
+ ,pages = {1--6}
+ ,numpages = {6}
+-,url = {http://www.usenix.org/event/hotpar11/tech/final_files/Howard.pdf}
++,url = {https://www.usenix.org/event/hotpar11/tech/final_files/Howard.pdf}
+ ,publisher = {USENIX Association}
+ ,address = {Berkeley, CA, USA}
+ }
+@@ -2581,7 +2581,7 @@ lot of {Linux} into your technology!!!"
+ ,year = {2011}
+ ,pages = {145--158}
+ ,numpages = {14}
+-,url={http://www.usenix.org/event/atc11/tech/final_files/Triplett.pdf}
++,url={https://www.usenix.org/event/atc11/tech/final_files/Triplett.pdf}
+ ,publisher = {The USENIX Association}
+ ,address = {Portland, OR USA}
+ }
+@@ -2654,7 +2654,7 @@ lot of {Linux} into your technology!!!"
+ ,year="2012"
+ ,issn="1045-9219"
+ ,pages="375-382"
+-,doi="http://doi.ieeecomputersociety.org/10.1109/TPDS.2011.159"
++,doi="https://doi.ieeecomputersociety.org/10.1109/TPDS.2011.159"
+ ,publisher="IEEE Computer Society"
+ ,address="Los Alamitos, CA, USA"
+ ,annotation={
+@@ -2677,7 +2677,7 @@ lot of {Linux} into your technology!!!"
+ ,numpages = {12}
+ ,publisher = {ACM}
+ ,address = {London, UK}
+-,url="http://people.csail.mit.edu/nickolai/papers/clements-bonsai.pdf"
++,url="https://people.csail.mit.edu/nickolai/papers/clements-bonsai.pdf"
+ }
+ 
+ @unpublished{PaulEMcKenney2012ELCbattery
+@@ -2729,7 +2729,7 @@ lot of {Linux} into your technology!!!"
+ ,month="July"
+ ,day="10"
+ ,year="2012"
+-,note="\url{http://software.imdea.org/~gotsman/papers/recycling-esop13-ext.pdf}"
++,note="\url{https://software.imdea.org/~gotsman/papers/recycling-esop13-ext.pdf}"
+ ,annotation={
+ 	Separation-logic formulation of RCU uses.
+ }
+@@ -2768,9 +2768,9 @@ lot of {Linux} into your technology!!!"
+ ,annotation={
+ 	Looking for data races, including those involving RCU.
+ 	Proposal:
+-	http://www.fsl.cs.sunysb.edu/docs/jseyster-proposal/redflag.pdf
++	https://www.fsl.cs.sunysb.edu/docs/jseyster-proposal/redflag.pdf
+ 	Dissertation:
+-	http://www.fsl.cs.sunysb.edu/docs/jseyster-dissertation/redflag.pdf
++	https://www.fsl.cs.sunysb.edu/docs/jseyster-dissertation/redflag.pdf
+ }
+ }
+ 
+@@ -2795,7 +2795,7 @@ lot of {Linux} into your technology!!!"
+ ,publisher = {Springer}
+ ,address = {Rome, Italy}
+ ,annotation={
+-	http://software.imdea.org/~gotsman/papers/recycling-esop13.pdf
++	https://software.imdea.org/~gotsman/papers/recycling-esop13.pdf
+ }
+ }
+ 
+diff --git a/Documentation/RCU/rcubarrier.rst b/Documentation/RCU/rcubarrier.rst
+index f64f4413a47c..e7b229bb4db7 100644
+--- a/Documentation/RCU/rcubarrier.rst
++++ b/Documentation/RCU/rcubarrier.rst
+@@ -3,7 +3,7 @@
+ RCU and Unloadable Modules
+ ==========================
+ 
+-[Originally published in LWN Jan. 14, 2007: http://lwn.net/Articles/217484/]
++[Originally published in LWN Jan. 14, 2007: https://lwn.net/Articles/217484/]
+ 
+ RCU (read-copy update) is a synchronization mechanism that can be thought
+ of as a replacement for read-writer locking (among other things), but with
+@@ -59,7 +59,7 @@ But what if p_callback is defined in an unloadable module?
+ If we unload the module while some RCU callbacks are pending,
+ the CPUs executing these callbacks are going to be severely
+ disappointed when they are later invoked, as fancifully depicted at
+-http://lwn.net/images/ns/kernel/rcu-drop.jpg.
++https://lwn.net/images/ns/kernel/rcu-drop.jpg.
+ 
+ We could try placing a synchronize_rcu() in the module-exit code path,
+ but this is not sufficient. Although synchronize_rcu() does wait for a
+diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
+index c7f147b8034f..c1d5105a7317 100644
+--- a/Documentation/RCU/whatisRCU.rst
++++ b/Documentation/RCU/whatisRCU.rst
+@@ -11,8 +11,8 @@ to start learning about RCU:
+ | 3.	RCU part 3: the RCU API      http://lwn.net/Articles/264090/
+ | 4.	The RCU API, 2010 Edition    http://lwn.net/Articles/418853/
+ | 	2010 Big API Table           http://lwn.net/Articles/419086/
+-| 5.	The RCU API, 2014 Edition    http://lwn.net/Articles/609904/
+-|	2014 Big API Table           http://lwn.net/Articles/609973/
++| 5.	The RCU API, 2014 Edition    https://lwn.net/Articles/609904/
++|	2014 Big API Table           https://lwn.net/Articles/609973/
+ 
+ 
+ What is RCU?
+-- 
+2.27.0
+
