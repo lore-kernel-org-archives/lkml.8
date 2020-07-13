@@ -2,151 +2,232 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18217C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B372067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="u4CmsHwa"
+	by mail.kernel.org (Postfix) with ESMTP id EC77420849
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgGMSTG (ORCPT
+        id S1726372AbgGMSVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729687AbgGMSTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:19:05 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1665C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ls15so264432pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=DMv6KVcfwWuUfVxq/TG9jnHiUvzjJiD3obg8ZekXyMs=;
-        b=u4CmsHwa7xaCe3zDb4jrOUPoyQAwVMb0GO0GgYreE3k9fxWU5POmlIk30LPDTgAQUj
-         UXSamG1nn5bzlmnsItQRLjFVeTX9jNNZSWB3UwJkV82kO9sw8mlCK+8QA2A6XZi7xW2p
-         cYw26U3rmfF6mijGvSDefylxiQCOhgYcxL7pxRoq9V/UTMxzAkw29s2tnGqbRpV7VXiB
-         xUZoWpQGSZUmOzxEuR/l0sY53x7ZhIn9xs7ai2/qJ8GwCFJdnk5CAStVEdHSJJZOWF44
-         QORefjrjcSrzgiOPOEdXNRfrCTZl39dyw6LhXayUWrSOVuTaE7f9koQ+xXXMyR2rQ5bk
-         e1xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=DMv6KVcfwWuUfVxq/TG9jnHiUvzjJiD3obg8ZekXyMs=;
-        b=TBx/M07vuoyHW5ho37HFt/xf4xJbseN8hmsplBuV/LgNMOBcXdld71dpXYtqSzCTrp
-         bY69ocYx3YUG+xbVQpsiCvMyvsNLet2R0N1aZiKMkNjfAPp+AN6nmutVAEFdJgIXDd08
-         CQOHfWQ1Y7Lw6zRZuVCdlGVlghM7RaZ94g8XADZ1c/IUm8+4zNidlrVPxcu2BagCdTfw
-         BOAoT2xoipPtE6wcpKeOgs3yX74TAHYzEeMoAPkAW4jIpJ0UiJU2wpKpUtpvhdmyG4bv
-         HMGHWDx3G1+Mh9slgAI7gDyi6gAVr2MpkWDi6g26hq9dlFcHfY9RLlsng5guLTZUsJjj
-         nE5g==
-X-Gm-Message-State: AOAM5334u3WjudFUmU6BnUj2rOheC8Lm9znKQ7s2T0BelPhnBTJXwYe/
-        1H3kbda3w1PC3PDz1HHG2msQ+w==
-X-Google-Smtp-Source: ABdhPJxyhASCLIINvghsf6QoRE0SwaPQ4do1QD3z/4f/3BAYiXHFhS0sGlAWxIM465D2lRN3W0sD0g==
-X-Received: by 2002:a17:90a:ba86:: with SMTP id t6mr719906pjr.10.1594664345260;
-        Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:3071:afe7:f805:6350? ([2601:646:c200:1ef2:3071:afe7:f805:6350])
-        by smtp.gmail.com with ESMTPSA id j5sm15051298pfa.5.2020.07.13.11.19.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 11:19:04 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy tlb option
-Date:   Mon, 13 Jul 2020 11:18:57 -0700
-Message-Id: <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
-References: <1594658283.qabzoxga67.astroid@bobo.none>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
+        Mon, 13 Jul 2020 14:21:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34624 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgGMSVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:21:47 -0400
+IronPort-SDR: 4zl5akwv0CHx6HkbCYN0s6gB8AE4tacjbeAizwFGqMInHrCF21Jg+Q377EGbXT8vpwUxIjZL7i
+ TQMvPYo8xsyg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213520108"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="213520108"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 11:21:47 -0700
+IronPort-SDR: i3gjZw8MEb6BcvEbigSe/N+i1JQpXzB3wXV7nLMnpOOsBwaGwNK2dfb3tjoxabDfDwSgfUC2dc
+ 8cMDxgslYZoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="299283619"
+Received: from bcope-mobl.ger.corp.intel.com (HELO localhost) ([10.249.32.223])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jul 2020 11:21:37 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jessica Yu <jeyu@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Alexandre Ghiti <alex@ghiti.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
-In-Reply-To: <1594658283.qabzoxga67.astroid@bobo.none>
-To:     Nicholas Piggin <npiggin@gmail.com>
-X-Mailer: iPhone Mail (17F80)
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 3/3] kprobes: Flag out CONFIG_MODULES dependent code
+Date:   Mon, 13 Jul 2020 21:19:39 +0300
+Message-Id: <20200713182030.1418041-3-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200713182030.1418041-1-jarkko.sakkinen@linux.intel.com>
+References: <20200713182030.1418041-1-jarkko.sakkinen@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove CONFIG_MODULES dependency by flagging out the dependent code. This
+allows to use kprobes in a kernel without support for loadable modules,
+which could be useful for a test kernel or perhaps an embedded kernel.
 
-> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
->=20
-> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 am:=
+Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/Kconfig                |  1 -
+ include/linux/module.h      | 14 +++++++-------
+ kernel/kprobes.c            |  9 +++++++++
+ kernel/trace/trace_kprobe.c | 16 +++++++++++++++-
+ 4 files changed, 31 insertions(+), 9 deletions(-)
 
->>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->>>=20
->>> On big systems, the mm refcount can become highly contented when doing
->>> a lot of context switching with threaded applications (particularly
->>> switching between the idle thread and an application thread).
->>>=20
->>> Abandoning lazy tlb slows switching down quite a bit in the important
->>> user->idle->user cases, so so instead implement a non-refcounted scheme
->>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot down
->>> any remaining lazy ones.
->>>=20
->>> On a 16-socket 192-core POWER8 system, a context switching benchmark
->>> with as many software threads as CPUs (so each switch will go in and
->>> out of idle), upstream can achieve a rate of about 1 million context
->>> switches per second. After this patch it goes up to 118 million.
->>>=20
->>=20
->> I read the patch a couple of times, and I have a suggestion that could
->> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
->> refcount.  You're saying "hey, this mm has no more references, but it
->> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
->> those references too."  I'm wondering whether you actually need the
->> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
->> for real?  Roughly, in __mmdrop(), you would only free the page tables
->> if mm_cpumask() is empty.  And, in the code that removes a CPU from
->> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check if
->> you just removed the last bit from mm_cpumask and potentially free the
->> mm.
->>=20
->> Getting the locking right here could be a bit tricky -- you need to
->> avoid two CPUs simultaneously exiting lazy TLB and thinking they
->> should free the mm, and you also need to avoid an mm with mm_users
->> hitting zero concurrently with the last remote CPU using it lazily
->> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
->> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns the=
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 8cc35dc556c7..bb59cdf335ab 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -61,7 +61,6 @@ config OPROFILE_NMI_TIMER
+ 
+ config KPROBES
+ 	bool "Kprobes"
+-	depends on MODULES
+ 	depends on HAVE_KPROBES
+ 	select KALLSYMS
+ 	help
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 857b84bf9e90..eaa8ad02f75c 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -290,6 +290,13 @@ extern typeof(name) __mod_##type##__##name##_device_table		\
+ 
+ struct notifier_block;
+ 
++enum module_state {
++	MODULE_STATE_LIVE,	/* Normal state. */
++	MODULE_STATE_COMING,	/* Full formed, running module_init. */
++	MODULE_STATE_GOING,	/* Going away. */
++	MODULE_STATE_UNFORMED,	/* Still setting it up. */
++};
++
+ #ifdef CONFIG_MODULES
+ 
+ extern int modules_disabled; /* for sysctl */
+@@ -305,13 +312,6 @@ struct module_use {
+ 	struct module *source, *target;
+ };
+ 
+-enum module_state {
+-	MODULE_STATE_LIVE,	/* Normal state. */
+-	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+-	MODULE_STATE_GOING,	/* Going away. */
+-	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+-};
+-
+ struct mod_tree_node {
+ 	struct module *mod;
+ 	struct latch_tree_node node;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bbe3423cb2b8..047353008cb6 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1608,6 +1608,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 			goto out;
+ 		}
+ 
++#ifdef CONFIG_MODULES
+ 		/*
+ 		 * If the module freed .init.text, we couldn't insert
+ 		 * kprobes in there.
+@@ -1618,6 +1619,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 			*probed_mod = NULL;
+ 			ret = -ENOENT;
+ 		}
++#endif
+ 	}
+ out:
+ 	preempt_enable();
+@@ -2214,6 +2216,7 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_MODULES
+ /* Remove all symbols in given area from kprobe blacklist */
+ static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+ {
+@@ -2231,6 +2234,7 @@ static void kprobe_remove_ksym_blacklist(unsigned long entry)
+ {
+ 	kprobe_remove_area_blacklist(entry, entry + 1);
+ }
++#endif
+ 
+ int __init __weak arch_populate_kprobe_blacklist(void)
+ {
+@@ -2274,6 +2278,7 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+ 	return ret ? : arch_populate_kprobe_blacklist();
+ }
+ 
++#ifdef CONFIG_MODULES
+ static void add_module_kprobe_blacklist(struct module *mod)
+ {
+ 	unsigned long start, end;
+@@ -2319,6 +2324,10 @@ static void remove_module_kprobe_blacklist(struct module *mod)
+ 		kprobe_remove_area_blacklist(start, end);
+ 	}
+ }
++#else
++static void add_module_kprobe_blacklist(struct module *mod) {}
++static void remove_module_kprobe_blacklist(struct module *mod) {}
++#endif /* CONFIG_MODULES */
+ 
+ /* Module notifier call back, checking kprobes on the module */
+ static int kprobes_module_callback(struct notifier_block *nb,
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 710ec6a6aa8f..7fcd1bf2d96e 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -103,8 +103,9 @@ static nokprobe_inline bool trace_kprobe_has_gone(struct trace_kprobe *tk)
+ 	return !!(kprobe_gone(&tk->rp.kp));
+ }
+ 
++#ifdef CONFIG_MODULES
+ static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
+-						 struct module *mod)
++						       struct module *mod)
+ {
+ 	int len = strlen(mod->name);
+ 	const char *name = trace_kprobe_symbol(tk);
+@@ -129,6 +130,17 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+ 
+ 	return ret;
+ }
++#else
++static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
++						       struct module *mod)
++{
++	return false;
++}
++static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
++{
++	return false;
++}
++#endif
+ 
+ static bool trace_kprobe_is_busy(struct dyn_event *ev)
+ {
+@@ -685,10 +697,12 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
+ 			/* Don't need to check busy - this should have gone. */
+ 			__unregister_trace_kprobe(tk);
+ 			ret = __register_trace_kprobe(tk);
++#ifdef CONFIG_MODULES
+ 			if (ret)
+ 				pr_warn("Failed to re-register probe %s on %s: %d\n",
+ 					trace_probe_name(&tk->tp),
+ 					mod->name, ret);
++#endif
+ 		}
+ 	}
+ 	mutex_unlock(&event_mutex);
+-- 
+2.25.1
 
->> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some careful
->> cmpxchg or dec_return to make sure that only one CPU frees it.
->>=20
->> Or maybe you'd need a lock or RCU for this, but the idea would be to
->> only ever take the lock after mm_users goes to zero.
->=20
-> I don't think it's nonsense, it could be a good way to avoid IPIs.
->=20
-> I haven't seen much problem here that made me too concerned about IPIs=20
-> yet, so I think the simple patch may be good enough to start with
-> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the
-> unlazying with the exit TLB flush without doing anything fancy with
-> ref counting, but we'll see.
-
-I would be cautious with benchmarking here. I would expect that the nasty ca=
-ses may affect power consumption more than performance =E2=80=94 the specifi=
-c issue is IPIs hitting idle cores, and the main effects are to slow down ex=
-it() a bit but also to kick the idle core out of idle. Although, if the idle=
- core is in a deep sleep, that IPI could be *very* slow.
-
-So I think it=E2=80=99s worth at least giving this a try.
-
->=20
-> Thanks,
-> Nick
