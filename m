@@ -2,180 +2,178 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C15C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E4EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584DB20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223A62075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGMMiF (ORCPT
+        id S1729733AbgGMMib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:38:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11571 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGMMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:38:05 -0400
-IronPort-SDR: Eq1ZN5DVPxV39LgoLwRadTgao3xJUYh1mu3ooxi49uh40Iv7F0T2oKmNmclcfHXHFUKiIlLGU/
- IsZKdQ1+r3Fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="136071878"
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="136071878"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 05:38:04 -0700
-IronPort-SDR: EO3B2qrs1RQQyHOKOCrYUqs9vNaGgetc64MWP8nB2LSmzWjROwMV027JJgpdRM5J2Zw1t07eng
- lMFC0mhU57tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="307447599"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jul 2020 05:38:03 -0700
-Received: from [10.249.229.49] (abudanko-mobl.ccr.corp.intel.com [10.249.229.49])
-        by linux.intel.com (Postfix) with ESMTP id 60D50580810;
-        Mon, 13 Jul 2020 05:37:52 -0700 (PDT)
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
- <7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com>
- <20200710170911.GD7487@kernel.org>
- <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
- <20200713121746.GA7029@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0fadcf78-8b0e-ed03-a554-cc172b7d249c@linux.intel.com>
-Date:   Mon, 13 Jul 2020 15:37:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 08:38:31 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:57176 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMib (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:38:31 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1juxj1-0001AD-UL; Mon, 13 Jul 2020 06:38:27 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1juxj0-0000e9-Sw; Mon, 13 Jul 2020 06:38:27 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-kernel@vger.kernel.org, tj@kernel.org,
+        gregkh@linuxfoundation.org, dan.j.williams@intel.com
+References: <20200704205619.11172-1-richard@nod.at>
+Date:   Mon, 13 Jul 2020 07:35:39 -0500
+In-Reply-To: <20200704205619.11172-1-richard@nod.at> (Richard Weinberger's
+        message of "Sat, 4 Jul 2020 22:56:19 +0200")
+Message-ID: <87sgdvbnj8.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200713121746.GA7029@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1juxj0-0000e9-Sw;;;mid=<87sgdvbnj8.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18pMLZQ3OtSquT9B9ftcoTj28hZic45tqk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] [RFC] kernfs: Allow vm_ops->close() if VMA is never split
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Richard Weinberger <richard@nod.at> writes:
 
-On 13.07.2020 15:17, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 13, 2020 at 12:48:25PM +0300, Alexey Budankov escreveu:
->>
->> On 10.07.2020 20:09, Arnaldo Carvalho de Melo wrote:
->>> Em Fri, Jul 10, 2020 at 05:30:50PM +0300, Alexey Budankov escreveu:
->>>> On 10.07.2020 16:31, Ravi Bangoria wrote:
->>>>>> Currently access to perf_events, i915_perf and other performance
->>>>>> monitoring and observability subsystems of the kernel is open only for
->>>>>> a privileged process [1] with CAP_SYS_ADMIN capability enabled in the
->>>>>> process effective set [2].
-> 
->>>>>> This patch set introduces CAP_PERFMON capability designed to secure
->>>>>> system performance monitoring and observability operations so that
->>>>>> CAP_PERFMON would assist CAP_SYS_ADMIN capability in its governing role
->>>>>> for performance monitoring and observability subsystems of the kernel.
-> 
->>>>> I'm seeing an issue with CAP_PERFMON when I try to record data for a
->>>>> specific target. I don't know whether this is sort of a regression or
->>>>> an expected behavior.
-> 
->>>> Thanks for reporting and root causing this case. The behavior looks like
->>>> kind of expected since currently CAP_PERFMON takes over the related part
->>>> of CAP_SYS_ADMIN credentials only. Actually Perf security docs [1] say
->>>> that access control is also subject to CAP_SYS_PTRACE credentials.
-> 
->>> I think that stating that in the error message would be helpful, after
->>> all, who reads docs? 8-)
-> 
->> At least those who write it :D ...
-> 
-> Everybody should read it, sure :-)
+> 10 years ago commit a6849fa1f7d7 ("sysfs: Fail bin file mmap if vma close is implemented.")
+> removed support for vm_ops->close() for mmap on sysfs.
+> As far I understand the reason is that due to the wrapping in kernfs
+> every VMA split operation needs to be tracked to call vm_ops->close()
+> for all fragments. This is not feasible with reasonable effort.
+>
+> Since commit 31383c6865a5 ("mm, hugetlbfs: introduce ->split() to vm_operations_struct")
+> we can get notified as soon a VMA is split, this can help to relax the restriction.
+> So I propose to allow having a custom close under the condition that a
+> VMA cannot get split.
+
+The existence of split may help but your patch does not address the
+problem.
+
+The difficult to handle case is not split.  Simply wrapping
+vma->vm_ops->open and vma->vm_ops->close is enough to handle split.  The
+challenge is when the kernel revokes acess to a kernfs file.  Revokes
+happen when the module supporting a kernfs file is removed, or when a
+piece of hardware is removed.
+
+The code path for that revocation looks like:
+	kernfs_remove or kernfs_remove_self
+		__kernfs_remove
+			kernfs_drain
+        			kernfs_drain_open_files
+                			unmap_mapping_range
+
+
+The fundamental problem is that at the time of unmap_mapping_range the
+code if it is to implement vma->vm_ops->close properly needs to call
+close on all of the vmas.  The code can not wait longer as after
+kernfs_remove returns the kernfs code makes the guarantee that the code
+implementing vma->vm_ops->close has been removed from the kernel.
+
+The technical challenge is how to implement walking the list of vmas and
+call the vma->vops->close method on all of them at revoke time.  Last
+I looked taking the locks that are necessary to do that is not safe to
+do when holding the locks that are held in the kernfs_remove path.
+
+A lot has changed in kernfs and the mm subsystem since I examined it,
+so it might be worth looking at this again.
+
+So in short the problem is that the code does not exist to call close
+when the kernfs file is revoked.  Your patch below does not implement
+that code.
+
+Eric
+
+>
+> Signed-off-by: Richard Weinberger <richard@nod.at>
+> ---
+>  fs/kernfs/file.c | 42 ++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 34 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+> index 06b342d8462b..82b09e72acff 100644
+> --- a/fs/kernfs/file.c
+> +++ b/fs/kernfs/file.c
+> @@ -347,6 +347,38 @@ static void kernfs_vma_open(struct vm_area_struct *vma)
+>  	kernfs_put_active(of->kn);
+>  }
 >  
->>> I.e., this:
->>>
->>> $ ./perf stat ls
->>>   Error:
->>>   Access to performance monitoring and observability operations is limited.
->>> $
->>>
->>> Could become:
->>>
->>> $ ./perf stat ls
->>>   Error:
->>>   Access to performance monitoring and observability operations is limited.
->>>   Right now only CAP_PERFMON is granted, you may need CAP_SYS_PTRACE.
->>> $
->>
->> It would better provide reference to perf security docs in the tool output.
-> 
-> So add a 3rd line:
-> 
-> $ ./perf stat ls
->   Error:
->   Access to performance monitoring and observability operations is limited.
->   Right now only CAP_PERFMON is granted, you may need CAP_SYS_PTRACE.
->   Please read the 'Perf events and tool security' document:
->   https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-If it had that patch below then message change would not be required.
-However this two sentences in the end of whole message would still add up:
-"Please read the 'Perf events and tool security' document:
- https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html"
-
-> 
->> Looks like extending ptrace_may_access() check for perf_events with CAP_PERFMON
-> 
-> You mean the following?
-
-Exactly that.
-
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 856d98c36f56..a2397f724c10 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11595,7 +11595,7 @@ SYSCALL_DEFINE5(perf_event_open,
->  		 * perf_event_exit_task() that could imply).
->  		 */
->  		err = -EACCES;
-> -		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> +		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
->  			goto err_cred;
->  	}
-> 
->> makes monitoring simpler and even more secure to use since Perf tool need
->> not to start/stop/single-step and read/write registers and memory and so on
->> like a debugger or strace-like tool. What do you think?
-> 
-> I tend to agree, Peter?
+> +static void kernfs_vma_close(struct vm_area_struct *vma)
+> +{
+> +	struct file *file = vma->vm_file;
+> +	struct kernfs_open_file *of = kernfs_of(file);
+> +
+> +	if (!of->vm_ops)
+> +		return;
+> +
+> +	if (!kernfs_get_active(of->kn))
+> +		return;
+> +
+> +	if (of->vm_ops->close)
+> +		of->vm_ops->close(vma);
+> +
+> +	kernfs_put_active(of->kn);
+> +}
+> +
+> +static int kernfs_vma_split(struct vm_area_struct *vma, unsigned long addr)
+> +{
+> +	struct file *file = vma->vm_file;
+> +	struct kernfs_open_file *of = kernfs_of(file);
+> +
+> +	/*
+> +	 * We cannot keep track of split operations,
+> +	 * so refuse splitting a VMA if someone uses close.
+> +	 */
+> +	if (of->vm_ops && of->vm_ops->close)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  static vm_fault_t kernfs_vma_fault(struct vm_fault *vmf)
+>  {
+>  	struct file *file = vmf->vma->vm_file;
+> @@ -457,6 +489,8 @@ static struct mempolicy *kernfs_vma_get_policy(struct vm_area_struct *vma,
 >  
->> Alexei
->>
->>>
->>> - Arnaldo
-
-Alexei
+>  static const struct vm_operations_struct kernfs_vm_ops = {
+>  	.open		= kernfs_vma_open,
+> +	.close		= kernfs_vma_close,
+> +	.split		= kernfs_vma_split,
+>  	.fault		= kernfs_vma_fault,
+>  	.page_mkwrite	= kernfs_vma_page_mkwrite,
+>  	.access		= kernfs_vma_access,
+> @@ -505,14 +539,6 @@ static int kernfs_fop_mmap(struct file *file, struct vm_area_struct *vma)
+>  	if (of->mmapped && of->vm_ops != vma->vm_ops)
+>  		goto out_put;
+>  
+> -	/*
+> -	 * It is not possible to successfully wrap close.
+> -	 * So error if someone is trying to use close.
+> -	 */
+> -	rc = -EINVAL;
+> -	if (vma->vm_ops && vma->vm_ops->close)
+> -		goto out_put;
+> -
+>  	rc = 0;
+>  	of->mmapped = true;
+>  	of->vm_ops = vma->vm_ops;
