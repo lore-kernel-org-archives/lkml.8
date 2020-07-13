@@ -4,181 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B06C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAECC43458
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483C02075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3656820791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QiHDfDTG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmtW2ht4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgGMOuG (ORCPT
+        id S1730263AbgGMOuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32828 "EHLO
+        Mon, 13 Jul 2020 10:50:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbgGMOt5 (ORCPT
+        with ESMTP id S1730222AbgGMOt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:57 -0400
+        Mon, 13 Jul 2020 10:49:59 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A78C08C5DB
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z2so16886131wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C01C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so16822473wrw.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MGVkPRp/+I1joXVdv6caEP06X1PF0rNG8kbo7/M1JBk=;
-        b=QiHDfDTGlAj/YS7C4u7kOc9JwEFDw3G0oGclidDhkGG3zqi1U3reU5/sFhI47sYphg
-         HeiZUEn/8P25l8ozcJNgk5z6bsdiI5c07DjWLBg3+bY/4kLVz2Q32r9LNafPsNTobcQS
-         qkH5Tm1h8TN6RDaCWLJT4g0EX6g+c1CeY4vDz8SsfIPEXVAwMrje1zKdA1KWa5H882OL
-         SZ1FPlR19YfURzt9hxk5H7HI8ywDaJ31gFsUOPmNz7070R9N6rjz0rom3oYN//QTvb+l
-         YmXn4Dpd0zghrInn3FZCpnIZl93yJoeIcYXPsxF9WdG+1WSYAZxAXJm+ILAFRi3bECqk
-         v7Wg==
+        bh=nkDu4+NF/Jy0nw1npPjBWOEwj+80cykTcSKL8zkEyoE=;
+        b=ZmtW2ht4WqM7YXMQqyxHw3ZRWguzPgBqFC2JKAMqnldEWEsJAUcbwc2bmoKXuvKdhB
+         ohLnx6dHRciOiJRTxfPCFjCrEU+2qXEPZTQjSGaojFkCaf6eucv0LMOlOH5ybPM6rBxY
+         tDPXuEMK7uUVfDp3zwVJ2KxMPq7Hr81fGJ9+9pNX7BcxMW5GNb707zAllgt9brug1YNA
+         C5iAFICTeYYWHDJz2rbibn+U9WTtjaFxewwzqY+I7CTq4Iw2/NIsi2sAK7h9pWrxK98S
+         7uCOBoC0BEbMzYAIM8CRkDzn8+axiDVRtayVn3F4BqiORSe8IAY5nVQWBQKD31MV3mWw
+         wsUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MGVkPRp/+I1joXVdv6caEP06X1PF0rNG8kbo7/M1JBk=;
-        b=XvKVpfRe0WbyAaf9/NdjCJZiTxhPH9yoyzhPmjfc/jtZ35KWhmDp35kzAe7XYCCWhi
-         bz66bvDbULC7WRBA71iQqVjc7EZDz45tvDQJYmnr9m+uRGRuAN0o+jADQQRc6PZ3fQ+P
-         DYgFzjn+94u6LsTrb8ugAioAxa8X2mrKLk4nXrKDcg7Jx/YyxSLTYw7J/zHBfA9PYd7G
-         8J8Ucwz5XrMQFIOLwcY/7f8h2o35v4mOZ5zSGBTIt6lt0xyjQ/L0NqflOdWZNfe7mTc/
-         +yKr1R7sFyl+00KjLXQZnZuJb6KqlR19dgQfNLuZ1yOAzqsBDJ/qEuLUz3w1ssyEhvlE
-         XS3g==
-X-Gm-Message-State: AOAM533ymMrdZ7Esg/9g9SsHhNh8Bj68wDjAp2TMg1cRRjIqT/XvdAeX
-        mqgHsuFNx6KfajfddueBzjXq7g==
-X-Google-Smtp-Source: ABdhPJx9Drg7tITXelXrTGkjdiA4cztDP4a+w06kMhyQ79IF54jdT4nucp1hYkuJYWkR3yVfSNeQhA==
-X-Received: by 2002:a5d:6a90:: with SMTP id s16mr78126603wru.8.1594651796017;
-        Mon, 13 Jul 2020 07:49:56 -0700 (PDT)
+        bh=nkDu4+NF/Jy0nw1npPjBWOEwj+80cykTcSKL8zkEyoE=;
+        b=Q+0eMhwQQ0WPU5HQd1kHoL+WpMMedGr69pPmWhaTn0UmGqIJsZ223NGBSGphDwlkhS
+         9+jXD+6vZjkklLo1S9ONfGcYP+arFr8r3GApn3DM4PGDyrwQZ/npPeEYWJRWDzs4Helt
+         r5mo3D0I/+NAZSEP53rtDkKKhiJT5gzj14SYfFRL3YtrsPrTniFqr8yvfwx67hc44UQV
+         erh1cAiF+eR96nqO17q1Tt/84tofyHEDBnDZ5+kS4gD+fYjtiVyaJ2qQg3uckk5g8J5D
+         bVWmtc1bT93U3r5ea+qbiRJm15+0MbgFvHXAU+RxQ6Mi08EKeF/N/VXFMF+gdC3ubfnr
+         ypag==
+X-Gm-Message-State: AOAM533xDh/9YVakhMwyHK6eq8SNRGAZdCGB119wc5XVa/K51eQshLDO
+        T5xhgP3a0Ehwgkygbd4v4ja8oQ==
+X-Google-Smtp-Source: ABdhPJwWZnEQwNy0uHw6fz+gVKKB5MdRFqRoRee91JUrZWtXKOGQ/CMQO9b8C5u1UFocGLb+2c0OYw==
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr80843478wrn.269.1594651798432;
+        Mon, 13 Jul 2020 07:49:58 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.55
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:55 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 21/25] pinctrl: pinctrl-single: Fix struct/function documentation blocks
-Date:   Mon, 13 Jul 2020 15:49:26 +0100
-Message-Id: <20200713144930.1034632-22-lee.jones@linaro.org>
+        Kevin Hilman <khilman@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 23/25] pinctrl: meson: pinctrl-meson-a1: Remove unused const variable 'i2c_slave_groups'
+Date:   Mon, 13 Jul 2020 15:49:28 +0100
+Message-Id: <20200713144930.1034632-24-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add some missing attributes/parameter descriptions, remove other
-superfluous ones, add struct header titles and fix misspellings.
+It has never been used.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/pinctrl-single.c:50: warning: Function parameter or member 'mask' not described in 'pcs_func_vals'
- drivers/pinctrl/pinctrl-single.c:97: warning: Function parameter or member 'conf' not described in 'pcs_function'
- drivers/pinctrl/pinctrl-single.c:97: warning: Function parameter or member 'nconfs' not described in 'pcs_function'
- drivers/pinctrl/pinctrl-single.c:659: warning: Function parameter or member 'pin_pos' not described in 'pcs_add_pin'
- drivers/pinctrl/pinctrl-single.c:985: warning: Excess function parameter 'pctldev' description in 'pcs_parse_one_pinctrl_entry'
- drivers/pinctrl/pinctrl-single.c:1357: warning: Cannot understand  * @reg:        virtual address of interrupt register
- drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'pcs_soc' not described in 'pcs_irq_set'
- drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'irq' not described in 'pcs_irq_set'
- drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'enable' not described in 'pcs_irq_set'
- drivers/pinctrl/pinctrl-single.c:1458: warning: Function parameter or member 'pcs_soc' not described in 'pcs_irq_handle'
- drivers/pinctrl/pinctrl-single.c:1458: warning: Excess function parameter 'pcs_irq' description in 'pcs_irq_handle'
- drivers/pinctrl/pinctrl-single.c:1506: warning: Excess function parameter 'irq' description in 'pcs_irq_chain_handler'
+ drivers/pinctrl/meson/pinctrl-meson-a1.c:749:27: warning: ‘i2c_slave_groups’ defined but not used [-Wunused-const-variable=]
+ 749 | static const char const i2c_slave_groups[] = {
+ | ^~~~~~~~~~~~~~~~
 
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: linux-omap@vger.kernel.org
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Qianggui Song <qianggui.song@amlogic.com>
+Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/pinctrl-single.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson-a1.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index e6d1cf25782ce..542578d0bda2d 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -42,6 +42,7 @@
-  * struct pcs_func_vals - mux function register offset and value pair
-  * @reg:	register virtual address
-  * @val:	register value
-+ * @mask:	mask
-  */
- struct pcs_func_vals {
- 	void __iomem *reg;
-@@ -83,6 +84,8 @@ struct pcs_conf_type {
-  * @nvals:	number of entries in vals array
-  * @pgnames:	array of pingroup names the function uses
-  * @npgnames:	number of pingroup names the function uses
-+ * @conf:	array of pin configurations
-+ * @nconfs:	number of pin configurations available
-  * @node:	list node
-  */
- struct pcs_function {
-@@ -653,6 +656,7 @@ static const struct pinconf_ops pcs_pinconf_ops = {
-  * pcs_add_pin() - add a pin to the static per controller pin array
-  * @pcs: pcs driver instance
-  * @offset: register offset from base
-+ * @pin_pos: unused
-  */
- static int pcs_add_pin(struct pcs_device *pcs, unsigned offset,
- 		unsigned pin_pos)
-@@ -959,7 +963,6 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-a1.c b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+index 0bcec03f344aa..8abf750eac7ee 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-a1.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+@@ -746,11 +746,6 @@ static const char * const i2c3_groups[] = {
+ 	"i2c3_sck_x", "i2c3_sda_x", "i2c3_sck_f", "i2c3_sda_f",
+ };
  
- /**
-  * pcs_parse_one_pinctrl_entry() - parses a device tree mux entry
-- * @pctldev: pin controller device
-  * @pcs: pinctrl driver instance
-  * @np: device node of the mux entry
-  * @map: map entry
-@@ -1353,7 +1356,9 @@ static int pcs_add_gpio_func(struct device_node *node, struct pcs_device *pcs)
- 	}
- 	return ret;
- }
-+
- /**
-+ * struct pcs_interrupt
-  * @reg:	virtual address of interrupt register
-  * @hwirq:	hardware irq number
-  * @irq:	virtual irq number
-@@ -1368,6 +1373,9 @@ struct pcs_interrupt {
- 
- /**
-  * pcs_irq_set() - enables or disables an interrupt
-+ * @pcs_soc: SoC specific settings
-+ * @irq: interrupt
-+ * @enable: enable or disable the interrupt
-  *
-  * Note that this currently assumes one interrupt per pinctrl
-  * register that is typically used for wake-up events.
-@@ -1448,7 +1456,7 @@ static int pcs_irq_set_wake(struct irq_data *d, unsigned int state)
- 
- /**
-  * pcs_irq_handle() - common interrupt handler
-- * @pcs_irq: interrupt data
-+ * @pcs_soc: SoC specific settings
-  *
-  * Note that this currently assumes we have one interrupt bit per
-  * mux register. This interrupt is typically used for wake-up events.
-@@ -1496,7 +1504,6 @@ static irqreturn_t pcs_irq_handler(int irq, void *d)
- 
- /**
-  * pcs_irq_handle() - handler for the dedicated chained interrupt case
-- * @irq: interrupt
-  * @desc: interrupt descriptor
-  *
-  * Use this if you have a separate interrupt for each
+-static const char * const i2c_slave_groups[] = {
+-	"i2c_slave_sda_a", "i2c_slave_sck_a",
+-	"i2c_slave_sda_f", "i2c_slave_sck_f",
+-};
+-
+ static const char * const spi_a_groups[] = {
+ 	"spi_a_mosi_x2", "spi_a_ss0_x3", "spi_a_sclk_x4", "spi_a_miso_x5",
+ 	"spi_a_mosi_x7", "spi_a_miso_x8", "spi_a_ss0_x9", "spi_a_sclk_x10",
 -- 
 2.25.1
 
