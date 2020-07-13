@@ -4,99 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9817FC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57041C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75BB22065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381082067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666181;
-	bh=ktHNbx6FnV+x7s9t29sCpc1xgDRXdJHLcRv/GH5Mzmc=;
+	s=default; t=1594666211;
+	bh=z13PCUuzcghr9/B6vN2+wFShikgYZSbBxE2vpgj/NvM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tqqup8Vhi4rrz5di5PxIBY0i1YnDL9yvA+6L7TLghNrfS5zZOFvv1CBdn6YfavxoJ
-	 Nj2zDGn2Po7M8fuKwLAnYNU8GqOhPw3PI2Q4pKyX1IjwI0QWpK+xfxSisjp8vMqpy4
-	 0lb5riSMpWcjosO664ToQsyT4zYNyp2RgdybhTPA=
+	b=SD4J0Wk23Lr2RdXma8DjJETgH/oBlvRB98T6lyUYFfRi6R8dfSnIkcbATyut2clPx
+	 VBWVnYFGw5g/fIMNHFlgGxd9lj3JKthn44VVTeCO6kKzYdXeimbTsU2irHBsZsAi+J
+	 2aRKZ+HFKjsoShZtlW21JpuEB77+P1SbyG3B/WlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGMStk (ORCPT
+        id S1726891AbgGMSuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:49:40 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33137 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgGMStj (ORCPT
+        Mon, 13 Jul 2020 14:50:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33963 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGMSuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:49:39 -0400
-Received: by mail-il1-f194.google.com with SMTP id a11so12134417ilk.0;
-        Mon, 13 Jul 2020 11:49:38 -0700 (PDT)
+        Mon, 13 Jul 2020 14:50:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id q74so14666192iod.1;
+        Mon, 13 Jul 2020 11:50:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=D2pEC3wrhCgsQyFWELi0L0bjElIETMMY7GPEG8vzOa4=;
-        b=AAW87OdxFuU7LFiVoogoSoFn57W407dKhnSwjhovi3BnAcwjCaSEO1sv7qZ9xqtEip
-         G1BCOfpd1CSr3cjMnMZME7Sh6lQ+1Nhroyxu8N1zNxdY07Tz4sXFJsXLpg5dFayO6FTV
-         5CaL7gwC4zJww8FjYHxON8SivmPE2cdJPDH/H9ZZf8jVvz704DhZJW6O+REOeTbfprf9
-         vT885GGygzHZGTV0QIETXUsh3sRmYZDz6MIq9Z83Q9LLk3cVZb9VJKvLNfrAH6jyVtuO
-         JIMfLnFjJSf5h0uAI6M9JJ4rV6C0BcV6NHsQSoh7rnL9EgA3PF1OphiOQiMO437HMs6r
-         W05g==
-X-Gm-Message-State: AOAM531cqBovoAWA2VRuRXgsaofECJMYAHT7l4lPHHdxUcAHl80n5bF6
-        WUTmNBy2S92VeBufo2+HoiKJpHyGeQ==
-X-Google-Smtp-Source: ABdhPJyP/pl5I6zbz0C7TeX4/5kUapJB9XyFwzuhnpEOXC9kRpfTO0YGPJ4Fovdmqn23DjQWcYsaNQ==
-X-Received: by 2002:a05:6e02:dd1:: with SMTP id l17mr1154698ilj.136.1594666178303;
-        Mon, 13 Jul 2020 11:49:38 -0700 (PDT)
+        bh=Xmy+10bkAUzplh5z+naSAXciqgu3DwKbZRMbbuqfApI=;
+        b=dB1l64aV2B/9snK6l4ai08u7a3zGyoH0Br2rwrAqchY4yc1ME+hrrjB97j+dnM/Z6t
+         wBtKccNtuDpXMjFU3CubTh3VKhgKY/rCIr794pgiLTs/LSxQXMcmDZ4Yvv6h3g77H7sw
+         TJgLAY25pf47cuKt5heRc+neek0MRpfBPbVKOnPvm7eSqHTf8Bl075TXTLaXhhjYbY6n
+         aGqfWrNUuzdGowdOJlETAkhfsFAfhfRj9v484ZYtWQE/mlo3ptuv6TDOnUiAfhRi0FVo
+         PpE0aK7uo725OgOilZR/BHjCqP9MuuEF8Y3k0BiNCbS1H3Uz0x8sGciJczz30rch21+g
+         UXTw==
+X-Gm-Message-State: AOAM531s2A93ZwEJ/nKfdVg3aBWN3U66ckB+ziXzdyV1l744lRdQNlg5
+        hBDYwVDup+EnmZWxFmUFpQ==
+X-Google-Smtp-Source: ABdhPJzzEYf4Sgi8m3Za6DzOBFTogKjjcVv7B4FkRBuc4xnN+Y7GUXEtlNF5YcGy5/T2CnI0KTilZg==
+X-Received: by 2002:a02:3c08:: with SMTP id m8mr1605797jaa.107.1594666207313;
+        Mon, 13 Jul 2020 11:50:07 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k24sm8962781ilg.66.2020.07.13.11.49.37
+        by smtp.gmail.com with ESMTPSA id q2sm8766251ilp.82.2020.07.13.11.50.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:49:37 -0700 (PDT)
-Received: (nullmailer pid 528776 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:49:36 -0000
-Date:   Mon, 13 Jul 2020 12:49:36 -0600
+        Mon, 13 Jul 2020 11:50:06 -0700 (PDT)
+Received: (nullmailer pid 529751 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:50:05 -0000
+Date:   Mon, 13 Jul 2020 12:50:05 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 3/5] dt-bindings: interrupt-controller: Convert
- mrvl,intc to json-schema
-Message-ID: <20200713184936.GA528729@bogus>
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 4/5] dt-bindings: rtc: Convert sa1100-rtc to
+ json-schema
+Message-ID: <20200713185005.GA529639@bogus>
 References: <20200616223353.993567-1-lkundrak@v3.sk>
- <20200616223353.993567-4-lkundrak@v3.sk>
+ <20200616223353.993567-5-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616223353.993567-4-lkundrak@v3.sk>
+In-Reply-To: <20200616223353.993567-5-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 00:33:51 +0200, Lubomir Rintel wrote:
-> Convert the mrvl,intc binding to DT schema format using json-schema.
+On Wed, 17 Jun 2020 00:33:52 +0200, Lubomir Rintel wrote:
+> Convert the sa1100-rtc binding to DT schema format using json-schema.
+> While add that, add clocks and resets that are actually used.
 > 
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > 
 > ---
 > Changes since v1:
-> - Move minItems/maxItems to main reg property definition from the
->   conditional one
-> - Drop the condition for marvell,orion-intc
+> - Remove interrupts/maxItems
+> - Mention clocks and resets in the patch description
 > - Add default GPL-2.0-only license tag
 > - Fill in maintainers from MAINTAINERS file
 > 
->  .../interrupt-controller/mrvl,intc.txt        |  64 ---------
->  .../interrupt-controller/mrvl,intc.yaml       | 134 ++++++++++++++++++
->  2 files changed, 134 insertions(+), 64 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+>  .../devicetree/bindings/rtc/sa1100-rtc.txt    | 17 ------
+>  .../devicetree/bindings/rtc/sa1100-rtc.yaml   | 57 +++++++++++++++++++
+>  2 files changed, 57 insertions(+), 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/sa1100-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml
 > 
 
 Applied, thanks!
