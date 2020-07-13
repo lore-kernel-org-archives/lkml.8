@@ -2,118 +2,162 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6510EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA4BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D7C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594649482;
-	bh=T7QvK7R+StJM4r1IQ7c0n9HcB+fbfozHwcxG3TVZxo4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ervwJt0KEDRzr38E0xLhYefOiihqeqeZqHb80Y+XLKzNYZfGseYsfKJDeqyQrPOhC
-	 LdTdrmfyYPShTHip/4KaEcqgW6oqXZ4Dj2/2TxQcRxXZUhKLkbaKJRsFydkTYE9GXZ
-	 RDbrE3O/BfHbe+7J2SvBTb4tbCyL6ZT177OMLKc0=
+	by mail.kernel.org (Postfix) with ESMTP id 86CA920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgGMOLU (ORCPT
+        id S1730025AbgGMOLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMOLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:11:20 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EE892075B;
-        Mon, 13 Jul 2020 14:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594649479;
-        bh=T7QvK7R+StJM4r1IQ7c0n9HcB+fbfozHwcxG3TVZxo4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X7FqkZipmIBmyCZGB2I50FJei86C7jKNyhfscfKTgxvANpKpPjPQ+2Oe2TEv+EiB7
-         affUXOkPREJoFFD6k8g7b7Z4mpB0bFJ/1T92vUM55PbW8XX5Tt0XNsw4Sk0jdKO3ZR
-         L3jlsUUKQorGXQalVIGSFuIaVfRfeIfGk032djzI=
-Received: by mail-oo1-f51.google.com with SMTP id k47so2369577ool.2;
-        Mon, 13 Jul 2020 07:11:19 -0700 (PDT)
-X-Gm-Message-State: AOAM5304+p8J0UxcTfZ0bL079z9SDU+73ToBZ8zFU8Y3CgrkHwRuHO3a
-        XacMWU4tJJWEDD/WwF2drE0asEE5cPzL+lx08g==
-X-Google-Smtp-Source: ABdhPJzP1wWznjdcOYYxW7COHis2JavRSCgLMLU2wKLa+wmcB7a1M0yROJgH50RXyQmrjZLEyjG4GfeETI7dveqtQXI=
-X-Received: by 2002:a4a:7459:: with SMTP id t25mr64494ooe.25.1594649478792;
- Mon, 13 Jul 2020 07:11:18 -0700 (PDT)
+        Mon, 13 Jul 2020 10:11:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2459 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729782AbgGMOLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:11:34 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 268373485370AB025F40;
+        Mon, 13 Jul 2020 15:11:33 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.82.58) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 15:11:32 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
+        <lenb@kernel.org>, <tony.luck@intel.com>,
+        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
+        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
+        <jroedel@suse.de>
+CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
+Subject: [PATCH v12 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 13 Jul 2020 15:08:59 +0100
+Message-ID: <20200713140901.853-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org>
-In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 13 Jul 2020 08:11:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-Message-ID: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
- speed booting
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.82.58]
+X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> I found that if I ever had a little mistake in my kernel config,
-> or device tree, or graphics driver that my system would sit in a loop
-> at bootup trying again and again and again.  An example log was:
+CPER records describing a firmware-first error are identified by GUID.
+The ghes driver currently logs, but ignores any unknown CPER records.
+This prevents describing errors that can't be represented by a standard
+entry, that would otherwise allow a driver to recover from an error.
+The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+version 2.8).
 
-Why do we care about optimizing the error case?
+patch set
+1. add a notifier chain for these non-standard/vendor-records
+   in the ghes driver.
 
->   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
->   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
->   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
->   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
->   ...
->
-> I finally tracked it down where this was happening:
->   - msm_pdev_probe() is called.
->   - msm_pdev_probe() registers drivers.  Registering drivers kicks
->     off processing of probe deferrals.
->   - component_master_add_with_match() could return -EPROBE_DEFER.
->     making msm_pdev_probe() return -EPROBE_DEFER.
->   - When msm_pdev_probe() returned the processing of probe deferrals
->     happens.
->   - Loop back to the start.
->
-> It looks like we can fix this by marking "mdss" as a "simple-bus".
-> I have no idea if people consider this the right thing to do or a
-> hack.  Hopefully it's the right thing to do.  :-)
+2. add a driver to handle HiSilicon hip PCIe controller's errors.
+   
+Changes:
+V12:
+1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
 
-It's a simple test. Do the child devices have any dependency on the
-parent to probe and/or function? If so, not a simple-bus.
+V11:
+1. Following modifications made by James Morse in the APEI patch
+   for the vendor error record.
+   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+   
+   Note: Kept the Signed-off-by: James Morse as he is given
+   because I am not sure the right format.
+   
+2. Changes in the HIP PCIe error handler driver
+   for the comments by Andy Shevchenko.
 
-> Once I do this I notice that my boot gets marginally faster (you
-> don't need to probe the sub devices over and over) and also if I
+V10:
+1. Changes for Bjorn's comments on HIP PCIe error handler driver
+   and APEI patch.
+   
+2. Changes in the HIP PCIe error handler driver
+   for the feedbacks by Andy Shevchenko.
+   
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
 
-Can you quantify that?
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
 
-Have you run with devlinks enabled. You need a command line option to
-enable. That too should reduce deferred probes.
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
 
-> have a problem it doesn't loop forever (on my system it still
-> gets upset about some stuck clocks in that case, but at least I
-> can boot up).
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
 
-Deferred probe only runs when a device is added, so it's not like it
-is continually running.
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
 
-Rob
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 |  63 +++++
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  27 ++
+ 5 files changed, 426 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
