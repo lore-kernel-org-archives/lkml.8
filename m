@@ -2,666 +2,251 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4967C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33203C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37F8206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070F8206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Kw6VSrOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgGMCxS (ORCPT
+        id S1728848AbgGMCx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:53:18 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:65089 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGMCxR (ORCPT
+        Sun, 12 Jul 2020 22:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbgGMCx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:53:17 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="36395011"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 13 Jul 2020 10:53:12 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(164610:0:AUTH_RELAY)
-        (envelope-from <jingle.wu@emc.com.tw>); Mon, 13 Jul 2020 10:53:12 +0800 (CST)
-Received: from 192.168.33.11
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2485:0:AUTH_RELAY)
-        (envelope-from <jingle.wu@emc.com.tw>); Mon, 13 Jul 2020 10:53:09 +0800 (CST)
-From:   "jingle" <jingle.wu@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <phoenix@emc.com.tw>, <josh.chen@emc.com.tw>,
-        <dave.wang@emc.com.tw>
-References: <20200710054047.5473-1-jingle.wu@emc.com.tw> <20200712060846.GA3224245@dtor-ws>
-In-Reply-To: <20200712060846.GA3224245@dtor-ws>
-Subject: RE: [PATCH 1/2] Input: elan_i2c - Add ic type 0x11 0x13 0x14.
-Date:   Mon, 13 Jul 2020 10:53:09 +0800
-Message-ID: <000301d658c0$bdbc55d0$39350170$@emc.com.tw>
+        Sun, 12 Jul 2020 22:53:56 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E269C08C5DB
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 19:53:56 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id e13so10936994qkg.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 19:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LfGl8MgHNTkh4eHPxpTYeSeTP47fmrEcX6XAsbs0NMI=;
+        b=Kw6VSrObxjDxE1uwXFX7RhwxDOATo6vFk6W0yzVhg0cOvCuPoaY5Vu3UbcalkfgGMz
+         7qSpyIqBd2UVYIKuAKsD7zqu0AEAj6BHw/je/DGse6tg508fK+qih5rH7dezypuhlYss
+         SJfc6u3W6Uf3sw97BQeoc1Ww+6JP9tm+RLAJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LfGl8MgHNTkh4eHPxpTYeSeTP47fmrEcX6XAsbs0NMI=;
+        b=WCWhDRp/AIf2gOWfqmp42tS7bGCbAEoPYdmxbtrka2h3nHJWAqjrBmKyZU4K4ETuGE
+         zoZZqnA300zhLEeuI/zd1jPbTHzwQZTyjWHzsmURYbgtv2JQxKPQbMXtbWbAZs5M1QII
+         SW1uAKv9P/r65ZDZSfWTf0B/rIkA55gYFdiuoWNTJheA7LWScNSPHbQtsv6pcqJcOvdA
+         GZdDsh1SvseQbz5z6wK5CbujX/bNLRfiuhU2i5gAIjarJh1uT7jAJdDPBPxiwW3vqAzd
+         OLJ8TVzePhEXCUck1Ki81E0nE+SbH34d4pNokSiOeRRHgGfBVIvokbSNRXt+g+ZCNF4+
+         j08Q==
+X-Gm-Message-State: AOAM5319PoifEIsBF6xy7A3CGiuDlAmTEifQHOFuq0VlV5BzzcZQjsck
+        SnIZ3cQr8iZTuZtYHfJt1zowlg==
+X-Google-Smtp-Source: ABdhPJzNUoy4InAuw5dwqvsnFRKP1vnKgkRK10qXoyJdbcfTTpEXJt4daYmo5h0D1MLrh1rHettGCw==
+X-Received: by 2002:a37:4592:: with SMTP id s140mr76769699qka.245.1594608835452;
+        Sun, 12 Jul 2020 19:53:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id t138sm16463758qka.15.2020.07.12.19.53.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 19:53:54 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 22:53:54 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+Message-ID: <20200713025354.GB3644504@google.com>
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <20200712215041.GA3644504@google.com>
+ <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQFfRhhlA2l6ZyS8J6fW4qHcbJaTVwIg6JkiqeHm7UA=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYwMTFcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1mYjM3MzM4Yi1jNGIzLTExZWEtODE5YS1mMDc5NTk2OWU3NWVcYW1lLXRlc3RcZmIzNzMzOGQtYzRiMy0xMWVhLTgxOWEtZjA3OTU5NjllNzVlYm9keS50eHQiIHN6PSIxODg5NSIgdD0iMTMyMzkwODIzODkxNDgwNDQ4IiBoPSI0VExheGIyclhVVjFWY0Y5eTRIa1VrRHV0L3M9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry:
+Hi Linus,
 
-1. Could you please tell me what devices this patch was tested with? I want
-to be sure we are not only adding support for newer devices, but also not
-breaking existing ones.
---> The device which this patch was tested with was "coral".
---> Its corresponding ic_type was 0xD, 0xE, 0x10, 0x11, 0x13 0x14.
-
-2. Also, could you please split this patch in 2: one adding variable length
-firmware page size support, and another adding the new IC types.
---> As a result, Do I need to up-stream in total 3 patches?
-
-3. 
-> +	case 0x14:
->  		*validpage_count = 1024;
->  		break;
-
-I would prefer if we listed 0x14 separately below.
---> OK
-
-4. Do we really need to check ic_type here in addition to iap_version?
---> Yes, different ic_type might feat with different iap version
-
-I.e. IC 0x11 - can it have IAP 2? 
---> Yes
-
-And will it be using 512 or 128 byte pages? In other words I am trying to
-understand if we could determine page size solely by IAP version.
---> We need to have iap version and ic_type information to determine the
-page size (512 or 128).
-
-5. I think we have data->fw_page_size, we do not need to pass it separately
-here.
---> OK
-
-6.
-> +
-> +	if ((val[0] == 0xFF) && (val[1] == 0xFF))
-> +		*pattern = 0;
-> +	else
-> +		*pattern = val[1];
-
-This needs a comment explaining why we are doing it.
---> Some firmware of the IC_type did not create the pattern reading command,
-they would get 0xFF 0xFF value if we trigger the pattern command.
-As a result, we initial it as 0.
-
-7. Haven't we queried IAP version already? Can we pass it in, along with
-ic_type?
---> OK
-
-8.
-> +	if ((ic_type >= 0x0D) && (iap_version >= 1)) {
-
-No need for parenthesis around simple comparisons. Also, do we really need
-to check both ic type and iap version?
---> Yes
-
-Is there ICs less than 0x0d with newer IAP versions?
---> There have not been the ICs less than 0x0d with newer IAP versions so
-far.
-
-9.
-> -	u8 page_store[ETP_FW_PAGE_SIZE + 4];
-> +	u8 *page_store = kcalloc(1, fw_page_size + 4, GFP_KERNEL);
-
-Why kcalloc()? kzalloc() if you want cleared memoryi, but I think kmalloc
-would be fine.
---> Yes, we want to clear the memory.
-
-THANKS
-
-
-
------Original Message-----
-From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
-Sent: Sunday, July 12, 2020 2:09 PM
-To: Jingle Wu
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org;
-phoenix@emc.com.tw; josh.chen@emc.com.tw; dave.wang@emc.com.tw
-Subject: Re: [PATCH 1/2] Input: elan_i2c - Add ic type 0x11 0x13 0x14.
-
-Hi Jingle,
-
-On Fri, Jul 10, 2020 at 01:40:47AM -0400, Jingle Wu wrote:
-> Modify the iap method for all IC.
-> Get the correct value of ic_type for old and new pattern of firmware.
-
-Could you please tell me what devices this patch was tested with? I want to
-be sure we are not only adding support for newer devices, but also not
-breaking existing ones.
-
-Also, could you please split this patch in 2: one adding variable length
-firmware page size support, and another adding the new IC types.
-
+On Sun, Jul 12, 2020 at 03:58:06PM -0700, Linus Torvalds wrote:
+> On Sun, Jul 12, 2020 at 2:50 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > I reproduced Naresh's issue on a 32-bit x86 machine and the below patch fixes it.
+> > The issue is solely within execve() itself and the way it allocates/copies the
+> > temporary stack.
+> >
+> > It is actually indeed an overlapping case because the length of the
+> > stack is big enough to cause overlap. The VMA grows quite a bit because of
+> > all the page faults that happen due to the copy of the args/env. Then during
+> > the move of overlapped region, it finds that a PMD is already allocated.
 > 
-> Signed-off-by: Jingle Wu <jingle.wu@emc.com.tw>
-> ---
->  drivers/input/mouse/elan_i2c.h       |   6 +-
->  drivers/input/mouse/elan_i2c_core.c  |  52 ++++++++-----
->  drivers/input/mouse/elan_i2c_i2c.c   | 109 ++++++++++++++++++++++-----
->  drivers/input/mouse/elan_i2c_smbus.c |  10 +--
->  4 files changed, 134 insertions(+), 43 deletions(-)
+> Oh, ok, I think I see.
 > 
-> diff --git a/drivers/input/mouse/elan_i2c.h 
-> b/drivers/input/mouse/elan_i2c.h index a9074ac9364f..f28b747978f5 
-> 100644
-> --- a/drivers/input/mouse/elan_i2c.h
-> +++ b/drivers/input/mouse/elan_i2c.h
-> @@ -33,6 +33,8 @@
->  #define ETP_FW_IAP_PAGE_ERR	(1 << 5)
->  #define ETP_FW_IAP_INTF_ERR	(1 << 4)
->  #define ETP_FW_PAGE_SIZE	64
-> +#define ETP_FW_PAGE_SIZE_128	128
-> +#define ETP_FW_PAGE_SIZE_512	512
->  #define ETP_FW_SIGNATURE_SIZE	6
->  
->  struct i2c_client;
-> @@ -72,8 +74,8 @@ struct elan_transport_ops {
->  	int (*iap_get_mode)(struct i2c_client *client, enum tp_mode *mode);
->  	int (*iap_reset)(struct i2c_client *client);
->  
-> -	int (*prepare_fw_update)(struct i2c_client *client);
-> -	int (*write_fw_block)(struct i2c_client *client,
-> +	int (*prepare_fw_update)(struct i2c_client *client, u16 ic_type);
-> +	int (*write_fw_block)(struct i2c_client *client, u16 fw_page_size,
->  			      const u8 *page, u16 checksum, int idx);
->  	int (*finish_fw_update)(struct i2c_client *client,
->  				struct completion *reset_done);
-> diff --git a/drivers/input/mouse/elan_i2c_core.c 
-> b/drivers/input/mouse/elan_i2c_core.c
-> index 3f9354baac4b..0703f7d0d02d 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -89,7 +89,8 @@ struct elan_tp_data {
->  	u8			mode;
->  	u16			ic_type;
->  	u16			fw_validpage_count;
-> -	u16			fw_signature_address;
-> +	u16			fw_page_size;
-> +	u32			fw_signature_address;
->  
->  	bool			irq_wake;
->  
-> @@ -100,8 +101,10 @@ struct elan_tp_data {
->  	bool			middle_button;
->  };
->  
-> -static int elan_get_fwinfo(u16 ic_type, u16 *validpage_count,
-> -			   u16 *signature_address)
-> +static int elan_get_fwinfo(u16 ic_type, u8 iap_version, 
-> +                           u16 *validpage_count,
-> +			   u32 *signature_address,
-> +			   u16 *page_size)
->  {
->  	switch (ic_type) {
->  	case 0x00:
-> @@ -124,18 +127,34 @@ static int elan_get_fwinfo(u16 ic_type, u16
-*validpage_count,
->  		*validpage_count = 640;
->  		break;
->  	case 0x10:
-> +	case 0x14:
->  		*validpage_count = 1024;
->  		break;
-
-I would prefer if we listed 0x14 separately below.
-
-> +	case 0x11:
-> +		*validpage_count = 1280;
-> +		break;
-> +	case 0x13:
-> +		*validpage_count = 2048;
-> +		break;
->  	default:
->  		/* unknown ic type clear value */
->  		*validpage_count = 0;
->  		*signature_address = 0;
-> +		*page_size = 0;
->  		return -ENXIO;
->  	}
->  
->  	*signature_address =
->  		(*validpage_count * ETP_FW_PAGE_SIZE) -
-ETP_FW_SIGNATURE_SIZE;
->  
-> +	if ((ic_type == 0x14) && (iap_version >= 2)) {
-> +		*validpage_count /= 8;
-> +		*page_size = ETP_FW_PAGE_SIZE_512;
-
-Do we really need to check ic_type here in addition to iap_version?
-I.e. IC 0x11 - can it have IAP 2? And will it be using 512 or 128 byte
-pages? In other words I am trying to understand if we could determine page
-size solely by IAP version.
-
-> +	} else if ((ic_type >= 0x0D) && (iap_version >= 1)) {
-> +		*validpage_count /= 2;
-> +		*page_size = ETP_FW_PAGE_SIZE_128;
-> +	} else
-> +		*page_size = ETP_FW_PAGE_SIZE;
->  	return 0;
->  }
->  
-> @@ -312,7 +331,6 @@ static int elan_initialize(struct elan_tp_data 
-> *data)  static int elan_query_device_info(struct elan_tp_data *data)  
-> {
->  	int error;
-> -	u16 ic_type;
->  
->  	error = data->ops->get_version(data->client, false,
-&data->fw_version);
->  	if (error)
-> @@ -336,13 +354,10 @@ static int elan_query_device_info(struct
-elan_tp_data *data)
->  	if (error)
->  		return error;
->  
-> -	if (data->pattern == 0x01)
-> -		ic_type = data->ic_type;
-> -	else
-> -		ic_type = data->iap_version;
-> -
-> -	error = elan_get_fwinfo(ic_type, &data->fw_validpage_count,
-> -				&data->fw_signature_address);
-> +	error = elan_get_fwinfo(data->ic_type, data->iap_version, 
-> +				&data->fw_validpage_count,
-> +				&data->fw_signature_address,
-> +				&data->fw_page_size);
->  	if (error)
->  		dev_warn(&data->client->dev,
->  			 "unexpected iap version %#04x (ic type: %#04x),
-firmware update 
-> will not work\n", @@ -430,14 +445,14 @@ static int
-elan_query_device_parameters(struct elan_tp_data *data)
->   * IAP firmware updater related routines
->   **********************************************************
->   */
-> -static int elan_write_fw_block(struct elan_tp_data *data,
-> +static int elan_write_fw_block(struct elan_tp_data *data, u16 
-> +page_size,
-
-I think we have data->fw_page_size, we do not need to pass it separately
-here.
-
->  			       const u8 *page, u16 checksum, int idx)  {
->  	int retry = ETP_RETRY_COUNT;
->  	int error;
->  
->  	do {
-> -		error = data->ops->write_fw_block(data->client,
-> +		error = data->ops->write_fw_block(data->client, page_size,
->  						  page, checksum, idx);
->  		if (!error)
->  			return 0;
-> @@ -460,21 +475,22 @@ static int __elan_update_firmware(struct
-elan_tp_data *data,
->  	u16 boot_page_count;
->  	u16 sw_checksum = 0, fw_checksum = 0;
->  
-> -	error = data->ops->prepare_fw_update(client);
-> +	error = data->ops->prepare_fw_update(client, data->ic_type);
->  	if (error)
->  		return error;
->  
->  	iap_start_addr = get_unaligned_le16(&fw->data[ETP_IAP_START_ADDR * 
-> 2]);
->  
-> -	boot_page_count = (iap_start_addr * 2) / ETP_FW_PAGE_SIZE;
-> +	boot_page_count = (iap_start_addr * 2) / data->fw_page_size;
->  	for (i = boot_page_count; i < data->fw_validpage_count; i++) {
->  		u16 checksum = 0;
-> -		const u8 *page = &fw->data[i * ETP_FW_PAGE_SIZE];
-> +		const u8 *page = &fw->data[i * data->fw_page_size];
->  
-> -		for (j = 0; j < ETP_FW_PAGE_SIZE; j += 2)
-> +		for (j = 0; j < data->fw_page_size; j += 2)
->  			checksum += ((page[j + 1] << 8) | page[j]);
->  
-> -		error = elan_write_fw_block(data, page, checksum, i);
-> +		error = elan_write_fw_block(data, data->fw_page_size,
-> +						page, checksum, i);
->  		if (error) {
->  			dev_err(dev, "write page %d fail: %d\n", i, error);
->  			return error;
-> diff --git a/drivers/input/mouse/elan_i2c_i2c.c 
-> b/drivers/input/mouse/elan_i2c_i2c.c
-> index 058b35b1f9a9..91ef0c7bda43 100644
-> --- a/drivers/input/mouse/elan_i2c_i2c.c
-> +++ b/drivers/input/mouse/elan_i2c_i2c.c
-> @@ -19,6 +19,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/jiffies.h>
->  #include <linux/kernel.h>
-> +#include <linux/slab.h>
->  #include <linux/sched.h>
->  #include <asm/unaligned.h>
->  
-> @@ -43,6 +44,7 @@
->  #define ETP_I2C_RESOLUTION_CMD		0x0108
->  #define ETP_I2C_PRESSURE_CMD		0x010A
->  #define ETP_I2C_IAP_VERSION_CMD		0x0110
-> +#define ETP_I2C_IAP_VERSION_CMD_OLD		0x0111
->  #define ETP_I2C_SET_CMD			0x0300
->  #define ETP_I2C_POWER_CMD		0x0307
->  #define ETP_I2C_FW_CHECKSUM_CMD		0x030F
-> @@ -53,6 +55,8 @@
->  #define ETP_I2C_CALIBRATE_CMD		0x0316
->  #define ETP_I2C_MAX_BASELINE_CMD	0x0317
->  #define ETP_I2C_MIN_BASELINE_CMD	0x0318
-> +#define ETP_I2C_IAP_TYPE_REG	0x0040
-> +#define ETP_I2C_IAP_TYPE_CMD	0x0304
->  
->  #define ETP_I2C_REPORT_LEN		34
->  #define ETP_I2C_DESC_LENGTH		30
-> @@ -249,7 +253,11 @@ static int elan_i2c_get_pattern(struct i2c_client
-*client, u8 *pattern)
->  		dev_err(&client->dev, "failed to get pattern: %d\n", error);
->  		return error;
->  	}
-> -	*pattern = val[1];
-> +
-> +	if ((val[0] == 0xFF) && (val[1] == 0xFF))
-> +		*pattern = 0;
-> +	else
-> +		*pattern = val[1];
-
-This needs a comment explaining why we are doing it.
-
->  
->  	return 0;
->  }
-> @@ -259,6 +267,7 @@ static int elan_i2c_get_version(struct i2c_client 
-> *client,  {
->  	int error;
->  	u8 pattern_ver;
-> +	u16 iap_cmd;
->  	u8 val[3];
->  
->  	error = elan_i2c_get_pattern(client, &pattern_ver); @@ -266,9 
-> +275,14 @@ static int elan_i2c_get_version(struct i2c_client *client,
->  		dev_err(&client->dev, "failed to get pattern version\n");
->  		return error;
->  	}
-> +	
-> +	if (pattern_ver >= 0x01)
-> +		iap_cmd = ETP_I2C_IAP_VERSION_CMD;
-> +	else
-> +		iap_cmd = ETP_I2C_IAP_VERSION_CMD_OLD;
-
-Can we make it
-
-	if (!iap)
-		cmd = ETP_I2C_FW_VERSION_CMD;
-	else if (pattern_ver == 0)
-		cmd = ETP_I2C_IAP_VERSION_CMD_OLD;
-	else
-		cmd = ETP_I2C_IAP_VERSION_CMD;
-
->  
->  	error = elan_i2c_read_cmd(client,
-> -				  iap ? ETP_I2C_IAP_VERSION_CMD :
-> +				  iap ? iap_cmd :
->  					ETP_I2C_FW_VERSION_CMD,
->  				  val);
->  	if (error) {
-> @@ -277,7 +291,7 @@ static int elan_i2c_get_version(struct i2c_client
-*client,
->  		return error;
->  	}
->  
-> -	if (pattern_ver == 0x01)
-> +	if (pattern_ver >= 0x01)
->  		*version = iap ? val[1] : val[0];
->  	else
->  		*version = val[0];
-> @@ -298,7 +312,7 @@ static int elan_i2c_get_sm_version(struct i2c_client
-*client,
->  		return error;
->  	}
->  
-> -	if (pattern_ver == 0x01) {
-> +	if (pattern_ver >= 0x01) {
->  		error = elan_i2c_read_cmd(client, ETP_I2C_IC_TYPE_CMD, val);
->  		if (error) {
->  			dev_err(&client->dev, "failed to get ic type: %d\n",
-@@ -324,7 
-> +338,14 @@ static int elan_i2c_get_sm_version(struct i2c_client *client,
->  			return error;
->  		}
->  		*version = val[0];
-> -		*ic_type = val[1];
-> +
-> +		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_VERSION_CMD,
-val);
-> +		if (error) {
-> +			dev_err(&client->dev, "failed to get ic type: %d\n",
-> +				error);
-> +			return error;
-> +		}
-> +		*ic_type = val[0];
->  
->  		error = elan_i2c_read_cmd(client, ETP_I2C_NSM_VERSION_CMD,
->  					  val);
-> @@ -507,13 +528,53 @@ static int elan_i2c_set_flash_key(struct i2c_client
-*client)
->  	return 0;
->  }
->  
-> -static int elan_i2c_prepare_fw_update(struct i2c_client *client)
-> +static int elan_read_write_iap_type(struct i2c_client *client) {
-> +	int error;
-> +	u16 constant;
-> +	u8 val[3];
-> +	int retry = 3;
-> +
-> +	do {
-> +		error = elan_i2c_write_cmd(client, ETP_I2C_IAP_TYPE_CMD,
-> +				ETP_I2C_IAP_TYPE_REG);
-> +		if (error) {
-> +			dev_err(&client->dev,
-> +					"cannot write iap type: %d\n",
-error);
-> +			return error;
-> +		}
-> +
-> +		error = elan_i2c_read_cmd(client, ETP_I2C_IAP_TYPE_CMD,
-val);
-> +		if (error) {
-> +			dev_err(&client->dev,
-> +				"failed to read iap type register: %d\n",
-> +				error);
-> +			return error;
-> +		}
-> +		constant = le16_to_cpup((__le16 *)val);
-> +		dev_dbg(&client->dev, "iap type reg: 0x%04x.\n", constant);
-> +
-> +		if (constant == ETP_I2C_IAP_TYPE_REG)
-> +			return 0;
-> +
-> +	} while (--retry > 0);
-> +
-> +	dev_err(&client->dev, "cannot set iap type.\n");
-> +	return -EIO;
-> +}
-> +
-> +static int elan_i2c_prepare_fw_update(struct i2c_client *client, u16 
-> +ic_type)
->  {
->  	struct device *dev = &client->dev;
->  	int error;
->  	enum tp_mode mode;
->  	u8 val[3];
->  	u16 password;
-> +	u8 iap_version;
-> +	
-> +	error = elan_i2c_get_version(client, true, &iap_version);
-> +	if (error)
-> +		return error;
-
-Haven't we queried IAP version already? Can we pass it in, along with
-ic_type?
-
->  
->  	/* Get FW in which mode	(IAP_MODE/MAIN_MODE)  */
->  	error = elan_i2c_iap_get_mode(client, &mode); @@ -546,6 +607,12 @@ 
-> static int elan_i2c_prepare_fw_update(struct i2c_client *client)
->  		dev_err(dev, "wrong mode: %d\n", mode);
->  		return -EIO;
->  	}
-> +	
-> +	if ((ic_type >= 0x0D) && (iap_version >= 1)) {
-
-No need for parenthesis around simple comparisons. Also, do we really need
-to check both ic type and iap version? Is there ICs less than 0x0d with
-newer IAP versions?
-
-> +		error = elan_read_write_iap_type(client);
-> +		if (error)
-> +			return error;
-> +	}
->  
->  	/* Set flash key again */
->  	error = elan_i2c_set_flash_key(client); @@ -572,45 +639,51 @@ static
-
-> int elan_i2c_prepare_fw_update(struct i2c_client *client)
->  	return 0;
->  }
->  
-> -static int elan_i2c_write_fw_block(struct i2c_client *client,
-> +static int elan_i2c_write_fw_block(struct i2c_client *client, u16 
-> +fw_page_size,
->  				   const u8 *page, u16 checksum, int idx)  {
->  	struct device *dev = &client->dev;
-> -	u8 page_store[ETP_FW_PAGE_SIZE + 4];
-> +	u8 *page_store = kcalloc(1, fw_page_size + 4, GFP_KERNEL);
-
-Why kcalloc()? kzalloc() if you want cleared memoryi, but I think kmalloc
-would be fine.
-
->  	u8 val[3];
->  	u16 result;
-> -	int ret, error;
-> +	int ret, error = 0;
->  
->  	page_store[0] = ETP_I2C_IAP_REG_L;
->  	page_store[1] = ETP_I2C_IAP_REG_H;
-> -	memcpy(&page_store[2], page, ETP_FW_PAGE_SIZE);
-> +	memcpy(&page_store[2], page, fw_page_size);
->  	/* recode checksum at last two bytes */
-> -	put_unaligned_le16(checksum, &page_store[ETP_FW_PAGE_SIZE + 2]);
-> +	put_unaligned_le16(checksum, &page_store[fw_page_size + 2]);
->  
-> -	ret = i2c_master_send(client, page_store, sizeof(page_store));
-> -	if (ret != sizeof(page_store)) {
-> +	ret = i2c_master_send(client, page_store, fw_page_size + 4);
-> +	if (ret != fw_page_size + 4) {
->  		error = ret < 0 ? ret : -EIO;
->  		dev_err(dev, "Failed to write page %d: %d\n", idx, error);
-> -		return error;
-> +		goto exit;
->  	}
->  
->  	/* Wait for F/W to update one page ROM data. */
-> -	msleep(35);
-> +	if (fw_page_size == ETP_FW_PAGE_SIZE_512)
-> +		msleep(50);
-> +	else
-> +		msleep(35);
->  
->  	error = elan_i2c_read_cmd(client, ETP_I2C_IAP_CTRL_CMD, val);
->  	if (error) {
->  		dev_err(dev, "Failed to read IAP write result: %d\n",
-error);
-> -		return error;
-> +		goto exit;
->  	}
->  
->  	result = le16_to_cpup((__le16 *)val);
->  	if (result & (ETP_FW_IAP_PAGE_ERR | ETP_FW_IAP_INTF_ERR)) {
->  		dev_err(dev, "IAP reports failed write: %04hx\n",
->  			result);
-> -		return -EIO;
-> +		error = -EIO;
-> +		goto exit;
->  	}
->  
-> -	return 0;
-> +exit:
-> +	kfree(page_store);
-> +	return error;
->  }
->  
->  static int elan_i2c_finish_fw_update(struct i2c_client *client, diff 
-> --git a/drivers/input/mouse/elan_i2c_smbus.c 
-> b/drivers/input/mouse/elan_i2c_smbus.c
-> index 8c3185d54c73..1e762c90c894 100644
-> --- a/drivers/input/mouse/elan_i2c_smbus.c
-> +++ b/drivers/input/mouse/elan_i2c_smbus.c
-> @@ -340,7 +340,7 @@ static int elan_smbus_set_flash_key(struct i2c_client
-*client)
->  	return 0;
->  }
->  
-> -static int elan_smbus_prepare_fw_update(struct i2c_client *client)
-> +static int elan_smbus_prepare_fw_update(struct i2c_client *client, 
-> +u16 ic_type)
->  {
->  	struct device *dev = &client->dev;
->  	int len;
-> @@ -414,7 +414,7 @@ static int elan_smbus_prepare_fw_update(struct 
-> i2c_client *client)  }
->  
->  
-> -static int elan_smbus_write_fw_block(struct i2c_client *client,
-> +static int elan_smbus_write_fw_block(struct i2c_client *client, u16 
-> +fw_page_size,
->  				     const u8 *page, u16 checksum, int idx)
-{
->  	struct device *dev = &client->dev;
-> @@ -429,7 +429,7 @@ static int elan_smbus_write_fw_block(struct i2c_client
-*client,
->  	 */
->  	error = i2c_smbus_write_block_data(client,
->  					   ETP_SMBUS_WRITE_FW_BLOCK,
-> -					   ETP_FW_PAGE_SIZE / 2,
-> +					   fw_page_size / 2,
->  					   page);
->  	if (error) {
->  		dev_err(dev, "Failed to write page %d (part %d): %d\n", @@
--439,8 
-> +439,8 @@ static int elan_smbus_write_fw_block(struct i2c_client 
-> *client,
->  
->  	error = i2c_smbus_write_block_data(client,
->  					   ETP_SMBUS_WRITE_FW_BLOCK,
-> -					   ETP_FW_PAGE_SIZE / 2,
-> -					   page + ETP_FW_PAGE_SIZE / 2);
-> +					   fw_page_size / 2,
-> +					   page + fw_page_size / 2);
->  	if (error) {
->  		dev_err(dev, "Failed to write page %d (part %d): %d\n",
->  			idx, 2, error);
-> --
-> 2.17.1
+> So the issue is that while move_normal_pmd() _itself_ will be clearing
+> the old pmd entries when it copies them, the 4kB copies that happened
+> _before_ this time will not have cleared the old pmd that they were
+> in.
 > 
+> So we've had a deeper stack, and we've already copied some of it one
+> page at a time, and we're done with those 4kB entries, but now we hit
+> a 2MB-aligned case and want to move that down. But when it does that,
+> it hits the (by now hopefully empty) pmd that used to contain the 4kB
+> entries we copied earlier.
+> 
+> So we've cleared the page table, but we've simply never called
+> pgtable_clear() here, because the page table got cleared in
+> move_ptes() when it did that
+> 
+>                 pte = ptep_get_and_clear(mm, old_addr, old_pte);
+> 
+> on the previous old pte entries.
+> 
+> That makes sense to me. Does that match what you see? Because when I
+> said it wasn't overlapped, I was really talking about that one single
+> pmd move itself not being overlapped.
 
-Thanks.
+This matches exactly what you mentioned.
 
--- 
-Dmitry
+Here is some analysis with specific numbers:
+
+Some time during execve(), the copy_strings() causes page faults. During this
+the VMA is growing and new PMD is allocated during the page fault:
+
+copy_strings: Copying args/env old process's memory 8067420 to new stack bfb0eec6 (len 4096)
+handle_mm_fault: vma: bfb0d000 c0000000
+handle_mm_fault: pmd_alloc: ad: bfb0dec6 ptr: f46d0bf8
+
+Here we see that the the pmd entry's (pmd_t *) pointer value is f46d0bf8 and
+the fault was on address bfb0dec6.
+
+Similarly, I note the pattern of other copy_strings() faulting and do the
+following mapping:
+
+address space	 	pmd entry pointer
+0xbfe00000-0xc0000000	f4698ff8
+0xbfc00000-0xbfe00000	f4698ff0
+0xbfa00000-0xbfc00000	f4698fe8
+
+This is all from tracing the copy_strings().
+
+Then later, the kernel decides to move the VMA down. The VMA total size 5MB.
+The stack is initially at a 1MB aligned address: 0xbfb00000 . exec requests
+move_page_tables() to move it down by 4MB. That is, to 0xbf700000 which is
+also 1MB aligned.  This is an overlapping move.
+
+move_page_tables starts, I see the following prints before the warning fires.
+
+The plan of attack should be, first copy 1MB using move_ptes() like you said.
+Then it hits 2MB aligned boundary and starts move_normal_pmd(). For both
+move_ptes() and move_normal_pmd(), a pmd_alloc() first happens which is
+printed below:
+
+move_page_tables: move_page_tables old=bfb00000 (len:5242880) new=bf700000
+move_page_tables: pmd_alloc: ad: bf700000 ptr: f4698fd8
+move_page_tables: move_ptes old=bfb00000->bfc00000 new=bf700000
+move_page_tables: pmd_alloc: ad: bf800000 ptr: f4698fe0
+move_page_tables: move_normal_pmd: old: bfc00000-c0000000 new: bf800000 (val: 0)
+move_page_tables: pmd_alloc: ad: bfa00000 ptr: f4698fe8
+move_page_tables: move_normal_pmd: old: bfe00000-c0000000 new: bfa00000 (val: 34164067)
+
+So basically, it did 1MB worth of move_ptes(), and twice 2MB worth of
+move_normal_pmd.  Since the shift was only 4MB, it hit an already allocated
+PMD during the second move_normal_pmd. The warning fires as that
+move_normal_pmd() sees 0xbf800000 is already allocated before.
+
+As you said, this is harmless.
+
+One thing I observed by code reading is move_page_tables() is (in the case of
+mremap)  only called for non-overlapping moves (through mremap_to() or
+move_vma() as the case maybe). It makes me nervous we are doing an
+overlapping move and causing some bug inadvertently.
+
+Could you let me know if there is any reason why we should not make the new
+stack's location as non-overlapping, just to keep things simple? (Assuming
+we fix the issues related to overriding you mentioned below).
+
+> > The below patch fixes it and is not warning anymore in 30 minutes of testing
+> > so far.
+> 
+> So I'm not hugely happy with the patch, I have to admit.
+> 
+> Why?
+> 
+> Because:
+> 
+> > +       /* Ensure the temporary stack is shifted by atleast its size */
+> > +       if (stack_shift < (vma->vm_end - vma->vm_start))
+> > +               stack_shift = (vma->vm_end - vma->vm_start);
+> 
+> This basically overrides the random stack shift done by arch_align_stack().
+> 
+> Yeah, yeah, arch_align_stack() is kind of misnamed. It _used_ to do
+> what the name implies it does, which on x86 is to just give the
+> minimum ABI-specified 16-byte stack alignment.
+> But these days, what it really does is say "align the stack pointer,
+> but also shift it down by a random amount within 8kB so that the start
+> of the stack isn't some repeatable thing that an attacker can
+> trivially control with the right argv/envp size.."
+
+Got it, thanks I will work on improving the patch along these lines.
+
+> I don't think it works right anyway because we then PAGE_ALIGN() it,
+> but whatever.
+
+:)
+
+> But it looks like what you're doing means that now the size of the
+> stack will override that shift, and that means that now the
+> randomization is entirely undone. No?
+
+Yes, true. I will work on fixing it.
+
+> Plus you do it after we've also checked that we haven't grown the
+> stack down to below mmap_min_addr().
+> 
+> But maybe I misread that patch.
+> 
+> But I do feel like you figured out why the bug happened, now we're
+> just discussing whether the patch is the right thing to do.
+
+Yes.
+
+> Maybe saying "doing the pmd copies for the initial stack isn't
+> important, so let's just note this as a special case and get rid of
+> the WARN_ON()" might be an alternative solution.
+
+Personally, I feel it is better to keep the warning just so in the future we
+can detect any bugs.
+
+thanks,
+
+ - Joel
 
