@@ -2,102 +2,109 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62507C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9972EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384B32068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2AB2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ilan3iZo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IRrHmCR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgGMC0D (ORCPT
+        id S1728345AbgGMC0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        Sun, 12 Jul 2020 22:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGMC0D (ORCPT
+        with ESMTP id S1726261AbgGMC0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:26:03 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D43C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 19:26:03 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id w2so5368091pgg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 19:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=K7MYaIX+wT71EJvLWgWA8JA0RGTIZ3wbXsQ2GKe7NSw=;
-        b=Ilan3iZoZmROtJNhs74jfnx1uUwFqbZ9FIHrlgLhPBuhNvJADRLACQ425GmwK9LEcY
-         DcWI5SKoLXnQOD4CjGCI6hAKadCYNKS510LmQrbkCSXfEXtyroqyLHBiMKi/sxCNTCaB
-         bpKBPKqdu2lLKm5eksty5ILO++cGoBgBFMh/hQqvwUHFj6H2+w+uAP/CEUAm0bahI50Q
-         BJCGYPWWjEV5upJ2XSKwxEElZRX+AHjCeM5kFqWUz09YuKDFN66OErOt+ofqsgkbBz5D
-         /yG4MjdBBIhFIz01ksGbhx9/co1uEcSMS6zfHP/lMyFBwCZWgIYB0dfWTjthWH3ei7k7
-         dW9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K7MYaIX+wT71EJvLWgWA8JA0RGTIZ3wbXsQ2GKe7NSw=;
-        b=EuKOK/burWhGwhfILLTZoPNxAjgdKtDrH+SSldZl4Hzvgf5ieC6zNjOGY5ZtIEeVFS
-         QvRu+O8+jr5BtdCjL5uQJczwdG9eQq0j1954IZG78U/DOyIme4iQKtbgB/wJtQAWH4K+
-         r71+rOcOhUcGQBiDn1OWkNWGJ25opnR+k19otDsUualPmcTX3VEdBg+xH4wykq6urQc4
-         Zk/r6aHuHyV8a8rxMCbdqdw4vj4YeuvOwuMYcngg8gUiB/Lwh5r3CLEzWizzw1CsLwzQ
-         TOmi2mgv8S9w3OXQvpmPuzuxnfohuZacNeHgI+jVpLavqMJTSPqIGaXLm0uLv/oMRkzq
-         4BSg==
-X-Gm-Message-State: AOAM532VsKGBkSyfVNobJ+evwiY9FQFaAwnJM8A+sYVKjGGGSQZflxzs
-        t+P6jViM5lNXvJfYK4Fud8c=
-X-Google-Smtp-Source: ABdhPJz5WPfbo1qjfg+warbSMJgxBFnFz+PRzO15Kx7y7n3fX3y1SHO2kCDjq3imq/qFoNq0XMAbWg==
-X-Received: by 2002:a63:571b:: with SMTP id l27mr68389176pgb.417.1594607162752;
-        Sun, 12 Jul 2020 19:26:02 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id w1sm12007792pfq.53.2020.07.12.19.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 19:26:02 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Mon, 13 Jul 2020 11:25:58 +0900
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, torvalds@linux-foundation.org,
-        Jason@zx2c4.com
-Subject: Re: [PATCH v2] doc:kmsg: explictly state the return value in case of
- SEEK_CUR
-Message-ID: <20200713022558.GC491026@jagdpanzerIV.localdomain>
-References: <20200710174423.10480-1-bmeneg@redhat.com>
+        Sun, 12 Jul 2020 22:26:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EFDC061794;
+        Sun, 12 Jul 2020 19:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=1YPJ7BPo3bLI1LJBMxd8JhrL056FNIrP/ad+GWM9uL4=; b=IRrHmCR2zAJ5D6uTPftxgvDEvV
+        KpQSd8Lm4A03GT2xoKuxOpZNMDWXU3fBEIoayxYtsvWTNO3AmTopvDmBBRFRDpOp+8USueHu4HoeD
+        gnPv8FQNbG9zzKgiQWSmVWN9PLAGtNaDmMOgc9tDHpBEYeJTVXtYvOSk6yPrsXUi+B5IOQfUxOZ4E
+        T81fZ0yoMp+rkMCOl8613m1FBUBzdX2mDSQhyj69AmpIXXVXJiQUKTJ+XT+kz2MHNKNYTOgdZqpt+
+        gnYqOvAY24BTtelSNhnAsXuQ8wRA8nvpv3mdENJO99wAjwYTufQwrdgZjGIkap2Fx7Pov23f3YjE7
+        BpdI5hmQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juoAc-0005T4-QT; Mon, 13 Jul 2020 02:26:19 +0000
+Subject: Re: linux-next: Tree for Jul 10
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200710183318.7b808092@canb.auug.org.au>
+ <20200712155604.GA342822@smile.fi.intel.com>
+ <20200713080152.63ee1246@canb.auug.org.au>
+ <e519f1c2-9761-4866-4878-09cc3da23d1f@infradead.org>
+Message-ID: <31e99bdc-1243-3be7-74aa-59c01820ed8e@infradead.org>
+Date:   Sun, 12 Jul 2020 19:26:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710174423.10480-1-bmeneg@redhat.com>
+In-Reply-To: <e519f1c2-9761-4866-4878-09cc3da23d1f@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/10 14:44), Bruno Meneguele wrote:
-> The commit 625d3449788f ("Revert "kernel/printk: add kmsg SEEK_CUR
-> handling"") reverted a change done to the return value in case a SEEK_CUR
-> operation was performed for kmsg buffer based on the fact that different
-> userspace apps were handling the new return value (-ESPIPE) in different
-> ways, breaking them.
+On 7/12/20 7:19 PM, Randy Dunlap wrote:
+> On 7/12/20 3:01 PM, Stephen Rothwell wrote:
+>> Hi Andy,
+>>
+>> On Sun, 12 Jul 2020 18:56:04 +0300 Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+>>>
+>>> On Fri, Jul 10, 2020 at 06:33:18PM +1000, Stephen Rothwell wrote:
+>>>>
+>>>> Changes since 20200709:
+>>>
+>>> I can't build it on Debian with Sparse enabled
+>>>
+>>> CC      init/main.o
+>>> init/main.c:760:20: warning: no previous prototype for ‘mem_encrypt_init’ [-Wmissing-prototypes]
+>>> 760 | void __init __weak mem_encrypt_init(void) { }
+>>> |                    ^~~~~~~~~~~~~~~~
+>>> CHECK   /home/andy/prj/linux-topic-uart/init/main.c
+>>> include/linux/compiler.h:309:16: error: typename in expression
+>>> include/linux/compiler.h:309:16: error: Expected ) in function call
+>>> include/linux/compiler.h:309:16: error: got :
+>>> ...
+>>> (All READ_ONCE() entries fail)
+>>>
+>>> Is it known issue?
+>>
+>> Not that I am aware of at the moment.  Does next-20200709 work?  Does
+>> Linus' tree work?  The only obvious thing I can think of is commit
 > 
-> At the same time -ESPIPE was the wrong decision because kmsg /does support/
-> seek() but doesn't follow the "normal" behavior userspace is used to.
-> Because of that and also considering the time -EINVAL has been used, it was
-> decided to keep this way to avoid more userspace breakage.
+> I'm hitting this same thing on 5.8-rc5. (x86_64)
 > 
-> This patch adds an official statement to the kmsg documentation pointing to
-> the current return value for SEEK_CUR, -EINVAL, thus userspace libraries
-> and apps can refer to it for a definitive guide on what to expect.
 > 
-> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+>> 6ec4476ac825 ("Raise gcc version requirement to 4.9")
+>>
+>> The commmit message says:
+>>
+>>     Using _Generic also means that you will need to have a very recent
+>>     version of 'sparse', but thats easy to build yourself, and much less of
+>>     a hassle than some old gcc version can be.
 
-Looks good to me,
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+OK, no problems, newer sparse fixes it.
 
-	-ss
+-- 
+~Randy
+
