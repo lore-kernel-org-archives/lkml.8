@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0102075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FE32075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Khv7GQHx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UvmIywVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgGMOne (ORCPT
+        id S1730092AbgGMOnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:43:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53493 "EHLO
+        Mon, 13 Jul 2020 10:43:37 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53522 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729689AbgGMOnd (ORCPT
+        with ESMTP id S1729649AbgGMOne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:43:33 -0400
+        Mon, 13 Jul 2020 10:43:34 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200713144332euoutp02f0e1c0150f87a9745b1e4c14fe416ccf~hVwLOBsjz2797427974euoutp02H
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:43:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200713144332euoutp02f0e1c0150f87a9745b1e4c14fe416ccf~hVwLOBsjz2797427974euoutp02H
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200713144333euoutp0223399dfc4bba98a429aee41abd15f7d6~hVwMY5-A42797527975euoutp02B
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:43:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200713144333euoutp0223399dfc4bba98a429aee41abd15f7d6~hVwMY5-A42797527975euoutp02B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594651412;
-        bh=l2lxSqoqhRbb4X9ynL2i6rkNRlCJlfLxzfEp8Lhp6UE=;
+        s=mail20170921; t=1594651413;
+        bh=ldZknbF9TPUSQxdpO3ouuzcL7PaF+JDqisngEE3mM30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Khv7GQHxGcl1oNaYb80IKm+Iq2S9vWfliopuPMKNnkTCdyxa+MMzxIeUrv0Hz4O23
-         ohUn88mudgrw1inCZ6nY5iot35nZOtPZo6YnYkxRcKmbn2GWOInb6egNNAqhbLQz/S
-         JL3DaRKTvZ2XIYR9gTPqaT+NEDvZ9uCUGbvTR+lU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200713144332eucas1p10094fde0732d18b7b6d4037c81020c76~hVwKyo-Hy1041510415eucas1p1v;
-        Mon, 13 Jul 2020 14:43:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id F4.22.05997.4137C0F5; Mon, 13
-        Jul 2020 15:43:32 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200713144331eucas1p24107a30783dacc92887b80cf082be9fb~hVwKWZbq20910209102eucas1p2k;
-        Mon, 13 Jul 2020 14:43:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200713144331eusmtrp21fa81494749fc5dfc3a964686afaec07~hVwKVj3bD1147711477eusmtrp2w;
-        Mon, 13 Jul 2020 14:43:31 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-11-5f0c7314b2b1
+        b=UvmIywVy7PH0VtWUpGVHrrsKV0jPUT2V7MtpgEDbsSwYg/m4EzvQtWNmUx1/7z20U
+         A3rCcHoacTOJWZJhMzU5YZEVcAnwrDK+/GEXKfRoP6IKdu0gsdD/+XuHK/GCaLfgSd
+         8iscvrxs39vD0uNs12ExMvq1jgcFMhcCQKcwPRps=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200713144333eucas1p2554697096c3ff0d9fa576d0bf15c4fb6~hVwMAqfWU0720407204eucas1p2v;
+        Mon, 13 Jul 2020 14:43:33 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1D.E5.06456.5137C0F5; Mon, 13
+        Jul 2020 15:43:33 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200713144333eucas1p127c600faa8a7416d89f0d84681c73ab9~hVwLrh6O21041510415eucas1p1x;
+        Mon, 13 Jul 2020 14:43:33 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200713144333eusmtrp1ebd47862f33d49c25a5e985aa2fd0160~hVwLqzCMj0993509935eusmtrp1Z;
+        Mon, 13 Jul 2020 14:43:33 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-b7-5f0c7315974e
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 05.2A.06314.3137C0F5; Mon, 13
-        Jul 2020 15:43:31 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 45.5A.06017.4137C0F5; Mon, 13
+        Jul 2020 15:43:32 +0100 (BST)
 Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200713144330eusmtip1ebe4f1fbd587ac6c7a4eaf92371da882~hVwJpKMJY1706817068eusmtip1Y;
-        Mon, 13 Jul 2020 14:43:30 +0000 (GMT)
+        20200713144332eusmtip17eed23fae87263527c6711746e549ad4~hVwK82OmS2060420604eusmtip1I;
+        Mon, 13 Jul 2020 14:43:32 +0000 (GMT)
 From:   Andrzej Hajda <a.hajda@samsung.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
@@ -72,142 +72,106 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-Subject: [PATCH v9 1/4] driver core: add device probe log helper
-Date:   Mon, 13 Jul 2020 16:43:21 +0200
-Message-Id: <20200713144324.23654-2-a.hajda@samsung.com>
+Subject: [PATCH v9 3/4] drm/bridge/sii8620: fix resource acquisition error
+ handling
+Date:   Mon, 13 Jul 2020 16:43:23 +0200
+Message-Id: <20200713144324.23654-4-a.hajda@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200713144324.23654-1-a.hajda@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHObuP3S0nt7nypJU0CHqQlgadHtSKgksQFmFFUbryqpmbsesj
-        CzKs5iPzkWm6Hmqp6axm85UTH6zwkW2kpqj5yJLALLTUrGGZ8yr99/19f5/f63AoTGohXKiz
-        6jBWo1aGyEkxXtHw27pBxjn4bjQVEajnmZVAwykvAXqeaSBQ+uAQiWYqUjH0bnKURFcfGUjU
-        MTWMoeavHTiKT80TIuOnTgK1m+6RyJxeA9DTV31CZE46ge5PpGMKmmnvbMWY0a7rQqbmZw7O
-        VOn6hMzduCyCMerjSaYppU3A1N1/ImQGbjQKmNK8aCapTA+Y+ptpODNuXHlQcly8w58NORvB
-        ajx2+omD6gxxgvOmpRemc2rxK6BamgAoCtKbYfddRQIQU1K6EEBr0hjggwkAc43fST4YBzDf
-        nI8nANFcRVvbZ4JPPAbQ+GaBmi0Zqikn7BRJr4V/SrtJu5bRXjDZohPaIYy24bAjVjsHOdEK
-        WBL7bg7C6dUwdaoYs2sJjeAHs25+nBssLqnH7MuK6K0wO+movQ+kvwnhg+qPQp7ZC9umWwW8
-        doJfGsvm/eVwpip73o+GA4XXML44DsDykiqMT2yHvVYbaR+AzW5tMHnw9m4Y2zyC84/kCLu+
-        Lbbb2Ky8VXEH420JjNNKeXoVHLCUzzd0hvlvJ0leM7DgdebcJVI6EcCGmegU4Kb7PysHAD1w
-        ZsM5VSDLearZSHdOqeLC1YHuZ0JVRjD7yVr+Nk68AKbp02ZAU0DuIIHeDr5SQhnBRanMAFKY
-        XCbZY2k5JZX4K6MusppQX014CMuZgSuFy50lXg+HT0rpQGUYe45lz7OahayAErlcAWV0kDXK
-        p7lojWjwlM8vKvdIb2Vk0VP5kgBlQViAQi/rF/uNypYomoqD98bLI/AYT1I7Ol4Ymda/pceW
-        MWRxFSdmOdUeOlD6I/Cky3vH0NsDhhWyzku9+WmX91cme7U4TTzxWO+9zFubmbGo6rZfj9g0
-        Fvw9Zuywbdsun33o2OUROc4FKTetwzSc8h9uQOSkYAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7rCxTzxBvNXq1jcWneO1eLlhMOM
-        FhtnrGe1mPrwCZvF/20TmS2ufH3PZtG8eD2bxdXvL5ktTr65ymLROXEJu8Wmx9dYLS7vmsNm
-        cWjqXkaLtUfuslsc6ou2mPtlKrODgMflaxeZPd7faGX32PttAYvHzll32T1md8xk9di0qpPN
-        48SES0we++euYfe4332cyWPzknqPvi2rGD0O9E5m8fi8SS6AN0rPpii/tCRVISO/uMRWKdrQ
-        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY//6DqaCXWIVfxbsY2lg3C3UxcjJ
-        ISFgInHp0jPWLkYuDiGBpYwSHw5dZYNIiEvsnv+WGcIWlvhzrYsNougTo8Tsk2vYQRJsApoS
-        fzffBGsQETCW6D87ix2kiFmgjVVi7vknYEXCAg4SG9qvgBWxCKhKTPy+Gmwqr4CFxINDs1gg
-        NshLrN5wACjOwcEpYCkxvy8cxBQCKjnx1nMCI98CRoZVjCKppcW56bnFhnrFibnFpXnpesn5
-        uZsYgZG17djPzTsYL20MPsQowMGoxMMr4c8TL8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrU
-        ovz4otKc1OJDjKZAJ01klhJNzgdGfV5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTU
-        gtQimD4mDk6pBsbMW6GftLkONjmathxTS4ual39tg77Gnefl9ZX7bDiZbvifebZ45f/So54J
-        K+6uS/l4KOLq34WCRcvKZ31IXmCWXbVPrtdB77vH7Hiri95ua492tO4WbFhw9ZTtdxnHhJV9
-        Bz8eX7ZoBtvvs9M6Pn5NC2ta+i2pLYvV4lvj3Td/vxw9PV1ovr2iEktxRqKhFnNRcSIAvpDW
-        98ICAAA=
-X-CMS-MailID: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSaUhUURjtzlsdnLxNll+2SANRRmlRP277QtHDgjYkyMpe+TJJJ5uXLQYW
+        raOVaSbV2IYaU6Omjgs5JNlUOjU45tZmJqE/mhZs07Aom9fT+ne+853vnMPl8pTewwTzccbd
+        kskoxhtYLV1Z29cwdYTsHz3tZQuQl7c8DPFm3Eek9EIxQ7LfdLGkvzKTIi093Sw5klfMktbv
+        Xoo8+tBKk9TMfI7YO58ypNlxiSXO7GpEih60c8SZHkUuf8umFmKh+WkjJXQ/P8YJ1b3XaKHK
+        0s4JOeaLjGC3pbKCK6NJI9y9XMgJHSfrNEJZ/kEhvdyGhJrTWbTw1T5ulW69dm6MFB+3RzKF
+        z9+s3W6rrdUk5gXss5TWaQ4hl38a8uMBzwRP1REqDWl5Pb6BwPrQrVGHbwhuNpQy6vAVQX5a
+        IRo8MT+zDaisCNq8VubfSU35F1pRsTgUfpW9YBUciGfAmXoLp4go/IOG1hPHGWUxHEeC1dX+
+        15bGE6C72UEpWIcJfGjtp9W4ECgoqfHxPO+HZ8HV9HWKD2AvB1lFLQOVlkClw8qoeDi8qyvn
+        VDwG3FmnBnwOQseNo5R6bEZQUVJFqYs58Mrzg1UCKF/rYke4Si+CipxuWqEBD4XnH4cpNOWD
+        ZyvPUyqtA/NxvaoeDx31FQOGQXD9SQ+rYgGOvmn720aPT/neNz8iA4VY/mddQ8iGgqQkOSFW
+        kqcbpb1hspggJxljw7buTLAj3y9z/677chv1NG1xIswjg78OVvpH6xlxj7w/wYmApwyBusX1
+        7k16XYy4P1ky7Yw2JcVLshON5mlDkG5GrnejHseKu6UdkpQomQa3Gt4v+BDa1/KiMyW1rK+v
+        I/OeJeLwz7s5s2etd73O/fzeOYVLdDdEFq6ZZ9G+DU8S8YKwmF+BDXErgj2xoWOru0aWu5Pj
+        bmsdnviVrx6nBCRfKcCjT09avnRp8AaHLav/gOtiY1uxoXDbOZhqh9Xm3qhPbOSW8DtGzdYh
+        E9f+LFgmuu+MGrfLQMvbxemTKZMs/gG5+MSHYQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xu7qixTzxBn94LW6tO8dq8XLCYUaL
+        jTPWs1pMffiEzeL/tonMFle+vmezaF68ns3i6veXzBYn31xlseicuITdYtPja6wWl3fNYbM4
+        NHUvo8XaI3fZLQ71RVvM/TKV2UHA4/K1i8we72+0snvs/baAxWPnrLvsHrM7ZrJ6bFrVyeZx
+        YsIlJo/9c9ewe9zvPs7ksXlJvUffllWMHgd6J7N4fN4kF8AbpWdTlF9akqqQkV9cYqsUbWhh
+        pGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJex6tgxpoLF/BWzNh5namA8wdPFyMkh
+        IWAi0XF9FVMXIxeHkMBSRonp95+wQyTEJXbPf8sMYQtL/LnWxQZR9IlRYvGXhSwgCTYBTYm/
+        m2+ygdgiAsYS/WdnsYMUMQu0sUrMPQ8xSVggWGLXkgZGEJtFQFXi/eVdYFN5BSwk3lz9zwKx
+        QV5i9YYDQHEODk4BS4n5feEgphBQyYm3nhMY+RYwMqxiFEktLc5Nzy020itOzC0uzUvXS87P
+        3cQIjKttx35u2cHY9S74EKMAB6MSD6+EP0+8EGtiWXFl7iFGCQ5mJRFep7On44R4UxIrq1KL
+        8uOLSnNSiw8xmgKdNJFZSjQ5HxjzeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
+        Uotg+pg4OKUaGNeUqyzks5wz6/3K+z2WfZ1Vl7okLtjlOgcxzbZwShF40OF72+OJU+G1ugWy
+        Mzst27793ij1aGWUZaBLIQtH+Qw5Vq34e5O/1vgwyv283eoy0fXd7g7+0GMrohnm/C3eP3fa
+        0kDp9DNW/EU7599blSmguFpss4T+3Nr3LZUNkn7vPLdZnxA/rsRSnJFoqMVcVJwIAJkG1LzB
+        AgAA
+X-CMS-MailID: 20200713144333eucas1p127c600faa8a7416d89f0d84681c73ab9
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+X-RootMTR: 20200713144333eucas1p127c600faa8a7416d89f0d84681c73ab9
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+X-CMS-RootMailID: 20200713144333eucas1p127c600faa8a7416d89f0d84681c73ab9
 References: <20200713144324.23654-1-a.hajda@samsung.com>
-        <CGME20200713144331eucas1p24107a30783dacc92887b80cf082be9fb@eucas1p2.samsung.com>
+        <CGME20200713144333eucas1p127c600faa8a7416d89f0d84681c73ab9@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During probe every time driver gets resource it should usually check for
-error printk some message if it is not -EPROBE_DEFER and return the error.
-This pattern is simple but requires adding few lines after any resource
-acquisition code, as a result it is often omitted or implemented only
-partially.
-dev_err_probe helps to replace such code sequences with simple call,
-so code:
-	if (err != -EPROBE_DEFER)
-		dev_err(dev, ...);
-	return err;
-becomes:
-	return dev_err_probe(dev, err, ...);
+In case of error during resource acquisition driver should print error
+message only in case it is not deferred probe, using dev_err_probe helper
+solves the issue. Moreover it records defer probe reason for debugging.
 
 Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/base/core.c    | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h |  3 +++
- 2 files changed, 45 insertions(+)
+ drivers/gpu/drm/bridge/sil-sii8620.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 67d39a90b45c..3a827c82933f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3953,6 +3953,48 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index 92acd336aa89..389c1f029774 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -2299,10 +2299,9 @@ static int sii8620_probe(struct i2c_client *client,
+ 	INIT_LIST_HEAD(&ctx->mt_queue);
  
- #endif
+ 	ctx->clk_xtal = devm_clk_get(dev, "xtal");
+-	if (IS_ERR(ctx->clk_xtal)) {
+-		dev_err(dev, "failed to get xtal clock from DT\n");
+-		return PTR_ERR(ctx->clk_xtal);
+-	}
++	if (IS_ERR(ctx->clk_xtal))
++		return dev_err_probe(dev, PTR_ERR(ctx->clk_xtal),
++				     "failed to get xtal clock from DT\n");
  
-+/**
-+ * dev_err_probe - probe error check and log helper
-+ * @dev: the pointer to the struct device
-+ * @err: error value to test
-+ * @fmt: printf-style format string
-+ * @...: arguments as specified in the format string
-+ *
-+ * This helper implements common pattern present in probe functions for error
-+ * checking: print debug or error message depending if the error value is
-+ * -EPROBE_DEFER and propagate error upwards.
-+ * It replaces code sequence:
-+ * 	if (err != -EPROBE_DEFER)
-+ * 		dev_err(dev, ...);
-+ * 	else
-+ * 		dev_dbg(dev, ...);
-+ * 	return err;
-+ * with
-+ * 	return dev_err_probe(dev, err, ...);
-+ *
-+ * Returns @err.
-+ *
-+ */
-+int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
-+{
-+	struct va_format vaf;
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	if (err != -EPROBE_DEFER)
-+		dev_err(dev, "error %d: %pV", err, &vaf);
-+	else
-+		dev_dbg(dev, "error %d: %pV", err, &vaf);
-+
-+	va_end(args);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(dev_err_probe);
-+
- static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
- {
- 	return fwnode && !IS_ERR(fwnode->secondary);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 15460a5ac024..6b2272ae9af8 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -964,6 +964,9 @@ void device_link_remove(void *consumer, struct device *supplier);
- void device_links_supplier_sync_state_pause(void);
- void device_links_supplier_sync_state_resume(void);
+ 	if (!client->irq) {
+ 		dev_err(dev, "no irq provided\n");
+@@ -2313,16 +2312,14 @@ static int sii8620_probe(struct i2c_client *client,
+ 					sii8620_irq_thread,
+ 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+ 					"sii8620", ctx);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to install IRQ handler\n");
+-		return ret;
+-	}
++	if (ret < 0)
++		return dev_err_probe(dev, ret,
++				     "failed to install IRQ handler\n");
  
-+extern __printf(3, 4)
-+int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-+
- /* Create alias, so I can be autoloaded. */
- #define MODULE_ALIAS_CHARDEV(major,minor) \
- 	MODULE_ALIAS("char-major-" __stringify(major) "-" __stringify(minor))
+ 	ctx->gpio_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ctx->gpio_reset)) {
+-		dev_err(dev, "failed to get reset gpio from DT\n");
+-		return PTR_ERR(ctx->gpio_reset);
+-	}
++	if (IS_ERR(ctx->gpio_reset))
++		return dev_err_probe(dev, PTR_ERR(ctx->gpio_reset),
++				     "failed to get reset gpio from DT\n");
+ 
+ 	ctx->supplies[0].supply = "cvcc10";
+ 	ctx->supplies[1].supply = "iovcc18";
 -- 
 2.17.1
 
