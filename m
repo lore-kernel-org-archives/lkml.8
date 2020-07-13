@@ -2,108 +2,145 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2728AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08389205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639772075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Flus2iJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgGMOVz (ORCPT
+        id S1729983AbgGMOXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:21:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3894 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729659AbgGMOVz (ORCPT
+        Mon, 13 Jul 2020 10:23:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38114 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMOXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:21:55 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DE4MNw099007;
-        Mon, 13 Jul 2020 10:21:44 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3276afrvpt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 10:21:44 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DEFCSp003644;
-        Mon, 13 Jul 2020 14:21:43 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 3275288j40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 14:21:43 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DELgI443975114
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 14:21:42 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7393F7805E;
-        Mon, 13 Jul 2020 14:21:42 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B90A78063;
-        Mon, 13 Jul 2020 14:21:42 +0000 (GMT)
-Received: from [9.163.41.130] (unknown [9.163.41.130])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jul 2020 14:21:41 +0000 (GMT)
-Subject: Re: [PATCH] fsi: fsi-occ: fix return value check in occ_probe()
-To:     Xu Wang <vulab@iscas.ac.cn>, jk@ozlabs.org, joel@jms.id.au,
-        alistair@popple.id.au, linux-fsi@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200713033313.21487-1-vulab@iscas.ac.cn>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <f2a70c79-15c4-339a-92c5-173d9303dc30@linux.ibm.com>
-Date:   Mon, 13 Jul 2020 09:21:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 13 Jul 2020 10:23:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DEGrGb130500;
+        Mon, 13 Jul 2020 14:23:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=YEAfbMaiJQNUK2CZcdliAlyWaSUy6CyK7Y8B/WS5gRc=;
+ b=Flus2iJ+y1ks2p8psdjbUGD8p6yoT2UfipH8SnPyUruCadbYc/yF0kkwM+t41u7COU22
+ rJQ6Ddun3CVRPMwqz5tQQWZyPMEC3uJMghfmVpEgnEmNs4/lZQ6JkkNZkQGwyN71K2yv
+ UCUxYFGWWjtJsEq5ROiallikO1BGJtnf6BOSZ0JQYyfMYNlLBqbfckJu+nU6QIccvQjp
+ pmdeq6iHygDvsHm0B6BMkyjhtXoIVmE3FyUWSS5RKsu1l7ZSa5SGuycvTvDDWhUOiZ1I
+ FXQ2Xmzvv3EWO3WLrbBJsa/2gy6i1LgXY+eXKmYgOTQ4UkP3NBIJQEbfV1+B9hvUF37C yw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32762n76ys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 14:23:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DEIZED145532;
+        Mon, 13 Jul 2020 14:23:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 327qbvngfa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 14:23:13 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DENCne013570;
+        Mon, 13 Jul 2020 14:23:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jul 2020 07:23:12 -0700
+Date:   Mon, 13 Jul 2020 17:23:05 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ivan Safonov <insafonov@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Soumyajit Deb <debsoumyajit100@gmail.com>
+Subject: Re: [PATCH] staging: r8188eu: remove unused members of struct
+ xmit_buf
+Message-ID: <20200713142305.GV2549@kadam>
+References: <20200712123821.553420-1-insafonov@gmail.com>
+ <20200713131607.GR2549@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200713033313.21487-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_11:2020-07-13,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1011 lowpriorityscore=0 suspectscore=21 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713131607.GR2549@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=977 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 mlxlogscore=991 lowpriorityscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 04:16:07PM +0300, Dan Carpenter wrote:
+> On Sun, Jul 12, 2020 at 03:38:21PM +0300, Ivan Safonov wrote:
+> > Remove unused members of struct xmit_buf: alloc_sz, ff_hwaddr,
+> > dma_transfer_addr, bpending and last.
+> > 
+> > Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+> > ---
+> >  drivers/staging/rtl8188eu/include/rtw_xmit.h  | 5 -----
+> >  drivers/staging/rtl8188eu/os_dep/xmit_linux.c | 1 -
+> >  2 files changed, 6 deletions(-)
+> > 
+> > diff --git a/drivers/staging/rtl8188eu/include/rtw_xmit.h b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+> > index 12d16e98176a..3c03987c81a1 100644
+> > --- a/drivers/staging/rtl8188eu/include/rtw_xmit.h
+> > +++ b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+> > @@ -193,14 +193,9 @@ struct xmit_buf {
+> >  	void *priv_data;
+> >  	u16 ext_tag; /*  0: Normal xmitbuf, 1: extension xmitbuf. */
+> >  	u16 flags;
+> > -	u32 alloc_sz;
+> >  	u32  len;
+> >  	struct submit_ctx *sctx;
+> > -	u32	ff_hwaddr;
+> >  	struct urb *pxmit_urb[8];
+> > -	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
+> > -	u8 bpending[8];
+> > -	int last[8];
+> >  };
+> >  
+> >  struct xmit_frame {
+> > diff --git a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
+> > index 017e1d628461..61ced1160951 100644
+> > --- a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
+> > +++ b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
+> > @@ -24,7 +24,6 @@ int rtw_os_xmit_resource_alloc(struct adapter *padapter,
+> >  		return _FAIL;
+> >  
+> >  	pxmitbuf->pbuf = PTR_ALIGN(pxmitbuf->pallocated_buf, XMITBUF_ALIGN_SZ);
+> 
+> Not related to this patch but kmalloc always returns data which is at
+> least ARCH_KMALLOC_MINALIGN aligned which is never less than
+> XMITBUF_ALIGN_SZ (4) so this is a no-op.
 
-On 7/12/20 10:33 PM, Xu Wang wrote:
-> In case of error, the function platform_device_register_full()
-> returns ERR_PTR() and never returns NULL. The NULL test in the
-> return value check should be replaced with IS_ERR().
+The alignment in the driver is pretty crazy because it's all unnecessary
+and so complicated.  Every allocation is 4 bytes extra so we can align
+it later.
 
+Also every buffer is called "pbuf" which stands for pointer to buffer.
+"pallocated_buf" is not really useful either.
 
-Thanks,
+I tried to look at this to see if we could change the alignment, and
+it's complicated because of the naming and the alignment.
 
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
+regards,
+dan carpenter
 
-
->
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->   drivers/fsi/fsi-occ.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-> index 7da9c81759ac..9eeb856c8905 100644
-> --- a/drivers/fsi/fsi-occ.c
-> +++ b/drivers/fsi/fsi-occ.c
-> @@ -555,7 +555,7 @@ static int occ_probe(struct platform_device *pdev)
->   
->   	hwmon_dev_info.id = occ->idx;
->   	hwmon_dev = platform_device_register_full(&hwmon_dev_info);
-> -	if (!hwmon_dev)
-> +	if (IS_ERR(hwmon_dev))
->   		dev_warn(dev, "failed to create hwmon device\n");
->   
->   	return 0;
