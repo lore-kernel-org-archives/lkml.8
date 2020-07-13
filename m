@@ -2,135 +2,101 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCA1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03908C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B34A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P6ue5J2Q"
+	by mail.kernel.org (Postfix) with ESMTP id D928D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgGMRJn (ORCPT
+        id S1729969AbgGMROk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMRJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:09:43 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1818C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:09:42 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b4so12899090qkn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AjfD32HKP9GelxZOkg41v9V6Gzjw1JRj8RlOK03pams=;
-        b=P6ue5J2QVyGR013c2UC25Q9bEjmGLQLJlmEuA1j5UoaACPlwGsRU5oPQydR4VgHRAQ
-         L1LLo1DsbWsmVVz1JJH+XrYRnbQxNVDp0Tbzha5dqUAB1U3rVrK0ZuloeI02R3+Ohmck
-         nIhcHDRdSQZbeXNk1VGmdTIpJpVNzm4aXapDBvkADLvm+N6wGsC0Vuj5SRCjoLtTpbM6
-         3YNMYd60otly0jlZeIyCvHepWSBprUXUrUnc1mbSIi5+zMPYtY/xp7pglqsia5XJhfiB
-         F8DgDcnW27IcL2XuD2u0H8FjQS8bqlDG91XFUgIbJjfpl7taOGEyt92W8DFNPIX8mT3F
-         fvkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AjfD32HKP9GelxZOkg41v9V6Gzjw1JRj8RlOK03pams=;
-        b=ruAzktlnWZWXtow0fVzYDhFWevflxRqMPcaP+wcwaRXemoO/5O50XE5ZCmKrkDrTpv
-         rbZU+osisVRXOhQEn3utr/PIQvfGCxJh2XQ83rr9sXoLmG9a5uZvVCxOOx4xTdSsvhoY
-         sPIVQ0hUvfkBRmscz8bOQfDWyh43Q7i3hF+3nN5tUrru3hsau4fCIyuQRX5ecYmy8Jjj
-         V2ohcICVc3xHj+5lAPdr7mVnddTHj+JFC2XBxCa4xRd9D44LG4IEpIZzcY7EGUQGcR9r
-         ttk5SBV0WzjwQw4pvKfn9/GZJMfkgMMXwjuSXSJSOHw7gfy3Wq/JuGWYOlbt4wP8PXPB
-         Zd4Q==
-X-Gm-Message-State: AOAM531mYgr4ZpxR7cd1Bd2wGfI0L2cHDaxm+ujSdjRxh2Er62clKGZQ
-        MKagP1EJQGTGIE6lW+iZwMFt/g==
-X-Google-Smtp-Source: ABdhPJzvbBBh0WGnYFjQ6KDKcJ34oSp591S6VrK9/KQzdFPP1pwlEgvCtv/HHrr6bK2VB24/hylh7Q==
-X-Received: by 2002:a37:5bc4:: with SMTP id p187mr661575qkb.166.1594660182115;
-        Mon, 13 Jul 2020 10:09:42 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id i35sm19119142qtd.96.2020.07.13.10.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 10:09:41 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jv1xV-009lWJ-4g; Mon, 13 Jul 2020 14:09:41 -0300
-Date:   Mon, 13 Jul 2020 14:09:41 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     skhan@linuxfoundation.org, linux-rdma@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
+        Mon, 13 Jul 2020 13:14:40 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:44972 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729700AbgGMROk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 13:14:40 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 1D2A3BC053;
+        Mon, 13 Jul 2020 17:14:35 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        davem@davemloft.net, kuba@kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/14 v3] IB/hfi1: Check the return value of
- pcie_capability_read_*()
-Message-ID: <20200713170941.GB25301@ziepe.ca>
-References: <20200713175529.29715-1-refactormyself@gmail.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] net: ethernet: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 19:14:29 +0200
+Message-Id: <20200713171429.36369-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713175529.29715-1-refactormyself@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:55:25PM +0200, Saheed O. Bolarinwa wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> On failure pcie_capability_read_dword() sets it's last parameter,
-> val to 0. In this case dn and up will be 0, so aspm_hw_l1_supported()
-> will return false.
-> However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x). So with
-> dn and up being 0x02, a true value is return when the read has actually
-> failed.
-> 
-> This bug can be avoided if the return value of pcie_capability_read_dword
-> is checked to confirm success. The behaviour of the function remains
-> intact.
-> 
-> Check the return value of pcie_capability_read_dword() to ensure success.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->  drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/aspm.c b/drivers/infiniband/hw/hfi1/aspm.c
-> index a3c53be4072c..80d0b3edd983 100644
-> +++ b/drivers/infiniband/hw/hfi1/aspm.c
-> @@ -24,6 +24,7 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
->  {
->  	struct pci_dev *parent = dd->pcidev->bus->self;
->  	u32 up, dn;
-> +	int ret_up, ret_dn;
->  
->  	/*
->  	 * If the driver does not have access to the upstream component,
-> @@ -32,14 +33,14 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
->  	if (!parent)
->  		return false;
->  
-> -	pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
-> +	ret_dn = pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
->  	dn = ASPM_L1_SUPPORTED(dn);
->  
-> -	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
-> +	ret_up = pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
->  	up = ASPM_L1_SUPPORTED(up);
->  
->  	/* ASPM works on A-step but is reported as not supported */
-> -	return (!!dn || is_ax(dd)) && !!up;
-> +	return !!ret_dn && !!ret_up && (!!dn || is_ax(dd)) && !!up;
->  }
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-what is all the !! for? boolean contexts already coerce to boolean
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Jason
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/net/ethernet/cortina/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cortina/Kconfig b/drivers/net/ethernet/cortina/Kconfig
+index ac8cb5744a87..aaf9e294b70b 100644
+--- a/drivers/net/ethernet/cortina/Kconfig
++++ b/drivers/net/ethernet/cortina/Kconfig
+@@ -7,7 +7,7 @@ config NET_VENDOR_CORTINA
+ 	help
+ 	  If you have a network (Ethernet) card belonging to this class, say Y
+ 	  and read the Ethernet-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ if NET_VENDOR_CORTINA
+ 
+-- 
+2.27.0
+
