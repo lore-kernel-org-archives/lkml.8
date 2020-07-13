@@ -2,61 +2,75 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEB8920702
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594627099;
-	bh=h5unvicdcZvk0xDMtbojzQI3KvAdcUSE1ppDWDwg9F8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qICwwy/NTyhyja9MeQKYZf5ZFns0IPIlvVbadCmhZR4S46POjAdIJrG7M5OV7k40B
-	 ZiQcS3VoWkfh4jXy7hc3nOuHqE8D8J0Duha4t9Fv+uepcH29VEAw09N4SRu9gvGHcZ
-	 1XwPfbnkBHlLz34cApnVV3CQ7beuq1Hwb+PwLFUA=
+	by mail.kernel.org (Postfix) with ESMTP id 1E88220702
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u90mu1uE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgGMH6S (ORCPT
+        id S1729003AbgGMIAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:58:18 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:30557 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgGMH6S (ORCPT
+        Mon, 13 Jul 2020 04:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgGMIAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:58:18 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 06D7uYDf027924;
-        Mon, 13 Jul 2020 16:56:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 06D7uYDf027924
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1594626994;
-        bh=cXlkKx6N8NEBTpVkCbg0vvb9KuVX9FkcLVkdaw2RUnI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VxbmIPJHOtRVfhwgqKN6w6NJ8TXawOqUOTra0G1P/+X/zrUHkBDBAWuQodWCYtdp7
-         SXSoEyOtVuaU/77su2m2eiQiNAJBgPHZv+JPW1werHuEJHjqbnNbGIwxr/qrYfJJ0K
-         5c5DPpftzYdxU9Zqbg6udkSrNHvfCDm0MP7M3s65ilclRV8phPAmjRvISI8lA6ydCP
-         czfYb1AIzxUGZ/sLcrmkymN3H5OXwFxIdt7Fj+7G4NK5Y+xTfHBdn4QwVihyf1BmGU
-         XHcPPEBLRO5GcqZwX0D9ERw1oERgaRViXWVkeTZWJyQ7IW5CwN09MxU1bDdYv4FpBC
-         uGE9TMfj1FaGQ==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] powerpc/boot: add DTB to 'targets'
-Date:   Mon, 13 Jul 2020 16:56:28 +0900
-Message-Id: <20200713075629.5948-1-masahiroy@kernel.org>
+        Mon, 13 Jul 2020 04:00:10 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A1AC08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:10 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z2so14766649wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+HM3pvSE2JuDZ5Kc5EJ0B/qyBhrrEM7iialxYUUhb/4=;
+        b=u90mu1uENJfv42WQrr4sPLX09MrjDa6vroB7o+MEKc0HVsOVjzzYhFRBmi4LomvAHJ
+         19XJjQxmv/FGSKG4HiGnLg93xo/JlRpijQz94rqfPzTApnPD7Em6lAZKb93CaoNhvwKh
+         vXyE70gCKUaQhtl0J7ye9p7SY6Bx1VsBj9pXMxkL+SPqPlvszcneSFaxPbMcX6fPTLb8
+         4TM58j9gsBFH7mKR6xZewVmGNIeWsjiJdcpd5CBCkNn7+1PMIUu4pqLqSKsYqC2PpNln
+         WVnPwiXP5f0o6E/sLPnCbFPKW4YulHfMnddz/bXDuTcKGhH1zbpqKVeF8cEcq+EulVwm
+         zUVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+HM3pvSE2JuDZ5Kc5EJ0B/qyBhrrEM7iialxYUUhb/4=;
+        b=FkK3mIwlN1/cfqngZhhc67ML6fKp41cUe+36ENjraBDFwU7vcSNAz/Eeh2kkvalVYe
+         bPvqpr6IWql2GtaJAWRhFFiSkLaCsuxNRrHXmMtPlCbYtPaITkkHLJi5Dc7y/ubrz1FL
+         3tCiLMOp9Y+dilzcYJboIYCY1HPu+pxZGCxuAYFNEI6i3+vE1p0w01pAouFfVEI1hU8p
+         AHwrmiKdVfbUua1kcsNxsCQseJvXcJHYXBoHajRfaNlQtYTR6cFWgHZXDqN7EtRKb3eF
+         wS0V7Zrw75Ikb7JGMjol+szsOirweTn1+f9xnczmtEIFZ6FLlmjNGYtooys2IkCgjYjc
+         pbsg==
+X-Gm-Message-State: AOAM530mWTnHk0910CrNSnfTykCODomiFEihF06IpX2Cs4FagkBSnW9R
+        UWmB1cZxpVTWS0HOBWXtjKYu/LRNQ9s=
+X-Google-Smtp-Source: ABdhPJwq1WiUMeXrjichLdO4rSnqr9PqPnI9d1e3unEYlTcbaL8MMSizXuzJG4lfZkLLNgl4n3WlhQ==
+X-Received: by 2002:a5d:4a01:: with SMTP id m1mr77435792wrq.250.1594627208654;
+        Mon, 13 Jul 2020 01:00:08 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.6])
+        by smtp.gmail.com with ESMTPSA id 33sm24383549wri.16.2020.07.13.01.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 01:00:08 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH v2 01/24] scsi: aacraid: aachba: Repair two kerneldoc headers
+Date:   Mon, 13 Jul 2020 08:59:38 +0100
+Message-Id: <20200713080001.128044-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200713080001.128044-1-lee.jones@linaro.org>
+References: <20200713080001.128044-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,41 +78,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PowerPC always re-builds DTB even if nothing has been changed.
+The function headers for aac_get_config_status() and aac_get_containers()
+have suffered bitrot where the documentation hasn't kept up with the API.
 
-As for other architectures, arch/*/boot/dts/Makefile builds DTB by
-using the dtb-y syntax.
+Fixes the following W=1 kernel build warning(s):
 
-In contrast, arch/powerpc/boot/dts/(fsl/)Makefile does nothing unless
-CONFIG_OF_ALL_DTBS is defined. Instead, arch/powerpc/boot/Makefile
-builds DTB on demand. You need to add DTB to 'targets' explicitly
-so .*.cmd files are included.
+ drivers/scsi/aacraid/aachba.c:358: warning: Function parameter or member 'dev' not described in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:358: warning: Function parameter or member 'commit_flag' not described in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:358: warning: Excess function parameter 'common' description in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:450: warning: Function parameter or member 'dev' not described in 'aac_get_containers'
+ drivers/scsi/aacraid/aachba.c:450: warning: Excess function parameter 'common' description in 'aac_get_containers'
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
+ drivers/scsi/aacraid/aachba.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-I want to apply this to kbuild tree because this is needed
-to fix the build error caused by another kbuild patch:
-
-https://lkml.org/lkml/2020/7/7/134
-
-
- arch/powerpc/boot/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 63d7456b9518..8792323707fd 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -366,6 +366,8 @@ initrd-y := $(patsubst zImage%, zImage.initrd%, \
- 		$(patsubst treeImage%, treeImage.initrd%, $(image-y)))))
- initrd-y := $(filter-out $(image-y), $(initrd-y))
- targets	+= $(image-y) $(initrd-y)
-+targets += $(foreach x, dtbImage uImage cuImage simpleImage treeImage, \
-+		$(patsubst $(x).%, dts/%.dtb, $(filter $(x).%, $(image-y))))
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 7ae1e545a255c..769af4ca9ca97 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -350,7 +350,8 @@ static inline int aac_valid_context(struct scsi_cmnd *scsicmd,
  
- $(addprefix $(obj)/, $(initrd-y)): $(obj)/ramdisk.image.gz
+ /**
+  *	aac_get_config_status	-	check the adapter configuration
+- *	@common: adapter to query
++ *	@dev: aac driver data
++ *	@commit_flag: force sending CT_COMMIT_CONFIG
+  *
+  *	Query config status, and commit the configuration if needed.
+  */
+@@ -442,7 +443,7 @@ static void aac_expose_phy_device(struct scsi_cmnd *scsicmd)
  
+ /**
+  *	aac_get_containers	-	list containers
+- *	@common: adapter to probe
++ *	@dev: aac driver data
+  *
+  *	Make a list of all containers on this controller
+  */
 -- 
 2.25.1
 
