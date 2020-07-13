@@ -2,138 +2,140 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6511EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAD620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Shu73sr1"
+	by mail.kernel.org (Postfix) with ESMTP id A691C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgGMJ2t (ORCPT
+        id S1729475AbgGMJdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:28:49 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46201 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726991AbgGMJ2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:28:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594632527;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P+elYLgq2j5qUQKLLEoBv4e9Ba57OCTVDx1n9MkHwGc=;
-        b=Shu73sr1Ai4RiNhJTbavFg9vCUiYk4KN3C2ONoNz0PeeV4QgzMJZcui+02mLg8YhZyAaGR
-        7P1cuEEVcGspfE6i3EDUvtU9COxrBkP/fhOOFNxqBhY6MCau5V9tkZJ+XHHIl28SCtXW6+
-        E/bZLZomk4MtsiteAgyVL/+hixGbx9M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-FwrGlKyLNL-IwTkG1UdoMw-1; Mon, 13 Jul 2020 05:28:45 -0400
-X-MC-Unique: FwrGlKyLNL-IwTkG1UdoMw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 085F51080;
-        Mon, 13 Jul 2020 09:28:44 +0000 (UTC)
-Received: from localhost (ovpn-114-66.ams2.redhat.com [10.36.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3B3D74F44;
-        Mon, 13 Jul 2020 09:28:40 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 10:28:39 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     davem@davemloft.net, virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH] vsock/virtio: annotate 'the_virtio_vsock' RCU pointer
-Message-ID: <20200713092839.GD28639@stefanha-x1.localdomain>
-References: <20200710121243.120096-1-sgarzare@redhat.com>
+        Mon, 13 Jul 2020 05:33:37 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:55354 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgGMJdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:33:36 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id DDA56BC09E;
+        Mon, 13 Jul 2020 09:33:32 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     khc@pm.waw.pl, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] WAN: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 11:33:23 +0200
+Message-Id: <20200713093323.32841-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200710121243.120096-1-sgarzare@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YToU2i3Vx8H2dn7O"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---YToU2i3Vx8H2dn7O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-On Fri, Jul 10, 2020 at 02:12:43PM +0200, Stefano Garzarella wrote:
-> Commit 0deab087b16a ("vsock/virtio: use RCU to avoid use-after-free
-> on the_virtio_vsock") starts to use RCU to protect 'the_virtio_vsock'
-> pointer, but we forgot to annotate it.
->=20
-> This patch adds the annotation to fix the following sparse errors:
->=20
->     net/vmw_vsock/virtio_transport.c:73:17: error: incompatible types in =
-comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:73:17:    struct virtio_vsock [noder=
-ef] __rcu *
->     net/vmw_vsock/virtio_transport.c:73:17:    struct virtio_vsock *
->     net/vmw_vsock/virtio_transport.c:171:17: error: incompatible types in=
- comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:171:17:    struct virtio_vsock [node=
-ref] __rcu *
->     net/vmw_vsock/virtio_transport.c:171:17:    struct virtio_vsock *
->     net/vmw_vsock/virtio_transport.c:207:17: error: incompatible types in=
- comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:207:17:    struct virtio_vsock [node=
-ref] __rcu *
->     net/vmw_vsock/virtio_transport.c:207:17:    struct virtio_vsock *
->     net/vmw_vsock/virtio_transport.c:561:13: error: incompatible types in=
- comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:561:13:    struct virtio_vsock [node=
-ref] __rcu *
->     net/vmw_vsock/virtio_transport.c:561:13:    struct virtio_vsock *
->     net/vmw_vsock/virtio_transport.c:612:9: error: incompatible types in =
-comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:612:9:    struct virtio_vsock [noder=
-ef] __rcu *
->     net/vmw_vsock/virtio_transport.c:612:9:    struct virtio_vsock *
->     net/vmw_vsock/virtio_transport.c:631:9: error: incompatible types in =
-comparison expression (different address spaces):
->     net/vmw_vsock/virtio_transport.c:631:9:    struct virtio_vsock [noder=
-ef] __rcu *
->     net/vmw_vsock/virtio_transport.c:631:9:    struct virtio_vsock *
->=20
-> Fixes: 0deab087b16a ("vsock/virtio: use RCU to avoid use-after-free on th=
-e_virtio_vsock")
-> Reported-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/virtio_transport.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
---YToU2i3Vx8H2dn7O
-Content-Type: application/pgp-signature; name="signature.asc"
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
------BEGIN PGP SIGNATURE-----
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl8MKUcACgkQnKSrs4Gr
-c8iLnAf9E+pOReZB1uxaaxHt2z9HjKmxjs6nY1gK0E/aNHGD4C4ZQFpkMMYrgACn
-mTAJbmWJG/694IDC1i803aGbRKIq0VIyrezJtZWH7e8KTMG77U1YEDUr/T6yTAqf
-MYrz9ylRKbEHjzAmRQtnQGJ/YtshXFVHISJf6maySSPuHHInz+n/rUlXFxxmrOme
-x8cvGFTQ71RZUEWpIQxTL2vp4BEob1aIvrrFREvqgR9Xh4W1ZV641dP50QqjkJf9
-ebLfHIpb+n9ZrYNa/+WwEZvMhw8r+hWA3giUXEuSwkGZkoi9s5d6WfZYeU7Lcbr7
-0VLfCa/y5QsWouWZkkMZ7nLfxrMEsg==
-=2Mf5
------END PGP SIGNATURE-----
+ If you apply the patch, please let me know.
 
---YToU2i3Vx8H2dn7O--
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/net/wan/c101.c      | 2 +-
+ drivers/net/wan/n2.c        | 2 +-
+ drivers/net/wan/pc300too.c  | 2 +-
+ drivers/net/wan/pci200syn.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wan/c101.c b/drivers/net/wan/c101.c
+index cb57f9124ab1..c354a5143e99 100644
+--- a/drivers/net/wan/c101.c
++++ b/drivers/net/wan/c101.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) 2000-2003 Krzysztof Halasa <khc@pm.waw.pl>
+  *
+- * For information see <http://www.kernel.org/pub/linux/utils/net/hdlc/>
++ * For information see <https://www.kernel.org/pub/linux/utils/net/hdlc/>
+  *
+  * Sources of information:
+  *    Hitachi HD64570 SCA User's Manual
+diff --git a/drivers/net/wan/n2.c b/drivers/net/wan/n2.c
+index f9e7fc7e9978..5bf4463873b1 100644
+--- a/drivers/net/wan/n2.c
++++ b/drivers/net/wan/n2.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) 1998-2003 Krzysztof Halasa <khc@pm.waw.pl>
+  *
+- * For information see <http://www.kernel.org/pub/linux/utils/net/hdlc/>
++ * For information see <https://www.kernel.org/pub/linux/utils/net/hdlc/>
+  *
+  * Note: integrated CSU/DSU/DDS are not supported by this driver
+  *
+diff --git a/drivers/net/wan/pc300too.c b/drivers/net/wan/pc300too.c
+index 190735604b2e..001fd378d417 100644
+--- a/drivers/net/wan/pc300too.c
++++ b/drivers/net/wan/pc300too.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) 2000-2008 Krzysztof Halasa <khc@pm.waw.pl>
+  *
+- * For information see <http://www.kernel.org/pub/linux/utils/net/hdlc/>.
++ * For information see <https://www.kernel.org/pub/linux/utils/net/hdlc/>.
+  *
+  * Sources of information:
+  *    Hitachi HD64572 SCA-II User's Manual
+diff --git a/drivers/net/wan/pci200syn.c b/drivers/net/wan/pci200syn.c
+index b5f8aaca5f06..d0062224b216 100644
+--- a/drivers/net/wan/pci200syn.c
++++ b/drivers/net/wan/pci200syn.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) 2002-2008 Krzysztof Halasa <khc@pm.waw.pl>
+  *
+- * For information see <http://www.kernel.org/pub/linux/utils/net/hdlc/>
++ * For information see <https://www.kernel.org/pub/linux/utils/net/hdlc/>
+  *
+  * Sources of information:
+  *    Hitachi HD64572 SCA-II User's Manual
+-- 
+2.27.0
 
