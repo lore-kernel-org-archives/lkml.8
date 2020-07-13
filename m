@@ -6,100 +6,79 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A008DC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A555C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E490206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7B820722
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WAgRrgmT"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cy5PcgTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgGMB4W (ORCPT
+        id S1728298AbgGMB4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:56:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45925 "EHLO ozlabs.org"
+        Sun, 12 Jul 2020 21:56:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:34152 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMB4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:56:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4mw32SB4z9sR4;
-        Mon, 13 Jul 2020 11:56:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594605379;
-        bh=S3DekknS5Db3vpTQmHZCmzd6fKM7tj2AAD3xpwqxj5Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WAgRrgmTeiC+TXfTyPQKiTy6kC7yo4oUOLMCSh5S2GUJ/GImballElNTWqzIujDu8
-         z7MBGkWdS0OHBjdQ0vKUu5ATbgVX11CWiWZQt14y8YBwRcUOQk7sjsqjBf1jdrwg/O
-         aeE4oItXqOCg+oUCeULYdaSqIn3LCpBWzd1+P+M12iULppkHrjgnCu3eT1VK/TjsXP
-         ZvIcmQlFkvm3GEKJGMRHM/ybTIOwG17xkPt3Ys2uphDmdleO7B4cSeGNJ+NcwCcJPX
-         v9oXvTtF3zDsHEBMMdDlGQmsdM1MBf66HJbfXfnKc9SQr9SDuRSguxLQYIW6n8tSrt
-         LvwsfhhlGmKwA==
-Date:   Mon, 13 Jul 2020 11:56:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kbuild tree
-Message-ID: <20200713115618.5e07a783@canb.auug.org.au>
-In-Reply-To: <20200707170720.55be721f@canb.auug.org.au>
-References: <20200707170720.55be721f@canb.auug.org.au>
+        id S1726261AbgGMB4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:56:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594605374; bh=gdZ3L0fVux68kDxio9119EDiHzxmA4TjQjhbhQ4czvE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=cy5PcgTQu8i9lsZhTxxDX+7Yv+rsSYFKlkTIirreGfpV9uAyTkhiiIkolj7GXzsX3
+         jHkLjZ0dIFAa6PkPG7qz1ARepmtzP5oq1OMMh+rRNax93tVC4ZSVPdl1nkUKXNX4Si
+         XqwzwGfdBhhgi2ZNPWU5HqbStXj6Zl63leIr3hEc=
+Date:   Mon, 13 Jul 2020 03:56:13 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
+        marek.behun@nic.cz
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200713015613.tr6l5svn6ddkktbo@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
+        marek.behun@nic.cz
+References: <20200702144712.1994685-1-megous@megous.com>
+ <20200711100409.GA18901@amd>
+ <20200711210111.5ysijhexgyzyr7u7@core.my.home>
+ <20200712072554.GC4721@duo.ucw.cz>
+ <20200712134911.r3lig4hgyqhmslth@core.my.home>
+ <20200712191111.GA20592@amd>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SqpINmfPhut1RqXugvzbqg1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200712191111.GA20592@amd>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SqpINmfPhut1RqXugvzbqg1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Pavel,
 
-Hi all,
+On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
+> > > So.. 48 triggers on Marek's systems means I'll not apply your patch.
+> > > 
+> > > Please take a look at my version, it is as simple and avoids that
+> > > problem.
+> > 
+> > I would, but I don't see your version linked or mentioned in this
+> > thread.
+> 
+> Ah! Sorry about that. Here it is. (I verified it compiles in the
+> meantime).
 
-On Tue, 7 Jul 2020 17:07:20 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> After merging the kbuild tree, today's linux-next build (powerpc
-> ppc44x_defconfig) failed like this:
->=20
-> cc1: fatal error: opening output file arch/powerpc/boot/dts/.ebony.dtb.dt=
-s.tmp: No such file or directory
->=20
-> and directory arch/powerpc/boot/dts/ does, indeed, not exist in the
-> separate object directory.
->=20
-> Caused by commit
->=20
->   ea4679253288 ("kbuild: always create directories of targets")
->=20
-> at least, reverting that commit makes the build work again.
+I tried implementing a driver using this API:
 
-I am still reverting that commit.
+https://megous.com/git/linux/commit/?h=tbs-a711-5.8&id=adda29f57685155ac35bd810b51befbfb266da48
 
---=20
-Cheers,
-Stephen Rothwell
+and it works pretty nicely for me.
 
---Sig_/SqpINmfPhut1RqXugvzbqg1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Lv0IACgkQAVBC80lX
-0GzUsQf/V4yY7O8fRZ0Qnj6y/90EZHvwRSyV2ru1AqBN4k3gyskZyo5+AWZUT7Tt
-b9y8XYsc7u5cXlDN4zW89xQ4N2TpPeLtBn5Yq296y9MMyIfYuvEHuM/Ga65/BC/H
-1C64QGpqE+9ogBLZNL5g5Tx87nTMcD2L7HWQlhnEuwbwwTFuwW73ZZbRWxYAUk1j
-QQ972y/rGzyZ5wtrQswpVLH32oHuhLrLR+W9A6sAyI1C4NYd3pWp6rJyfJyeNKkQ
-hdihvj/nI3LKuGaru53mzDI8BB1p2hu2dKRg8X0Zf/7D+IOZQZ8u5rcKaO37dzv2
-taySdLnWCl5KFQLhAwbGLX0t4hNxsw==
-=B9n/
------END PGP SIGNATURE-----
-
---Sig_/SqpINmfPhut1RqXugvzbqg1--
+thank you and regards,
+	o.
