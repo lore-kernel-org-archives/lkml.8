@@ -2,142 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A271C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5E4920771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYqjtefW"
+	by mail.kernel.org (Postfix) with ESMTP id 69A88205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgGMQWO (ORCPT
+        id S1730047AbgGMQWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:22:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729826AbgGMQWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:22:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594657332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nIrIhkWx/fstyu+UDLNFnGFufkVWvbrIsXpWnjTB3C8=;
-        b=gYqjtefWOpavVbsvDHbnk4jsfHIIlM8Ae9DAQMlfYKrPVwmyborprJk4JRbkDmPjhufhsl
-        vo/nafL+tDwqwrDp+PzIWzz2aiAuCGC23ZEiLKUy0yyaJjpQMZrt8LSkB25okyFbEvh3LG
-        kgMbVIn++lF8XGuzwriWmpMP5xzu0lM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-ah7gXTzCPP63Gib3iujv3g-1; Mon, 13 Jul 2020 12:22:11 -0400
-X-MC-Unique: ah7gXTzCPP63Gib3iujv3g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC843800FED;
-        Mon, 13 Jul 2020 16:22:09 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.194.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C706D74F47;
-        Mon, 13 Jul 2020 16:22:07 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] KVM: nVMX: fix the layout of struct kvm_vmx_nested_state_hdr
-Date:   Mon, 13 Jul 2020 18:22:06 +0200
-Message-Id: <20200713162206.1930767-1-vkuznets@redhat.com>
+        Mon, 13 Jul 2020 12:22:55 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:55544 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729933AbgGMQWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:22:55 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 83998BC053;
+        Mon, 13 Jul 2020 16:22:52 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] media: uvcvideo: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 18:22:46 +0200
+Message-Id: <20200713162246.35758-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer
-migration") struct kvm_vmx_nested_state_hdr looked like:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-struct kvm_vmx_nested_state_hdr {
-        __u64 vmxon_pa;
-        __u64 vmcs12_pa;
-        struct {
-                __u16 flags;
-        } smm;
-}
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-The ABI got broken by the above mentioned commit and an attempt
-to fix that was made in commit 83d31e5271ac ("KVM: nVMX: fixes for
-preemption timer migration") which made the structure look like:
-
-struct kvm_vmx_nested_state_hdr {
-        __u64 vmxon_pa;
-        __u64 vmcs12_pa;
-        struct {
-                __u16 flags;
-        } smm;
-        __u32 flags;
-        __u64 preemption_timer_deadline;
-};
-
-The problem with this layout is that before both changes compilers were
-allocating 24 bytes for this and although smm.flags is padded to 8 bytes,
-it is initialized as a 2 byte value. Chances are that legacy userspaces
-using old layout will be passing uninitialized bytes which will slip into
-what is now known as 'flags'.
-
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
-Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
-- The patch breaks ABI so it needs to go into 5.8.
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-- This is a successor of "[PATCH] KVM: nVMX: properly pad struct
- kvm_vmx_nested_state_hdr"
----
- Documentation/virt/kvm/api.rst  | 5 +++--
- arch/x86/include/uapi/asm/kvm.h | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 320788f81a05..e75992ad856a 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -4345,8 +4345,9 @@ Errors:
- 	struct {
- 		__u16 flags;
- 	} smm;
--
--	__u32 flags;
-+	__u16 pad16;
-+	__u32 pad32;
-+	__u64 flags;
- 	__u64 preemption_timer_deadline;
-   };
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/media/usb/uvc/uvc_driver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 431d86e1c94b..5676dc7bc319 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -284,7 +284,7 @@ void uvc_simplify_fraction(u32 *numerator, u32 *denominator,
+ 		return;
  
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 0780f97c1850..4ecc6bd49818 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -414,8 +414,9 @@ struct kvm_vmx_nested_state_hdr {
- 	struct {
- 		__u16 flags;
- 	} smm;
--
--	__u32 flags;
-+	__u16 pad16;
-+	__u32 pad32;
-+	__u64 flags;
- 	__u64 preemption_timer_deadline;
- };
- 
+ 	/* Convert the fraction to a simple continued fraction. See
+-	 * http://mathforum.org/dr.math/faq/faq.fractions.html
++	 * https://mathforum.org/dr.math/faq/faq.fractions.html
+ 	 * Stop if the current term is bigger than or equal to the given
+ 	 * threshold.
+ 	 */
 -- 
-2.25.4
+2.27.0
 
