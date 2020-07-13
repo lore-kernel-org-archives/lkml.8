@@ -2,158 +2,107 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F9EC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84788C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C534B2077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6282B206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cHdBGMUw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fb1RLuNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgGMUcx (ORCPT
+        id S1726918AbgGMUfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:32:53 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:36770 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGMUcw (ORCPT
+        Mon, 13 Jul 2020 16:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgGMUfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:32:52 -0400
-Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CAADF20B4909;
-        Mon, 13 Jul 2020 13:32:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAADF20B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594672371;
-        bh=VeWN4l0WTivLpVxHyd7AaFSTibjlEMzXV0jVP3Zo+E4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cHdBGMUwa6d7vQELISebugbZOJJPgfylgs+Ow4juQxNZlH84Uew4znIMhI1ctPIqj
-         H3I0N3rghH+OPS5b0/jhoIQBL8VUHOjGPpO6T+NSQaCMWJ5VU3jNPyjiJGtaOjHTVC
-         7dGIyN+NRs9Dp/ZrXQdYTJ5ocXPgoEQ4OChP6Zbc=
-Subject: Re: [V2 PATCH 2/3] dt-bindings: chosen: Document ima-kexec-buffer
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-References: <20200618071045.471131-1-prsriva@linux.microsoft.com>
- <20200618071045.471131-3-prsriva@linux.microsoft.com>
- <87mu4yr2k2.fsf@morokweng.localdomain>
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-Message-ID: <80813a16-be43-3fc4-4812-33c60095a423@linux.microsoft.com>
-Date:   Mon, 13 Jul 2020 13:32:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 16:35:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF39C061755;
+        Mon, 13 Jul 2020 13:35:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so464496pjb.2;
+        Mon, 13 Jul 2020 13:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Hc91sxEuoSk8EdIe1r3k/U/UpC/yMdx5sG7UaEcRO1A=;
+        b=Fb1RLuNlYB7IFjYJtdGwvMwg6ZZ7VhlNEP0GfFhgr+3A5uCMSBrZvQZjprg7iCYZxZ
+         M/OlHWw0Kg9y6Jh73kEdwsxkQ6pSpvToeGMDGu3DO5bq0Dy/1MTCeB+7ivMh3jvSEoLW
+         M2YDF7Pxe+3S/qpc79nnMmlX6JCoQeymgqbSEg8+BxoXzOP7OD3P0yNrqMp4scfsjal0
+         f6qf3byVx0qvF3GJxAdoajvRuQMdWTRwrTnhfZeXVvdXHvwoVbr6p3DZDKJkTCWSzsyu
+         N0jlWPasj5i3Yb90jJPyoTsaMMHO/uiDkt9dnI5OzRQ9GhyWPxX/pS9E0A7MrndARwVJ
+         hfcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=Hc91sxEuoSk8EdIe1r3k/U/UpC/yMdx5sG7UaEcRO1A=;
+        b=qlTJTdQ3+amCk2FOWbu6W+h7mTc5JE4uKfBFKuqOCCuV1bBYZrxBFBWUt/EvKzDwY+
+         Tr2CurcJJ6BVhdYpDQVoWHt5j36yh8vSb3nuKYwIKstPeJRw/zWvaYUqmDDN3OMLXwIW
+         H1RhwRIl5tbC/pVcU/Fn9TogWrFdWB6cg+jG1SFvzs3H2WffAGec/Kqqnfp3gXomHZCW
+         xruhjv1yloNGL1LaiKh+p14G3L3xK7vwJZ5y4lGOb8cV6hmq+kfrW1BBkime9MbdGUVx
+         UrIDg4ICCvToO+UX7Q23wAheCOKxGAymYNlmotQs5bW8H41ztWKtpjdbBlIwTp55NLYL
+         Rr/Q==
+X-Gm-Message-State: AOAM532q0ZWaZIkKs1NSlyPVVlPTg4MRgTlQWjIXZHc3DXd5hYjbjaM6
+        FiaL2nXq+XPAx0Bsla+ZNn6Uvnr1NI0=
+X-Google-Smtp-Source: ABdhPJyHJEIZ21G8jzUigVI0jSe79fjGm4gXhEhPUJ1TAYcnshBv+OR/UGqht1JVvn0SUpgmb3f9PQ==
+X-Received: by 2002:a17:90a:7483:: with SMTP id p3mr1194846pjk.64.1594672540173;
+        Mon, 13 Jul 2020 13:35:40 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id 137sm14232950pgg.72.2020.07.13.13.35.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 13:35:39 -0700 (PDT)
+Subject: [PATCH] virtio-balloon: Document byte ordering of poison_val
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     david@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, mst@redhat.com
+Cc:     virtio-dev@lists.oasis-open.org
+Date:   Mon, 13 Jul 2020 13:35:39 -0700
+Message-ID: <20200713203539.17140.71425.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <87mu4yr2k2.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
+The poison_val field in the virtio_balloon_config is treated as a
+little-endian field by the host. Since we are currently only having to deal
+with a single byte poison value this isn't a problem, however if the value
+should ever expand it would cause byte ordering issues. Document that in
+the code so that we know that if the value should ever expand we need to
+byte swap the value on big-endian architectures.
 
-On 6/19/20 5:41 PM, Thiago Jung Bauermann wrote:
-> 
-> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
-> 
->> Integrity measurement architecture(IMA) validates if files
->> have been accidentally or maliciously altered, both remotely and
->> locally, appraise a file's measurement against a "good" value stored
->> as an extended attribute, and enforce local file integrity.
->>
->> IMA also measures singatures of kernel and initrd during kexec along with
->> the command line used for kexec.
->> These measurements are critical to verify the seccurity posture of the OS.
->>
->> Resering memory and adding the memory information to a device tree node
->> acts as the mechanism to carry over IMA measurement logs.
->>
->> Update devicetree documentation to reflect the addition of new property
->> under the chosen node.
-> 
-> Thank you for writing this documentation patch. It's something I should
-> have done when I added the powerpc IMA kexec support.
-> 
-> You addressed Rob Herring's comments regarding the commit message, but
-> not the ones regarding the patch contents.
-> 
-> When posting a new version of the patches, make sure to address all
-> comments made so far. Addressing a comment doesn't necessarily mean
-> implementing the requested change. If you don't then you should at least
-> explain why you chose a different path.
-> 
-> I mention it because this has occurred before with this patch series,
-> and it's hard to make forward progress if review comments get ignored.
-> 
->> ---
->>   Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->> index 45e79172a646..a15f70c007ef 100644
->> --- a/Documentation/devicetree/bindings/chosen.txt
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -135,3 +135,20 @@ e.g.
->>   		linux,initrd-end = <0x82800000>;
->>   	};
->>   };
->> +
->> +linux,ima-kexec-buffer
->> +----------------------
->> +
->> +This property(currently used by powerpc, arm64) holds the memory range,
-> 
-> space before the parenthesis.
-> 
->> +the address and the size, of the IMA measurement logs that are being carried
-> 
-> Maybe it's because English isn't my first language, but IMHO it's
-> clearer if "the address and the size" is between parentheses rather than
-> commas.
-> 
->> +over to the kexec session.
-> 
-> I don't think there's a "kexec session", but I'm not sure what a good
-> term would be. "linux,booted-from-kexec" uses "new kernel" so perhaps
-> that's a good option to use instead of "kexec session".
-> 
->> +
->> +/ {
->> +	chosen {
->> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
->> +	};
->> +};
->> +
->> +This porperty does not represent real hardware, but the memory allocated for
->> +carrying the IMA measurement logs. The address and the suze are expressed in
->> +#address-cells and #size-cells, respectively of the root node.
-> 
-> 
-I will update the descriptions and ack the comments/changes in the 
-patches as well.
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ drivers/virtio/virtio_balloon.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thankyou,
-Prakhar Srivastava
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
-> 
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 1f157d2f4952..d0fd8f8dc6ed 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -974,6 +974,11 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 		/*
+ 		 * Let the hypervisor know that we are expecting a
+ 		 * specific value to be written back in balloon pages.
++		 *
++		 * If the PAGE_POISON value was larger than a byte we would
++		 * need to byte swap poison_val here to guarantee it is
++		 * little-endian. However for now it is a single byte so we
++		 * can pass it as-is.
+ 		 */
+ 		if (!want_init_on_free())
+ 			memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+
