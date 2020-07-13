@@ -2,133 +2,103 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A26CC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF2572065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iZZEY+7x"
+	by mail.kernel.org (Postfix) with ESMTP id F41A52067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgGMIUa (ORCPT
+        id S1727829AbgGMIVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:20:30 -0400
-Received: from ozlabs.org ([203.11.71.1]:42531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgGMIUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:20:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4xRF6KT1z9sDX;
-        Mon, 13 Jul 2020 18:20:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594628427;
-        bh=LH4FOtl0Z+kfpRZwAFFiDHlO3qpDI4fH8c6WKE5JlK4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iZZEY+7xZ4Owu8dkWATmnMr4gMb/dpivDUmtJ7lyVWzea/p5ORoLHse3jdw3hpjyE
-         IoBD9RIB/IXngv2BCsIhlVlOsnZGx9STLcdBLR/SQhaqyFCfFKLHrjkCqXHtG3/X0g
-         WzuEoHcTa+I6NruoM+iBog+hzu35DPsYp/quZZW8YcnrnOsdjTB+6vd+osgXksOyE1
-         j6tXhvP+HYm4cPeYlhCVuRhrVov4Gz8u5yi+gCuDRq06foymER6+5M5Z/7bCoFzQYK
-         RYL58kXANKz39/8G4Ujz46lvQpXDiXRY18p5NlX4c3JCs2wlzpge0GIdAd+R+LO8jV
-         EyH5WWTyyNWwg==
-Date:   Mon, 13 Jul 2020 18:20:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: linux-next: manual merge of the akpm-current tree with the net-next
- tree
-Message-ID: <20200713182023.3f08605e@canb.auug.org.au>
+        Mon, 13 Jul 2020 04:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgGMIVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:21:45 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772BCC061755;
+        Mon, 13 Jul 2020 01:21:45 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2C9B7BC0C2;
+        Mon, 13 Jul 2020 08:21:42 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     gupt21@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] HID: mcp2221: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 10:21:35 +0200
+Message-Id: <20200713082135.32350-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2Vp1I5dWzQ=eova.7uLLoky";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2Vp1I5dWzQ=eova.7uLLoky
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Hi all,
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-  mm/cma.h
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-between commit:
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-  a2b992c828f7 ("debugfs: make sure we can remove u32_array files cleanly")
+ If you apply the patch, please let me know.
 
-from the net-next tree and commit:
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
-  bc7212aceef6 ("mm: cma: fix the name of CMA areas")
 
-from the akpm-current tree.
+ drivers/hid/hid-mcp2221.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
+index e1b93ce32e01..0d27ccb55dd9 100644
+--- a/drivers/hid/hid-mcp2221.c
++++ b/drivers/hid/hid-mcp2221.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (c) 2020, Rishi Gupta <gupt21@gmail.com>
+  *
+- * Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
++ * Datasheet: https://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
+  */
+ 
+ #include <linux/module.h>
+-- 
+2.27.0
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc mm/cma.h
-index 6698fa63279b,27d3f0e9f68f..000000000000
---- a/mm/cma.h
-+++ b/mm/cma.h
-@@@ -2,8 -2,8 +2,10 @@@
-  #ifndef __MM_CMA_H__
-  #define __MM_CMA_H__
- =20
- +#include <linux/debugfs.h>
- +
-+ #define CMA_MAX_NAME 64
-+=20
-  struct cma {
-  	unsigned long   base_pfn;
-  	unsigned long   count;
-@@@ -13,9 -13,8 +15,9 @@@
-  #ifdef CONFIG_CMA_DEBUGFS
-  	struct hlist_head mem_head;
-  	spinlock_t mem_head_lock;
- +	struct debugfs_u32_array dfs_bitmap;
-  #endif
-- 	const char *name;
-+ 	char name[CMA_MAX_NAME];
-  };
- =20
-  extern struct cma cma_areas[MAX_CMA_AREAS];
-
---Sig_/2Vp1I5dWzQ=eova.7uLLoky
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8MGUcACgkQAVBC80lX
-0GyeuAf/aFe008ZUac4c96jkCZ7nQnIBL9wZioAPtsMBJM6sDIjWlChbH6qdKJgZ
-DeTYAvLzrcX+Z3RjQuRkQrBHS9ulMOC8VYGIblWc7MNJAdV0FKCJEbzM8JolPLN4
-GUkiqLmZJvh47sGWs5xnEbk2NZRuQRKZo/XC0vj2bsa4WOFdSE5SYrt0aX3SUgdg
-7voHV/9NLuCpQVP4ZrZb7/lpy7BYQZ0Haa7tZdaymJmw6gPnITd/qIVYLIj0AMcv
-x/NOY4rVlPPRDIgVODkY30VPmhclDWNQzuyhxT8Mj0YQu3yxNJWL6Li1GdytLXz6
-U4BBLAtUcmQwVDV762JLZGAngqH7xA==
-=DZqr
------END PGP SIGNATURE-----
-
---Sig_/2Vp1I5dWzQ=eova.7uLLoky--
