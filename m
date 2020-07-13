@@ -2,115 +2,147 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63789C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A209206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DC32065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqFYIQCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbgGMQdK (ORCPT
+        id S1730393AbgGMQdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730433AbgGMQdG (ORCPT
+        Mon, 13 Jul 2020 12:33:14 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35503 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730585AbgGMQdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:33:06 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF30AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:33:05 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 7D15ABC070;
-        Mon, 13 Jul 2020 16:33:03 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     ssantosh@kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] memory: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 18:32:55 +0200
-Message-Id: <20200713163255.35830-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 12:33:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594657986;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jQyN5nMptUdr+FXFnO+0cz+AZazAi5FEXN8n0OwGMPM=;
+        b=FqFYIQCYE3wPVIwLVJek3Y/3zdwK1O3+2dl9N5JctErzDEznmbhagsabEo6CBAhq2XKHuU
+        q+G09+eR/0mRGPc1eR/Oc5qQZTDTb8OHGcQJHc+U1SotMZDl16ya58VbcY4Tb2E7WVdFQH
+        IfLfeH2EcLdQ0cFwCTT8f8vQ0LaeSF4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-6akDkgNxPv2r1vJGIyslDQ-1; Mon, 13 Jul 2020 12:33:03 -0400
+X-MC-Unique: 6akDkgNxPv2r1vJGIyslDQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A6FB100A8C0;
+        Mon, 13 Jul 2020 16:33:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B34915D9CC;
+        Mon, 13 Jul 2020 16:32:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 12/32] fscache, cachefiles: Fix disabled histogram warnings
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jul 2020 17:32:54 +0100
+Message-ID: <159465797497.1376674.14328755555295693847.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
+References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Fix variable unused warnings due to disabled histogram stuff.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+ fs/cachefiles/internal.h |    7 +++++--
+ fs/fscache/internal.h    |    6 ++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/memory/ti-aemif.c        | 2 +-
- drivers/memory/ti-emif-sram-pm.S | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/memory/ti-aemif.c b/drivers/memory/ti-aemif.c
-index db526dbf71ee..b41ca225f25c 100644
---- a/drivers/memory/ti-aemif.c
-+++ b/drivers/memory/ti-aemif.c
-@@ -2,7 +2,7 @@
+diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+index b89f76a03546..16d15291a629 100644
+--- a/fs/cachefiles/internal.h
++++ b/fs/cachefiles/internal.h
+@@ -143,11 +143,11 @@ extern int cachefiles_check_in_use(struct cachefiles_cache *cache,
  /*
-  * TI AEMIF driver
-  *
-- * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. http://www.ti.com/
-+ * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. https://www.ti.com/
-  *
-  * Authors:
-  * Murali Karicheri <m-karicheri2@ti.com>
-diff --git a/drivers/memory/ti-emif-sram-pm.S b/drivers/memory/ti-emif-sram-pm.S
-index d1c83bd5b98e..7310fa97e624 100644
---- a/drivers/memory/ti-emif-sram-pm.S
-+++ b/drivers/memory/ti-emif-sram-pm.S
-@@ -1,7 +1,7 @@
+  * proc.c
+  */
+-#ifdef CONFIG_CACHEFILES_HISTOGRAM
+ extern atomic_t cachefiles_lookup_histogram[HZ];
+ extern atomic_t cachefiles_mkdir_histogram[HZ];
+ extern atomic_t cachefiles_create_histogram[HZ];
+ 
++#ifdef CONFIG_CACHEFILES_HISTOGRAM
+ extern int __init cachefiles_proc_init(void);
+ extern void cachefiles_proc_cleanup(void);
+ static inline
+@@ -162,7 +162,10 @@ void cachefiles_hist(atomic_t histogram[], unsigned long start_jif)
+ #else
+ #define cachefiles_proc_init()		(0)
+ #define cachefiles_proc_cleanup()	do {} while (0)
+-#define cachefiles_hist(hist, start_jif) do {} while (0)
++static inline
++void cachefiles_hist(atomic_t histogram[], unsigned long start_jif)
++{
++}
+ #endif
+ 
  /*
-  * Low level PM code for TI EMIF
-  *
-- * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2017 Texas Instruments Incorporated - https://www.ti.com/
-  *	Dave Gerlach
-  *
-  * This program is free software; you can redistribute it and/or
--- 
-2.27.0
+diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
+index 443671310e31..a70c1a612309 100644
+--- a/fs/fscache/internal.h
++++ b/fs/fscache/internal.h
+@@ -95,13 +95,13 @@ extern struct fscache_cookie fscache_fsdef_index;
+ /*
+  * histogram.c
+  */
+-#ifdef CONFIG_FSCACHE_HISTOGRAM
+ extern atomic_t fscache_obj_instantiate_histogram[HZ];
+ extern atomic_t fscache_objs_histogram[HZ];
+ extern atomic_t fscache_ops_histogram[HZ];
+ extern atomic_t fscache_retrieval_delay_histogram[HZ];
+ extern atomic_t fscache_retrieval_histogram[HZ];
+ 
++#ifdef CONFIG_FSCACHE_HISTOGRAM
+ static inline void fscache_hist(atomic_t histogram[], unsigned long start_jif)
+ {
+ 	unsigned long jif = jiffies - start_jif;
+@@ -113,7 +113,9 @@ static inline void fscache_hist(atomic_t histogram[], unsigned long start_jif)
+ extern const struct seq_operations fscache_histogram_ops;
+ 
+ #else
+-#define fscache_hist(hist, start_jif) do {} while (0)
++static inline void fscache_hist(atomic_t histogram[], unsigned long start_jif)
++{
++}
+ #endif
+ 
+ /*
+
 
