@@ -2,133 +2,115 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94329C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D907820758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECAB207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1RzZEMo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="plSd9J0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgGMKFt (ORCPT
+        id S1729623AbgGMKFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGMKFs (ORCPT
+        Mon, 13 Jul 2020 06:05:53 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:27478 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729143AbgGMKFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:05:48 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6FEC061755;
-        Mon, 13 Jul 2020 03:05:48 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id ed14so5511081qvb.2;
-        Mon, 13 Jul 2020 03:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2R5FqpATOsC9anZCjDdbfJmwuMulHp2IY/fh6GixDKM=;
-        b=M1RzZEMoz5QxfH8SpG+taA4nXeqDdQhlsmE7KUJcmdBZU1aCZMQAlI5y8ElOf6Fuhp
-         4lh52bmfq+PnMcWMrf65ELqM4xBZhvfUb86Sl0MKqeqYSDtBPJn9vlZ3ZLWCHpazAJc/
-         9s0PoRAXaDSyezsgU9OP13jwiif1veTIOUAqndwQ8KCfuxgw+AzHtYQa1xRi4GiwbZXM
-         Ojjv9jB4SaGfwE1FkUXkomIv10SvKhmWJ1M5/6ApjeymByh7qiegSUUuI88ARLQw1pzh
-         XnIcJZCyYJMgKpamqdjDwWqE6coAJynCjscbblgZTn0D/GtOfbpUUb5FNGSSImLkShX/
-         eDew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2R5FqpATOsC9anZCjDdbfJmwuMulHp2IY/fh6GixDKM=;
-        b=L1oDqeoxqUWC0W57CxhQi03TAwYuDu5zS50wJdwQttH9i+Q4kQwehqk/D9UdPVeTdY
-         9pFCEGWYey3dgzcVry/GIvvWhIZStW8LxWDbsNMIyvr71DPyZ7qMOb5sS9HBHFnBVYZJ
-         lWDJJunv/d02srRtS3yi6/9ZuSMb37152CiuQ+Y4dRCNmYTTAQbjp/e3BeS4VJj9VT6A
-         7xRWQzwsqXrC3KFlrd1Z8vzTKwzRqtDwXbY3fefrAklsv2sRLtXw5ZQUP47ehDMlzHG4
-         PNY6YnjEdtu00W1Ge/ZXUGL5GbsbeioPmxQtzHoCKIa+uLqBbg/+7rOodGkwYlWFBYbg
-         dE+w==
-X-Gm-Message-State: AOAM531XaDRcGuT1FDKbMKUDGfY+XrEx3F6odoqjE8NF0CMVHIKKaXSN
-        Bby1mkOwB6VbnBGAXrL4Wpu986lvuHKdZb5xzH8=
-X-Google-Smtp-Source: ABdhPJzFqEGiReKbwy5jLRxtaDiSvZmM3/d21BHz80ho9j12CosVkGT1LkCaauKrTm3/r4dgwAWY3ecgapZq6+wKTMw=
-X-Received: by 2002:a0c:cd84:: with SMTP id v4mr44981386qvm.35.1594634747242;
- Mon, 13 Jul 2020 03:05:47 -0700 (PDT)
+        Mon, 13 Jul 2020 06:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594634749; x=1626170749;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iEPXg4m/PV2bFSjHkkjCWZpki+k4rKh/UyV/yzZSQ0M=;
+  b=plSd9J0bmW18eTQhfQR9VlIqV5bR2Fl9Q1kPYz+65he0PykjFFlWLjci
+   u2xGCaEibyiYPfXbFeHDOQ3AOckaXkQ3POlfimZKmiiwtZC+axlJrSp3W
+   199P6OLiIv5ynG9JvNwoaPW2FuApHMVk6niPBXMT81h76+25WrfpemPZi
+   7bHWXvKnwOtxh3Zi3EdU5xhBq6x0SsP3VyWQZpNxJww0FQdotITdPPKw3
+   SuEycNvccYk3tszcMbQ7xL3lBCpVLEqoApIlZy62hx+nn2YQk80wlzDnR
+   D5vdAnGaEoBHjGUjgE0zRxGt7J6xmFjOIXrQz8Jqy+2/qMcrVNZ8Y3XXx
+   g==;
+IronPort-SDR: meGEHEUjaT0fMMXyYcZqeGoQpnTvH3DTaH1aev/07RNploieJ9h5IeW0beRH6EslITv1iyRox5
+ B9lI9X/I7pXsUmozhMp91rOkhmkObZ8bWzT3EjC+szJAzGkxc1J69/x3bQWy5/kXfSFe7+sBKm
+ 5VKZNBlbk7pFzSs/WzPAEtVRd2FL5W7syFD+bh2uG7OUDXsqOpwVMNZhPV2r06+4yUp8r9GUXF
+ O/84ZMtUJgJh2mWt2zIHCxxMgA+w0hzBCkPIj2iWDz97VIaqTkW9ebCUuP0MSy9BGPA/F+GJgm
+ 0fg=
+X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
+   d="scan'208";a="79679482"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jul 2020 03:05:48 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 13 Jul 2020 03:05:48 -0700
+Received: from ness.mchp-main.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Mon, 13 Jul 2020 03:05:14 -0700
+From:   <nicolas.ferre@microchip.com>
+To:     <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+        <netdev@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>, <f.fainelli@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <antoine.tenart@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH v6 0/2] net: macb: Wake-on-Lan magic packet GEM and MACB handling
+Date:   Mon, 13 Jul 2020 12:05:24 +0200
+Message-ID: <cover.1594632220.git.nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200710135706.537715-1-hch@lst.de> <20200710135706.537715-5-hch@lst.de>
-In-Reply-To: <20200710135706.537715-5-hch@lst.de>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Mon, 13 Jul 2020 18:05:10 +0800
-Message-ID: <CAEbi=3dSkAcTey8WeRuxN7oYq_O47QAZffLwruQRbpGpmqT-yA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] uaccess: remove segment_eq
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nick Hu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> =E6=96=BC 2020=E5=B9=B47=E6=9C=8810=E6=97=A5=
- =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:57=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> segment_eq is only used to implement uaccess_kernel.  Just open code
-> uaccess_kernel in the arch uaccess headers and remove one layer of
-> indirection.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/alpha/include/asm/uaccess.h      | 2 +-
->  arch/arc/include/asm/segment.h        | 3 +--
->  arch/arm/include/asm/uaccess.h        | 4 ++--
->  arch/arm64/include/asm/uaccess.h      | 2 +-
->  arch/csky/include/asm/segment.h       | 2 +-
->  arch/h8300/include/asm/segment.h      | 2 +-
->  arch/ia64/include/asm/uaccess.h       | 2 +-
->  arch/m68k/include/asm/segment.h       | 2 +-
->  arch/microblaze/include/asm/uaccess.h | 2 +-
->  arch/mips/include/asm/uaccess.h       | 2 +-
->  arch/nds32/include/asm/uaccess.h      | 2 +-
->  arch/nios2/include/asm/uaccess.h      | 2 +-
->  arch/openrisc/include/asm/uaccess.h   | 2 +-
->  arch/parisc/include/asm/uaccess.h     | 2 +-
->  arch/powerpc/include/asm/uaccess.h    | 3 +--
->  arch/riscv/include/asm/uaccess.h      | 4 +---
->  arch/s390/include/asm/uaccess.h       | 2 +-
->  arch/sh/include/asm/segment.h         | 3 +--
->  arch/sparc/include/asm/uaccess_32.h   | 2 +-
->  arch/sparc/include/asm/uaccess_64.h   | 2 +-
->  arch/x86/include/asm/uaccess.h        | 2 +-
->  arch/xtensa/include/asm/uaccess.h     | 2 +-
->  include/asm-generic/uaccess.h         | 4 ++--
->  include/linux/uaccess.h               | 2 --
->  24 files changed, 25 insertions(+), 32 deletions(-)
->
-[...]
-> diff --git a/arch/nds32/include/asm/uaccess.h b/arch/nds32/include/asm/ua=
-ccess.h
-> index 3a9219f53ee0d8..010ba5f1d7dd6b 100644
-> --- a/arch/nds32/include/asm/uaccess.h
-> +++ b/arch/nds32/include/asm/uaccess.h
-> @@ -44,7 +44,7 @@ static inline void set_fs(mm_segment_t fs)
->         current_thread_info()->addr_limit =3D fs;
->  }
->
-> -#define segment_eq(a, b)       ((a) =3D=3D (b))
-> +#define uaccess_kernel()       (get_fs() =3D=3D KERNEL_DS)
->
->  #define __range_ok(addr, size) (size <=3D get_fs() && addr <=3D (get_fs(=
-) -size))
->
-Hi Christoph, Thank you.
-Acked-by: Greentime Hu <green.hu@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+
+Hi,
+
+Here is the second part of support for WoL magic-packet on the current macb driver. This one
+is addressing the bulk of the feature and is based on current net-next/master.
+
+MACB and GEM code must co-exist and as they don't share exactly the same
+register layout, I had to specialize a bit the suspend/resume paths and plug a
+specific IRQ handler in order to avoid overloading the "normal" IRQ hot path.
+
+These changes were tested on both sam9x60 which embeds a MACB+FIFO controller
+and sama5d2 which has a GEM+packet buffer type of controller.
+
+Best regards,
+  Nicolas
+
+Changes in v6:
+- rebase on net-next/master now that the "fixes" patches of the series are
+  merged in both net and net-next.
+- GEM addition and MACB update to finish the support of WoL magic-packet on the
+  two revisions of the controller.
+
+These 2 patches were last posted in v3 series.
+
+History of previous changes already added to git commit message here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f9f41e3db40ee8d61b427d4d88c7365d968052a9
+
+Nicolas Ferre (2):
+  net: macb: WoL support for GEM type of Ethernet controller
+  net: macb: Add WoL interrupt support for MACB type of Ethernet
+    controller
+
+ drivers/net/ethernet/cadence/macb.h      |   3 +
+ drivers/net/ethernet/cadence/macb_main.c | 188 +++++++++++++++++++----
+ 2 files changed, 164 insertions(+), 27 deletions(-)
+
+-- 
+2.27.0
+
