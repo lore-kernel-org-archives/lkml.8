@@ -2,100 +2,135 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930CDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B3C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD93207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258D2206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ILHYL0kw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGMSfw (ORCPT
+        id S1726782AbgGMShE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:35:52 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:43794 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgGMSfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:35:52 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 46C16BC070;
-        Mon, 13 Jul 2020 18:35:48 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     linus.walleij@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 20:35:41 +0200
-Message-Id: <20200713183541.36963-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 14:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgGMShE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:37:04 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21CE6C061755;
+        Mon, 13 Jul 2020 11:37:04 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CF5A12250C;
+        Mon, 13 Jul 2020 20:37:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594665422;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XfYMwt8cNKAgfpgnMbHDoEssinl9YHa1dI1qRe7KO3s=;
+        b=ILHYL0kwXNJCY7FYFF/ywIn4y8GW0NN/yJEEc06NZxcz0WKfmrQf6kayJ8bkmMnNJXqIKE
+        IrrD1oB/kLQ+4QHszael3lHbBMeSjO6c90CX9fcFajXXmy+xZCYxA8c5/v3XdxEe4ihpM5
+        KzbO1LbHIVZ/ir/L1XnSf7AszWkrM1s=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jul 2020 20:37:01 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
+ ability constants
+In-Reply-To: <20200713182314.GW1551@shell.armlinux.org.uk>
+References: <20200709213526.21972-1-michael@walle.cc>
+ <20200709213526.21972-2-michael@walle.cc>
+ <20200713182314.GW1551@shell.armlinux.org.uk>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <546718f3f76862d285aeb82cb02767c4@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Am 2020-07-13 20:23, schrieb Russell King - ARM Linux admin:
+> On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
+>> The constants are taken from the USXGMII Singleport Copper Interface
+>> specification. The naming are based on the SGMII ones, but with an 
+>> MDIO_
+>> prefix.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>> 
+>> diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
+>> index 4bcb41c71b8c..784723072578 100644
+>> --- a/include/uapi/linux/mdio.h
+>> +++ b/include/uapi/linux/mdio.h
+>> @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int prtad, 
+>> int devad)
+>>  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
+>>  }
+>> 
+>> +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
+>> +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop 
+>> supported */
+>> +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
+>> +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
+>> +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full duplex */
+>> +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex and 
+>> speed bits */
+>> +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
+>> +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
+>> +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
+>> +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
+>> +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
+>> +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
+>> +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
+>> +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
+>> +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with copper-side 
+>> partner */
+> 
+> btw, the only thing which is missing from this is bit 0.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+TBH, I didn't know how to name it. Any suggestions?
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> One other point - in the USXGMII specification, this appears to be
+> somewhat symmetrical - the same definitions are listed as being
+> used for PHY to MAC as for MAC to PHY (presumably as part of the
+> acknowledgement that the MAC actually switched to that speed.)
+> So, it probably makes sense to drop the LPA_ infix.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Ok. I'll send a new version, once we have a name for bit 0.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/pinctrl/pinctrl-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c07324d1f265..a94b54636da9 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -9,7 +9,7 @@
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  * Copyright (c) 2012 Linaro Ltd
-- *		http://www.linaro.org
-+ *		https://www.linaro.org
-  *
-  * and pinctrl-at91:
-  * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
--- 
-2.27.0
-
+-michael
