@@ -2,102 +2,114 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208D0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1051F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF41520771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZaSFTqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgGMUsV (ORCPT
+        id S1726698AbgGMUxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60110 "EHLO
+        Mon, 13 Jul 2020 16:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgGMUsV (ORCPT
+        with ESMTP id S1726382AbgGMUxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:48:21 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F37EBC061755;
-        Mon, 13 Jul 2020 13:48:20 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 69654BC06E;
-        Mon, 13 Jul 2020 20:48:18 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     kevin.curtis@farsite.co.uk, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] wan: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 22:48:12 +0200
-Message-Id: <20200713204812.38158-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 16:53:45 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DF5C061755;
+        Mon, 13 Jul 2020 13:53:44 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so1316328wmh.2;
+        Mon, 13 Jul 2020 13:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ALurGzrJJ9wqkP2ke4uTKprfGDnx2zaAQBFzAuepUB4=;
+        b=QZaSFTqHdagHJdkMYHPypk8cFC/5FtmTQkGnZ4jgNm69WsJW5rwpDbQqDBInBpO4Ku
+         rLSLuXMoRXWxm1KVRHinFg5/kT6aj/3zlewCGDL2THtVzrhGlHDGOxavNY3KXR7oZab/
+         UC3MMrG2u6YWtUn21ItZjxZ6+cOW+dgTf6/2FAkI6FA3RHlv2kIR8oMYjRogSWRP1Ixm
+         tkf9YgDXo/+D4Evh2U5Td/zJq03vQvZgw/1BJZIi5sThIlxKFQIAiqmtkVNOtUvsCSlC
+         GHbVGcmxBPuhkGQK9P7h1qjWyYXx3DZ/vZ9JPZfBpmikhWaUAZL4ixXyIXp33cxLrEKR
+         /zCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ALurGzrJJ9wqkP2ke4uTKprfGDnx2zaAQBFzAuepUB4=;
+        b=bAC+7iRLhVtvuswNBF87HtYEF/WZ0GyAAfGOlFvMBCiJoTSsIyAs0eZGgCqfci/9nC
+         0ZvccCiLZ/3h07L4KVubBKWO90uQp91bLw8yHbNndGDSKXZQ+8eSRMbVmkgmEiSwDKV8
+         +IA3lC9nJcoeOXu4G9Rc2urOlv8x9ia2mXmo+9kXxyZmEmT1YcEXMWiyEJewTt8OpMSM
+         SJQX0XQkLMa8EMdK6KuH7xZxwGS2FNGP/YDLhhpgYlnEHoKSKa7AhZk6yLXwf/97/XzB
+         GiDG5Otc7wmYfCLxLLQE8a0E/7dgAoP0TXK96uDctbwJKsAx9C/HSFKHzBBueDbnMWDl
+         psQQ==
+X-Gm-Message-State: AOAM533XimZ1zvyyyBRLki8C906kZMBfbyz+HBEFQneilfohL0xQ6gCJ
+        mD3snP+qDsxtSeOJowCKUmW/OG6U
+X-Google-Smtp-Source: ABdhPJzEX/tt0TMQMf+TPx9VPK4TeJsjDGIiyPDidh58RrSuPoa5tp7YEZ4O2oiNcvM7Dzp8Wh/5og==
+X-Received: by 2002:a1c:a4c6:: with SMTP id n189mr1099908wme.173.1594673623480;
+        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
+Received: from cluster5 ([80.76.206.81])
+        by smtp.gmail.com with ESMTPSA id u20sm1019921wmm.15.2020.07.13.13.53.43
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
+From:   Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL properties
+Date:   Mon, 13 Jul 2020 21:50:26 +0100
+Message-Id: <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Add names and decriptions of additional PORT0_PAD_CTRL properties.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/net/wan/farsync.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wan/farsync.c b/drivers/net/wan/farsync.c
-index 7916efce7188..0196b7fd130d 100644
---- a/drivers/net/wan/farsync.c
-+++ b/drivers/net/wan/farsync.c
-@@ -124,7 +124,7 @@ module_param_array(fst_excluded_list, int, NULL, 0);
- /*      The Am186CH/CC processors support a SmartDMA mode using circular pools
-  *      of buffer descriptors. The structure is almost identical to that used
-  *      in the LANCE Ethernet controllers. Details available as PDF from the
-- *      AMD web site: http://www.amd.com/products/epd/processors/\
-+ *      AMD web site: https://www.amd.com/products/epd/processors/\
-  *                    2.16bitcont/3.am186cxfa/a21914/21914.pdf
-  */
- struct txdesc {			/* Transmit descriptor */
+diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+index ccbc6d89325d..3d34c4f2e891 100644
+--- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
++++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+@@ -13,6 +13,14 @@ Optional properties:
+ 
+ - reset-gpios: GPIO to be used to reset the whole device
+ 
++Optional MAC configuration properties:
++
++- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
++- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
++				falling edge.
++- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
++				falling edge.
++
+ Subnodes:
+ 
+ The integrated switch subnode should be specified according to the binding
 -- 
-2.27.0
+2.25.4
 
