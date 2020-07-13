@@ -2,117 +2,124 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127DDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F314C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E146620771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Avvogo0E"
+	by mail.kernel.org (Postfix) with ESMTP id 3ED5B206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594664642;
+	bh=ppt62WvXKF05OipX3gn1xhHgk70OfYdjS0NhuenP91g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eLbob2YB5BlJsWTq4fsP1gSjCn1Z4gUhq7HysVRU/xUjId+22qfYGzVjEE/BicBJB
+	 hCcV1wBz7kxFaXCklzb/159ib5nM4U8K9Hf6pwexuh/XDtFQb6zD/7c09c6dDW+bFV
+	 BiXH1g80D0aa/kg3Dq4CmLYEWbcPV8aQ/OOGU4oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGMSYL (ORCPT
+        id S1726600AbgGMSYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgGMSYK (ORCPT
+        Mon, 13 Jul 2020 14:24:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37333 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgGMSX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:24:10 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A77C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:24:10 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id c16so14532672ioi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EYkJT4IJ7durdcl3HAxzOHP9WiK8D09OCIn5mRv/ew0=;
-        b=Avvogo0Ehwuuxv7pOUWUsVP9CBTo8Oy9rhoMRMfJXL8CTXWLE6ltS7rvu63OWcfL9+
-         zzfMGIbqka1Wlk99wMB8UeyFkHCSEEVe5IpLjsBIyKQkCYPfXri+DgT6gUVPBaX41p4s
-         7MANE/HHnaTsa0kqvCg/JRj0LTh1B3K7Zzo5dNsqJufOcP47rRj3PNns7t0E1IDu0Hnh
-         X0Ex1ka6fF6hT6nFnbDv79JFqCF+5TdPNjRJ0n5tMWCSRm8dJg3rWWFuV5mZI9oxWFS/
-         jrXRerEaQyvbkG0fK4JsGb2A/q/PkE22SHBkvCypKEm8HTU4m73Z2X7IlfHteV4O9yXw
-         MfcQ==
+        Mon, 13 Jul 2020 14:23:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so14554187iob.4;
+        Mon, 13 Jul 2020 11:23:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EYkJT4IJ7durdcl3HAxzOHP9WiK8D09OCIn5mRv/ew0=;
-        b=ixDWV/0CccYyTnZJmEO4slmJYDIe/n4rGdMZamUmIVjncRBgvG46vVBSv1tG1jhTYA
-         12XUcSaNIKMLYS9XxbSDzeMNymjZ1l14R6fCslAZX76oygUuRLiu6murzWmZDG1CMeX2
-         5xtbovCMEcpFEVYSwceMu+J4c6+Fw3B4y6zRc2TXegaI4VnvpWJL1T3g3rGYs5wSRHEw
-         xclGkvKG5ICEWN0vu44iyisR2wjmTopClXOEYGZQQSZFwfDdcQ6Mc3woGrK/815jqojI
-         8HDautAm2hTA18xoF6T45h69JdW7iQn5DbDtXN9mGz5v22iJUNawIs6OLMNgMJtY5dNy
-         1PFw==
-X-Gm-Message-State: AOAM532m1V4PSdqyXFRyrrVi/YDhzmqk1+nVGGUpfHE7evQPFgNbS6EO
-        wcJANcYx4K9WwSdkSfLRdJLJ7PWwvF6IeG8nWxKmMQ==
-X-Google-Smtp-Source: ABdhPJzuW+QbYZgBiMGGDUi132YDZrEQbqRA6a7lx6xxTu6DtSbSx3+CqUb8OrQ2zu/CCblMAetN5Y/1qoWkUST/M+U=
-X-Received: by 2002:a6b:c3cf:: with SMTP id t198mr1048147iof.164.1594664649992;
- Mon, 13 Jul 2020 11:24:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ifx3aALNuF7rKl8vX3SdTnNE70Q3qXp0lBlunsaf+O4=;
+        b=VPOOTJhoLj5Cb150y6p1TwenBQzNfDKOJ5wyIUWq4XesRghFuTupXuNDC6XNt5OrZa
+         Y2mvcXADpPiRngSgJJMkFr1gD3AYhLU7GsEGv8Yk1NjjGhs0PShMjaoA0yiZ9Vj3bHHI
+         f0tHrDuUtWjy0YmU2DPTP72NHuzF2htDmG+Xv3vspo1FQn28gbZBbCsFlWFJA5UbdEE2
+         tKMAaZp1qC+gDMfv2kJqggJI5H/WvroU6A/Pv1xt2X1IRwbyMxsjC6GDQho6qnrG8rCG
+         jv+p0WXJsc5kYMuXSj/fBo3dLxk3e4kUc/sSHhG2fi9RMkU9le6t9UnLvXXhu1dm1mg7
+         DJWA==
+X-Gm-Message-State: AOAM531xcWgCijWFCMHSfaq2+gqfDJ4IR4U1yAwOsPTsPXK2TLW17jM4
+        aFtGB5nmVKZljP8THAO4sQ==
+X-Google-Smtp-Source: ABdhPJya3sqMPQiW2H/b993RNfsrgt3J2EBCVEUsT+0P5mubEbH1CLbcW6JdVEJ2qL9zNx+NokQEPw==
+X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr1090199iop.14.1594664638827;
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t1sm8159994iob.16.2020.07.13.11.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: (nullmailer pid 493759 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:23:56 -0000
+Date:   Mon, 13 Jul 2020 12:23:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+Message-ID: <20200713182356.GA413630@bogus>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <20200713162206.1930767-1-vkuznets@redhat.com>
-In-Reply-To: <20200713162206.1930767-1-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 13 Jul 2020 11:23:59 -0700
-Message-ID: <CALMp9eR+DYVH0UZvbNKUNArzPdf1mvAoxakzj++szaVCD0Fcpw@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: nVMX: fix the layout of struct kvm_vmx_nested_state_hdr
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Peter Shier <pshier@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612171334.26385-2-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:22 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Before commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer
-> migration") struct kvm_vmx_nested_state_hdr looked like:
->
-> struct kvm_vmx_nested_state_hdr {
->         __u64 vmxon_pa;
->         __u64 vmcs12_pa;
->         struct {
->                 __u16 flags;
->         } smm;
-> }
->
-> The ABI got broken by the above mentioned commit and an attempt
-> to fix that was made in commit 83d31e5271ac ("KVM: nVMX: fixes for
-> preemption timer migration") which made the structure look like:
->
-> struct kvm_vmx_nested_state_hdr {
->         __u64 vmxon_pa;
->         __u64 vmcs12_pa;
->         struct {
->                 __u16 flags;
->         } smm;
->         __u32 flags;
->         __u64 preemption_timer_deadline;
-> };
->
-> The problem with this layout is that before both changes compilers were
-> allocating 24 bytes for this and although smm.flags is padded to 8 bytes,
-> it is initialized as a 2 byte value. Chances are that legacy userspaces
-> using old layout will be passing uninitialized bytes which will slip into
-> what is now known as 'flags'.
->
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
-> Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> The firmware running on the RPi VideoCore can be used to reset and
+> initialize HW controlled by the firmware.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> ---
+> Changes since v2:
+>  - Add include file for reset IDs
+> 
+> Changes since v1:
+>  - Correct cells binding as per Florian's comment
+>  - Change compatible string to be more generic
+> 
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index b48ed875eb8e..23a885af3a28 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -39,6 +39,22 @@ properties:
+>        - compatible
+>        - "#clock-cells"
+>  
+> +  reset:
 
-Oops!
+I'm not really thrilled how this is evolving with a node per provider. 
+There's no reason you can't just add #clock-cells and #reset-cells to 
+the parent firmware node.
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
+I probably should have complained with the clocks node, but that's only 
+pending for 5.9.
+
+The bigger issue is this stuff is just trickling in one bit at a time 
+which gives no context for review. What's next? Is it really a mystery 
+as to what functions the firmware provides? You don't have to have a 
+driver in place for every function.
+
+Rob
