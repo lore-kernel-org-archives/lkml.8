@@ -2,90 +2,158 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D667C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8661C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E4A2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E5E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgGMPRZ (ORCPT
+        id S1730009AbgGMPSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:17:25 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60970 "EHLO vps0.lunn.ch"
+        Mon, 13 Jul 2020 11:18:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27119 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgGMPRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:17:24 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jv0Cl-004si1-56; Mon, 13 Jul 2020 17:17:19 +0200
-Date:   Mon, 13 Jul 2020 17:17:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH net-next v1 5/5] net: phy: micrel: ksz886x/ksz8081: add
- cabletest support
-Message-ID: <20200713151719.GE1078057@lunn.ch>
-References: <20200710120851.28984-1-o.rempel@pengutronix.de>
- <20200710120851.28984-6-o.rempel@pengutronix.de>
- <20200711182912.GP1014141@lunn.ch>
- <20200713041129.gyoldkmsti4vl4m2@pengutronix.de>
+        id S1729027AbgGMPSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:18:09 -0400
+IronPort-SDR: 7t4lzylVkLdbMHlSFjmooUpdyvAbijZ8IpvBUYiwBa8UZvNs7ZRkHU9b+D4eLYrIuWg30C6tCr
+ l+BBUPo1tkoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="136104685"
+X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
+   d="scan'208";a="136104685"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 08:17:50 -0700
+IronPort-SDR: k+LArToREmmC7e4v1zUnIxNuRxpCtVuMqz0gR8g4Q8HZELz/BEFpKHVPkyOZ0YXfaARAhLJzoy
+ jiIZFE/0qDfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
+   d="scan'208";a="429420888"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jul 2020 08:17:50 -0700
+Date:   Mon, 13 Jul 2020 08:17:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
+Message-ID: <20200713151750.GA29901@linux.intel.com>
+References: <20200713082824.1728868-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713041129.gyoldkmsti4vl4m2@pengutronix.de>
+In-Reply-To: <20200713082824.1728868-1-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Oleksij
-> > 
-> > Do the PHY register read/writes pass through the DSA driver for the
-> > 8873?  I was wondering if the switch could intercept reads/writes on
-> > port1 for KSZ8081_LMD and return EOPNOTSUPP? That would be a more
-> > robust solution than DT properties, which are going to get forgotten.
+On Mon, Jul 13, 2020 at 10:28:24AM +0200, Vitaly Kuznetsov wrote:
+> Holes in structs which are userspace ABI are undesireable.
 > 
-> Yes, it was my first idea as well. But this switch allows direct MDIO
-> access to the PHYs and this PHY driver could be used without DSA driver.
-> Not sure if we should support both variants?
+> Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  Documentation/virt/kvm/api.rst  | 2 +-
+>  arch/x86/include/uapi/asm/kvm.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Beside, the Port 1 need at least one more quirk. The pause souport is
-> announced but is not working. Should we some how clear Puase bit in the PHY and
-> tell PHY framework to not use it? What is the best way to do it?
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 320788f81a05..7beccda11978 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -4345,7 +4345,7 @@ Errors:
+>  	struct {
+>  		__u16 flags;
+>  	} smm;
+> -
+> +	__u16 pad;
 
-It all seems rather odd, the way one PHY is messed up, but the other
-works. Does this PHY exist as a standalone device, not integrated into
-the switch? Do the same erratas apply to such a standalone device?
+I don't think this is sufficient.  Before 83d31e5271ac, the struct was:
 
-If the issues are just limited to integrated PHYs, there is maybe
-something you can do via DSA:
+	struct kvm_vmx_nested_state_hdr {
+		__u64 vmxon_pa;
+		__u64 vmcs12_pa;
 
-in slave.c:
+		struct {
+			__u16 flags;
+		} smm;
+	};
 
-static int dsa_slave_phy_setup(struct net_device *slave_dev)
-{
-...
-        if (ds->ops->get_phy_flags)
-                phy_flags = ds->ops->get_phy_flags(ds, dp->index);
+which most/all compilers will pad out to 24 bytes on a 64-bit system.  And
+although smm.flags is padded to 8 bytes, it's initialized as a 2 byte value.
 
-        ret = phylink_of_phy_connect(dp->pl, port_dn, phy_flags);
+714             struct kvm_vmx_nested_state_hdr boo;
+715             u64 val;
+716
+717             BUILD_BUG_ON(sizeof(boo) != 3*8);
+718             boo.smm.flags = 0;
+   0xffffffff810148a9 <+41>:    xor    %eax,%eax
+   0xffffffff810148ab <+43>:    mov    %ax,0x18(%rsp)
 
-It is either B53 or SF2 which uses this, i forget which. flags get
-or'ed into phydev->dev_flags. These are device specific flags. So you
-could define a bit to represent this errata. And then in the PHY
-driver do whatever needs to be done when you see the flag set for a
-specific PHY.
+719
+720             val = *((volatile u64 *)(&boo.smm.flags));
+   0xffffffff810148b0 <+48>:    mov    0x18(%rsp),%rax
 
-If Pause is broken, then yes, it would be good to remove the Pause
-from the available features, and return an error if requested to use
-it.
 
-       Andrew
+Which means that userspace built for the old kernel will potentially send in
+garbage for the new 'flags' field due to it being uninitialized stack data,
+even with the layout after this patch.
+
+	struct kvm_vmx_nested_state_hdr {
+		__u64 vmxon_pa;
+		__u64 vmcs12_pa;
+
+		struct {
+			__u16 flags;
+		} smm;
+		__u16 pad;
+		__u32 flags;
+		__u64 preemption_timer_deadline;
+	};
+
+So to be backwards compatible I believe we need to add a __u32 pad as well,
+and to not cause internal padding issues, either make the new 'flags' a
+__u64 or pad that as well (or add and check a reserved __32).  Making flags
+a __64 seems like the least wasteful approach, e.g.
+
+	struct kvm_vmx_nested_state_hdr {
+		__u64 vmxon_pa;
+		__u64 vmcs12_pa;
+
+		struct {
+			__u16 flags;
+		} smm;
+		__u16 pad16;
+		__u32 pad32;
+		__u64 flags;
+		__u64 preemption_timer_deadline;
+	};
+
+
+>  	__u32 flags;
+>  	__u64 preemption_timer_deadline;
+>    };
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index 0780f97c1850..aae3df1cbd01 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -414,7 +414,7 @@ struct kvm_vmx_nested_state_hdr {
+>  	struct {
+>  		__u16 flags;
+>  	} smm;
+> -
+> +	__u16 pad;
+>  	__u32 flags;
+>  	__u64 preemption_timer_deadline;
+>  };
+> -- 
+> 2.25.4
+> 
