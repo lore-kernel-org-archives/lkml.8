@@ -2,148 +2,91 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E1C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C88206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989D3206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgGML0S (ORCPT
+        id S1729665AbgGML1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:26:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:56394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgGML0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:26:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1C3D1FB;
-        Mon, 13 Jul 2020 04:26:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18A4A3F7D8;
-        Mon, 13 Jul 2020 04:26:15 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 12:26:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200713112613.GB25865@e121166-lin.cambridge.arm.com>
-References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
+        Mon, 13 Jul 2020 07:27:04 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35799 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729143AbgGML1D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:27:03 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k4so10663442oik.2;
+        Mon, 13 Jul 2020 04:27:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hZfdrESmTkh44pExrcL33u4SHqgxscd/TdxVBNeiFI8=;
+        b=M+fYUSfKfzooFJwQIN5/nEiopIrHweW3vPgROyrfqGWxKax1a7W9qe/zKdZPwKMy5m
+         8WAkBNHHxRcZnMSZrcNGCf+9Xbcg6HLBzy3TB8vPjJNSJ6OAKF0r0MY0nbnoROXnoLHJ
+         OTqdkMoqje3rVDgJmv+O10KZhoIJip+yq4/OXIBUSVBA/0BMfG7kIaAs6SrlCZl9QO8h
+         x+ypS2hruvc2zUOetIaqrIzwvcxBdJVjUqz4kmXELbgjywFYXt98YAAW6E4ZrnOUoo7r
+         UI+sGPJZ3rGvLOIt9qCTempoMqXvVMjslxWzGKRaIbJt11y1WiR+WI5CzpTK9eJ888+w
+         YK8w==
+X-Gm-Message-State: AOAM530gdG5dn8vqBYMhUkZxi29vPEnrDGC/f2AaYpIRz3tMSML9+4RA
+        MBYnRNUYMXUsqww4zejj/yshQ38l16Bx5l71kjM=
+X-Google-Smtp-Source: ABdhPJwAa+vsekdcbdiwbMA9snm8YofJa4TUmXKKH+oZAM2R4RD3MZVuzCKpKjtvYCyXBAHd59NorvzkCCAiGn3OcEM=
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr13558051oih.54.1594639622718;
+ Mon, 13 Jul 2020 04:27:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ0WARicxaATS_1h2W2MyXqZ8OGOxOTvWWB+hD70ea_MQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 Jul 2020 13:26:51 +0200
+Message-ID: <CAMuHMdXppLj2Fc4AyNOoSrF9Vb5GJTZKJui3ahmGnTy533qp=A@mail.gmail.com>
+Subject: Re: [PATCH 4/8] dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:16:57AM -0600, Rob Herring wrote:
-> On Tue, Jun 16, 2020 at 6:57 AM Bharat Kumar Gogada
-> <bharat.kumar.gogada@xilinx.com> wrote:
-> >
-> > - Add support for Versal CPM as Root Port.
-> > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-> >   block for CPM along with the integrated bridge can function
-> >   as PCIe Root Port.
-> > - Bridge error and legacy interrupts in Versal CPM are handled using
-> >   Versal CPM specific interrupt line.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  drivers/pci/controller/Kconfig           |   8 +
-> >  drivers/pci/controller/Makefile          |   1 +
-> >  drivers/pci/controller/pcie-xilinx-cpm.c | 617 +++++++++++++++++++++++++++++++
-> >  3 files changed, 626 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
-> 
-> [...]
-> 
-> > +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +       struct xilinx_cpm_pcie_port *port;
-> > +       struct device *dev = &pdev->dev;
-> > +       struct pci_host_bridge *bridge;
-> > +       struct resource *bus_range;
-> > +       int err;
-> > +
-> > +       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-> > +       if (!bridge)
-> > +               return -ENODEV;
-> > +
-> > +       port = pci_host_bridge_priv(bridge);
-> > +
-> > +       port->dev = dev;
-> > +
-> > +       err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> > +                                             &bridge->dma_ranges, &bus_range);
-> > +       if (err) {
-> > +               dev_err(dev, "Getting bridge resources failed\n");
-> > +               return err;
-> > +       }
-> > +
-> > +       err = xilinx_cpm_pcie_init_irq_domain(port);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       err = xilinx_cpm_pcie_parse_dt(port, bus_range);
-> > +       if (err) {
-> > +               dev_err(dev, "Parsing DT failed\n");
-> > +               goto err_parse_dt;
-> > +       }
-> > +
-> > +       xilinx_cpm_pcie_init_port(port);
-> > +
-> > +       err = xilinx_cpm_setup_irq(port);
-> > +       if (err) {
-> > +               dev_err(dev, "Failed to set up interrupts\n");
-> > +               goto err_setup_irq;
-> > +       }
-> 
-> All the h/w init here can be moved to an .init() function in ecam ops
-> and then use pci_host_common_probe. Given this is v9, that can be a
-> follow-up I guess.
+On Wed, Jul 8, 2020 at 7:48 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document SDHI controller for RZ/G2H (R8A774E1) SoC, which is compatible
+> with R-Car Gen3 SoC family.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-I think there is time to get it done, Bharat please let me know if
-you can repost it shortly with Rob's requested change implemented.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks,
-Lorenzo
+Gr{oetje,eeting}s,
 
-> Otherwise,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> > +
-> > +       bridge->dev.parent = dev;
-> > +       bridge->sysdata = port->cfg;
-> > +       bridge->busnr = port->cfg->busr.start;
-> > +       bridge->ops = &pci_generic_ecam_ops.pci_ops;
-> > +       bridge->map_irq = of_irq_parse_and_map_pci;
-> > +       bridge->swizzle_irq = pci_common_swizzle;
-> > +
-> > +       err = pci_host_probe(bridge);
-> > +       if (err < 0)
-> > +               goto err_host_bridge;
-> > +
-> > +       return 0;
-> > +
-> > +err_host_bridge:
-> > +       xilinx_cpm_free_interrupts(port);
-> > +err_setup_irq:
-> > +       pci_ecam_free(port->cfg);
-> > +err_parse_dt:
-> > +       xilinx_cpm_free_irq_domains(port);
-> > +       return err;
-> > +}
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
