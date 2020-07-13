@@ -2,162 +2,165 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6DEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE342075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594621064;
-	bh=XlMSuqTpDlP5SWU0u/vnLYHw1UcIUbZbzLp5CEBxgos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uj+aMTUfuCDXfI6XRM2pnqGulY3YmpeadcFz34eoYz7N/fKqu3JEYA/DiefmEZMJA
-	 s3Ozxu01alrENlf3bBrcARnA3Cr3lbN1L7mjV26SgO8/fnUr9i7lk6bmVtDwRcSMVw
-	 SsSOMXKmnoBBt6oheyRx1QEqN5LhP624AQZP51qM=
+	by mail.kernel.org (Postfix) with ESMTP id 8C0BA2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1lwY+onh";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RkW41z1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgGMGRn (ORCPT
+        id S1729198AbgGMGT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgGMGRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:17:42 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16AD92065F;
-        Mon, 13 Jul 2020 06:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594621062;
-        bh=XlMSuqTpDlP5SWU0u/vnLYHw1UcIUbZbzLp5CEBxgos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNl3g7zAwv+h/dlFGVcJySB7qXgYhqSUXJL0PPfLcAGCk3tLLFl2RrRafkjXCinex
-         QWnlowxFpGmoM2BSqp7SB5VYvrvyQSy5jbs96BqZRi0TjzeaYVt/IO+21BwLCy8xUg
-         mzPQZ8Cj5k1e2eVM/4sghR236HDiiMZa9F51B2i0=
-Date:   Mon, 13 Jul 2020 11:47:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh+dt@kernel.org, krzk@kernel.org, kwmad.kim@samsung.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        kishon@ti.com
-Subject: Re: [PATCH v12 2/2] phy: samsung-ufs: add UFS PHY driver for samsung
- SoC
-Message-ID: <20200713061737.GD34333@vkoul-mobl>
-References: <20200703171135.77389-1-alim.akhtar@samsung.com>
- <CGME20200703173144epcas5p1daa9f5c594e7f299638cc75b7425b7c8@epcas5p1.samsung.com>
- <20200703171135.77389-2-alim.akhtar@samsung.com>
+        Mon, 13 Jul 2020 02:19:29 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:23215 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgGMGT2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:19:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594621168; x=1626157168;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=DptnLCJ4aXU8eT6B9ZfaMee/mjBzqPKy7dVpkd4LxZw=;
+  b=1lwY+onhZ8wvgXt7RCIkVp1ZMTjiVgTHbBt8FmEvyErl+MKbxNYn/teQ
+   w2J/X4SMEPrXqpHRAI/GivyvEbykG+TwA2EiwxDVVStTvhdudYfd0asWn
+   /RuDco4xxKra7ySyhdJrJIs/G//jg10lfgmH8376PlHkf6xlFq2brdHGU
+   HlUQ8qOjEoJONXe8n0MjM7kn0wSanIorjhHD55xY+bneWCgBQ+GU+cYVD
+   COhiF0fYLp1ye7uQCMWNlpn+18awLyqSA5AyaqEB2AnRLYcmJnSgO3uGr
+   y/Hz8em4Xm1GetbMwFFPuxUVCSzblZsnFDc5FhY7K3URS73XuNTiHbbd5
+   g==;
+IronPort-SDR: aCKz2aWoGTOckzCFuuY6uprlYS/sTpTqCAa5ic3An2yVhz6buloTC0UAW/R2KPepN7KUv9hZeP
+ +MNyY0h18ywTfruG2QwJK5klCsRzKC93T15mI3OGd7un1QH55ih+9RBmloONoUCpDRl+Ta+QKX
+ zQGDzgmoNswFAjM9VBc4si6P+ao9WJjbQd4zwBes+CeXuJMOiIK6ne/XgHECuLqIkgr/hclx9a
+ G1yV97nw/ZMR0AcERx3emnAn2yIUf0GlyYXLvTC6TrDz316rIl2GvQiRFsrvX8AAZj6BEjordt
+ I2w=
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="87286063"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2020 23:19:27 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 12 Jul 2020 23:18:56 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Sun, 12 Jul 2020 23:18:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OmVcoTdY/FeAsNA8mpzvGf8UJHCnv9VqHUm/lYBJ/oBDVT6lX9vv3ucBAKTWuefR+j5ngCbAB12T2KHl+pqvV0BFfSgvCdwEz1gD3Mam6BvjoUza+8OicSWd7rSpc33Z8uMgoaC6arjKyPCJmBDQ7np/3p73dQN+JBcmpe2dodvaUtVYFl/R7Te/2lDn3m4M6kRgv+NJrDbSvVAtGLTCD3wHBkfEyqSdGZaktlNv5ixQwOWBzJCS4EMkwutZzZkpx2fa9ld3j7ruMq1ydqaOCM0pPAtcidj2htndbIUvIwuABL6PBRxY2SnlNMJ6NqfjY8+Bdq3BTkk6//PiFoEaJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DptnLCJ4aXU8eT6B9ZfaMee/mjBzqPKy7dVpkd4LxZw=;
+ b=NSEBRwUhBp0uenB22139r8TG+lYCQqC8wS59rB/KgJV3f/OelULMhvFld3DHb8vVglgH+FMhLBNedHccduViICpEGEKjtMIlNwm+DtK8Fy+IWh5Df/lEglVRNU5D0W0EpLpe/VaUeebO0h5MdqZ9OeRXUH2kLcNflBTF0ZJ1I08hLh8xbfBx2JLcryj143nLpoBwKFt430sw52BZBm2tAgoJArMnihjLJC96aSLFY2VgcElyTm5kDt5zYnbfiSAXo4UM2oc96ltqMPkL1bNzCK5s7TWnA2yrtG+iolKQ6cv9A1jk0e+mBq567F/iuqsEsLAcmYU3EdJkPexLrU1xWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DptnLCJ4aXU8eT6B9ZfaMee/mjBzqPKy7dVpkd4LxZw=;
+ b=RkW41z1vV+BDXAlFYgo2Ve3kDUBdIvfu+AkaiaUrMsX1cAumAYiB0kDhe9SVjjaqpm/YN6MX5/PqiqWHs7Snd8F4v3wU93lBNGpMIhuOw5aL5XzWtt8hykdHxEHF/QeJnFfMKRfiIlt1D7CoWEoM9CylLFBLG35wFK1SVqpH2Zc=
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
+ by BYAPR11MB3576.namprd11.prod.outlook.com (2603:10b6:a03:b4::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.24; Mon, 13 Jul
+ 2020 06:19:25 +0000
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
+ 06:19:25 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <p.yadav@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <vigneshr@ti.com>, <broonie@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
+        <michal.simek@xilinx.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     <nsekhar@ti.com>, <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v10 03/17] spi: atmel-quadspi: reject DTR ops
+Thread-Topic: [PATCH v10 03/17] spi: atmel-quadspi: reject DTR ops
+Thread-Index: AQHWWN2OjiZAyoUj/UaQzlTa4VGA4w==
+Date:   Mon, 13 Jul 2020 06:19:25 +0000
+Message-ID: <33e2708a-7e69-86c9-089c-2ace27f7768c@microchip.com>
+References: <20200623183030.26591-1-p.yadav@ti.com>
+ <20200623183030.26591-4-p.yadav@ti.com>
+In-Reply-To: <20200623183030.26591-4-p.yadav@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [86.120.242.181]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 977e2248-149b-4766-6285-08d826f4b120
+x-ms-traffictypediagnostic: BYAPR11MB3576:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB35762D1B28CE7EABF8850A8DF0600@BYAPR11MB3576.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yemMI/P62AdxmmAJ1aEw4Ziz03WW2gJiqOaPnI7O4GKHQAES/2z0fLHXnxvZOsYluedymS52WWhXfthlyLd2fryyZM2GEQhAJtsnF+vwtZcyVN3WVOJbqqfhjBneElYTNKq83MAwND31YdH+WYoDIXkQAL0Iawagufx1DadVBtII9ZZwnFQfSOo/TGxWOPUaglchlnrHSsUzmx5SSplWZWdry8RWobkmRPjob0DTVy90CfAvMLeMiFQxOb0C4h5Q9zpBXMGVORUfNv/UYPjHvnrbHOJl7c4jkHNIEboxr2ZXlUtzB9QVKd2SJ9ngVvoouFo8TEbXKgUgODfMAKglY3FRNkurdMN8hiXope5uTrz7AmOAzOX3taf8UWWjoE7I7zTQrgRKbcUO8RMbj2+X+g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39860400002)(136003)(346002)(376002)(366004)(54906003)(6486002)(2616005)(4326008)(8936002)(5660300002)(31696002)(110136005)(6512007)(86362001)(186003)(8676002)(2906002)(31686004)(26005)(7416002)(478600001)(36756003)(6506007)(53546011)(76116006)(66946007)(66476007)(71200400001)(316002)(66446008)(66556008)(91956017)(64756008)(921003)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: aFvWk89N8Vv82tc85nwySs9c9VYs7Rcp7Mv/5/FVlrJyI9z+/3jlm3fyLuSsplJPQ/8OetY+sg58IajJXJt95KCUcFZkUGB8/e1f6mzGXAIHa7apGFbHSdd06pF2EdsYg2PFkAgJxuqnKxa9vjtzsHj5hn/Jdb6uP6iQhoiPS69aG2/zZ5RV9d40ZEB0QzemeqPss3cxYDzaGG9tOXSv0BTSWJE5vT+KHdSSZRtSfVXVepqDLQ6Z2ocYusO6xTRSqO729qGeE4NwT+Zz7D4puekSHvWITF0yd0+5tfvvQPPnkmyEDWuIHYEgDW/Mvyb0VzH68pXdzhHytxHJSA31NKdVme+DKOlhZ61+FBU/HJPKiX6OwV6N2e3C6KpUXFYiIaFUhbYBNngQHCAuyKMpbVVLGoS0UmlTfoDHqC9xrwH//1yFwLIWSlLdEuY7PlAZOvACTTKTd3nOSAe2hWkLEdGwgEfdiUfyZRzpPJ7XYB0alD0Fq3Nsj72thssJ5I2Q
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7A4C109E0E655841BEF0F3AD8CDB724F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703171135.77389-2-alim.akhtar@samsung.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 977e2248-149b-4766-6285-08d826f4b120
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 06:19:25.6961
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b825ytLg/t9jp4cKgBOJdZ3o8F2ZWFDbneZCFCf+w3B92ArPeX4CYd33JrhTX6pcEvNd2eCMmctJT2yleWiyOGe+LFRNyq2pRDD3263wGis=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3576
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-07-20, 22:41, Alim Akhtar wrote:
-
-> +static const struct samsung_ufs_phy_cfg exynos7_post_init_cfg[] = {
-> +	END_UFS_PHY_CFG
-> +};
-
-This is dummy, why not add a check to make config optional?
-
-> +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy *phy)
-> +{
-> +	int ret = 0;
-
-superfluous init, am sure I flagged it before as well
-
-> +
-> +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
-> +	if (IS_ERR(phy->tx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
-> +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
-> +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n", __func__, ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->rx0_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: rx0_symbol_clk enable failed %d\n", __func__, ret);
-> +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->rx1_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: rx1_symbol_clk enable failed %d\n", __func__, ret);
-> +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> +		clk_disable_unprepare(phy->rx0_symbol_clk);
-
-maybe it will look better if we add common rollback and jump to proper
-labels
-
-> +static int samsung_ufs_phy_clks_init(struct samsung_ufs_phy *phy)
-> +{
-> +	int ret;
-> +
-> +	phy->ref_clk = devm_clk_get(phy->dev, "ref_clk");
-> +	if (IS_ERR(phy->ref_clk))
-> +		dev_err(phy->dev, "failed to get ref_clk clock\n");
-> +
-> +	ret = clk_prepare_enable(phy->ref_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: ref_clk enable failed %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(phy->dev, "UFS MPHY ref_clk_rate = %ld\n", clk_get_rate(phy->ref_clk));
-
-debug pls
-
-> +static int samsung_ufs_phy_init(struct phy *phy)
-> +{
-> +	struct samsung_ufs_phy *_phy = get_samsung_ufs_phy(phy);
-
-ss_phy perhaps?
-
-> +	int ret;
-> +
-> +	_phy->lane_cnt = phy->attrs.bus_width;
-> +	_phy->ufs_phy_state = CFG_PRE_INIT;
-> +
-> +	if (_phy->drvdata->has_symbol_clk) {
-> +		ret = samsung_ufs_phy_symbol_clk_init(_phy);
-> +		if (ret)
-> +			dev_err(_phy->dev, "failed to set ufs phy symbol clocks\n");
-> +	}
-> +
-> +	ret = samsung_ufs_phy_clks_init(_phy);
-> +	if (ret)
-> +		dev_err(_phy->dev, "failed to set ufs phy  clocks\n");
-> +
-> +	samsung_ufs_phy_calibrate(phy);
-> +
-> +	return 0;
-
-not return samsung_ufs_phy_calibrate() ?
--- 
-~Vinod
+T24gNi8yMy8yMCA5OjMwIFBNLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToNCj4gRVhURVJOQUwgRU1B
+SUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25v
+dyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBEb3VibGUgVHJhbnNmZXIgUmF0ZSAoRFRSKSBv
+cHMgYXJlIGFkZGVkIGluIHNwaS1tZW0uIEJ1dCB0aGlzIGNvbnRyb2xsZXINCj4gZG9lc24ndCBz
+dXBwb3J0IERUUiB0cmFuc2FjdGlvbnMuIFNpbmNlIHdlIGRvbid0IHVzZSB0aGUgZGVmYXVsdA0K
+DQp0aGUgc2FtOXg2MCB2ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVyIHN1cHBvcnRzIERUUiBvcHMu
+DQoNCj4gc3VwcG9ydHNfb3AoKSwgd2hpY2ggcmVqZWN0cyBhbGwgRFRSIG9wcywgZG8gdGhhdCBl
+eHBsaWNpdGx5IGluIG91cg0KPiBzdXBwb3J0c19vcCgpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+UHJhdHl1c2ggWWFkYXYgPHAueWFkYXZAdGkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc3BpL2F0
+bWVsLXF1YWRzcGkuYyB8IDYgKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25z
+KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jIGIvZHJp
+dmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jDQo+IGluZGV4IGNiNDRkMWUxNjlhYS4uYTg5ODc1NWZi
+NDFlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMNCj4gKysrIGIv
+ZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jDQo+IEBAIC0yODUsNiArMjg1LDEyIEBAIHN0YXRp
+YyBib29sIGF0bWVsX3FzcGlfc3VwcG9ydHNfb3Aoc3RydWN0IHNwaV9tZW0gKm1lbSwNCj4gICAg
+ICAgICAgICAgICAgIG9wLT5kdW1teS5uYnl0ZXMgPT0gMCkNCj4gICAgICAgICAgICAgICAgIHJl
+dHVybiBmYWxzZTsNCj4gDQo+ICsgICAgICAgLyogRFRSIG9wcyBub3Qgc3VwcG9ydGVkLiAqLw0K
+DQpCZXR0ZXIgdG8gc2F5IHRoYXQgIkRUUiBvcHMgYXJlIG5vdCBpbXBsZW1lbnRlZC4iDQoNCj4g
+KyAgICAgICBpZiAob3AtPmNtZC5kdHIgfHwgb3AtPmFkZHIuZHRyIHx8IG9wLT5kdW1teS5kdHIg
+fHwgb3AtPmRhdGEuZHRyKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiArICAg
+ICAgIGlmIChvcC0+Y21kLm5ieXRlcyAhPSAxKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGZh
+bHNlOw0KPiArDQoNCkkgd291bGQgbW92ZSB0aGVzZSB0aGUgZmlyc3QgdGhpbmcgaW4gdGhlIGZ1
+bmN0aW9uLCB0byBzcGVlZCB1cCB0aGUgZXhpdC4NCg0KV2l0aCB0aGVzZSBhZGRyZXNzZWQ6DQoN
+ClJldmlld2VkLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+
+DQoNCj4gICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gIH0NCj4gDQo+IC0tDQo+IDIuMjcuMA0KPiAN
+Cg0K
