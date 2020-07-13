@@ -4,88 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5887C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 696812065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C646B2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594681519;
-	bh=rfIf8KLWNcWH0T1z7Tv2/kSXsj6ghsoPGlj1s2KhE6o=;
+	s=default; t=1594681572;
+	bh=u38qQRxtP91hc9Pn5P9p4w1ZGDjrKxTm6yZGnkMhX2o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bmjUGNrdV5oMu7XfNrvOohI6CyJXapaTMS8CsjZEa/MjRDW16u6EGO93NuekvHsKC
-	 SdX9AxvCF6oZJP/SdrrdneDPGD+zMqVJMRRtahAvoRwrwZQOP95sbzug7NgZkcvJ2V
-	 k720m91+i1UsG6UBaoJTye5NDu0UKJmkD2MWtlSo=
+	b=LLPCXdco6oTOcF34NflGLN4dZDwh3TSmT4wTxB0/a/u0f9Vcb0zLIZZ8YSTvw+VeZ
+	 xSAgmKtQMeS3BBwyCVUNwzuTsLXIC7tgHGa6VWrUo7wVHm42Iq6G9mD0I9HTsC0Y+F
+	 lXu+Z0CIdefqj2n8ha/B4cJOxNrFAJ9pRTKbCl6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGMXFR (ORCPT
+        id S1726776AbgGMXGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:05:17 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34101 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGMXFR (ORCPT
+        Mon, 13 Jul 2020 19:06:11 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33150 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGMXGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:05:17 -0400
-Received: by mail-il1-f195.google.com with SMTP id t4so12716178iln.1;
-        Mon, 13 Jul 2020 16:05:16 -0700 (PDT)
+        Mon, 13 Jul 2020 19:06:10 -0400
+Received: by mail-io1-f67.google.com with SMTP id d18so15374962ion.0;
+        Mon, 13 Jul 2020 16:06:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qkXyHnsv68ED4w7McKNKxAN4UpsE/YFqp1JlctBInnU=;
-        b=a9WqWF13sZl/lV00EiMTDDbeZTW1x5BuNPyqRra83jgTSaCyeIQHArKsAQjtUPNtlv
-         zSfy2/Ey0PNIPA5Nd8ITbXvzVAd+/qiJNiWcLIj9ZcH3Bk6ewLlbCoGU5iBdC0BSDqDR
-         tyIUhlEkklEE2b3RQV51h++fG6D0cDhshE+TDdLT48r4/bPu1UQyqPt2oxgaL1DsMtoU
-         0rvzUHG/0cVMehNjQUl5T1p9YAxGPc1nVmEWD79mkSwbYoVaZy+K5IgkTQkvBtTGkRwQ
-         jf57QjXvTARz3g4erspq3t1rDAphPopqa4SLGAUVpd81hoPD+4MwBFHSFg003JeSKAR6
-         9DTQ==
-X-Gm-Message-State: AOAM532kvAXVvVAebvXsO70kfTxGIbl6y9SokiPlb+Ecd3IJbubso4Hq
-        BBFF2kk2a0/Z9MDW/kF42g==
-X-Google-Smtp-Source: ABdhPJxZ9uWIbSzhP3o1StELFModGoY1L4ZSW4KiG7rqg3xYuCfk5q/0OPS7jM/nLh/X7d/OC/Nu8g==
-X-Received: by 2002:a92:c9cb:: with SMTP id k11mr2188434ilq.70.1594681516447;
-        Mon, 13 Jul 2020 16:05:16 -0700 (PDT)
+        bh=XA4BB6FazEGBX1PaMryq6/o+Tzg4dFJ0aIRvH8y7LQw=;
+        b=SFaBh/U59eYp/GflsGEy6WRf1pzaeDLN+FKuK90GMVU1JeV1oQ6pr+f0UdEKZNA9Xi
+         kJT1vfOFMKQ1RTXnLvMpChhEVFafxQg5M2fiUcRe52OaHVKAgXYfDzgFvaHjH9VvCpht
+         LvyRcPRLuZCaVcMZ8w1wNnPc0IxorWr/0AVfww8hmjYhGWfdkRw1++hIOR2oh7ukINnt
+         fi0hK2kz9a0HpAzsj/Y4xav3Cyj8t7/k9/6prGry1t/MdD0ZCNEHTAXZJ/zBkr1ULHxS
+         RxCpkpb/7rCLQI9kQoIRmjxzkUmaAEa8x7VTL4NJtsQqh9zRJZAf/Vyl2S4AGPkRtT/8
+         Oh/w==
+X-Gm-Message-State: AOAM532smzZK5ZkJq/inOwzzy2MKz2twL52xZOg+xuoyaHuO33JADhQB
+        +DNpP4Bqoj0RF4Pmli5alDMMt9gw8Q==
+X-Google-Smtp-Source: ABdhPJy0Eu8uS8XRgfOhXG3Xs4i0VS/SjjD9lFH6csH0UXcJR4J//DEYTVmu1BbLa7MVTota+1JNRQ==
+X-Received: by 2002:a5e:9b08:: with SMTP id j8mr531727iok.116.1594681569149;
+        Mon, 13 Jul 2020 16:06:09 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w5sm8931082ilm.46.2020.07.13.16.05.15
+        by smtp.gmail.com with ESMTPSA id x12sm9111916ile.14.2020.07.13.16.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:05:15 -0700 (PDT)
-Received: (nullmailer pid 888550 invoked by uid 1000);
-        Mon, 13 Jul 2020 23:05:14 -0000
-Date:   Mon, 13 Jul 2020 17:05:14 -0600
+        Mon, 13 Jul 2020 16:06:08 -0700 (PDT)
+Received: (nullmailer pid 889798 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:06:07 -0000
+Date:   Mon, 13 Jul 2020 17:06:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        jgg@ziepe.ca, Rob Herring <robh+dt@kernel.org>,
-        linux-integrity@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
-        ardb@kernel.org, peterhuewe@gmx.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial
- device
-Message-ID: <20200713230514.GA888497@bogus>
-References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
- <20200708131424.18729-3-masahisa.kojima@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/14] dt-bindings: clock: combine qcom,sdm845-gpucc
+ and qcom,sc7180-gpucc
+Message-ID: <20200713230607.GA889744@bogus>
+References: <20200709135251.643-1-jonathan@marek.ca>
+ <20200709135251.643-7-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708131424.18729-3-masahisa.kojima@linaro.org>
+In-Reply-To: <20200709135251.643-7-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020 22:14:24 +0900, Masahisa Kojima wrote:
-> Add a compatible string for the SynQuacer TPM to the binding for a
-> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
-> slightly differently on this hardware, so it requires its own
-> identifier.
+On Thu, 09 Jul 2020 09:52:37 -0400, Jonathan Marek wrote:
+> These two bindings are almost identical, so combine them into one. This
+> will make it easier to add the sm8150 and sm8250 gpucc bindings.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 > ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  ...qcom,sdm845-gpucc.yaml => qcom,gpucc.yaml} | 14 ++--
+>  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 74 -------------------
+>  2 files changed, 9 insertions(+), 79 deletions(-)
+>  rename Documentation/devicetree/bindings/clock/{qcom,sdm845-gpucc.yaml => qcom,gpucc.yaml} (82%)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
