@@ -2,142 +2,190 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CE1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A009C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D05320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB5A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CRSdQDBt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+E3GxcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgGMFoU (ORCPT
+        id S1728985AbgGMFoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59630 "EHLO
+        Mon, 13 Jul 2020 01:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgGMFoT (ORCPT
+        with ESMTP id S1725804AbgGMFob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:44:19 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874B5C08C5DB
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 22:44:19 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dp18so14658118ejc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 22:44:19 -0700 (PDT)
+        Mon, 13 Jul 2020 01:44:31 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA461C061794;
+        Sun, 12 Jul 2020 22:44:31 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u5so5524273pfn.7;
+        Sun, 12 Jul 2020 22:44:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rp7+bh2mU6TpEEtWpOr+87rCm6MPnrvLOWdtUzMHKQ8=;
-        b=CRSdQDBtxmD9eFlVT0K5jcruX9Eb95imbaOtpnYb7gl8aEBpXbsxoBVC4abKx/J+Ld
-         DFDhaOOfCqUgceSh2DeJvNwSBdWGz4Enfbn7+tsEQatlol7t82YFPryAObOhHvlVQ1A+
-         fkQzDtU1fT+c4rqwAN9nfZyl6z1t9Vi91nFGc=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uaxK61b6eNFTeIyPEZWODnxtmcqDzzyQf4r5VKLOXqY=;
+        b=V+E3GxcXuiz/woTyBNXb7juJ9L7hVv0pBhu9EPiwKhfi8tdWrO+O71qGQBGqe2qUpP
+         MYOjEPCOaYS7/lQVrl0+kEon4tn7Eydy5gr4AvhaJl7iNmUsA2MKuru25bz+lJsGtL40
+         3BeDmEw1ptfAcOfZcm659AFUpn9yjHD1GMu63AQY4j6OXjghI4lhxuwFDx/QNlQoHZ3d
+         s4OcTrHW1yc7R9xqbfNHzvEKiUd5bECjoO5qFL0FUYpooZm5vFAUc0w0XNEnaeSTBqXt
+         CQyTzqmDUPhUf+GTTAB9kYK3eKnLn7ChbT3VxiEttUHk7/uhTydqtatVqRKC6T2lkZoa
+         ceAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rp7+bh2mU6TpEEtWpOr+87rCm6MPnrvLOWdtUzMHKQ8=;
-        b=Svo9Bopofbk+wVN+F/gS7ZaKRr+cFQpu17fF2jjwf4uHvW855XTZjojPxobbFyJ0Ms
-         bAaPXF+BtmFlW14YZC48LzJ77a3L37BC9qJTipapWB5MCdF3Yzhx+4FNhGSOwVpqJS6c
-         tfnWRXlMMKkbngr+SY6+oBnbzojdXgvqx6ad4GHCkVtWL4p+BIjg6mqRSGqrMhviD5sC
-         jWKjOub9871GHuQUF7vIjoi36kW3uDlaXXEXoSKAF2rovEkasQTf2tQ+niCS/FdcljqB
-         2CP9afjf5Nx1fPEJRrT+ne2mUzOVBuT7duGRTxc1LuG5qL0EMODR3udqQ4SQV6Me8gU0
-         vo4g==
-X-Gm-Message-State: AOAM533L+LKNMYzw85geY5LauuofSAfqxQYoO5no/ugwxw8NnEmHQbtR
-        2fin3lfRrSZs2Me7vTsWWO31WNPA6kRzPU7gEWdPUQ==
-X-Google-Smtp-Source: ABdhPJxKhhkxwRWVmaaKVxOyh3qvejCjDIr3yNQRWD870hkkTeHHZbJtXmbbx2iPuNB7nZjoO1GN3ll0CJpetV9WDDo=
-X-Received: by 2002:a17:906:b45:: with SMTP id v5mr69591620ejg.464.1594619058124;
- Sun, 12 Jul 2020 22:44:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uaxK61b6eNFTeIyPEZWODnxtmcqDzzyQf4r5VKLOXqY=;
+        b=uYH08skhe86woMypTW3gq4w1Wy5ABaSd+hXljPZ+9hlzFBzrcLxrINgsRDs/MWxjxT
+         9w0tr71a2Pgk4dRYkIFXpfSPjz67WvBiIkEje6w8HlHgDA/5t5izmt/2Z4Zu+aO8Cxun
+         m9UdXr/2ifryK6oB9v1QPO6CtCtMMjDZIqZ7yuQFsTvSHVaepw3U57Fm8fnIISiTBy7S
+         HlLS4W45fjxsR/oOMLIx/FUxdsvZjMAZlfd2fBEN9p+nbheHUW/oh5ak0ZossqHu0xV5
+         7tyzslixM+R4+GnuShxW21vn9CnpXI5ETWFIlf9M4R+nOwWsCOSTMhs+PgXAfB8ozZWa
+         KMJQ==
+X-Gm-Message-State: AOAM532xiPPR1C2JnNjlcqFcx/2aXeoNf2sq1+3Gb0WXfV+9fGZFl/2R
+        0GaRoIWdtDGILyj2bg/C0VQ=
+X-Google-Smtp-Source: ABdhPJw/12Yazmj19RCOWmGDUqGyyKoudOD7lCbkADDZiDrqZOVC54yhfYS3CM0I5o3CL56JuFLg+Q==
+X-Received: by 2002:a05:6a00:14cf:: with SMTP id w15mr7563038pfu.237.1594619071175;
+        Sun, 12 Jul 2020 22:44:31 -0700 (PDT)
+Received: from blackclown ([103.88.82.220])
+        by smtp.gmail.com with ESMTPSA id s10sm32792311pjf.3.2020.07.12.22.44.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 Jul 2020 22:44:30 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 11:14:24 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: Remove pci-dma-compat wrapper APIs.
+Message-ID: <20200713054424.GD12262@blackclown>
+References: <20200711124633.GA16459@blackclown>
+ <20200713045959.GA7563@f3>
 MIME-Version: 1.0
-References: <20200711064846.16007-1-yong.wu@mediatek.com> <20200711064846.16007-2-yong.wu@mediatek.com>
- <9e21288c-07da-88b0-2dbb-bd9a2a4d529b@gmail.com>
-In-Reply-To: <9e21288c-07da-88b0-2dbb-bd9a2a4d529b@gmail.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Mon, 13 Jul 2020 13:43:42 +0800
-Message-ID: <CANdKZ0dwsaP=s8AgRbDx2_0y4JmPnF-X0Rb=4vor2MWCYWfGKw@mail.gmail.com>
-Subject: Re: [PATCH 01/21] dt-binding: memory: mediatek: Add a common
- larb-port header file
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        iommu@lists.linux-foundation.org,
-        =?UTF-8?B?WW91bGluIFBlaSAo6KO05Y+L5p6XKQ==?= 
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, cui.zhang@mediatek.com,
-        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7DO5AaGCk89r4vaK"
+Content-Disposition: inline
+In-Reply-To: <20200713045959.GA7563@f3>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 2:06 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
->
->
-> On 11/07/2020 08:48, Yong Wu wrote:
-> > Put all the macros about smi larb/port togethers, this is a preparing
-> > patch for extending LARB_NR and adding new dom-id support.
-> >
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > ---
-> >   include/dt-bindings/memory/mt2712-larb-port.h  |  2 +-
-> >   include/dt-bindings/memory/mt6779-larb-port.h  |  2 +-
-> >   include/dt-bindings/memory/mt8173-larb-port.h  |  2 +-
-> >   include/dt-bindings/memory/mt8183-larb-port.h  |  2 +-
-> >   include/dt-bindings/memory/mtk-smi-larb-port.h | 15 +++++++++++++++
-> >   5 files changed, 19 insertions(+), 4 deletions(-)
-> >   create mode 100644 include/dt-bindings/memory/mtk-smi-larb-port.h
-> >
-> > ...
-> > diff --git a/include/dt-bindings/memory/mtk-smi-larb-port.h b/include/dt-bindings/memory/mtk-smi-larb-port.h
-> > new file mode 100644
-> > index 000000000000..2ec7fe5ce4e9
-> > --- /dev/null
-> > +++ b/include/dt-bindings/memory/mtk-smi-larb-port.h
-> > @@ -0,0 +1,15 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (c) 2020 MediaTek Inc.
-> > + * Author: Yong Wu <yong.wu@mediatek.com>
-> > + */
-> > +#ifndef __DTS_MTK_IOMMU_PORT_H_
-> > +#define __DTS_MTK_IOMMU_PORT_H_
-> > +
-> > +#define MTK_LARB_NR_MAX                      16
->
-> include/soc/mediatek/smi.h has the very same define.
-> Should smi.h include this file?
->
-> Regards,
-> Matthias
->
 
-Looks like this is being addressed in patch 5 in this series ([05/21]
-iommu/mediatek: Use the common mtk-smi-larb-port.h)
-That said, should that patch be merged into this one?
+--7DO5AaGCk89r4vaK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 13, 2020 at 01:59:59PM +0900, Benjamin Poirier wrote:
+> On 2020-07-11 18:16 +0530, Suraj Upadhyay wrote:
+> > The legacy API wrappers in include/linux/pci-dma-compat.h
+> > should go away as it creates unnecessary midlayering
+> > for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+> > APIs directly.
+> >=20
+> > The patch has been generated with the coccinelle script below
+> > and compile-tested.
+> >=20
+> [...]
+> >=20
+> > @@ expression E1, E2, E3, E4; @@
+> > - pci_dma_sync_single_for_device(E1, E2, E3, E4)
+> > + dma_sync_single_for_device(&E1->dev, E2, E3, (enum dma_data_direction=
+)E4)
+>=20
+> The qlge driver contains more usages of the deprecated pci_dma_* api
+> than what this diff addresses. In particular, there are some calls to
+> pci_dma_sync_single_for_cpu() which were not changed despite this
+> expression being in the semantic patch.
+
+Hii Ben,
+        I couldn't find any instances of pci_dma_sync_single_for_cpu in
+the drivers/staging/qlge/ driver, I ran a simple `git grep pci_dma_sync_sin=
+gle_for_cpu/device`
+and got nothing.
+If I am wrong, please send the line number of the usages.
+
+> Dunno what happened but it should be reviewed. After converting away
+> from all of the old api, the TODO file should also be updated.
+
+Thanks for reminding me this, I would send a follow up patch to remove
+"pci_dma_*" from "avoid legacy/deprecated apis (ex. replace pci_dma_*, repl=
+ace pci_enable_msi,
+  use pci_iomap)".
 
 
+Thanks and Cheers,
 
-> > +
-> > +#define MTK_M4U_ID(larb, port)               (((larb) << 5) | (port))
-> > +#define MTK_M4U_TO_LARB(id)          (((id) >> 5) & 0xf)
-> > +#define MTK_M4U_TO_PORT(id)          ((id) & 0x1f)
-> > +
-> > +#endif
-> >
+Suraj Upadhyay.
+> [...]
+>=20
+> >=20
+> > diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlg=
+e_mpi.c
+> > index fa178fc642a6..16a9bf818346 100644
+> > --- a/drivers/staging/qlge/qlge_mpi.c
+> > +++ b/drivers/staging/qlge/qlge_mpi.c
+> > @@ -788,8 +788,9 @@ int ql_dump_risc_ram_area(struct ql_adapter *qdev, =
+void *buf,
+> >  	char *my_buf;
+> >  	dma_addr_t buf_dma;
+> > =20
+> > -	my_buf =3D pci_alloc_consistent(qdev->pdev, word_count * sizeof(u32),
+> > -				      &buf_dma);
+> > +	my_buf =3D dma_alloc_coherent(&qdev->pdev->dev,
+> > +				    word_count * sizeof(u32), &buf_dma,
+> > +				    GFP_ATOMIC);
+> >  	if (!my_buf)
+> >  		return -EIO;
+> > =20
+> > @@ -797,8 +798,8 @@ int ql_dump_risc_ram_area(struct ql_adapter *qdev, =
+void *buf,
+> >  	if (!status)
+> >  		memcpy(buf, my_buf, word_count * sizeof(u32));
+> > =20
+> > -	pci_free_consistent(qdev->pdev, word_count * sizeof(u32), my_buf,
+> > -			    buf_dma);
+> > +	dma_free_coherent(&qdev->pdev->dev, word_count * sizeof(u32), my_buf,
+> > +			  buf_dma);
+> >  	return status;
+> >  }
+> > =20
+> > --=20
+> > 2.17.1
+> >=20
+>=20
+>=20
+
+
+
+--7DO5AaGCk89r4vaK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8L9K8ACgkQ+gRsbIfe
+747xhxAApBto7Dbd7UotsciB3ZqhS3Rg74Hrfr/+WoBAk94f18vyobZG69zfN1uO
+i8xzQr4C5LnN2gVr9R2EoOSYxaddNvXmog5evd6nsgW1SboyUUZBBZ9P/OXqrzXr
+GUpbP/aYt0ITuUCoa7zyvnGDom4S+u+/RV4++0fnKU+9iv6KxHUHxO/jQ6uz0eBN
+JlhHTN2i/4ML6j6w97vx4ALqfTxkxAmZMlvvMGboqHbMeQybiPwQ/4qiEBQPexdK
+1YFrORjBseJF9VPK8vbVBB9qBe7bAKvlaETlWHCqsUmjLbf7rwBUu9VeO9AMydZ2
+XwD7OzOv8JLZO/rpAvn1wPWaFUfInUwObgHXTXEYtvs02VrMoODYVJWxCtVK6Ldj
+ESB812VmuqD+ukBzQim1tfzovuFB2tvJH0DwnzZc5e47trUP0Im5E8+nUW9erkrP
+nlpXrH522wnLTMONaKvFIGaa1gzI1056f51OmnSY+iFrQMSnT8LRFPGXB7WrnGqz
+wBz+K7C0+qkuyoIw+D4MfS6X1etpszwkCFFpbQHT5uSM3ce0m8LMUYwIBESWn/Vr
+xn0KQJQc5P8m4v8DRYX0+uIWjsuo2Pev3WciLA6dvrREz6g+gnJE/dZq3W63rLsi
+oLy5hJTjwGfmn9pc7gLC2Ma+8BN7MaRLZvbxT+6IvJUcHhsMF+o=
+=u72M
+-----END PGP SIGNATURE-----
+
+--7DO5AaGCk89r4vaK--
