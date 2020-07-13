@@ -2,138 +2,117 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24213C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81B8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC342065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B542065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594666156;
+	bh=tnlvgD9eepT+cbbC25Paro2u8v1tIseDBOi49YWykyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S8x7PkmnBcCBmD3j7n1aPgo3e1KzTqrDZxn1o1s9okM2u6FgVOaPaeYMVfwLlsDMn
+	 DSlpsTT3fW3nW5oO4Tl/S9tNuEQvG+1c+DVNUeiy4hotGuN4tCusrUEof0Dl+j5l5X
+	 os76WjQHv2yJ0krMwCk/5eU8U7hgxEvQV5iRSR0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGMSqR (ORCPT
+        id S1726465AbgGMStP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:46:17 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:47142 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgGMSqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:46:17 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 631BABC070;
-        Mon, 13 Jul 2020 18:46:12 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     dvhart@infradead.org, andy@infradead.org,
-        mika.westerberg@linux.intel.com, lee.jones@linaro.org,
-        dmitry.torokhov@gmail.com, mchehab+huawei@kernel.org,
-        ayman.bagabas@gmail.com, masahiroy@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 20:46:06 +0200
-Message-Id: <20200713184606.37033-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 14:49:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42617 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgGMStP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:49:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so14615258ioi.9;
+        Mon, 13 Jul 2020 11:49:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aCiNzIRb/i94Ziy734zDNgavUVaioKgtYqD7ynObnzs=;
+        b=cr54V41iD9tHY4LzUb2WF14//fCINN6nW+m+eJ3JJvh0XXahlqEdtGIVKl7VxmKT/S
+         n7cg2BXl8hCV4HbLGmMiNjXgBHaQeDhVL7eo/q4W/uc3fVpvot54RQtiNnYJveSwYTzW
+         YAPb4wwc3DDI+mDedtKKq7RITKcg5xGgGsrPax6N/nVVLgW5JCpq26qIp0aSBhSTGuJ/
+         FDwqXywFIdqTLl5vJVJlcnZWVmMETfNWsIBfkUMF144nWu0fBZixGB9LCu3XXg+UA1rv
+         /fYvcEl7CN1nyUpqGPQwczwj/CFNCRMBlY/H5t4+EPhQyo0yDl7btJ+2ZoR8G8OMUAjJ
+         tn1Q==
+X-Gm-Message-State: AOAM532U6+OwN4+uSZwiJLwfbizxKxjJdQwnmBCC6xJUgtY6F3asyAaj
+        ryTY+kElo4PCE82ZglF25VRShCVXfw==
+X-Google-Smtp-Source: ABdhPJyVVOPkjyR90yMteRSvUYPNKDibQo0H6E/faM4KxNHcY8WN8jZW0+XXxFQSfGxNOEFzwbd61w==
+X-Received: by 2002:a5e:a60d:: with SMTP id q13mr1124826ioi.199.1594666153909;
+        Mon, 13 Jul 2020 11:49:13 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s12sm9067267ilk.58.2020.07.13.11.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 11:49:13 -0700 (PDT)
+Received: (nullmailer pid 527876 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:49:11 -0000
+Date:   Mon, 13 Jul 2020 12:49:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     linux-i2c@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: Convert mrvl-gpio to
+ json-schema
+Message-ID: <20200713184911.GA527802@bogus>
+References: <20200616223353.993567-1-lkundrak@v3.sk>
+ <20200616223353.993567-2-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616223353.993567-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, 17 Jun 2020 00:33:49 +0200, Lubomir Rintel wrote:
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
+> 
+> Various fixes were done during the conversion, such as adding more
+> properties that are in fact mandatory or extending the examples to
+> include child nodes with extra GPIO blocks.
+> 
+> The compatible strings are a mess. It is not clear why so many of them
+> are needed; the driver doesn't really seem to differentiate between the
+> models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> are not used at all, so it's not known how many interrupts they utilize.
+> On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> doesn't end up in any actual DTB file.
+> 
+> In any case -- the schema merely copies whatever was in the original
+> binding document, so it's hopefully no more wrong that the original.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
+> ---
+> Changes since v2:
+> - Don't make ranges property mandatory
+> 
+> Changes since v1:
+> - Drop marvell,pxa1928-gpio
+> - Drop ranges from example with no gcb child nodes
+> - Add default GPL-2.0-only license tag
+> - Fill in maintainers from MAINTAINERS file
+> 
+>  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+>  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 173 ++++++++++++++++++
+>  2 files changed, 173 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> 
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/platform/x86/Kconfig      |  2 +-
- drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0581a54cf562..1d96e07b2a02 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -140,7 +140,7 @@ config ACERHDF
- 	  in the same node directory will tell you if it is "acerhdf".
- 
- 	  For more information about this driver see
--	  <http://piie.net/files/acerhdf_README.txt>
-+	  <https://piie.net/files/acerhdf_README.txt>
- 
- 	  If you have an Acer Aspire One netbook, say Y or M
- 	  here.
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 7e3083deb1c5..9aae45a45200 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
-  * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
-  * use a `TI LP8545`_.
-  *
-- * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
-- * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
-+ * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
-+ * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
-  */
- 
- static int gmux_get_brightness(struct backlight_device *bd)
-@@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
-  * switch the panel and the external DP connector and allocates a framebuffer
-  * for the selected GPU.
-  *
-- * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
-- * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-- * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-- * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
-+ * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
-+ * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-+ * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-+ * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
-  * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
-- * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
-+ * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
-  * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
-- * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
-+ * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
-  */
- 
- static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
--- 
-2.27.0
-
+Applied, thanks!
