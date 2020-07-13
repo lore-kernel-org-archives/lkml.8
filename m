@@ -2,204 +2,76 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A09C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895712067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xUm8TAgC"
+	by mail.kernel.org (Postfix) with ESMTP id 332A32067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbgGMQlX (ORCPT
+        id S1730326AbgGMQls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:41:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49514 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbgGMQlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:41:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DGM1J5177362;
-        Mon, 13 Jul 2020 16:41:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=OdIBi5hUo2/VqBKmf+cLwz5gWjKz/BgHq+yufd/HaRc=;
- b=xUm8TAgCkMgEOV9iB5QC8oH+4bIqa5sbM53IYKuzPyH79yZpFXxHVVoAL/45Mcw9p2Pe
- NN1fRoa3b3+y3C3CgkuUkHi+4cvm9oHTbYFrcTtEQwzq7f4x6aCAr7UJyq0A1MAntc9j
- 5tHEMdRdpkSDfXarvtNn/BxoXBSGsBICq/ppkvXlLsHpyB1XqA+n7zr3ZDYeMUDTjRvN
- z0DEpTsvtHgOrwh/zFbXt6aFUwIqkK8vQ8m8oJY1L/bpjzdp7E7NPuoVXRPqmUNGIRzf
- yqPjnKTCLyHt2EmdJUHcQIBPQmX0nYJd52xwTa3uzbachCZEjWB/VT4GxZrlv0m/qjbl tg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3274ur06s7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 16:41:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DGMZu6094523;
-        Mon, 13 Jul 2020 16:41:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 327qbvvtg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 16:41:14 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06DGfDmK031181;
-        Mon, 13 Jul 2020 16:41:13 GMT
-Received: from localhost (/10.159.128.100)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 09:41:13 -0700
-Date:   Mon, 13 Jul 2020 09:41:12 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200713164112.GZ7606@magnolia>
-References: <20200707191629.13911-1-longman@redhat.com>
+        Mon, 13 Jul 2020 12:41:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:46378 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729751AbgGMQlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:41:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BA601FB;
+        Mon, 13 Jul 2020 09:41:47 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E50D23F7D8;
+        Mon, 13 Jul 2020 09:41:45 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:41:40 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200713164140.GA29307@e121166-lin.cambridge.arm.com>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
+ <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+ <20200713082747.e3q3ml3wpbszn4j7@pali>
+ <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+ <20200713145003.foarsdixquicvivy@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200707191629.13911-1-longman@redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=1 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007130120
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713145003.foarsdixquicvivy@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
-> Depending on the workloads, the following circular locking dependency
-> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
-> lock) may show up:
+On Mon, Jul 13, 2020 at 04:50:03PM +0200, Pali Rohár wrote:
+> On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
+> > I will go over the thread again but I suspect I can merge the patch even
+> > though I still believe there is work to be done to understand the issue
+> > we are facing.
 > 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 5.0.0-rc1+ #60 Tainted: G        W
-> ------------------------------------------------------
-> fsfreeze/4346 is trying to acquire lock:
-> 0000000026f1d784 (fs_reclaim){+.+.}, at:
-> fs_reclaim_acquire.part.19+0x5/0x30
-> 
-> but task is already holding lock:
-> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
-> 
-> which lock already depends on the new lock.
->   :
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(sb_internal);
->                                lock(fs_reclaim);
->                                lock(sb_internal);
->   lock(fs_reclaim);
-> 
->  *** DEADLOCK ***
-> 
-> 4 locks held by fsfreeze/4346:
->  #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
->  #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
->  #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
->  #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
-> 
-> stack backtrace:
-> Call Trace:
->  dump_stack+0xe0/0x19a
->  print_circular_bug.isra.10.cold.34+0x2f4/0x435
->  check_prev_add.constprop.19+0xca1/0x15f0
->  validate_chain.isra.14+0x11af/0x3b50
->  __lock_acquire+0x728/0x1200
->  lock_acquire+0x269/0x5a0
->  fs_reclaim_acquire.part.19+0x29/0x30
->  fs_reclaim_acquire+0x19/0x20
->  kmem_cache_alloc+0x3e/0x3f0
->  kmem_zone_alloc+0x79/0x150
->  xfs_trans_alloc+0xfa/0x9d0
->  xfs_sync_sb+0x86/0x170
->  xfs_log_sbcount+0x10f/0x140
->  xfs_quiesce_attr+0x134/0x270
->  xfs_fs_freeze+0x4a/0x70
->  freeze_super+0x1af/0x290
->  do_vfs_ioctl+0xedc/0x16c0
->  ksys_ioctl+0x41/0x80
->  __x64_sys_ioctl+0x73/0xa9
->  do_syscall_64+0x18f/0xd23
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> This is a false positive as all the dirty pages are flushed out before
-> the filesystem can be frozen.
-> 
-> One way to avoid this splat is to add GFP_NOFS to the affected allocation
-> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
-> This shouldn't matter unless the system is really running out of memory.
-> In that particular case, the filesystem freeze operation may fail while
-> it was succeeding previously.
-> 
-> Without this patch, the command sequence below will show that the lock
-> dependency chain sb_internal -> fs_reclaim exists.
-> 
->  # fsfreeze -f /home
->  # fsfreeze --unfreeze /home
->  # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
-> 
-> After applying the patch, such sb_internal -> fs_reclaim lock dependency
-> chain can no longer be found. Because of that, the locking dependency
-> warning will not be shown.
-> 
-> Suggested-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+> Just to note that pci-mvebu.c also checks if pcie link is up before
+> trying to access the real PCIe interface registers, similarly as in my
+> patch.
 
-Looks good to me,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I understand - that does not change my opinion though, the link check
+is just a workaround, it'd be best if we pinpoint the real issue which
+is likely to a HW one.
 
---D
-
-> ---
->  fs/xfs/xfs_super.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 379cbff438bc..0797a96b83d6 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -913,11 +913,21 @@ xfs_fs_freeze(
->  	struct super_block	*sb)
->  {
->  	struct xfs_mount	*mp = XFS_M(sb);
-> +	unsigned int		flags;
-> +	int			ret;
->  
-> +	/*
-> +	 * The filesystem is now frozen far enough that memory reclaim
-> +	 * cannot safely operate on the filesystem. Hence we need to
-> +	 * set a GFP_NOFS context here to avoid recursion deadlocks.
-> +	 */
-> +	flags = memalloc_nofs_save();
->  	xfs_stop_block_reaping(mp);
->  	xfs_save_resvblks(mp);
->  	xfs_quiesce_attr(mp);
-> -	return xfs_sync_sb(mp, true);
-> +	ret = xfs_sync_sb(mp, true);
-> +	memalloc_nofs_restore(flags);
-> +	return ret;
->  }
->  
->  STATIC int
-> -- 
-> 2.18.1
-> 
+Lorenzo
