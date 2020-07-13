@@ -2,391 +2,189 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8945BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C76C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6765A2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1092068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgGMI5Q (ORCPT
+        id S1729144AbgGMI6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:57:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17823 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgGMI5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:57:15 -0400
-IronPort-SDR: oC3Mv8AC3GhMyLOIJrAvmNNl9/uL9uZqyY9fB/eOCugCevvVpK02ydvXn4lWmExvFTquJmFFPm
- OfAcCHyUF0lQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="148575788"
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="148575788"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 01:57:11 -0700
-IronPort-SDR: tMXhB/zNAc0hJKJrMb+EegCdwREEF3y/9LtIi8lKsGiqVcnADN67N/fuc6a0qeGfQHQihvgSEG
- bRl4fdWy5W5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="315999162"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2020 01:57:08 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v5 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Date:   Mon, 13 Jul 2020 16:54:53 +0800
-Message-Id: <20200713085453.7353-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200713085453.7353-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200713085453.7353-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 13 Jul 2020 04:58:21 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45613 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgGMI6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:58:20 -0400
+Received: by mail-il1-f199.google.com with SMTP id c1so9065242ilk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:58:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=8B3vMHbPo4VKoNt1QGmUK9ewUHDX7Q5MCfd6Wc4GsAc=;
+        b=Et5dAhZdBWKXG05lN1O9WkPIS3TmIHvGXCBAodkDOkmy3zZKzN7qB8OL+C6bSZe/TF
+         BZqHSjudOxp1+EAyfhcuyeC/dVgO2zAYdciwkvN7DreX3zKxnhIKSfAys/rm9UlhvZuX
+         FkcFsUgh472j3+r2//HGRXCpN080cvGDlJk0XoGPoKY0NthF2yh4UYVsy5V5XmH2raqm
+         r9BlJt99SyPszFf/DAk4SwHQtKb1o4P/U/5dZJCHYhCspSlJ0rxAZoW6CiFbSORvSTLa
+         Q8yQ7SahmgC9RrPCD01WG7xHhCiXeh3d2XhViu/6o5B4riwCK662L7iFT3cvf909vaar
+         yl0w==
+X-Gm-Message-State: AOAM5324AWkykVmFLa2UBeLv7QyuG2GF/s7blGFyNLlUDow3GLBQOeQ1
+        mMbjJwJdXuxkk/P5UhbWWmqame9XTkBw6FnygmnWvotIIZAK
+X-Google-Smtp-Source: ABdhPJxibwMYTn8HfA3GEQ6PS4cPJyQ7BfkyoOyGbeZJ4xu90QorI6xrMAF4EBFZztPPAewc8A3FxPPSUKDU5yC6nUWZydWy2Naz
+MIME-Version: 1.0
+X-Received: by 2002:a92:c0c9:: with SMTP id t9mr67617115ilf.82.1594630699291;
+ Mon, 13 Jul 2020 01:58:19 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 01:58:19 -0700
+In-Reply-To: <000000000000080a5f05aa4691a8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000611e4f05aa4ee40f@google.com>
+Subject: Re: BUG: soft lockup in smp_call_function
+From:   syzbot <syzbot+cce3691658bef1b12ac9@syzkaller.appspotmail.com>
+To:     bp@alien8.de, dvyukov@google.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+syzbot has found a reproducer for the following crash on:
 
-Add support for USB PHY on Intel LGM SoC.
+HEAD commit:    4437dd6e Merge tag 'io_uring-5.8-2020-07-12' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15998b47100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
+dashboard link: https://syzkaller.appspot.com/bug?extid=cce3691658bef1b12ac9
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a160bf100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16d2bd77100000
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/phy/Kconfig       |  11 ++
- drivers/phy/Makefile      |   1 +
- drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/phy/phy-lgm-usb.c
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cce3691658bef1b12ac9@syzkaller.appspotmail.com
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index b3ed94b98d9b..43ff5943f513 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -49,6 +49,17 @@ config PHY_XGENE
- 	help
- 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
- 
-+config USB_LGM_PHY
-+	tristate "INTEL Lightning Mountain USB PHY Driver"
-+	depends on USB_SUPPORT
-+	select USB_PHY
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
-+	help
-+	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-+	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-+	  of the Intel network SOC.
-+
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 310c149a9df5..c2cd6d756f5f 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
- obj-$(CONFIG_ARCH_MESON)		+= amlogic/
- obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
-diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
-new file mode 100644
-index 000000000000..1ec9ab266e08
---- /dev/null
-+++ b/drivers/phy/phy-lgm-usb.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel LGM USB PHY driver
-+ *
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/usb/phy.h>
-+#include <linux/workqueue.h>
-+
-+#define CTRL1_OFFSET		0x14
-+#define SRAM_EXT_LD_DONE	BIT(25)
-+#define SRAM_INIT_DONE		BIT(26)
-+
-+#define TCPC_OFFSET		0x1014
-+#define TCPC_MUX_CTL		GENMASK(1, 0)
-+#define MUX_NC			0
-+#define MUX_USB			1
-+#define MUX_DP			2
-+#define MUX_USBDP		3
-+#define TCPC_FLIPPED		BIT(2)
-+#define TCPC_LOW_POWER_EN	BIT(3)
-+#define TCPC_VALID		BIT(4)
-+#define TCPC_CONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
-+#define TCPC_DISCONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-+
-+static const char *const PHY_RESETS[] = { "phy31", "phy", };
-+static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-+
-+struct tca_apb {
-+	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-+	struct regulator *vbus;
-+	struct work_struct wk;
-+	struct usb_phy phy;
-+
-+	bool phy_initialized;
-+	bool connected;
-+};
-+
-+static int get_flipped(struct tca_apb *ta, bool *flipped)
-+{
-+	union extcon_property_value property;
-+	int ret;
-+
-+	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-+				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-+		return ret;
-+	}
-+
-+	*flipped = property.intval;
-+
-+	return ret;
-+}
-+
-+static int phy_init(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-+	int val, ret, i;
-+
-+	if (ta->phy_initialized)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_deassert(ta->resets[i]);
-+
-+	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-+		return ret;
-+	}
-+
-+	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-+
-+	ta->phy_initialized = true;
-+	if (!ta->phy.edev) {
-+		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-+		return phy->set_vbus(phy, true);
-+	}
-+
-+	schedule_work(&ta->wk);
-+
-+	return ret;
-+}
-+
-+static void phy_shutdown(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int i;
-+
-+	if (!ta->phy_initialized)
-+		return;
-+
-+	ta->phy_initialized = false;
-+	flush_work(&ta->wk);
-+	ta->phy.set_vbus(&ta->phy, false);
-+
-+	ta->connected = false;
-+	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+}
-+
-+static int phy_set_vbus(struct usb_phy *phy, int on)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int ret;
-+
-+	if (on) {
-+		ret = regulator_enable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not enabled\n");
-+	} else {
-+		ret = regulator_disable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not disabled\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static void tca_work(struct work_struct *work)
-+{
-+	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-+	bool connected;
-+	bool flipped = false;
-+	u32 val;
-+	int ret;
-+
-+	ret = get_flipped(ta, &flipped);
-+	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-+	if (connected == ta->connected)
-+		return;
-+
-+	ta->connected = connected;
-+	if (connected) {
-+		val = TCPC_CONN;
-+		if (flipped)
-+			val |= TCPC_FLIPPED;
-+		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-+	} else {
-+		val = TCPC_DISCONN;
-+		dev_info(ta->phy.dev, "disconnected\n");
-+	}
-+
-+	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	ret = ta->phy.set_vbus(&ta->phy, connected);
-+	if (ret)
-+		dev_err(ta->phy.dev, "failed to set VBUS\n");
-+}
-+
-+static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-+{
-+	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-+
-+	if (ta->phy_initialized)
-+		schedule_work(&ta->wk);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+static int phy_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-+	struct device *dev = &pdev->dev;
-+	struct usb_phy *phy;
-+	struct tca_apb *ta;
-+	int i;
-+
-+	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-+	if (!ta)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ta);
-+	INIT_WORK(&ta->wk, tca_work);
-+
-+	phy = &ta->phy;
-+	phy->dev = dev;
-+	phy->label = dev_name(dev);
-+	phy->type = USB_PHY_TYPE_USB3;
-+	phy->init = phy_init;
-+	phy->shutdown = phy_shutdown;
-+	phy->set_vbus = phy_set_vbus;
-+	phy->id_nb.notifier_call = id_notifier;
-+	phy->vbus_nb.notifier_call = vbus_notifier;
-+
-+	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->io_priv))
-+		return PTR_ERR(phy->io_priv);
-+
-+	ta->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(ta->vbus))
-+		return PTR_ERR(ta->vbus);
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-+		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-+		if (IS_ERR(resets[i])) {
-+			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-+			return PTR_ERR(resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-+		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-+		if (IS_ERR(ta->resets[i])) {
-+			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-+			return PTR_ERR(ta->resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_assert(resets[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+	/*
-+	 * Out-of-band reset of the controller after PHY reset will cause
-+	 * controller malfunctioning, so we should use in-band controller
-+	 * reset only and leave the controller de-asserted here.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_deassert(resets[i]);
-+
-+	/* Need to wait at least 20us after de-assert the controller */
-+	usleep_range(20, 100);
-+
-+	return usb_add_phy_dev(phy);
-+}
-+
-+static int phy_remove(struct platform_device *pdev)
-+{
-+	struct tca_apb *ta = platform_get_drvdata(pdev);
-+
-+	usb_remove_phy(&ta->phy);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id intel_usb_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-+
-+static struct platform_driver lgm_phy_driver = {
-+	.driver = {
-+		.name = "lgm-usb-phy",
-+		.of_match_table = intel_usb_phy_dt_ids,
-+	},
-+	.probe = phy_probe,
-+	.remove = phy_remove,
-+};
-+
-+module_platform_driver(lgm_phy_driver);
-+
-+MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-+MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+watchdog: BUG: soft lockup - CPU#1 stuck for 123s! [syz-executor644:6902]
+Modules linked in:
+irq event stamp: 173384
+hardirqs last  enabled at (173383): [<ffffffff88000c42>] asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+hardirqs last disabled at (173384): [<ffffffff87e4f2ed>] idtentry_enter_cond_rcu+0x1d/0x50 arch/x86/entry/common.c:649
+softirqs last  enabled at (172872): [<ffffffff88200748>] __do_softirq+0x748/0xa60 kernel/softirq.c:319
+softirqs last disabled at (172863): [<ffffffff88000f0f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+CPU: 1 PID: 6902 Comm: syz-executor644 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:csd_lock_wait kernel/smp.c:108 [inline]
+RIP: 0010:smp_call_function_single+0x192/0x4f0 kernel/smp.c:382
+Code: 10 8b 7c 24 1c 48 8d 74 24 40 48 89 44 24 50 48 8b 44 24 08 48 89 44 24 58 e8 fa f9 ff ff 41 89 c5 eb 07 e8 90 00 0b 00 f3 90 <44> 8b 64 24 48 31 ff 41 83 e4 01 44 89 e6 e8 fb fc 0a 00 45 85 e4
+RSP: 0018:ffffc900023a7a60 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 1ffff92000474f50 RCX: ffffffff8168b985
+RDX: ffff8880955564c0 RSI: ffffffff8168b970 RDI: 0000000000000005
+RBP: ffffc900023a7b28 R08: 0000000000000001 R09: ffff8880ae636dc7
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000040
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c8aa8 CR3: 0000000009a79000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ smp_call_function_many_cond+0x1a4/0x990 kernel/smp.c:518
+ __flush_tlb_others arch/x86/include/asm/paravirt.h:74 [inline]
+ flush_tlb_others arch/x86/mm/tlb.c:856 [inline]
+ flush_tlb_mm_range+0x295/0x4d0 arch/x86/mm/tlb.c:943
+ tlb_flush arch/x86/include/asm/tlb.h:24 [inline]
+ tlb_flush_mmu_tlbonly include/asm-generic/tlb.h:425 [inline]
+ tlb_flush_mmu_tlbonly include/asm-generic/tlb.h:415 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:248 [inline]
+ tlb_finish_mmu+0x3e7/0x8c0 mm/mmu_gather.c:328
+ exit_mmap+0x2d1/0x510 mm/mmap.c:3152
+ __mmput+0x122/0x470 kernel/fork.c:1093
+ mmput+0x53/0x60 kernel/fork.c:1114
+ exit_mm kernel/exit.c:482 [inline]
+ do_exit+0xa8f/0x2a40 kernel/exit.c:792
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ __do_sys_exit_group kernel/exit.c:914 [inline]
+ __se_sys_exit_group kernel/exit.c:912 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x442478
+Code: Bad RIP value.
+RSP: 002b:00007ffeb3621f28 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000442478
+RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+RBP: 00000000004c8a70 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006dba40 R14: 0000000000000000 R15: 0000000000000000
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 7110 Comm: kworker/0:0 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: wg-crypt-wg1 wg_packet_tx_worker
+RIP: 0010:__lock_is_held kernel/locking/lockdep.c:4733 [inline]
+RIP: 0010:lock_is_held_type+0x72/0xe0 kernel/locking/lockdep.c:4996
+Code: 00 00 85 c0 7f 0d eb 72 83 c3 01 3b 9d c8 08 00 00 7d 67 48 63 c3 4c 89 e6 48 8d 04 80 4d 8d 74 c5 00 4c 89 f7 e8 1e fe ff ff <85> c0 74 da 8b 4c 24 04 41 bc 01 00 00 00 83 f9 ff 74 11 41 0f b6
+RSP: 0018:ffffc90000007d38 EFLAGS: 00000046
+RAX: 0000000000000001 RBX: 0000000000000006 RCX: ffffffff86626577
+RDX: dffffc0000000000 RSI: ffff888093ce4300 RDI: ffff888094a20c00
+RBP: ffff888094a20240 R08: 0000000000000001 R09: 0000000000000003
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff888093ce4300
+R13: ffff888094a20b10 R14: ffff888094a20c00 R15: 0000000000000082
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000610 CR3: 000000009e49a000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ lock_is_held include/linux/lockdep.h:425 [inline]
+ advance_sched+0x638/0x990 net/sched/sch_taprio.c:702
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x6a9/0xfc0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:765 [inline]
+RIP: 0010:seqcount_lockdep_reader_access include/linux/seqlock.h:99 [inline]
+RIP: 0010:read_seqcount_begin.constprop.0+0x110/0x1f0 include/linux/seqlock.h:182
+Code: 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 d0 00 00 00 48 83 3d 90 ff 44 03 00 0f 84 92 00 00 00 e8 05 d9 03 fb 48 89 df 57 9d <0f> 1f 44 00 00 e8 f6 d8 03 fb 44 8b 25 6f 4a 3f 04 31 ff 44 89 e3
+RSP: 0018:ffffc90001b67630 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000293 RCX: 0000000000000003
+RDX: ffff888094a20240 RSI: ffffffff866fe0fb RDI: 0000000000000293
+RBP: 0000000000000200 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880941ed2c0
+R13: 0000000011108e1c R14: 0000000000000000 R15: dffffc0000000000
+ nf_conntrack_get_ht include/net/netfilter/nf_conntrack.h:300 [inline]
+ ____nf_conntrack_find net/netfilter/nf_conntrack_core.c:740 [inline]
+ __nf_conntrack_find_get+0xcb/0xf30 net/netfilter/nf_conntrack_core.c:778
+ resolve_normal_ct net/netfilter/nf_conntrack_core.c:1684 [inline]
+ nf_conntrack_in+0x484/0x12a0 net/netfilter/nf_conntrack_core.c:1846
+ ipv4_conntrack_local+0x11c/0x220 net/netfilter/nf_conntrack_proto.c:200
+ nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+ nf_hook_slow+0xc5/0x1e0 net/netfilter/core.c:512
+ nf_hook+0x2b8/0x540 include/linux/netfilter.h:262
+ __ip_local_out+0x26e/0x530 net/ipv4/ip_output.c:114
+ ip_local_out+0x26/0x1a0 net/ipv4/ip_output.c:123
+ iptunnel_xmit+0x5a0/0x9b0 net/ipv4/ip_tunnel_core.c:81
+ send4+0x4c6/0xd70 drivers/net/wireguard/socket.c:85
+ wg_socket_send_skb_to_peer+0x192/0x220 drivers/net/wireguard/socket.c:174
+ wg_packet_create_data_done drivers/net/wireguard/send.c:252 [inline]
+ wg_packet_tx_worker+0x2f9/0x980 drivers/net/wireguard/send.c:280
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
 
