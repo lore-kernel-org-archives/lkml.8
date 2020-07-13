@@ -2,106 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C60C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7FD20791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2A220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJYNe2yQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Os6izMQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGMTPx (ORCPT
+        id S1726545AbgGMTVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45830 "EHLO
+        Mon, 13 Jul 2020 15:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbgGMTPw (ORCPT
+        with ESMTP id S1726400AbgGMTVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:15:52 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E63EC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:15:52 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j18so875498wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:15:52 -0700 (PDT)
+        Mon, 13 Jul 2020 15:21:34 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBB9C08C5DD
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:21:34 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so6460385pgm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qLRZ9qpTJixANaJXhzQcebqMHUZZudD8UhTxU+6Cj1A=;
-        b=vJYNe2yQUDGkF+YAq88b5Obetolzl9a59Km8DPVhMwrLlxjULOKQF0ykX0/T063BKe
-         M7xoQENya6e2mAHycpH/22g6vAyms6e4MCOrnL3KO7N/KiKiEg+8RVg2kzEiGe3+FHA+
-         yId+MWYKSD13yxXKGveazWhKGqq9ya8GUZaeDbTpA+3/QM+HnVxPikAe5QDtur9fsgXN
-         PJdUJvPLGdYo7ze5DnfpBkpuxpQjOowT43eaAbdCXLrwbK8t/D5Msl6yh1mUPrM/L/It
-         iONewwidWdtacdyjaASW50/VL0eGiguIHiu0WKuevBQi0/0A7B9fFWU4VGGHah192mbT
-         6cOg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lnlvSS8yRTjaa31L4bdqfl6S2JOUPE+8vLPyFLQzIA0=;
+        b=Os6izMQO5HU2C9KMSKfCwZQxDgXOjXhkpAFRF2xk9FvopUV1KIpH3xyunGonqiRihD
+         YJDPvYc1aFxRAMGvPN5QPXG3IG86/9ascA8OlOT68leWXeVDnTfdbbBA6ZZiG68UdNac
+         QNzEtglbjw/alG4spZBMMxLRrFL8lgUlvHV7ERnck8TjIQSqwfXUmLIRjp+0zI/kFq0r
+         UdWsXlpULiynQmoeYVzMUgp+Srg/ZqSXqXh3QOkrUbnARBtNAO5mJLFLk4UVJU3o5SBC
+         dFfI3065HWFu8sUAD4e3lYGsD2YzmGKDNkatjLTAXI5tOTuyjRIAsnNZNpPOp4fgrK3S
+         gu0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qLRZ9qpTJixANaJXhzQcebqMHUZZudD8UhTxU+6Cj1A=;
-        b=DN7svnDp9NZ4D7urmzk17aXwob3XtlKB9rG4i2wwQhfZREz0cWjT2OxaNbW6q4pnk+
-         s97uo0q8e/8q4+sYxQGLj0ZGjCL5aKwY4PYMcMK+015i6RW8d4A6GQHIEQxTPO24Z8Zy
-         GyyN6W/wPz6MB2FB0/iWwXOBUx4YV8HjAbMe3VOkS+KJI3+8oKJqdp0l13dFuPK1GlfY
-         vcvg12suo0878sS6nN8ZR7eTk76BwUqBmpOILw22Y184lhpRagS6vPRkdz2m8gmRJZCm
-         76WOaASb4RRTAeDS1TjksaPsbx5OujY/feHpZDJPKeDFaEY/evQcWX85VFRGMa+PoRZD
-         Ua9A==
-X-Gm-Message-State: AOAM533439+c7GSMkQboMDLb3N2AxchJ2tBqOct5tDeHkTluIWZzanZy
-        PZIsTTPiEoCpIbrZrplQupw=
-X-Google-Smtp-Source: ABdhPJxHFwCKiZIWJgCMrB6VK9Qn4soHdbhhqubKZCErj4fWR2AFQL1EiFvZUn2oVMEIY+nuoaTO4A==
-X-Received: by 2002:a1c:345:: with SMTP id 66mr846794wmd.31.1594667750842;
-        Mon, 13 Jul 2020 12:15:50 -0700 (PDT)
-Received: from garrit-VirtualBox.fritz.box ([94.31.102.44])
-        by smtp.gmail.com with ESMTPSA id z1sm25407600wru.30.2020.07.13.12.15.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lnlvSS8yRTjaa31L4bdqfl6S2JOUPE+8vLPyFLQzIA0=;
+        b=pnBUaxQVY8RrZHly0SUx5orUS4VJKL/tR3uFZjlRz0sYkdj02CV5xwpglMcp+bxar+
+         GJzIk/SB5kmgSyycaWEFd65CdqHrdG/K67M3d3SALeOvI7/0jJ80pkdvxbH1iQ6/+Hqt
+         ZpdeTVbzxR0K0Bp+zsRzyOXvk6rT4twbWl2b1GgQovwQufVzOGYHRYab2/8uorPKN9t7
+         cANHxybaLIEZ8oM6+3r3+4LH/IQG5ogGwKj62eJn0UVXIzFi8ZOHVLJ0ZGdybSTh99lA
+         L4Z6hFfP7c8AyVrVwPfbgpGQ9XcXUZq1F96uMWyXs1lnsTyf2wOVrF/2ohz9QuOwEPzX
+         5pTQ==
+X-Gm-Message-State: AOAM532KpZzyfpI0PZT3oBVrsQxey6ttCcpvZU45jaARygtXYC3bZz5O
+        yOoU/BTswmrMOr8jxihyxHtCxw==
+X-Google-Smtp-Source: ABdhPJwGB1uxYOzm+iqLQAWuBTRahO/IW3KpbEcEwDkgmZiU7vjTTS+yyUzAEByjIHvJZETQz2iCaQ==
+X-Received: by 2002:a63:564e:: with SMTP id g14mr550912pgm.326.1594668093886;
+        Mon, 13 Jul 2020 12:21:33 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z10sm15863750pfr.90.2020.07.13.12.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:15:50 -0700 (PDT)
-From:   Garrit Franke <garritfranke@gmail.com>
-To:     rafael@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Garrit Franke <garritfranke@gmail.com>
-Subject: [PATCH] kobject: remove unused kobject action
-Date:   Mon, 13 Jul 2020 21:15:10 +0200
-Message-Id: <20200713191509.342466-1-garritfranke@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 13 Jul 2020 12:21:33 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:19:25 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alexey Minnekhanov <alexey.min@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
+Message-ID: <20200713191925.GD388985@builder.lan>
+References: <20200622192558.152828-1-konradybcio@gmail.com>
+ <20200622192558.152828-8-konradybcio@gmail.com>
+ <20200623072535.GX128451@builder.lan>
+ <CANi4RBQY8dXU=74JfB3hHZYMqMgVwtHoQsLZXV7CpwZ8ue2icw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANi4RBQY8dXU=74JfB3hHZYMqMgVwtHoQsLZXV7CpwZ8ue2icw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that the KOBJ_MAX action is never used. Does it serve any
-purpose, or can it be removed? As far as I know, Kobjects shouldn't be
-used for drivers and more higher level abstraction layers, so I figured
-it isn't used by user-provided code either.
+On Fri 26 Jun 08:48 PDT 2020, Alexey Minnekhanov wrote:
 
-Regards
-Garrit Franke
+> Tue, 23 Jun. 2020. 10:29, Bjorn Andersson <bjorn.andersson@linaro.org>:
+> >
+> > On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
+> >
+> > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> >
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >
+> 
+> Hi, I can see dts file in linux-next using compatible
+> "qcom,sdm660-apcs-hmss-global",
+> but not this patch that adds it into the driver?
 
-Signed-off-by: Garrit Franke <garritfranke@gmail.com>
----
- include/linux/kobject.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I take the dts patches through the Qualcomm tree, but the driver patch
+should go through the mailbox tree.
 
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index 6cba088bee24..fd99c5d2d8b7 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -58,8 +58,7 @@ enum kobject_action {
- 	KOBJ_ONLINE,
- 	KOBJ_OFFLINE,
- 	KOBJ_BIND,
--	KOBJ_UNBIND,
--	KOBJ_MAX
-+	KOBJ_UNBIND
- };
- 
- struct kobject {
--- 
-2.25.1
-
+Regards,
+Bjorn
