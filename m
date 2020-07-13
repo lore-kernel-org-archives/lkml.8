@@ -2,634 +2,147 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ED6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C28C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7912068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C6A2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594655874;
+	bh=yaIr3W3gRNyeiwvDjKU5N+IKZQj4ZrZ+IUKbWI+E60o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i7Txei2rEVb0Vx+5VFvzPqBlV2vSxTB6yGb36JgE31Ug7Tbj4HsxIMj6L4E3CiPmR
+	 nBeAkFXFzEcnSejknqzJILzdNPPeW3zPZ+ybu+YFi2I2VZW5GOjCdgGFxYXE8YFLkd
+	 PutSy8UTKrqG+jtFAYdLG09lmc8K2eowzVHpNXbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgGMP5e (ORCPT
+        id S1730183AbgGMP5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:57:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2463 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729027AbgGMP5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:57:33 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 10C84A676136A5A0C376;
-        Mon, 13 Jul 2020 16:57:32 +0100 (IST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 13 Jul 2020 16:57:31 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v7 0/6] ACPI: Support Generic Initiator proximity domains
-Date:   Mon, 13 Jul 2020 23:55:54 +0800
-Message-ID: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 13 Jul 2020 11:57:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgGMP5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:57:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D55FE2068F;
+        Mon, 13 Jul 2020 15:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594655872;
+        bh=yaIr3W3gRNyeiwvDjKU5N+IKZQj4ZrZ+IUKbWI+E60o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EJ1fJ3vuXCvpwl6tcgdeYo4tlGvtfPRux44gveEKYvl3IWk4CHicfRtfCLpBRtoQU
+         KoyR1iF6qU4nEtMY2hNBipSi2CGBHJ84s01SADiHpMRIIHJhNAa1M71YfuU33M2t3K
+         RFSGyjA2mvNotQOghu16p04fvi5NhuyVGse6O7AA=
+Date:   Mon, 13 Jul 2020 17:57:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai,
+        Ofir Bitton <obitton@habana.ai>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH 1/3] habanalabs: implement dma-fence mechanism
+Message-ID: <20200713155752.GC267581@kroah.com>
+References: <20200713155424.24721-1-oded.gabbay@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713155424.24721-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depends on
-[PATCH] ACPI: Only create numa nodes from entries in SRAT or SRAT emulation.
-or remove the extra parameter in acpi_map_pxm_to_node.
+On Mon, Jul 13, 2020 at 06:54:22PM +0300, Oded Gabbay wrote:
+> From: Ofir Bitton <obitton@habana.ai>
+> 
+> Instead of using standard dma-fence mechanism designed for GPU's, we
+> introduce our own implementation based on the former one. This
+> implementation is much more sparse than the original, contains only
+> mandatory functionality required by the driver.
 
-Introduces a new type of NUMA node for cases where we want to represent
-the access characteristics of a non CPU initiator of memory requests,
-as these differ from all those for existing nodes containing CPUs and/or
-memory.
+Sad you can't use the in-kernel code for this, I really don't understand
+what's wrong with using it as-is.
 
-These Generic Initiators are presented by the node access0 class in
-sysfs in the same way as a CPU.   It seems likely that there will be
-usecases in which the best 'CPU' is desired and Generic Initiators
-should be ignored.  The final few patches in this series introduced
-access1 which is a new performance class in the sysfs node description
-which presents only CPU to memory relationships.  Test cases for this
-are described below.
+Daniel, why do we need/want duplicate code floating around in the tree
+like this?
 
-Thanks to Dan for suggestions on V5.  Most of the changes are
-an attempt to implement what was discussed in that thread.
+Copying code leads to errors, here's some documentation ones:
 
-The new patch makes it clear that some of the existing naming is perhaps
-more specific than it should be. It may be worth a follow up patch
-to rename from *cpu* to *initiator* in a few places where this might
-cause confusion.
+> --- /dev/null
+> +++ b/drivers/misc/habanalabs/hl_dma_fence.c
+> @@ -0,0 +1,338 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Fence mechanism for dma-buf and to allow for asynchronous dma access
 
-One outstanding question to highlight in this series is whether
-we should assume all ACPI supporting architectures support Generic
-Initiator domains, or whether to introduce an
-ARCH_HAS_GENERIC_INITIATOR_DOMAINS entry in Kconfig.
+Is that what this still does?
 
-Note that GI nodes suffer from the same issue around hugetlb_cma
-as memoryless nodes.  A CMA area is defined that falls back into
-a nearby node with memory, but can then not actually be used.
-Proposed fix under review in.
-https://patchwork.kernel.org/patch/11629939/
+> + *
+> + * Copyright (C) 2012 Canonical Ltd
+> + * Copyright (C) 2012 Texas Instruments
+> + *
+> + * Authors:
+> + * Rob Clark <robdclark@gmail.com>
+> + * Maarten Lankhorst <maarten.lankhorst@canonical.com>
+> + *
+> + * The dma_fence module is a copy of dma-fence at drivers/dma-buf.
 
-Changes since V6:
+"The hl_dma_fence" module...
 
-* Rebase on 5.8-rc4 + Dependency as above.
-* Drop the ARM64 specific code. No specific calls are needed on ARM64
-  as the generic node init is done for all nodes, whether or not they
-  have memory.  X86 does memoryless nodes separately from those with
-  memory and hence needs to specifically intialize GI only nodes.
-* Fix up an error in the docs reported by Brice Goglin who also did
-  quite a bit of testing of v5. Thanks!
-  
-Changes since V5:
+And is it a stand-alone module?  Or just a single file?
 
-3 new patches:
-* A fix for a subtlety in how ACPI 6.3 changed part of the HMAT table.
-* Introduction of access1 class to represent characteristics between CPU
-  and memory, ingnoring GIs unlike access0 which includes them.
-* Docs to describe the new access0 class.
+> + * This was done due to an explicit request by GPU developers who asked not
+> + * to use the dma-buf module because we aren't part of DRM subsystem.
 
-Note that I ran a number of test cases for the new class which are
-described at the end of this email.
+Why is dma-buf only for use for DRM?
 
-Changes since V4:
+If it is, should the symbol namespace be set to that to catch users that
+want to use it for their own code?
 
-At Rafael's suggestion:
+> + * This copy was stripped from all extra features that habanalabs driver
+> + * doesn't use, including the uapi interface dma-buf exposes.
+> + * In addition, we removed the callbacks because the only usage is from inside
+> + * habanalabs driver
+> + */
+> +
+> +#include "hl_dma_fence.h"
+> +#include "habanalabs.h"
+> +#include <linux/slab.h>
+> +#include <linux/export.h>
+> +#include <linux/atomic.h>
+> +#include <linux/sched/signal.h>
+> +
+> +/**
+> + * DOC: DMA fences overview
+> + *
+> + * DMA fences, represented by &struct hl_dma_fence, are the kernel internal
+> + * synchronization primitive for DMA operations like GPU rendering, video
+> + * encoding/decoding, or displaying buffers on a screen.
 
-Rebase on top of Dan William's Specific Purpose Memory series as that
-moves srat.c Original patches cherry-picked fine onto mmotm with Dan's
-patches applied.
+I don't think this is correct anymore, right?  :(
 
-Applies to mmotm-2019-09-25 +
-https://lore.kernel.org/linux-acpi/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
-[PATCH v4 00/10] EFI Specific Purpose Memory Support
-(note there are some trivial conflicts to deal with when applying
-the SPM series).
+> --- /dev/null
+> +++ b/drivers/misc/habanalabs/hl_dma_fence.h
+> @@ -0,0 +1,148 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Fence mechanism for dma-buf to allow for asynchronous dma access
+> + *
+> + * Copyright (C) 2012 Canonical Ltd
+> + * Copyright (C) 2012 Texas Instruments
+> + *
+> + * Authors:
+> + * Rob Clark <robdclark@gmail.com>
+> + * Maarten Lankhorst <maarten.lankhorst@canonical.com>
+> + *
+> + * The dma_fence module is a copy of dma-fence at drivers/dma-buf.
 
-Change since V3.
-* Rebase.
+Same comments here for the .h file.
 
-Changes since RFC V2.
-* RFC dropped as now we have x86 support, so the lack of guards in in the
-  ACPI code etc should now be fine.
-  * Added x86 support.  Note this has only been tested on QEMU as I don't have
-    a convenient x86 NUMA machine to play with.  Note that this fitted together
-      rather differently from arm64 so I'm particularly interested in feedback
-        on the two solutions.
+thanks,
 
-Since RFC V1.
-* Fix incorrect interpretation of the ACPI entry noted by Keith Busch
-* Use the acpica headers definitions that are now in mmotm.
-
-It's worth noting that, to safely put a given device in a GI node, may
-require changes to the existing drivers as it's not unusual to assume
-you have local memory or processor core. There may be further constraints
-not yet covered by this patch.
-
-Original cover letter...
-
-ACPI 6.3 introduced a new entity that can be part of a NUMA proximity domain.
-It may share such a domain with the existing options (memory, CPU etc) but it
-may also exist on it's own.
-
-The intent is to allow the description of the NUMA properties (particularly
-via HMAT) of accelerators and other initiators of memory activity that are not
-the host processor running the operating system.
-
-This patch set introduces 'just enough' to make them work for arm64 and x86.
-It should be trivial to support other architectures, I just don't suitable
-NUMA systems readily available to test.
-
-There are a few quirks that need to be considered.
-
-1. Fall back nodes
-******************
-
-As pre ACPI 6.3 supporting operating systems do not have Generic Initiator
-Proximity Domains it is possible to specify, via _PXM in DSDT that another
-device is part of such a GI only node.  This currently blows up spectacularly.
-
-Whilst we can obviously 'now' protect against such a situation (see the related
-thread on PCI _PXM support and the  threadripper board identified there as
-also falling into the  problem of using non existent nodes
-https://patchwork.kernel.org/patch/10723311/ ), there is no way to  be sure
-we will never have legacy OSes that are not protected  against this.  It would
-also be 'non ideal' to fallback to  a default node as there may be a better
-(non GI) node to pick  if GI nodes aren't available.
-
-The work around is that we also have a new system wide OSC bit that allows
-an operating system to 'announce' that it supports Generic Initiators.  This
-allows, the firmware to us DSDT magic to 'move' devices between the nodes
-dependent on whether our new nodes are there or not.
-
-2. New ways of assigning a proximity domain for devices
-*******************************************************
-
-Until now, the only way firmware could indicate that a particular device
-(outside the 'special' set of cpus etc) was to be found in a particular
-Proximity Domain by the use of _PXM in DSDT.
-
-That is equally valid with GI domains, but we have new options. The SRAT
-affinity structure includes a handle (ACPI or PCI) to identify devices
-with the system and specify their proximity domain that way.  If both _PXM
-and this are provided, they should give the same answer.
-
-For now this patch set completely ignores that feature as we don't need
-it to start the discussion.  It will form a follow up set at some point
-(if no one else fancies doing it).
-
-Test cases for the access1 class
-********************************
-
-Test cases for Generic Initiator additions to HMAT.
-
-Setup
-
-PXM0 (node 0) - CPU0 CPU1, 2G memory
-PXM1 (node 1) - CPU2 CPU3, 2G memory
-PXM2 (node 2) - CPU4 CPU5, 2G memory
-PXM3 (node 4) - 2G memory (GI in one case below)
-PXM4 (node 3) - GI only.
-
-Config 1:  GI in PXM4 nearer to memory in PXM 3 than CPUs, not direct attached
-
-[    2.384064] acpi/hmat: HMAT: Locality: Flags:00 Type:Access Latency Initiator Domains:4 Target Domains:4 Base:256
-[    2.384913] acpi/hmat:   Initiator-Target[0-0]:1 nsec
-[    2.385190] acpi/hmat:   Initiator-Target[0-1]:9 nsec
-[    2.385736] acpi/hmat:   Initiator-Target[0-2]:9 nsec
-[    2.385984] acpi/hmat:   Initiator-Target[0-3]:9 nsec
-[    2.386447] acpi/hmat:   Initiator-Target[1-0]:9 nsec
-[    2.386740] acpi/hmat:   Initiator-Target[1-1]:1 nsec
-[    2.386964] acpi/hmat:   Initiator-Target[1-2]:9 nsec
-[    2.387174] acpi/hmat:   Initiator-Target[1-3]:9 nsec
-[    2.387624] acpi/hmat:   Initiator-Target[2-0]:9 nsec
-[    2.387953] acpi/hmat:   Initiator-Target[2-1]:9 nsec
-[    2.388155] acpi/hmat:   Initiator-Target[2-2]:1 nsec
-[    2.388607] acpi/hmat:   Initiator-Target[2-3]:9 nsec
-[    2.388861] acpi/hmat:   Initiator-Target[4-0]:13 nsec
-[    2.389126] acpi/hmat:   Initiator-Target[4-1]:13 nsec
-[    2.389574] acpi/hmat:   Initiator-Target[4-2]:13 nsec
-[    2.389805] acpi/hmat:   Initiator-Target[4-3]:5 nsec
-
-# Sysfs reads the same for nodes 0-2 for access0 and access1 as no GI involved.
-
-/sys/bus/node/devices/...
-    node0 #1 and 2 similar.
-        access0
-            initiators
-                node0
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node0
-            uevent
-        access1
-            initiators
-                node0
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node 0
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-    node3 # Note PXM 4, contains GI only
-        access0
-            initiators
-                *empty*
-            power
-            targets
-                node4
-            uevent
-        compact
-        ...
-    node4
-        access0
-            initiators
-                node3
-                read_bandwidth  0
-                read_latency    5
-                write_bandwidth 0
-                write_latency   5
-            power
-            targets
-                *empty*
-            uevent
-        access1
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty*
-            uevent
-        compact
-        ...
-
-Config 2:  GI in PXM4 further to memory in PXM 3 than CPUs, not direct attached
-
-[    4.073493] acpi/hmat: HMAT: Locality: Flags:00 Type:Access Latency Initiator Domains:4 Target Domains:4 Base:256
-[    4.074785] acpi/hmat:   Initiator-Target[0-0]:1 nsec
-[    4.075150] acpi/hmat:   Initiator-Target[0-1]:9 nsec
-[    4.075423] acpi/hmat:   Initiator-Target[0-2]:9 nsec
-[    4.076184] acpi/hmat:   Initiator-Target[0-3]:9 nsec
-[    4.077116] acpi/hmat:   Initiator-Target[1-0]:9 nsec
-[    4.077366] acpi/hmat:   Initiator-Target[1-1]:1 nsec
-[    4.077640] acpi/hmat:   Initiator-Target[1-2]:9 nsec
-[    4.078156] acpi/hmat:   Initiator-Target[1-3]:9 nsec
-[    4.078471] acpi/hmat:   Initiator-Target[2-0]:9 nsec
-[    4.078994] acpi/hmat:   Initiator-Target[2-1]:9 nsec
-[    4.079277] acpi/hmat:   Initiator-Target[2-2]:1 nsec
-[    4.079505] acpi/hmat:   Initiator-Target[2-3]:9 nsec
-[    4.080126] acpi/hmat:   Initiator-Target[4-0]:13 nsec
-[    4.080995] acpi/hmat:   Initiator-Target[4-1]:13 nsec
-[    4.081351] acpi/hmat:   Initiator-Target[4-2]:13 nsec
-[    4.082125] acpi/hmat:   Initiator-Target[4-3]:13 nsec
-
-/sys/bus/node/devices/...
-    node0 #1 and 2 similar.
-        access0
-            initiators
-                node0
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node0
-                node4
-            uevent
-        access1
-            initiators
-                node0
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node0
-                node4
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-    node3 # Note PXM 4, contains GI only
-        #No accessX directories.
-        compact
-        ...
-    node4
-        access0
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty*
-            uevent
-        access1
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty*
-            uevent
-        compact
-        ...
-
-
-case 3 - as per case 2 but now the memory in node 3 is direct attached to the
-GI but nearer the main nodes (not physically sensible :))
-
-/sys/bus/node/devices/...
-    node0 #1 and 2 similar.
-        access0
-            initiators
-                node0
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node0
-                node4
-            uevent
-        access1
-            initiators
-                node0
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node0
-                node4
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-    node3 # Note PXM 4, contains GI only
-        access0
-            initiators
-                *empty*
-            power
-            targets
-                node4
-            uevent
-        compact
-        ...
-    node4
-        access0
-            initiators
-                node3
-                read_bandwidth  0
-                read_latency    13
-                write_bandwidth 0
-                write_latency   13
-            power
-            targets
-                *empty*
-            uevent
-        access1
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty*
-            uevent
-        compact
-        ...
-
-Case 4 - nearer the GI, but direct attached to one of the CPUS.
-# Another bonkers one.
-
-/sys/bus/node/devices/...
-    node0 #1 similar.
-        access0
-            initiators
-                node0
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node0
-                node4
-            uevent
-        access1
-            initiators
-                node0
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node0
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-    node2 # Direct attached to memory in node 3
-        access0
-            initiators
-                node2
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node2
-                node4 #direct attached
-            uevent
-        access1
-            initiators
-                node2
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node2
-                node4 #direct attached
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-
-    node3 # Note PXM 4, contains GI only
-        #No accessX directories.
-        compact
-        ...
-    node4
-        access0
-            initiators
-                node3
-                read_bandwidth  0
-                read_latency    13
-                write_bandwidth 0
-                write_latency   13
-            power
-            targets
-                *empty*
-            uevent
-        access1
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty*
-            uevent
-        compact
-        ...
-
-case 5 memory and GI together in node 3 (added an extra GI to node 3)
-Note hmat should also reflect this extra initiator domain.
-
-/sys/bus/node/devices/...
-    node0 #1 and 2 similar.
-        access0
-            initiators
-                node0
-                read_bandwidth  0 #not specificed in hmat
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node0
-                node4
-            uevent
-        access1
-            initiators
-                node0
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                read_bandwidth  1   
-            power
-            targets
-                node0
-            uevent
-        compact
-        cpu0
-        cpu1
-        ...
-    node3 # Note PXM 3, contains GI only
-        #No accessX directories.
-        compact
-        ...
-    node4 # Now memory and GI.
-        access0
-            initiators
-                node4
-                read_bandwidth  0
-                read_latency    1
-                write_bandwidth 0
-                write_latency   1
-            power
-            targets
-                node4
-            uevent
-        access1
-            initiators
-                node0
-                node1
-                node2
-                read_bandwidth  0
-                read_latency    9
-                write_bandwidth 0
-                write_latency   9
-            power
-            targets
-                *empty* # as expected GI doesn't paticipate in access 1.
-            uevent
-        compact
-        ...
-
-Jonathan Cameron (6):
-  ACPI: Support Generic Initiator only domains
-  x86: Support Generic Initiator only proximity domains
-  ACPI: Let ACPI know we support Generic Initiator Affinity Structures
-  ACPI: HMAT: Fix handling of changes from ACPI 6.2 to ACPI 6.3
-  node: Add access1 class to represent CPU to memory characteristics
-  docs: mm: numaperf.rst Add brief description for access class 1.
-
- Documentation/admin-guide/mm/numaperf.rst |  8 ++
- arch/x86/include/asm/numa.h               |  2 +
- arch/x86/kernel/setup.c                   |  1 +
- arch/x86/mm/numa.c                        | 14 ++++
- drivers/acpi/bus.c                        |  1 +
- drivers/acpi/numa/hmat.c                  | 89 ++++++++++++++++++-----
- drivers/acpi/numa/srat.c                  | 60 ++++++++++++++-
- drivers/base/node.c                       |  3 +
- include/linux/acpi.h                      |  1 +
- include/linux/nodemask.h                  |  1 +
- 10 files changed, 159 insertions(+), 21 deletions(-)
-
--- 
-2.19.1
-
+greg k-h
