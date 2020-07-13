@@ -2,227 +2,245 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B153C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5ED7214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594684056;
-	bh=M+fPqr3keD0MLuA1DPbRUZHfZtD8rh06mB1ZvF5p1Nc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qsXdiqIcse46FCQ3WFuE7GMe3B9XRULh3XxwgPHbRhuiRpqLlaqfFsq/lYg20KrwT
-	 iFP9Xtq2vNxAKahCjW4nIStfIA0ey5qgsLkZX2t6vUW4PNEi+Ecebc2QTwvTjRyBkQ
-	 EUY9H9xGemOhNBLeFxZEeCup9npr7FJAt5APeYdU=
+	by mail.kernel.org (Postfix) with ESMTP id 6C69821548
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgGMXrf (ORCPT
+        id S1726768AbgGMXsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 19:48:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36768 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgGMXrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:47:35 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A6F21548;
-        Mon, 13 Jul 2020 23:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594684054;
-        bh=M+fPqr3keD0MLuA1DPbRUZHfZtD8rh06mB1ZvF5p1Nc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sdRO0XmKhq/n+Tn/m2Rs0MZTOgPoOC4cyiKY8VUlASf6LjIOYFq5OuLl1xoF3IuzY
-         f24j6469FmK7dJ4vG3lRAaxZDI00lPhYHIE+JtodejdMV9mddXh0Ohbdp0uvyCgIcG
-         SQDQVxKdRpc0CT8bckg3srG9A4pG8T7neAjqQX44=
-Received: by mail-lj1-f173.google.com with SMTP id q7so20285107ljm.1;
-        Mon, 13 Jul 2020 16:47:33 -0700 (PDT)
-X-Gm-Message-State: AOAM532mftrmZRwhGWRBFUmh8asTrKi8beRgzXr/U5XIfZARtxyNRXWy
-        dmXNi+FLpVb4v8ogBa+w31JRP6hfLkzf6YBAwaA=
-X-Google-Smtp-Source: ABdhPJzYF4F2WFkO5qBgcY0yowt20vpBCIxfZIh7tILdXiXuqCt9AuLvb9Bms1PmNGo9LdllpTFgiRflTuufR9LXll0=
-X-Received: by 2002:a05:651c:2da:: with SMTP id f26mr847407ljo.377.1594684051850;
- Mon, 13 Jul 2020 16:47:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594261154-69745-1-git-send-email-guoren@kernel.org>
- <1594261154-69745-7-git-send-email-guoren@kernel.org> <20200710225017.5ce329485e911f99e17cd483@kernel.org>
- <CAJF2gTSfFY6qf7gZ9t80P-3cACWi3oEe4X8ek+_1nQZZT3Uk5w@mail.gmail.com> <20200712223748.9cb00fdf7938fbf7353c11cc@kernel.org>
-In-Reply-To: <20200712223748.9cb00fdf7938fbf7353c11cc@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 14 Jul 2020 07:47:20 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQcRYHPmyM_T9g2rYRDN2DPedO0+s5X-MOiEzaFX+xxmA@mail.gmail.com>
-Message-ID: <CAJF2gTQcRYHPmyM_T9g2rYRDN2DPedO0+s5X-MOiEzaFX+xxmA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] riscv: Add KPROBES_ON_FTRACE supported
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Atish Patra <atish.patra@wdc.com>, penberg@kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726356AbgGMXsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 19:48:42 -0400
+IronPort-SDR: uYlSgAgMCxXQtl6GNy+ui3NUzkL7KwXVTsrNRKego86xVZNJM4Dw9b3UOowO0wffTypBw7ZUCY
+ pX9xR5TLddaA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148748413"
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="148748413"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 16:48:42 -0700
+IronPort-SDR: tXhh4TFbT2ZaYDOh4vGNPG0IJkokXqy25LmDMJhsc4slKTDe6jynd4n396J6jwzSnW4CpPMpqO
+ pXe05PNJDfdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="281570422"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 16:48:41 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Felix Kuehling" <Felix.Kuehling@amd.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Jacob Jun Pan" <jacob.jun.pan@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Sohil Mehta" <sohil.mehta@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        "amd-gfx" <amd-gfx@lists.freedesktop.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v6 00/12]  x86: tag application address space for devices
+Date:   Mon, 13 Jul 2020 16:47:55 -0700
+Message-Id: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+Hi, Thomas, Joerg, and other maintainers,
 
-On Sun, Jul 12, 2020 at 9:37 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Sat, 11 Jul 2020 09:32:01 +0800
-> Guo Ren <guoren@kernel.org> wrote:
->
-> > Thx Masami,
-> >
-> > On Fri, Jul 10, 2020 at 9:50 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >
-> > > Hi Guo,
-> > >
-> > > On Thu,  9 Jul 2020 02:19:14 +0000
-> > > guoren@kernel.org wrote:
-> > >
-> > > > +/* Ftrace callback handler for kprobes -- called under preepmt disabed */
-> > > > +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-> > > > +                        struct ftrace_ops *ops, struct pt_regs *regs)
-> > > > +{
-> > > > +     struct kprobe *p;
-> > > > +     struct kprobe_ctlblk *kcb;
-> > > > +
-> > > > +     p = get_kprobe((kprobe_opcode_t *)ip);
-> > > > +     if (unlikely(!p) || kprobe_disabled(p))
-> > > > +             return;
-> > > > +
-> > > > +     kcb = get_kprobe_ctlblk();
-> > > > +     if (kprobe_running()) {
-> > > > +             kprobes_inc_nmissed_count(p);
-> > > > +     } else {
-> > > > +             /*
-> > > > +              * The regs->epc hasn't been saved by SAVE_ALL in mcount-dyn.S
-> > > > +              * So no need to resume it, just for kprobe handler.
-> > > > +              */
-> > > > +             instruction_pointer_set(regs, ip);
-> > > > +             __this_cpu_write(current_kprobe, p);
-> > > > +             kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> > > > +             if (!p->pre_handler || !p->pre_handler(p, regs)) {
-> > > > +                     /*
-> > > > +                      * Emulate singlestep (and also recover regs->pc)
-> > > > +                      * as if there is a nop
-> > > > +                      */
-> > > > +                     instruction_pointer_set(regs,
-> > > > +                             (unsigned long)p->addr + MCOUNT_INSN_SIZE);
-> > > > +                     if (unlikely(p->post_handler)) {
-> > > > +                             kcb->kprobe_status = KPROBE_HIT_SSDONE;
-> > > > +                             p->post_handler(p, regs, 0);
-> > > > +                     }
-> > >
-> > > Hmm, don't you need restoring the previous instruction pointer here?
-> > look at  riscv mcount-dyn.S SAVE_ALL function, sp frame lay out like this:
-> > -----------------------
-> > | return address |
-> > -----------------------
-> > | frame pointer   |
-> > -----------------------
-> > | pt_regs x1-x31|
-> > -----------------------
-> > It's not a complete pt_regs for the handler, so modifing regs->ip is no use.
->
-> Yes, that is same on x86. But ftrace regs_caller on x86-64 modifies the
-> return address on the stack by regs->ip.
->
-> See arch/x86/kernel/ftrace_64.S:
->
-> -----
-> SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
->         call ftrace_stub
->
->         /* Copy flags back to SS, to restore them */
->         movq EFLAGS(%rsp), %rax
->         movq %rax, MCOUNT_REG_SIZE(%rsp)
->
->         /* Handlers can change the RIP */
->         movq RIP(%rsp), %rax
->         movq %rax, MCOUNT_REG_SIZE+8(%rsp)
-> -----
-Yes, and in save_mcount_regs, it prepare the origin pt_regs RIP.
+This series only has one change in patch 1 on top of v5 (see change log).
+Could you please consider to merge it upstream?
 
-         /* Move RIP to its proper location */
-        movq MCOUNT_REG_SIZE+\added(%rsp), %rdi
-        movq %rdi, RIP(%rsp)
+Thanks.
 
-I've fixed up riscv's: [1]
-[1]: https://lore.kernel.org/linux-riscv/1594683562-68149-4-git-send-email-guoren@kernel.org/T/#u
+-Fenghua
 
->
-> The last part update the return address on the stack.
->
-> > > If you don't support modifying the instruction pointer in the handler,
-> > We can modify ip like this if necessary:
-> > *(unsigned long *)((unsigned long)regs + sizeof(struct pt_regs) + 8) = xxx;
-> >
-> > > it must not be compatible with kprobes.
-> > Why, can you show related codes? thank you very much.
->
-> The "Changing Execution Path" section in the Documentation/kprobes.txt said
->
-> -----
-> Since kprobes can probe into a running kernel code, it can change the
-> register set, including instruction pointer.
-> -----
-Got it, thx for correct me.
+=====
 
->
-> As you can see, this is the expected behavior on kprobes.
-> Since user will not know the kprobes is working on a breakpoint or
-> ftrace, we have to support this behavior transparently. So, could you
-> enable this feature at first on ftrace@RISCV?
-Ditto
+Typical hardware devices require a driver stack to translate application
+buffers to hardware addresses, and a kernel-user transition to notify the
+hardware of new work. What if both the translation and transition overhead
+could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
+enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
+Applications map portals in their local-address-space and directly submit
+work to them using a new instruction.
 
->
-> >
-> > >
-> > > Now BPF function override and function error injection depends on
-> > > this behevior, so could you consider to support it in the "ftrace"
-> > > implementation at first? (And if it is enabled, you can enable the
-> > > livepatch on RISCV too)
-> > Great message!
-> >
-> > But can you show me codes that bpf and err-jnject using the behavior? Thx
->
-> In kernel/fail_function.c
-Nice tip, thx. And I've tested err-jnject: [2]
-[2]: https://lore.kernel.org/linux-riscv/1594683562-68149-4-git-send-email-guoren@kernel.org/T/#md66e4e58f3463c1369e11ab9e5d646343f7d250d
+This series enables ENQCMD and associated management of the new MSR
+(MSR_IA32_PASID). This new MSR allows an application address space to be
+associated with what the PCIe spec calls a Process Address Space ID (PASID).
+This PASID tag is carried along with all requests between applications and
+devices and allows devices to interact with the process address space.
 
->
-> -----
-> static int fei_kprobe_handler(struct kprobe *kp, struct pt_regs *regs)
-> {
->         struct fei_attr *attr = container_of(kp, struct fei_attr, kp);
->
->         if (should_fail(&fei_fault_attr, 1)) {
->                 regs_set_return_value(regs, attr->retval);
->                 override_function_with_return(regs);
->                 return 1;
->         }
->
->         return 0;
-> }
-> -----
->
-> And follow the code related to CONFIG_BPF_KPROBE_OVERRIDE in
-> kernel/trace/bpf_trace.c. (doing similar thing, but fail_function.c
-> is simpler.)
-Nice tip, thx
+SVA and ENQCMD enabled device drivers need this series. The phase 2 DSA
+patches with SVA and ENQCMD support was released on the top of this series:
+https://lore.kernel.org/patchwork/cover/1244060/
 
---
-Best Regards
- Guo Ren
+This series only provides simple and basic support for ENQCMD and the MSR:
+1. Clean up type definitions (patch 1-2). These patches can be in a
+   separate series.
+   - Define "pasid" as "u32" consistently
+   - Define "flags" as "unsigned int"
+2. Explain different various technical terms used in the series (patch 3).
+3. Enumerate support for ENQCMD in the processor (patch 4).
+4. Handle FPU PASID state and the MSR during context switch (patches 5-6).
+5. Define "pasid" in mm_struct (patch 7).
+5. Clear PASID state for new mm and forked and cloned thread (patch 8-9).
+6. Allocate and free PASID for a process (patch 10).
+7. Fix up the PASID MSR in #GP handler when one thread in a process
+   executes ENQCMD for the first time (patches 11-12).
 
-ML: https://lore.kernel.org/linux-csky/
+This patch series and the DSA phase 2 series are in
+https://github.com/intel/idxd-driver/tree/idxd-stage2
+
+References:
+1. Detailed information on the ENQCMD/ENQCMDS instructions and the
+IA32_PASID MSR can be found in Intel Architecture Instruction Set
+Extensions and Future Features Programming Reference:
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+
+2. Detailed information on DSA can be found in DSA specification:
+https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+
+Chang log:
+v6:
+- Change return type to u32 for kfd_pasid_alloc() in patch 1 (Felix)
+
+v5:
+- Mark ENQCMD disabled when configured out and use cpu_feature_enabled()
+  to simplify the feature checking code in patch 10 and 12 (PeterZ and
+  Dave Hansen)
+- Add Reviewed-by: Lu Baolu to patch 1, 2, 10, and 12.
+
+v4:
+- Define PASID as "u32" instead of "unsigned int" in patch 1, 7, 10, 12.
+  (Christoph)
+- Drop v3 patch 2 which changes PASID type in ocxl because it's not related
+  to x86 and was rejected by ocxl maintainer Frederic Barrat
+- A split patch which changes PASID type to u32 in crypto/hisilicon/qm.c
+  was released separately to linux-crypto mailing list because it's not
+  related to x86 and is a standalone patch:
+
+v3:
+- Change names of bind_mm() and unbind_mm() to match to new APIs in
+  patch 4 (Baolu)
+- Change CONFIG_PCI_PASID to CONFIG_IOMMU_SUPPORT because non-PCI device
+  can have PASID in ARM in patch 8 (Jean)
+- Add a few sanity checks in __free_pasid() and alloc_pasid() in
+  patch 11 (Baolu)
+- Add patch 12 to define a new flag "has_valid_pasid" for a task and
+  use the flag to identify if the task has a valid PASID MSR (PeterZ)
+- Add fpu__pasid_write() to update the MSR in fixup() in patch 13
+- Check if mm->pasid can be found in fixup() in patch 13
+
+v2:
+- Add patches 1-3 to define "pasid" and "flags" as "unsigned int"
+  consistently (Thomas)
+  (these 3 patches could be in a separate patch set)
+- Add patch 8 to move "pasid" to generic mm_struct (Christoph).
+  Jean-Philippe Brucker released a virtually same patch. Upstream only
+  needs one of the two.
+- Add patch 9 to initialize PASID in a new mm.
+- Plus other changes described in each patch (Thomas)
+
+Ashok Raj (1):
+  docs: x86: Add documentation for SVA (Shared Virtual Addressing)
+
+Fenghua Yu (9):
+  iommu: Change type of pasid to u32
+  iommu/vt-d: Change flags type to unsigned int in binding mm
+  x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+  x86/msr-index: Define IA32_PASID MSR
+  mm: Define pasid in mm
+  fork: Clear PASID for new mm
+  x86/process: Clear PASID state for a newly forked/cloned thread
+  x86/mmu: Allocate/free PASID
+  x86/traps: Fix up invalid PASID
+
+Peter Zijlstra (1):
+  sched: Define and initialize a flag to identify valid PASID in the
+    task
+
+Yu-cheng Yu (1):
+  x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
+
+ Documentation/x86/index.rst                   |   1 +
+ Documentation/x86/sva.rst                     | 287 ++++++++++++++++++
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/disabled-features.h      |   9 +-
+ arch/x86/include/asm/fpu/types.h              |  10 +
+ arch/x86/include/asm/fpu/xstate.h             |   2 +-
+ arch/x86/include/asm/iommu.h                  |   3 +
+ arch/x86/include/asm/mmu_context.h            |  11 +
+ arch/x86/include/asm/msr-index.h              |   3 +
+ arch/x86/kernel/cpu/cpuid-deps.c              |   1 +
+ arch/x86/kernel/fpu/xstate.c                  |   4 +
+ arch/x86/kernel/process.c                     |  18 ++
+ arch/x86/kernel/traps.c                       |  12 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h    |   4 +-
+ .../drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c    |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.h |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c       |   6 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ids.h       |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |   8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h        |   8 +-
+ .../gpu/drm/amd/amdkfd/cik_event_interrupt.c  |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_dbgdev.c       |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_dbgmgr.h       |   2 +-
+ .../drm/amd/amdkfd/kfd_device_queue_manager.c |   7 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.c       |   8 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.h       |   4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_iommu.c        |   6 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_pasid.c        |   4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h         |  20 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c      |   2 +-
+ .../gpu/drm/amd/include/kgd_kfd_interface.h   |   2 +-
+ drivers/iommu/amd/amd_iommu.h                 |  10 +-
+ drivers/iommu/amd/iommu.c                     |  31 +-
+ drivers/iommu/amd/iommu_v2.c                  |  20 +-
+ drivers/iommu/intel/dmar.c                    |   7 +-
+ drivers/iommu/intel/intel-pasid.h             |  24 +-
+ drivers/iommu/intel/iommu.c                   |   4 +-
+ drivers/iommu/intel/pasid.c                   |  31 +-
+ drivers/iommu/intel/svm.c                     | 225 ++++++++++++--
+ drivers/iommu/iommu.c                         |   2 +-
+ drivers/misc/uacce/uacce.c                    |   2 +-
+ include/linux/amd-iommu.h                     |   8 +-
+ include/linux/intel-iommu.h                   |  14 +-
+ include/linux/intel-svm.h                     |   2 +-
+ include/linux/iommu.h                         |  10 +-
+ include/linux/mm_types.h                      |   6 +
+ include/linux/sched.h                         |   3 +
+ include/linux/uacce.h                         |   2 +-
+ kernel/fork.c                                 |  12 +
+ 54 files changed, 721 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/x86/sva.rst
+
+-- 
+2.19.1
+
