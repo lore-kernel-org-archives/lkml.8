@@ -2,126 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A58C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F857C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B05420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FE02075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:11:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="e/NsNBEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGMUHs (ORCPT
+        id S1726775AbgGMULH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:07:48 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:44718 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgGMUHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:07:48 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id EF43CBC09D;
-        Mon, 13 Jul 2020 20:07:44 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jack@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] udf: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 22:07:38 +0200
-Message-Id: <20200713200738.37800-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 13 Jul 2020 16:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgGMULH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:11:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323ABC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:11:07 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 1so6496378pfn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=09LknHY9dkU2M2OX/SgfAySnftMBQc2JUvSKGgKRJCQ=;
+        b=e/NsNBEUiK2c9tIx0w5Wa2nFM/f6fn0Dm1wPMhDzZoNngENUVV+uLYf/RdwYXo0OWg
+         pqMuzaqoK6PBQ47TV56KgWEUB7BSCB6NWS91anQRwBTg6NN6jVoiCntB7R1NGAa7IMEu
+         pOYVUaJ8BPj5TB7BsSxZhZW7ekzkxmN8XVvVg6jTa4Tdknmq6EZXKeF/ZeZjg8x8T80c
+         3r3GH5P20vEZf1P6edjZ1pnfbhof/ZafcmoyiXZ34pcNiPunHTpuBMl3lX7B46shBCdI
+         xMvJofQ6An2Xe8pGb9uTXECGFHIQ1+hWY6YWIxdVTJZPt3vxpDuWeJ6OmeEdQsHWKXXm
+         40gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=09LknHY9dkU2M2OX/SgfAySnftMBQc2JUvSKGgKRJCQ=;
+        b=ByhISB6LPmT1ZXZ8kW3dpVxFa8MBxVGuwVEKalun/SCTl7fyEwo3BtQKCVK3vASCo5
+         i4/t6wDmdiiEBbCrEYnCSdf+P+0OOSOcELMGX1Kk3hww1HI9pbH0r9Ks05b8WHvjOT8z
+         k05N3uAi0E08ViI+209o21qnBvN1j9ONcKJOMFHZyyLTlsYpclL5g4aL9C78ewoCunjG
+         v1qfre1RKhvO/4c2bm5Dk5BVLxhUL376ryTE5yC+tONryvXyR0c+P+GCteMAv6pW3dwX
+         sBRKiP1N74xbGnDQRRFS20sBNjwwvU8LV99Qbi1ab+zImePH+45MuoIwPg95TkoV/Sw3
+         mP2Q==
+X-Gm-Message-State: AOAM530MkQZEOuQ6+dM0TsaKIGLENIKTRoWOkByBEvko9LWnPYom2iDE
+        HZ2UNX+wxLiHPQjcWWwwmHUwtQ==
+X-Google-Smtp-Source: ABdhPJyIavVroDJAFXHGVH3iAha82aBR6fPl20kp6ciqNkYezNXkt68WOlU0Q8ksIhyn8H06/JbttQ==
+X-Received: by 2002:a05:6a00:224c:: with SMTP id i12mr1417007pfu.18.1594671066404;
+        Mon, 13 Jul 2020 13:11:06 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id d16sm15290442pfo.156.2020.07.13.13.11.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 13:11:05 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 13:11:05 -0700 (PDT)
+X-Google-Original-Date: Mon, 13 Jul 2020 13:11:03 PDT (-0700)
+Subject:     Re: [PATCH 1/2] riscv: Fix building error in entry.S when CONFIG_RISCV_M_MODE is enabled
+In-Reply-To: <742f0a82a9d4ab62d8616784db5a88a95d8b5389.1594629047.git.greentime.hu@sifive.com>
+CC:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        Paul Walmsley <paul.walmsley@sifive.com>, lkp@intel.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     greentime.hu@sifive.com
+Message-ID: <mhng-f7d831a1-d892-4c55-82e9-4427539f1337@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, 13 Jul 2020 01:32:15 PDT (-0700), greentime.hu@sifive.com wrote:
+> arch/riscv/kernel/entry.S: Assembler messages:
+> arch/riscv/kernel/entry.S:106: Error: illegal operands `andi a0,s1,0x00001800'
+>
+> This building error is because of the SR_MPP value is too large to be used
+> as an immediate value for andi. To fix this issue I use li to set the
+> immediate value to t0, then it can use t0 and s1 to do and operation.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Thanks.  I guess I must have something wrong with my build tests, as it's
+supposed to be building the NOMMU stuff.  I was just about to fix this up in
+the patch, looks like I also lost my own Signed-off-by so I have to ammend it
+anyway.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/filesystems/udf.rst | 2 +-
- fs/udf/ecma_167.h                 | 2 +-
- fs/udf/super.c                    | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/filesystems/udf.rst b/Documentation/filesystems/udf.rst
-index d9badbf285b2..f9489ddbb767 100644
---- a/Documentation/filesystems/udf.rst
-+++ b/Documentation/filesystems/udf.rst
-@@ -72,4 +72,4 @@ For the latest version and toolset see:
- 
- Documentation on UDF and ECMA 167 is available FREE from:
- 	- http://www.osta.org/
--	- http://www.ecma-international.org/
-+	- https://www.ecma-international.org/
-diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
-index 736ebc5dc441..185c3e247648 100644
---- a/fs/udf/ecma_167.h
-+++ b/fs/udf/ecma_167.h
-@@ -2,7 +2,7 @@
-  * ecma_167.h
-  *
-  * This file is based on ECMA-167 3rd edition (June 1997)
-- * http://www.ecma.ch
-+ * https://www.ecma.ch
-  *
-  * Copyright (c) 2001-2002  Ben Fennema
-  * Copyright (c) 2017-2019  Pali Rohár <pali@kernel.org>
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index f747bf72edbe..1c42f544096d 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -11,8 +11,8 @@
-  *  This code is based on version 2.00 of the UDF specification,
-  *  and revision 3 of the ECMA 167 standard [equivalent to ISO 13346].
-  *    http://www.osta.org/
-- *    http://www.ecma.ch/
-- *    http://www.iso.org/
-+ *    https://www.ecma.ch/
-+ *    https://www.iso.org/
-  *
-  * COPYRIGHT
-  *  This file is distributed under the terms of the GNU General Public
--- 
-2.27.0
-
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  arch/riscv/kernel/entry.S | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 6ed579fc1073..000984695cd6 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -99,7 +99,8 @@ _save_context:
+>
+>  #ifdef CONFIG_CONTEXT_TRACKING
+>  	/* If previous state is in user mode, call context_tracking_user_exit. */
+> -	andi a0, s1, SR_SPP
+> +	li t0, SR_PP
+> +	and a0, s1, t0
+>  	bnez a0, skip_context_tracking
+>  	call context_tracking_user_exit
