@@ -2,127 +2,90 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8552A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:39:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yh9Pm9P9"
+	by mail.kernel.org (Postfix) with ESMTP id 42FD0206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgGMJjO (ORCPT
+        id S1729447AbgGMJkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgGMJjN (ORCPT
+        Mon, 13 Jul 2020 05:40:06 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:14486 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbgGMJkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:39:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66274C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:39:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u5so5764462pfn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=skXD+wsQgKq4LXd9xCnrPvK7KZqTAPrAbDnvMV4BILs=;
-        b=yh9Pm9P9Gp+QKQfxeQtuY1E1Hp14L5t3EfCVWNCaO52OM6gUUeJFFQTyK8rEyutk0H
-         BMoHaR7zBcRyTShlru8V/TjqVRzrZV4+B5MeBPC/AGQ5A+jfZAy8UEt43EkfDOpZu4V9
-         01nPZo5Akte8gAWlUJLgaa0gem1j28CIN8cD49/resMQr46y6OMYdUiK3whKdoa5Uvy5
-         +y3ZSH/GpTj9Dn49PXWKm4+8ovC5Z15loSyOKMRDKhb71xCepwG0+P+RLVfWt5RjYGZr
-         eyLaucHvluqtxjaz0JZV9dp8AXvH8VzJNZTRd03H+RiGwVDyP5C9sdB0gGbOaJ4/YDFw
-         iing==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=skXD+wsQgKq4LXd9xCnrPvK7KZqTAPrAbDnvMV4BILs=;
-        b=E1qJfAYNB3zVeCzn1T3C23t1TCu1o84fnWMOG5B0Wkhrz1FY35kvlpyrFzXFdGcRzg
-         vKq+7y+p7SohuO9MgIFUAzN+xZ2eIRHXN/d6TCFp9PGaqhc2miY4mw1CxxG1QQyJ+2y8
-         +QZbvMaXaqA2BnhXC40ePo2TCX6LQRcr6IYQSOtFFvD5HW1PTzX4euez0cCEwj24tBai
-         gPv/KRZcmTD/+amSLOnJbkT1+iVA+Rzkj+QH7RwgYZRN6FjjxnvM5i+vykMq2kXYtrHc
-         mUaBDtnMZDnSDTW7nLRaahfhRdfLRVfcH4VehDZb2nLP8ZGzMKzZ9nr39G8d+0m12nNP
-         DVtQ==
-X-Gm-Message-State: AOAM532FBPIoQdXJlYRyO+ygLFmjzYR3o4KIGvzjg3Cd04U/OIcAARS1
-        h0b4ZMMML5AA8VKiXYu382RgOg==
-X-Google-Smtp-Source: ABdhPJyl0zjLReOR/+Xr6FqTuxKWo4RJ4CVE+9dKiMkEDH87gGW8e4TOm3obgjWYwEX/7dZWcfxkkA==
-X-Received: by 2002:a63:3d01:: with SMTP id k1mr65845600pga.71.1594633152842;
-        Mon, 13 Jul 2020 02:39:12 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id i13sm14062787pjd.33.2020.07.13.02.39.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 02:39:11 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 15:09:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v7 2/8] cpufreq: mediatek: Enable clock and regulator
-Message-ID: <20200713093909.676v7wxjzsz4vbxv@vireshk-i7>
-References: <1594348284-14199-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1594348284-14199-3-git-send-email-andrew-sh.cheng@mediatek.com>
+        Mon, 13 Jul 2020 05:40:05 -0400
+X-IronPort-AV: E=Sophos;i="5.75,347,1589234400"; 
+   d="scan'208";a="459564921"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 11:39:56 +0200
+Date:   Mon, 13 Jul 2020 11:39:56 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Takashi Iwai <tiwai@suse.de>
+cc:     Julia Lawall <julia.lawall@inria.fr>,
+        Dan Williams <dan.j.williams@intel.com>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        tech-board-discuss@lists.linuxfoundation.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [Ksummit-discuss] [PATCH v3] CodingStyle: Inclusive
+ Terminology
+In-Reply-To: <s5hft9vzrgt.wl-tiwai@suse.de>
+Message-ID: <alpine.DEB.2.22.394.2007131137330.2322@hadrien>
+References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com> <s5hlfjnzvu7.wl-tiwai@suse.de> <alpine.DEB.2.22.394.2007131043070.2322@hadrien> <s5hft9vzrgt.wl-tiwai@suse.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594348284-14199-3-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-07-20, 10:31, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> Need to enable regulator,
-> so that the max/min requested value will be recorded
-> even it is not applied right away.
-> 
-> Intermediate clock is not always enabled by ccf in different projects,
-> so cpufreq should enable it by itself.
-> 
-> Change-Id: I9f4c8b1ea793794f5f9cdc65427daad1393f5df8
 
-You are on V7 right now, these should have been gone long back.
 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/cpufreq/mediatek-cpufreq.c | 33 +++++++++++++++++++++++++++++----
->  1 file changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index 0c98dd08273d..4b479c110cc9 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -350,6 +350,11 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  		ret = PTR_ERR(proc_reg);
->  		goto out_free_resources;
->  	}
-> +	ret = regulator_enable(proc_reg);
-> +	if (ret) {
-> +		pr_warn("enable vproc for cpu%d fail\n", cpu);
-> +		goto out_free_resources;
-> +	}
+On Mon, 13 Jul 2020, Takashi Iwai wrote:
 
-This is already done by the OPP core now.
+> On Mon, 13 Jul 2020 10:43:28 +0200,
+> Julia Lawall wrote:
+> >
+> >
+> >
+> > On Mon, 13 Jul 2020, Takashi Iwai wrote:
+> >
+> > > On Wed, 08 Jul 2020 20:14:27 +0200,
+> > > Dan Williams wrote:
+> > > >
+> > > > +Recommended replacements for 'blacklist/whitelist' are:
+> > > > +    'denylist / allowlist'
+> > > > +    'blocklist / passlist'
+> > >
+> > > I started looking through the tree now and noticed there are lots of
+> > > patterns like "whitelisted" or "blacklisted".  How can the words fit
+> > > for those?  Actually, there are two cases like:
+> > >
+> > > - Foo is blacklisted
+> > > - Allow to load the non-whitelisted cards
+> > >
+> > > Currently I'm replacing the former with "Foo is in denylist", but not
+> >
+> > In the denylist?
+>
+> Not really, only the allowlist exists in this case.
 
--- 
-viresh
+I'm not sure to understand.  in denylist is not grammatical.  It needs "a"
+or "the".
+
+Maybe it has to be foo is denylisted?  foo is in the implicit denyList?
+foo is not in the allowList?
+
+julia
