@@ -2,182 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA84C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61F5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973DD2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1059206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xZkDaSdO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gn2xMHlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbgGMJpe (ORCPT
+        id S1729545AbgGMJpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        Mon, 13 Jul 2020 05:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGMJpd (ORCPT
+        with ESMTP id S1729519AbgGMJpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:45:33 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B08C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:45:33 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g75so12639228wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:45:33 -0700 (PDT)
+        Mon, 13 Jul 2020 05:45:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F80C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:45:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b9so5289178plx.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:45:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=otVulKjc0ogv42O2JFqcEJScHvHl4vp3m32t3UYd2Kw=;
-        b=xZkDaSdOHPEuGUwfOb6nqqxZOvsPfL1pnepML+/Ed+UjvcgcEO/o0p33DH/SpU+JpV
-         qvqgb7VDlYs6FjP1uLWfp/CF8LUjqY9Dp/4N4wWePkbMjnalzR+k82j0NrHN2KxOmgyY
-         tlfhpO8ISIVj+kiDIEeqh7Z2sCBI4ga87fW5Pd5uuthrc+vuyPnARbVVKHyC8JvjOq1a
-         +XSxNnEHzRDLAMc+brEL/6ZMWsDauigI6FWUkg9Rylhy3+RpoiTfCqgNrVWh4qcGUe5j
-         m9HoTRmZZpoYfapnA7BbtCwdtuhghjRTeWCVrCtVnaXPoK3Gph7UhLMdndE7Cgan4fKJ
-         GM2Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0olB/Kj5+mM078/bHyZqezPaPK0WajdFbhRfxVSilRM=;
+        b=Gn2xMHlOBxombYzdcOBeNb7/n3j/kqRvvaLLW0WODfv8XcYN4wvPkv/VelKSuBP69N
+         UqYAzOFnTRyOXYGP4stWtS1e2WJ0541MZUrW7Jn4EzmpRWNfZnAHVFxP4CCNc+KNr+va
+         otUTk2GbD0GCOa0jrU4/V+OEz7yEdEQbnY273ksNxPIWRSHkSE9A04vZDs/2YxcHamFI
+         TDYExsyQlQ3acmCutMiKev+tyJl0jWuD2kpvnT7lXyVT6nqpoW6VhD6egu6RJJVIgVsS
+         7pnNeiJwjDebLCS0ZkRE3+BoAGVWSRHbiIEEviLgMmkeayuCOeqeCxxGfQsNP4fU3PFy
+         mckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=otVulKjc0ogv42O2JFqcEJScHvHl4vp3m32t3UYd2Kw=;
-        b=YjHgyqRZ+MEDZuIqdPm1NrwrNTrdP/v76hiPx5XcjesLBaSNUz3EpfECUTSCPau2yT
-         eNU8ihx+ZI6SboE9BEFknKdGYhviA9+GJbJGdGbwRQaRroxsH/yHFF+Uu+Thce2ykjav
-         g2ZwKgD4VUypJrAiXjcNPrnz0JImYEwPdADNl7dqiQqI3AW0FmohLTM0yeT4aO/N8h3s
-         KRqQ0YbqveNzNb4YuDWtqsU/G27QB5bW4/XztZAxHH+xN7z5nAqjIjOuDjGrmjlimbFI
-         s1HWcPWnv6P6J1rciEpc32uCbw4ZKYnmPE5OKkQ/2LhDjZjtElvWWeJMe5ektlD/tFyi
-         YKfw==
-X-Gm-Message-State: AOAM530g7HhTwYgZaesAi/rwWdMlPbKNEO7tZqJyKLk3LaArHudbWNsi
-        JvkK1FGlX0hcPa2hNntrDlU36g==
-X-Google-Smtp-Source: ABdhPJwfmSghj8SqWwYfEsnJ+Vo/AbskhnH8qm7h+6UXba3OKaV1P/faDsL0eoU21I1tCfkG4Xn/bQ==
-X-Received: by 2002:a1c:f007:: with SMTP id a7mr17993993wmb.103.1594633531976;
-        Mon, 13 Jul 2020 02:45:31 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
-        by smtp.googlemail.com with ESMTPSA id n14sm23603421wro.81.2020.07.13.02.45.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 02:45:31 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
- <20200706105538.2159-4-daniel.lezcano@linaro.org>
- <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
- <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
- <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
- <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
- <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <e1a6063a-ec96-7fae-8c3f-cc9eb7df01a2@linaro.org>
-Date:   Mon, 13 Jul 2020 11:45:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0olB/Kj5+mM078/bHyZqezPaPK0WajdFbhRfxVSilRM=;
+        b=K75Qy83hLq5L3mfx8z0fnqwE8HGLyS9VR1CW6OE+zOiK8EGKCUkeqiPO7BQ2u8PaHP
+         aa3at5RvVW8M//+UkXypUi4QaH1l8pjJYnqDCls6r5us07iTiMu2iiX4CGho4EcTQ5yS
+         YPYpBwr+lkusIWOn4oCbSyVDQ9R7mDup8r8IUm7lpa0Qcch4j8g1LbyCwBasvJPDJquU
+         AObgrrNaJg60neta267XPxabps9jDVZXLqQ80sPxwIDm6AnS6IDgfdp93QzR5o0rrLAj
+         vnnUatiVXY4EXe02mKZhsXyivqpTa5K8B/jWfjm4hEM2ASi1N4jnrS66T5lMcL+JTsv+
+         zbSw==
+X-Gm-Message-State: AOAM533n7Wrer5EKM/kqFFECYzKgKk2H9b7RtjlajygDXTeSTbpP9aUy
+        i9BK11h8QHH8qUEzGTNv/lm+Vg==
+X-Google-Smtp-Source: ABdhPJw6RpvjZvtN9GfY5lgA9lyTRdntA6c5g4jImyUp+kuNOOIMz04NipT9in353pzQI6555/bXiA==
+X-Received: by 2002:a17:902:9042:: with SMTP id w2mr59195104plz.8.1594633541141;
+        Mon, 13 Jul 2020 02:45:41 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id u2sm13654333pfl.21.2020.07.13.02.45.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 02:45:40 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 15:15:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic/sembuf: Update architecture related
+ information in comment
+Message-ID: <20200713094538.ix5g5bt6ss55kwrn@vireshk-i7>
+References: <64efe033394b6f0dfef043a63fd8897a81ba6d16.1589970173.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64efe033394b6f0dfef043a63fd8897a81ba6d16.1589970173.git.viresh.kumar@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Added Arnd in Cc.
-
-On 13/07/2020 11:31, Marek Szyprowski wrote:
-> Hi
+On 20-05-20, 15:53, Viresh Kumar wrote:
+> The structure came originally from x86_32 but is used by most of the
+> architectures now. Update the comment which says it is for x86 only.
 > 
-> On 07.07.2020 11:15, Marek Szyprowski wrote:
->> On 06.07.2020 15:46, Daniel Lezcano wrote:
->>> On 06/07/2020 15:17, Marek Szyprowski wrote:
->>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
->>>>> The generic netlink protocol is implemented but the different
->>>>> notification functions are not yet connected to the core code.
->>>>>
->>>>> These changes add the notification calls in the different
->>>>> corresponding places.
->>>>>
->>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
->>>> ("thermal: core: Add notifications call in the framework"). Sadly it
->>>> breaks booting various Samsung Exynos based boards. Here is an example
->>>> log from Odroid U3 board:
->>>>
->>>> Unable to handle kernel NULL pointer dereference at virtual address 
->>>> 00000010
->>>> pgd = (ptrval)
->>>> [00000010] *pgd=00000000
->>>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->>>> Modules linked in:
->>>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
->>>> #1146
->>>> Hardware name: Samsung Exynos (Flattened Device Tree)
->>>> PC is at kmem_cache_alloc+0x13c/0x418
->>>> LR is at kmem_cache_alloc+0x48/0x418
->>>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
->>>> ...
->>>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
->>>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
->>>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->>>> Stack: (0xee8f1cf8 to 0xee8f2000)
->>>> ...
->>>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] 
->>>> (__alloc_skb+0x5c/0x170)
->>>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
->>>> (thermal_genl_send_event+0x24/0x174)
->>>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
->>>> (thermal_notify_tz_create+0x58/0x74)
->>>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
->>>> (thermal_zone_device_register+0x358/0x650)
->>>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
->>>> (of_parse_thermal_zones+0x304/0x7a4)
->>>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
->>>> (thermal_init+0xdc/0x154)
->>>> [<c1028964>] (thermal_init) from [<c0102378>] 
->>>> (do_one_initcall+0x8c/0x424)
->>>> [<c0102378>] (do_one_initcall) from [<c1001158>]
->>>> (kernel_init_freeable+0x190/0x204)
->>>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
->>>> (kernel_init+0x8/0x118)
->>>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
->>>>
->>>> Reverting it on top of linux-next fixes the boot issue. I will
->>>> investigate it further soon.
->>> Thanks for reporting this.
->>>
->>> Can you send the addr2line result and code it points to ?
->>
->> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to 
->> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks 
->> like some trashed memory somewhere, but I don't have time right now to 
->> analyze it further now...
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  include/uapi/asm-generic/sembuf.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Just one more thing I've noticed. The crash happens only if the kernel 
-> is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC 
-> 4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like 
-> arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works 
-> fine...
-> 
-> This happens also with Linux next-20200710, which again got this commit.
-Arnd,
+> diff --git a/include/uapi/asm-generic/sembuf.h b/include/uapi/asm-generic/sembuf.h
+> index 0e709bd3d730..f54e48fc91ae 100644
+> --- a/include/uapi/asm-generic/sembuf.h
+> +++ b/include/uapi/asm-generic/sembuf.h
+> @@ -6,9 +6,9 @@
+>  #include <asm/ipcbuf.h>
+>  
+>  /*
+> - * The semid64_ds structure for x86 architecture.
+> - * Note extra padding because this structure is passed back and forth
+> - * between kernel and user space.
+> + * The semid64_ds structure for most architectures (though it came from x86_32
+> + * originally). Note extra padding because this structure is passed back and
+> + * forth between kernel and user space.
+>   *
+>   * semid64_ds was originally meant to be architecture specific, but
+>   * everyone just ended up making identical copies without specific
 
-are you aware of any issue with this gcc version which can explain this
-kernel panic ? Sounds like the problem does not appear with more recent
-version.
+Arnd, Ping.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+viresh
