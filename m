@@ -2,179 +2,197 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99329C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE0820809
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563A72067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fung/LLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGMU53 (ORCPT
+        id S1726514AbgGMUxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:57:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49428 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgGMU53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:57:29 -0400
-IronPort-SDR: o3A608ekfjNc5dPH9f0I2Sck/Ef41jagYkUDwBwAsuXkrcaj+D884EHZqyBSy5XNAw0LP17rTH
- 4hDfmTOTaD1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213545938"
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="213545938"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 13:57:25 -0700
-IronPort-SDR: IlhdM+NGDZW1h2RjwG/6dq1Ukn48CdCpzdoF83Xno+A3i0qrsSZf5KveIrUGaUZymvThVIgqFR
- JV0GNMhmHEZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="268467769"
-Received: from bcope-mobl.ger.corp.intel.com (HELO localhost) ([10.249.32.223])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Jul 2020 13:57:20 -0700
-Date:   Mon, 13 Jul 2020 23:57:19 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Ard Biesheuvel <ardb@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
-Subject: Re: [PATCH v2] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200713205719.GA1419951@linux.intel.com>
-References: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
+        Mon, 13 Jul 2020 16:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgGMUxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:53:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2616C061755;
+        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so18386147wrw.1;
+        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GZtfiXav89wkpI0gUU9ArbYeF3poYQO7hSKJ5JBj8Is=;
+        b=fung/LLFRum+RDTwtolw1vvFrmSuH4yuAH9sTFKLqHGXSoVOLz0V+QPjaSF67njYrh
+         c7yACuSsPqsGdbLoSnXE+v5vWPfPRpqBPagAYRLi8BYIdRg1SY/ZEwCjDSxNX8hgCR7i
+         cvDoaUvvedmz2cGAyfc2U0qfLSH1obS3KAu8Y1CmN6suX+iC30domrBnyd/i21FAZxCm
+         pLgyzlEiA72HCw9g9LJeCId9SzUvSi9jf/cWKiTrFkQ6LEwRRetWGdEnvGLQis5XSKHo
+         ddxC6i8d50v+DYMzTTtUSZJCHR90BrTWW+nmgJP6+0sZaGqVNeab366zV0mYRVmRePGH
+         RLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GZtfiXav89wkpI0gUU9ArbYeF3poYQO7hSKJ5JBj8Is=;
+        b=MXWuVr/XNQsk0n0Rz8VYN62hjANyhojoV9gZQwCXeqww/MNgEuWr7nPxieZr3puCqF
+         PUHY45BOT/s1oXZNxSWuase/kKOtJcHTeq9P355UwOaDmSj3wRGHey3HBgWIzPcVYMHE
+         ODdujQAGZwuxNSCspYv17zFa0xoIT/vX2rWQxY+FymztX7TWIxEXE2dhFoLky9SZdtMh
+         wfYv+znOXWX9FaSShxWUxX3RjPZf1S+85dtf22yq5RXGhx72R9qTleF3L05WdrXejr6G
+         /mKGYWYijrpyyrUFW9mq0PtyhpXUHMhFx/kX2KuWmKJFc645XWGEA8USMCotiiE7pgxT
+         lNgg==
+X-Gm-Message-State: AOAM533H56v2+W68rlNuirsihGAhYvouqGxkOMLByTWWYSmqNKCxh0jS
+        /6oHzgkBmZiJnBR6yE9V1RyN9diu
+X-Google-Smtp-Source: ABdhPJxnGb0JC591zQeRAAFavJrZe5Bs7bJiLfZd0l0fnWlLWIChM52eUyFnE2RxEUQoQUNPkvkS5w==
+X-Received: by 2002:adf:f54b:: with SMTP id j11mr1373720wrp.206.1594673622534;
+        Mon, 13 Jul 2020 13:53:42 -0700 (PDT)
+Received: from cluster5 ([80.76.206.81])
+        by smtp.gmail.com with ESMTPSA id a15sm29443811wrh.54.2020.07.13.13.53.41
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 13 Jul 2020 13:53:42 -0700 (PDT)
+From:   Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>
+Subject: [PATCH 1/2] net: dsa: qca8k: Add additional PORT0_PAD_CTRL options
+Date:   Mon, 13 Jul 2020 21:50:25 +0100
+Message-Id: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:29:55PM -0500, Tyler Hicks wrote:
-> Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> TCG_PCClientPCREvent event log header. Also require that
-> TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> 
-> The TCG PC Client Platform Firmware Profile Specification section 9.1
-> (Family "2.0", Level 00 Revision 1.04) states:
-> 
->  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
->  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
->  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> 
-> Section 9.4.5.1 provides this description of
-> TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> 
->  The number of Hash algorithms in the digestSizes field. This field MUST
->  be set to a value of 0x01 or greater.
-> 
-> Enforce these restrictions, as required by the above specification, in
-> order to better identify and ignore invalid sequences of bytes at the
-> end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> the means necessary to inform the kernel of the actual event log size so
-> the kernel's event log parsing code should be stringent when parsing the
-> event log for resiliency against firmware bugs. This is true, for
-> example, when firmware passes the event log to the kernel via a reserved
-> memory region described in device tree.
-> 
-> POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
-> device tree properties to describe the memory region used to pass the
-> event log from firmware to the kernel. Unfortunately, the
-> "linux,sml-size" property describes the size of the entire reserved
-> memory region rather than the size of the event long within the memory
-> region and the event log format does not include information describing
-> the size of the event log.
-> 
-> tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
-> "linux,sml-size" property is used. At the end of that function,
-> log->bios_event_log_end is pointing at the end of the reserved memory
-> region. That's typically 0x10000 bytes offset from "linux,sml-base",
-> depending on what's defined in the device tree source.
-> 
-> The firmware event log only fills a portion of those 0x10000 bytes and
-> the rest of the memory region should be zeroed out by firmware. Even in
-> the case of a properly zeroed bytes in the remainder of the memory
-> region, the only thing allowing the kernel's event log parser to detect
-> the end of the event log is the following conditional in
-> __calc_tpm2_event_size():
-> 
->         if (event_type == 0 && event_field->event_size == 0)
->                 size = 0;
-> 
-> If that wasn't there, __calc_tpm2_event_size() would think that a 16
-> byte sequence of zeroes, following an otherwise valid event log, was
-> a valid event.
-> 
-> However, problems can occur if a single bit is set in the offset
-> corresponding to either the TCG_PCR_EVENT2.eventType or
-> TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
-> This could confuse the parser into thinking that an additional entry is
-> present in the event log and exposing this invalid entry to userspace in
-> the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
-> problems have been seen if firmware does not fully zero the memory
-> region upon a warm reboot.
-> 
-> This patch significantly raises the bar on how difficult it is for
-> stale/invalid memory to confuse the kernel's event log parser but
-> there's still, ultimately, a reliance on firmware to properly initialize
-> the remainder of the memory region reserved for the event log as the
-> parser cannot be expected to detect a stale but otherwise properly
-> formatted firmware event log entry.
-> 
-> Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> ---
-> 
-> * v2
->   - Rebase the patch on top of the TPM next branch, commit 786a2aa281f4
->     ("Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")")
->   - Expand on the technical reasoning for needing strict event
->     validation in the commit message
->   - Improve the inline comment explaining the need for detecting
->     malformed events
-> 
->  include/linux/tpm_eventlog.h | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-> index 64356b199e94..739ba9a03ec1 100644
-> --- a/include/linux/tpm_eventlog.h
-> +++ b/include/linux/tpm_eventlog.h
-> @@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
->  
->  	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
->  
-> -	/* Check if event is malformed. */
-> +	/*
-> +	 * Perform validation of the event in order to identify malformed
-> +	 * events. This function may be asked to parse arbitrary byte sequences
-> +	 * immediately following a valid event log. The caller expects this
-> +	 * function to recognize that the byte sequence is not a valid event
-> +	 * and to return an event size of 0.
-> +	 */
->  	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
-> -		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
-> +		   sizeof(TCG_SPECID_SIG)) ||
-> +	    !efispecid->num_algs || count != efispecid->num_algs) {
->  		size = 0;
->  		goto out;
->  	}
-> -- 
-> 2.25.1
-> 
+A number of devices require additional PORT0_PAD configuration that cannot
+otherwise be inferred. This patch is based on John Crispin's "net: dsa:
+qca8k: allow swapping of mac0 and mac6", adding the ability to swap mac0
+and mac6, as well as to set the transmit and receive clock phase to falling
+edge.
 
+To keep things tidy, a function has been added to handle these device tree
+properties. However this handling could be moved to the
+qca8k_phylink_mac_config function if preferred.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+---
+ drivers/net/dsa/qca8k.c | 42 +++++++++++++++++++++++++++++++++++------
+ drivers/net/dsa/qca8k.h |  3 +++
+ 2 files changed, 39 insertions(+), 6 deletions(-)
 
-/Jarkko
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index 4acad5fa0c84..1443f97dd348 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -587,6 +587,28 @@ qca8k_setup_mdio_bus(struct qca8k_priv *priv)
+ 	return 0;
+ }
+ 
++static void
++qca8k_setup_port_pad_ctrl_reg(struct qca8k_priv *priv)
++{
++	u32 val = qca8k_read(priv, QCA8K_REG_PORT0_PAD_CTRL);
++
++	/* Swap MAC0-MAC6 */
++	if (of_property_read_bool(priv->dev->of_node,
++				  "qca,exchange-mac0-mac6"))
++		val |= QCA8K_PORT0_PAD_CTRL_MAC06_EXCHG;
++
++	/* SGMII Clock phase configuration */
++	if (of_property_read_bool(priv->dev->of_node,
++				  "qca,sgmii-rxclk-falling-edge"))
++		val |= QCA8K_PORT0_PAD_SGMII_RXCLK_FALLING_EDGE;
++
++	if (of_property_read_bool(priv->dev->of_node,
++				  "qca,sgmii-txclk-falling-edge"))
++		val |= QCA8K_PORT0_PAD_SGMII_TXCLK_FALLING_EDGE;
++
++	qca8k_write(priv, QCA8K_REG_PORT0_PAD_CTRL, val);
++}
++
+ static int
+ qca8k_setup(struct dsa_switch *ds)
+ {
+@@ -611,6 +633,9 @@ qca8k_setup(struct dsa_switch *ds)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Configure additional port pad properties */
++	qca8k_setup_port_pad_ctrl_reg(priv);
++
+ 	/* Enable CPU Port */
+ 	qca8k_reg_set(priv, QCA8K_REG_GLOBAL_FW_CTRL0,
+ 		      QCA8K_GLOBAL_FW_CTRL0_CPU_PORT_EN);
+@@ -722,27 +747,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		return;
+ 	}
+ 
++	/* Read port pad ctrl reg */
++	val = qca8k_read(priv, reg);
++
+ 	switch (state->interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		/* RGMII mode means no delay so don't enable the delay */
+-		qca8k_write(priv, reg, QCA8K_PORT_PAD_RGMII_EN);
++		val |= QCA8K_PORT_PAD_RGMII_EN;
++		qca8k_write(priv, reg, val);
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+ 		/* RGMII_ID needs internal delay. This is enabled through
+ 		 * PORT5_PAD_CTRL for all ports, rather than individual port
+ 		 * registers
+ 		 */
+-		qca8k_write(priv, reg,
+-			    QCA8K_PORT_PAD_RGMII_EN |
+-			    QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
+-			    QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY));
++		val |= QCA8K_PORT_PAD_RGMII_EN |
++		       QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
++		       QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY);
++		qca8k_write(priv, reg, val);
+ 		qca8k_write(priv, QCA8K_REG_PORT5_PAD_CTRL,
+ 			    QCA8K_PORT_PAD_RGMII_RX_DELAY_EN);
+ 		break;
+ 	case PHY_INTERFACE_MODE_SGMII:
+ 	case PHY_INTERFACE_MODE_1000BASEX:
+ 		/* Enable SGMII on the port */
+-		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
++		val |= QCA8K_PORT_PAD_SGMII_EN;
++		qca8k_write(priv, reg, val);
+ 
+ 		/* Enable/disable SerDes auto-negotiation as necessary */
+ 		val = qca8k_read(priv, QCA8K_REG_PWS);
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 10ef2bca2cde..4e115557e571 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -26,6 +26,9 @@
+ #define   QCA8K_MASK_CTRL_ID_M				0xff
+ #define   QCA8K_MASK_CTRL_ID_S				8
+ #define QCA8K_REG_PORT0_PAD_CTRL			0x004
++#define   QCA8K_PORT0_PAD_CTRL_MAC06_EXCHG		BIT(31)
++#define   QCA8K_PORT0_PAD_SGMII_RXCLK_FALLING_EDGE	BIT(19)
++#define   QCA8K_PORT0_PAD_SGMII_TXCLK_FALLING_EDGE	BIT(18)
+ #define QCA8K_REG_PORT5_PAD_CTRL			0x008
+ #define QCA8K_REG_PORT6_PAD_CTRL			0x00c
+ #define   QCA8K_PORT_PAD_RGMII_EN			BIT(26)
+-- 
+2.25.4
+
