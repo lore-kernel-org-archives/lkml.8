@@ -2,69 +2,131 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49139C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6FE20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594617207;
-	bh=sNwEMnzMjnyMevJ5fKpvrizzjBpnAP1Ys8GpNfdQ4z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K8iKZ3WKmRycQ3t03nAGSmIPGhrToPZ4ZX2vmETwx7uEmEzbIG7QJ86xBE59tL6d+
-	 uAd+PWq052PTaVXBKRUJc98PyK4xI6el/1AOGJB7aafkUq+Zs8C1hTShbtebhQ7dY5
-	 n3wO3nIYumo61ymr++AM4A1gQeW4vOr4eOoV1DkY=
+	by mail.kernel.org (Postfix) with ESMTP id 1DB7320724
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1YTVsAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgGMFNZ (ORCPT
+        id S1728927AbgGMFO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgGMFNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:13:24 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B96720724;
-        Mon, 13 Jul 2020 05:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594617204;
-        bh=sNwEMnzMjnyMevJ5fKpvrizzjBpnAP1Ys8GpNfdQ4z4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QQz2OglxSySt85av7NPMFfZTqueb0DO9C+FssnfRj/rvOcaw8elpB8cmWzWPKMA/0
-         75CwnQVm0Nfr5lSbEQ6j/a8Hl/GgWqF5PPffLE3tjdir9/a0VZy6Ox7FSrmWTXtueK
-         3gooGbQ918iysruy8cbUAF5Bm5mKvRXjMAo+eynE=
-Date:   Mon, 13 Jul 2020 10:43:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH RESEND] phy: exynos5-usbdrd: Calibrating makes sense only
- for USB2.0 PHY
-Message-ID: <20200713051320.GW34333@vkoul-mobl>
-References: <CGME20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf@eucas1p1.samsung.com>
- <20200708133800.3336-1-m.szyprowski@samsung.com>
+        Mon, 13 Jul 2020 01:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGMFO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:14:58 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38958C061794;
+        Sun, 12 Jul 2020 22:14:58 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b185so11119104qkg.1;
+        Sun, 12 Jul 2020 22:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HJfMKkuixe8TcFmSgPVFQeX2ebVBk2NIfALDJvpOegk=;
+        b=t1YTVsAOG7g2piVPzr9XqfcOnf1nl6fNsrPCzOhU25jJur4I0iJE19KVWcxP9TixlH
+         hA57KrAkQoI5IRkXUIwJDb5X00QSGkNpOaOxcD3Nan/XQTZVduQjrEg9Z14YNRooh0xq
+         YkYJUAB1lMa26uVrPQtmfvx05NKveu8jVXhT7ISzvFaojV/IuhzB9juQsNLM3nZX6QQD
+         /qypLMf6oZvwdlxwTxzwIwzH7E9u7lNMkYjJAceAoVyAthjE9BnK7zA8TE7Rk6oyIh60
+         ynOFniFe80hCUQ6h5+qkWRhJ8BTalGQHjoywwL3/780fkljffvktE9z46d8S7NnRo8NP
+         Pcrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HJfMKkuixe8TcFmSgPVFQeX2ebVBk2NIfALDJvpOegk=;
+        b=RNSKVmAOg6thIvBcvJUq6+3eFdcH5xiFQhlXG6eDRxyKu1jh76dauF/Wcf8Gfr4Szj
+         0mc0eBddzEBohWpVuIgzBXm+J3ucz7Uy/NZYrT3Kak9DHqdXsJ7L5xF+auWrBltrNpJE
+         1ECRdrdmD3ujcWZKz9VC2KX6O7JV2riVu117BsaYF1WXKixyRsO05faBSCspLOjQ7A5W
+         SuaLmRt1j7HQu5N65MUeW/CQOYEIenkt8L7eZPkTlKtf9YERTlTS/+6n/IJYbTaSXOUz
+         QAs3n4P7vSqNjQe569CGCueTbwgqDKnLYUsqKWYmWZ2u702THHU71nTv6wSbEfMzgVeI
+         G/Ew==
+X-Gm-Message-State: AOAM530TRfWQQe0FuEMnTWGtHnCTIpHvAmpfk4oaAuE7NRB7AVjM1dDp
+        rPt0QacZWdkpgA0zh26YNvuW9A2R841sMg9WzhU=
+X-Google-Smtp-Source: ABdhPJzZeRI4Vo+yZmNHHCrZWhnaKiX6BuWRvS5dt2QggK3l73mOoFiEQTzrVHTr+lD9cXIK0pQuLgSHhO8q2rUM2KU=
+X-Received: by 2002:a37:ec7:: with SMTP id 190mr75015576qko.421.1594617297477;
+ Sun, 12 Jul 2020 22:14:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708133800.3336-1-m.szyprowski@samsung.com>
+References: <20200705195110.405139-1-anarsoul@gmail.com> <20200705195110.405139-4-anarsoul@gmail.com>
+ <20200706114709.l6poszepqsmg5p5r@gilmour.lan>
+In-Reply-To: <20200706114709.l6poszepqsmg5p5r@gilmour.lan>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 12 Jul 2020 22:14:31 -0700
+Message-ID: <CA+E=qVe30AEocwi62sJSX7=tRUJ3LeKdgEwtA8trQN4xtMpgTA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: allwinner: a64: enable Bluetooth On Pinebook
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-20, 15:38, Marek Szyprowski wrote:
-> PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
-> calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
+On Mon, Jul 6, 2020 at 4:47 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Sun, Jul 05, 2020 at 12:51:10PM -0700, Vasily Khoruzhick wrote:
+> > Pinebook has an RTL8723CS WiFi + BT chip, BT is connected to UART1
+> > and uses PL5 as device wake GPIO, PL6 as host wake GPIO the I2C
+> > controlling signals are connected to R_I2C bus.
+> >
+> > Enable it in the device tree.
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  .../arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > index 64b1c54f87c0..e63ff271be4e 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > @@ -408,6 +408,18 @@ &uart0 {
+> >       status = "okay";
+> >  };
+> >
+> > +&uart1 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+> > +     status = "okay";
+>
+> You probably need uart-has-rtscts here
 
-Applied, thanks
+Will add in v2
 
--- 
-~Vinod
+> > +
+> > +     bluetooth {
+> > +             compatible = "realtek,rtl8723cs-bt";
+> > +             device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
+> > +             host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
+> > +     };
+>
+> And max-speed I guess?
+
+There's no max-speed in the schema for this bluetooth controller.
+Moreover it reads uart settings from firmware config. See
+btrtl_get_uart_settings() in drivers/bluetooth/btrtl.c
+
+> Maxime
+> >
