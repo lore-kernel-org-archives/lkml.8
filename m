@@ -2,69 +2,99 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A7CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4A7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64433206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E8820702
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594629510;
-	bh=sJPslYojoRgx0zLon4IrNTWOSSq0CbniTN6vn4XRxNs=;
+	s=default; t=1594629678;
+	bh=MsAb3MjB616bGxcV0JPjDtRGwlS8I2nFDbRd+BfX26c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rFMzMF/EoubSQv6rRbi732wxtICGltMh2jKQPHwk/ZXbp3EEcxoeEZffKW2E2KwQ7
-	 RddfIyMhs0a5NlgShPueI05xY2+h75BoXF31N1LpvQGUspW6HZK0IksyPjx7Fr/906
-	 COHadBOENFe4FncMKohkpSo9zb1w/aqEfkGdfx0s=
+	b=vy2d3TrM395ckCr4pYNdPtEIdsGEtDMQuEfg6wW3dUKiiWIr+zlXmcSAKVcHoHvtN
+	 1B3UhS8KMLpAilpRwE/59PUc2ODOyPwfXewH6OITWCoKp1BUBxq5BYEc3kpFPAAVme
+	 20xpt+SRJxr1i72CEImCvraFV3BKjwSw7jImA0HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgGMIi3 (ORCPT
+        id S1729003AbgGMIlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36508 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 04:41:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgGMIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:38:28 -0400
+        id S1725830AbgGMIlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:41:16 -0400
 Received: from localhost (unknown [84.241.194.92])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D86B22065D;
-        Mon, 13 Jul 2020 08:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6692065D;
+        Mon, 13 Jul 2020 08:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594629508;
-        bh=sJPslYojoRgx0zLon4IrNTWOSSq0CbniTN6vn4XRxNs=;
+        s=default; t=1594629676;
+        bh=MsAb3MjB616bGxcV0JPjDtRGwlS8I2nFDbRd+BfX26c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZupFqVvJpLcsApMVFPBDW62BfmjXbN4IPOcoXX0N316toLcduF6sQwnYtrEWANfdi
-         tL7B39pIXw4mnaGpsMSTWESyeOQ+noSMwCoZ2k9C0IEp3Lx5LfL/DWbdjUglF02t8z
-         Y33VXq5+/bVPR/lczAF/uhB3MYq/Kv1MPltcECJ8=
-Date:   Mon, 13 Jul 2020 10:38:24 +0200
+        b=MXm0KiOxO2k0zw4i2ze76Wz8PqM4Kkrf6Uog/SNndD8gcGntR7kRRQVZgZlQFIOZG
+         za2aAZ1FPtawtQLofe5zuUB+WQ0mxquf+CseShjLkc7AiZyGjCC8zK8C0diQs949aJ
+         6UhMmliBHcdc6eyWokws5haM/VBd5pjlxDLeVkGg=
+Date:   Mon, 13 Jul 2020 10:41:13 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: allow ->read_iter on debugfs
-Message-ID: <20200713083824.GB215949@kroah.com>
-References: <20200713073729.875584-1-hch@lst.de>
+To:     Qiwu Huang <yanziily@gmail.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v2 1/5] power: supply: core: add quick charge type
+ property
+Message-ID: <20200713084113.GC215949@kroah.com>
+References: <cover.1594612572.git.huangqiwu@xiaomi.com>
+ <38b7b1dc10cf608faceae923374791a52a450919.1594612572.git.huangqiwu@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713073729.875584-1-hch@lst.de>
+In-Reply-To: <38b7b1dc10cf608faceae923374791a52a450919.1594612572.git.huangqiwu@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 09:37:28AM +0200, Christoph Hellwig wrote:
-> Hi Greg,
+On Mon, Jul 13, 2020 at 12:03:36PM +0800, Qiwu Huang wrote:
+> From: Qiwu Huang <huangqiwu@xiaomi.com>
 > 
-> in my filesystem set_fs removel series I convert the seq_file interface
-> to be iov_iter based.  It turns out debugfs needs this little patch
-> to proxy read_iter as well.  Let me know if you are ok with me queueing
-> this up with the rest of the series.
+> Reports the kind of quick charge type based on
+> different adapter power. UI will show different
+> animation effect for different quick charge type.
 > 
-> 
+> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
+>  drivers/power/supply/power_supply_sysfs.c   |  1 +
+>  include/linux/power_supply.h                |  1 +
+>  3 files changed, 12 insertions(+)
 
-No objection from me, please do so!
+What changed from v1 of this patch?  SHouldn't that always be below the
+--- line?
+
+
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index 216d61a22f1e..d3169d47e359 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -708,3 +708,13 @@ Description:
+>  
+>  		Access: Read
+>  		Valid values: 1-31
+> +
+> +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
+> +Date:		Jul 2020
+> +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> +		Description:
+> +		Reports the kind of quick charge type based on different adapter power.
+
+What are the allowed types here?  Shouldn't that also be an enumerated
+type with a predefined string?
 
 thanks,
 
