@@ -2,82 +2,119 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A332073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440C52073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgGMFyF (ORCPT
+        id S1728965AbgGMFzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:54:05 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:35092 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbgGMFyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:54:05 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-05 (Coremail) with SMTP id zQCowABXng7v9gtffydiAA--.31846S2;
-        Mon, 13 Jul 2020 13:53:51 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     wim@linux-watchdog.org, linux@roeck-us.net,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] watchdog: pcwd_usb: remove needless check before usb_free_coherent()
-Date:   Mon, 13 Jul 2020 05:53:48 +0000
-Message-Id: <20200713055348.21620-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowABXng7v9gtffydiAA--.31846S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZw4rtr4rZr45AF15Aw1UZFb_yoWfuFc_Jr
-        y0qrZ3GrnxCr1SgFy8Zw13AFWqgr48XFn3Wr4ftFyrCFZrtw1Yyr4xArWfCr4fAa95J3y7
-        Gr1vqrWFkr18GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4r
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUY1v3UUUUU
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAAQA18J9e7lagAAsZ
+        Mon, 13 Jul 2020 01:55:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3187 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725859AbgGMFzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:55:17 -0400
+IronPort-SDR: TrnXLB5T8KV+6qQv0ENLLvAZ9/0e9joomVOf8lKioxsixYlBLoCk8f3qUcR1ovOKGbu1aF1Mnx
+ 0vj4Lg642EIA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="128616161"
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="128616161"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 22:55:16 -0700
+IronPort-SDR: 04Y8FVYlgaJqSU6R0QtpvvyRPt6Sq04lDLvVlOD42KuZCEXulWehfJyfFs0IGn8RvD7NIpp/5x
+ APD5EBedfLQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="281287992"
+Received: from lgrunert-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.52.195])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jul 2020 22:55:04 -0700
+Date:   Mon, 13 Jul 2020 08:55:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, hch@lst.de
+Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
+Message-ID: <20200713055503.GE956284@linux.intel.com>
+References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
+ <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
+ <20200710113238.GH4800@hirez.programming.kicks-ass.net>
+ <20200710221802.da2f4cf077ce1bb51c7e11ca@kernel.org>
+ <20200710092243.076e9b44@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710092243.076e9b44@oasis.local.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usb_free_coherent() is safe with NULL usb_pcwd->intr_buffer and 
-this check is not required.
+On Fri, Jul 10, 2020 at 09:22:43AM -0400, Steven Rostedt wrote:
+> On Fri, 10 Jul 2020 22:18:02 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > 
+> > Agreed. As far as I know, ftrace and bpf also depends on module_alloc(),
+> > so text_alloc() will help them too.
+> > 
+> 
+> Yes please.
+> 
+> arch/x86/kernel/ftrace.c:
+> 
+> #ifdef CONFIG_MODULES
+> #include <linux/moduleloader.h>
+> /* Module allocation simplifies allocating memory for code */
+> static inline void *alloc_tramp(unsigned long size)
+> {
+> 	return module_alloc(size);
+> }
+> static inline void tramp_free(void *tramp)
+> {
+> 	module_memfree(tramp);
+> }
+> #else
+> /* Trampolines can only be created if modules are supported */
+> static inline void *alloc_tramp(unsigned long size)
+> {
+> 	return NULL;
+> }
+> static inline void tramp_free(void *tramp) { }
+> #endif
+> 
+> -- Steve
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/watchdog/pcwd_usb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Thanks, note taken. I'll take this into account in the next version.
 
-diff --git a/drivers/watchdog/pcwd_usb.c b/drivers/watchdog/pcwd_usb.c
-index 2f44af1831d0..6726301ac02e 100644
---- a/drivers/watchdog/pcwd_usb.c
-+++ b/drivers/watchdog/pcwd_usb.c
-@@ -585,9 +585,8 @@ static struct notifier_block usb_pcwd_notifier = {
- static inline void usb_pcwd_delete(struct usb_pcwd_private *usb_pcwd)
- {
- 	usb_free_urb(usb_pcwd->intr_urb);
--	if (usb_pcwd->intr_buffer != NULL)
--		usb_free_coherent(usb_pcwd->udev, usb_pcwd->intr_size,
--				  usb_pcwd->intr_buffer, usb_pcwd->intr_dma);
-+	usb_free_coherent(usb_pcwd->udev, usb_pcwd->intr_size,
-+			  usb_pcwd->intr_buffer, usb_pcwd->intr_dma);
- 	kfree(usb_pcwd);
- }
- 
--- 
-2.17.1
-
+/Jarkko
