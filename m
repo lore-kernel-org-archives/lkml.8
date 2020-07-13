@@ -7,36 +7,32 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D95C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FF620B80
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9FC20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGMVsg (ORCPT
+        id S1726602AbgGMVzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGMVsg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:48:36 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F41EC061755;
-        Mon, 13 Jul 2020 14:48:36 -0700 (PDT)
+        Mon, 13 Jul 2020 17:55:17 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:47562 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgGMVzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 17:55:16 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id A0111BC0D1;
-        Mon, 13 Jul 2020 21:48:32 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 28AF3BC097;
+        Mon, 13 Jul 2020 21:55:12 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     sagi@grimberg.me, maxg@mellanox.com, dledford@redhat.com,
-        jgg@ziepe.ca, bvanassche@acm.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org
+To:     tony.luck@intel.com, fenghua.yu@intel.com, corbet@lwn.net,
+        linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH v2] IB: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 23:48:26 +0200
-Message-Id: <20200713214826.42487-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200713135031.GA25301@ziepe.ca>
-References: <20200713135031.GA25301@ziepe.ca>
+Subject: [PATCH v2] ia64: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 23:55:06 +0200
+Message-Id: <20200713215506.44327-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200713083408.38154746@lwn.net>
+References: <20200713083408.38154746@lwn.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++
@@ -64,45 +60,24 @@ For each file:
 
 Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- Just drivers/infiniband. There's nothing for include/rdma.
+ As you said I should not HTTPSify broken links...
 
- drivers/infiniband/ulp/iser/Kconfig | 2 +-
- drivers/infiniband/ulp/srp/Kconfig  | 2 +-
- drivers/infiniband/ulp/srpt/Kconfig | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ Documentation/ia64/xen.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/iser/Kconfig b/drivers/infiniband/ulp/iser/Kconfig
-index 3016a0c9a9f0..6ba73ae1291b 100644
---- a/drivers/infiniband/ulp/iser/Kconfig
-+++ b/drivers/infiniband/ulp/iser/Kconfig
-@@ -9,5 +9,5 @@ config INFINIBAND_ISER
- 	  that speak iSCSI over iSER over InfiniBand.
+diff --git a/Documentation/ia64/xen.rst b/Documentation/ia64/xen.rst
+index 831339c74441..9da6abb02a2c 100644
+--- a/Documentation/ia64/xen.rst
++++ b/Documentation/ia64/xen.rst
+@@ -28,7 +28,7 @@ Getting and Building Xen and Dom0
  
- 	  The iSER protocol is defined by IETF.
--	  See <http://www.ietf.org/rfc/rfc5046.txt>
-+	  See <https://www.ietf.org/rfc/rfc5046.txt>
- 	  and <http://members.infinibandta.org/kwspub/spec/Annex_iSER.PDF>
-diff --git a/drivers/infiniband/ulp/srp/Kconfig b/drivers/infiniband/ulp/srp/Kconfig
-index 67cd63d1399c..c33f4e5fa4d7 100644
---- a/drivers/infiniband/ulp/srp/Kconfig
-+++ b/drivers/infiniband/ulp/srp/Kconfig
-@@ -9,5 +9,5 @@ config INFINIBAND_SRP
- 	  InfiniBand.
+ 	# hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
+ 	# cd xen-unstable.hg
+-	# hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
++	# hg clone https://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
  
- 	  The SRP protocol is defined by the INCITS T10 technical
--	  committee.  See <http://www.t10.org/>.
-+	  committee.  See <https://www.t10.org/>.
+  2. # make world
  
-diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
-index 4b5d9b792cfa..f63b34d9ae32 100644
---- a/drivers/infiniband/ulp/srpt/Kconfig
-+++ b/drivers/infiniband/ulp/srpt/Kconfig
-@@ -10,4 +10,4 @@ config INFINIBAND_SRPT
- 	  that supports the RDMA protocol. Currently the RDMA protocol is
- 	  supported by InfiniBand and by iWarp network hardware. More
- 	  information about the SRP protocol can be found on the website
--	  of the INCITS T10 technical committee (http://www.t10.org/).
-+	  of the INCITS T10 technical committee (https://www.t10.org/).
 -- 
 2.27.0
 
