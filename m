@@ -2,154 +2,307 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FCDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346D8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF0A2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594642606;
-	bh=oaI4s2MsM8xroW8K8RHL20N6Yf7Pmnda3h0N0nAm4sA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pp1hA3HUXmBUeO1uQVoHcLCY0r3gFL1iqMXRGiB89yLvSo426P9ePuMdm+rs9EQlj
-	 T4KmEQ+/XHVOcel98sax4YVg+oV3htxxqTLJQx2QBhvtiAUKeRMBbJT30bfcQ1ILBe
-	 rj58EABcRTXxn/PQ7x3HH0wOz+9wb90fDVClIDOY=
+	s=default; t=1594642672;
+	bh=wc2dhxkIG9GjfHmWSmkltugECChmqIjO4+eGKEz9U8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xvjysx9cveIohv1Qypd+z/FajY6WZ04a/6QgCYEuWyGzXZ+R/KH+GWsI+g+YbR/72
+	 2yTkOFo4bxuvTqYXbSnupvxWtzAnFF6BoQUfwNC5+TRh3Wb0P4nIgPjqFv2L+6m5g+
+	 Nak23P58IXaV6yOurTigvmiNTrY9PqiptxPwb8UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgGMMQp (ORCPT
+        id S1729703AbgGMMRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:16:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44402 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:16:44 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 5so9296289oty.11;
-        Mon, 13 Jul 2020 05:16:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pO75K6jp9I0TgVd5uiJ2Fq8Rt2TkoAscNvbsoxxq4gc=;
-        b=dPWa6aQZgW7DGcWueb0oDzNGa1E+TbEIvYUXVbCEdclJbzvViyU+bANV1337iivQSx
-         8lLqLCt7h9X/BPhvZey6kO4jL17Ky1I9XRD1LGUYxTJ7U6gVQRcdlRWBWxFrEetBVoHO
-         bpkCze66VeDJ9CmNmsWqM91+BIpArS84TDeHPMieh5Dq650r4l8HPxHjyplI2LGs/9FS
-         7c7U9GLYHihG8JX+YXU8VPNSYUgQQcCBF1Y7OgGdZJzcEov9OX32r2VrUosRHQy4yxCH
-         dc2EI6RGNy5ZNqwLLSNJSsJd4hWKvEdquVDANHVvjIFX2Aa8XdlSekHufEXZ37S1MOJI
-         HaFw==
-X-Gm-Message-State: AOAM532PD7cmMoPfOrUrF5L1ydYM0cNGKeb4Zldk+vHUQwPbiZEQf57L
-        GTLWYc0H6BuLQODq4yB/bVns/kgs6N4kQnSrWok=
-X-Google-Smtp-Source: ABdhPJww6iKdpqCo7i0DLnnBg8yn+ASnskqRd8nMWT8j5w3LUd+Vv/EmoEO2GQob/q2uJhtuznO0DPhZzhOpQWxyyg0=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr33047434oth.262.1594642603476;
- Mon, 13 Jul 2020 05:16:43 -0700 (PDT)
+        Mon, 13 Jul 2020 08:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgGMMRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:17:50 -0400
+Received: from quaco.ghostprotocols.net (unknown [177.158.141.203])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CCDB206F0;
+        Mon, 13 Jul 2020 12:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594642669;
+        bh=wc2dhxkIG9GjfHmWSmkltugECChmqIjO4+eGKEz9U8U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NU7xlNRIpfzoyfaed7t2MB9wYUrmC/Wy9Zlmr0S7A2G8ByKqE2GKBqMXDhAYt24gG
+         bdyovVnMvdmfyTmoH1pgspO72I5SfzqbEO+2pPZSiZR+npt9idpq9b8Nf+K4jH7Avf
+         KtG4JjEQf3O/2GuwLHU1ceEofeuxDiN5LocZDN5k=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 125C7405FF; Mon, 13 Jul 2020 09:17:46 -0300 (-03)
+Date:   Mon, 13 Jul 2020 09:17:46 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+Message-ID: <20200713121746.GA7029@kernel.org>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
+ <7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com>
+ <20200710170911.GD7487@kernel.org>
+ <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
 MIME-Version: 1.0
-References: <2016232.ihCVsphvri@kreacher> <2988949.NgUrjYMkJj@kreacher> <000801d65634$14f0ecb0$3ed2c610$@net>
-In-Reply-To: <000801d65634$14f0ecb0$3ed2c610$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Jul 2020 14:16:32 +0200
-Message-ID: <CAJZ5v0gmzUAXavNY=hFnG+983sQWWuAJhCeJBumD3mmt79cepg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] cpufreq: intel_pstate: Use passive mode by default
- without HWP
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:01 PM Doug Smythies <dsmythies@telus.net> wrote:
->
-> Hi Rafael,
->
-> As you may or may not recall, I am attempting to untangle
-> and separate multiple compounding issues around the
-> intel_pstate driver and HWP (or not).
->
-> Until everything is figured out, I am using the following rules:
->
-> . never use x86_energy_perf_policy.
-> . For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
-> . after boot always check and reset the various power limit log bits that are set.
-> . never compile the kernel (well, until after any tests), which will set those bits again.
-> . never run prime95 high heat torture test, which will set those bits again.
-> . try to never do anything else that will set those bits again.
->
-> On 2020.03.28 05:58 Rafael J. Wysocki wrote:
-> >
-> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >
-> > After recent changes allowing scale-invariant utilization to be
-> > used on x86, the schedutil governor on top of intel_pstate in the
-> > passive mode should be on par with (or better than) the active mode
-> > "powersave" algorithm of intel_pstate on systems in which
-> > hardware-managed P-states (HWP) are not used, so it should not be
-> > necessary to use the internal scaling algorithm in those cases.
-> >
-> > Accordingly, modify intel_pstate to start in the passive mode by
-> > default if the processor at hand does not support HWP of if the driver
-> > is requested to avoid using HWP through the kernel command line.
-> >
-> > Among other things, that will allow utilization clamps and the
-> > support for RT/DL tasks in the schedutil governor to be utilized on
-> > systems in which intel_pstate is used.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  Documentation/admin-guide/pm/intel_pstate.rst | 32 ++++++++++++++++-----------
-> >  drivers/cpufreq/intel_pstate.c                |  3 ++-
-> >  2 files changed, 21 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-
-> > guide/pm/intel_pstate.rst
-> > index ad392f3aee06..39d80bc29ccd 100644
-> > --- a/Documentation/admin-guide/pm/intel_pstate.rst
-> > +++ b/Documentation/admin-guide/pm/intel_pstate.rst
-> > @@ -62,9 +62,10 @@ on the capabilities of the processor.
-> >  Active Mode
-> >  -----------
-> >
-> > -This is the default operation mode of ``intel_pstate``.  If it works in this
-> > -mode, the ``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq``
-> > -policies contains the string "intel_pstate".
-> > +This is the default operation mode of ``intel_pstate`` for processors with
-> > +hardware-managed P-states (HWP) support.  If it works in this mode, the
-> > +``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq`` policies
-> > +contains the string "intel_pstate".
-> >
-> >  In this mode the driver bypasses the scaling governors layer of ``CPUFreq`` and
-> >  provides its own scaling algorithms for P-state selection.  Those algorithms
-> > @@ -138,12 +139,13 @@ internal P-state selection logic to be less performance-focused.
-> >  Active Mode Without HWP
-> >  ~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > -This is the default operation mode for processors that do not support the HWP
-> > -feature.  It also is used by default with the ``intel_pstate=no_hwp`` argument
-> > -in the kernel command line.  However, in this mode ``intel_pstate`` may refuse
-> > -to work with the given processor if it does not recognize it.  [Note that
-> > -``intel_pstate`` will never refuse to work with any processor with the HWP
-> > -feature enabled.]
-> > +This operation mode is optional for processors that do not support the HWP
-> > +feature or when the ``intel_pstate=no_hwp`` argument is passed to the kernel in
-> > +the command line.  The active mode is used in those cases if the
-> > +``intel_pstate=active`` argument is passed to the kernel in the command line.
->
-> ???
-> I can not see anywhere in the code where the kernel command line argument
-> "intel_pstate=active" is dealt with.
+Em Mon, Jul 13, 2020 at 12:48:25PM +0300, Alexey Budankov escreveu:
+> 
+> On 10.07.2020 20:09, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Jul 10, 2020 at 05:30:50PM +0300, Alexey Budankov escreveu:
+> >> On 10.07.2020 16:31, Ravi Bangoria wrote:
+> >>>> Currently access to perf_events, i915_perf and other performance
+> >>>> monitoring and observability subsystems of the kernel is open only for
+> >>>> a privileged process [1] with CAP_SYS_ADMIN capability enabled in the
+> >>>> process effective set [2].
 
-My bad, sorry about this.
+> >>>> This patch set introduces CAP_PERFMON capability designed to secure
+> >>>> system performance monitoring and observability operations so that
+> >>>> CAP_PERFMON would assist CAP_SYS_ADMIN capability in its governing role
+> >>>> for performance monitoring and observability subsystems of the kernel.
 
-I'll send a patch to fix this issue shortly.
+> >>> I'm seeing an issue with CAP_PERFMON when I try to record data for a
+> >>> specific target. I don't know whether this is sort of a regression or
+> >>> an expected behavior.
 
-Thanks!
+> >> Thanks for reporting and root causing this case. The behavior looks like
+> >> kind of expected since currently CAP_PERFMON takes over the related part
+> >> of CAP_SYS_ADMIN credentials only. Actually Perf security docs [1] say
+> >> that access control is also subject to CAP_SYS_PTRACE credentials.
+
+> > I think that stating that in the error message would be helpful, after
+> > all, who reads docs? 8-)
+
+> At least those who write it :D ...
+
+Everybody should read it, sure :-)
+ 
+> > I.e., this:
+> > 
+> > $ ./perf stat ls
+> >   Error:
+> >   Access to performance monitoring and observability operations is limited.
+> > $
+> > 
+> > Could become:
+> > 
+> > $ ./perf stat ls
+> >   Error:
+> >   Access to performance monitoring and observability operations is limited.
+> >   Right now only CAP_PERFMON is granted, you may need CAP_SYS_PTRACE.
+> > $
+> 
+> It would better provide reference to perf security docs in the tool output.
+
+So add a 3rd line:
+
+$ ./perf stat ls
+  Error:
+  Access to performance monitoring and observability operations is limited.
+  Right now only CAP_PERFMON is granted, you may need CAP_SYS_PTRACE.
+  Please read the 'Perf events and tool security' document:
+  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+
+> Looks like extending ptrace_may_access() check for perf_events with CAP_PERFMON
+
+You mean the following?
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 856d98c36f56..a2397f724c10 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11595,7 +11595,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		 * perf_event_exit_task() that could imply).
+ 		 */
+ 		err = -EACCES;
+-		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
++		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
+ 			goto err_cred;
+ 	}
+
+> makes monitoring simpler and even more secure to use since Perf tool need
+> not to start/stop/single-step and read/write registers and memory and so on
+> like a debugger or strace-like tool. What do you think?
+
+I tend to agree, Peter?
+ 
+> Alexei
+> 
+> > 
+> > - Arnaldo
+> >  
+> >> CAP_PERFMON could be used to extend and substitute ptrace_may_access()
+> >> check in perf_events subsystem to simplify user experience at least in
+> >> this specific case.
+> >>
+> >> Alexei
+> >>
+> >> [1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> >>
+> >>>
+> >>> Without setting CAP_PERFMON:
+> >>>
+> >>>   $ getcap ./perf
+> >>>   $ ./perf stat -a ls
+> >>>     Error:
+> >>>     Access to performance monitoring and observability operations is limited.
+> >>>   $ ./perf stat ls
+> >>>     Performance counter stats for 'ls':
+> >>>                     2.06 msec task-clock:u              #    0.418 CPUs utilized
+> >>>                     0      context-switches:u        #    0.000 K/sec
+> >>>                     0      cpu-migrations:u          #    0.000 K/sec
+> >>>
+> >>> With CAP_PERFMON:
+> >>>
+> >>>   $ getcap ./perf
+> >>>     ./perf = cap_perfmon+ep
+> >>>   $ ./perf stat -a ls
+> >>>     Performance counter stats for 'system wide':
+> >>>                   142.42 msec cpu-clock                 #   25.062 CPUs utilized
+> >>>                   182      context-switches          #    0.001 M/sec
+> >>>                    48      cpu-migrations            #    0.337 K/sec
+> >>>   $ ./perf stat ls
+> >>>     Error:
+> >>>     Access to performance monitoring and observability operations is limited.
+> >>>
+> >>> Am I missing something silly?
+> >>>
+> >>> Analysis:
+> >>> ---------
+> >>> A bit more analysis lead me to below kernel code fs/exec.c:
+> >>>
+> >>>   begin_new_exec()
+> >>>   {
+> >>>         ...
+> >>>         if (bprm->interp_flags & BINPRM_FLAGS_ENFORCE_NONDUMP ||
+> >>>             !(uid_eq(current_euid(), current_uid()) &&
+> >>>               gid_eq(current_egid(), current_gid())))
+> >>>                 set_dumpable(current->mm, suid_dumpable);
+> >>>         else
+> >>>                 set_dumpable(current->mm, SUID_DUMP_USER);
+> >>>
+> >>>         ...
+> >>>         commit_creds(bprm->cred);
+> >>>   }
+> >>>
+> >>> When I execute './perf stat ls', it's going into else condition and thus sets
+> >>> dumpable flag as SUID_DUMP_USER. Then in commit_creds():
+> >>>
+> >>>   int commit_creds(struct cred *new)
+> >>>   {
+> >>>         ...
+> >>>         /* dumpability changes */
+> >>>         if (...
+> >>>             !cred_cap_issubset(old, new)) {
+> >>>                 if (task->mm)
+> >>>                         set_dumpable(task->mm, suid_dumpable);
+> >>>   }
+> >>>
+> >>> !cred_cap_issubset(old, new) fails for perf without any capability and thus
+> >>> it doesn't execute set_dumpable(). Whereas that condition passes for perf
+> >>> with CAP_PERFMON and thus it overwrites old value (SUID_DUMP_USER) with
+> >>> suid_dumpable in mm_flags. On an Ubuntu, suid_dumpable default value is
+> >>> SUID_DUMP_ROOT. On Fedora, it's SUID_DUMP_DISABLE. (/proc/sys/fs/suid_dumpable).
+> >>>
+> >>> Now while opening an event:
+> >>>
+> >>>   perf_event_open()
+> >>>     ptrace_may_access()
+> >>>       __ptrace_may_access() {
+> >>>                 ...
+> >>>                 if (mm &&
+> >>>                     ((get_dumpable(mm) != SUID_DUMP_USER) &&
+> >>>                      !ptrace_has_cap(cred, mm->user_ns, mode)))
+> >>>                     return -EPERM;
+> >>>       }
+> >>>
+> >>> This if condition passes for perf with CAP_PERFMON and thus it returns -EPERM.
+> >>> But it fails for perf without CAP_PERFMON and thus it goes ahead and returns
+> >>> success. So opening an event fails when perf has CAP_PREFMON and tries to open
+> >>> process specific event as normal user.
+> >>>
+> >>> Workarounds:
+> >>> ------------
+> >>> Based on above analysis, I found couple of workarounds (examples are on
+> >>> Ubuntu 18.04.4 powerpc):
+> >>>
+> >>> Workaround1:
+> >>> Setting SUID_DUMP_USER as default (in /proc/sys/fs/suid_dumpable) solves the
+> >>> issue.
+> >>>
+> >>>   # echo 1 > /proc/sys/fs/suid_dumpable
+> >>>   $ getcap ./perf
+> >>>     ./perf = cap_perfmon+ep
+> >>>   $ ./perf stat ls
+> >>>     Performance counter stats for 'ls':
+> >>>                     1.47 msec task-clock                #    0.806 CPUs utilized
+> >>>                     0      context-switches          #    0.000 K/sec
+> >>>                     0      cpu-migrations            #    0.000 K/sec
+> >>>
+> >>> Workaround2:
+> >>> Using CAP_SYS_PTRACE along with CAP_PERFMON solves the issue.
+> >>>
+> >>>   $ cat /proc/sys/fs/suid_dumpable
+> >>>     2
+> >>>   # setcap "cap_perfmon,cap_sys_ptrace=ep" ./perf
+> >>>   $ ./perf stat ls
+> >>>     Performance counter stats for 'ls':
+> >>>                     1.41 msec task-clock                #    0.826 CPUs utilized
+> >>>                     0      context-switches          #    0.000 K/sec
+> >>>                     0      cpu-migrations            #    0.000 K/sec
+> >>>
+> >>> Workaround3:
+> >>> Adding CAP_PERFMON to parent of perf (/bin/bash) also solves the issue.
+> >>>
+> >>>   $ cat /proc/sys/fs/suid_dumpable
+> >>>     2
+> >>>   # setcap "cap_perfmon=ep" /bin/bash
+> >>>   # setcap "cap_perfmon=ep" ./perf
+> >>>   $ bash
+> >>>   $ ./perf stat ls
+> >>>     Performance counter stats for 'ls':
+> >>>                     1.47 msec task-clock                #    0.806 CPUs utilized
+> >>>                     0      context-switches          #    0.000 K/sec
+> >>>                     0      cpu-migrations            #    0.000 K/sec
+> >>>
+> >>> - Ravi
+> > 
+
+-- 
+
+- Arnaldo
