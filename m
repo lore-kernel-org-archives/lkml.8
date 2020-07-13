@@ -2,139 +2,264 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52303C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A313C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303C220773
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D3F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fNpeW/b9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7dviruo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgGMQgc (ORCPT
+        id S1730773AbgGMQgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:36:32 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6797 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730403AbgGMQga (ORCPT
+        Mon, 13 Jul 2020 12:36:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40170 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730326AbgGMQgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:36:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c8d810000>; Mon, 13 Jul 2020 09:36:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 09:36:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 09:36:30 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 16:36:17 +0000
-Subject: Re: [PATCH v2 19/22] mm/memremap_pages: Convert to 'struct range'
-To:     Dan Williams <dan.j.williams@intel.com>,
-        <linux-nvdimm@lists.01.org>
-CC:     Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>, <peterz@infradead.org>,
-        <dave.hansen@linux.intel.com>, <ard.biesheuvel@linaro.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <hch@lst.de>,
-        <joao.m.martins@oracle.com>
-References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159457126779.754248.3575056680831729751.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <52e00a67-b686-8554-8b92-a172ba9f34b6@nvidia.com>
-Date:   Mon, 13 Jul 2020 09:36:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jul 2020 12:36:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594658196;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qPZPF8CZHtaoL1uBXqtCN+iDfCdWcWYQMvIrZ6uG2yY=;
+        b=i7dviruoijavrklan6hvGkIz4q6LYHpd1RuterXV0IErqeeBbgBnV6jnp1/LtrsyHPspsa
+        7si+WgQE4t4ROQZ+C+ftXNUV/Kvgvq39cbtzWSi+mM0K41im4dWSC5+n8wL82hyOTfxyWl
+        s+dp3wiqIKrc+oSYd36OSpORvdwS5Pc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-9Pba6R6MNXasIO1U8nE6QA-1; Mon, 13 Jul 2020 12:36:34 -0400
+X-MC-Unique: 9Pba6R6MNXasIO1U8nE6QA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACF9E1080;
+        Mon, 13 Jul 2020 16:36:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F2B45D9DC;
+        Mon, 13 Jul 2020 16:36:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 30/32] fscache: Provide resize operation
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jul 2020 17:36:22 +0100
+Message-ID: <159465818273.1376674.5693474446095659046.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
+References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-In-Reply-To: <159457126779.754248.3575056680831729751.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594658177; bh=pEu43f6TYC38teVwUvS5veiq+jHDv/8kh2CbYzLWE6U=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fNpeW/b9FMcDuL8oBoNL4fjzJoqpiaHBjJ5dsdIG5lrR+4Y/gb8oxeR9pNqs5p58E
-         jg/E8fTCGVG/pvYTlGNYMJ4np0poYz626qjoxbOuxMSk67Oh9xeDZjp9Dlx+JvN/yI
-         anmR/T+xHKXScxT+q/iQrtkW+yLeCbIRALu8t1RHIL23PtB5Gt3fPRk3mkNbf55HbY
-         rurMSczEzdbFa7CP+/s/hv3jIlWgQnc/l3MXL6dU1kdaK+Pru79j771P+5fyYyqL5O
-         XSYWgz3RPaAQhvk7/olB0odRYdNQkhmC2b55QRVX3q2JPs4J6+AQSE73bzRJ26O6Q9
-         P7158pxFYmDSQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Provide a cache operation to resize an object.  This is intended to be run
+synchronously rather than being deferred as it really needs to run inside
+the inode lock on the netfs inode from ->setattr() to correctly order with
+respect to other truncates and writes.
 
-On 7/12/20 9:27 AM, Dan Williams wrote:
-> The 'struct resource' in 'struct dev_pagemap' is only used for holding
-> resource span information. The other fields, 'name', 'flags', 'desc',
-> 'parent', 'sibling', and 'child' are all unused wasted space.
-> 
-> This is in preparation for introducing a multi-range extension of
-> devm_memremap_pages().
-> 
-> The bulk of this change is unwinding all the places internal to
-> libnvdimm that used 'struct resource' unnecessarily.
-> 
-> P2PDMA had a minor usage of the flags field, but only to report failures
-> with "%pR". That is replaced with an open coded print of the range.
-> 
-> Cc: Paul Mackerras <paulus@ozlabs.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->   arch/powerpc/kvm/book3s_hv_uvmem.c     |   13 +++--
->   drivers/dax/bus.c                      |   10 ++--
->   drivers/dax/bus.h                      |    2 -
->   drivers/dax/dax-private.h              |    5 --
->   drivers/dax/device.c                   |    3 -
->   drivers/dax/hmem/hmem.c                |    5 ++
->   drivers/dax/pmem/core.c                |   12 ++---
->   drivers/gpu/drm/nouveau/nouveau_dmem.c |    3 +
->   drivers/nvdimm/badrange.c              |   26 +++++------
->   drivers/nvdimm/claim.c                 |   13 +++--
->   drivers/nvdimm/nd.h                    |    3 +
->   drivers/nvdimm/pfn_devs.c              |   12 ++---
->   drivers/nvdimm/pmem.c                  |   26 ++++++-----
->   drivers/nvdimm/region.c                |   21 +++++----
->   drivers/pci/p2pdma.c                   |   11 ++---
->   include/linux/memremap.h               |    5 +-
->   include/linux/range.h                  |    6 ++
->   mm/memremap.c                          |   77 ++++++++++++++++----------------
->   tools/testing/nvdimm/test/iomap.c      |    2 -
->   19 files changed, 135 insertions(+), 120 deletions(-)
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-I think you are missing a call to memremap_pages() in lib/test_hmm.c
-and a call to release_mem_region() that need to be converted too.
-Try setting CONFIG_TEST_HMM=m.
+ fs/cachefiles/interface.c     |   24 ++++++++++++++++++++++++
+ fs/fscache/internal.h         |    3 +++
+ fs/fscache/io.c               |   27 +++++++++++++++++++++++++++
+ fs/fscache/stats.c            |    9 +++++++--
+ include/linux/fscache-cache.h |    2 ++
+ include/linux/fscache.h       |   18 ++++++++++++++++++
+ 6 files changed, 81 insertions(+), 2 deletions(-)
 
-Also, what about the call to release_mem_region() in
-drivers/gpu/drm/nouveau/nouveau_dmem.c? Doesn't that need a small change too?
+diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
+index c626cc4248a7..d4172a40ddc9 100644
+--- a/fs/cachefiles/interface.c
++++ b/fs/cachefiles/interface.c
+@@ -248,6 +248,29 @@ static bool cachefiles_shorten_object(struct cachefiles_object *object, loff_t n
+ 	return true;
+ }
+ 
++/*
++ * Resize the backing object.
++ */
++static void cachefiles_resize_object(struct fscache_object *_object, loff_t new_size)
++{
++	struct cachefiles_object *object =
++		container_of(_object, struct cachefiles_object, fscache);
++	loff_t old_size = object->fscache.cookie->object_size;
++
++	_enter("%llu->%llu", old_size, new_size);
++
++	if (new_size < old_size) {
++		cachefiles_shorten_content_map(object, new_size);
++		cachefiles_shorten_object(object, new_size);
++		return;
++	}
++
++	/* The file is being expanded.  We don't need to do anything
++	 * particularly.  cookie->initial_size doesn't change and so the point
++	 * at which we have to download before doesn't change.
++	 */
++}
++
+ /*
+  * Trim excess stored data off of an object.
+  */
+@@ -631,6 +654,7 @@ const struct fscache_cache_ops cachefiles_cache_ops = {
+ 	.free_lookup_data	= cachefiles_free_lookup_data,
+ 	.grab_object		= cachefiles_grab_object,
+ 	.update_object		= cachefiles_update_object,
++	.resize_object		= cachefiles_resize_object,
+ 	.invalidate_object	= cachefiles_invalidate_object,
+ 	.drop_object		= cachefiles_drop_object,
+ 	.put_object		= cachefiles_put_object,
+diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
+index 120bb68f74b1..eb61e0716e20 100644
+--- a/fs/fscache/internal.h
++++ b/fs/fscache/internal.h
+@@ -178,6 +178,9 @@ extern atomic_t fscache_n_updates;
+ extern atomic_t fscache_n_updates_null;
+ extern atomic_t fscache_n_updates_run;
+ 
++extern atomic_t fscache_n_resizes;
++extern atomic_t fscache_n_resizes_null;
++
+ extern atomic_t fscache_n_relinquishes;
+ extern atomic_t fscache_n_relinquishes_null;
+ extern atomic_t fscache_n_relinquishes_retire;
+diff --git a/fs/fscache/io.c b/fs/fscache/io.c
+index 1885cfbe7f04..1a074f9c4bbe 100644
+--- a/fs/fscache/io.c
++++ b/fs/fscache/io.c
+@@ -172,3 +172,30 @@ int __fscache_write(struct fscache_io_request *req, struct iov_iter *iter)
+ 	}
+ }
+ EXPORT_SYMBOL(__fscache_write);
++
++/*
++ * Change the size of a backing object.
++ */
++void __fscache_resize_cookie(struct fscache_cookie *cookie, loff_t new_size)
++{
++	struct fscache_object *object;
++
++	ASSERT(cookie->type != FSCACHE_COOKIE_TYPE_INDEX);
++
++	object = fscache_begin_io_operation(cookie, FSCACHE_WANT_WRITE, NULL);
++	if (!IS_ERR(object)) {
++		fscache_stat(&fscache_n_resizes);
++		set_bit(FSCACHE_OBJECT_NEEDS_UPDATE, &object->flags);
++
++		/* We cannot defer a resize as we need to do it inside the
++		 * netfs's inode lock so that we're serialised with respect to
++		 * writes.
++		 */
++		object->cache->ops->resize_object(object, new_size);
++		object->cache->ops->put_object(object, fscache_obj_put_ioreq);
++		fscache_end_io_operation(cookie);
++	} else {
++		fscache_stat(&fscache_n_resizes_null);
++	}
++}
++EXPORT_SYMBOL(__fscache_resize_cookie);
+diff --git a/fs/fscache/stats.c b/fs/fscache/stats.c
+index 63fb4d831f4d..33cea7f527db 100644
+--- a/fs/fscache/stats.c
++++ b/fs/fscache/stats.c
+@@ -26,6 +26,9 @@ atomic_t fscache_n_updates;
+ atomic_t fscache_n_updates_null;
+ atomic_t fscache_n_updates_run;
+ 
++atomic_t fscache_n_resizes;
++atomic_t fscache_n_resizes_null;
++
+ atomic_t fscache_n_relinquishes;
+ atomic_t fscache_n_relinquishes_null;
+ atomic_t fscache_n_relinquishes_retire;
+@@ -132,10 +135,12 @@ int fscache_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "Invals : n=%u\n",
+ 		   atomic_read(&fscache_n_invalidates));
+ 
+-	seq_printf(m, "Updates: n=%u nul=%u run=%u\n",
++	seq_printf(m, "Updates: n=%u nul=%u run=%u rsz=%u rsn=%u\n",
+ 		   atomic_read(&fscache_n_updates),
+ 		   atomic_read(&fscache_n_updates_null),
+-		   atomic_read(&fscache_n_updates_run));
++		   atomic_read(&fscache_n_updates_run),
++		   atomic_read(&fscache_n_resizes),
++		   atomic_read(&fscache_n_resizes_null));
+ 
+ 	seq_printf(m, "Relinqs: n=%u nul=%u rtr=%u\n",
+ 		   atomic_read(&fscache_n_relinquishes),
+diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
+index 3625fd431d9f..ba0ad89a968e 100644
+--- a/include/linux/fscache-cache.h
++++ b/include/linux/fscache-cache.h
+@@ -118,6 +118,8 @@ struct fscache_cache_ops {
+ 
+ 	/* store the updated auxiliary data on an object */
+ 	void (*update_object)(struct fscache_object *object);
++	/* Change the size of a data object */
++	void (*resize_object)(struct fscache_object *object, loff_t new_size);
+ 
+ 	/* Invalidate an object */
+ 	bool (*invalidate_object)(struct fscache_object *object,
+diff --git a/include/linux/fscache.h b/include/linux/fscache.h
+index c313950afd8a..cd8b6dc81c52 100644
+--- a/include/linux/fscache.h
++++ b/include/linux/fscache.h
+@@ -232,6 +232,7 @@ extern void __fscache_unuse_cookie(struct fscache_cookie *, const void *, const
+ extern void __fscache_relinquish_cookie(struct fscache_cookie *, bool);
+ extern void __fscache_update_cookie(struct fscache_cookie *, const void *, const loff_t *);
+ extern void __fscache_shape_request(struct fscache_cookie *, struct fscache_request_shape *);
++extern void __fscache_resize_cookie(struct fscache_cookie *, loff_t);
+ extern void __fscache_invalidate(struct fscache_cookie *, const void *, loff_t, unsigned int);
+ extern void __fscache_init_io_request(struct fscache_io_request *,
+ 				      struct fscache_cookie *);
+@@ -431,6 +432,23 @@ void fscache_update_cookie(struct fscache_cookie *cookie, const void *aux_data,
+ 		__fscache_update_cookie(cookie, aux_data, object_size);
+ }
+ 
++/**
++ * fscache_resize_cookie - Request that a cache object be resized
++ * @cookie: The cookie representing the cache object
++ * @new_size: The new size of the object (may be NULL)
++ *
++ * Request that the size of an object be changed.
++ *
++ * See Documentation/filesystems/caching/netfs-api.txt for a complete
++ * description.
++ */
++static inline
++void fscache_resize_cookie(struct fscache_cookie *cookie, loff_t new_size)
++{
++	if (fscache_cookie_valid(cookie))
++		__fscache_resize_cookie(cookie, new_size);
++}
++
+ /**
+  * fscache_pin_cookie - Pin a data-storage cache object in its cache
+  * @cookie: The cookie representing the cache object
+
+
