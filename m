@@ -7,90 +7,80 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ED0C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2206C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04C452137B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B072145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594681336;
-	bh=JG0+kgixTef9uZ2Ba+ko8MY6CeXFk7NvKSWKj/uympo=;
+	s=default; t=1594681350;
+	bh=csKVKFceH1rTNOC33g9fwVMVIRFcnnH039GM85S3mFQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WAKuL+X5jXFLMGgDoCLygfQATKChgTRE4p971He7qcRTCs/kslhP9tLDsW07oyiDZ
-	 y9Vm5l7jnmzj06ApOS9AXYOBP3TbVs2YbC/bi2HBpUGcoPJIVU/RND32RTkmIH6hAl
-	 Gqp0F88224HOYcbobd2zOZgcKjSYSBh5xFfpLPvs=
+	b=jFoONWpVSH9sG9jlwwZ9aRNOh5WW6wZNxEjnIjYJC0JDYZ/FqpZYMm0+bvbIN2Xoc
+	 mJXyyNe6fOWjV9Hv96idS+mc18wDffS62+m9WtC1zpeuTt6yrVnfOpL/Yg6UdnRAVh
+	 fWvFlNULqJ04tFkuRPzHfW3grFwrz7XkajPkQ/Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGMXCO (ORCPT
+        id S1726936AbgGMXC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:02:14 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39939 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgGMXCN (ORCPT
+        Mon, 13 Jul 2020 19:02:29 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39183 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgGMXC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:02:13 -0400
-Received: by mail-il1-f193.google.com with SMTP id e18so12662638ilr.7;
-        Mon, 13 Jul 2020 16:02:12 -0700 (PDT)
+        Mon, 13 Jul 2020 19:02:29 -0400
+Received: by mail-il1-f194.google.com with SMTP id k6so12687307ili.6;
+        Mon, 13 Jul 2020 16:02:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0JkY/IydW/gEv8qHIx3b5ShKlXszMgynuLTSr7LPSiY=;
-        b=V095K5swDUq+zOcrhks/UeoKKIutafug3bYIxlOYHDh5GLanYYWq2J2WOzxfpHit0g
-         eEC3+2gjmdMD32JLrGjm64wACOpqueT3fwwTeScqFn5lvoI3Vsm7q+eqL/qNx+C8eEFY
-         RLjYQNxHdyvEtXVkD6jCz+WUVK2BBtEPjc273h/fouXJnCPI15gtyko+c5Z8NnR2vdpV
-         wCVL4UFghLmsXF5Cr3Vf6EjGqvHdzRrvWciXuJYGhN/MR36b18dKOWiaLM50d004UlKh
-         RVdbbnVnRHOR8nN9JHQVrwB9TDXg3hv/rxjcnvQFIAT6KTdD9fLtf7MDgvFjzERX4kgt
-         Dt4w==
-X-Gm-Message-State: AOAM530BiJIqL5Z6v+YZfwnnjwh8tGNDLTPYcpEVFwum43ZlAZiaIHg0
-        Cu4FXQ2y9aRiEter2eUSAQ==
-X-Google-Smtp-Source: ABdhPJxe9k1suva8aVWluB0pMau2ihw31/IveMFIbqWcliLeoU1S1b8L1Guy6UtfWOj37Ipt2k6A/w==
-X-Received: by 2002:a92:b6d4:: with SMTP id m81mr2123220ill.72.1594681331730;
-        Mon, 13 Jul 2020 16:02:11 -0700 (PDT)
+        bh=yirNwoaDU0pMBRql/rjy3m99mfgLldryNB/4qbEp9l4=;
+        b=fdLbn0M5WNK5EDFtiR2HLC+fINOgNqeCssFZSraVjc22at0y2uzb9L0tcB5Suw/Jrq
+         3LgHyUAFX77vPTzZjXkYzLg1gHjXUEU1iaRGXgvZf/cwsIG1eEwdR/TzJsUDNd/W96gp
+         0gn813mnC0mjVji5A/VaCKKusCXEsSS3EHQgMeHHfdnOH4pVSKd+XjI9CFhuTbpPatlw
+         xlZIeic55rPQtkoVDqWOUDIOvi0v7C1XLSPp5mJ3GKH/94odNmNa/0JbfUvtA5MmO1cY
+         ehhP+vVRfGstPDYjt4e+yBNZ4TxeYm5A4twTbgKjBGZaqI1pe/kvz8iY3hqAmkavJ/tA
+         MCxQ==
+X-Gm-Message-State: AOAM532gD1vYcY8+0LyhflIPhbD1odUXnWn2TQmtHwOQ3nSt4Wa53Jzv
+        svSBW1ir2WhGvviknNwVzQ==
+X-Google-Smtp-Source: ABdhPJyZAeCAYfbgxeF+m2aVu/0mz1s0JaD5lb9g3nwPagtlQhkjqauUsh0bigiv0Uq4PjZuNCAi4Q==
+X-Received: by 2002:a05:6e02:e08:: with SMTP id a8mr2187875ilk.171.1594681348293;
+        Mon, 13 Jul 2020 16:02:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c3sm8887100ilj.31.2020.07.13.16.02.08
+        by smtp.gmail.com with ESMTPSA id u62sm9154379ilc.87.2020.07.13.16.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:02:11 -0700 (PDT)
-Received: (nullmailer pid 884155 invoked by uid 1000);
-        Mon, 13 Jul 2020 23:02:06 -0000
-Date:   Mon, 13 Jul 2020 17:02:06 -0600
+        Mon, 13 Jul 2020 16:02:27 -0700 (PDT)
+Received: (nullmailer pid 884711 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:02:26 -0000
+Date:   Mon, 13 Jul 2020 17:02:26 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     mturquette@baylibre.com, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, mripard@kernel.org,
-        lee.jones@linaro.org, sboyd@kernel.org, liyong@allwinnertech.com,
-        daniel.lezcano@linaro.org, anarsoul@gmail.com,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+Cc:     clabbe@baylibre.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, wens@csie.org, mripard@kernel.org,
+        georgii.staroselskii@emlid.com, huangshuosheng@allwinnertech.com,
+        tiny.windzz@gmail.com, devicetree@vger.kernel.org,
         megous@megous.com, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, rui.zhang@intel.com,
-        srinivas.kandagatla@linaro.org, linux-pm@vger.kernel.org,
-        gregory.clement@bootlin.com, icenowy@aosc.io,
-        tiny.windzz@gmail.com, jason@lakedaemon.net, stefan@olimex.com,
-        maz@kernel.org, tglx@linutronix.de, wens@csie.org,
-        bage@linutronix.de, huangshuosheng@allwinnertech.com,
-        amit.kucheria@verdurent.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, clabbe@baylibre.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 07/16] dt-bindings: thermal: sun8i: Add binding for
- A100's THS controller
-Message-ID: <20200713230206.GA884103@bogus>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-8-frank@allwinnertech.com>
+        liyong@allwinnertech.com, icenowy@aosc.io
+Subject: Re: [PATCH v3 15/16] dt-bindings: arm: sunxi: Add Allwinner A100
+ Perf1 Board bindings
+Message-ID: <20200713230226.GA884639@bogus>
+References: <20200708082719.5644-1-frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-8-frank@allwinnertech.com>
+In-Reply-To: <20200708082719.5644-1-frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:19:33 +0800, Frank Lee wrote:
-> Add a binding for A100's ths controller.
+On Wed, 08 Jul 2020 16:27:19 +0800, Frank Lee wrote:
+> Document board compatible names for Allwinner A100 Perf1 Board.
 > 
 > Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
 > ---
->  .../devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml       | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
