@@ -2,120 +2,149 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45818C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E433C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D442073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594617432;
-	bh=aDIzWAOIaa0QdRb3SomcHX9OzL94Axn7+kd+SCdMNdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dLbGnVlHCENr7XvZ1kychS3yOW318RW4PBhUKFxyUwmEL4XR+A+vhi94+gMaU6obU
-	 kG4mAjbcrrVAH8Jsx3S+ceioY9Ax7/McmFZSrjFzYlPTFwFXyL5BitBDK/u2i5mRa8
-	 e6PGBXdKupXXC9zH7ygqWJP0GI8S1qyMU5oEaWbU=
+	by mail.kernel.org (Postfix) with ESMTP id 65AAC2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgGMFRK (ORCPT
+        id S1728848AbgGMFXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgGMFRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:17:10 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2120720724;
-        Mon, 13 Jul 2020 05:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594617430;
-        bh=aDIzWAOIaa0QdRb3SomcHX9OzL94Axn7+kd+SCdMNdw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0EsVqJ0Hy2e8BkgzejMc/xP2d9JNGv5W2rAiPkNMDrRgeotK8f8mO38If88/WUmW2
-         8UaILDeySzlj8/SaZvijSSKWKbgkdklC95JvSirBl+976h/tVGWKjtFtAXpR+Wiy7W
-         jt6Ty+7S+2vU6z3rEMFAPP8NSbYsyyVGpWt32MIo=
-Date:   Mon, 13 Jul 2020 10:47:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     kishon@ti.com, wsa+renesas@sang-engineering.com,
-        geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org,
+        Mon, 13 Jul 2020 01:23:13 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:42088 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGMFXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:23:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 12C4F20139AB;
+        Mon, 13 Jul 2020 13:23:11 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 6d45HdKN3EjX; Mon, 13 Jul 2020 13:23:10 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id E3E9020139A6;
+        Mon, 13 Jul 2020 13:23:10 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.188.129])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 7E936C019F4;
+        Mon, 13 Jul 2020 13:23:10 +0800 (HKT)
+Subject: Re: [PATCH v6 1/2] hwmon: shtc1: add support for device tree bindings
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: renesas: rcar-gen3-usb2: fix SError happen if
- DEBUG_SHIRQ is enabled
-Message-ID: <20200713051705.GX34333@vkoul-mobl>
-References: <1594290978-8205-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <20200712044411.23323-1-chris.ruehl@gtsys.com.hk>
+ <20200712044411.23323-2-chris.ruehl@gtsys.com.hk>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <456804e8-eae6-d013-180f-42b8d5b9ea40@gtsys.com.hk>
+Date:   Mon, 13 Jul 2020 13:23:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594290978-8205-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20200712044411.23323-2-chris.ruehl@gtsys.com.hk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yoshihiro,
 
-On 09-07-20, 19:36, Yoshihiro Shimoda wrote:
-> If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
-> correctly. If we appended "earlycon keep_bootcon" to the kernel
-> command like, we could get kernel log like below.
+On 12/7/2020 12:44 pm, Chris Ruehl wrote:
+> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
 > 
->     SError Interrupt on CPU0, code 0xbf000002 -- SError
->     CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
->     Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
->     pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
->     pc : rcar_gen3_phy_usb2_irq+0x14/0x54
->     lr : free_irq+0xf4/0x27c
-> 
-> This means free_irq() calls the interrupt handler while PM runtime
-> is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
-> failed. To fix the issue, add a condition into the interrupt
-> handler to avoid register access if any phys are not initialized.
-> 
-> Note that rcar_gen3_is_any_rphy_initialized() was introduced on v5.2.
-> So, if we backports this patch to v5.1 or less, we need to make
-> other way.
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Should we really check phy is initialized? I think the issue here is
-that you register irq first, so your handler can be invoked. Right fix
-for this would be to move the irq registration to later in the probe
-when we are ready to handle interrupts
+Received new PCBA from the factory today, with the chip installed.
+Probe working, the measurement of temperature and humidity is correct.
 
-> 
-> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+root@pcba0:~# cat 
+/sys/devices/platform/ff110000.i2c/i2c-1/1-0070/hwmon/hwmon1/temp1_input
+42334
+root@pcba0:~# cat 
+/sys/devices/platform/ff110000.i2c/i2c-1/1-0070/hwmon/hwmon1/humidity1_input
+38128
+
+
+Tested-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+
 > ---
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>   drivers/hwmon/shtc1.c | 25 ++++++++++++++++++++++---
+>   1 file changed, 22 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> index bfb22f8..91c732d 100644
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -507,9 +507,13 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
->  {
->  	struct rcar_gen3_chan *ch = _ch;
->  	void __iomem *usb2_base = ch->base;
-> -	u32 status = readl(usb2_base + USB2_OBINTSTA);
-> +	u32 status;
->  	irqreturn_t ret = IRQ_NONE;
->  
-> +	if (!rcar_gen3_is_any_rphy_initialized(ch))
-> +		return ret;
+> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+> index a0078ccede03..7993a5ff8768 100644
+> --- a/drivers/hwmon/shtc1.c
+> +++ b/drivers/hwmon/shtc1.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/err.h>
+>   #include <linux/delay.h>
+>   #include <linux/platform_data/shtc1.h>
+> +#include <linux/of.h>
+>   
+>   /* commands (high precision mode) */
+>   static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
+>   	enum shtcx_chips chip = id->driver_data;
+>   	struct i2c_adapter *adap = client->adapter;
+>   	struct device *dev = &client->dev;
+> +	struct device_node *np = dev->of_node;
+>   
+>   	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>   		dev_err(dev, "plain i2c transactions not supported\n");
+> @@ -233,8 +235,14 @@ static int shtc1_probe(struct i2c_client *client,
+>   	data->client = client;
+>   	data->chip = chip;
+>   
+> -	if (client->dev.platform_data)
+> -		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	if (np) {
+> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking-io");
+> +		data->setup.high_precision = !of_property_read_bool(np, "sensicon,low-precision");
+> +	} else {
+> +		if (client->dev.platform_data)
+> +			data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	}
 > +
-> +	status = readl(usb2_base + USB2_OBINTSTA);
->  	if (status & USB2_OBINT_BITS) {
->  		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
->  		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-> -- 
-> 2.7.4
+>   	shtc1_select_command(data);
+>   	mutex_init(&data->update_lock);
+>   
+> @@ -257,8 +265,19 @@ static const struct i2c_device_id shtc1_id[] = {
+>   };
+>   MODULE_DEVICE_TABLE(i2c, shtc1_id);
+>   
+> +static const struct of_device_id shtc1_of_match[] = {
+> +	{ .compatible = "sensirion,shtc1" },
+> +	{ .compatible = "sensirion,shtw1" },
+> +	{ .compatible = "sensirion,shtc3" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
+> +
+>   static struct i2c_driver shtc1_i2c_driver = {
+> -	.driver.name  = "shtc1",
+> +	.driver = {
+> +		.name = "shtc1",
+> +		.of_match_table = shtc1_of_match,
+> +	},
+>   	.probe        = shtc1_probe,
+>   	.id_table     = shtc1_id,
+>   };
+> 
 
 -- 
-~Vinod
+GTSYS Limited RFID Technology
+9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
+42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
+Tel (852) 9079 9521
+
+Disclaimer: https://www.gtsys.com.hk/email/classified.html
