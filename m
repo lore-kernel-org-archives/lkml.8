@@ -2,205 +2,118 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB12C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A625FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7766620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7783620773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nMuqAZb1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yn3NsfAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgGMLxl (ORCPT
+        id S1729723AbgGMLxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:53:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54056 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729621AbgGMLxj (ORCPT
+        Mon, 13 Jul 2020 07:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbgGMLxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:53:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DBqoYZ053984;
-        Mon, 13 Jul 2020 11:52:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=z/1QPWqbNyssbqBldMP+d1+QFcSjoQ7OXySDQDNPWcc=;
- b=nMuqAZb1fl7VT6hBcuSqplj5RvdkimFGmNkOOo04qXrpBVDfEhxxm9kO4Q3winHDZFA0
- jG7KAXmpxDa6wTPcX5sYxm6EuBfPiWSEd3Q0FDc1WuDMwoQbJ3qoElBmYab3EO1nuFUD
- xVEW7ebQvOVNZmTB8Uc+yUhOHpKFjwQnJYjjxgwW7yxv2a9A8ail3i2HOr605MencrWY
- yc5sAPInTV8NyGoWHklMcOLvIpAiIiH9Z5sYjGgzV7KVp8aYYs0XIlvC+cJXT531T14d
- frZdcjlJO76eGkLYxY/on25SbvqI97ZPlxuR+60fvBmexZKJIMADXBNZqB/TfyoCbC0u Qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32762n6dke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 11:52:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DBhlpf106797;
-        Mon, 13 Jul 2020 11:52:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0m7usr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 11:52:54 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DBqsvG020305;
-        Mon, 13 Jul 2020 11:52:54 GMT
-Received: from localhost.uk.oracle.com (/10.175.215.251)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 04:52:53 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
-        daniel@iogearbox.net
-Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v3 bpf-next 2/2] selftests/bpf: add selftests verifying bpf_trace_printk() behaviour
-Date:   Mon, 13 Jul 2020 12:52:34 +0100
-Message-Id: <1594641154-18897-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
-References: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007130088
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 suspectscore=2 phishscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007130089
+        Mon, 13 Jul 2020 07:53:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87FBFC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:53:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so12885237wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LqnxdlraFGa9oyC6Dgb6a9mOJnjee/T6OYCQNFyIlz8=;
+        b=yn3NsfAHu+FbIXw3Q92w6Rs3PfR7AzddGXKTkkZN3Sjt5HbDm21Nt7B7NRDaZaW5q2
+         KGPrl1rORhcNfB0tp6QcMj+cqdy22R+ZIHy+6AS16r/ee1MR9NYT5QQ+kRSzMKkc7WlJ
+         VuUaFCIuxBTcPzmMQiRAvySDxAKlvvXFElboMKsCp/iwC6opkzVI3AvXaCEun3ScX1Gy
+         QJwmpOU3qw2sT2XM8r7zYRuVBNSmo22fG9Lis5Sikq1ulkca0fIHBxZmdKLKMMFARY20
+         j8v/5DyCyvZeSk0PML/VGuU5l8D/jqvHc9+c8I7iTkyNbx/YolQV5SuZqHs8qeanjHQu
+         4fog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LqnxdlraFGa9oyC6Dgb6a9mOJnjee/T6OYCQNFyIlz8=;
+        b=SaMFp6Wno9dQFlwVNv6hgMZhBgM8AQ7njE5CTjZ5PcXI1ni+GhQ95ZTR8zODgJNpLh
+         HGkMn31TXw4Z37I0f0ArkzkGcRszObMusekdFzTJib+/Uy1zGausJKW9GMcJfvgh0z2h
+         K8fDZnndBjhao9491ynUyrkavhnSBr5NytWC2p6qusGARn2niwo2vu/NMpCuv0JkLWJ8
+         IA/dKOwOg25rpcOMVCPoNebNVJqH+kxhGLzvplKNgAy3zxEQ5JP4M312yJyOTkjIurms
+         CFU3TGYSvoZpU7/9+Fecum//2KeU4zpQJUEUnFPw0BYu60SH0/VrPg0ALvyTYyCOmQfA
+         FKJg==
+X-Gm-Message-State: AOAM532rtNDTvLZdyslTvxa1VSvASUsECW9QTensxbXENcP4jqlgcstT
+        mMwFYXdPri6JkrKI6HMrtN4Q8w==
+X-Google-Smtp-Source: ABdhPJxjRNlt8Qj/SHfDfkN36guWr5K2uFmxbVr9DmVfJpCdP/YsDE++05I/pvn3FJdwDptIzOC2Sw==
+X-Received: by 2002:a05:600c:2dc1:: with SMTP id e1mr17527976wmh.108.1594641230264;
+        Mon, 13 Jul 2020 04:53:50 -0700 (PDT)
+Received: from dell ([2.31.163.6])
+        by smtp.gmail.com with ESMTPSA id z10sm24303484wrm.21.2020.07.13.04.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 04:53:49 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:53:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 12/24] scsi: virtio_scsi: Demote seemingly
+ unintentional kerneldoc header
+Message-ID: <20200713115348.GE3500@dell>
+References: <20200713080001.128044-1-lee.jones@linaro.org>
+ <20200713080001.128044-13-lee.jones@linaro.org>
+ <20200713071453-mutt-send-email-mst@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713071453-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simple selftests that verifies bpf_trace_printk() returns a sensible
-value and tracing messages appear.
+On Mon, 13 Jul 2020, Michael S. Tsirkin wrote:
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
----
- .../selftests/bpf/prog_tests/trace_printk.c        | 75 ++++++++++++++++++++++
- tools/testing/selftests/bpf/progs/trace_printk.c   | 21 ++++++
- 2 files changed, 96 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk.c
- create mode 100644 tools/testing/selftests/bpf/progs/trace_printk.c
+> On Mon, Jul 13, 2020 at 08:59:49AM +0100, Lee Jones wrote:
+> > This is the only use of kerneldoc in the sourcefile and no
+> > descriptions are provided.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/scsi/virtio_scsi.c:109: warning: Function parameter or member 'vscsi' not described in 'virtscsi_complete_cmd'
+> >  drivers/scsi/virtio_scsi.c:109: warning: Function parameter or member 'buf' not described in 'virtscsi_complete_cmd'
+> > 
+> > Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> > Cc: Jason Wang <jasowang@redhat.com>
+> > Cc: Stefan Hajnoczi <stefanha@redhat.com>
+> > Cc: virtualization@lists.linux-foundation.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/trace_printk.c b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
-new file mode 100644
-index 0000000..39b0dec
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
-@@ -0,0 +1,75 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2020, Oracle and/or its affiliates. */
-+
-+#include <test_progs.h>
-+
-+#include "trace_printk.skel.h"
-+
-+#define TRACEBUF	"/sys/kernel/debug/tracing/trace_pipe"
-+#define SEARCHMSG	"testing,testing"
-+
-+void test_trace_printk(void)
-+{
-+	int err, iter = 0, duration = 0, found = 0;
-+	struct trace_printk__bss *bss;
-+	struct trace_printk *skel;
-+	char *buf = NULL;
-+	FILE *fp = NULL;
-+	size_t buflen;
-+
-+	skel = trace_printk__open();
-+	if (CHECK(!skel, "skel_open", "failed to open skeleton\n"))
-+		return;
-+
-+	err = trace_printk__load(skel);
-+	if (CHECK(err, "skel_load", "failed to load skeleton: %d\n", err))
-+		goto cleanup;
-+
-+	bss = skel->bss;
-+
-+	err = trace_printk__attach(skel);
-+	if (CHECK(err, "skel_attach", "skeleton attach failed: %d\n", err))
-+		goto cleanup;
-+
-+	fp = fopen(TRACEBUF, "r");
-+	if (CHECK(fp == NULL, "could not open trace buffer",
-+		  "error %d opening %s", errno, TRACEBUF))
-+		goto cleanup;
-+
-+	/* We do not want to wait forever if this test fails... */
-+	fcntl(fileno(fp), F_SETFL, O_NONBLOCK);
-+
-+	/* wait for tracepoint to trigger */
-+	usleep(1);
-+	trace_printk__detach(skel);
-+
-+	if (CHECK(bss->trace_printk_ran == 0,
-+		  "bpf_trace_printk never ran",
-+		  "ran == %d", bss->trace_printk_ran))
-+		goto cleanup;
-+
-+	if (CHECK(bss->trace_printk_ret <= 0,
-+		  "bpf_trace_printk returned <= 0 value",
-+		  "got %d", bss->trace_printk_ret))
-+		goto cleanup;
-+
-+	/* verify our search string is in the trace buffer */
-+	while (getline(&buf, &buflen, fp) >= 0 || errno == EAGAIN) {
-+		if (strstr(buf, SEARCHMSG) != NULL)
-+			found++;
-+		if (found == bss->trace_printk_ran)
-+			break;
-+		if (++iter > 1000)
-+			break;
-+	}
-+
-+	if (CHECK(!found, "message from bpf_trace_printk not found",
-+		  "no instance of %s in %s", SEARCHMSG, TRACEBUF))
-+		goto cleanup;
-+
-+cleanup:
-+	trace_printk__destroy(skel);
-+	free(buf);
-+	if (fp)
-+		fclose(fp);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/trace_printk.c b/tools/testing/selftests/bpf/progs/trace_printk.c
-new file mode 100644
-index 0000000..8ca7f39
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/trace_printk.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020, Oracle and/or its affiliates.
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+int trace_printk_ret = 0;
-+int trace_printk_ran = 0;
-+
-+SEC("tp/raw_syscalls/sys_enter")
-+int sys_enter(void *ctx)
-+{
-+	static const char fmt[] = "testing,testing %d\n";
-+
-+	trace_printk_ret = bpf_trace_printk(fmt, sizeof(fmt),
-+					    ++trace_printk_ran);
-+	return 0;
-+}
+Thank you Michael.
+
+> Pls merge with the rest of the patches (which tree is this for?)
+
+My assumption is that Martin will take all of these (and the other
+sets) via the SCSI repo.
+
 -- 
-1.8.3.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
