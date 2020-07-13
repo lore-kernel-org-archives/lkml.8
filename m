@@ -2,131 +2,114 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30507C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40208C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DD4206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC55A206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b="PlIuW+Kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgGMB4e (ORCPT
+        id S1728422AbgGMB5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:56:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11551 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMB4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:56:33 -0400
-IronPort-SDR: fSTj7bQRcEsB1XtstARi7P2B3kqSy4Cgy1UudQq4NUtd2Coiv/Q5lEc9ArK1pJ8Fgrwi2IZXUJ
- MZgujUHND89w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="136718378"
-X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
-   d="scan'208";a="136718378"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 18:56:32 -0700
-IronPort-SDR: Zs6lenS7Wgpo3n8w5Vp2sagKfsqwSr7MBh4M5MGPbpuwx84FK+KuMJAKbgXVDysn5amjPIxRj7
- cfW9QpGNYa4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
-   d="scan'208";a="317223746"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Jul 2020 18:56:30 -0700
-Date:   Mon, 13 Jul 2020 09:52:24 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     "Wu, Hao" <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>,
-        yilun.xu@intel.com
-Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Message-ID: <20200713015224.GA2624@yilunxu-OptiPlex-7050>
-References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
- <20200709093527.GA32541@yilunxu-OptiPlex-7050>
- <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
- <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
- <20200710052443.GB8689@yilunxu-OptiPlex-7050>
- <DM6PR11MB3819BF1B54D64AD706BF832E85650@DM6PR11MB3819.namprd11.prod.outlook.com>
- <20200710154616.GA130068@epycbox.lan>
+        Sun, 12 Jul 2020 21:57:25 -0400
+Received: from mail.synology.com ([211.23.38.101]:33456 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbgGMB5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:57:25 -0400
+Subject: Re: [PATCH] mm : fix pte _PAGE_DIRTY bit when fallback migrate page
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1594605443; bh=dMt+4j48OGNWxlYU555z1xu2wQ1GhECOEHBMhx3gXYc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=PlIuW+KcQCXbqf+KNuT0az7wI1UjNfW25kD3FT1JxChhMBgqDffloSHQ8PGVw/iKS
+         nF8wf6FNSEVt/U6Mq8eNHkttyvN9i/ySllUUdH8WXHrOS+S/QedOAfybYCdXZ9hhLV
+         ZbpTyC4D0r6dYOqwjOYhtYtkESYfK/CcsDlzzDBM=
+To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200709024808.18466-1-robbieko@synology.com>
+ <859c810e-376e-5e8b-e8a5-0da3f83315d1@suse.cz>
+From:   Robbie Ko <robbieko@synology.com>
+Message-ID: <80b55fcf-def1-8a83-8f53-a22f2be56244@synology.com>
+Date:   Mon, 13 Jul 2020 09:57:23 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710154616.GA130068@epycbox.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <859c810e-376e-5e8b-e8a5-0da3f83315d1@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 08:46:16AM -0700, Moritz Fischer wrote:
-> On Fri, Jul 10, 2020 at 06:14:19AM +0000, Wu, Hao wrote:
-> > > On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
-> > > >
-> > > > On 7/9/20 3:14 AM, Wu, Hao wrote:
-> > > > >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
-> > > > >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-> > > > >>>>
-> > > > >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
-> > > > >>>>
-> > > > >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > > > >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > > > >>>> ---
-> > > > >>>>  drivers/fpga/dfl-pci.c | 2 ++
-> > > > >>>>  1 file changed, 2 insertions(+)
-> > > > >>>>
-> > > > >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> > > > >>>> index 73b5153..824aecf 100644
-> > > > >>>> --- a/drivers/fpga/dfl-pci.c
-> > > > >>>> +++ b/drivers/fpga/dfl-pci.c
-> > > > >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev
-> > > *pcidev)
-> > > > >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
-> > > > >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
-> > > > >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
-> > > > >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
-> > > > >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
-> > > > >> I think we could keep _PF_, also there is no need to support VF of pac
-> > > > >> n3000 in product now, but it does exist (ID: 0x0b31).
-> > > >
-> > > > I was wondering about the vf id, thanks!
-> > > >
-> > > > >>
-> > > > >> And add _INTEL_ is good to me.
-> > > > >>
-> > > > >> Then how about this one:
-> > > > >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
-> > > > > I am just considering the alignment with ids defined in
-> > > include/linux/pci_ids.h
-> > > > > So drop _PF_ before _INTEL_ would be better? : )
-> > > >
-> > > > To be consistent, all the id's are intel and all could drop pf.
-> > > 
-> > > That's good to me after checking the pci_ids.h. So we have:
-> > > 
-> > > #define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
-> > 
-> > Sounds good to me.
-> > 
-> > Hao
-> 
-> Heads up I was gonna send out the PR early next week. I can fix this up
-> myself if you want if you want or you can resend it?
 
-I sent the v2 patch for this. Please help check it.
+Vlastimil Babka 於 2020/7/10 下午11:31 寫道:
+> On 7/9/20 4:48 AM, robbieko wrote:
+>> From: Robbie Ko <robbieko@synology.com>
+>>
+>> When a migrate page occurs, we first create a migration entry
+>> to replace the original pte, and then go to fallback_migrate_page
+>> to execute a writeout if the migratepage is not supported.
+>>
+>> In the writeout, we will clear the dirty bit of the page and use
+>> page_mkclean to clear the dirty bit along with the corresponding pte,
+>> but page_mkclean does not support migration entry.
+>>
+>> The page ditry bit is cleared, but the dirty bit of the pte still exists,
+>> so if mmap continues to write, it will result in data loss.
+> Curious, did you observe this data loss? What filesystem? If yes, it seems
+> serious enough to
+> CC stable and determine a Fixes: tag?
 
-Thanks,
-Yilun
+Yes, there is data loss.
+I'm using a btrfs environment, but not the following patch
+btrfs: implement migratepage callback for data pages
+https://git.kernel.org/pub/scm/linux/kernel 
+/git/torvalds/linux.git/commit/?h=v5.8-rc5& 
+id=f8e6608180a31cc72a23b74969da428da236dbd1
 
-> 
-> Thanks,
-> Moritz
+
+>> We fix the by first remove the migration entry and then clearing
+>> the dirty bits of the page, which also clears the pte's dirty bits.
+>>
+>> Signed-off-by: Robbie Ko <robbieko@synology.com>
+>> ---
+>>   mm/migrate.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index f37729673558..5c407434b9ba 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -875,10 +875,6 @@ static int writeout(struct address_space *mapping, struct page *page)
+>>   		/* No write method for the address space */
+>>   		return -EINVAL;
+>>   
+>> -	if (!clear_page_dirty_for_io(page))
+>> -		/* Someone else already triggered a write */
+>> -		return -EAGAIN;
+>> -
+>>   	/*
+>>   	 * A dirty page may imply that the underlying filesystem has
+>>   	 * the page on some queue. So the page must be clean for
+>> @@ -889,6 +885,10 @@ static int writeout(struct address_space *mapping, struct page *page)
+>>   	 */
+>>   	remove_migration_ptes(page, page, false);
+>>   
+>> +	if (!clear_page_dirty_for_io(page))
+>> +		/* Someone else already triggered a write */
+>> +		return -EAGAIN;
+>> +
+>>   	rc = mapping->a_ops->writepage(page, &wbc);
+>>   
+>>   	if (rc != AOP_WRITEPAGE_ACTIVATE)
+>>
+>
