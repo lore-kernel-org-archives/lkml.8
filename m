@@ -2,123 +2,155 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81080C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF75BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6288C2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD1E2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMkxg68p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgGMDFn (ORCPT
+        id S1727107AbgGMDNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:05:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726261AbgGMDFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:05:42 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B6D92AF74B0C189A1CBE;
-        Mon, 13 Jul 2020 11:05:39 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
- 11:05:34 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <b.zolnierkie@samsung.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yangyingliang@huawei.com>
-Subject: [PATCH] vgacon: fix a UAF in do_update_region()
-Date:   Mon, 13 Jul 2020 11:04:45 +0000
-Message-ID: <20200713110445.553974-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 12 Jul 2020 23:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgGMDNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:13:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E18DC061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:13:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k4so4876778pld.12
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=psxzbrOp99J5mngwlPoMiQAT+alHBEBXUBDoOJ1/0T0=;
+        b=bMkxg68pIh+RvX2AC4XXKe6pe1QOex4aB1n7ujCqFRZd69+OnuEEgrE4tbSiQHzr2w
+         HUONe3Rz9kqrSbjvW1EW7ygCDQ/aWO1wdWhs3MyPk8wX/x/ejLAIA2GGvf5BPpEdxpUK
+         xboFHzonjwMPK3n9xEddAHBnE6DMrvun0X5PBgA59sAi87sum89ri+yl19ri98UFYIrz
+         RhmOZAmNgecT2cwN+1+yJWn5QLeyeeBvAe85s+moYqIXda9vTBgiueAIHIYf70nqgLGB
+         ABFcbyIbOa6l2P83EU6Ak68QAD2KGHrHF/zaKiPrPHqgGBnSirLubl0ZLyJMl4w+YAVF
+         4oXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=psxzbrOp99J5mngwlPoMiQAT+alHBEBXUBDoOJ1/0T0=;
+        b=mwiNdhgBBwyedhQfQ82Y6xVOJIC/22/WOYAQcAoQWshxC9T4dVEoRMDrMWK40OcFWg
+         CYsFgksl3D6+at5QOvTH6a/AUYY5BHi+CKRWhx0a72t84O5JbZ0XPi3Ugmkxppbsjm3P
+         /FiS8bil4EUGkz6oGFAKpt+Nuifr8Vqe5yc9jkxoc/cAAp/mRZoqKp+RnZk5qPeNpkGN
+         4VzgADtozoBldktjBsjtU9zUGJuhzYlgxDmqGR88jdhLbyFfpzx1giPE0OI2MZbZuRv4
+         oX3bPtydkr3heSLibD1Pu7JefAlgM8HsdlvH1F3RE+kkolWg5LoyKpMTrVN7V14DoYa+
+         aMDQ==
+X-Gm-Message-State: AOAM533pi3eBplZJAzEEymbPJaosWfieLtV3oyA1BZfXh+3J/LzJiNbS
+        b5Ddr08fHD9IJc513YuAd52wUmCy
+X-Google-Smtp-Source: ABdhPJwWlxM5jkFHf6rPbXsTiEijCyx0KGUV3hHGgDVb+KR9EnkUi27lPfgLbJA7ICFZ7bgXL6pYMQ==
+X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr37221828plb.250.1594609980408;
+        Sun, 12 Jul 2020 20:13:00 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([172.30.115.29])
+        by smtp.gmail.com with ESMTPSA id cl17sm12635508pjb.50.2020.07.12.20.12.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 20:12:59 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v2] f2fs: change the way of handling range.len in F2FS_IOC_SEC_TRIM_FILE
+Date:   Mon, 13 Jul 2020 12:12:52 +0900
+Message-Id: <20200713031252.3873546-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got a UAF report in do_update_region() when I doing fuzz test.
+From: Daeho Jeong <daehojeong@google.com>
 
-[   51.161905] BUG: KASAN: use-after-free in do_update_region+0x579/0x600
-[   51.161918] Read of size 2 at addr ffff888000100000 by task test/295
+Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
+ 1. Added -1 value support for range.len to secure trim the whole blocks
+    starting from range.start regardless of i_size.
+ 2. If the end of the range passes over the end of file, it means until
+    the end of file (i_size).
+ 3. ignored the case of that range.len is zero to prevent the function
+    from making end_addr zero and triggering different behaviour of
+    the function.
 
-[   51.161957] CPU: 2 PID: 295 Comm: test Not tainted 5.7.0+ #975
-[   51.161969] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-[   51.161976] Call Trace:
-[   51.162001]  dump_stack+0xc6/0x11e
-[   51.162019]  ? do_update_region+0x579/0x600
-[   51.162047]  print_address_description.constprop.6+0x1a/0x220
-[   51.162083]  ? vprintk_func+0x66/0xed
-[   51.162100]  ? do_update_region+0x579/0x600
-[   51.162112]  ? do_update_region+0x579/0x600
-[   51.162128]  kasan_report.cold.9+0x37/0x7c
-[   51.162151]  ? do_update_region+0x579/0x600
-[   51.162173]  do_update_region+0x579/0x600
-[   51.162207]  ? con_get_trans_old+0x230/0x230
-[   51.162229]  ? retint_kernel+0x10/0x10
-[   51.162278]  csi_J+0x557/0xa00
-[   51.162307]  do_con_trol+0x49af/0x5cc0
-[   51.162330]  ? lock_downgrade+0x720/0x720
-[   51.162347]  ? reset_palette+0x1b0/0x1b0
-[   51.162369]  ? lockdep_hardirqs_on_prepare+0x379/0x540
-[   51.162393]  ? notifier_call_chain+0x11b/0x160
-[   51.162438]  do_con_write.part.24+0xb0a/0x1a30
-[   51.162501]  ? do_con_trol+0x5cc0/0x5cc0
-[   51.162522]  ? console_unlock+0x7b8/0xb00
-[   51.162555]  ? __mutex_unlock_slowpath+0xd4/0x670
-[   51.162574]  ? this_tty+0xe0/0xe0
-[   51.162589]  ? console_unlock+0x559/0xb00
-[   51.162605]  ? wait_for_completion+0x260/0x260
-[   51.162638]  con_write+0x31/0xb0
-[   51.162658]  n_tty_write+0x4fa/0xd40
-[   51.162710]  ? n_tty_read+0x1800/0x1800
-[   51.162730]  ? prepare_to_wait_exclusive+0x270/0x270
-[   51.162754]  ? __might_fault+0x175/0x1b0
-[   51.162783]  tty_write+0x42b/0x8d0
-[   51.162795]  ? n_tty_read+0x1800/0x1800
-[   51.162825]  ? tty_lookup_driver+0x450/0x450
-[   51.162848]  __vfs_write+0x7c/0x100
-[   51.162875]  vfs_write+0x1c9/0x510
-[   51.162901]  ksys_write+0xff/0x200
-[   51.162918]  ? __ia32_sys_read+0xb0/0xb0
-[   51.162940]  ? do_syscall_64+0x1a/0x520
-[   51.162957]  ? lockdep_hardirqs_on_prepare+0x379/0x540
-[   51.162984]  do_syscall_64+0xa1/0x520
-[   51.163008]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-After vgacon_set_origin() is called in set_origin(), the vc_origin is
-set to vga_vram_base, the vc_pos should between vga_vram_base and
-vga_vram_end. But we still use vc_screenbuf_size, if the vga_vram_size
-is smaller than vc_screenbuf_size, vc_pos may be out of bound, using it
-will cause a use-after-free(or out-of-bounds). Fix this by calling
-vc_resize() if vga_vram_size is smaller than vc_screenbuf_size.
-
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
- drivers/video/console/vgacon.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
+ - Changed -1 range.len option to mean the whole blocks starting from
+   range.start regardless of i_size
+---
+ fs/f2fs/file.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-index b51ffb9a208d..2eabb86bb0dd 100644
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -1341,6 +1341,9 @@ static int vgacon_set_origin(struct vc_data *c)
- 	if (vga_is_gfx ||	/* We don't play origin tricks in graphic modes */
- 	    (console_blanked && !vga_palette_blanked))	/* Nor we write to blanked screens */
- 		return 0;
-+
-+	if (c->vc_screenbuf_size > vga_vram_size)
-+		vc_resize(c, screen_info.orig_video_cols, screen_info.orig_video_lines);
- 	c->vc_origin = c->vc_visible_origin = vga_vram_base;
- 	vga_set_mem_top(c);
- 	vga_rolled_over = 0;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 368c80f8e2a1..2485841e3b2d 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3792,7 +3792,7 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+ 	pgoff_t index, pg_end;
+ 	block_t prev_block = 0, len = 0;
+ 	loff_t end_addr;
+-	bool to_end;
++	bool to_end = false;
+ 	int ret = 0;
+ 
+ 	if (!(filp->f_mode & FMODE_WRITE))
+@@ -3813,23 +3813,23 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+ 	file_start_write(filp);
+ 	inode_lock(inode);
+ 
+-	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
++	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
++			range.start >= inode->i_size) {
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-	if (range.start >= inode->i_size) {
+-		ret = -EINVAL;
++	if (range.len == 0)
+ 		goto err;
+-	}
+ 
+-	if (inode->i_size - range.start < range.len) {
+-		ret = -E2BIG;
+-		goto err;
++	if (inode->i_size - range.start > range.len) {
++		end_addr = range.start + range.len;
++	} else {
++		end_addr = range.len == (u64)-1 ?
++			sbi->sb->s_maxbytes : inode->i_size;
++		to_end = true;
+ 	}
+-	end_addr = range.start + range.len;
+ 
+-	to_end = (end_addr == inode->i_size);
+ 	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
+ 			(!to_end && !IS_ALIGNED(end_addr, F2FS_BLKSIZE))) {
+ 		ret = -EINVAL;
+@@ -3846,7 +3846,8 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+ 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	down_write(&F2FS_I(inode)->i_mmap_sem);
+ 
+-	ret = filemap_write_and_wait_range(mapping, range.start, end_addr - 1);
++	ret = filemap_write_and_wait_range(mapping, range.start,
++			to_end ? LLONG_MAX : end_addr - 1);
+ 	if (ret)
+ 		goto out;
+ 
 -- 
-2.25.1
+2.27.0.383.g050319c2ae-goog
 
