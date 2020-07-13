@@ -2,62 +2,63 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27837C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF6BC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F1D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6AF2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eZztk7O7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="j0V0viTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgGMN3m (ORCPT
+        id S1729927AbgGMN3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48606 "EHLO
+        Mon, 13 Jul 2020 09:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729613AbgGMN3l (ORCPT
+        with ESMTP id S1729896AbgGMN3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:29:41 -0400
+        Mon, 13 Jul 2020 09:29:48 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28930C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z2so16570354wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5B5C08C5E0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so16550454wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8M2es7HHouzmCUpyAYFqBmq/VXXAGiCHzbOor1SAZdY=;
-        b=eZztk7O7rf+DFBdXysVaFW4Q6svK0fGNMvSOeDFuBZn/YGHCVDHChUbKn5LhBskGZF
-         z4kFVrudVva1mgg1mPIwMgG/zOElB0ulSNlJAWaXR4twxVMVl3if3wzh4Jerf2NIhpy9
-         ZgYZpN1qdb1PX8A36OK7S2FYxhqRzMqWnhli036pECPg1gVa6H+PclsfMX1+zivylIBh
-         EdcoHIsqNvh00CBTbSgfCw04YoJLD5d00c8lG8RVo0q06XZ1R2AfjmaXvoXcZiRPu0I+
-         TnQBMfQZVhJf8vwoGnfJyVRgxYMSADJXe6+/E4ouhnfFeOQD3BoMi4SN7/c/DPG7Jt5h
-         uUmA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pl8osqFHzEcsdNW9tfkecnvuu2M/qEbw8a1f1sca/Bk=;
+        b=j0V0viTo0JLbXENBdA8u1+UQl/wK7PVzGbNY3YKPkjM6a93X59GWthJFO0yR9ONhfF
+         +drSmRuFiaHGhkaieOUng8wozlwVYqlzoqVh+ijxMllnXMQqWtoZduqq8nLLZSsheBZR
+         FMrf020wFUq6/ZR6gYCTH1BnUE8yN7ePXjQUyHqBTGkctxxLUcCMfkmkcR8zA9iagnh7
+         DgCE83w6nFrC2jtNTQfu/xA+iR91Xeg4jNGr6fGMBeEKGSL7aZD6iy4iy9yHxxSPk94H
+         G6m+Am15ak2b7/KYTmu4i9QtIkTJzEBZ9HKtZmSVXS33an9eGFMuG1ZKEEYU7w2IKWs8
+         6pqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8M2es7HHouzmCUpyAYFqBmq/VXXAGiCHzbOor1SAZdY=;
-        b=pFqBVz3uj6PAXk/mkLf/BWV8PvRZpsTVGheenWJ+xvxku0/AGrZ92fdDy930gmkwix
-         Osm9CD+Q0D4v2Yo8gO+LGj+sx/gZgN7grL0ZCq8QXKzPn3mciBc60mRLgym5G7ARdFAG
-         nv3JjJU7T4Nir/z++b8Slj2B5bY7w5rfoUW/jpiEndSTrcwU3n8Ni7G3tn7vBTfdA/Rc
-         mXe2GxodgYzZss7vLTKv/pWx7jKGgMsB1t29UjapsovJGUA3OhRnjPPhW0lEz29VmCmo
-         hywC9CDSKgWvf/WBvD3KwiJftwWWY8bMupfZCP09SRnoLq3ETXRSsiS/jDJ/S/Yb+hop
-         nthQ==
-X-Gm-Message-State: AOAM531OV2AS9dTdS5UhQMZfMHKBlfI62iqYpgBwfeVVeqTHeISsd6Y3
-        NmFcyBa0lf83BHkLPDInxHOPqg==
-X-Google-Smtp-Source: ABdhPJxMEwQ8RYMjAHEW54Z1j94xXKNRmix+I5953GVI4mfW5CH5zrllY5eazKO4pgPCsaIsWRN1NA==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr86432689wrm.271.1594646979741;
-        Mon, 13 Jul 2020 06:29:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pl8osqFHzEcsdNW9tfkecnvuu2M/qEbw8a1f1sca/Bk=;
+        b=ocX4invmAxg0cLwHV4/ma6CR6GwjRaRi5TFQvNpG7TzLoMNImqKsE0+3dL4R4kYnU7
+         E5IZf59a23Z1dehbeUjPAfWm4oW+u7kaO8JoKxvBRfLcZ6371ynVEUYVzOML42v3mIXm
+         Ed5WpQQVmvtspaBqla2ki1amrUiA7HITj3g1AIZKYYBBQ0p3TafYKDZugexATMRIa/ak
+         x/LwtBG8iRBmHUE04TeBhUtaYJQeSeU2JON213R4dctHta5EN6TTVESdkWsca80vFJ/p
+         QV/K6D6N6xcvnRmMhlTdAAHw23j0AjCZ5hBilAUK66KItPK1BFJZAvfSJnOLlhHrBxnE
+         Iqrw==
+X-Gm-Message-State: AOAM533qdzZTvkMvb6jQbSfV2zI4sLklGicZLWsDhuRADt+jFZ5ntH69
+        CvJabsh5733sDRY7ocPZfQ8Aaw==
+X-Google-Smtp-Source: ABdhPJwykKAe+1hKtLIks/qZbsmfhZ3wQYs7n9CAFTDWM+nYh/VUMUiFm2oxGk4afCL5P/rY946YCQ==
+X-Received: by 2002:adf:f0ce:: with SMTP id x14mr76501632wro.137.1594646984561;
+        Mon, 13 Jul 2020 06:29:44 -0700 (PDT)
 Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.38
+        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:29:38 -0700 (PDT)
+        Mon, 13 Jul 2020 06:29:43 -0700 (PDT)
 From:   Alexandre Bailon <abailon@baylibre.com>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         matthias.bgg@gmail.com
@@ -65,10 +66,12 @@ Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH 0/6] Add support of mt8183 APU
-Date:   Mon, 13 Jul 2020 15:29:21 +0200
-Message-Id: <20200713132927.24925-1-abailon@baylibre.com>
+Subject: [PATCH 4/6] remoteproc: mtk_vpu_rproc: Don't try to load empty PT_LOAD segment
+Date:   Mon, 13 Jul 2020 15:29:25 +0200
+Message-Id: <20200713132927.24925-5-abailon@baylibre.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200713132927.24925-1-abailon@baylibre.com>
+References: <20200713132927.24925-1-abailon@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,46 +79,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Mediatek's SoC have an Accelerated Processing Unit.
-This adds support of the one available in the mt8183
-(aswell some derivative SoC).
+The firmware generated by our toolchain contains many empty PT_LOAD
+segments. The elf loader don't manage it and will raise an error:
+"bad phdr da 0x0 mem 0x0".
+To workaround it, implement the sanity_check callback to detect the
+empty PT_LOAD segment and change it to PT_NULL.
+In that way, the elf load won't try to load the segment.
 
-This series depends on two other series:
-- Mediatek MT8183 scpsys support  
-- arm64: dts: Add m4u and smi-larbs nodes for mt8183 
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+---
+ drivers/remoteproc/mtk_apu_rproc.c | 35 +++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-Notes:
-This series include two workarounds:
-- remoteproc: mtk_vpu_rproc: Don't try to load empty PT_LOAD segment
-- rproc: mtk_apu: Don't try to use local APU RAM
-
-The first one is required to load malformed firmwares.
-This is probably caused by the toolchain we are using (a fork of gcc 4.2).
-It would be better to fix the firmwares but I don't know how to fix it.
-
-The second one prevents the CPU to access to the APU local RAM.
-If the CPU tries to read or write the APU local RAM, then the CPU will
-hang. I'm still looking for a solution, but until, we must prevent
-remoteproc to write something (usually, to initialize data section).
-Because of that issue, the current driver doesn't map the the local RAM.
-
-Alexandre Bailon (6):
-  dt bindings: remoteproc: Add bindings for MT8183 APU
-  remoteproc: Add a remoteproc driver for the MT8183's APU
-  remoteproc: mtk_vpu_rproc: Add support of JTAG
-  remoteproc: mtk_vpu_rproc: Don't try to load empty PT_LOAD segment
-  remoteproc: mtk_apu: Don't try to use the APU local RAM
-  ARM64: mt8183: Add support of APU to mt8183
-
- .../bindings/remoteproc/mtk,apu.yaml          | 121 +++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  42 ++
- drivers/remoteproc/Kconfig                    |  19 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/mtk_apu_rproc.c            | 501 ++++++++++++++++++
- 5 files changed, 684 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
- create mode 100644 drivers/remoteproc/mtk_apu_rproc.c
-
+diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
+index f2342b747a35..565b3adca5de 100644
+--- a/drivers/remoteproc/mtk_apu_rproc.c
++++ b/drivers/remoteproc/mtk_apu_rproc.c
+@@ -137,10 +137,39 @@ static void mtk_vpu_rproc_kick(struct rproc *rproc, int vqid)
+ 	vpu_write32(vpu_rproc, CORE_CTL_XTENSA_INT, 1 << vqid);
+ }
+ 
++int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
++{
++	const u8 *elf_data = fw->data;
++	struct elf32_hdr *ehdr;
++	struct elf32_phdr *phdr;
++	int ret;
++	int i;
++
++	ret = rproc_elf_sanity_check(rproc, fw);
++	if (ret)
++		return ret;
++
++	ehdr = (struct elf32_hdr *)elf_data;
++	phdr = (struct elf32_phdr *)(elf_data + ehdr->e_phoff);
++
++	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
++		/* Remove empty PT_LOAD section */
++		if (phdr->p_type == PT_LOAD && !phdr->p_paddr)
++			phdr->p_type = PT_NULL;
++	}
++
++	return 0;
++}
++
+ static const struct rproc_ops mtk_vpu_rproc_ops = {
+-	.start		= mtk_vpu_rproc_start,
+-	.stop		= mtk_vpu_rproc_stop,
+-	.kick		= mtk_vpu_rproc_kick,
++	.start			= mtk_vpu_rproc_start,
++	.stop			= mtk_vpu_rproc_stop,
++	.kick			= mtk_vpu_rproc_kick,
++	.load			= rproc_elf_load_segments,
++	.parse_fw		= rproc_elf_load_rsc_table,
++	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
++	.sanity_check		= mtk_vpu_elf_sanity_check,
++	.get_boot_addr		= rproc_elf_get_boot_addr,
+ };
+ 
+ static irqreturn_t mtk_vpu_rproc_callback(int irq, void *data)
 -- 
 2.26.2
 
