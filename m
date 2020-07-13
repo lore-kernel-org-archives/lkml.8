@@ -2,226 +2,145 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CFFC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC94C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A3E2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AA32068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgGMFYy (ORCPT
+        id S1728463AbgGMFWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:24:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24712 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725804AbgGMFYx (ORCPT
+        Mon, 13 Jul 2020 01:22:55 -0400
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:47762 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725767AbgGMFWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:24:53 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06D52NSF180904;
-        Mon, 13 Jul 2020 01:24:48 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32771wj11j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 01:24:47 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D5OkOI014335;
-        Mon, 13 Jul 2020 05:24:46 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 327527stsb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 05:24:46 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06D5Ohdk63832220
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 05:24:44 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4AAA4C044;
-        Mon, 13 Jul 2020 05:24:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3CB34C050;
-        Mon, 13 Jul 2020 05:24:40 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.102.23.34])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jul 2020 05:24:40 +0000 (GMT)
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
-Subject: [PATCH v6] powerpc/fadump: fix race between pstore write and fadump crash trigger
-Date:   Mon, 13 Jul 2020 10:54:35 +0530
-Message-Id: <20200713052435.183750-1-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Mon, 13 Jul 2020 01:22:55 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B4B0B182240AB;
+        Mon, 13 Jul 2020 05:22:53 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: scene76_1e0bdf926ee5
+X-Filterd-Recvd-Size: 4087
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 13 Jul 2020 05:22:51 +0000 (UTC)
+Message-ID: <da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of
+ Kamstrup DTS
+From:   Joe Perches <joe@perches.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Date:   Sun, 12 Jul 2020 22:22:50 -0700
+In-Reply-To: <20200713025559.GZ21277@dragon>
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+         <20200629114927.17379-3-bruno.thomsen@gmail.com>
+         <20200713025559.GZ21277@dragon>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_03:2020-07-10,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 suspectscore=0 adultscore=0
- clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130034
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we enter into fadump crash path via system reset we fail to update
-the pstore.
+On Mon, 2020-07-13 at 10:56 +0800, Shawn Guo wrote:
+> On Mon, Jun 29, 2020 at 01:49:27PM +0200, Bruno Thomsen wrote:
+> > Add myself as reviewer of device trees for Kamstrup
+> > Concentrators.
+> > 
+> > Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+> > ---
+> >  MAINTAINERS | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 496fd4eafb68..97fc112309af 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9282,6 +9282,11 @@ S:	Maintained
+> >  F:	Documentation/hwmon/k8temp.rst
+> >  F:	drivers/hwmon/k8temp.c
+> >  
+> > +KAMSTRUP CONCENTRATORS
+> > +R:	Bruno Thomsen <bruno.thomsen@gmail.com>
+> > +S:	Maintained
+> > +F:	arch/arm/boot/dts/imx7d-flex-concentrator*.dts
+> > +
+> 
+> I guess get_maintainer.pl should list you for patches touching the
+> files, so it's not really required?  I'm worried about that MAINTAINERS
+> file will get bloated quickly if we patch it for every single DTS
+> file.
 
-On the system reset path we first update the pstore then we go for fadump
-crash. But the problem here is when all the CPUs try to get the pstore
-lock to initiate the pstore write, only one CPUs will acquire the lock
-and proceed with the pstore write. Since it in NMI context CPUs that fail
-to get lock do not wait for their turn to write to the pstore and simply
-proceed with the next operation which is fadump crash. One of the CPU who
-proceeded with fadump crash path triggers the crash and does not wait for
-the CPU who gets the pstore lock to complete the pstore update.
+Right now, a little less than half of the .dts* files
+have an author or other email address in them.
 
-Timeline diagram to depicts the sequence of events that leads to an
-unsuccessful pstore update when we hit fadump crash path via system reset.
+$ git ls-files arch/arm/boot/dts/*.dts* | wc -l
+2105
 
-                 1    2     3    ...      n   CPU Threads
-                 |    |     |             |
-                 |    |     |             |
- Reached to   -->|--->|---->| ----------->|
- system reset    |    |     |             |
- path            |    |     |             |
-                 |    |     |             |
- Try to       -->|--->|---->|------------>|
- acquire the     |    |     |             |
- pstore lock     |    |     |             |
-                 |    |     |             |
-                 |    |     |             |
- Got the      -->| +->|     |             |<-+
- pstore lock     | |  |     |             |  |-->  Didn't get the
-                 | --------------------------+     lock and moving
-                 |    |     |             |        ahead on fadump
-                 |    |     |             |        crash path
-                 |    |     |             |
-  Begins the  -->|    |     |             |
-  process to     |    |     |             |<-- Got the chance to
-  update the     |    |     |             |    trigger the crash
-  pstore         | -> |     |    ... <-   |
-                 | |  |     |         |   |
-                 | |  |     |         |   |<-- Triggers the
-                 | |  |     |         |   |    crash
-                 | |  |     |         |   |      ^
-                 | |  |     |         |   |      |
-  Writing to  -->| |  |     |         |   |      |
-  pstore         | |  |     |         |   |      |
-                   |                  |          |
-       ^           |__________________|          |
-       |               CPU Relax                 |
-       |                                         |
-       +-----------------------------------------+
-                          |
-                          v
-            Race: crash triggered before pstore
-                  update completes
+$ git grep -P --name-only '<\S+@\S+>' arch/arm/boot/dts/*.dts* | wc -l
+997
 
-To avoid this race condition a barrier is added on crash_fadump path, it
-prevents the CPU to trigger the crash until all the online CPUs completes
-their task.
+Some have multiple email addresses:
 
-A barrier is added to make sure all the secondary CPUs hit the
-crash_fadump function before we initiates the crash. A timeout is kept to
-ensure the primary CPU (one who initiates the crash) do not wait for
-secondary CPUs indefinitely.
+$ git grep -P '<\S+@\S+>' arch/arm/boot/dts/*.dts* | wc -l
+1240
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+(and there are a few false positives in that regex)
+
+I suppose that get_maintainer could handle .dts* files
+the same way .yaml files are handled so any email address
+in the file is added to patches that touch the file.
+
+This is the commit that added the .yaml file handling:
+
+commit 0c78c013762142bfe8fce34e7e968f83f0a4b891
+Author: Joe Perches <joe@perches.com>
+Date:   Thu Jun 4 16:50:01 2020 -0700
+
+    get_maintainer: add email addresses from .yaml files
+    
+    .yaml files can contain maintainer/author addresses and it seems unlikely
+    or unnecessary that individual MAINTAINER file section entries for each
+    .yaml file will be created.
+    
+    So add the email addresses found in .yaml files to the default
+    get_maintainer output.
+    
+    The email addresses are marked with "(in file)" when using the "--roles"
+    or "--rolestats" options.
+
+So something like:
 ---
- arch/powerpc/kernel/fadump.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ scripts/get_maintainer.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
----
-Chanagelog:
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 484d2fbf5921..4c3c69d7bed0 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -436,7 +436,7 @@ sub maintainers_in_file {
+ 
+     return if ($file =~ m@\bMAINTAINERS$@);
+ 
+-    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
++    if (-f $file && ($email_file_emails || $file =~ /\.(?:yaml|dtsi?)$/)) {
+ 	open(my $f, '<', $file)
+ 	    or die "$P: Can't open $file: $!\n";
+ 	my $text = do { local($/) ; <$f> };
 
-v1 -> v3:
-   - https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-April/208267.html
-
-v3 -> v4:
-
-   - Now the primary CPU (one who triggers dump) waits for all secondary
-     CPUs to enter and then initiates the crash.
-
-v4 -> v5:
-    - Fixed a build failure reported by kernel test robot <lkp at intel.com>
-      Now the cpus_in_crash variable is defined outside CONFIG_CMA
-      config option.
-
-v5 -> v6
-    - Changed a variable name cpus_in_crash -> cpus_in_fadump.
----
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 78ab9a6ee6ac..1858896d6809 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -32,11 +32,20 @@
- #include <asm/fadump-internal.h>
- #include <asm/setup.h>
- 
-+/*
-+ * The CPU who acquired the lock to trigger the fadump crash should
-+ * wait for other CPUs to enter.
-+ *
-+ * The timeout is in milliseconds.
-+ */
-+#define CRASH_TIMEOUT		500
-+
- static struct fw_dump fw_dump;
- 
- static void __init fadump_reserve_crash_area(u64 base);
- 
- struct kobject *fadump_kobj;
-+static atomic_t cpus_in_fadump;
- 
- #ifndef CONFIG_PRESERVE_FA_DUMP
- static DEFINE_MUTEX(fadump_mutex);
-@@ -668,8 +677,11 @@ early_param("fadump_reserve_mem", early_fadump_reserve_mem);
- 
- void crash_fadump(struct pt_regs *regs, const char *str)
- {
-+	unsigned int msecs;
- 	struct fadump_crash_info_header *fdh = NULL;
- 	int old_cpu, this_cpu;
-+	/* Do not include first CPU */
-+	unsigned int ncpus = num_online_cpus() - 1;
- 
- 	if (!should_fadump_crash())
- 		return;
-@@ -685,6 +697,8 @@ void crash_fadump(struct pt_regs *regs, const char *str)
- 	old_cpu = cmpxchg(&crashing_cpu, -1, this_cpu);
- 
- 	if (old_cpu != -1) {
-+		atomic_inc(&cpus_in_fadump);
-+
- 		/*
- 		 * We can't loop here indefinitely. Wait as long as fadump
- 		 * is in force. If we race with fadump un-registration this
-@@ -708,6 +722,16 @@ void crash_fadump(struct pt_regs *regs, const char *str)
- 
- 	fdh->online_mask = *cpu_online_mask;
- 
-+	/*
-+	 * If we came in via system reset, wait a while for the secondary
-+	 * CPUs to enter.
-+	 */
-+	if (TRAP(&(fdh->regs)) == 0x100) {
-+		msecs = CRASH_TIMEOUT;
-+		while ((atomic_read(&cpus_in_fadump) < ncpus) && (--msecs > 0))
-+			mdelay(1);
-+	}
-+
- 	fw_dump.ops->fadump_trigger(fdh, str);
- }
- 
--- 
-2.25.4
 
