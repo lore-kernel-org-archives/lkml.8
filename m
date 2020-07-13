@@ -2,132 +2,129 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0118AC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6788A2077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="dSNDq5fq"
+	by mail.kernel.org (Postfix) with ESMTP id DB3DA2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgGMKB7 (ORCPT
+        id S1729543AbgGMKDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:01:59 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:34455 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728950AbgGMKB6 (ORCPT
+        Mon, 13 Jul 2020 06:03:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29288 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbgGMKC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:01:58 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id uvHTj6d52GLmCuvHXjAusU; Mon, 13 Jul 2020 12:01:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594634516; bh=Qvmhkqy8a9fuPe1CeKmBjQ4cwdl+ZofLMoa2K+Ph6Jw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=dSNDq5fq0noaKLmUIOxNZXt4OQrZfN0Rr0TxTQIi+DVUwGWLEPXyfct+USQuhYe1J
-         DSU9NMQMNd44ekjlUOtNHvDkj3N75EQkV0dK0eB9JN2V2AXm1m+YPrGj8aBtSKz2yI
-         55RCKsNFrn97ONJ1k76E1/bbH1ApaSHnX/yltJDGwIL4VLMJhi58SzX8Hqwn0ouEFi
-         JiNhxgjcY4vpdT8wfxzhE9cJWat75KjROnvAMMXW02pxqDWo1lVmnjy0VO3268g4iQ
-         +2rYLjhuBIkgsXoGkvn3msJJw7tErLsrk4RSQ6yeosChTXWsDXn6Lz19AL43Rj/FB1
-         bA1zduNYFQnXw==
-Subject: Re: [PATCH v1 2/6] [media] cx23885: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-References: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
- <20200629073604.205478-3-vaibhavgupta40@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c4a46846-208f-c834-56d7-02543c395795@xs4all.nl>
-Date:   Mon, 13 Jul 2020 12:01:51 +0200
+        Mon, 13 Jul 2020 06:02:59 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DA2Wp9122637;
+        Mon, 13 Jul 2020 06:02:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3278qs71bk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 06:02:40 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DA2afa122862;
+        Mon, 13 Jul 2020 06:02:36 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3278qs7149-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 06:02:36 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D9ko3R032061;
+        Mon, 13 Jul 2020 10:02:17 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 327p0vrnsq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 10:02:17 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DA2EDL1835312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 10:02:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 834AE42047;
+        Mon, 13 Jul 2020 10:02:14 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE56642041;
+        Mon, 13 Jul 2020 10:02:12 +0000 (GMT)
+Received: from [9.85.82.10] (unknown [9.85.82.10])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 10:02:12 +0000 (GMT)
+Subject: Re: [PATCH v2 0/3] Power10 basic energy management
+To:     Nicholas Piggin <npiggin@gmail.com>, benh@kernel.crashing.org,
+        ego@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
+        mpe@ellerman.id.au, paulus@samba.org, pratik.r.sampat@gmail.com,
+        ravi.bangoria@linux.ibm.com, svaidy@linux.ibm.com
+References: <20200710052207.12003-1-psampat@linux.ibm.com>
+ <1594617564.57k8bsyfd0.astroid@bobo.none>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <bc6494c0-9a17-2416-c6cc-15612020f497@linux.ibm.com>
+Date:   Mon, 13 Jul 2020 15:32:12 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200629073604.205478-3-vaibhavgupta40@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <1594617564.57k8bsyfd0.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEgDG4469ro2DKZtOFm+RMAiztJsuP9cXotS0TmKFGSp+9SgAmFhYVWhxx8yl1HV3fhJ0MUp67jAVE65zOxo52NzY9xIlIT4UHuJ5eIKrEQOM4LDUySb
- NgT01kC82efUbFUt0D2pfcDAlO7NOj0g1HAx5eODA2118fHYGLTjGvV65hvujMh1Kz/ZBgGV1FJERCgwknLrHWRkb68/0KqJkSjmLUSh8rlupLyIlpXI1sxL
- pttMKR+pabmKYUydmGw3JtBPaxZv1SXfsUcriO17OD3CRQIt17Ib15JgVW/GXbPYpnYofun0Y0Fv1JCXIKXN+d4QGY8N/y07yAUMW9B5Sz3PwiFf+8X+Aloc
- pSF3EBCnXi4bNNx+oG6C1AoUys5Tvw1Vtm1qy0OWsP3+AuOUISE5qP0/Dt/BXyILhVLlgj/HAywqgLGUhCxJkcfkE1zx+YW9DITON62v++oNDWzT4xUlHbxO
- vjB81y8ZqBQaG2D4Dz4+/X/8JASOUyBBLQwR0MF2PnoBAZ/hlQKxyCKT0ok=
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_07:2020-07-10,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/06/2020 09:36, Vaibhav Gupta wrote:
-> The .suspend() and .resume() callbacks are not defined for this driver.
-> Still, their power managemgement stucture can be easily upgraded to
+Thank you for your comments,
 
-management structure
+On 13/07/20 10:53 am, Nicholas Piggin wrote:
+> Excerpts from Pratik Rajesh Sampat's message of July 10, 2020 3:22 pm:
+>> Changelog v1 --> v2:
+>> 1. Save-restore DAWR and DAWRX unconditionally as they are lost in
+>> shallow idle states too
+>> 2. Rename pnv_first_spr_loss_level to pnv_first_fullstate_loss_level to
+>> correct naming terminology
+>>
+>> Pratik Rajesh Sampat (3):
+>>    powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on P9 and above
+>>    powerpc/powernv/idle: save-restore DAWR0,DAWRX0 for P10
+>>    powerpc/powernv/idle: Rename pnv_first_spr_loss_level variable
+>>
+>>   arch/powerpc/platforms/powernv/idle.c | 34 +++++++++++++++++----------
+>>   1 file changed, 22 insertions(+), 12 deletions(-)
+> These look okay to me, but the CPU_FTR_ARCH_300 test for
+> pnv_power9_idle_init() is actually wrong, it should be a PVR test
+> because idle is not completely architected (not even shallow stop
+> states, unfortunately).
+>
+> It doesn't look like we support POWER10 idle correctly yet, and on older
+> kernels it wouldn't work even if we fixed newer, so ideally the PVR
+> check would be backported as a fix in the front of the series.
+>
+> Sadly, we have no OPAL idle driver yet. Hopefully we will before the
+> next processor shows up :P
+>
+> Thanks,
+> Nick
 
-> gemeric, without affecting its normal behaviour.
+So if I understand this correctly, in powernv/idle.c where we check for
+CPU_FTR_ARCH_300, we should rather be making a pvr_version_is(PVR_POWER9)
+check instead?
 
-generic
+Of course, the P10 PVR and its relevant checks will have to be added then too.
 
-> 
-> Hence, define them NULL and use struct dev_pm_ops type to bind them.
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> ---
->  drivers/media/pci/cx23885/cx23885-core.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/pci/cx23885/cx23885-core.c b/drivers/media/pci/cx23885/cx23885-core.c
-> index 7e0b0b7cc2a3..da9ee7270dfd 100644
-> --- a/drivers/media/pci/cx23885/cx23885-core.c
-> +++ b/drivers/media/pci/cx23885/cx23885-core.c
-> @@ -2230,14 +2230,18 @@ static const struct pci_device_id cx23885_pci_tbl[] = {
->  };
->  MODULE_DEVICE_TABLE(pci, cx23885_pci_tbl);
->  
-> +#define cx23885_suspend NULL
-> +#define cx23885_resume NULL
-> +
-> +static SIMPLE_DEV_PM_OPS(cx23885_pm_ops, cx23885_suspend, cx23885_resume);
-> +
->  static struct pci_driver cx23885_pci_driver = {
-> -	.name     = "cx23885",
-> -	.id_table = cx23885_pci_tbl,
-> -	.probe    = cx23885_initdev,
-> -	.remove   = cx23885_finidev,
-> +	.name      = "cx23885",
-> +	.id_table  = cx23885_pci_tbl,
-> +	.probe     = cx23885_initdev,
-> +	.remove    = cx23885_finidev,
->  	/* TODO */
-> -	.suspend  = NULL,
-> -	.resume   = NULL,
-> +	.driver.pm = &cx23885_pm_ops,
+Thanks
+Pratik
 
-I don't entirely understand this. Wouldn't it be sufficient to just
-drop the .suspend/.resume assignments here? It is now required for
-driver.pm to be non-NULL?
-
-I'm not up to speed on the changes, but normally you can leave things
-NULL if you don't support a feature (PM in this case).
-
-Regards,
-
-	Hans
-
->  };
->  
->  static int __init cx23885_init(void)
-> 
+  
 
