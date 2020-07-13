@@ -2,146 +2,123 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1328AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81080C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EE82068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6288C2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgGMDH3 (ORCPT
+        id S1728354AbgGMDFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:07:29 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35605 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgGMDH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:07:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0U2UhFSb_1594609639;
-Received: from 30.25.206.74(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2UhFSb_1594609639)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 13 Jul 2020 11:07:21 +0800
-Subject: Re: [PATCH v4 5/7] KVM: PPC: clean up redundant kvm_run parameters in
- assembly
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        chenhuacai@gmail.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-6-tianjia.zhang@linux.alibaba.com>
- <20200526055924.GD282305@thinks.paulus.ozlabs.org>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <c3540a4b-a568-3428-0427-ae2a1f30dbe2@linux.alibaba.com>
-Date:   Mon, 13 Jul 2020 11:07:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Jul 2020 23:05:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbgGMDFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:05:42 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B6D92AF74B0C189A1CBE;
+        Mon, 13 Jul 2020 11:05:39 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 11:05:34 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <b.zolnierkie@samsung.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yangyingliang@huawei.com>
+Subject: [PATCH] vgacon: fix a UAF in do_update_region()
+Date:   Mon, 13 Jul 2020 11:04:45 +0000
+Message-ID: <20200713110445.553974-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200526055924.GD282305@thinks.paulus.ozlabs.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I got a UAF report in do_update_region() when I doing fuzz test.
 
+[   51.161905] BUG: KASAN: use-after-free in do_update_region+0x579/0x600
+[   51.161918] Read of size 2 at addr ffff888000100000 by task test/295
 
-On 2020/5/26 13:59, Paul Mackerras wrote:
-> On Mon, Apr 27, 2020 at 12:35:12PM +0800, Tianjia Zhang wrote:
->> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->> structure. For historical reasons, many kvm-related function parameters
->> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
->> patch does a unified cleanup of these remaining redundant parameters.
-> 
-> Some of these changes don't look completely correct to me, see below.
-> If you're expecting these patches to go through my tree, I can fix up
-> the patch and commit it (with you as author), noting the changes I
-> made in the commit message.  Do you want me to do that?
-> 
+[   51.161957] CPU: 2 PID: 295 Comm: test Not tainted 5.7.0+ #975
+[   51.161969] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+[   51.161976] Call Trace:
+[   51.162001]  dump_stack+0xc6/0x11e
+[   51.162019]  ? do_update_region+0x579/0x600
+[   51.162047]  print_address_description.constprop.6+0x1a/0x220
+[   51.162083]  ? vprintk_func+0x66/0xed
+[   51.162100]  ? do_update_region+0x579/0x600
+[   51.162112]  ? do_update_region+0x579/0x600
+[   51.162128]  kasan_report.cold.9+0x37/0x7c
+[   51.162151]  ? do_update_region+0x579/0x600
+[   51.162173]  do_update_region+0x579/0x600
+[   51.162207]  ? con_get_trans_old+0x230/0x230
+[   51.162229]  ? retint_kernel+0x10/0x10
+[   51.162278]  csi_J+0x557/0xa00
+[   51.162307]  do_con_trol+0x49af/0x5cc0
+[   51.162330]  ? lock_downgrade+0x720/0x720
+[   51.162347]  ? reset_palette+0x1b0/0x1b0
+[   51.162369]  ? lockdep_hardirqs_on_prepare+0x379/0x540
+[   51.162393]  ? notifier_call_chain+0x11b/0x160
+[   51.162438]  do_con_write.part.24+0xb0a/0x1a30
+[   51.162501]  ? do_con_trol+0x5cc0/0x5cc0
+[   51.162522]  ? console_unlock+0x7b8/0xb00
+[   51.162555]  ? __mutex_unlock_slowpath+0xd4/0x670
+[   51.162574]  ? this_tty+0xe0/0xe0
+[   51.162589]  ? console_unlock+0x559/0xb00
+[   51.162605]  ? wait_for_completion+0x260/0x260
+[   51.162638]  con_write+0x31/0xb0
+[   51.162658]  n_tty_write+0x4fa/0xd40
+[   51.162710]  ? n_tty_read+0x1800/0x1800
+[   51.162730]  ? prepare_to_wait_exclusive+0x270/0x270
+[   51.162754]  ? __might_fault+0x175/0x1b0
+[   51.162783]  tty_write+0x42b/0x8d0
+[   51.162795]  ? n_tty_read+0x1800/0x1800
+[   51.162825]  ? tty_lookup_driver+0x450/0x450
+[   51.162848]  __vfs_write+0x7c/0x100
+[   51.162875]  vfs_write+0x1c9/0x510
+[   51.162901]  ksys_write+0xff/0x200
+[   51.162918]  ? __ia32_sys_read+0xb0/0xb0
+[   51.162940]  ? do_syscall_64+0x1a/0x520
+[   51.162957]  ? lockdep_hardirqs_on_prepare+0x379/0x540
+[   51.162984]  do_syscall_64+0xa1/0x520
+[   51.163008]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-I am very glad for you to do so, although I have submitted a new version 
-of patch, I still prefer you to fix up and commit it.
+After vgacon_set_origin() is called in set_origin(), the vc_origin is
+set to vga_vram_base, the vc_pos should between vga_vram_base and
+vga_vram_end. But we still use vc_screenbuf_size, if the vga_vram_size
+is smaller than vc_screenbuf_size, vc_pos may be out of bound, using it
+will cause a use-after-free(or out-of-bounds). Fix this by calling
+vc_resize() if vga_vram_size is smaller than vc_screenbuf_size.
 
-Thanks and best,
-Tianjia
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/video/console/vgacon.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->> diff --git a/arch/powerpc/kvm/book3s_interrupts.S b/arch/powerpc/kvm/book3s_interrupts.S
->> index f7ad99d972ce..0eff749d8027 100644
->> --- a/arch/powerpc/kvm/book3s_interrupts.S
->> +++ b/arch/powerpc/kvm/book3s_interrupts.S
->> @@ -55,8 +55,7 @@
->>    ****************************************************************************/
->>   
->>   /* Registers:
->> - *  r3: kvm_run pointer
->> - *  r4: vcpu pointer
->> + *  r3: vcpu pointer
->>    */
->>   _GLOBAL(__kvmppc_vcpu_run)
->>   
->> @@ -68,8 +67,8 @@ kvm_start_entry:
->>   	/* Save host state to the stack */
->>   	PPC_STLU r1, -SWITCH_FRAME_SIZE(r1)
->>   
->> -	/* Save r3 (kvm_run) and r4 (vcpu) */
->> -	SAVE_2GPRS(3, r1)
->> +	/* Save r3 (vcpu) */
->> +	SAVE_GPR(3, r1)
->>   
->>   	/* Save non-volatile registers (r14 - r31) */
->>   	SAVE_NVGPRS(r1)
->> @@ -82,11 +81,11 @@ kvm_start_entry:
->>   	PPC_STL	r0, _LINK(r1)
->>   
->>   	/* Load non-volatile guest state from the vcpu */
->> -	VCPU_LOAD_NVGPRS(r4)
->> +	VCPU_LOAD_NVGPRS(r3)
->>   
->>   kvm_start_lightweight:
->>   	/* Copy registers into shadow vcpu so we can access them in real mode */
->> -	mr	r3, r4
->> +	mr	r4, r3
-> 
-> This mr doesn't seem necessary.
-> 
->>   	bl	FUNC(kvmppc_copy_to_svcpu)
->>   	nop
->>   	REST_GPR(4, r1)
-> 
-> This should be loading r4 from GPR3(r1), not GPR4(r1) - which is what
-> REST_GPR(4, r1) will do.
-> 
-> Then, in the file but not in the patch context, there is this line:
-> 
-> 	PPC_LL	r3, GPR4(r1)		/* vcpu pointer */
-> 
-> where once again GPR4 needs to be GPR3.
-> 
->> @@ -191,10 +190,10 @@ after_sprg3_load:
->>   	PPC_STL	r31, VCPU_GPR(R31)(r7)
->>   
->>   	/* Pass the exit number as 3rd argument to kvmppc_handle_exit */
-> 
-> The comment should be modified to say "2nd" instead of "3rd",
-> otherwise it is confusing.
-> 
-> The rest of the patch looks OK.
-> 
-> Paul.
-> 
+diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+index b51ffb9a208d..2eabb86bb0dd 100644
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -1341,6 +1341,9 @@ static int vgacon_set_origin(struct vc_data *c)
+ 	if (vga_is_gfx ||	/* We don't play origin tricks in graphic modes */
+ 	    (console_blanked && !vga_palette_blanked))	/* Nor we write to blanked screens */
+ 		return 0;
++
++	if (c->vc_screenbuf_size > vga_vram_size)
++		vc_resize(c, screen_info.orig_video_cols, screen_info.orig_video_lines);
+ 	c->vc_origin = c->vc_visible_origin = vga_vram_base;
+ 	vga_set_mem_top(c);
+ 	vga_rolled_over = 0;
+-- 
+2.25.1
+
