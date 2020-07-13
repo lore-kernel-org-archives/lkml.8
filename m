@@ -2,361 +2,179 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB8AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092DFC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323812077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2DFF20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pdaD6yei"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="m2vHGB+L";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Jb+vg6rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgGMKF5 (ORCPT
+        id S1729683AbgGMKGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:05:57 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:2223 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbgGMKFx (ORCPT
+        Mon, 13 Jul 2020 06:06:39 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:62178 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729671AbgGMKGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:05:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594634753; x=1626170753;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=j4fbE/Ra2zunqbefrRtifT/kkezAH7ZZwuMWC07541Y=;
-  b=pdaD6yei1ZOhP5kLFrgIItTxdosJw8Wl1DriU5j9R6S1NKvqIsZFXQ1a
-   hVCEcUeDR1eqncyYFrRpw35gJhyssd1GSSh2Yex0bk2wa2TQlilcN+dfI
-   9es1bMGN+5gN5Wqu1reDKvr1/dXJYaYnP8VUTlh6I0QpMVDtG4KJOZDVt
-   34+0R1jY5f1RuW0chPcK9//41ow+Dv1Xu9b3Sxvxog3Zu7CLPY0LGB3sq
-   1s03s01E1oUFeI6qhV0L9kiUC/6LySuKbaNApfMOdcoW3nCQ3WTx8fqFX
-   M5aQKYoFsgFOoIEhNZqpouwrXjoWy446S54xIenrJQ4jBFXTgYz15xuZY
-   Q==;
-IronPort-SDR: TfWC43o5Onk8BgX+tKI0ThUZCT8mtd/M6nsD1BxQBqG2ncByKDRTqeM38/X72u+2deAm54zDYE
- zQ/hr0qDoC67p85s3W1sNF13jgcpkNp3Hg9si4rHsb1m97r1R5Q1fgDAXT20qDI+3b2UMD9OQ8
- zs50t174y6wYlRcamsutyzCgGj1dYDWXCAzbz4HLFicB4KVub9mqf4vYZ1/NmJSa0GQ+aSW6QT
- Frc+VZLZdJiUU0TiPaFeK1WvRekrqgQCqMdKD6Eyr4BOb3aptTkGD8y60LlazkXekyWfC+/+I2
- eiI=
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="18953335"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jul 2020 03:05:52 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 13 Jul 2020 03:05:50 -0700
-Received: from ness.mchp-main.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Mon, 13 Jul 2020 03:05:16 -0700
-From:   <nicolas.ferre@microchip.com>
-To:     <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
-        <netdev@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        <harini.katakam@xilinx.com>, <f.fainelli@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <antoine.tenart@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v6 1/2] net: macb: WoL support for GEM type of Ethernet controller
-Date:   Mon, 13 Jul 2020 12:05:25 +0200
-Message-ID: <1e40c4277d85b2ae23c8baca6f75ad25dbd35446.1594632220.git.nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1594632220.git.nicolas.ferre@microchip.com>
-References: <cover.1594632220.git.nicolas.ferre@microchip.com>
+        Mon, 13 Jul 2020 06:06:36 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DA359p026892;
+        Mon, 13 Jul 2020 03:06:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=CPf1zSv7IVfODNLFsJAw7lDiExMuKFA9g1MD17728bg=;
+ b=m2vHGB+L6fQrhJuRV4wkcVg3DRTaJthqFO54ze/TGNjqb9aOj9KfmU6tz/3g5JhXgBSe
+ ZT3eV4MNqX+n4TNG0X82k4It/0e5fZLt2CXFQxPrajZ40HPChy5N61skbv83u027/aHz
+ jfPIcKa+EonexkvQJyr8y0KlDWsf9GF8VoXctJ9jhqnnHDB/yNVg5pW2bWYaXi3D4egE
+ wsdis7LBp3W6mrowhHsdGVnHS1X2VxAiNNXc3/oacA+ze7l9jwgZBGG5IfkOqivHcL4m
+ sknnTiWCMhCpf4de2nbUf+AK8CxJgwlIPuECIq2Mz3Mg04NEmUj4LKqwz42ArykBXnYK mA== 
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2052.outbound.protection.outlook.com [104.47.36.52])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 3279yud6c4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 03:06:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fo/fzdlcOhG/687PAGlJrAYrlvt3D4Yco5AzEs72uLhg0Fx4aQSnSpNgqu46G0MM6QuwPorG7/vxANVyWb3AhN+PtRqQYLGoJtAbT9kyk6GB8QZ9ITf+yv4r5SAVgZQjZneJZICCT//zj+OMaEM7inDMKcFrhY8kXVjWn6hjw2Pr/KxUsw1xSvQ6mTlWsjLloaat9m9TDsseae5h0z2HsieY6ICGB30NMakROzswK2oqu8yIlv2eqyEp/AXXPRJf2u3AYIO9f46sPlt2YpUvPp9XWo5lGDulchK0wslJIUB/vCjtZNEoTzJl5EPRctq9+6iq4tj/FQH+MLTkX7dnsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CPf1zSv7IVfODNLFsJAw7lDiExMuKFA9g1MD17728bg=;
+ b=k9CzyqxQW0t6bTpAba83aOEAsJ0F7XWFYjoFUi2J4tszJmphnDF+cZIcQLgPe4VcIyLOKdVcHwjL0jgKWRD83g//EAZABsl9GaQqhpF3zSAhlV9bUmQkuC4cAOhONPvVLrGoCkII2aTrMmlTD8OsxU7ivuo67Eqegnb1yPwNe02V+HbR++EFxtnp1Vhb8yyR1ycX+7S39VKdolV0VxeyqbInE0y2bFqPSe0eJKE/wV7bsTyz0x6/EUi66h04e5SGCVIigbuNWIvOhb5jFClgRYa7X0SuEqQU4hMPfHzCo2O8gC/U4ibzgb8HsAfB9rOWm+DVQHHC6Y+HL/ApwDwEzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CPf1zSv7IVfODNLFsJAw7lDiExMuKFA9g1MD17728bg=;
+ b=Jb+vg6rxHMh4LT50jvn2V0oOqwsVJqxGzH3+7JVk4xVWRdq0N5HdLC+DozU0fqEgRixr4ePWqg7qu22eGVfoVtoj017KR4gtwN7bFUNlIijq2fE6XI/SNfmSUami7tvMFY1sAejgNiSvVzMSNcXIRTNeJlRpCQLZjr6jjCOT4ok=
+Received: from DM5PR05CA0006.namprd05.prod.outlook.com (2603:10b6:3:d4::16) by
+ SN4PR0701MB3712.namprd07.prod.outlook.com (2603:10b6:803:4a::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Mon, 13 Jul
+ 2020 10:06:08 +0000
+Received: from DM6NAM12FT046.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:3:d4:cafe::2e) by DM5PR05CA0006.outlook.office365.com
+ (2603:10b6:3:d4::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10 via Frontend
+ Transport; Mon, 13 Jul 2020 10:06:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ DM6NAM12FT046.mail.protection.outlook.com (10.13.178.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3195.9 via Frontend Transport; Mon, 13 Jul 2020 10:06:08 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 06DA63Yo013926
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 13 Jul 2020 06:06:05 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 13 Jul 2020 12:06:03 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 13 Jul 2020 12:06:03 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 06DA637x028623;
+        Mon, 13 Jul 2020 12:06:03 +0200
+Received: (from pawell@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 06DA62MW028618;
+        Mon, 13 Jul 2020 12:06:02 +0200
+From:   Pawel Laszczak <pawell@cadence.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rogerq@ti.com>, <peter.chen@nxp.com>
+CC:     <dan.carpenter@oracle.com>, <heikki.krogerus@linux.intel.com>,
+        <colin.king@canonical.com>, <jpawar@cadence.com>,
+        <ben.dooks@codethink.co.uk>, <kurahul@cadence.com>,
+        <sparmar@cadence.com>, Pawel Laszczak <pawell@cadence.com>
+Subject: [PATCH v2 0/9] usb: cdns3: Improvements for cdns3 DRD code
+Date:   Mon, 13 Jul 2020 12:05:45 +0200
+Message-ID: <20200713100554.28530-1-pawell@cadence.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(136003)(39860400002)(36092001)(46966005)(70586007)(86362001)(6666004)(47076004)(8936002)(7416002)(2616005)(1076003)(426003)(42186006)(82310400002)(54906003)(83380400001)(356005)(4326008)(110136005)(316002)(2906002)(336012)(5660300002)(107886003)(36906005)(8676002)(81166007)(70206006)(26005)(36756003)(82740400003)(186003)(478600001);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f755aabd-ac49-4004-7b57-08d827145cd7
+X-MS-TrafficTypeDiagnostic: SN4PR0701MB3712:
+X-Microsoft-Antispam-PRVS: <SN4PR0701MB3712026B9C371BD1C6462694DD600@SN4PR0701MB3712.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YXEZH2NpVZMZb2OX3zMOkaCN0jNnKDh4LHuRjeZ9bRW34J0g4rl8s1/vYusTR+QQWqSq9gVrR9XA40Yx8iCFWhzMBrK1eR/bBJ23g2MxVR8m6zU7YLp7dRBxDz61fQi+WStyfpEg4io415LAlgI3thezMdp6bAvJuxH6t+0/adTeV4hhGXQ4e05Jl1xyShlD96agZN0mpSPI4GaybuuXiv4GfYOjl4K1xrOPZ12UCqcyWqviR+mL6gUD0/ni81BQ8XcSkzRExPD5QSGLqwrlfvYi09ejxvjDd8o2BfHfk6h5dJbn7Pb5n4fh8Nbm2z/2xM1M9ABg0wql8SXqO6q+EN+7ldmxXCFK+ONZ+YUVUWoFoC5uSpFL8X9RZQLFeocWtAezxDtMtMN9aaiLHipqT8nzdFmymo4JWfrpFXKnEZs=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2020 10:06:08.2640
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f755aabd-ac49-4004-7b57-08d827145cd7
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT046.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0701MB3712
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_07:2020-07-13,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 bulkscore=0 mlxlogscore=867
+ mlxscore=0 phishscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Series introduce some improvements to drd.c, drd.h and core.c files of 
+cdns3 driver.
 
-Adapt the Wake-on-Lan feature to the Cadence GEM Ethernet controller.
-This controller has different register layout and cannot be handled by
-previous code.
-We disable completely interrupts on all the queues but the queue 0.
-Handling of WoL interrupt is done in another interrupt handler
-positioned depending on the controller version used, just between
-suspend() and resume() calls.
-It allows to lower pressure on the generic interrupt hot path by
-removing the need to handle 2 tests for each IRQ: the first figuring out
-the controller revision, the second for actually knowing if the WoL bit
-is set.
+Except for the first (1/9) patch that removes not needed function,
+the rest patches make improvements suggested by Dan Carpenter
+during reviewing CDNSP driver.
+CDNSP is the next Cadence USBSSP  driver which will be upstreamed.
+The DRD part is similar for both CDNS3 and CDNSP and Greg suggested
+to merge the similar part of DRD code. As first step I want to merge 
+some improvements.
 
-Queue management in suspend()/resume() functions inspired from RFC patch
-by Harini Katakam <harinik@xilinx.com>, thanks!
+Changes for v2:
+ - Change patch titles as sugested by Peter Chen.
+ - Remove typos in patch 5 and patch 7.
+ - Add reviewed-by Peter Chen tag [Patch 1, patch 8 and Patch 9].
 
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Changes in v6:
-- Values of registers usrio and scrt2 properly read in any case (WoL or not)
-  during macb_suspend() to be restored during macb_resume()
+Pawel Laszczak (9):
+  usb: cdns3: core: removed cdns3_get_current_role_driver function
+  usb: cdns3: drd: removed not needed variables initialization
+  usb: cnds3: drd: deleted !=
+  usb: cdns3: drd: return IRQ_NONE explicitly.
+  usb: cdns3: drd: changed return type from int to bool
+  usb: cdns3: Added CDNS3_ID_PERIPHERAL and CDNS3_ID_HOST
+  usb: cdns3: core: removed 'goto not_otg'
+  usb: cdns3: core: removed overwriting some error code
+  usb: cdns3: drd: simplify *switch_gadet and *switch_host
 
-Changes in v3:
-- In macb_resume(), move to a more in-depth re-configuration of the controller
-  even on the non-WoL path in order to accept deeper sleep states.
-- this ends up having a phylink_stop()/phylink_start() for each of the
-  WoL/!WoL paths
-- In macb_resume(), keep setting the MPE bit in NCR register which is needed in
-  case of deep power saving mode used
-- Tests done in "standby" as well as our deeper Power Management mode:
-  Backup Self-Refresh (BSR)
+ drivers/usb/cdns3/core.c   |  39 +++------
+ drivers/usb/cdns3/drd.c    | 165 ++++++++++++++++++++-----------------
+ drivers/usb/cdns3/drd.h    |  13 ++-
+ drivers/usb/cdns3/gadget.c |   4 +-
+ drivers/usb/cdns3/host.c   |   4 +-
+ 5 files changed, 114 insertions(+), 111 deletions(-)
 
-Changes in v2:
-- Addition of pm_wakeup_event() in WoL IRQ
-- In macb_resume(), removal of setting the MPE bit in NCR register which is not
-  needed in any case: IP is reset on the usual path and kept alive if WoL is used
-- In macb_resume(), complete reset of the controller is kept only for non-WoL
-  case. For the WoL case, we only replace the usual IRQ handler.
-
- drivers/net/ethernet/cadence/macb.h      |   3 +
- drivers/net/ethernet/cadence/macb_main.c | 151 +++++++++++++++++++----
- 2 files changed, 127 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index ab827fb4b6b9..4f1b41569260 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -90,6 +90,7 @@
- #define GEM_SA3T		0x009C /* Specific3 Top */
- #define GEM_SA4B		0x00A0 /* Specific4 Bottom */
- #define GEM_SA4T		0x00A4 /* Specific4 Top */
-+#define GEM_WOL			0x00b8 /* Wake on LAN */
- #define GEM_EFTSH		0x00e8 /* PTP Event Frame Transmitted Seconds Register 47:32 */
- #define GEM_EFRSH		0x00ec /* PTP Event Frame Received Seconds Register 47:32 */
- #define GEM_PEFTSH		0x00f0 /* PTP Peer Event Frame Transmitted Seconds Register 47:32 */
-@@ -396,6 +397,8 @@
- #define MACB_PDRSFT_SIZE	1
- #define MACB_SRI_OFFSET		26 /* TSU Seconds Register Increment */
- #define MACB_SRI_SIZE		1
-+#define GEM_WOL_OFFSET		28 /* Enable wake-on-lan interrupt */
-+#define GEM_WOL_SIZE		1
- 
- /* Timer increment fields */
- #define MACB_TI_CNS_OFFSET	0
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index e5e37aa81b02..122c54e40f91 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1517,6 +1517,35 @@ static void macb_tx_restart(struct macb_queue *queue)
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
- }
- 
-+static irqreturn_t gem_wol_interrupt(int irq, void *dev_id)
-+{
-+	struct macb_queue *queue = dev_id;
-+	struct macb *bp = queue->bp;
-+	u32 status;
-+
-+	status = queue_readl(queue, ISR);
-+
-+	if (unlikely(!status))
-+		return IRQ_NONE;
-+
-+	spin_lock(&bp->lock);
-+
-+	if (status & GEM_BIT(WOL)) {
-+		queue_writel(queue, IDR, GEM_BIT(WOL));
-+		gem_writel(bp, WOL, 0);
-+		netdev_vdbg(bp->dev, "GEM WoL: queue = %u, isr = 0x%08lx\n",
-+			    (unsigned int)(queue - bp->queues),
-+			    (unsigned long)status);
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, GEM_BIT(WOL));
-+		pm_wakeup_event(&bp->pdev->dev, 0);
-+	}
-+
-+	spin_unlock(&bp->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t macb_interrupt(int irq, void *dev_id)
- {
- 	struct macb_queue *queue = dev_id;
-@@ -3316,6 +3345,8 @@ static const struct ethtool_ops macb_ethtool_ops = {
- static const struct ethtool_ops gem_ethtool_ops = {
- 	.get_regs_len		= macb_get_regs_len,
- 	.get_regs		= macb_get_regs,
-+	.get_wol		= macb_get_wol,
-+	.set_wol		= macb_set_wol,
- 	.get_link		= ethtool_op_get_link,
- 	.get_ts_info		= macb_get_ts_info,
- 	.get_ethtool_stats	= gem_get_ethtool_stats,
-@@ -4567,33 +4598,67 @@ static int __maybe_unused macb_suspend(struct device *dev)
- 	struct macb_queue *queue = bp->queues;
- 	unsigned long flags;
- 	unsigned int q;
-+	int err;
- 
- 	if (!netif_running(netdev))
- 		return 0;
- 
- 	if (bp->wol & MACB_WOL_ENABLED) {
--		macb_writel(bp, IER, MACB_BIT(WOL));
--		macb_writel(bp, WOL, MACB_BIT(MAG));
--		enable_irq_wake(bp->queues[0].irq);
--		netif_device_detach(netdev);
--	} else {
--		netif_device_detach(netdev);
-+		spin_lock_irqsave(&bp->lock, flags);
-+		/* Flush all status bits */
-+		macb_writel(bp, TSR, -1);
-+		macb_writel(bp, RSR, -1);
- 		for (q = 0, queue = bp->queues; q < bp->num_queues;
--		     ++q, ++queue)
--			napi_disable(&queue->napi);
-+		     ++q, ++queue) {
-+			/* Disable all interrupts */
-+			queue_writel(queue, IDR, -1);
-+			queue_readl(queue, ISR);
-+			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+				queue_writel(queue, ISR, -1);
-+		}
-+		/* Change interrupt handler and
-+		 * Enable WoL IRQ on queue 0
-+		 */
-+		if (macb_is_gem(bp)) {
-+			devm_free_irq(dev, bp->queues[0].irq, bp->queues);
-+			err = devm_request_irq(dev, bp->queues[0].irq, gem_wol_interrupt,
-+					       IRQF_SHARED, netdev->name, bp->queues);
-+			if (err) {
-+				dev_err(dev,
-+					"Unable to request IRQ %d (error %d)\n",
-+					bp->queues[0].irq, err);
-+				return err;
-+			}
-+			queue_writel(bp->queues, IER, GEM_BIT(WOL));
-+			gem_writel(bp, WOL, MACB_BIT(MAG));
-+		} else {
-+			queue_writel(bp->queues, IER, MACB_BIT(WOL));
-+			macb_writel(bp, WOL, MACB_BIT(MAG));
-+		}
-+		spin_unlock_irqrestore(&bp->lock, flags);
-+
-+		enable_irq_wake(bp->queues[0].irq);
-+	}
-+
-+	netif_device_detach(netdev);
-+	for (q = 0, queue = bp->queues; q < bp->num_queues;
-+	     ++q, ++queue)
-+		napi_disable(&queue->napi);
-+
-+	if (!(bp->wol & MACB_WOL_ENABLED)) {
- 		rtnl_lock();
- 		phylink_stop(bp->phylink);
- 		rtnl_unlock();
- 		spin_lock_irqsave(&bp->lock, flags);
- 		macb_reset_hw(bp);
- 		spin_unlock_irqrestore(&bp->lock, flags);
-+	}
- 
--		if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
--			bp->pm_data.usrio = macb_or_gem_readl(bp, USRIO);
-+	if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
-+		bp->pm_data.usrio = macb_or_gem_readl(bp, USRIO);
- 
--		if (netdev->hw_features & NETIF_F_NTUPLE)
--			bp->pm_data.scrt2 = gem_readl_n(bp, ETHT, SCRT2_ETHT);
--	}
-+	if (netdev->hw_features & NETIF_F_NTUPLE)
-+		bp->pm_data.scrt2 = gem_readl_n(bp, ETHT, SCRT2_ETHT);
- 
- 	if (bp->ptp_info)
- 		bp->ptp_info->ptp_remove(netdev);
-@@ -4608,7 +4673,9 @@ static int __maybe_unused macb_resume(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct macb *bp = netdev_priv(netdev);
- 	struct macb_queue *queue = bp->queues;
-+	unsigned long flags;
- 	unsigned int q;
-+	int err;
- 
- 	if (!netif_running(netdev))
- 		return 0;
-@@ -4617,29 +4684,59 @@ static int __maybe_unused macb_resume(struct device *dev)
- 		pm_runtime_force_resume(dev);
- 
- 	if (bp->wol & MACB_WOL_ENABLED) {
--		macb_writel(bp, IDR, MACB_BIT(WOL));
--		macb_writel(bp, WOL, 0);
--		disable_irq_wake(bp->queues[0].irq);
--	} else {
--		macb_writel(bp, NCR, MACB_BIT(MPE));
--
--		if (netdev->hw_features & NETIF_F_NTUPLE)
--			gem_writel_n(bp, ETHT, SCRT2_ETHT, bp->pm_data.scrt2);
-+		spin_lock_irqsave(&bp->lock, flags);
-+		/* Disable WoL */
-+		if (macb_is_gem(bp)) {
-+			queue_writel(bp->queues, IDR, GEM_BIT(WOL));
-+			gem_writel(bp, WOL, 0);
-+		} else {
-+			queue_writel(bp->queues, IDR, MACB_BIT(WOL));
-+			macb_writel(bp, WOL, 0);
-+		}
-+		/* Clear ISR on queue 0 */
-+		queue_readl(bp->queues, ISR);
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(bp->queues, ISR, -1);
-+		/* Replace interrupt handler on queue 0 */
-+		devm_free_irq(dev, bp->queues[0].irq, bp->queues);
-+		err = devm_request_irq(dev, bp->queues[0].irq, macb_interrupt,
-+				       IRQF_SHARED, netdev->name, bp->queues);
-+		if (err) {
-+			dev_err(dev,
-+				"Unable to request IRQ %d (error %d)\n",
-+				bp->queues[0].irq, err);
-+			return err;
-+		}
-+		spin_unlock_irqrestore(&bp->lock, flags);
- 
--		if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
--			macb_or_gem_writel(bp, USRIO, bp->pm_data.usrio);
-+		disable_irq_wake(bp->queues[0].irq);
- 
--		for (q = 0, queue = bp->queues; q < bp->num_queues;
--		     ++q, ++queue)
--			napi_enable(&queue->napi);
-+		/* Now make sure we disable phy before moving
-+		 * to common restore path
-+		 */
- 		rtnl_lock();
--		phylink_start(bp->phylink);
-+		phylink_stop(bp->phylink);
- 		rtnl_unlock();
- 	}
- 
-+	for (q = 0, queue = bp->queues; q < bp->num_queues;
-+	     ++q, ++queue)
-+		napi_enable(&queue->napi);
-+
-+	if (netdev->hw_features & NETIF_F_NTUPLE)
-+		gem_writel_n(bp, ETHT, SCRT2_ETHT, bp->pm_data.scrt2);
-+
-+	if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
-+		macb_or_gem_writel(bp, USRIO, bp->pm_data.usrio);
-+
-+	macb_writel(bp, NCR, MACB_BIT(MPE));
- 	macb_init_hw(bp);
- 	macb_set_rx_mode(netdev);
- 	macb_restore_features(bp);
-+	rtnl_lock();
-+	phylink_start(bp->phylink);
-+	rtnl_unlock();
-+
- 	netif_device_attach(netdev);
- 	if (bp->ptp_info)
- 		bp->ptp_info->ptp_init(netdev);
 -- 
-2.27.0
+2.17.1
 
