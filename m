@@ -7,68 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D7DC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B618C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4105320720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6121220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OY9mL1RC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udRqTFtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgGMHsC (ORCPT
+        id S1729285AbgGMHrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50428 "EHLO
+        Mon, 13 Jul 2020 03:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbgGMHrL (ORCPT
+        with ESMTP id S1729119AbgGMHq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:47:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F2CC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so12172529wml.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:11 -0700 (PDT)
+        Mon, 13 Jul 2020 03:46:59 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985F3C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z13so14666099wrw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KFOnaZnxegDwLsJeWEMPqv4RGP3pzEUK9a4hgTT6mu8=;
-        b=OY9mL1RCUfiNwlK7Y8LLoK+AzG927nw81f3Z4PqcWbGl3vSJOucO49vTdu8eGhYXAl
-         w11NKIhj/+05DjP3pU/AWZq9hcBlj2iLJ0iSTbqGhdUktM+Vj1xLk5a3PvFeb1nwhDCl
-         fsrQXk2S0T4I5s9VtOZsPAP926q3LKfnEbI1jnv3qx8AVtlmWgClMnsXa+/JfBUrMgco
-         pkjIqv4DSe/jwVUWdO/svjzb7A4Np+nDuFcikxV3+5oFt+aQ7YIuPvKX6L9WBu3aSwhD
-         uYjuLCzI6U3kEKHCIkcMiSYiCw9rJ/c7tswAPwBOLDa7XRCAjFF3qbOzeTZtoENoe30S
-         g+MA==
+        bh=8R5JqiLjYcza4fbV6goyYqcdxR7v8Q2JkVSQFyfGqhI=;
+        b=udRqTFtVMJHrG8FeYyUiq433O2fFQWC945bPEuJp10f4RrlpzSBC3G1uT3JrWYA1z+
+         KkuTTQHCBdHe1LYCAy/Iu3gl9yKuqzR0//GRW+h8lH+KZWAZK605JeIx5pB2kAKHOSXI
+         V335Wh3pK7UbDMZzCDpcb1FmsQkI8K+4bAYGhygGqjF9tBjGZSaj7UJQVmYRRKniBfXr
+         SCBIkyICY6k35WAoLl9qqCFZJfpliOIQY1ByScnoV6kBjLvUTTfL9aJVq/QlI5KXWYzP
+         VMQdVskZjbYEcfJ7cJY+OgjrxcgZjB6XG39HbAY8rYrFvKZnFv+LkC0PtP30tOSv65uW
+         AZqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KFOnaZnxegDwLsJeWEMPqv4RGP3pzEUK9a4hgTT6mu8=;
-        b=Wtnc9a8RNTd4D9FNJ9dBFzxnI54nF9nTk/Xv2lsKD2NaFDe4RiIPzZNxUd2AtT/Jn2
-         o9MGEM7wVhLdpv+9HOPijZOJDwj2JAI9lst9UKqyQwR2R68eXDf2/cE7g52ljogborhu
-         MJaZirlyIupfkuYHLb/BfW+dqizn4owm5VWhgMTrNgWX3YiA4TiGqaoYf+QsQZuxBUep
-         wFmfVZHzn6SkiEIZo6BwKNYj0cebpZZxOeVWy/XWfblKqUedAPNAvflMHyoDA97eNEoP
-         k/VMde5ohcH5FCNi9u4GlneQje3nZSjGTLWxCFqdvh17xFEV92x88SGUD4++hEn2e+0s
-         Y4BQ==
-X-Gm-Message-State: AOAM530d0Jd1QmljB2OwTW/+vyOQgHKkJfrJs67IShxgT20IZWISYv1T
-        GPW2YBRYshpxEekgNKlNcOYyWg==
-X-Google-Smtp-Source: ABdhPJwRuM1r9uL6bIMWY8lKVERcxzLzcL+9/u+h5G0jkwKYSf7ROchiqv2H6ETBhcueyyrOt5j41w==
-X-Received: by 2002:a7b:c013:: with SMTP id c19mr17249605wmb.158.1594626430342;
-        Mon, 13 Jul 2020 00:47:10 -0700 (PDT)
+        bh=8R5JqiLjYcza4fbV6goyYqcdxR7v8Q2JkVSQFyfGqhI=;
+        b=OWXcYp1XNXr/6Lc+ougQxypTH09kXMl+/8GgMgpgc/If0Cg69iPFth5aerCSSldJBp
+         3VKq7zZ6uj5vAVhlZZ4fSQAG1XV58HDMaalV9JEBPsPxNFeJyZ057CU5HQIErPpETuxr
+         gH88eAGlIPPpC7QTsEpUPgZu0xQcCe4R+0HHg08AWpYr4kFHE2kWn5VIl+eEMqCHZzF4
+         3p5ZsiceN+Zgsbui6wNX1eFaMvMePFiupvw5Nm8M6BfnxnUFu+hzQHdE36jlPI8uKlnB
+         DpA36mT7mUJ52qIAIwtzeGO7Ju30cvuApMq7TtIpOu17ZFh+pC0o+qjFrUWu6dOIg0U9
+         hxRQ==
+X-Gm-Message-State: AOAM531xFE+9i8baubswvtyb0DNg6haEZQnCuosKnLGfX1Ln1cz9bgZw
+        6HuPr9hk7+c9QXaJj9vCd3Ghhw==
+X-Google-Smtp-Source: ABdhPJzSaAiAW3pCxf6bHROZk6HR9qPvG3gRkewkP6qZUrfb7C/flDBz3JdziBfir+fa/ZfAKDVxNQ==
+X-Received: by 2002:a5d:664e:: with SMTP id f14mr78870952wrw.6.1594626417338;
+        Mon, 13 Jul 2020 00:46:57 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.47.09
+        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.46.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 00:47:09 -0700 (PDT)
+        Mon, 13 Jul 2020 00:46:56 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Daniel M. Eischen" <deischen@iworks.InterWorks.org>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH v2 21/29] scsi: aic7xxx: aic7xxx_osm: Fix 'amount_xferred' set but not used issue
-Date:   Mon, 13 Jul 2020 08:46:37 +0100
-Message-Id: <20200713074645.126138-22-lee.jones@linaro.org>
+        QLogic-Storage-Upstream@cavium.com
+Subject: [PATCH v2 09/29] scsi: qedf: qedf_main: Remove set but not checked variable 'tmp'
+Date:   Mon, 13 Jul 2020 08:46:25 +0100
+Message-Id: <20200713074645.126138-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713074645.126138-1-lee.jones@linaro.org>
 References: <20200713074645.126138-1-lee.jones@linaro.org>
@@ -80,44 +78,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'amount_xferred' is used, but only in certain circumstances.  Place
-the same stipulations on the defining/allocating of 'amount_xferred'
-as is placed when using it.
-
-We've been careful not to change any of the ordering semantics here.
+Looks like the return value of readw() has never been checked.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aic7xxx/aic7xxx_osm.c: In function ‘ahc_done’:
- drivers/scsi/aic7xxx/aic7xxx_osm.c:1725:12: warning: variable ‘amount_xferred’ set but not used [-Wunused-but-set-variable]
- 1725 | uint32_t amount_xferred;
- | ^~~~~~~~~~~~~~
+ drivers/scsi/qedf/qedf_main.c: In function ‘__qedf_probe’:
+ drivers/scsi/qedf/qedf_main.c:3203:6: warning: variable ‘tmp’ set but not used [-Wunused-but-set-variable]
 
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: "Daniel M. Eischen" <deischen@iworks.InterWorks.org>
-Cc: Doug Ledford <dledford@redhat.com>
+Cc: QLogic-Storage-Upstream@cavium.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_osm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/qedf/qedf_main.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-index ed437c16de881..e7ccb8b80fc19 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-@@ -1711,10 +1711,12 @@ ahc_done(struct ahc_softc *ahc, struct scb *scb)
- 	 */
- 	cmd->sense_buffer[0] = 0;
- 	if (ahc_get_transaction_status(scb) == CAM_REQ_INPROG) {
-+#ifdef AHC_REPORT_UNDERFLOWS
- 		uint32_t amount_xferred;
+diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+index a77a74fad6a7e..47fc14f5ed9d7 100644
+--- a/drivers/scsi/qedf/qedf_main.c
++++ b/drivers/scsi/qedf/qedf_main.c
+@@ -3199,7 +3199,6 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
+ 	void *task_start, *task_end;
+ 	struct qed_slowpath_params slowpath_params;
+ 	struct qed_probe_params qed_params;
+-	u16 tmp;
  
- 		amount_xferred =
- 		    ahc_get_transfer_length(scb) - ahc_get_residual(scb);
-+#endif
- 		if ((scb->flags & SCB_TRANSMISSION_ERROR) != 0) {
- #ifdef AHC_DEBUG
- 			if ((ahc_debug & AHC_SHOW_MISC) != 0) {
+ 	/*
+ 	 * When doing error recovery we didn't reap the lport so don't try
+@@ -3393,9 +3392,9 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
+ 	    "Writing %d to primary and secondary BDQ doorbell registers.\n",
+ 	    qedf->bdq_prod_idx);
+ 	writew(qedf->bdq_prod_idx, qedf->bdq_primary_prod);
+-	tmp = readw(qedf->bdq_primary_prod);
++	readw(qedf->bdq_primary_prod);
+ 	writew(qedf->bdq_prod_idx, qedf->bdq_secondary_prod);
+-	tmp = readw(qedf->bdq_secondary_prod);
++	readw(qedf->bdq_secondary_prod);
+ 
+ 	qed_ops->common->set_power_state(qedf->cdev, PCI_D0);
+ 
 -- 
 2.25.1
 
