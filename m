@@ -2,163 +2,179 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C66FC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0162145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChjWzhUT"
+	by mail.kernel.org (Postfix) with ESMTP id 92E1A2137B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGMXoJ (ORCPT
+        id S1726955AbgGMXpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgGMXn7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:43:59 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDEEC061794;
-        Mon, 13 Jul 2020 16:43:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f12so19447265eja.9;
-        Mon, 13 Jul 2020 16:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=7FE6Gq0R+rbH37mVjTE37qvA0VNf6iTNJ2JVteVF6QY=;
-        b=ChjWzhUTFd3ZWontlFJUbIF1bCDJZWVrCnVutln+mX2nl95ya2shljj1f1hqfyJOmP
-         BNNsbGFDrEGeYn/hZNLG3tydF2lKzNXrNvf+er/gNd6Bs+7D85rTOEkPtAwCK03tG3ly
-         rxfZJiLbUKrOAgYMsnmHfVjtu9XlLbX178S77sZDICn+EnR4IytJ9BVKUQ2SbhG28n7s
-         LlO84BOizTGlKehwTr8dKmICV7sApijJCBhP7XvCzZm/UVQDZQPukhrEal8BYxWTGloL
-         uHtUrdrOe44pdqe5UonTt2lSKPFyr8WbA33WehsX47NZ0SZsKWpncj+ML5B7oRwtdU9e
-         6cOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7FE6Gq0R+rbH37mVjTE37qvA0VNf6iTNJ2JVteVF6QY=;
-        b=JCkk4s/VUZ4ijGjiHRtVS52h8zAc1iPu2v8E9lecG6hMp783nMJkVy98wPUlfKqxUG
-         ty9hu0ShQGNZU3GtcKTVNxWondRGrkCgC4MJWbBjFlg/ezZp0My/govpXor0bCN5jwRM
-         ZlFmvkZvNogfCNkc5cDvH9J14hRItmw6JohXLkGLRbaApMkonT5mGB1k1ikXWun/dXqB
-         4v/Lks9c5xK58TsQC6voH9JfSEZO0t18H6zb6L5N6s8PZwtjsILddW8MGtIb9adSUXma
-         GYkrM5fTzLvmsL5MEAVwEIdXRMepDoXAxNiSA68wD0kXhxDZW8030tqYtMFrqcSem1ET
-         Zzwg==
-X-Gm-Message-State: AOAM530b10UhypvOFytlDEKFZZmrHPjySv0NfDRZUKDRDL9AmKnUoQHp
-        +v3tVPJOm1GBVpJFgf++b15x1mbO
-X-Google-Smtp-Source: ABdhPJyCydA993JsuDAmn2drmLzjH1PmbTOTUxyKBVW5K902aURzPlnlRHO0JYKt1ahzZndqQg8Bvg==
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr2127738ejw.170.1594683837571;
-        Mon, 13 Jul 2020 16:43:57 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id a13sm12964712edk.58.2020.07.13.16.43.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:43:57 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] io_uring: batch put_task_struct()
-Date:   Tue, 14 Jul 2020 02:41:56 +0300
-Message-Id: <15a2db7fa57e5e78ed2677d21bb70dd3d32f8deb.1594683622.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1594683622.git.asml.silence@gmail.com>
-References: <cover.1594683622.git.asml.silence@gmail.com>
+        Mon, 13 Jul 2020 19:45:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24613 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGMXpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 19:45:38 -0400
+IronPort-SDR: I6EppEDsVgJH+g2g+OknSX4UDP4IO5Ua4/3gkVAMQ6vbSmaNaMx6vApZ+9xxlfXcBRNIfLzehO
+ HjH/GS0MxEkA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233607085"
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="233607085"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 16:45:37 -0700
+IronPort-SDR: Kn5c0eppcv/+I+CBXbdhsKMm9ww93BO3a1BtOr84OLqvCUZqDFUcbto6KorA635qVJGYP4mDx1
+ msDKcKqUo4Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="307650546"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Jul 2020 16:45:37 -0700
+Date:   Mon, 13 Jul 2020 16:45:28 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     hpa@zytor.com
+Cc:     Brendan Shanks <bshanks@codeweavers.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, ebiederm@xmission.com,
+        andi@notmuch.email, Babu.Moger@amd.com
+Subject: Re: [PATCH v5] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200713234528.GA21221@ranerica-svr.sc.intel.com>
+References: <20200710224525.21966-1-bshanks@codeweavers.com>
+ <85F5E233-6C81-419F-8FE2-D9B93169E4DA@zytor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85F5E233-6C81-419F-8FE2-D9B93169E4DA@zytor.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each put_task_struct() is an atomic_dec. Do that in batches.
+On Sat, Jul 11, 2020 at 02:49:54PM -0700, hpa@zytor.com wrote:
+> On July 10, 2020 3:45:25 PM PDT, Brendan Shanks <bshanks@codeweavers.com> wrote:
+> >Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> >processes.
+> >
+> >Wine users have found a small number of Windows apps using SLDT that
+> >were crashing when run on UMIP-enabled systems.
+> >
+> >Reported-by: Andreas Rammhold <andi@notmuch.email>
+> >Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> >Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+> >---
+> >
+> >v5: Capitalize instruction names in comments.
+> >
+> > arch/x86/kernel/umip.c | 40 +++++++++++++++++++++++++++-------------
+> > 1 file changed, 27 insertions(+), 13 deletions(-)
+> >
+> >diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> >index 8d5cbe1bbb3b..2c304fd0bb1a 100644
+> >--- a/arch/x86/kernel/umip.c
+> >+++ b/arch/x86/kernel/umip.c
+> >@@ -45,11 +45,12 @@
+> >* value that, lies close to the top of the kernel memory. The limit for
+> >the GDT
+> >  * and the IDT are set to zero.
+> >  *
+> >- * Given that SLDT and STR are not commonly used in programs that run
+> >on WineHQ
+> >- * or DOSEMU2, they are not emulated.
+> >- *
+> >- * The instruction smsw is emulated to return the value that the
+> >register CR0
+> >+ * The instruction SMSW is emulated to return the value that the
+> >register CR0
+> >  * has at boot time as set in the head_32.
+> >+ * SLDT and STR are emulated to return the values that the kernel
+> >programmatically
+> >+ * assigns:
+> >+ * - SLDT returns (GDT_ENTRY_LDT * 8) if an LDT has been set, 0 if
+> >not.
+> >+ * - STR returns (GDT_ENTRY_TSS * 8).
+> >  *
+> >  * Emulation is provided for both 32-bit and 64-bit processes.
+> >  *
+> >@@ -244,16 +245,34 @@ static int emulate_umip_insn(struct insn *insn,
+> >int umip_inst,
+> > 		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
+> > 		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
+> > 
+> >-	} else if (umip_inst == UMIP_INST_SMSW) {
+> >-		unsigned long dummy_value = CR0_STATE;
+> >+	} else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT
+> >||
+> >+		   umip_inst == UMIP_INST_STR) {
+> >+		unsigned long dummy_value;
+> >+
+> >+		if (umip_inst == UMIP_INST_SMSW) {
+> >+			dummy_value = CR0_STATE;
+> >+		} else if (umip_inst == UMIP_INST_STR) {
+> >+			dummy_value = GDT_ENTRY_TSS * 8;
+> >+		} else if (umip_inst == UMIP_INST_SLDT) {
+> >+#ifdef CONFIG_MODIFY_LDT_SYSCALL
+> >+			down_read(&current->mm->context.ldt_usr_sem);
+> >+			if (current->mm->context.ldt)
+> >+				dummy_value = GDT_ENTRY_LDT * 8;
+> >+			else
+> >+				dummy_value = 0;
+> >+			up_read(&current->mm->context.ldt_usr_sem);
+> >+#else
+> >+			dummy_value = 0;
+> >+#endif
+> >+		}
+> > 
+> > 		/*
+> >-		 * Even though the CR0 register has 4 bytes, the number
+> >+		 * For these 3 instructions, the number
+> > 		 * of bytes to be copied in the result buffer is determined
+> > 		 * by whether the operand is a register or a memory location.
+> > 		 * If operand is a register, return as many bytes as the operand
+> > 		 * size. If operand is memory, return only the two least
+> >-		 * siginificant bytes of CR0.
+> >+		 * siginificant bytes.
+> > 		 */
+> > 		if (X86_MODRM_MOD(insn->modrm.value) == 3)
+> > 			*data_size = insn->opnd_bytes;
+> >@@ -261,7 +280,6 @@ static int emulate_umip_insn(struct insn *insn, int
+> >umip_inst,
+> > 			*data_size = 2;
+> > 
+> > 		memcpy(data, &dummy_value, *data_size);
+> >-	/* STR and SLDT  are not emulated */
+> > 	} else {
+> > 		return -EINVAL;
+> > 	}
+> >@@ -383,10 +401,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
+> >	umip_pr_warn(regs, "%s instruction cannot be used by applications.\n",
+> > 			umip_insns[umip_inst]);
+> > 
+> >-	/* Do not emulate (spoof) SLDT or STR. */
+> >-	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
+> >-		return false;
+> >-
+> >	umip_pr_warn(regs, "For now, expensive software emulation returns the
+> >result.\n");
+> > 
+> > 	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
+> 
+> It's there any reason for SLDT to not *always* return a fixed value? "An LDT has been assigned" is formally a kernel internal property, separate from the property of whenever there are user space enteies in the LDT.
 
-Tested io_uring-bench(iopoll,QD=128) with a custom nullblk, where
-added ->iopoll() is not optimised at all:
+But isn't it true that sldt returns 0 if the application has not set an
+LDT and non-zero otherwise?
 
-before: 529504 IOPS
-after: 	538415 IOPS
-diff:	~1.8%
+In native_set_ldt() I see that the the LDT register is set to 0 if the
+table has no entries and to GDT_ENTRY_LDT*8 otherwise.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+Please correct me if I understand this wrong.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 6f767781351f..3216cc00061b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1761,8 +1761,18 @@ static void io_free_req(struct io_kiocb *req)
- struct req_batch {
- 	void *reqs[IO_IOPOLL_BATCH];
- 	int to_free;
-+
-+	struct task_struct	*task;
-+	int			task_refs;
- };
- 
-+static void io_init_req_batch(struct req_batch *rb)
-+{
-+	rb->to_free = 0;
-+	rb->task_refs = 0;
-+	rb->task = NULL;
-+}
-+
- static void __io_req_free_batch_flush(struct io_ring_ctx *ctx,
- 				      struct req_batch *rb)
- {
-@@ -1776,6 +1786,10 @@ static void io_req_free_batch_finish(struct io_ring_ctx *ctx,
- {
- 	if (rb->to_free)
- 		__io_req_free_batch_flush(ctx, rb);
-+	if (rb->task) {
-+		put_task_struct_many(rb->task, rb->task_refs);
-+		rb->task = NULL;
-+	}
- }
- 
- static void io_req_free_batch(struct req_batch *rb, struct io_kiocb *req)
-@@ -1787,6 +1801,16 @@ static void io_req_free_batch(struct req_batch *rb, struct io_kiocb *req)
- 	if (req->flags & REQ_F_LINK_HEAD)
- 		io_queue_next(req);
- 
-+	if (req->flags & REQ_F_TASK_PINNED) {
-+		if (req->task != rb->task && rb->task) {
-+			put_task_struct_many(rb->task, rb->task_refs);
-+			rb->task = req->task;
-+			rb->task_refs = 0;
-+		}
-+		rb->task_refs++;
-+		req->flags &= ~REQ_F_TASK_PINNED;
-+	}
-+
- 	io_dismantle_req(req);
- 	rb->reqs[rb->to_free++] = req;
- 	if (unlikely(rb->to_free == ARRAY_SIZE(rb->reqs)))
-@@ -1809,7 +1833,7 @@ static void io_submit_flush_completions(struct io_comp_state *cs)
- 	spin_unlock_irq(&ctx->completion_lock);
- 	io_cqring_ev_posted(ctx);
- 
--	rb.to_free = 0;
-+	io_init_req_batch(&rb);
- 	for (i = 0; i < nr; ++i) {
- 		req = cs->reqs[i];
- 		if (refcount_dec_and_test(&req->refs))
-@@ -1973,7 +1997,7 @@ static void io_iopoll_complete(struct io_ring_ctx *ctx, unsigned int *nr_events,
- 	/* order with ->result store in io_complete_rw_iopoll() */
- 	smp_rmb();
- 
--	rb.to_free = 0;
-+	io_init_req_batch(&rb);
- 	while (!list_empty(done)) {
- 		int cflags = 0;
- 
--- 
-2.24.0
-
+Thanks and BR,
+Ricardo
