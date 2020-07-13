@@ -2,130 +2,99 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8271205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZseOkDY3"
+	by mail.kernel.org (Postfix) with ESMTP id 34708205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgGMOaS (ORCPT
+        id S1730052AbgGMObF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:30:18 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12190 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:30:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c6fed0000>; Mon, 13 Jul 2020 07:30:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 07:30:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:30:17 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 14:30:09 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v4 3/4] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>,
-        <mirq-linux@rere.qmqm.pl>
-References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
- <1593186236-12760-4-git-send-email-sumitg@nvidia.com>
- <20200629061639.7cwxfi64drkof6yu@vireshk-i7>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <0d04d2c8-8f87-ecc7-9bd6-633d84b60e8b@nvidia.com>
-Date:   Mon, 13 Jul 2020 19:59:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 13 Jul 2020 10:31:05 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:46440 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729659AbgGMObE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:31:04 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 42AE6BC06E;
+        Mon, 13 Jul 2020 14:31:01 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     isdn@linux-pingi.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, arnd@arndb.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] isdn/capi: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 16:30:54 +0200
+Message-Id: <20200713143054.34978-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200629061639.7cwxfi64drkof6yu@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594650605; bh=cczukomO7UcCHwxyADg2/yNUOTAA7Ksj6A5ikRcdVSA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZseOkDY3VI8BBpYTwAQpZqe6ktLrz0X4KF9iKWlMzXm81N5tZVCx7P9cwtXlKw/V/
-         cdls1zrdFWpmKpSv/v0ICmHIx5ZjCiVT2ViSPXqCvbuxRBZZYZJOJqL/XQ9lIBDYBt
-         Jlj+THatHHPaGH1xG8du4Xi13uygwwJWLIMAFtFyk6znhBTGcu4+TzmSDFDx/yHnPG
-         QSlAlx2JA0WOKpgdJY9RSv5UF8Ftc9mHWFobovQ05rfoLMRVQsEOGUFpekhZSh3WBi
-         /cUvhBKOlKDxYhxF3BxI0qnLLZ1TCDz0QoSyRAPEBcvwXFwWL0XnR4/4QK/iUFkXoj
-         7GOq0EISwKABw==
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-> 
-> On 26-06-20, 21:13, Sumit Gupta wrote:
->> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
->> +{
->> +     struct tegra194_cpufreq_data *data;
->> +     struct tegra_bpmp *bpmp;
->> +     int err, i;
->> +
->> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +     if (!data)
->> +             return -ENOMEM;
->> +
->> +     data->num_clusters = MAX_CLUSTERS;
->> +     data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
->> +                                 sizeof(*data->tables), GFP_KERNEL);
->> +     if (!data->tables)
->> +             return -ENOMEM;
->> +
->> +     platform_set_drvdata(pdev, data);
->> +
->> +     bpmp = tegra_bpmp_get(&pdev->dev);
->> +     if (IS_ERR(bpmp))
->> +             return PTR_ERR(bpmp);
->> +
->> +     read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
->> +     if (!read_counters_wq) {
->> +             dev_err(&pdev->dev, "fail to create_workqueue\n");
->> +             err = -EINVAL;
->> +             goto put_bpmp;
-> 
-> This will call destroy_workqueue() eventually and it will crash your
-> kernel.
-> 
-> Apart from this, this stuff looks okay. Don't resend the patch just
-> yet (and if required, send only this patch using --in-reply-to flag
-> for git send email). Lets wait for an Ack from Rob for the first two
-> patches.
-> 
-Sorry for the delayed response as i was on PTO.
-Thank you for the feedback.
+ drivers/isdn/capi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Have posted a v5 based on v4 patch set.
+diff --git a/drivers/isdn/capi/Kconfig b/drivers/isdn/capi/Kconfig
+index cc408ad9aafb..fdb43a632215 100644
+--- a/drivers/isdn/capi/Kconfig
++++ b/drivers/isdn/capi/Kconfig
+@@ -5,7 +5,7 @@ config ISDN_CAPI
+ 	  This provides CAPI (the Common ISDN Application Programming
+ 	  Interface) Version 2.0, a standard making it easy for programs to
+ 	  access ISDN hardware in a device independent way. (For details see
+-	  <http://www.capi.org/>.)  CAPI supports making and accepting voice
++	  <https://www.capi.org/>.)  CAPI supports making and accepting voice
+ 	  and data connections, controlling call options and protocols,
+ 	  as well as ISDN supplementary services like call forwarding or
+ 	  three-party conferences (if supported by the specific hardware
+-- 
+2.27.0
 
->> +     }
->> +
-> 
-> --
-> viresh
-> 
