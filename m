@@ -2,101 +2,183 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE50C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F10120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFu1qFbD"
+	by mail.kernel.org (Postfix) with ESMTP id 922DC2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgGMRQY (ORCPT
+        id S1729969AbgGMRSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgGMRQY (ORCPT
+        Mon, 13 Jul 2020 13:18:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3818 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729700AbgGMRSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:16:24 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA8DC061755;
-        Mon, 13 Jul 2020 10:16:24 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a21so10075835otq.8;
-        Mon, 13 Jul 2020 10:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zyBbRluQ5lYnUX7KFT5ZGZlRL0DFuI68QfOqM4RCzdA=;
-        b=gFu1qFbDmtup0YSpFIfNaHM0a48eh0Ul1xSKNTnWGxWxCcBWiJ9n6R78PekE3f8A7p
-         JtyBKwiVNIPBHsm1iLpcnuAI0d7JLvtXpcO2cPmP2Y/1z2LNW8bn0o3s7tgh3ZFU6b2s
-         rYAWZryk+LgjPlE7o2+DXW7bCV12FqJAwCESb5liZr9Gxj0/Tl4/+tGlQjUz/iqYICFF
-         R+RprQ6Xn5hWYnV3XgizYrw5LtuKlYa2H3jLOaZr2I4xgAgwckrkDkpSTcemOFp085ki
-         yPBScHeFWTT5WT96kmmb5qlPZuhyRlVOk8bHWSEAQe+f2EQyzg9XgzSPG+7m3XzozbWW
-         OJvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zyBbRluQ5lYnUX7KFT5ZGZlRL0DFuI68QfOqM4RCzdA=;
-        b=c+D7xGPGxS3L5Lknb+0Xz6Kfz9L1JK9hhxvgMxkg6vHrsdamLMwiEUwNzwg3Zv2P8h
-         XgK3tLlgDASQMgp55YHX4kS7CDjZ4/KFLRV8LQieaycZzq9OLwzjzABjcC5DlQWChrp6
-         llrXAENAzeqxw+4hyzemobUq5JHgtNj+yzt+PKviXFGZdUcqvR25TEk8fr/vRle8R/ol
-         ge7Uiq78VQ9ug9k/J5rw/boQNKYpOexKnqF10ilXcCBwhvnFUKKGB81WeVe3/5VPcAe/
-         W7OqYtZSt+a4a7p7Wae4Rq47WJiAlm/U+D1Z6yqc00a09FAd/EyvNZxBX7v3h0oV99fj
-         pjHA==
-X-Gm-Message-State: AOAM5328Cx84uwL0oUNjoPBMTCMeFMBk0RtF0qy4tBU3pRMpqV25oohP
-        ONa9yOt+A4WNWPDk+hKGcx0yCn2c
-X-Google-Smtp-Source: ABdhPJzJONrB+kPTWhVu9FhPTJ3Uhjr1/qB3HON7hdP7A8eAITLGJ3+s1k4xTNEcxUfwaaXa3lhIsg==
-X-Received: by 2002:a9d:7a4c:: with SMTP id z12mr595958otm.126.1594660583279;
-        Mon, 13 Jul 2020 10:16:23 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id a16sm2824303oid.14.2020.07.13.10.16.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 10:16:22 -0700 (PDT)
-Subject: Re: [RFC PATCH 02/35] ssb: Change PCIBIOS_SUCCESSFUL to 0
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        helgaas@kernel.org, Michael Buesch <m@bues.ch>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-3-refactormyself@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <70e57af0-6a8c-a893-67c9-0181af16ae2b@lwfinger.net>
-Date:   Mon, 13 Jul 2020 12:16:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 13:18:45 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DH3p61029660;
+        Mon, 13 Jul 2020 13:18:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1gq14j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 13:18:29 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DH4ZpH032181;
+        Mon, 13 Jul 2020 13:18:29 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1gq13y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 13:18:28 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DHHOmh026808;
+        Mon, 13 Jul 2020 17:18:27 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3274pgtcuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 17:18:26 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DHIN0G53149768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 17:18:24 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1AB14C04E;
+        Mon, 13 Jul 2020 17:18:23 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 826B24C04A;
+        Mon, 13 Jul 2020 17:18:20 +0000 (GMT)
+Received: from hbathini.in.ibm.com (unknown [9.102.3.11])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 17:18:20 +0000 (GMT)
+Subject: [PATCH v3 00/12] ppc64: enable kdump support for kexec_file_load
+ syscall
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Date:   Mon, 13 Jul 2020 22:48:19 +0530
+Message-ID: <159466066875.24582.5506988608335189343.stgit@hbathini.in.ibm.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20200713122247.10985-3-refactormyself@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_15:2020-07-13,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
+ suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 7:22 AM, Saheed O. Bolarinwa wrote:
-> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
-> Their scope should be limited within arch/x86.
-> 
-> Change all PCIBIOS_SUCCESSFUL to 0
-> 
-> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption. There is scope to
+expand purgatory to verify sha256 digest along with other improvements
+in purgatory code. Will deal with those changes in a separate patch
+series later.
 
-Could you please tell me what difference this makes? It looks like source churn 
-rather than a substantive change. The symbol is defined in pci.h and is used in 
-many architures. Certainly, PCIBIOS_SUCCESSFUL indicates success even more 
-clearly than 0 does.
+The first patch adds a weak arch_kexec_locate_mem_hole() function to
+override locate memory hole logic suiting arch needs. There are some
+special regions in ppc64 which should be avoided while loading buffer
+& there are multiple callers to kexec_add_buffer making it complicated
+to maintain range sanity and using generic lookup at the same time.
 
-Why is your name inside quotes in your s-o-b?
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
 
-Larry
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_locate_mem_hole() function to
+locate memory hole for kdump segments by accounting for the special
+memory regions, referred to as excluded memory ranges, and sets
+kbuf->mem when a suitable memory region is found.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The seventh patch adds relocation support for the purgatory. Patch 8
+helps setup the stack for the purgatory. The next patch setups up
+backup region as a segment while loading kdump kernel and teaches
+purgatory to copy it from source to destination.
+
+Patch 10 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The next patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support for kdump as
+all the necessary changes are added.
+
+The last patch fixes a lookup issue for `kexec -l -s` case when
+memory is reserved for crashkernel.
+
+---
+
+Hari Bathini (12):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: add support to relocate purgatory
+      ppc64/kexec_file: setup the stack for purgatory
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
+      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+
+
+ arch/powerpc/include/asm/crashdump-ppc64.h |   15 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   35 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   18 
+ arch/powerpc/include/asm/purgatory.h       |   11 
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   35 +
+ arch/powerpc/kexec/file_load.c             |   78 +
+ arch/powerpc/kexec/file_load_64.c          | 1508 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  397 +++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |   28 -
+ arch/powerpc/purgatory/purgatory_64.c      |   36 +
+ arch/powerpc/purgatory/trampoline.S        |  117 --
+ arch/powerpc/purgatory/trampoline_64.S     |  170 +++
+ include/linux/kexec.h                      |   29 -
+ kernel/kexec_file.c                        |   16 
+ 19 files changed, 2407 insertions(+), 210 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/include/asm/purgatory.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ create mode 100644 arch/powerpc/purgatory/purgatory_64.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+
