@@ -2,69 +2,137 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D53C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294B120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3984A20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594658540;
+	bh=DTwgxtmu5cArvIbVuTDaWQ3jATFmx/Wxz91NZAUKkV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cTs/AWVjp9OJXAf7gYADliaI7t2d6Ypn8u4S9VfL7RoqWCOqGYqEqnPwugukxiqhd
+	 5cYuMW0Jvn3lb02G4S9PzaErz96NsCaMJ8rFRut4IM24PcXyEO0SDfiVKgTBEKKJ9A
+	 mOadCemOO5P/5ww9b5u+1/3PsQ05Vafv2mC7/BVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbgGMQmK (ORCPT
+        id S1730653AbgGMQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:42:10 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42089 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbgGMQmE (ORCPT
+        Mon, 13 Jul 2020 12:42:19 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43471 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729751AbgGMQmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:42:04 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 581A5CECCA;
-        Mon, 13 Jul 2020 18:52:00 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Linux-kernel-mentees] [PATCH 2/2] net/bluetooth: Prevent
- out-of-bounds read in hci_inquiry_result_with_rssi_evt()
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <82c4e719b7615f5333444bdc2b5cc243a693eeb1.1594414498.git.yepeilin.cs@gmail.com>
-Date:   Mon, 13 Jul 2020 18:42:02 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <1B0C88A5-05B1-49FB-9B8C-8D833BA51AD9@holtmann.org>
-References: <3f69f09d6eb0bc1430cae2894c635252a1cb09e1.1594414498.git.yepeilin.cs@gmail.com>
- <82c4e719b7615f5333444bdc2b5cc243a693eeb1.1594414498.git.yepeilin.cs@gmail.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 13 Jul 2020 12:42:17 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so14145762iom.10;
+        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=95u4XQbiBNEbmUiVqX+fo8bOSxhI7i+gaxCn3lXTzqc=;
+        b=Ki0uiu2WF5elAO9m6oh5urkF4YdhJXVhuAs6vnZIEkE/bjpVpw/MvddAHdv0GfZbho
+         9OUc6KJUuV5hji8Z66oYdcrgWzaWx1x4g3txsCfqU0tVr1fRc5gRRv3Dy+y3qQ9InpNB
+         uX4tD6CLOgvFFHeBM1Q5Y10ZZV5y7H1XJEmM96mWie9+hTYq57ExRoEr/huMXMLAMqf9
+         JyYrzTD//2sxBrZXI5aSz/qDDFG8zrajvHkGTWSgEX29OGN6dQrtHuFUbLrosPNwZDlw
+         hIk4ybwk99nSh9mafPqHPS7Yk5yIV6ZzuTM8kzs0yrpn7zYX6FsT050Fr7/b3l5dfaTj
+         1dFw==
+X-Gm-Message-State: AOAM533pn5he9VOvmcE/t30BLR2HFmk8vzHgNTV/zCwHWv63MhU4cAEg
+        KzN3BCdp2urAmHTUSsOW3A==
+X-Google-Smtp-Source: ABdhPJw6zyKQhU2fGmPHQI3+yP7QiHYYcgQrgUA4qyagqHgLVfTS4YB+9LdplG/eDrMeToQieLohgw==
+X-Received: by 2002:a02:6c07:: with SMTP id w7mr1034168jab.33.1594658536188;
+        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b13sm7889364iof.21.2020.07.13.09.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 09:42:15 -0700 (PDT)
+Received: (nullmailer pid 359058 invoked by uid 1000);
+        Mon, 13 Jul 2020 16:42:14 -0000
+Date:   Mon, 13 Jul 2020 10:42:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
+        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194
+ ccplex compatible and bpmp property
+Message-ID: <20200713164214.GA341271@bogus>
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+ <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peilin,
+On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
+> To do frequency scaling on all CPUs within T194 CPU Complex, we need
+> to query BPMP for data on valid operating points. Document a compatible
+> string under 'cpus' node to represent the CPU Complex for binding drivers
+> like cpufreq which don't have their node or CPU Complex node to bind to.
+> Also, document a property to point to the BPMP device that can be queried
+> for all CPUs.
 
-> Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
+The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus' 
+node. AIUI, the latter is what you want. You should do your own schema 
+file here.
+
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 > ---
-> net/bluetooth/hci_event.c | 7 +++++++
-> 1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index a018147..9b328e3 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -162,6 +162,7 @@ properties:
+>        - nvidia,tegra132-denver
+>        - nvidia,tegra186-denver
+>        - nvidia,tegra194-carmel
+> +      - nvidia,tegra194-ccplex
 
-patch has been applied to bluetooth-next tree.
+Tegra194 has 2 different CPUs?
 
-Regards
-
-Marcel
-
+>        - qcom,krait
+>        - qcom,kryo
+>        - qcom,kryo260
+> @@ -255,6 +256,15 @@ properties:
+>  
+>        where voltage is in V, frequency is in MHz.
+>  
+> +  nvidia,bpmp:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: |
+> +      Specifies the bpmp node that needs to be queried to get
+> +      operating point data for all CPUs.
+> +
+> +      Optional for systems that have a "compatible"
+> +      property value of "nvidia,tegra194-ccplex".
+> +
+>    power-domains:
+>      $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>      description:
+> @@ -340,6 +350,7 @@ required:
+>  
+>  dependencies:
+>    rockchip,pmu: [enable-method]
+> +  nvidia,bpmp: [compatible]
+>  
+>  examples:
+>    - |
+> -- 
+> 2.7.4
+> 
