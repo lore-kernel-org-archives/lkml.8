@@ -2,126 +2,94 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F34C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89670C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FDF206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6044720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kz1L2isO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f+s0XeUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgGMOG6 (ORCPT
+        id S1730085AbgGMOMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:06:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10119 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOG6 (ORCPT
+        Mon, 13 Jul 2020 10:12:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33314 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMOMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:06:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c6a750000>; Mon, 13 Jul 2020 07:06:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 07:06:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:06:57 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 14:06:56 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 13 Jul 2020 14:06:57 +0000
-Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0c6a7c0001>; Mon, 13 Jul 2020 07:06:56 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
-        <jonathanh@nvidia.com>, <talho@nvidia.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
-Subject: [TEGRA194_CPUFREQ PATCH v5 0/4] Add cpufreq driver for Tegra194
-Date:   Mon, 13 Jul 2020 19:36:45 +0530
-Message-ID: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Mon, 13 Jul 2020 10:12:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DECJdl098089;
+        Mon, 13 Jul 2020 14:12:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WyYsli8fqJKfYyX1azr1UjWckt1Wk+/8MvW65fU7r7g=;
+ b=f+s0XeUdUgOROnrFZx0wvSX/DtX0Kds3Xhe8Y8RLQudTyx1+a3JCnbacI/6Qjw98vf1q
+ e1+2IYleEmEhvrZMi5jbvTeOsDj7ZKNVRzE0eQM/nyQj0r6iB6wIlnqNVgvxVjfR3WkP
+ qe5fyweGu3rVirj4+unHdrKs2wr1X6Jl/XeRdb7kjM7q0Zza4pKgG8x39zvqVM4Ltmi2
+ Ng34zT/vX/fVQMWLqMVoBUpR1sfGdyw74vigwXSX3Vj1qXu+QoaB111FK6i/AkVOeRXU
+ naSiTl8TKs5DCvIzGBil6f8+6LOUqF/ub32MlFjVvipkZwkFSv9Q+CI0Sp6z6B4pvbGj MQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3274uqyacb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 14:12:43 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DE3YqJ146361;
+        Mon, 13 Jul 2020 14:12:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 327q6qbgmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 14:12:43 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06DECglu012869;
+        Mon, 13 Jul 2020 14:12:42 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jul 2020 07:12:41 -0700
+Date:   Mon, 13 Jul 2020 17:12:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Suraj Upadhyay <usuraj35@gmail.com>
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] staging: qlge: qlge_main: Simplify while statements.
+Message-ID: <20200713141235.GT2549@kadam>
+References: <cover.1594642213.git.usuraj35@gmail.com>
+ <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594649205; bh=U4gKmB4y0qNEJQMMMEmw5DHftEyFtcpFURIRDyOumOk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=Kz1L2isODkhL7vhii4ky6KnxDsBSmnVexTLc0pN1iEyCi5kOFc0Y7ZRJZKLWsEu9W
-         l2Laqyjlo97zDxK4gDNTU0eiwPNTsAGe2xyXuhUk+KyXFYNGuXlmRSq7m6FRrAQOAN
-         f2w6oTG4/tCB8+q8KBXlj9BcwJobPjPTrtxudKGExSHhJnBk9ysojvHmFkt2B1TyFU
-         TOEfI8RPCYpQvTjl6tjQZVbCQ3GfnigVHzP5t504hDhBciaX8RtTEgWIDjm86pasKF
-         V18pGIDdRpFkHWnDBkJ9y/3d4W7X6bfFd+jCZsm3rxZ8MYxkmPIOE/fkCPn9caOCFl
-         OcO7aqbFrehDQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=949 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=970 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Mon, Jul 13, 2020 at 05:50:14PM +0530, Suraj Upadhyay wrote:
+> Simplify while loops into more readable and simple for loops.
+> 
 
-The patch series adds cpufreq driver for Tegra194 SOC.
-Incorporated the feedback on previous version of patchset.
-Please consider this patch series for merging in 5.9.
+I don't think either is more clear that the other.  Walter Harms hates
+count down loops and he's not entirely wrong...
 
-Hi Rob,
-Can you please review/ack DT patches (1-2).
-
-v4[4] -> v5
-- Don't call destroy_workqueue() if alloc_workqueue() fails[Viresh]
-- Move CONFIG_ARM_TEGRA194_CPUFREQ enabling to soc/tegra/Kconfig[Viresh]
-- Add dependency of 'nvidia,bpmp' on 'compatible' in yaml file[Michal]
-- Fix typo in description causing dt_binding_check bot failure[Rob]
-
-v3[3] -> v4
-- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
-- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
-- Remove flush_workqueue from free_resources[Viresh]
-
-v2[2] -> v3
-- Set same policy for all cpus in a cluster[Viresh].
-- Add compatible string for CPU Complex under cpus node[Thierry].
-- Add reference to bpmp node under cpus node[Thierry].
-- Bind cpufreq driver to CPU Complex compatible string[Thierry].
-- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
-
-v1[1] -> v2:
-- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
-- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
-- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
-- Rename opp_table to freq_table [Viresh].
-
-Sumit Gupta (4):
-  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
-  arm64: tegra: Add t194 ccplex compatible and bpmp property
-  cpufreq: Add Tegra194 cpufreq driver
-  soc/tegra: cpufreq: select cpufreq for Tegra194
-
- Documentation/devicetree/bindings/arm/cpus.yaml |  11 +
- arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
- drivers/cpufreq/Kconfig.arm                     |   6 +
- drivers/cpufreq/Makefile                        |   1 +
- drivers/cpufreq/tegra194-cpufreq.c              | 397 ++++++++++++++++++++++++
- drivers/soc/tegra/Kconfig                       |   1 +
- 6 files changed, 418 insertions(+)
- create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
-
-[1] https://marc.info/?t=157539452300001&r=1&w=2
-[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
-[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
-[4] https://marc.info/?l=linux-tegra&m=159318640622917&w=2
--- 
-2.7.4
+regards,
+dan carpenter
 
