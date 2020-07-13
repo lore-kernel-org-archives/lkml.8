@@ -2,114 +2,127 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2749C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C6CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6F422068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491DB206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="2BqzUBw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgGMJyr (ORCPT
+        id S1729418AbgGMJzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:54:47 -0400
-Received: from mga14.intel.com ([192.55.52.115]:55716 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgGMJyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:54:47 -0400
-IronPort-SDR: FQtNr3/iWGHaZVWsMygCAbJfGYs9r9idZuEsAQcTLcR3G7DNni2TqZJmStVAa+mFLpdfRQzDLP
- VxxjNj9jMF9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="147701281"
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="147701281"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 02:54:46 -0700
-IronPort-SDR: HNOCqn0wxEYs3QwZ2tL2Fj+aEnrK+2DGU0ucdJ4fIB95RYsMmoq1VpbSh1kkAnOg0xlJQewLbs
- CUQePnkXnLbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="281347156"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 02:54:43 -0700
-Date:   Mon, 13 Jul 2020 17:54:43 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Rong Chen <rong.a.chen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>
-Subject: Re: [LKP] Re: [bpf] af7ec13833: will-it-scale.per_process_ops -2.5%
- regression
-Message-ID: <20200713095443.GD85993@shbuild999.sh.intel.com>
-References: <20200628085032.GT5535@shao2-debian>
- <cb4cab43-8f13-dd2a-5c58-855d93c6e790@fb.com>
- <1d98d1f0-fe84-6df7-f5bd-f4cb2cdb7f45@intel.com>
+        Mon, 13 Jul 2020 05:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728950AbgGMJzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:55:19 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61AB3C08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:55:19 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id z17so12781017edr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EX/IMErDoxcFcjxLjU7HkV8aJIJA8/hNtsxtvwLEDVQ=;
+        b=2BqzUBw7/Z8AjkdfPds8NRm7bDSUM3XsIrf08G4cqiKfWpoCwH1NTL+R5QErw9RMJD
+         ruOOmIvhK2azCGi9uTui4vnRgEUtp0bpkPnHMDU11Vkn3wOmHcqW2EV9SaqkOxHV5Fca
+         NUWASbM2f6hrjIsVsCk2LOEX1AFlHFS0IQAtONNEn4HJRA0HgBsb+AyCyOH7FVVpoy29
+         /h+oPi34xmqCcwXn6mGQunDQDpNDNsV+FVWlBZ8WBwCJ5Bfk0ZwD7tLlXopNogGdJscE
+         x5hhD9Q7+FTkS8/x09olpK0PddGcpPQU8Pxzn8gjOKjZB2ssoHAQq8jHqyOjTj2+8lFz
+         eGmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EX/IMErDoxcFcjxLjU7HkV8aJIJA8/hNtsxtvwLEDVQ=;
+        b=Oc386Zv8LmaVgR0MxrxpsUxheUnBk6fne40K4NaQQuUnSQeecuCLLWxKJcv3PUsrEK
+         Xu7C+IZY5d8RKeM6A8im9sHGbu9/jOuc7fMyyvdeFAZ5JBpyW5pu+JyiRLyVErcwi1k1
+         9+veJIR+tMwg6kc2v6v6S9KJNJ1Q0ITF3hLVkoNWElZSxa2tVkeGi1FHiTBgV0EJzbJc
+         ODlG9bdjXptGxj3JdU5CnNS++MTDhMt15ljaCqYwtJ0McYH8552pfuVZm2757kNbvowa
+         5kWxV2eEQT0I+qfES5m/k7uf9jStNYB+rsEf2jFh6ilLfK1QOiqFAg7d9TQGSF4zfjjE
+         R/Jw==
+X-Gm-Message-State: AOAM531KbzG6RhVdQfJnS73PfrLV0s/ogBNZGWuKkiYXIRl5OPSA1n3N
+        kEuRYnncS4yQ/rdRVLXbzPRY/g==
+X-Google-Smtp-Source: ABdhPJxc6tyvTQYd53XE6resgy8+ALS+JG8waXk5fYpksiyCZf1PTru3ENaDbBHsQP/quKbsa2MCMQ==
+X-Received: by 2002:a05:6402:1494:: with SMTP id e20mr77492854edv.2.1594634117908;
+        Mon, 13 Jul 2020 02:55:17 -0700 (PDT)
+Received: from localhost.localdomain (dh207-98-45.xnet.hr. [88.207.98.45])
+        by smtp.googlemail.com with ESMTPSA id w24sm10957046edt.28.2020.07.13.02.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 02:55:17 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH] arm64: dts: ipq6018: Add NAND nodes
+Date:   Mon, 13 Jul 2020 11:55:08 +0200
+Message-Id: <20200713095508.512919-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d98d1f0-fe84-6df7-f5bd-f4cb2cdb7f45@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 01:54:39PM +0800, Rong Chen wrote:
-> > This commit should not cause regression.
-> >
-> > Probably the variation of performance is caused by test environment 
-> > which you may want to investigate further to reduce false alarming.
-> > Thanks!
-> 
-> Hi Yonghong,
-> 
-> It's a function align issue, the commit effects the align of functions 
-> which causes a little regression,
-> we force to set -falign-functions=32 in KBUILD_CFLAGS and the regression 
-> is gone:
-> 
-> diff --git a/Makefile b/Makefile
-> index 70def4907036c..9746afa4edc21 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -476,7 +476,7 @@ LINUXINCLUDE牋? := \
->  牋牋牋牋牋牋牋? $(USERINCLUDE)
-> 
->  燢BUILD_AFLAGS牋 := -D__ASSEMBLY__ -fno-PIE
-> -KBUILD_CFLAGS牋 := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
-> +KBUILD_CFLAGS牋 := -Wall -Wundef -falign-functions=32 
-> -Werror=strict-prototypes -Wno-trigraphs \
->  牋牋牋牋牋牋牋牋牋 -fno-strict-aliasing -fno-common -fshort-wchar 
-> -fno-PIE \
->  牋牋牋牋牋牋牋牋牋 -Werror=implicit-function-declaration 
-> -Werror=implicit-int \
->  牋牋牋牋牋牋牋牋牋 -Wno-format-security \
+IPQ6018 uses the same NAND and controller as IPQ8074 which
+is supported by the Qualcomm NANDC driver.
+So lets add the NAND node as well as node for the BAM DMA
+controller that is supported by the BAM DMA driver.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 1aa8d8579463..bd4a1317c4c6 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -274,6 +274,33 @@ i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
+ 			status = "disabled";
+ 		};
  
-For these strange performance change cases caused by a seemingly
-unrelated commit, we have used this function alignment patch to
-explain some of them to be caused by re-arrange of text code
-alignment [1][2]
-
-So one bold thought is can we merge this option into mainline under
-a kernel config option in 'kernel hacking' category, with which both
-developers and 0day can filter out some cases to be related with text
-alignment change more easily?
-
-[1] [LKP][mm] fd4d9c7d0c: stress-ng.switch.ops_per_sec -30.5% regression
-    https://lore.kernel.org/lkml/20200330011254.GA14393@feng-iot/ 
-[2] [mm/hugetlb] c77c0a8ac4: will-it-scale.per_process_ops 15.9% improvement
-    https://lore.kernel.org/lkml/20200114085637.GA29297@shao2-debian/
-    (this patch is not used in the discussion, but we later used
-    this patch to confirm it's a text alignment case)
-
-Thanks,
-Feng
++		qpic_bam: dma@7984000{
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x7984000 0x1a000>;
++			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_QPIC_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++			status = "disabled";
++		};
++
++		nand: qpic-nand@79b0000 {
++			compatible = "qcom,ipq8074-nand";
++			reg = <0x79b0000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&gcc GCC_QPIC_CLK>,
++					 <&gcc GCC_QPIC_AHB_CLK>;
++			clock-names = "core", "aon";
++
++			dmas = <&qpic_bam 0>,
++			       <&qpic_bam 1>,
++			       <&qpic_bam 2>;
++			dma-names = "tx", "rx", "cmd";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
+-- 
+2.26.2
 
