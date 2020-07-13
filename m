@@ -2,191 +2,115 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBACC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E46B2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6Atwcv3"
+	by mail.kernel.org (Postfix) with ESMTP id 3A209206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgGMQdD (ORCPT
+        id S1730594AbgGMQdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:33:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50614 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730577AbgGMQdA (ORCPT
+        Mon, 13 Jul 2020 12:33:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730433AbgGMQdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:33:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594657978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tP6l1C0alH26x13TIIslzPNEfR9MrU1nOyotTY1c1j0=;
-        b=D6Atwcv3P37Akg2uNKQ9t1mCJG5JWe47GguejyJOYUahRnxQOaJG0DPhljmzxVK3xwMqDQ
-        hznLbrwwhaJj+NZSlkl34IO0junj1RV4+f+SGesJQclSeomPa9G066+MDEWJwl3OHlDqnx
-        4eNIkkC8zHYkI3UJU+QabTkdCxMVmCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-MC_DnXy_Nt2kzlCaveItmw-1; Mon, 13 Jul 2020 12:32:51 -0400
-X-MC-Unique: MC_DnXy_Nt2kzlCaveItmw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B68611902EA2;
-        Mon, 13 Jul 2020 16:32:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA436724C3;
-        Mon, 13 Jul 2020 16:32:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/32] fscache: Keep track of size of a file last set
- independently on the server
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:32:42 +0100
-Message-ID: <159465796283.1376674.15372489386955555864.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
-References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Mon, 13 Jul 2020 12:33:06 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF30AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:33:05 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 7D15ABC070;
+        Mon, 13 Jul 2020 16:33:03 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ssantosh@kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] memory: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 18:32:55 +0200
+Message-Id: <20200713163255.35830-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keep track of the size of a file that we're caching as last set
-independently on the server by another client.  As long as this does not
-change, we can make the assumption that anything over that boundary, if not
-represented in the local cache, will not be represented on the server
-either and can be just cleared rather than being read, thereby saving a
-trip to the server.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-This only works if we make space in the cache by zapping whole files and
-not just punching bits out of them as if we write to the server but don't
-keep a copy in the cache, the assumption mentioned above no longer holds
-true.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-We also need to update this size when invalidation occurs.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
- fs/afs/inode.c          |    2 +-
- fs/fscache/cookie.c     |    8 +++++++-
- include/linux/fscache.h |    8 +++++---
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 49d897437998..b0772e64a844 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -569,7 +569,7 @@ static void afs_zap_data(struct afs_vnode *vnode)
- 	_enter("{%llx:%llu}", vnode->fid.vid, vnode->fid.vnode);
- 
- #ifdef CONFIG_AFS_FSCACHE
--	fscache_invalidate(vnode->cache);
-+	fscache_invalidate(vnode->cache, i_size_read(&vnode->vfs_inode));
- #endif
- 
- 	/* nuke all the non-dirty pages that aren't locked, mapped or being
-diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
-index a1eba3be9ce8..5c53027d3f53 100644
---- a/fs/fscache/cookie.c
-+++ b/fs/fscache/cookie.c
-@@ -159,6 +159,7 @@ struct fscache_cookie *fscache_alloc_cookie(
- 	cookie->key_len = index_key_len;
- 	cookie->aux_len = aux_data_len;
- 	cookie->object_size = object_size;
-+	cookie->zero_point = object_size;
- 	strlcpy(cookie->type_name, type_name, sizeof(cookie->type_name));
- 
- 	if (fscache_set_key(cookie, index_key, index_key_len) < 0)
-@@ -473,7 +474,7 @@ void fscache_set_cookie_stage(struct fscache_cookie *cookie,
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/memory/ti-aemif.c        | 2 +-
+ drivers/memory/ti-emif-sram-pm.S | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/memory/ti-aemif.c b/drivers/memory/ti-aemif.c
+index db526dbf71ee..b41ca225f25c 100644
+--- a/drivers/memory/ti-aemif.c
++++ b/drivers/memory/ti-aemif.c
+@@ -2,7 +2,7 @@
  /*
-  * Invalidate an object.  Callable with spinlocks held.
-  */
--void __fscache_invalidate(struct fscache_cookie *cookie)
-+void __fscache_invalidate(struct fscache_cookie *cookie, loff_t new_size)
- {
- 	_enter("{%s}", cookie->type_name);
- 
-@@ -486,6 +487,11 @@ void __fscache_invalidate(struct fscache_cookie *cookie)
- 	 */
- 	ASSERTCMP(cookie->type, ==, FSCACHE_COOKIE_TYPE_DATAFILE);
- 
-+	spin_lock(&cookie->lock);
-+	cookie->object_size = new_size;
-+	cookie->zero_point = new_size;
-+	spin_unlock(&cookie->lock);
-+
- 	if (!hlist_empty(&cookie->backing_objects) &&
- 	    test_and_set_bit(FSCACHE_COOKIE_INVALIDATING, &cookie->flags))
- 		fscache_dispatch(cookie, NULL, 0, fscache_invalidate_object);
-diff --git a/include/linux/fscache.h b/include/linux/fscache.h
-index 56fdd0e74a88..bfb28cebfcfd 100644
---- a/include/linux/fscache.h
-+++ b/include/linux/fscache.h
-@@ -102,6 +102,7 @@ struct fscache_cookie {
- 	struct list_head		proc_link;	/* Link in proc list */
- 	char				type_name[8];	/* Cookie type name */
- 	loff_t				object_size;	/* Size of the netfs object */
-+	loff_t				zero_point;	/* Size after which no data on server */
- 
- 	unsigned long			flags;
- #define FSCACHE_COOKIE_INVALIDATING	4	/* T if cookie is being invalidated */
-@@ -216,8 +217,8 @@ extern void __fscache_use_cookie(struct fscache_cookie *, bool);
- extern void __fscache_unuse_cookie(struct fscache_cookie *, const void *, const loff_t *);
- extern void __fscache_relinquish_cookie(struct fscache_cookie *, bool);
- extern void __fscache_update_cookie(struct fscache_cookie *, const void *, const loff_t *);
--extern void __fscache_invalidate(struct fscache_cookie *);
- extern void __fscache_shape_request(struct fscache_cookie *, struct fscache_request_shape *);
-+extern void __fscache_invalidate(struct fscache_cookie *, loff_t);
- extern void __fscache_init_io_request(struct fscache_io_request *,
- 				      struct fscache_cookie *);
- extern void __fscache_free_io_request(struct fscache_io_request *);
-@@ -448,6 +449,7 @@ void fscache_unpin_cookie(struct fscache_cookie *cookie)
- /**
-  * fscache_invalidate - Notify cache that an object needs invalidation
-  * @cookie: The cookie representing the cache object
-+ * @size: The revised size of the object.
+  * TI AEMIF driver
   *
-  * Notify the cache that an object is needs to be invalidated and that it
-  * should abort any retrievals or stores it is doing on the cache.  The object
-@@ -459,10 +461,10 @@ void fscache_unpin_cookie(struct fscache_cookie *cookie)
-  * description.
-  */
- static inline
--void fscache_invalidate(struct fscache_cookie *cookie)
-+void fscache_invalidate(struct fscache_cookie *cookie, loff_t size)
- {
- 	if (fscache_cookie_valid(cookie))
--		__fscache_invalidate(cookie);
-+		__fscache_invalidate(cookie, size);
- }
- 
- /**
-
+- * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. http://www.ti.com/
++ * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. https://www.ti.com/
+  *
+  * Authors:
+  * Murali Karicheri <m-karicheri2@ti.com>
+diff --git a/drivers/memory/ti-emif-sram-pm.S b/drivers/memory/ti-emif-sram-pm.S
+index d1c83bd5b98e..7310fa97e624 100644
+--- a/drivers/memory/ti-emif-sram-pm.S
++++ b/drivers/memory/ti-emif-sram-pm.S
+@@ -1,7 +1,7 @@
+ /*
+  * Low level PM code for TI EMIF
+  *
+- * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016-2017 Texas Instruments Incorporated - https://www.ti.com/
+  *	Dave Gerlach
+  *
+  * This program is free software; you can redistribute it and/or
+-- 
+2.27.0
 
