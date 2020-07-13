@@ -2,118 +2,107 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B15C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05578206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB59206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:18:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="XLao+p1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgGMIQM (ORCPT
+        id S1728833AbgGMISU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:16:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44345 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgGMIQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:16:12 -0400
-IronPort-SDR: ECD8d+6VRERVz1NexPRZLAD16cqy0DLQfBe3yBgY8lt1YIdTHViZQs3MDURNGkXxKe684enxaR
- QyJ+hk5S46YA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="213412198"
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="213412198"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 01:16:11 -0700
-IronPort-SDR: W0/N1s0QOrFeETf1Nu+GSGKpwp7WPsF7Kg8kkCMvvHqU/8uN4iZ6YsxgiZY1oeB8A8vM2KRCSC
- uWVo3KQ3dYfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="325431342"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 01:16:11 -0700
-Received: from [10.249.229.49] (abudanko-mobl.ccr.corp.intel.com [10.249.229.49])
-        by linux.intel.com (Postfix) with ESMTP id 981DE580810;
-        Mon, 13 Jul 2020 01:16:08 -0700 (PDT)
-Subject: Re: [PATCH v10 04/15] perf evlist: introduce control file descriptors
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
- <92aa73c7-4148-a45d-6964-983fe1654d1e@linux.intel.com>
- <CAM9d7cj86U7xcmAdiKjEKNp+qS_YAP72xKusAjLWGo2frxpL_A@mail.gmail.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <823145dc-f293-166e-290b-076c1254fe17@linux.intel.com>
-Date:   Mon, 13 Jul 2020 11:16:06 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 04:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgGMIST (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:18:19 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A0DC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:18:19 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dr13so15502956ejc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9JP1Yyp+DTsbRDEveTS8YwrT8f2VEO8CdIRFCeUgVxQ=;
+        b=XLao+p1V5JORtXNlcnEOcYEcU8EJSO/lRaYhZO3XmgfuF21T31seX/KeejsgSYB/dH
+         9Mtzc6sD0ywKjPrk4YHzeSWPbmFx4cZwR8sgmBUOfTXTsukGhDYlx0yeT7wzCN3UPuIu
+         u48JA1UwjkiLL7Du7ODyx85cRfcRXQfHsGYEmhYjSXUTxNFnqEywTwpxHWMy1ugojrgK
+         pcbagL35jFPmlEmuAhruE3o6KM6BKgpVutSeb0ABNj5aUbzZxe0DCJhMIR9mB1thYzO3
+         eqxYHou/QhiKuyswI8nlJrw5jmV3dqxdqWYuU6h1iLGNgu56Fjd91dRiWupz2EBmGJuk
+         6Vew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9JP1Yyp+DTsbRDEveTS8YwrT8f2VEO8CdIRFCeUgVxQ=;
+        b=nh+5BwSFzHaeXTwPlDb5FE8u7WuAXaf66p8UTqm/4MIhnAgZDm36KmjJLMvfIDwJ9O
+         Zn6Kc8fGG8NFleWrHcUtvLpb6FYi8KWV7yIzMWAx4Ttb7gURDUDsjETZLL5wxHmS2DrS
+         OXlK7BfXEL7N+qEoOaMLrhehpZNh6OiG85SEXBY5wvd736dtKJzPJfAMfxV+QAZwuo9K
+         j3vpCdToTq/ADXcPkM1t5B5jJvY4xY1wzTMt1jkin/70m108H8s8tvVq7Lypqbs4Y4eD
+         KY2QdQi+oqPs6xnSRGtL5J/PGNozt7bw/NsocZrvbRSLhZgFMp2ZduZFea1UzSjcv1Lm
+         8WFg==
+X-Gm-Message-State: AOAM530dsrScskUBB19FXM4/5AzxlAhM+BBtQJ7y/eOiT8yi45IpvNdm
+        kLPYsaW2rPFS38tfUi2OXCG1QgVfrwFgVD8257lIHDDA+Mr/Jg==
+X-Google-Smtp-Source: ABdhPJxfrzyIRllQdfLdumU9+TZZyekQcPC/KWcapEDU2nFmJDRgWdJeqmsnwXUbP2/nb/mNJboQFf0aegkdjFp3mFI=
+X-Received: by 2002:a17:906:3b01:: with SMTP id g1mr37201239ejf.353.1594628298066;
+ Mon, 13 Jul 2020 01:18:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cj86U7xcmAdiKjEKNp+qS_YAP72xKusAjLWGo2frxpL_A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200713080001.128044-1-lee.jones@linaro.org> <20200713080001.128044-11-lee.jones@linaro.org>
+In-Reply-To: <20200713080001.128044-11-lee.jones@linaro.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 13 Jul 2020 10:18:07 +0200
+Message-ID: <CAMGffEmhV+wznX2Og26nL4oe6dj8VaHO1ksOZpP7m5owB-t9yg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/24] scsi: pm8001: pm8001_ctl: Provide descriptions
+ for the many undocumented 'attr's
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 13.07.2020 6:13, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, Jul 8, 2020 at 4:47 PM Alexey Budankov
-> <alexey.budankov@linux.intel.com> wrote:
->>
->>
->> Define and initialize control file descriptors.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->>  tools/perf/util/evlist.c | 3 +++
->>  tools/perf/util/evlist.h | 5 +++++
->>  2 files changed, 8 insertions(+)
->>
->> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->> index bcbe0cb8482e..36eb50aba1f5 100644
->> --- a/tools/perf/util/evlist.c
->> +++ b/tools/perf/util/evlist.c
->> @@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
->>         perf_evlist__set_maps(&evlist->core, cpus, threads);
->>         evlist->workload.pid = -1;
->>         evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
->> +       evlist->ctl_fd.fd = -1;
->> +       evlist->ctl_fd.ack = -1;
->> +       evlist->ctl_fd.pos = -1;
->>  }
->>
->>  struct evlist *evlist__new(void)
->> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
->> index 38901c0d1599..2caf19fb87a8 100644
->> --- a/tools/perf/util/evlist.h
->> +++ b/tools/perf/util/evlist.h
->> @@ -74,6 +74,11 @@ struct evlist {
->>                 pthread_t               th;
->>                 volatile int            done;
->>         } thread;
->> +       struct {
->> +               int     fd;
->> +               int     ack;
->> +               int     pos;
->> +       } ctl_fd;
-> 
-> Could you please add brief descriptions for each field
-> in the comment?  It's not obvious to me other than fd.
-
-Ok. In v11.
-
-Alexei
+On Mon, Jul 13, 2020 at 10:00 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> ... even if they are completely unused.
+>
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/scsi/pm8001/pm8001_ctl.c:56: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_mpi_interface_rev_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:81: warning: Function parameter or member 'attr' not described in 'controller_fatal_error_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:100: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fw_version_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:130: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ila_version_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:155: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_inactive_fw_version_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:181: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_out_io_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:204: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_devices_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:230: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_sg_list_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:274: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_sas_spec_support_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:303: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_host_sas_address_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:322: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_logging_level_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:355: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_aap_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:390: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ib_queue_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:423: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ob_queue_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:454: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_bios_version_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:492: warning: Function parameter or member 'attr' not described in 'event_log_size_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:510: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_iop_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:548: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fatal_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:566: warning: Function parameter or member 'attr' not described in 'non_fatal_log_show'
+>  drivers/scsi/pm8001/pm8001_ctl.c:609: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_gsm_log_show'
+>
+> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+good to have kernel doc warning clean.
+Thanks!
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
