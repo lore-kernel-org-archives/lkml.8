@@ -2,82 +2,205 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2E1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A20C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 986872070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BB12070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JxuUPySn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGMCjd (ORCPT
+        id S1728209AbgGMCjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:39:33 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:37936 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgGMCjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:39:32 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1203083|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.033401-0.000584162-0.966015;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=32;RT=32;SR=0;TI=W4_5899425_DEFAULT_0A93261B_1594607767001_o7001c677m;
-Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0A93261B_1594607767001_o7001c677m]) by e01l07384.eu6 at Mon, 13 Jul 2020 10:39:25 +0800
-Date:   Mon, 13 Jul 2020 10:39:25 +0800
-From:   "Frank Lee" <frank@allwinnertech.com>
-To:     "Maxime Ripard" <maxime@cerno.tech>
-Cc:     "robh+dt" <robh+dt@kernel.org>, "wens" <wens@csie.org>,
-        "mturquette" <mturquette@baylibre.com>, "sboyd" <sboyd@kernel.org>,
-        "gregory.clement" <gregory.clement@bootlin.com>,
-        "tglx" <tglx@linutronix.de>, "jason" <jason@lakedaemon.net>,
-        "maz" <maz@kernel.org>,
-        "srinivas.kandagatla" <srinivas.kandagatla@linaro.org>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        "anarsoul" <anarsoul@gmail.com>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        "rui.zhang" <rui.zhang@intel.com>,
-        "daniel.lezcano" <daniel.lezcano@linaro.org>,
-        "amit.kucheria" <amit.kucheria@verdurent.com>,
-        "lee.jones" <lee.jones@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>, "clabbe" <clabbe@baylibre.com>,
-        "icenowy" <icenowy@aosc.io>, "megous" <megous@megous.com>,
-        "stefan" <stefan@olimex.com>, "bage" <bage@linutronix.de>,
-        "devicetree" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "linux-clk" <linux-clk@vger.kernel.org>,
-        "linux-i2c" <linux-i2c@vger.kernel.org>,
-        "linux-gpio" <linux-gpio@vger.kernel.org>,
-        "linux-pm" <linux-pm@vger.kernel.org>,
-        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
-        "=?UTF-8?B?5p2O5YuH?=" <liyong@allwinnertech.com>
-Reply-To: "Frank Lee" <frank@allwinnertech.com>
-Message-ID: <5dd1b52a-811d-4837-a048-502dd975ad09.frank@allwinnertech.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAwMC8xNl0gQWxsd2lubmVyIEExMDAgSW5pdGlhbCBzdXBwb3J0?=
-X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
+        Sun, 12 Jul 2020 22:39:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54541 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgGMCjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 22:39:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4nt41KKVz9sRW;
+        Mon, 13 Jul 2020 12:39:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594607981;
+        bh=meDA0dI9bF1M87CGnHs5FNt1rKN7p6Az2SbG8dk/I4Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JxuUPySncKAjaw33rJngbz3GRO5bLo0Y+VQhIMZXQghQKXtWD5tf1AwwF5BWMhwk7
+         FGu0JoQBkVeTw9BMnBu2h+vkMhuyJS7x3FbRKC5bh/FEOn21n0nD4EnX+7HnaZD+LZ
+         bPpeVy4tUgp3T9sXMmkiK7IDq2k4QjuunNIhGCGiEfi8DpLO3QuPFcVThrHQlwVQgS
+         LY94Qv2VtEUsxp5oEMqQ7wEw+lPsx6vpvKDIzsB4XdnXXeXJ9Tytoxd59MSl3Dlhr6
+         lGs2n+fUZqGVwDb/uqVzhIYFHoq2QZY/bFTuUvu/4861TvC68TwDUhweE2GxZvYnew
+         S4YQlu7AV7Kqw==
+Date:   Mon, 13 Jul 2020 12:39:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     mhocko@kernel.org, cai@lca.pw, rientjes@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm, oom: make the calculation of oom badness more
+ accurate
+Message-ID: <20200713123939.6ea87a93@canb.auug.org.au>
+In-Reply-To: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
+References: <1594396651-9931-1-git-send-email-laoar.shao@gmail.com>
 MIME-Version: 1.0
-References: <20200708071942.22595-1-frank@allwinnertech.com>,<20200710142841.7ue3xtracowexjct@gilmour.lan>
-In-Reply-To: <20200710142841.7ue3xtracowexjct@gilmour.lan>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/SwlqXOp1Zhki_KdvfbZLso4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SEksCgo+PiAgIGR0LWJpbmRpbmdzOiBpcnE6IHN1bjdpLW5taTogZml4IGR0LWJpbmRpbmcgZm9y
-IGE4MCBubWkKPj4gICBkdC1iaW5kaW5nczogaXJxOiBzdW43aS1ubWk6IEFkZCBiaW5kaW5nIGZv
-ciBBMTAwJ3MgTk1JIGNvbnRyb2xsZXIKPgo+aXQgZG9lc24ndCBsb29rIGxpa2UgdGhvc2UgcGF0
-Y2hlcyB3ZW50IHRocm91Z2g/CgpEdWUgdG8gc2VuZGluZyB0b28gbWFueSBlbWFpbHMgYXQgb25j
-ZSwgaXQgc2VlbXMgdGhhdCBzb21lIGVtYWlscyBoYXZlCmJlZW4gZmlsdGVyZWQgYnkgdGhlIG1h
-aWxib3gsIGFuZCBJIGp1c3QgcmVpc3N1ZWQgdGhlbS4KCj4KPj4gICBkdC1iaW5kaW5nczogaTJj
-OiBtdjY0eHh4OiBBZGQgY29tcGF0aWJsZSBmb3IgdGhlIEExMDAgaTJjIG5vZGUuCj4+ICAgYXJt
-NjQ6IGFsbHdpbm5lcjogQTEwMDogYWRkIHRoZSBiYXNpY2FsIEFsbHdpbm5lciBBMTAwIERUU0kg
-ZmlsZQo+PiAgIGR0LWJpbmRpbmdzOiBhcm06IHN1bnhpOiBBZGQgQWxsd2lubmVyIEExMDAgUGVy
-ZjEgQm9hcmQgYmluZGluZ3MKPj4gICBhcm02NDogYWxsd2lubmVyOiBBMTAwOiBhZGQgc3VwcG9y
-dCBmb3IgQWxsd2lubmVyIFBlcmYxIGJvYXJkCj4KPk9uIGEgbW9yZSBnZW5lcmFsIHRvcGljLCB3
-aGljaCBib290bG9hZGVyIGhhdmUgeW91IHVzZWQgdG8gdGVzdCB0aGlzPwo+VGhlIG9uZSBmcm9t
-IEFsbHdpbm5lcidzIEJTUCBJIGFzc3VtZT8KClllYWgsIHRoZXJlIGlzIG5vIGJyaW5ndXAgb24g
-dGhlIG1haW5saW5lIEJvb3RMb2FkZXIgeWV0LgoKSWYgbm90aGluZyBoYXBwZW5zLCB0aGUgbmV4
-dCBlZGl0aW9uIHdpbGwgYmUgcmVsZWFzZWQgdG9kYXkuCldlIGhvcGUgdGhhdCBBMTAwIHdpbGwg
-YmUgaW50ZWdyYXRlZCBhcyBzb29uIGFzIHBvc3NpYmxlLgoKTUJSLApZYW5ndGFv
+--Sig_/SwlqXOp1Zhki_KdvfbZLso4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 10 Jul 2020 11:57:31 -0400 Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> ---
+> v2 -> v3:
+> - fix the type of variable 'point' in oom_evaluate_task()
+> - initialize oom_control->chosen_points in select_bad_process() per Michal
+> - update the comment in proc_oom_score() per Michal
+
+I have applied the following incremental patch to linux-next today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 13 Jul 2020 12:34:46 +1000
+Subject: [PATCH] mm-oom-make-the-calculation-of-oom-badness-more-accurate-f=
+ix
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/tty/sysrq.c |  1 -
+ fs/proc/base.c      | 10 +++++++---
+ mm/memcontrol.c     |  1 -
+ mm/oom_kill.c       |  5 +++--
+ mm/page_alloc.c     |  1 -
+ 5 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index e83fd46f632c..7c95afa905a0 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -382,7 +382,6 @@ static void moom_callback(struct work_struct *ignored)
+ 		.memcg =3D NULL,
+ 		.gfp_mask =3D gfp_mask,
+ 		.order =3D -1,
+-		.chosen_points =3D LONG_MIN,
+ 	};
+=20
+ 	mutex_lock(&oom_lock);
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index bf164064b901..10c2a26c0e20 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -554,10 +554,14 @@ static int proc_oom_score(struct seq_file *m, struct =
+pid_namespace *ns,
+ 	long badness;
+=20
+ 	badness =3D oom_badness(task, totalpages);
+-	if (badness !=3D LONG_MIN) {
+-		/* Let's keep the range of points as [0, 2000]. */
++	/*
++	 * Special case OOM_SCORE_ADJ_MIN for all others scale the
++	 * badness value into [0, 2000] range which we have been
++	 * exporting for a long time so userspace might depend on it.
++	 */
++	if (badness !=3D LONG_MIN)
+ 		points =3D (1000 + badness * 1000 / (long)totalpages) * 2 / 3;
+-	}
++
+ 	seq_printf(m, "%lu\n", points);
+=20
+ 	return 0;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 4ae64726f863..430d4c659669 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1666,7 +1666,6 @@ static bool mem_cgroup_out_of_memory(struct mem_cgrou=
+p *memcg, gfp_t gfp_mask,
+ 		.memcg =3D memcg,
+ 		.gfp_mask =3D gfp_mask,
+ 		.order =3D order,
+-		.chosen_points =3D LONG_MIN,
+ 	};
+ 	bool ret;
+=20
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 8fdb8b03f5cd..48e0db54d838 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -306,7 +306,7 @@ static enum oom_constraint constrained_alloc(struct oom=
+_control *oc)
+ static int oom_evaluate_task(struct task_struct *task, void *arg)
+ {
+ 	struct oom_control *oc =3D arg;
+-	unsigned long points;
++	long points;
+=20
+ 	if (oom_unkillable_task(task))
+ 		goto next;
+@@ -361,6 +361,8 @@ static int oom_evaluate_task(struct task_struct *task, =
+void *arg)
+  */
+ static void select_bad_process(struct oom_control *oc)
+ {
++	oc->chosen_points =3D LONG_MIN;
++
+ 	if (is_memcg_oom(oc))
+ 		mem_cgroup_scan_tasks(oc->memcg, oom_evaluate_task, oc);
+ 	else {
+@@ -1124,7 +1126,6 @@ void pagefault_out_of_memory(void)
+ 		.memcg =3D NULL,
+ 		.gfp_mask =3D 0,
+ 		.order =3D 0,
+-		.chosen_points =3D LONG_MIN,
+ 	};
+=20
+ 	if (mem_cgroup_oom_synchronize(true))
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0832b21a7728..65fc0ed784d2 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3915,7 +3915,6 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int or=
+der,
+ 		.memcg =3D NULL,
+ 		.gfp_mask =3D gfp_mask,
+ 		.order =3D order,
+-		.chosen_points =3D LONG_MIN,
+ 	};
+ 	struct page *page;
+=20
+--=20
+2.27.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SwlqXOp1Zhki_KdvfbZLso4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8LyWsACgkQAVBC80lX
+0GwsQwf+MvITQBZmDC5WElRjiWzEEz6ui44gEi4E5WFUCtdBY8l5wAABXqKaTMis
+RNLltytDctJkRYRQOdZtEkZ9+wPYVStp7Ln90l/W2fI97GVK27uk2v5EeK1u9a3I
+k//fPNfJXjuZ/j2MYA1dfInIjpp6GMcSfPjldIyWmdYnTaoom4JEEt1bVjx7fZy2
+/DvA5TpCi2Vw3BrzsZm/mfBhQgfjbzuvQHLwNXKNyp+nM+MkprPLDeTXw0hfDJ4/
+iPXOpe6NeaSUQCiz/WjbcjhgZ88vycWYDfUjejM5ewFou//GQ6P2wRpo2bDgpyB/
+s9NOwZcH2ZgnkUFugI31lXFpXe1ioQ==
+=pAno
+-----END PGP SIGNATURE-----
+
+--Sig_/SwlqXOp1Zhki_KdvfbZLso4--
