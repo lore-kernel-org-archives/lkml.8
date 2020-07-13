@@ -2,361 +2,597 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BA0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2BC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39CEE20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYpG9dze"
+	by mail.kernel.org (Postfix) with ESMTP id 1E83A20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgGMM3H (ORCPT
+        id S1729792AbgGMM3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        Mon, 13 Jul 2020 08:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgGMM3G (ORCPT
+        with ESMTP id S1729769AbgGMM3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:29:06 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D162C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:29:06 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cm21so6179627pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BnAHK0bP2N2xz5NBMgcIxYPxY9vMYYlQan1Kqz0oNAU=;
-        b=ZYpG9dzeLC8ZKd4S3XbF/n6RMrLmtqz9ewoyIHWumnFfKYAyoZWC+DRFqMWrorFCwx
-         vrmIRAfCZzd06xFFGlZIO1kc2xCgWDjsHMTmBb4zvuJ+iRF0y3x7kg7dli6HTteYk6FU
-         7+j3u2TrWaREUCqF2mzEi2/k0oMRIM+iXxhBStXM1X9BDQbxMHg7/BeOzK2GOg2As3H9
-         fn8mIM8UBNqYGpucwsMVKNABcAJwMr5HBDogAxIyck0OywnV///4466pVZ/m/MkvVr1m
-         oqTvkRzkKkfxemLQtvwVUobQDDFhiSkPBRsreUo5AoQ0is/LS6qG3OkOdySRhp2rVUFt
-         Z2ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=BnAHK0bP2N2xz5NBMgcIxYPxY9vMYYlQan1Kqz0oNAU=;
-        b=BQ98H2/kaaUvu/f6iA1/ExksOvTyK6ia5e5o3yXqx5jSTnRpktWSSaVCGtJ3Lgzbb7
-         7wY1W92LCSXKmM3lIYV3rA4fdApLPGLjOkuajeYm1+49iMen1RAVHkZj+7dd7tquS7Jm
-         2gf/fXEv0wrp1GGhf0CY8V6qep5Tu0L0JPbbZKVm+EthQdN8lU1WMt3Jpya0Rb2VX/+E
-         iGYp/br9JmuA5RyWbh1ITokXpkyrr4uknA/mDGeeNcnsANZAULgrhq3aZ+dmVSCQbzLN
-         M2zp5+W5t4THYIOAS6ytKC9u1fhE0ENjMK3SBd6ueGAiW+N4/ZTl1ixe3hpNXqLg43wm
-         edug==
-X-Gm-Message-State: AOAM533ej1rxk8oPX+LiFhA3A/C/E8d0/2WNq9FpZHy1aRUIC60Snh46
-        l/zeNb+n5uB8kXdl0SNS9fw=
-X-Google-Smtp-Source: ABdhPJwLlJnrfTR1p2d1pdbDFTkuVZuWPq8JxNWOHceI6UJebFpM3mh3jLDGQ7MEA6+86nL/RP2/8A==
-X-Received: by 2002:a17:90a:ea0f:: with SMTP id w15mr20904807pjy.138.1594643346133;
-        Mon, 13 Jul 2020 05:29:06 -0700 (PDT)
-Received: from hyd1soter3.caveonetworks.com ([115.113.156.2])
-        by smtp.googlemail.com with ESMTPSA id p1sm31891839pja.2.2020.07.13.05.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 05:29:05 -0700 (PDT)
-From:   rakeshs.lkm@gmail.com
-To:     sbhatta@marvell.com, sgoutham@marvell.com, jerinj@marvell.com,
-        rsaladi2@marvell.com, davem@davemloft.net, kuba@kernel.org,
+        Mon, 13 Jul 2020 08:29:12 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F30C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:29:12 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 98A5BBC078;
+        Mon, 13 Jul 2020 12:29:06 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
+        laurent.pinchart@ideasonboard.com, zhengbin13@huawei.com,
+        sebastian.reichel@collabora.com, masahiroy@kernel.org,
+        krzk@kernel.org, sam@ravnborg.org, ajhernandez@ti.com,
+        wen.yang99@zte.com.cn, tony@atomide.com,
+        boris.brezillon@collabora.com, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Cc:     Sunil Kovvuri Goutham <Sunil.Goutham@cavium.com>
-Subject: [net-next PATCH 2/2] octeontx2-af: add nix error af interrupt handlers
-Date:   Mon, 13 Jul 2020 17:56:40 +0530
-Message-Id: <20200713122640.4155-3-rakeshs.lkm@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713122640.4155-1-rakeshs.lkm@gmail.com>
-References: <20200713122640.4155-1-rakeshs.lkm@gmail.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] drm: omapdrm: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 14:28:59 +0200
+Message-Id: <20200713122859.34135-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerin Jacob <jerinj@marvell.com>
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Added debug messages for NIX_AF_RVU_INT, NIX_AF_ERR_INT and NIX_AF_RAS
-error AF interrupts.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Signed-off-by: Jerin Jacob <jerinj@marvell.com>
-Signed-off-by: Sunil Kovvuri Goutham <Sunil.Goutham@cavium.com>
-Signed-off-by: Rakesh Babu <rsaladi2@marvell.com>
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- .../net/ethernet/marvell/octeontx2/af/rvu.c   |   5 +
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |   2 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 202 ++++++++++++++++++
- .../marvell/octeontx2/af/rvu_struct.h         |  10 +
- 4 files changed, 219 insertions(+)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-index 6c4027f04cfc..9a36ce5fc57a 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-@@ -2131,6 +2131,7 @@ static void rvu_unregister_interrupts(struct rvu *rvu)
- 	int irq;
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
- 	rvu_npa_unregister_interrupts(rvu);
-+	rvu_nix_unregister_interrupts(rvu);
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
- 	/* Disable the Mbox interrupt */
- 	rvu_write64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT_ENA_W1C,
-@@ -2344,6 +2345,10 @@ static int rvu_register_interrupts(struct rvu *rvu)
- 	if (ret)
- 		goto fail;
+ If you apply the patch, please let me know.
 
-+	ret = rvu_nix_register_interrupts(rvu);
-+	if (ret)
-+		goto fail;
-+
- 	return 0;
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
- fail:
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-index 63c9f6049ad5..44d25a8f598d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-@@ -465,6 +465,8 @@ void rvu_nix_freemem(struct rvu *rvu);
- int rvu_get_nixlf_count(struct rvu *rvu);
- void rvu_nix_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int npalf);
- int nix_get_nixlf(struct rvu *rvu, u16 pcifunc, int *nixlf, int *nix_blkaddr);
-+int rvu_nix_register_interrupts(struct rvu *rvu);
-+void rvu_nix_unregister_interrupts(struct rvu *rvu);
 
- /* NPC APIs */
- int rvu_npc_init(struct rvu *rvu);
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-index 36953d4f51c7..99bf7003bd2d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-@@ -3369,3 +3369,205 @@ int rvu_mbox_handler_nix_lso_format_cfg(struct rvu *rvu,
+ drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c | 2 +-
+ drivers/gpu/drm/omapdrm/dss/Kconfig             | 4 ++--
+ drivers/gpu/drm/omapdrm/dss/base.c              | 2 +-
+ drivers/gpu/drm/omapdrm/dss/dispc.h             | 2 +-
+ drivers/gpu/drm/omapdrm/dss/dispc_coefs.c       | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi.h              | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi4.c             | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c         | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi4_core.c        | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi4_core.h        | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi5.c             | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi5_core.c        | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi5_core.h        | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi_phy.c          | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi_pll.c          | 2 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi_wp.c           | 2 +-
+ drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 2 +-
+ drivers/gpu/drm/omapdrm/dss/omapdss.h           | 2 +-
+ drivers/gpu/drm/omapdrm/dss/output.c            | 2 +-
+ drivers/gpu/drm/omapdrm/dss/pll.c               | 2 +-
+ drivers/gpu/drm/omapdrm/dss/video-pll.c         | 2 +-
+ drivers/gpu/drm/omapdrm/omap_connector.c        | 2 +-
+ drivers/gpu/drm/omapdrm/omap_crtc.c             | 2 +-
+ drivers/gpu/drm/omapdrm/omap_debugfs.c          | 2 +-
+ drivers/gpu/drm/omapdrm/omap_dmm_priv.h         | 2 +-
+ drivers/gpu/drm/omapdrm/omap_dmm_tiler.c        | 2 +-
+ drivers/gpu/drm/omapdrm/omap_dmm_tiler.h        | 2 +-
+ drivers/gpu/drm/omapdrm/omap_drv.c              | 2 +-
+ drivers/gpu/drm/omapdrm/omap_drv.h              | 2 +-
+ drivers/gpu/drm/omapdrm/omap_encoder.c          | 2 +-
+ drivers/gpu/drm/omapdrm/omap_fb.c               | 2 +-
+ drivers/gpu/drm/omapdrm/omap_fbdev.c            | 2 +-
+ drivers/gpu/drm/omapdrm/omap_gem.c              | 2 +-
+ drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c       | 2 +-
+ drivers/gpu/drm/omapdrm/omap_irq.c              | 2 +-
+ drivers/gpu/drm/omapdrm/omap_plane.c            | 2 +-
+ drivers/gpu/drm/omapdrm/tcm-sita.c              | 2 +-
+ 37 files changed, 38 insertions(+), 38 deletions(-)
 
- 	return 0;
- }
-+
-+static irqreturn_t rvu_nix_af_rvu_intr_handler(int irq, void *rvu_irq)
-+{
-+	struct rvu *rvu = (struct rvu *)rvu_irq;
-+	int blkaddr;
-+	u64 intr;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NIX, 0);
-+	if (blkaddr < 0)
-+		return IRQ_NONE;
-+
-+	intr = rvu_read64(rvu, blkaddr, NIX_AF_RVU_INT);
-+
-+	if (intr & BIT_ULL(0))
-+		dev_err(rvu->dev, "NIX: Unmapped slot error\n");
-+
-+	/* Clear interrupts */
-+	rvu_write64(rvu, blkaddr, NIX_AF_RVU_INT, intr);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t rvu_nix_af_err_intr_handler(int irq, void *rvu_irq)
-+{
-+	struct rvu *rvu = (struct rvu *)rvu_irq;
-+	int blkaddr;
-+	u64 intr;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NIX, 0);
-+	if (blkaddr < 0)
-+		return IRQ_NONE;
-+
-+	intr = rvu_read64(rvu, blkaddr, NIX_AF_ERR_INT);
-+
-+	if (intr & BIT_ULL(14))
-+		dev_err(rvu->dev, "NIX: Memory fault on NIX_AQ_INST_S read\n");
-+
-+	if (intr & BIT_ULL(13))
-+		dev_err(rvu->dev, "NIX: Memory fault on NIX_AQ_RES_S write\n");
-+
-+	if (intr & BIT_ULL(12))
-+		dev_err(rvu->dev, "NIX: AQ doorbell error\n");
-+
-+	if (intr & BIT_ULL(6))
-+		dev_err(rvu->dev, "NIX: Rx on unmapped PF_FUNC\n");
-+
-+	if (intr & BIT_ULL(5))
-+		dev_err(rvu->dev, "NIX: Rx multicast replication error\n");
-+
-+	if (intr & BIT_ULL(4))
-+		dev_err(rvu->dev, "NIX: Memory fault on NIX_RX_MCE_S read\n");
-+
-+	if (intr & BIT_ULL(3))
-+		dev_err(rvu->dev, "NIX: Memory fault on multicast WQE read\n");
-+
-+	if (intr & BIT_ULL(2))
-+		dev_err(rvu->dev, "NIX: Memory fault on mirror WQE read\n");
-+
-+	if (intr & BIT_ULL(1))
-+		dev_err(rvu->dev, "NIX: Memory fault on mirror pkt write\n");
-+
-+	if (intr & BIT_ULL(0))
-+		dev_err(rvu->dev, "NIX: Memory fault on multicast pkt write\n");
-+
-+	/* Clear interrupts */
-+	rvu_write64(rvu, blkaddr, NIX_AF_ERR_INT, intr);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t rvu_nix_af_ras_intr_handler(int irq, void *rvu_irq)
-+{
-+	struct rvu *rvu = (struct rvu *)rvu_irq;
-+	int blkaddr;
-+	u64 intr;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NIX, 0);
-+	if (blkaddr < 0)
-+		return IRQ_NONE;
-+
-+	intr = rvu_read64(rvu, blkaddr, NIX_AF_RAS);
-+
-+	if (intr & BIT_ULL(34))
-+		dev_err(rvu->dev, "NIX: Poisoned data on NIX_AQ_INST_S read\n");
-+
-+	if (intr & BIT_ULL(33))
-+		dev_err(rvu->dev, "NIX: Poisoned data on NIX_AQ_RES_S write\n");
-+
-+	if (intr & BIT_ULL(32))
-+		dev_err(rvu->dev, "NIX: Poisoned data on HW context read\n");
-+
-+	if (intr & BIT_ULL(4))
-+		dev_err(rvu->dev, "NIX: Poisoned data on packet read from mirror buffer\n");
-+
-+	if (intr & BIT_ULL(3))
-+		dev_err(rvu->dev, "NIX: Poisoned data on packet read from multicast buffer\n");
-+
-+	if (intr & BIT_ULL(2))
-+		dev_err(rvu->dev, "NIX: Poisoned data on WQE read from mirror buffer\n");
-+
-+	if (intr & BIT_ULL(1))
-+		dev_err(rvu->dev, "NIX: Poisoned data on WQE read from multicast buffer\n");
-+
-+	if (intr & BIT_ULL(0))
-+		dev_err(rvu->dev, "NIX: Poisoned data on NIX_RX_MCE_S read\n");
-+
-+	/* Clear interrupts */
-+	rvu_write64(rvu, blkaddr, NIX_AF_RAS, intr);
-+	return IRQ_HANDLED;
-+}
-+
-+static bool rvu_nix_af_request_irq(struct rvu *rvu, int blkaddr, int offset,
-+				   const char *name, irq_handler_t fn)
-+{
-+	int rc;
-+
-+	WARN_ON(rvu->irq_allocated[offset]);
-+	rvu->irq_allocated[offset] = false;
-+	sprintf(&rvu->irq_name[offset * NAME_SIZE], name);
-+	rc = request_irq(pci_irq_vector(rvu->pdev, offset), fn, 0,
-+			 &rvu->irq_name[offset * NAME_SIZE], rvu);
-+	if (rc)
-+		dev_warn(rvu->dev, "Failed to register %s irq\n", name);
-+	else
-+		rvu->irq_allocated[offset] = true;
-+
-+	return rvu->irq_allocated[offset];
-+}
-+
-+int rvu_nix_register_interrupts(struct rvu *rvu)
-+{
-+	int blkaddr, base;
-+	bool rc;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NIX, 0);
-+	if (blkaddr < 0)
-+		return blkaddr;
-+
-+	/* Get NIX AF MSIX vectors offset. */
-+	base = rvu_read64(rvu, blkaddr, NIX_PRIV_AF_INT_CFG) & 0x3ff;
-+	if (!base) {
-+		dev_warn(rvu->dev,
-+			 "Failed to get NIX_AF_INT vector offsets\n");
-+		return 0;
-+	}
-+
-+	/* Register and enable NIX_AF_RVU_INT interrupt */
-+	rc = rvu_nix_af_request_irq(rvu, blkaddr, base +  NIX_AF_INT_VEC_RVU,
-+				    "NIX_AF_RVU_INT",
-+				    rvu_nix_af_rvu_intr_handler);
-+	if (!rc)
-+		goto err;
-+	rvu_write64(rvu, blkaddr, NIX_AF_RVU_INT_ENA_W1S, ~0ULL);
-+
-+	/* Register and enable NIX_AF_ERR_INT interrupt */
-+	rc = rvu_nix_af_request_irq(rvu, blkaddr, base + NIX_AF_INT_VEC_AF_ERR,
-+				    "NIX_AF_ERR_INT",
-+				    rvu_nix_af_err_intr_handler);
-+	if (!rc)
-+		goto err;
-+	rvu_write64(rvu, blkaddr, NIX_AF_ERR_INT_ENA_W1S, ~0ULL);
-+
-+	/* Register and enable NIX_AF_RAS interrupt */
-+	rc = rvu_nix_af_request_irq(rvu, blkaddr, base + NIX_AF_INT_VEC_POISON,
-+				    "NIX_AF_RAS",
-+				    rvu_nix_af_ras_intr_handler);
-+	if (!rc)
-+		goto err;
-+	rvu_write64(rvu, blkaddr, NIX_AF_RAS_ENA_W1S, ~0ULL);
-+
-+	return 0;
-+err:
-+	rvu_nix_unregister_interrupts(rvu);
-+	return rc;
-+}
-+
-+void rvu_nix_unregister_interrupts(struct rvu *rvu)
-+{
-+	int blkaddr, offs, i;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NIX, 0);
-+	if (blkaddr < 0)
-+		return;
-+
-+	offs = rvu_read64(rvu, blkaddr, NIX_PRIV_AF_INT_CFG) & 0x3ff;
-+	if (!offs)
-+		return;
-+
-+	rvu_write64(rvu, blkaddr, NIX_AF_RVU_INT_ENA_W1C, ~0ULL);
-+	rvu_write64(rvu, blkaddr, NIX_AF_ERR_INT_ENA_W1C, ~0ULL);
-+	rvu_write64(rvu, blkaddr, NIX_AF_RAS_ENA_W1C, ~0ULL);
-+
-+	if (rvu->irq_allocated[offs + NIX_AF_INT_VEC_RVU]) {
-+		free_irq(pci_irq_vector(rvu->pdev, offs + NIX_AF_INT_VEC_RVU),
-+			 rvu);
-+		rvu->irq_allocated[offs + NIX_AF_INT_VEC_RVU] = false;
-+	}
-+
-+	for (i = NIX_AF_INT_VEC_AF_ERR; i < NIX_AF_INT_VEC_CNT; i++)
-+		if (rvu->irq_allocated[offs + i]) {
-+			free_irq(pci_irq_vector(rvu->pdev, offs + i), rvu);
-+			rvu->irq_allocated[offs + i] = false;
-+		}
-+}
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-index bf5f03aeb5f0..a665fa242926 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-@@ -70,6 +70,16 @@ enum npa_af_int_vec_e {
- 	NPA_AF_INT_VEC_CNT	= 0x5,
- };
-
-+/* NIX Admin function Interrupt Vector Enumeration */
-+enum nix_af_int_vec_e {
-+	NIX_AF_INT_VEC_RVU	= 0x0,
-+	NIX_AF_INT_VEC_GEN	= 0x1,
-+	NIX_AF_INT_VEC_AQ_DONE	= 0x2,
-+	NIX_AF_INT_VEC_AF_ERR	= 0x3,
-+	NIX_AF_INT_VEC_POISON	= 0x4,
-+	NIX_AF_INT_VEC_CNT	= 0x5,
-+};
-+
- /**
-  * RVU PF Interrupt Vector Enumeration
+diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+index 3484b5d4a91c..ec394746cd2d 100644
+--- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
++++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+@@ -2,7 +2,7 @@
+ /*
+  * Generic DSI Command Mode panel driver
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
   */
---
-2.17.1
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/Kconfig b/drivers/gpu/drm/omapdrm/dss/Kconfig
+index 2658c521b702..e11b258a2294 100644
+--- a/drivers/gpu/drm/omapdrm/dss/Kconfig
++++ b/drivers/gpu/drm/omapdrm/dss/Kconfig
+@@ -80,7 +80,7 @@ config OMAP5_DSS_HDMI
+ 	select OMAP2_DSS_HDMI_COMMON
+ 	help
+ 	  HDMI Interface for OMAP5 and similar cores. This adds the High
+-	  Definition Multimedia Interface. See http://www.hdmi.org/ for HDMI
++	  Definition Multimedia Interface. See https://www.hdmi.org/ for HDMI
+ 	  specification.
+ 
+ config OMAP2_DSS_SDI
+@@ -101,7 +101,7 @@ config OMAP2_DSS_DSI
+ 	  DSI is a high speed half-duplex serial interface between the host
+ 	  processor and a peripheral, such as a display or a framebuffer chip.
+ 
+-	  See http://www.mipi.org/ for DSI specifications.
++	  See https://www.mipi.org/ for DSI specifications.
+ 
+ config OMAP2_DSS_MIN_FCK_PER_PCK
+ 	int "Minimum FCK/PCK ratio (for scaling)"
+diff --git a/drivers/gpu/drm/omapdrm/dss/base.c b/drivers/gpu/drm/omapdrm/dss/base.c
+index c7650a7c155d..cf50430e6363 100644
+--- a/drivers/gpu/drm/omapdrm/dss/base.c
++++ b/drivers/gpu/drm/omapdrm/dss/base.c
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP Display Subsystem Base
+  *
+- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.h b/drivers/gpu/drm/omapdrm/dss/dispc.h
+index 2348faf88768..3f842c1ff81a 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.h
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Archit Taneja <archit@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c b/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
+index bccb28de5a59..d1f3a93b8efd 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Chandrabhanu Mahapatra <cmahapatra@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi.h b/drivers/gpu/drm/omapdrm/dss/hdmi.h
+index 3a40833d3368..c4a4e07f0b99 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi.h
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi.h
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI driver definition for TI OMAP4 Processor.
+  *
+- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #ifndef _HDMI_H
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+index 2578c95570f6..401168a21e03 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI interface DSS driver for TI's OMAP4 family of SoCs.
+  *
+- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Authors: Yong Zhi
+  *	Mythri pk <mythripk@ti.com>
+  */
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+index ebf9c96d43ee..43592c1cf081 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+@@ -3,7 +3,7 @@
+  *
+  * Based on the CEC code from hdmi_ti_4xxx_ip.c from Android.
+  *
+- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Authors: Yong Zhi
+  *	Mythri pk <mythripk@ti.com>
+  *
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+index 751985a2679a..35faa7f028c4 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI TI81xx, TI38xx, TI OMAP4 etc IP driver Library
+  *
+- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Authors: Yong Zhi
+  *	Mythri pk <mythripk@ti.com>
+  */
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
+index dc64ae2aa300..3c9e1f600fbe 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI header definition for OMAP4 HDMI core IP
+  *
+- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #ifndef _HDMI4_CORE_H_
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5.c b/drivers/gpu/drm/omapdrm/dss/hdmi5.c
+index 4d4c1fabd0a1..bdac755288ff 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi5.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi5.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI driver for OMAP5
+  *
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Authors:
+  *	Yong Zhi
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+index 7dd587035160..6cc2ad7a420c 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP5 HDMI CORE IP driver library
+  *
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  * Authors:
+  *	Yong Zhi
+  *	Mythri pk
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
+index 65eadefdb3f9..070cbf5fb57d 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI driver definition for TI OMAP5 processors.
+  *
+- * Copyright (C) 2011-2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011-2012 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #ifndef _HDMI5_CORE_H_
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+index 00bbf24488c1..5dc200f09c3c 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI PHY
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c b/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
+index cf2b000f397f..13bf649aba52 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI PLL
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #define DSS_SUBSYS_NAME "HDMIPLL"
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c b/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
+index 32f45f4f569d..9d830584a762 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
+@@ -2,7 +2,7 @@
+ /*
+  * HDMI wrapper
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #define DSS_SUBSYS_NAME "HDMIWP"
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+index 72a7da7bfff1..f21b5df31213 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+index ab19d4af8de7..a48a9a254e33 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/output.c b/drivers/gpu/drm/omapdrm/dss/output.c
+index ce21c798cca6..5affdf078134 100644
+--- a/drivers/gpu/drm/omapdrm/dss/output.c
++++ b/drivers/gpu/drm/omapdrm/dss/output.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Archit Taneja <archit@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/pll.c b/drivers/gpu/drm/omapdrm/dss/pll.c
+index 1212f3cc52d1..241a338ace29 100644
+--- a/drivers/gpu/drm/omapdrm/dss/pll.c
++++ b/drivers/gpu/drm/omapdrm/dss/pll.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #define DSS_SUBSYS_NAME "PLL"
+diff --git a/drivers/gpu/drm/omapdrm/dss/video-pll.c b/drivers/gpu/drm/omapdrm/dss/video-pll.c
+index a612e2696dbc..b72c3ffddc9a 100644
+--- a/drivers/gpu/drm/omapdrm/dss/video-pll.c
++++ b/drivers/gpu/drm/omapdrm/dss/video-pll.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #include <linux/clk.h>
+diff --git a/drivers/gpu/drm/omapdrm/omap_connector.c b/drivers/gpu/drm/omapdrm/omap_connector.c
+index 528764566b17..797efccfd46d 100644
+--- a/drivers/gpu/drm/omapdrm/omap_connector.c
++++ b/drivers/gpu/drm/omapdrm/omap_connector.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
+index fce7e944a280..26b9a45a116e 100644
+--- a/drivers/gpu/drm/omapdrm/omap_crtc.c
++++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_debugfs.c b/drivers/gpu/drm/omapdrm/omap_debugfs.c
+index b57fbe8a0ac2..2d3909a37f51 100644
+--- a/drivers/gpu/drm/omapdrm/omap_debugfs.c
++++ b/drivers/gpu/drm/omapdrm/omap_debugfs.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob.clark@linaro.org>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_priv.h b/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
+index 60bb3f9297bc..58a8239d3e69 100644
+--- a/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
++++ b/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  *         Andy Gross <andy.gross@ti.com>
+  *
+diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+index 42ec51bb7b1b..7d5aa21ae1f3 100644
+--- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
++++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+@@ -1,7 +1,7 @@
+ /*
+  * DMM IOMMU driver support functions for TI OMAP processors.
+  *
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  *         Andy Gross <andy.gross@ti.com>
+  *
+diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
+index 43c1d096b021..2f8918fe06d5 100644
+--- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
++++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  *         Andy Gross <andy.gross@ti.com>
+  *
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
+index cdafd7ef1c32..70846a8bb8a5 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.c
++++ b/drivers/gpu/drm/omapdrm/omap_drv.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
+index 8a1fac680138..ae57e7ada876 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.h
++++ b/drivers/gpu/drm/omapdrm/omap_drv.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_encoder.c b/drivers/gpu/drm/omapdrm/omap_encoder.c
+index ae4b867a67a3..57e92a4d5937 100644
+--- a/drivers/gpu/drm/omapdrm/omap_encoder.c
++++ b/drivers/gpu/drm/omapdrm/omap_encoder.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_fb.c b/drivers/gpu/drm/omapdrm/omap_fb.c
+index 9aeab81dfb90..4f1079d19388 100644
+--- a/drivers/gpu/drm/omapdrm/omap_fb.c
++++ b/drivers/gpu/drm/omapdrm/omap_fb.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+index 09a84919ef73..43bcb43aca2f 100644
+--- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
++++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_gem.c b/drivers/gpu/drm/omapdrm/omap_gem.c
+index d08ae95ecc0a..c7eefb248a98 100644
+--- a/drivers/gpu/drm/omapdrm/omap_gem.c
++++ b/drivers/gpu/drm/omapdrm/omap_gem.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob.clark@linaro.org>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
+index b319fe7f2371..f4cde3a169d8 100644
+--- a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
++++ b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob.clark@linaro.org>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_irq.c b/drivers/gpu/drm/omapdrm/omap_irq.c
+index 382bcdc72ac0..de80cd3455c8 100644
+--- a/drivers/gpu/drm/omapdrm/omap_irq.c
++++ b/drivers/gpu/drm/omapdrm/omap_irq.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob.clark@linaro.org>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/omap_plane.c b/drivers/gpu/drm/omapdrm/omap_plane.c
+index 73ec99819a3d..21e0b9785599 100644
+--- a/drivers/gpu/drm/omapdrm/omap_plane.c
++++ b/drivers/gpu/drm/omapdrm/omap_plane.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Rob Clark <rob.clark@linaro.org>
+  */
+ 
+diff --git a/drivers/gpu/drm/omapdrm/tcm-sita.c b/drivers/gpu/drm/omapdrm/tcm-sita.c
+index 817be3c41863..9e1acbd2c7aa 100644
+--- a/drivers/gpu/drm/omapdrm/tcm-sita.c
++++ b/drivers/gpu/drm/omapdrm/tcm-sita.c
+@@ -5,7 +5,7 @@
+  *          Lajos Molnar <molnar@ti.com>
+  *          Andy Gross <andy.gross@ti.com>
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This package is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+-- 
+2.27.0
+
