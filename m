@@ -2,222 +2,185 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE03EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89476C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB40120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6092B20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USyMiXvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGMTQs (ORCPT
+        id S1726785AbgGMTR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45972 "EHLO
+        Mon, 13 Jul 2020 15:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMTQs (ORCPT
+        with ESMTP id S1726356AbgGMTR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:16:48 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16742C061755;
-        Mon, 13 Jul 2020 12:16:48 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2B644BC0D1;
-        Mon, 13 Jul 2020 19:16:44 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     pali@kernel.org, sre@kernel.org, afd@ti.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] power: supply: bq2xxxx: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 21:16:38 +0200
-Message-Id: <20200713191638.37311-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 15:17:28 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A86C061755;
+        Mon, 13 Jul 2020 12:17:27 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id o1so5937045plk.1;
+        Mon, 13 Jul 2020 12:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v5U6F41TkrmuFMdMBZZCA57RfJVOhnudyCPli5pfjRs=;
+        b=USyMiXvoNPiMCCop7qertDsazIIU+3jR2JLEgjshl4JNxoDALxJ/lUUN604xtEAG5w
+         avXkgdCT5xXSJOLJ0L+17MxbCyM1X+6q5aHui70iVXuHx3VGw62uaLl04iF6klkz5FR4
+         lW8B+E5FQsH1ZvbjyZiL5m+wu7XjqO9uYq1n+vibGLp2UKgH0c3h3pDkXKnj9nsYvEpM
+         H3gHmCgO983PwSz2G9m4xiD5ryR/DG8HL06fcgpb/9c0zR8vkX0vBpMQZBEu/6zimYcs
+         CikDfZlSSHVg42QzE4kZ/YelvCaLtqLRh1aLlHyvCjBoFDGvEzS5eyyva7nwCkTd3rNF
+         b2Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v5U6F41TkrmuFMdMBZZCA57RfJVOhnudyCPli5pfjRs=;
+        b=d3+wUUdzdr8Ga9WTM9IeHDDIIJi4oQGBf38QBCzuAGJ8yrSbG6iDfc9fzfMvbaKUkN
+         X9TbyissGSeYiNZcvLLhYd5YF+oYDfs1sCoaMQTNlytQiZzgnZtSXLE07WlQi0t4ouhg
+         wYvxXcfpkErWlsLoJc1XlS7pCrqXWNKtlgBDg42buKbu4CRtNXqSuOjDQxyXqy9a/Rmt
+         LqObBLL5s6a3g64yEO+hVyOrB8nJR36CryYJitlIuvtuGckuRxjm8jUCHYqtcDZsTzMP
+         EgDwZ9ZW0xOKAi8IcwDALJizUNzI9B0JWiluahYY/HPWH3B5rkG5xCOTaSjvbWjzt2F5
+         YWGQ==
+X-Gm-Message-State: AOAM5309Wu0MdCQiYbbMHxUrLb7Qlj3KfayFI7+XLnoQYQ2KmpzqaOe3
+        dQiyL4bM1/7FFH2dAFoVUctFXkOq1Sw/1WSULJg=
+X-Google-Smtp-Source: ABdhPJzBe4Z0IIVCnp2VDfH3SltGa57BzPspnJlSjUB2gW4zz73hNPrxa7Tqrenphov1bJgTQ3bGgnPJ9nN36fGhsLA=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr914342plo.262.1594667847297;
+ Mon, 13 Jul 2020 12:17:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+References: <20200713184606.37033-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200713184606.37033-1-grandmaster@al2klimov.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 13 Jul 2020 22:17:10 +0300
+Message-ID: <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 9:46 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Please split per driver basis.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+>
+>
+>  drivers/platform/x86/Kconfig      |  2 +-
+>  drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0581a54cf562..1d96e07b2a02 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -140,7 +140,7 @@ config ACERHDF
+>           in the same node directory will tell you if it is "acerhdf".
+>
+>           For more information about this driver see
+> -         <http://piie.net/files/acerhdf_README.txt>
+> +         <https://piie.net/files/acerhdf_README.txt>
+>
+>           If you have an Acer Aspire One netbook, say Y or M
+>           here.
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 7e3083deb1c5..9aae45a45200 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+>   * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+>   * use a `TI LP8545`_.
+>   *
+> - * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+> - * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
+> + * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
+> + * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+>   */
+>
+>  static int gmux_get_brightness(struct backlight_device *bd)
+> @@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+>   * switch the panel and the external DP connector and allocates a framebuffer
+>   * for the selected GPU.
+>   *
+> - * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> - * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+> + * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> + * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+>   * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+> - * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+> + * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+>   * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+> - * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+> + * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+>   */
+>
+>  static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
+> --
+> 2.27.0
+>
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/power/supply/bq2415x_charger.c     | 16 ++++----
- drivers/power/supply/bq24257_charger.c     |  6 +--
- drivers/power/supply/bq27xxx_battery.c     | 44 +++++++++++-----------
- drivers/power/supply/bq27xxx_battery_hdq.c |  2 +-
- drivers/power/supply/bq27xxx_battery_i2c.c |  2 +-
- 5 files changed, 35 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/power/supply/bq2415x_charger.c b/drivers/power/supply/bq2415x_charger.c
-index a1f00ae1c180..5724001e66b9 100644
---- a/drivers/power/supply/bq2415x_charger.c
-+++ b/drivers/power/supply/bq2415x_charger.c
-@@ -5,14 +5,14 @@
-  * Copyright (C) 2011-2013  Pali Rohár <pali@kernel.org>
-  *
-  * Datasheets:
-- * http://www.ti.com/product/bq24150
-- * http://www.ti.com/product/bq24150a
-- * http://www.ti.com/product/bq24152
-- * http://www.ti.com/product/bq24153
-- * http://www.ti.com/product/bq24153a
-- * http://www.ti.com/product/bq24155
-- * http://www.ti.com/product/bq24157s
-- * http://www.ti.com/product/bq24158
-+ * https://www.ti.com/product/bq24150
-+ * https://www.ti.com/product/bq24150a
-+ * https://www.ti.com/product/bq24152
-+ * https://www.ti.com/product/bq24153
-+ * https://www.ti.com/product/bq24153a
-+ * https://www.ti.com/product/bq24155
-+ * https://www.ti.com/product/bq24157s
-+ * https://www.ti.com/product/bq24158
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/power/supply/bq24257_charger.c b/drivers/power/supply/bq24257_charger.c
-index eb151687beb3..8e60cb0f3c3f 100644
---- a/drivers/power/supply/bq24257_charger.c
-+++ b/drivers/power/supply/bq24257_charger.c
-@@ -5,9 +5,9 @@
-  * Copyright (C) 2015 Intel Corporation
-  *
-  * Datasheets:
-- * http://www.ti.com/product/bq24250
-- * http://www.ti.com/product/bq24251
-- * http://www.ti.com/product/bq24257
-+ * https://www.ti.com/product/bq24250
-+ * https://www.ti.com/product/bq24251
-+ * https://www.ti.com/product/bq24257
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 942c92127b6d..76a78c3a20a7 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -18,31 +18,31 @@
-  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-  *
-  * Datasheets:
-- * http://www.ti.com/product/bq27000
-- * http://www.ti.com/product/bq27200
-- * http://www.ti.com/product/bq27010
-- * http://www.ti.com/product/bq27210
-- * http://www.ti.com/product/bq27500
-- * http://www.ti.com/product/bq27510-g1
-- * http://www.ti.com/product/bq27510-g2
-- * http://www.ti.com/product/bq27510-g3
-+ * https://www.ti.com/product/bq27000
-+ * https://www.ti.com/product/bq27200
-+ * https://www.ti.com/product/bq27010
-+ * https://www.ti.com/product/bq27210
-+ * https://www.ti.com/product/bq27500
-+ * https://www.ti.com/product/bq27510-g1
-+ * https://www.ti.com/product/bq27510-g2
-+ * https://www.ti.com/product/bq27510-g3
-  * http://www.ti.com/product/bq27520-g1
-  * http://www.ti.com/product/bq27520-g2
-  * http://www.ti.com/product/bq27520-g3
-- * http://www.ti.com/product/bq27520-g4
-- * http://www.ti.com/product/bq27530-g1
-- * http://www.ti.com/product/bq27531-g1
-- * http://www.ti.com/product/bq27541-g1
-- * http://www.ti.com/product/bq27542-g1
-- * http://www.ti.com/product/bq27546-g1
-- * http://www.ti.com/product/bq27742-g1
-- * http://www.ti.com/product/bq27545-g1
-- * http://www.ti.com/product/bq27421-g1
-- * http://www.ti.com/product/bq27425-g1
-- * http://www.ti.com/product/bq27426
-- * http://www.ti.com/product/bq27411-g1
-- * http://www.ti.com/product/bq27441-g1
-- * http://www.ti.com/product/bq27621-g1
-+ * https://www.ti.com/product/bq27520-g4
-+ * https://www.ti.com/product/bq27530-g1
-+ * https://www.ti.com/product/bq27531-g1
-+ * https://www.ti.com/product/bq27541-g1
-+ * https://www.ti.com/product/bq27542-g1
-+ * https://www.ti.com/product/bq27546-g1
-+ * https://www.ti.com/product/bq27742-g1
-+ * https://www.ti.com/product/bq27545-g1
-+ * https://www.ti.com/product/bq27421-g1
-+ * https://www.ti.com/product/bq27425-g1
-+ * https://www.ti.com/product/bq27426
-+ * https://www.ti.com/product/bq27411-g1
-+ * https://www.ti.com/product/bq27441-g1
-+ * https://www.ti.com/product/bq27621-g1
-  */
- 
- #include <linux/device.h>
-diff --git a/drivers/power/supply/bq27xxx_battery_hdq.c b/drivers/power/supply/bq27xxx_battery_hdq.c
-index 9aff896c9802..29771967df2e 100644
---- a/drivers/power/supply/bq27xxx_battery_hdq.c
-+++ b/drivers/power/supply/bq27xxx_battery_hdq.c
-@@ -1,7 +1,7 @@
- /*
-  * BQ27xxx battery monitor HDQ/1-wire driver
-  *
-- * Copyright (C) 2007-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2007-2017 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
-index 2677c38a8a42..8e114a7abfc9 100644
---- a/drivers/power/supply/bq27xxx_battery_i2c.c
-+++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-@@ -1,7 +1,7 @@
- /*
-  * BQ27xxx battery monitor I2C driver
-  *
-- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
-  *	Andrew F. Davis <afd@ti.com>
-  *
-  * This program is free software; you can redistribute it and/or modify
 -- 
-2.27.0
-
+With Best Regards,
+Andy Shevchenko
