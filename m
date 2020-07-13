@@ -2,98 +2,169 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A17C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B95C20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:29:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEeOUmDz"
+	by mail.kernel.org (Postfix) with ESMTP id 174F7206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgGMD3O (ORCPT
+        id S1728714AbgGMDaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:29:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53393 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726267AbgGMD3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:29:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594610952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5sqmIa3FOThqJ2P5OGh1edrqCIvFDayENPyYWhN4VO0=;
-        b=EEeOUmDzDxG/uNx89SYC7UDU5Ub5PWd07Pg6cLxbj24QTN1IpVkGFn0zlWSwtryDOMNiii
-        QsyhFjsajeRWQJeeDI9F2ZeEky9qEpMZu6IE6IsikzZ6DMerFfAXxdMsSD1EdO3f2qkOpU
-        6x1h3NexXki+eIxzhJikDOzsRfll6nk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-cgnKb0z2Mb-co7CYRgTzmw-1; Sun, 12 Jul 2020 23:29:11 -0400
-X-MC-Unique: cgnKb0z2Mb-co7CYRgTzmw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E1441086;
-        Mon, 13 Jul 2020 03:29:10 +0000 (UTC)
-Received: from [10.72.13.177] (ovpn-13-177.pek2.redhat.com [10.72.13.177])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F2FE74F75;
-        Mon, 13 Jul 2020 03:29:02 +0000 (UTC)
-Subject: Re: [PATCH] virtio_balloon: fix sparse warning
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        virtualization@lists.linux-foundation.org
-References: <20200710104837.405966-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2c3b61df-c5c8-536a-01d4-c468e958f6d7@redhat.com>
-Date:   Mon, 13 Jul 2020 11:29:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Jul 2020 23:30:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33664 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbgGMDaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:30:22 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C03845CF625A9997552B;
+        Mon, 13 Jul 2020 11:30:17 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.214) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 11:30:10 +0800
+Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
+ tmpfile
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     Richard Weinberger <richard@nod.at>
+CC:     Richard Weinberger <richard.weinberger@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        yi zhang <yi.zhang@huawei.com>
+References: <20200701112643.726986-1-chengzhihao1@huawei.com>
+ <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
+ <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
+ <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
+ <963fa5c8-414f-783f-871e-47e751b54d87@huawei.com>
+ <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
+ <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
+Message-ID: <4b59ffcc-fbbb-e62e-779b-ce4d795f51c7@huawei.com>
+Date:   Mon, 13 Jul 2020 11:30:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200710104837.405966-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Originating-IP: [10.174.179.214]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/7/10 下午6:48, Michael S. Tsirkin wrote:
-> balloon uses virtio32_to_cpu instead of cpu_to_virtio32
-> to convert a native endian number to virtio.
-> No practical difference but makes sparse warn.
-> Fix it up.
+在 2020/7/11 14:37, Zhihao Cheng 写道:
+> 在 2020/7/7 20:47, Richard Weinberger 写道:
+>> ----- Ursprüngliche Mail -----
+>>>>> Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix
+>>>>> O_TMPFILE corner case in ubifs_link()") wanted to fix.
+>>>>> I think orphan area is used to remind filesystem don't forget to 
+>>>>> delete
+>>>>> inodes (whose nlink is 0) in next unclean rebooting. Generally, 
+>>>>> the file
+>>>>> system is not corrupted caused by replaying orphan nodes.
+>>>>> Ralph reported a filesystem corruption in combination with overlayfs.
+>>>>> Can you tell me the details about that problem? Thanks.
+>>>> On my test bed I didn't see a fs corruption, what I saw was a 
+>>>> failing orphan
+>>>> self test while playing with O_TMPFILE and linkat().
+>>> Do we have a reproducer, or can I get the fail testcase? Is it a 
+>>> xfstest
+>>> case?
+>> I think xfstests triggered it, yes.
+>> Later today I can check. :)
+>>
+>> Thanks,
+>> //richard
+>>
+>> .
 >
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/virtio/virtio_balloon.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> I think I have found the testcases, overlay/006 and overlay/041.
 >
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index fc7301406540..5d4b891bf84f 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -596,7 +596,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb)
->   	while (virtqueue_get_buf(vq, &unused))
->   		;
->   
-> -	vb->cmd_id_active = virtio32_to_cpu(vb->vdev,
-> +	vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
->   					virtio_balloon_cmd_id_received(vb));
->   	sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
->   	err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
+> The 'mv' and 'rm' operations will put lowertestfile into orphan list 
+> twice, so we must reseve the orphan deletion operation in 
+> ubifs_link(), otherwise the testcase fails and we will see the 
+> following msg:
+Sorry, not lowertestfile, it's tempfile which is generated by ovl 
+copy-up (mv operation). The tempfile is linked after copy-up finished. 
+The tempfile is then unlinked by 'rm' operation.
+>
+>   overlay/006 2s ... - output mismatch (see 
+> /root/git/xfstests-dev/results//overlay/006.out.bad)
+>     --- tests/overlay/006.out    2020-07-07 21:42:57.737000000 +0800
+>     +++ /root/git/xfstests-dev/results//overlay/006.out.bad 2020-07-11 
+> 14:31:55.340000000 +0800
+>     @@ -1,2 +1,4 @@
+>      QA output created by 006
+>      Silence is golden
+>     +rm: cannot remove 
+> '/tmp/scratch/ovl-mnt/uppertestdir/lowertestfile': Invalid argument
+>     +lowertestfile
+>     ...
+>
+>   [  382.258210] UBIFS error (ubi0:1 pid 11896): orphan_add [ubifs]: 
+> orphaned twice
+>   [  382.352535] UBIFS error (ubi0:1 pid 11930): free_orphans [ubifs]: 
+> orphan list not empty at unmount
+>
+>
+> So, how about moving ubifs_delete_orphan() after ubifs_jnl_update() in 
+> function ubifs_link(). Following modifications applied in linux-5.8 
+> has been tested by overlay/041, overlay/006 and  other tmpfile cases 
+> (generic/531, generic/530, generic/509, generic/389, generic/004).
+>
+> diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
+> index ef85ec167a84..fd4443a5e8c6 100644
+> --- a/fs/ubifs/dir.c
+> +++ b/fs/ubifs/dir.c
+> @@ -722,11 +722,6 @@ static int ubifs_link(struct dentry *old_dentry, 
+> struct inode *dir,
+>                 goto out_fname;
+>
+>         lock_2_inodes(dir, inode);
+> -
+> -       /* Handle O_TMPFILE corner case, it is allowed to link a 
+> O_TMPFILE. */
+> -       if (inode->i_nlink == 0)
+> -               ubifs_delete_orphan(c, inode->i_ino);
+> -
+> inc_nlink(inode);
+> ihold(inode);
+>         inode->i_ctime = current_time(inode);
+> @@ -736,6 +731,11 @@ static int ubifs_link(struct dentry *old_dentry, 
+> struct inode *dir,
+>         err = ubifs_jnl_update(c, dir, &nm, inode, 0, 0);
+>         if (err)
+>                 goto out_cancel;
+> +
+> +       /* Handle O_TMPFILE corner case, it is allowed to link a 
+> O_TMPFILE. */
+> +       if (inode->i_nlink == 1)
+> +               ubifs_delete_orphan(c, inode->i_ino);
+> +
+>         unlock_2_inodes(dir, inode);
+>
+>         ubifs_release_budget(c, &req);
+> @@ -747,8 +747,6 @@ static int ubifs_link(struct dentry *old_dentry, 
+> struct inode *dir,
+>         dir->i_size -= sz_change;
+>         dir_ui->ui_size = dir->i_size;
+> drop_nlink(inode);
+> -       if (inode->i_nlink == 0)
+> -               ubifs_add_orphan(c, inode->i_ino);
+>         unlock_2_inodes(dir, inode);
+>         ubifs_release_budget(c, &req);
+> iput(inode);
+> -- 
+>
+>
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
 
 
