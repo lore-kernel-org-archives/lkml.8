@@ -2,95 +2,108 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E77C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B97C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D274206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6B020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgGMLFT (ORCPT
+        id S1729708AbgGMLFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgGMLFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:05:19 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880BFC08C5DB
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:05:18 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by albert.telenet-ops.be with bizsmtp
-        id 2b5F2300G4C55Sk06b5FYM; Mon, 13 Jul 2020 13:05:15 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1juwGp-0002Pf-Bp; Mon, 13 Jul 2020 13:05:15 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1juwGp-0002mi-9r; Mon, 13 Jul 2020 13:05:15 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] usb: hso: Fix debug compile warning on sparc32
-Date:   Mon, 13 Jul 2020 13:05:13 +0200
-Message-Id: <20200713110513.10651-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jul 2020 07:05:24 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:59340 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729618AbgGMLFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:05:21 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id E3B92BC06E;
+        Mon, 13 Jul 2020 11:05:17 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     trenn@suse.com, shuah@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] cpupower: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 13:05:11 +0200
+Message-Id: <20200713110511.33549-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On sparc32, tcflag_t is "unsigned long", unlike on all other
-architectures, where it is "unsigned int":
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
-parameters to "unsigned int".
-While at it, use "%u" to format unsigned numbers.
-
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/net/usb/hso.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index bb8c34d746ab33a8..5f123a8cf68ed920 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1390,8 +1390,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
- 	unsigned long flags;
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ tools/power/cpupower/man/cpupower-monitor.1 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/power/cpupower/man/cpupower-monitor.1 b/tools/power/cpupower/man/cpupower-monitor.1
+index 70a56476f4b0..8ee737eefa5c 100644
+--- a/tools/power/cpupower/man/cpupower-monitor.1
++++ b/tools/power/cpupower/man/cpupower-monitor.1
+@@ -170,7 +170,7 @@ displayed.
  
- 	if (old)
--		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
--			tty->termios.c_cflag, old->c_cflag);
-+		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
-+			(unsigned int)tty->termios.c_cflag,
-+			(unsigned int)old->c_cflag);
+ .SH REFERENCES
+ "BIOS and Kernel Developer’s Guide (BKDG) for AMD Family 14h Processors"
+-http://support.amd.com/us/Processor_TechDocs/43170.pdf
++https://support.amd.com/us/Processor_TechDocs/43170.pdf
  
- 	/* the actual setup */
- 	spin_lock_irqsave(&serial->serial_lock, flags);
+ "Intel® Turbo Boost Technology
+ in Intel® Core™ Microarchitecture (Nehalem) Based Processors"
+@@ -178,7 +178,7 @@ http://download.intel.com/design/processor/applnots/320354.pdf
+ 
+ "Intel® 64 and IA-32 Architectures Software Developer's Manual
+ Volume 3B: System Programming Guide"
+-http://www.intel.com/products/processor/manuals
++https://www.intel.com/products/processor/manuals
+ 
+ .SH FILES
+ .ta
 -- 
-2.17.1
+2.27.0
 
