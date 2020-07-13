@@ -2,178 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E855C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBC42073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594616733;
-	bh=JxJp9VSiVtBSKbZYDcCaTaxt/f4xJQVvXKj7oFzNxxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e38rFCsx0daVNDqabD4A+L94dovAGodHV3GAxlEmn4g9v4/Q+H7zeVVSutyhbypT7
-	 EjyZk166/GtsqswSabyWj9xi+WiW0TTQnAxoa8J1JHdXbEnn6LABto2zHvNZKwqr54
-	 X2nHnHHXzu87zNi7zodCC40+VhcrQAj5Nzgujzh0=
+	by mail.kernel.org (Postfix) with ESMTP id 1EDF620724
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgGMFFc (ORCPT
+        id S1728686AbgGMFGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48828 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 01:06:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65191 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgGMFFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:05:32 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A125120724;
-        Mon, 13 Jul 2020 05:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594616731;
-        bh=JxJp9VSiVtBSKbZYDcCaTaxt/f4xJQVvXKj7oFzNxxw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HqnQ2+SiDhAGgzNWnPs2gt0UTDKTww104BASz7gdSal7PjzQbx9Cvb2l9ppmjNl9B
-         p1VjslY09VfaebQt1i0ani+oC4d6Qs5zZgjAF4YH8wgWYVUh9fYfdfprYlxkig3hg4
-         gXjydw3C0S2tJFgcMq8ryMyDrnncqXGm9B7692oo=
-Date:   Mon, 13 Jul 2020 10:35:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] phy: socionext: Add UniPhier AHCI PHY driver
- support
-Message-ID: <20200713050527.GR34333@vkoul-mobl>
-References: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1593507574-10007-3-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1725818AbgGMFGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:06:03 -0400
+IronPort-SDR: sL2fcUf6C+NkHc5mUBucqGbhA83qxOaFX3miz3cUSsqbPO4Rg4Lx5HyoJmXwaDSLuPdUb731UU
+ O/UnUuN+9q5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="210095587"
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="210095587"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 22:06:02 -0700
+IronPort-SDR: +VKpVcMkfAQDb15VehValzhPE3TscLiDj//1nLJDqUAquYJhVjbdYZLVxTOFAfSgO40aVHvDME
+ KayTCToVPXbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="484883611"
+Received: from lgrunert-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.52.195])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Jul 2020 22:05:51 -0700
+Date:   Mon, 13 Jul 2020 08:05:49 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
+Message-ID: <20200713050549.GA956284@linux.intel.com>
+References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
+ <20200710090344.GX4800@hirez.programming.kicks-ass.net>
+ <20200710103638.GA2614@linux.intel.com>
+ <20200710104910.GG4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593507574-10007-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20200710104910.GG4800@hirez.programming.kicks-ass.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-06-20, 17:59, Kunihiko Hayashi wrote:
+On Fri, Jul 10, 2020 at 12:49:10PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 10, 2020 at 01:36:38PM +0300, Jarkko Sakkinen wrote:
+> > Just so that I know (and learn), what did exactly disable optprobes?
+> 
+> So regular, old-skool style kprobe is:
+> 
+>   - copy original instruction out
+>   - replace instruction with breakpoint (int3 on x86)
+>   - have exception handler return to the copied instruction with
+>     single-step on
+>   - have single step exception handler return to the original
+>     instruction stream
+> 
+> which is 2 exceptions.
 
-> +++ b/drivers/phy/socionext/phy-uniphier-ahci.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
-> + * Copyright 2016-2018, Socionext Inc.
+Out of pure interest, how does it handle a jump (as the original
+opcode), given that it single steps a copy?
 
-we are in 2020 now!
+> optprobes avoid the single-step by not only writing a single
+> instruction, but additionally placing a JMP instruction behind it such
+> that it will automagically continue in the original instruction stream.
+> 
+> This brings the requirement that the copied instruction is placed
+> within the JMP displacement of the regular kernel text (s32 on x86).
+> 
+> module_alloc() ensures the memory provided is within that range.
 
-> +static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* enable reference clock for PHY */
-> +	val = readl(priv->base + CKCTRL);
-> +	val |= CKCTRL_REF_SSP_EN;
-> +	writel(val, priv->base + CKCTRL);
-> +
-> +	/* release port reset */
-> +	val = readl(priv->base + CKCTRL);
-> +	val &= ~CKCTRL_P0_RESET;
-> +	writel(val, priv->base + CKCTRL);
-> +
-> +	/* wait until PLL is ready */
-> +	if (priv->data->is_ready_high)
-> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-> +					 (val & CKCTRL_P0_READY), 200, 400);
-> +	else
-> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-> +					 !(val & CKCTRL_P0_READY), 200, 400);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
-> +		goto out_disable_clock;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_disable_clock:
-> +	/* assert port reset */
-> +	val = readl(priv->base + CKCTRL);
-> +	val |= CKCTRL_P0_RESET;
-> +	writel(val, priv->base + CKCTRL);
-> +
-> +	/* disable reference clock for PHY */
-> +	val = readl(priv->base + CKCTRL);
-> +	val &= ~CKCTRL_REF_SSP_EN;
-> +	writel(val, priv->base + CKCTRL);
+Right, a relative jump is placed instead of 0xcc to the breakpoint?
 
-this seems to be repeated patter, why not add a modifyl() helper here..
-
-> +static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
-> +{
-> +	int i;
-> +	u32 val;
-> +
-> +	/* setup port parameter */
-> +	val = readl(priv->base + TXCTRL0);
-> +	val &= ~TXCTRL0_AMP_G3_MASK;
-> +	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
-> +	val &= ~TXCTRL0_AMP_G2_MASK;
-> +	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
-> +	val &= ~TXCTRL0_AMP_G1_MASK;
-> +	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
-> +	writel(val, priv->base + TXCTRL0);
-> +
-> +	val = readl(priv->base + TXCTRL1);
-> +	val &= ~TXCTRL1_DEEMPH_G3_MASK;
-> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
-> +	val &= ~TXCTRL1_DEEMPH_G2_MASK;
-> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
-> +	val &= ~TXCTRL1_DEEMPH_G1_MASK;
-> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
-> +
-> +	val = readl(priv->base + RXCTRL);
-> +	val &= ~RXCTRL_LOS_LVL_MASK;
-> +	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
-> +	val &= ~RXCTRL_LOS_BIAS_MASK;
-> +	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
-> +	val &= ~RXCTRL_RX_EQ_MASK;
-> +	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
-> +
-> +	/* dummy read 25 times */
-
-why?
-
-> +static int uniphier_ahciphy_init(struct phy *phy)
-> +{
-> +	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(priv->clk_parent);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = reset_control_deassert(priv->rst_parent);
-> +	if (ret)
-> +		goto out_clk_disable;
-> +
-> +	if (priv->data->init) {
-> +		ret = priv->data->init(priv);
-> +		if (ret)
-> +			goto out_rst_assert;
-> +	}
-> +
-> +	return ret;
-
-return 0?
-
-> +static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
-> +	.init = NULL,
-
-Isn't this superfluous ?
--- 
-~Vinod
+/Jarkko
