@@ -2,168 +2,168 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43220C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71494C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C944206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCA3206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AG4m+3cV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgGMC6W (ORCPT
+        id S1728177AbgGMDBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:58:22 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7295 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbgGMC6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:58:22 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3628DE0009133F1570D6;
-        Mon, 13 Jul 2020 10:58:20 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
- 10:58:18 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <b.zolnierkie@samsung.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] vgacon: Fix an out-of-bounds in vgacon_scrollback_update()
-Date:   Mon, 13 Jul 2020 10:57:30 +0000
-Message-ID: <20200713105730.550334-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 12 Jul 2020 23:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgGMDBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:01:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7D1C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:01:03 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so5392742pfu.1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GV4IomG6qj4F1GMNLsaNJW9pUDWfsK4KtOliKaa9r4M=;
+        b=AG4m+3cVsDUZHrXHV7Dg997rQayoox9XRupkxW5sz3TXp1nMng3UKLPXZxaL9cvZUg
+         WRGwnE0EQkpAm7E2PQHh7TGOMcrfswpGcx3ai4Vma1rkZ+CQsBLNa0GxwWCRJxqY7DL5
+         fwKVtyZaY0IJVisG8EOAq6xLLp931xNoBm+0+h1qZ/F01pydZ2hIAJM7QTK34uCBY0hM
+         OLlSAbuiGqapTUjqJJOm1WE5MJr8o2V/xYiiVgIHCVKALHnGPz6xBXvHsxw62dqtVor/
+         OyxPXIXMc0p09EvsK5sA+zicimEm+TMI34/RgbC6r2AQ+OAb6JWSUaNkoFBVueHH6tlA
+         MeAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GV4IomG6qj4F1GMNLsaNJW9pUDWfsK4KtOliKaa9r4M=;
+        b=gVLych7q/YOa9TYJO9u5WW5E4cytkyttqe4EZ0EmnmyNKZrn+W5EPCSiNH+Ai9Xy3d
+         WYjao75yRDR7JM4TnsyaUJf4CcD/6N+Mgz+doe+LoXrPGwJzKisrt37gSS0BtL35S8Cz
+         TLrP17q+RFbyP0Q0zGn0Kn0JCW2KMAGNQ4ptMFUcviokzDO+Uvx0lw0kxt4b8Nj0WwRL
+         H2zvg9G0NHbqz7v1xGYDrS9EZPrFfongrhribKNEPvo0VemEF1zAsPK2jEa/Za8SMjsY
+         Rju+MZzi3LNI9knLO9y8KCivzNpk2w2WJfDlvk7gN4zyUOq730xbHDaBFJBgYtx4Z1g1
+         GiRQ==
+X-Gm-Message-State: AOAM530/KXBXJ7tQeYLhwPXdCDy/EgeMlYFAGtq6thevSMGYKTfPgKO7
+        4bJeE/zD+yA21O5lsrLW8kgG
+X-Google-Smtp-Source: ABdhPJy+HlXUxaa/u4zIP4jzIn73PFiw/wD7SgvPDfi3JVrz26O53QmdcVR5DxpZn5oiTEhi+yyPug==
+X-Received: by 2002:a63:7246:: with SMTP id c6mr67503848pgn.422.1594609262825;
+        Sun, 12 Jul 2020 20:01:02 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:985:5688:92a:5a4d:636b:c45f])
+        by smtp.gmail.com with ESMTPSA id b128sm11834488pfg.114.2020.07.12.20.00.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 Jul 2020 20:01:01 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 08:30:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Amit Tomer <amittomer25@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for
+ Cubieboard7
+Message-ID: <20200713030055.GA2978@Mani-XPS-13-9360>
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
+ <20200712173044.GL6110@Mani-XPS-13-9360>
+ <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got a slab-out-of-bounds report when I doing fuzz test.
+On Mon, Jul 13, 2020 at 12:15:28AM +0530, Amit Tomer wrote:
+> Hi,
+> 
+> On Sun, Jul 12, 2020 at 11:00 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Thu, Jul 02, 2020 at 08:22:56PM +0530, Amit Singh Tomar wrote:
+> > > This commit adds uSD support for Cubieboard7 board based on Actions Semi
+> > > S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
+> > > added yet, fixed regulator has been used as a regulator node.
+> > >
+> > > Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> > > ---
+> > > Changes since v4:
+> > >       * No change.
+> > > Changes since v3:
+> > >         * No change.
+> > > Changes since v2:
+> > >         * No change.
+> > > Changes since v1:
+> > >         * No change.
+> > > Changes since RFC:
+> > >         * No change.
+> > > ---
+> > >  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
+> > >  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
+> > >  2 files changed, 42 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > > index 63e375cd9eb4..ec117eb12f3a 100644
+> > > --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > > +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> > > @@ -13,6 +13,7 @@
+> > >
+> > >       aliases {
+> > >               serial3 = &uart3;
+> > > +             mmc0 = &mmc0;
+> > >       };
+> > >
+> > >       chosen {
+> > > @@ -28,6 +29,23 @@
+> > >               device_type = "memory";
+> > >               reg = <0x1 0xe0000000 0x0 0x0>;
+> > >       };
+> > > +
+> > > +     /* Fixed regulator used in the absence of PMIC */
+> > > +     vcc_3v1: vcc-3v1 {
+> > > +             compatible = "regulator-fixed";
+> > > +             regulator-name = "fixed-3.1V";
+> > > +             regulator-min-microvolt = <3100000>;
+> > > +             regulator-max-microvolt = <3100000>;
+> > > +     };
+> >
+> > Is this regulator used somewhere?
+> 
+> This is something I copied from bubblegum dts as I wasn't sure what is right way
+> to include these regulators.
+> 
+> Also, another day tested it without having these regulators in , and
+> still it seems to
+> work.  So should these be removed ?
+> 
 
-[  334.989515] ==================================================================
-[  334.989577] BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-[  334.989588] Write of size 1766 at addr ffff8883de69ff3e by task test/2658
-[  334.989593]
-[  334.989608] CPU: 3 PID: 2658 Comm: test Not tainted 5.7.0-rc5-00005-g152036d1379f #789
-[  334.989617] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[  334.989624] Call Trace:
-[  334.989646]  dump_stack+0xe4/0x14e
-[  334.989676]  print_address_description.constprop.5+0x3f/0x60
-[  334.989699]  ? vgacon_scroll+0x57a/0x8ed
-[  334.989710]  __kasan_report.cold.8+0x92/0xaf
-[  334.989735]  ? vgacon_scroll+0x57a/0x8ed
-[  334.989761]  kasan_report+0x37/0x50
-[  334.989789]  check_memory_region+0x1c1/0x1e0
-[  334.989806]  memcpy+0x38/0x60
-[  334.989824]  vgacon_scroll+0x57a/0x8ed
-[  334.989876]  con_scroll+0x4ef/0x5e0
-[  334.989904]  ? lockdep_hardirqs_on+0x5e0/0x5e0
-[  334.989934]  lf+0x24f/0x2a0
-[  334.989951]  ? con_scroll+0x5e0/0x5e0
-[  334.989975]  ? find_held_lock+0x33/0x1c0
-[  334.990005]  do_con_trol+0x313/0x5ff0
-[  334.990027]  ? lock_downgrade+0x730/0x730
-[  334.990045]  ? reset_palette+0x440/0x440
-[  334.990070]  ? _raw_spin_unlock_irqrestore+0x4b/0x60
-[  334.990095]  ? notifier_call_chain+0x120/0x170
-[  334.990132]  ? __atomic_notifier_call_chain+0xf0/0x180
-[  334.990160]  do_con_write.part.16+0xb2b/0x1b20
-[  334.990238]  ? do_con_trol+0x5ff0/0x5ff0
-[  334.990258]  ? mutex_lock_io_nested+0x1280/0x1280
-[  334.990269]  ? rcu_read_unlock+0x50/0x50
-[  334.990315]  ? __mutex_unlock_slowpath+0xd9/0x670
-[  334.990340]  ? lockdep_hardirqs_on+0x3a2/0x5e0
-[  334.990368]  con_write+0x36/0xc0
-[  334.990389]  do_output_char+0x561/0x780
-[  334.990414]  n_tty_write+0x58e/0xd30
-[  334.990478]  ? n_tty_read+0x1800/0x1800
-[  334.990500]  ? prepare_to_wait_exclusive+0x300/0x300
-[  334.990525]  ? __might_fault+0x17a/0x1c0
-[  334.990557]  tty_write+0x430/0x960
-[  334.990568]  ? n_tty_read+0x1800/0x1800
-[  334.990600]  ? tty_release+0x1280/0x1280
-[  334.990622]  __vfs_write+0x81/0x100
-[  334.990648]  vfs_write+0x1ce/0x510
-[  334.990676]  ksys_write+0x104/0x200
-[  334.990691]  ? __ia32_sys_read+0xb0/0xb0
-[  334.990708]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-[  334.990725]  ? trace_hardirqs_off_caller+0x40/0x1a0
-[  334.990744]  ? do_syscall_64+0x3b/0x5e0
-[  334.990775]  do_syscall_64+0xc8/0x5e0
-[  334.990798]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[  334.990811] RIP: 0033:0x44f369
-[  334.990827] Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-[  334.990834] RSP: 002b:00007ffe9ace0968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  334.990848] RAX: ffffffffffffffda RBX: 0000000000400418 RCX: 000000000044f369
-[  334.990856] RDX: 0000000000000381 RSI: 0000000020003500 RDI: 0000000000000003
-[  334.990865] RBP: 00007ffe9ace0980 R08: 0000000020003530 R09: 00007ffe9ace0980
-[  334.990873] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000402110
-[  334.990881] R13: 0000000000000000 R14: 00000000006bf018 R15: 0000000000000000
-[  334.990937]
-[  334.990943] The buggy address belongs to the page:
-[  334.990962] page:ffffea000f79a400 refcount:1 mapcount:0 mapping:000000002bff47b3 index:0x0 head:ffffea000f79a400 order:4 compound_mapcount:0 compound_pincount:0
-[  334.990973] flags: 0x2fffff80010000(head)
-[  334.990992] raw: 002fffff80010000 dead000000000100 dead000000000122 0000000000000000
-[  334.991006] raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-[  334.991013] page dumped because: kasan: bad access detected
-[  334.991017]
-[  334.991023] Memory state around the buggy address:
-[  334.991034]  ffff8883de6a0000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  334.991044]  ffff8883de6a0080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  334.991054] >ffff8883de6a0100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc
-[  334.991061]                                                              ^
-[  334.991071]  ffff8883de6a0180: fc fc fc fc fc fc 00 00 00 00 00 00 00 00 00 00
-[  334.991082]  ffff8883de6a0200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  334.991088] ==================================================================
+Fixed regulators are used to nicely model the regulators which aren't tied to
+any PMIC. But for some cases we use them to represent supplies when there is
+no support for the specific PMIC present in the kernel and they are turned
+on/configured by the bootloader (this is what happening here).
 
-Because vgacon_scrollback_cur->tail plus memcpy size is greater than
-vgacon_scrollback_cur->size. Fix this by checking the memcpy size.
+And there is no use of declaring fixed regulators when there is no consumer.
+Even if you don't define these, the corresponding supplies in the board will
+always be in the same state configured by the bootloader. So I'd suggest you
+to remove this for now.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- drivers/video/console/vgacon.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Since I don't have the schematics to check, please make sure you name the
+regulators as mentioned in the schematics (this could vary from board to board,
+so don't just copy from others).
 
-diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-index 998b0de1812f..b51ffb9a208d 100644
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -243,6 +243,7 @@ static void vgacon_scrollback_startup(void)
- static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
- {
- 	void *p;
-+	int size;
- 
- 	if (!vgacon_scrollback_cur->data || !vgacon_scrollback_cur->size ||
- 	    c->vc_num != fg_console)
-@@ -251,13 +252,17 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
- 
- 	while (count--) {
-+		size = vgacon_scrollback_cur->size - vgacon_scrollback_cur->tail;
-+		if (size > c->vc_size_row)
-+			size = c->vc_size_row;
-+
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
--			    p, c->vc_size_row);
-+			    p, size);
- 
- 		vgacon_scrollback_cur->cnt++;
--		p += c->vc_size_row;
--		vgacon_scrollback_cur->tail += c->vc_size_row;
-+		p += size;
-+		vgacon_scrollback_cur->tail += size;
- 
- 		if (vgacon_scrollback_cur->tail >= vgacon_scrollback_cur->size)
- 			vgacon_scrollback_cur->tail = 0;
--- 
-2.25.1
+Thanks,
+Mani
 
+> Thanks
+> -Amit
