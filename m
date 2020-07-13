@@ -2,205 +2,103 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA2AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCF82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB8920702
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594627099;
+	bh=h5unvicdcZvk0xDMtbojzQI3KvAdcUSE1ppDWDwg9F8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qICwwy/NTyhyja9MeQKYZf5ZFns0IPIlvVbadCmhZR4S46POjAdIJrG7M5OV7k40B
+	 ZiQcS3VoWkfh4jXy7hc3nOuHqE8D8J0Duha4t9Fv+uepcH29VEAw09N4SRu9gvGHcZ
+	 1XwPfbnkBHlLz34cApnVV3CQ7beuq1Hwb+PwLFUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgGMH5D (ORCPT
+        id S1729085AbgGMH6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:57:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9092 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbgGMH5C (ORCPT
+        Mon, 13 Jul 2020 03:58:18 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:30557 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgGMH6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:57:02 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06D757K7081399;
-        Mon, 13 Jul 2020 03:56:57 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3279a9u8e1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 03:56:56 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D7tM6T005302;
-        Mon, 13 Jul 2020 07:56:55 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 327527syan-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 07:56:55 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06D7uqqp59244560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 07:56:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2B2952057;
-        Mon, 13 Jul 2020 07:56:52 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.53.244])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 935C25204F;
-        Mon, 13 Jul 2020 07:56:51 +0000 (GMT)
-From:   latha@linux.vnet.ibm.com
-To:     trenn@suse.com, shuah@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
-Subject: [PATCH] cpupower: Provide offline CPU information for cpuidle-set and cpufreq-set options
-Date:   Mon, 13 Jul 2020 13:26:47 +0530
-Message-Id: <20200713075647.70036-1-latha@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 13 Jul 2020 03:58:18 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 06D7uYDf027924;
+        Mon, 13 Jul 2020 16:56:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 06D7uYDf027924
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594626994;
+        bh=cXlkKx6N8NEBTpVkCbg0vvb9KuVX9FkcLVkdaw2RUnI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VxbmIPJHOtRVfhwgqKN6w6NJ8TXawOqUOTra0G1P/+X/zrUHkBDBAWuQodWCYtdp7
+         SXSoEyOtVuaU/77su2m2eiQiNAJBgPHZv+JPW1werHuEJHjqbnNbGIwxr/qrYfJJ0K
+         5c5DPpftzYdxU9Zqbg6udkSrNHvfCDm0MP7M3s65ilclRV8phPAmjRvISI8lA6ydCP
+         czfYb1AIzxUGZ/sLcrmkymN3H5OXwFxIdt7Fj+7G4NK5Y+xTfHBdn4QwVihyf1BmGU
+         XHcPPEBLRO5GcqZwX0D9ERw1oERgaRViXWVkeTZWJyQ7IW5CwN09MxU1bDdYv4FpBC
+         uGE9TMfj1FaGQ==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc/boot: add DTB to 'targets'
+Date:   Mon, 13 Jul 2020 16:56:28 +0900
+Message-Id: <20200713075629.5948-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_04:2020-07-10,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 suspectscore=2
- clxscore=1011 spamscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
+PowerPC always re-builds DTB even if nothing has been changed.
 
-When a user tries to modify cpuidle or cpufreq properties on offline
-CPUs, the tool returns success (exit status 0) but also does not provide
-any warning message regarding offline cpus that may have been specified
-but left unchanged. In case of all or a few CPUs being offline, it can be
-difficult to keep track of which CPUs didn't get the new frequency or idle
-state set. Silent failures are difficult to keep track of when there are a
-huge number of CPUs on which the action is performed.
+As for other architectures, arch/*/boot/dts/Makefile builds DTB by
+using the dtb-y syntax.
 
-This patch adds an additional message if the user attempts to modify
-offline cpus.
+In contrast, arch/powerpc/boot/dts/(fsl/)Makefile does nothing unless
+CONFIG_OF_ALL_DTBS is defined. Instead, arch/powerpc/boot/Makefile
+builds DTB on demand. You need to add DTB to 'targets' explicitly
+so .*.cmd files are included.
 
-Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
-Signed-off-by: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- tools/power/cpupower/utils/cpufreq-set.c | 24 ++++++++++++++++++++++--
- tools/power/cpupower/utils/cpuidle-set.c | 21 ++++++++++++++++++++-
- 2 files changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index 6ed82fba5aaa..87031120582a 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -195,10 +195,14 @@ int cmd_freq_set(int argc, char **argv)
- 	extern int optind, opterr, optopt;
- 	int ret = 0, cont = 1;
- 	int double_parm = 0, related = 0, policychange = 0;
-+	int str_len = 0;
- 	unsigned long freq = 0;
- 	char gov[20];
-+	char *offline_cpus_str = NULL;
- 	unsigned int cpu;
+I want to apply this to kbuild tree because this is needed
+to fix the build error caused by another kbuild patch:
+
+https://lkml.org/lkml/2020/7/7/134
+
+
+ arch/powerpc/boot/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 63d7456b9518..8792323707fd 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -366,6 +366,8 @@ initrd-y := $(patsubst zImage%, zImage.initrd%, \
+ 		$(patsubst treeImage%, treeImage.initrd%, $(image-y)))))
+ initrd-y := $(filter-out $(image-y), $(initrd-y))
+ targets	+= $(image-y) $(initrd-y)
++targets += $(foreach x, dtbImage uImage cuImage simpleImage treeImage, \
++		$(patsubst $(x).%, dts/%.dtb, $(filter $(x).%, $(image-y))))
  
-+	struct bitmask *offline_cpus = NULL;
-+
- 	struct cpufreq_policy new_pol = {
- 		.min = 0,
- 		.max = 0,
-@@ -311,14 +315,21 @@ int cmd_freq_set(int argc, char **argv)
- 		}
- 	}
+ $(addprefix $(obj)/, $(initrd-y)): $(obj)/ramdisk.image.gz
  
-+	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
-+	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
-+	offline_cpus_str = malloc(sizeof(char) * str_len);
- 
- 	/* loop over CPUs */
- 	for (cpu = bitmask_first(cpus_chosen);
- 	     cpu <= bitmask_last(cpus_chosen); cpu++) {
- 
--		if (!bitmask_isbitset(cpus_chosen, cpu) ||
--		    cpupower_is_cpu_online(cpu) != 1)
-+		if (!bitmask_isbitset(cpus_chosen, cpu))
-+			continue;
-+
-+		if (cpupower_is_cpu_online(cpu) != 1) {
-+			bitmask_setbit(offline_cpus, cpu);
- 			continue;
-+		}
- 
- 		printf(_("Setting cpu: %d\n"), cpu);
- 		ret = do_one_cpu(cpu, &new_pol, freq, policychange);
-@@ -328,5 +339,14 @@ int cmd_freq_set(int argc, char **argv)
- 		}
- 	}
- 
-+	if (!bitmask_isallclear(offline_cpus)) {
-+		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
-+		printf(_("Following CPUs are offline:\n%s\n"),
-+			 offline_cpus_str);
-+		printf(_("cpupower set operation was not performed on them\n"));
-+	}
-+	free(offline_cpus_str);
-+	bitmask_free(offline_cpus);
-+
- 	return 0;
- }
-diff --git a/tools/power/cpupower/utils/cpuidle-set.c b/tools/power/cpupower/utils/cpuidle-set.c
-index 569f268f4c7f..adf6543fd3d6 100644
---- a/tools/power/cpupower/utils/cpuidle-set.c
-+++ b/tools/power/cpupower/utils/cpuidle-set.c
-@@ -27,9 +27,12 @@ int cmd_idle_set(int argc, char **argv)
- 	extern char *optarg;
- 	extern int optind, opterr, optopt;
- 	int ret = 0, cont = 1, param = 0, disabled;
-+	int str_len = 0;
- 	unsigned long long latency = 0, state_latency;
- 	unsigned int cpu = 0, idlestate = 0, idlestates = 0;
- 	char *endptr;
-+	char *offline_cpus_str = NULL;
-+	struct bitmask *offline_cpus = NULL;
- 
- 	do {
- 		ret = getopt_long(argc, argv, "d:e:ED:", info_opts, NULL);
-@@ -99,14 +102,20 @@ int cmd_idle_set(int argc, char **argv)
- 	if (bitmask_isallclear(cpus_chosen))
- 		bitmask_setall(cpus_chosen);
- 
-+	offline_cpus = bitmask_alloc(sysconf(_SC_NPROCESSORS_CONF));
-+	str_len = sysconf(_SC_NPROCESSORS_CONF) * 5;
-+	offline_cpus_str = (void *)malloc(sizeof(char) * str_len);
-+
- 	for (cpu = bitmask_first(cpus_chosen);
- 	     cpu <= bitmask_last(cpus_chosen); cpu++) {
- 
- 		if (!bitmask_isbitset(cpus_chosen, cpu))
- 			continue;
- 
--		if (cpupower_is_cpu_online(cpu) != 1)
-+		if (cpupower_is_cpu_online(cpu) != 1) {
-+			bitmask_setbit(offline_cpus, cpu);
- 			continue;
-+		}
- 
- 		idlestates = cpuidle_state_count(cpu);
- 		if (idlestates <= 0)
-@@ -181,5 +190,15 @@ int cmd_idle_set(int argc, char **argv)
- 			break;
- 		}
- 	}
-+
-+	if (!bitmask_isallclear(offline_cpus)) {
-+		bitmask_displaylist(offline_cpus_str, str_len, offline_cpus);
-+		printf(_("Following CPUs are offline:\n%s\n"),
-+			 offline_cpus_str);
-+		printf(_("CPU idle operation was not performed on them\n"));
-+	}
-+	free(offline_cpus_str);
-+	bitmask_free(offline_cpus);
-+
- 	return EXIT_SUCCESS;
- }
 -- 
-2.19.1
+2.25.1
 
