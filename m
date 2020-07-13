@@ -2,373 +2,99 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67376C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 255D620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D8520773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U88pRapG"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="RqGITRMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgGMLDH (ORCPT
+        id S1729523AbgGMLFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:03:07 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:28154 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729801AbgGMLDF (ORCPT
+        Mon, 13 Jul 2020 07:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729303AbgGMLE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:03:05 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200713110302epoutp027ec97397b5574cd47d0c8ab9e92011e5~hSvpZnFWB2652126521epoutp02R
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:03:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200713110302epoutp027ec97397b5574cd47d0c8ab9e92011e5~hSvpZnFWB2652126521epoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594638182;
-        bh=w86spwHftZcaltPW4Jt2BNK0RzUuiuzMJ7cLsg6el1I=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=U88pRapG19Oshoiac61dBthBrTn2+afB2Gn6mIN8MS9bAQ/t8GsZXVkE+dYPzHSB5
-         vLYaIHyvP97lPVwlA4XAQ8ZQ0ZzeKaBLVfNAG8p40WJLn0V1gCrmPjuQqb8lGyGcJ5
-         foKjyrHcy5/IsuXxEhVAitGV7PrtjuXv+jZR1bcU=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200713110301epcas1p1581c1affbabe2de1d842b9810c1d09cf~hSvpAxaxn2177621776epcas1p1p;
-        Mon, 13 Jul 2020 11:03:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v6 5/5] scsi: ufs: Prepare HPB read for cached sub-region
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <231786897.01594637881536.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21594638181758.JavaMail.epsvc@epcpadp2>
-Date:   Mon, 13 Jul 2020 19:58:44 +0900
-X-CMS-MailID: 20200713105844epcms2p3c289747549d27e2e239168bed024a1e4
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
-References: <231786897.01594637881536.JavaMail.epsvc@epcpadp2>
-        <231786897.01594637581589.JavaMail.epsvc@epcpadp2>
-        <231786897.01594637401708.JavaMail.epsvc@epcpadp1>
-        <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
-        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
-        <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p3>
+        Mon, 13 Jul 2020 07:04:59 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF76C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:04:58 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g20so13154215edm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nN3m2m7pEWJxxgE22EVhuHKcD4TrCFPuvsPIp3KGX9k=;
+        b=RqGITRMKNmMiYRdu6+vlFczkTYWFJp1c6+1yOC3ohAOzxc8vpAusqQEaQ0E2axiD3D
+         QON4GHysm7Te5zUXV4Lz0GiISjc4xgU5T3b391ZpRcwJGbZ1amHXgAgqFQDjhLNJfgyG
+         eX0sdzLY1TPzVvZ6Y5DHPyyoWITelQBhUSBaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nN3m2m7pEWJxxgE22EVhuHKcD4TrCFPuvsPIp3KGX9k=;
+        b=ElJHNfDOokTv3+di8wba5xkBAoYohChuZ38OiaAR0dlaA+lQmNIQcM0vEzKoEYdSwm
+         vEYVJZXhponDyYttaMkbNn5IZaO7R84ePSDoRPfR5QF+NkTVZ0a6AmZFA9kt2oEw+pQ3
+         6/fDlkjnOcu70940mQvzMgRpo3XPnxiX8a6KJ8nabqQfdfT7iVR7oYcEEtIG7/y9tw4+
+         VTBfL5znDWVuoTAK/P6VBh5/jx/8FTRDH5CZ1F76pDamcqPBpQndNlILVxswazvZM/1l
+         zZdox4+Nj07AZgrfbQYOpox64ks9svM9KbfU5csGgnn00ffzxvjyQugRZBmEuGYqJoTb
+         ZLFw==
+X-Gm-Message-State: AOAM532PUZN1RkHvu6muTybrWp8I1hQISQ1gVrKJmb1zMcsSEr5QiM7g
+        5IpCpOayfNsIF2obm54+FV23aw==
+X-Google-Smtp-Source: ABdhPJxJ/mazTAbJfCnV5ZLs6gKzw7Mb01cM+wDRYPldnGl3iBlU+mkR/ggy29bNiaIxfIFLSI4DFw==
+X-Received: by 2002:a50:b5e3:: with SMTP id a90mr50641671ede.381.1594638297371;
+        Mon, 13 Jul 2020 04:04:57 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:ef88])
+        by smtp.gmail.com with ESMTPSA id j21sm11395375edq.20.2020.07.13.04.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 04:04:56 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:04:56 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] mm, memcg: memory.{low,min} reclaim fix & cleanup
+Message-ID: <cover.1594638158.git.chris@chrisdown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.14.5 (2020-06-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the read I/O to the HPB read I/O.
+This series contains a fix for a edge case in my earlier protection
+calculation patches, and a patch to make the area overall a little more
+robust to hopefully help avoid this in future.
 
-If the logical address of the read I/O belongs to active sub-region, the
-HPB driver modifies the read I/O command to HPB read. It modifies the upiu
-command of UFS instead of modifying the existing SCSI command.
+Changes in v4:
 
-In the HPB version 1.0, the maximum read I/O size that can be converted to
-HPB read is 4KB.
+- Fix premature OOM when checking protection on root memcg. Thanks
+  Naresh and Michal for helping debug.
 
-The dirty map of the active sub-region prevents an incorrect HPB read that
-has stale physical page number which is updated by previous write I/O.
+Chris Down (1):
+  mm, memcg: Decouple e{low,min} state mutations from protection checks
 
-Tested-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufshpb.c | 235 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 235 insertions(+)
+Yafang Shao (1):
+  mm, memcg: Avoid stale protection values when cgroup is above
+    protection
 
-diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
-index 45510c207a98..8e8b273d88d9 100644
---- a/drivers/scsi/ufs/ufshpb.c
-+++ b/drivers/scsi/ufs/ufshpb.c
-@@ -26,6 +26,22 @@ static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
- 		srgn->srgn_state == HPB_SRGN_VALID;
- }
- 
-+static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
-+{
-+	return req_op(cmd->request) == REQ_OP_READ;
-+}
-+
-+static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
-+{
-+	return op_is_write(req_op(cmd->request)) ||
-+	       op_is_discard(req_op(cmd->request));
-+}
-+
-+static inline bool ufshpb_is_support_chunk(int transfer_len)
-+{
-+	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
-+}
-+
- static inline bool ufshpb_is_general_lun(int lun)
- {
- 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
-@@ -117,6 +133,224 @@ static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
- 	put_device(&hpb->hpb_lu_dev);
- }
- 
-+static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_pos(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
-+
-+static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_sectors(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
-+
-+static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+			     int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int set_bit_len;
-+	int bitmap_len = hpb->entries_per_srgn;
-+
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		set_bit_len = bitmap_len - srgn_offset;
-+	else
-+		set_bit_len = cnt;
-+
-+	if (rgn->rgn_state != HPB_RGN_INACTIVE &&
-+	    srgn->srgn_state == HPB_SRGN_VALID)
-+		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
-+
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
-+
-+	cnt -= set_bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
-+
-+	WARN_ON(cnt < 0);
-+}
-+
-+static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+				   int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int bitmap_len = hpb->entries_per_srgn;
-+	int bit_len;
-+
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	if (!ufshpb_is_valid_srgn(rgn, srgn))
-+		return true;
-+
-+	/*
-+	 * If the region state is active, mctx must be allocated.
-+	 * In this case, check whether the region is evicted or
-+	 * mctx allcation fail.
-+	 */
-+	WARN_ON(!srgn->mctx);
-+
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		bit_len = bitmap_len - srgn_offset;
-+	else
-+		bit_len = cnt;
-+
-+	if (find_next_bit(srgn->mctx->ppn_dirty,
-+			  bit_len, srgn_offset) >= srgn_offset)
-+		return true;
-+
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
-+
-+	cnt -= bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
-+
-+	return false;
-+}
-+
-+static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
-+			  struct ufshpb_map_ctx *mctx, int pos, int *error)
-+{
-+	u64 *ppn_table;
-+	struct page *page;
-+	int index, offset;
-+
-+	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
-+	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
-+
-+	page = mctx->m_page[index];
-+	if (unlikely(!page)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev,
-+			"error. cannot find page in mctx\n");
-+		return 0;
-+	}
-+
-+	ppn_table = page_address(page);
-+	if (unlikely(!ppn_table)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev, "error. cannot get ppn_table\n");
-+		return 0;
-+	}
-+
-+	return ppn_table[offset];
-+}
-+
-+static inline void
-+ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
-+			int *srgn_idx, int *offset)
-+{
-+	int rgn_offset;
-+
-+	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
-+	rgn_offset = lpn & hpb->entries_per_rgn_mask;
-+	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
-+	*offset = rgn_offset & hpb->entries_per_srgn_mask;
-+}
-+
-+static void
-+ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
-+				  u32 lpn, u64 ppn,  unsigned int transfer_len)
-+{
-+	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
-+
-+	cdb[0] = UFSHPB_READ;
-+
-+	put_unaligned_be64(ppn, &cdb[6]);
-+	cdb[14] = transfer_len;
-+}
-+
-+/* routine : READ10 -> HPB_READ  */
-+static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
-+{
-+	struct ufshpb_lu *hpb;
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	struct scsi_cmnd *cmd = lrbp->cmd;
-+	u32 lpn;
-+	u64 ppn;
-+	unsigned long flags;
-+	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
-+	int err = 0;
-+
-+	hpb = ufshpb_get_hpb_data(cmd);
-+	err = ufshpb_lu_get(hpb);
-+	if (unlikely(err))
-+		return;
-+
-+	WARN_ON(hpb->lun != cmd->device->lun);
-+	if (!ufshpb_is_write_discard_cmd(cmd) &&
-+	    !ufshpb_is_read_cmd(cmd))
-+		goto put_hpb;
-+
-+	transfer_len = ufshpb_get_len(cmd);
-+	if (unlikely(!transfer_len))
-+		goto put_hpb;
-+
-+	lpn = ufshpb_get_lpn(cmd);
-+	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	/* If command type is WRITE or DISCARD, set bitmap as drity */
-+	if (ufshpb_is_write_discard_cmd(cmd)) {
-+		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				 transfer_len);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	WARN_ON(!ufshpb_is_read_cmd(cmd));
-+
-+	if (!ufshpb_is_support_chunk(transfer_len))
-+		goto put_hpb;
-+
-+	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				   transfer_len)) {
-+		atomic_inc(&hpb->stats.miss_cnt);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
-+	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+	if (unlikely(err)) {
-+		/*
-+		 * In this case, the region state is active,
-+		 * but the ppn table is not allocated.
-+		 * Make sure that ppn table must be allocated on
-+		 * active state.
-+		 */
-+		WARN_ON(true);
-+		dev_err(&hpb->hpb_lu_dev,
-+			"ufshpb_get_ppn failed. err %d\n", err);
-+		goto put_hpb;
-+	}
-+
-+	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
-+
-+	atomic_inc(&hpb->stats.hit_cnt);
-+put_hpb:
-+	ufshpb_lu_put(hpb);
-+}
-+
- static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
- 					     struct ufshpb_subregion *srgn)
- {
-@@ -1672,6 +1906,7 @@ static struct ufshpb_driver ufshpb_drv = {
- 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.ufshpb_ops = {
-+		.prep_fn = ufshpb_prep_fn,
- 		.reset = ufshpb_reset,
- 		.reset_host = ufshpb_reset_host,
- 		.suspend = ufshpb_suspend,
+ include/linux/memcontrol.h | 95 ++++++++++++++++++++++++++++++++------
+ mm/memcontrol.c            | 36 ++++++---------
+ mm/vmscan.c                | 20 +++-----
+ 3 files changed, 103 insertions(+), 48 deletions(-)
+
 -- 
-2.17.1
-
+2.27.0
 
