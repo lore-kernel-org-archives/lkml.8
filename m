@@ -2,130 +2,130 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E11EC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25361C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6792075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594647522;
-	bh=4Imm2J6zv8AZlRj8+r7FQpWufua3rH2Ik69iuryP7GY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZxcH6M0AvgYTVXzh87pl99+XW3XUmEygKeDg9CPPkxUiAK6A/irlvjDnIoz56y6p6
-	 PpXc0cs5Nyn+xr48w/v3mYSSJoobLJz6k/AcbuPpsM8OelXok+jVeYU1AtgKP8Dx0U
-	 GZQrnuUmTOcRnLp7Gx/XUa2snEEd6to0h3MbbsN0=
+	by mail.kernel.org (Postfix) with ESMTP id F30C32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VK9um5eT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgGMNil (ORCPT
+        id S1729855AbgGMNis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:38:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32985 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729613AbgGMNik (ORCPT
+        Mon, 13 Jul 2020 09:38:48 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53262 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729885AbgGMNip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:38:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id h13so9538159otr.0;
-        Mon, 13 Jul 2020 06:38:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kKVN/vPe7K4KAMz4mV6RUquQjBtyPJmIcfvA3qAlRAg=;
-        b=pa1qalYb4F6H1MEVRALkMOLfFLy8DVj9s7PDLEhmqZO7pYWqJ2N/1XjY1fVaC269V5
-         pyZFHcstUwO3EYlie4OX6XeoydOc+NENvMIUk8zETan77aie3D4jgWCwVY+IPU87xif3
-         cryrdIY0tEc54nKjeswsDOVkO83BWntEcJ+M7F8iddurbaYhIwjwEAbDETDbki4H7O+a
-         Nv991qH30GV7bzQcWZTtK+D7DX9t7lq7dBtFWoV4UyUi7U30XkjIunQSSbf9zzXGr7w/
-         tp0swGV68klU6SH2uDZTDdKCLdjSqNm7k2NlgpmFNsbAN8oxRbWN2Fdag0z/5qi2r5JY
-         cheQ==
-X-Gm-Message-State: AOAM532WtWJSHXaYMEO9DgMHeCk0csOHGY4RQxa5htxb8nzwAF4/D2zn
-        pUmCuChRvApauGb/FeRH49/fFTHID2ppYfS3OhQ=
-X-Google-Smtp-Source: ABdhPJx5RnHa1Hn3aY+ZT8/nBrdKWD3bRcHrN7T59vVK7NLNelgqWLY78QK/j9BNBSrOKrq6+JIbCsZd5oOldQKXQ90=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr50825589ota.167.1594647519410;
- Mon, 13 Jul 2020 06:38:39 -0700 (PDT)
+        Mon, 13 Jul 2020 09:38:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DDaqx3082343;
+        Mon, 13 Jul 2020 13:38:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=fUB2CdLSMqMXDoa0rGVYHlfcTSEUJl4Bs0VPYA4d0cs=;
+ b=VK9um5eTZliMznZwPnRO+JHHFtIRSuSGXU9L77MxUelBXXaZHUKX9SbwVL1/wOl2Llia
+ 7tQzswh1pMWFIxPy7EGG5I4XdGA5tCxQ05xL7grGK1aYpJC9taOiinZ8QGUxu5n2o9LW
+ fQiCbxIipFRt51heOyAXMUAaPixQF6oRzvUCtw9/ijpoBMn26aA9HmCpGm9zb+1h1ros
+ Mdgeby5pvHKIPoxTvAwBZAkmgnXtKvbc2FnF+Ad88f5ciPtPAuusNJsGeUu61M8Rcja9
+ lFk1E+uViOEwnzqro6yS6pz5b7/OGnqR3G3lJRUH+g+BQBkiHVWmu2x8nvpoG9iVR+Go sw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 3275cky1pr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 13:38:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DDcYxl173248;
+        Mon, 13 Jul 2020 13:38:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 327qbvkc0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 13:38:35 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DDcTNP026658;
+        Mon, 13 Jul 2020 13:38:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jul 2020 06:38:28 -0700
+Date:   Mon, 13 Jul 2020 16:38:21 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Baidyanath Kundu <kundubaidya99@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH] Staging: vc04_services: Fix code indent error
+Message-ID: <20200713133821.GS2549@kadam>
+References: <20200713072224.7648-1-kundubaidya99@gmail.com>
+ <20200713133527.GB3122574@kroah.com>
 MIME-Version: 1.0
-References: <20200622120527.690-1-shiju.jose@huawei.com> <20200622120527.690-2-shiju.jose@huawei.com>
- <05c8916f4f85421f871e9cbff112512b@huawei.com> <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
- <9a5b81441f7149f8bfc4e65a4309a2c5@huawei.com>
-In-Reply-To: <9a5b81441f7149f8bfc4e65a4309a2c5@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Jul 2020 15:38:28 +0200
-Message-ID: <CAJZ5v0jXV6MCxoYk7h2vVzvraFeyeWUhEarNK2R02Kb9pscodg@mail.gmail.com>
-Subject: Re: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713133527.GB3122574@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 3:33 PM Shiju Jose <shiju.jose@huawei.com> wrote:
->
-> Hi Rafael,
->
-> >-----Original Message-----
-> >From: Rafael J. Wysocki [mailto:rafael@kernel.org]
-> >Sent: 13 July 2020 12:18
-> >To: Shiju Jose <shiju.jose@huawei.com>
-> >Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
-> >kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
-> >bp@alien8.de; james.morse@arm.com; lenb@kernel.org;
-> >tony.luck@intel.com; dan.carpenter@oracle.com;
-> >zhangliguang@linux.alibaba.com; andriy.shevchenko@linux.intel.com;
-> >Wangkefeng (OS Kernel Lab) <wangkefeng.wang@huawei.com>;
-> >jroedel@suse.de; Linuxarm <linuxarm@huawei.com>; yangyicong
-> ><yangyicong@huawei.com>; Jonathan Cameron
-> ><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>
-> >Subject: Re: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
-> >(vendor) CPER records
-> >
-> >On Mon, Jul 13, 2020 at 10:35 AM Shiju Jose <shiju.jose@huawei.com>
-> >wrote:
-> >>
-> >> Hi Rafael, Hi James,
-> >>
-> >> Can you help to merge this patch because I added and tested all the
-> >suggestions from James.
-> >
-> >I could apply the [1/2] in principle, but I need an ACK for the [2/2] from the
-> >PCI side.
-> >
-> >That said, it looks like the [1/2] is a James' patch that you are sending with
-> >some changes made by you.
-> James added following changes on top of the original patch(V10) by me,
-> [ Removed kfifo and ghes_gdata_pool. Expanded commit message ]
-> I had confusion how the S-o-b tag to be added for James's changes in the V11 patch posted.
+On Mon, Jul 13, 2020 at 03:35:27PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Jul 13, 2020 at 12:52:24PM +0530, Baidyanath Kundu wrote:
+> > This patch fixes the checkpatch.pl error:
+> > 
+> > ERROR: code indent should use tabs where possible
+> > 
+> > Signed-off-by: Baidyanath Kundu <kundubaidya99@gmail.com>
+> > ---
+> >  .../staging/vc04_services/vchiq-mmal/mmal-vchiq.c  | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> > index a075cd63da7f..86c00b68f099 100644
+> > --- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> > +++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+> > @@ -294,13 +294,13 @@ static void buffer_to_host_work_cb(struct work_struct *work)
+> >  	/* queue the bulk submission */
+> >  	vchiq_use_service(instance->service_handle);
+> >  	ret = vchiq_bulk_receive(instance->service_handle,
+> > -				 msg_context->u.bulk.buffer->buffer,
+> > -			         /* Actual receive needs to be a multiple
+> > -			          * of 4 bytes
+> > -			          */
+> > -			         (len + 3) & ~3,
+> > -			         msg_context,
+> > -			         VCHIQ_BULK_MODE_CALLBACK);
+> > +				msg_context->u.bulk.buffer->buffer,
+> > +				/* Actual receive needs to be a multiple
+> > +				 * of 4 bytes
+> > +				 */
+> > +				(len + 3) & ~3,
+> > +				msg_context,
+> > +				VCHIQ_BULK_MODE_CALLBACK);
+> 
+> Close, you need one more space for these lines, right?
+> 
 
-So James should have sent the patch with his S-o-b under it.
+Yeah.  The original has the space and looks correct.
 
-You cannot add S-o-b for somebody else to any patches.  You can only
-add your S-o-b to somebody else's patch if you have made any changes
-on top of the original.
+regards,
+dan carpenter
 
-In case you want to make a record of somebody else's contribution to
-your patch, you can use the Co-developed-by tag.
-
-Thanks!
