@@ -2,189 +2,88 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C082C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E1B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dc8HNhuT"
+	by mail.kernel.org (Postfix) with ESMTP id 50EFD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgGMJMz (ORCPT
+        id S1729412AbgGMJNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgGMJMy (ORCPT
+        Mon, 13 Jul 2020 05:13:09 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42757 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgGMJNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:12:54 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84F4C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:12:54 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g67so5759253pgc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:12:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2pjchSlwME4GrTpEw7XTrDCwU1gG4HJg02FXR22Hkas=;
-        b=Dc8HNhuThCDkktDS6B+WjGZyK0LdkXIxeRs+uY86mwkgQgeDrNeZBcgHv+dr/VgE8i
-         99LjcelPnCB6GxqIqDnK+19HuhjUyqsLTqBZV76hoWI+PhdoeFHI4rolEPvfQ03OsjQj
-         T0K19kPY3cx28Xa3O40GxC3+syA37DHUIx4xo=
+        Mon, 13 Jul 2020 05:13:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g37so8992259otb.9;
+        Mon, 13 Jul 2020 02:13:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2pjchSlwME4GrTpEw7XTrDCwU1gG4HJg02FXR22Hkas=;
-        b=oMyIyUPoCnBHAQtg8Hix5uPn1Ud0HJlVtsk2UCy5kC7RrPfDQjlOZidGRtyr1HjpRR
-         vUcZvIRxEhGGrDU8kwGrhM6Z7S1V5jY0564dgaG3XC5zBY4RVfDmUrRdtUoB8+YGRtiX
-         9/yXjJHVO4oLkY9u2ZbEiE9lhBVlBgwYrDCH0PF5XesvbGaQpR7usiLjVxFxlez8SQ3y
-         UIUSXSJbd3DJZ5MTAh6WqcnD4+ur8tH3PcYyT4yf8za5rLqD6Q6UY+azdmWdiwKzZFPv
-         MHeKQAkQEEfyEnUiP3Li+EuU1MU18Xi6H12X6q4oCDIpPrWNoGYotoZ8isa1FhB+Zira
-         WrQg==
-X-Gm-Message-State: AOAM531tYxoN5kjKiDE2nT3JHdZiNxIZy0yJUHg7TiP0q4Xrs8mEvyvE
-        bHn4/NP5DbVs3AsVOFkW+pFnfA==
-X-Google-Smtp-Source: ABdhPJzCBz1wXNm6srY4fV+QTPs1p1GBdSr9wd1N0xPtsZeiUu/632nKu46kLsgjWtntLiQYzALTzw==
-X-Received: by 2002:a63:140a:: with SMTP id u10mr71073813pgl.238.1594631574223;
-        Mon, 13 Jul 2020 02:12:54 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:3e52:82ff:fe5e:cc9d])
-        by smtp.gmail.com with ESMTPSA id kk6sm10887305pjb.1.2020.07.13.02.12.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 02:12:53 -0700 (PDT)
-From:   Claire Chang <tientzu@chromium.org>
-To:     robh+dt@kernel.org, frowand.list@gmail.com, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com
-Cc:     treding@nvidia.com, gregkh@linuxfoundation.org,
-        saravanak@google.com, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        tfiga@chromium.org, drinkcat@chromium.org,
-        Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 4/4] of: Add plumbing for bounced DMA pool
-Date:   Mon, 13 Jul 2020 17:12:11 +0800
-Message-Id: <20200713091211.2183368-5-tientzu@chromium.org>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-In-Reply-To: <20200713091211.2183368-1-tientzu@chromium.org>
-References: <20200713091211.2183368-1-tientzu@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Kvnn1U97jZEFNfOWUSAsH/gkQzeVqu192LUXU0iCy4=;
+        b=t3Dsv0rpGcYRgtqb6ZOQlxcLFQUqVYy4my2L7w6LZpqG3/5ZKsTdc0VCIxRF6kg0nj
+         mMIOngGZM/aTS6lDsjh4m82jlhR4v367v/z5ItIBol6hxOWwl/jxlBfGeqeq4xzi+yBK
+         Y1Dv1FY8ZgBcpRCk91vh8UwZ9B2czwKU9usuy1fhp0OdDf5KKtKwb4mMUt1ZUq4XGyo2
+         8MKT9UNpUn8Osz/YItM/w1u+/YYZVOzstp4SSh7KJhN0CALHv5x4WkAaYBtmzLf7TSjk
+         MnU006iFt3QaU+1CienqYHYQu5GCmy1/VC7yM5SOc5cgaQu/H/KWg+2DtPvJbIMj6j7s
+         tCIQ==
+X-Gm-Message-State: AOAM533fLQE40oN/MY2fOLQBxc+s4Crm1J5LMV7NFJHPFEU1DejoQIIb
+        RGSSaGjsMmDhnpgP7RvvubJQz/cq28kPNnNdcHI=
+X-Google-Smtp-Source: ABdhPJzCNB4z3cnwFxg40yF0vD7KxhFEnVze7JJzdymORNXy473eBLB/B4cnQoGYWPXmt7S7GLNnpSjsEbLKguPGOEk=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr56644751otp.250.1594631587724;
+ Mon, 13 Jul 2020 02:13:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200710135706.537715-1-hch@lst.de> <20200710135706.537715-6-hch@lst.de>
+In-Reply-To: <20200710135706.537715-6-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 Jul 2020 11:12:56 +0200
+Message-ID: <CAMuHMdVyy+cj+mpRJAW=1=3aOJWvUrLhXjJxKvVFdFcGr_RJRA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] uaccess: add force_uaccess_{begin,end} helpers
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a device is not behind an IOMMU, we look up the device node and set
-up the bounced DMA when the bounced-dma property is presented. One can
-specify two reserved-memory nodes in the device tree. One with
-shared-dma-pool to handle the coherent DMA buffer allocation, and
-another one with bounced-dma-pool for regular DMA to/from system memory,
-which would be subject to bouncing.
+On Fri, Jul 10, 2020 at 3:57 PM Christoph Hellwig <hch@lst.de> wrote:
+> Add helpers to wraper the get_fs/set_fs magic for undoing any damage
 
-Signed-off-by: Claire Chang <tientzu@chromium.org>
----
- drivers/of/address.c    | 37 +++++++++++++++++++++++++++++++++++++
- drivers/of/device.c     |  3 +++
- drivers/of/of_private.h |  6 ++++++
- 3 files changed, 46 insertions(+)
+to wrap
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8eea3f6e29a4..a767b80f8862 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -8,6 +8,7 @@
- #include <linux/logic_pio.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/pci.h>
- #include <linux/pci_regs.h>
- #include <linux/sizes.h>
-@@ -1009,6 +1010,42 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 	return ret;
- }
- 
-+int of_dma_set_bounce_buffer(struct device *dev)
-+{
-+	int length, size, ret, i;
-+	u32 idx[2];
-+
-+	if (!dev || !dev->of_node)
-+		return -EINVAL;
-+
-+	if (!of_get_property(dev->of_node, "bounced-dma", &length))
-+		return 0;
-+
-+	size = length / sizeof(idx[0]);
-+	if (size > ARRAY_SIZE(idx)) {
-+		dev_err(dev,
-+			"bounced-dma expected less than or equal to 2 indexs, but got %d\n",
-+			size);
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32_array(dev->of_node, "bounced-dma", idx,
-+					 size);
-+
-+	for (i = 0; i < size; i++) {
-+		ret = of_reserved_mem_device_init_by_idx(dev, dev->of_node,
-+							 idx[i]);
-+		if (ret) {
-+			dev_err(dev,
-+				"of_reserved_mem_device_init_by_idx() failed with %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * of_dma_is_coherent - Check if device is coherent
-  * @np:	device node
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 27203bfd0b22..238beef48a50 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -169,6 +169,9 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
- 
- 	arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
- 
-+	if (!iommu)
-+		return of_dma_set_bounce_buffer(dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_dma_configure);
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index edc682249c00..3d1b8cca1519 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -160,12 +160,18 @@ extern int of_bus_n_size_cells(struct device_node *np);
- #ifdef CONFIG_OF_ADDRESS
- extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 			    u64 *paddr, u64 *size);
-+extern int of_dma_set_bounce_buffer(struct device *dev);
- #else
- static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 				   u64 *paddr, u64 *size)
- {
- 	return -ENODEV;
- }
-+
-+static inline int of_dma_get_bounce_buffer(struct device *dev)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- #endif /* _LINUX_OF_PRIVATE_H */
+> done by set_fs(KERNEL_DS).  There is no real functional benefit, but this
+> documents the intent of these calls better, and will allow stubbing the
+> functions out easily for kernels builds that do not allow address space
+> overrides in the future.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+>  arch/m68k/include/asm/tlbflush.h | 12 ++++++------
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0.383.g050319c2ae-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
