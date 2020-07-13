@@ -2,84 +2,102 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C15AC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1A6C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 688742065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEAC2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594629725;
+	bh=LB10Hpmj34rIYqpojE3tjMY5Wd0jXgunZo/7a/Bdx4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YXQtCwsZAr0BHaQ1AB3qr8H9almg4FHkCgJ/e9eBdQT+v1Sp/ewb8xD+tWal4iXe7
+	 qnzgKf4P9dYdj+/QONL/dxH8q6xfsbOy1XYjqVRtP4+4iB7+cXN0WU88WtN/1zYuZq
+	 U6ExewNZ78GQuOPJ9ow0oBXPNJiHPnk0vz2RV6cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgGMIlg (ORCPT
+        id S1729166AbgGMImD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:41:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46404 "EHLO mga07.intel.com"
+        Mon, 13 Jul 2020 04:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgGMIlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:41:36 -0400
-IronPort-SDR: N2547ZEoTeqNBMC8fzTI+8W/jeP0XhIfG0BN8l9wc7hhlqm+JBvkSmXGra4zAeKkmcz4JJcbhi
- v2GohUVTAvhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="213414173"
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="213414173"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 01:41:35 -0700
-IronPort-SDR: BLDNkp2A7Jp4PSPcgGtrrs2mwi6zap10DENFrgIJHJw7qKhjwMhOLvab3Dd19FuZLoaO4IcQvP
- WqfvenKKZrlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="325436277"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 01:41:35 -0700
-Received: from [10.215.249.14] (mreddy3x-MOBL.gar.corp.intel.com [10.215.249.14])
-        by linux.intel.com (Postfix) with ESMTP id 6EEBA58080E;
-        Mon, 13 Jul 2020 01:41:32 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] Add Intel LGM soc DMA support.
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        malliamireddy009@gmail.com, mallikarjunax.reddy@linux.intel.com
-References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <20200709110914.GW3703480@smile.fi.intel.com>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
-Date:   Mon, 13 Jul 2020 16:41:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727834AbgGMImD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:42:03 -0400
+Received: from localhost (unknown [84.241.194.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 430ED2065D;
+        Mon, 13 Jul 2020 08:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594629723;
+        bh=LB10Hpmj34rIYqpojE3tjMY5Wd0jXgunZo/7a/Bdx4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sBsrH+ChkJC1OsMwtxYqPtV4cdidDnE9+YMOyB83YvCXN0N3eNk/yqMpqeim6xS16
+         Ji8yD26y/SmIgXaUrPhlPKUJkgOtrU2wjOA9rEuxoI9846VYCw+js05Vm3RGUlSGFB
+         N/ANtkAKuMF7PmEtPMpizPaFGfQfGAxx0HtjHNPM=
+Date:   Mon, 13 Jul 2020 10:42:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Qiwu Huang <yanziily@gmail.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v2 2/5] power: supply: core: add wireless charger adapter
+ type property
+Message-ID: <20200713084200.GD215949@kroah.com>
+References: <cover.1594612572.git.huangqiwu@xiaomi.com>
+ <b20548fc825241c69878bfb05464b0e4f378f4ce.1594612572.git.huangqiwu@xiaomi.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709110914.GW3703480@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b20548fc825241c69878bfb05464b0e4f378f4ce.1594612572.git.huangqiwu@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review Andy. My comments inline.
+On Mon, Jul 13, 2020 at 12:03:37PM +0800, Qiwu Huang wrote:
+> From: Qiwu Huang <huangqiwu@xiaomi.com>
+> 
+> Reports what type of wireless adapter connection is
+> currently active forthe supply.
+> for example it can show if ADAPTER_PD capable source is attached.
+> 
+> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-power | 11 +++++++++++
+>  drivers/power/supply/power_supply_sysfs.c   |  1 +
+>  include/linux/power_supply.h                |  1 +
+>  3 files changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index d3169d47e359..cd07d3f4e8b1 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -718,3 +718,14 @@ Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+>  		Access: Read-Only
+>  		Valid values: Reported as integer
+>  
+> +===== Wireless Charger Properties =====
+> +What:		/sys/class/power_supply/<supply_name>/tx_adapter
+> +Date:		Jul 2020
+> +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> +Description:
+> +		Reports what type of wireless adapter connection is currently active for
+> +		the supply, for example it can show if ADAPTER_PD capable source
+> +		is attached.
 
-On 7/9/2020 7:09 PM, Andy Shevchenko wrote:
-> On Thu, Jul 09, 2020 at 02:01:06PM +0800, Amireddy Mallikarjuna reddy wrote:
->> Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
->>
->> The main function of the DMA controller is the transfer of data from/to any
->> DPlus compliant peripheral to/from the memory. A memory to memory copy
->> capability can also be configured.
->>
->> This ldma driver is used for configure the device and channnels for data
->> and control paths.
->> +#include "../virt-dma.h"
-> I didn't find any evidence this driver utilizes virt-dma API in full.
-> For example, there is a virt_dma_desc structure and descriptor management around it.
-> Why don't you use it?
-Lgm dma soc has its own hardware descriptor.
-and each dma channel is associated with a peripheral, it is one to one 
-mapping between channel and associated peripheral.
->
+Same question as before, what are the allowed types here?
+
+> +
+> +		Access: Read-Only
+> +		Valid values: Reported as integer
+
+What integer maps to what values?
+
+thanks,
+
+greg k-h
