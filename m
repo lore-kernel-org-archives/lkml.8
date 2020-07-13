@@ -2,152 +2,134 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67002C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12989C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405742072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCAF2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N28atTV1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY1u+H7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgGMMN1 (ORCPT
+        id S1729708AbgGMMOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:13:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11233 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729027AbgGMMN0 (ORCPT
+        Mon, 13 Jul 2020 08:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgGMMOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:13:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594642405; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=QmzfPs8eZRl2dgcyf60Wj7Bm3TCq28QlYUw6T4kFc3o=;
- b=N28atTV16BcFHw54aymTGm094uNz670SDc6Uk46Q7gaI1o99iRhSqIiC6B38VtNNQXLcpcrk
- UiHRDUQmvqnLrDPWe05Zbdlu6ucdJ1bJY6+l3gWvXi6pTPiutwRO7CqVJbKTLCWEqg/vPUJ+
- 4ZOe5F9e90J5a+NO7d9GV6yoO3c=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f0c4fd9166c1c5494da358a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 12:13:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 84DC8C433AD; Mon, 13 Jul 2020 12:13:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E466C433C8;
-        Mon, 13 Jul 2020 12:13:11 +0000 (UTC)
+        Mon, 13 Jul 2020 08:14:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E67C061755;
+        Mon, 13 Jul 2020 05:14:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t15so6160737pjq.5;
+        Mon, 13 Jul 2020 05:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2P82DVa0uA6ZsAd3NB4q4eF6eR6EDSKhk3gZmaYEnrI=;
+        b=OY1u+H7TOfRirjsCn6YZ4ohxeV6a0pnQ8m6WWhPNUDRlvXcaIj2MdZ0bIJ7+lMr5H5
+         mi+DErEvZIBa7esEYaKuMK333QVLsFQEwO7baTFTH/6sq9xwUL2hKD+X/dBRNg+WlZ5F
+         HQH7T1i2KCC1N0vlTy7cJWKYzdsWPLtY6WpRDF9ZUQp3HhxYCFklkqhOZoZpKCGbPBwZ
+         QJF0T8HSWxscPIEocZP0eQxckDS6xq3GJM4F3SKP0YTZiBDAzwlBi06T8FxYUb8rv1uv
+         bNj7sI/h3oobmnw4zOWTdd+Ybpv+YXgFdX5G9W6L6LKyCgnmkpPqgwqBYdjAZhwqEz2V
+         5DSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2P82DVa0uA6ZsAd3NB4q4eF6eR6EDSKhk3gZmaYEnrI=;
+        b=VaDgl3bWrkYOVjRI3/UWeU2ob7G+fDRgCv8IfLjf0bQfNs4Et6gbeXwDgpV3Vrhhf8
+         kPBM1tMFOPNOGEl3s5Pl+MM/dUy2CqUDqz9H/gIo1x40yBNPQNzjlVy18KdA2Piexaus
+         u8qOAqMDYnOf5MTdtJI5KqGJT2iIjdBz2md8XdE/otw2XPU0lwlLtaOE76VHjSU8BaPN
+         a88MwOOpJaIt9j5y40lXu3wKzaAQGb0KHiKDAYNuK3vVt7bxYmBCOl3ootUU3hzHNGY2
+         LsiikxeJRXYNV05dXKdPEgBDeZeQbuvnvjf+B3+mULuThDFZl9j2gNDjVmyaXtdXb4ec
+         0Acw==
+X-Gm-Message-State: AOAM532QFEGqzU1wLgAee4HexltCWgeGRX1+2qib1P0ArF7IdcZ1+TAM
+        pYrFPTVSVMLhnrfhhYYlQHtfj2WxeLaPZQ==
+X-Google-Smtp-Source: ABdhPJzH/Mg6FFnMjQPexZV+clQXflYEUbtTrxhI8RnnXsVRT+zfTStVRzLh9stkH84cILUtqvIocw==
+X-Received: by 2002:a17:90a:f206:: with SMTP id bs6mr20065510pjb.48.1594642483042;
+        Mon, 13 Jul 2020 05:14:43 -0700 (PDT)
+Received: from blackclown ([103.88.82.220])
+        by smtp.gmail.com with ESMTPSA id v11sm16230393pfc.108.2020.07.13.05.14.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Jul 2020 05:14:42 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:44:27 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] staging: qlge: General cleanup and refactor.
+Message-ID: <cover.1594642213.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jul 2020 20:13:11 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     daejun7.park@samsung.com
-Cc:     avri.altman@wdc.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, asutoshd@codeaurora.org,
-        beanhuo@micron.com, stanley.chu@mediatek.com, bvanassche@acm.org,
-        tomas.winkler@intel.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: Re: [PATCH v6 1/5] scsi: ufs: Add UFS feature related parameter
-In-Reply-To: <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
-References: <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
- <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p3>
- <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
-Message-ID: <dbc1c3ffaf66ec41236365c5b259d948@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-13 18:38, Daejun Park wrote:
-> This is a patch for parameters to be used for UFS features layer and 
-> HPB
-> module.
-> 
-> Tested-by: Bean Huo <beanhuo@micron.com>
-> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/scsi/ufs/ufs.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index f8ab16f30fdc..ae557b8d3eba 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -122,6 +122,7 @@ enum flag_idn {
->  	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
->  	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
->  	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-> +	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
->  };
-> 
->  /* Attribute idn for Query requests */
-> @@ -195,6 +196,9 @@ enum unit_desc_param {
->  	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
->  	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
->  	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-> +	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-> +	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-> +	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
->  	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
->  };
-> 
-> @@ -235,6 +239,8 @@ enum device_desc_param {
->  	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
->  	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
->  	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-> +	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-> +	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
->  	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
->  	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
->  	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-> @@ -283,6 +289,10 @@ enum geometry_desc_param {
->  	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
->  	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
->  	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-> +	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
-> +	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
-> +	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
-> +	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
->  	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
->  	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
->  	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-> @@ -327,6 +337,7 @@ enum {
-> 
->  /* Possible values for dExtendedUFSFeaturesSupport */
->  enum {
-> +	UFS_DEV_HPB_SUPPORT		= BIT(7),
->  	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
->  };
-> 
-> @@ -537,6 +548,7 @@ struct ufs_dev_info {
->  	u8 *model;
->  	u16 wspecversion;
->  	u32 clk_gating_wait_us;
-> +	u8 b_ufs_feature_sup;
->  	u32 d_ext_ufs_feature_sup;
->  	u8 b_wb_buffer_type;
->  	u32 d_wb_alloc_units;
-> 
-> base-commit: b53293fa662e28ae0cdd40828dc641c09f133405
+Hii,
+	This patchest aims to remove several of the checkpatch.pl
+warnings and refactor some ugly while loops into for loops for better
+readability.
+Some of the issues are found with checkpatch and others were listed in
+qlge/TODO.
+
+Thanks,
+
+Suraj Upadhyay (6):
+  staging: qlge: qlge.h: Function definition arguments should have
+    names.
+  staging: qlge: qlge.h: Insert line after declaration.
+  staging: qlge: qlge_dbg: Simplify while statements
+  staging: qlge: qlge_main: Simplify while statements.
+  staging: qlge: qlge_mpi: Simplify while statements.
+  staging: qlge: qlge_ethtool: Remove one byte memset.
+
+ drivers/staging/qlge/qlge.h         |  7 +++--
+ drivers/staging/qlge/qlge_dbg.c     |  5 ++-
+ drivers/staging/qlge/qlge_ethtool.c |  4 +--
+ drivers/staging/qlge/qlge_main.c    | 49 +++++++++++++----------------
+ drivers/staging/qlge/qlge_mpi.c     | 32 +++++++++----------
+ 5 files changed, 45 insertions(+), 52 deletions(-)
+
+--=20
+2.17.1
+
+
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8MUBoACgkQ+gRsbIfe
+7454sg/8DJM1+74HINhkyKxsOhUgvby6VzO0B0iFGVivi796N9MMSjLGpth9dl29
+PLvjRCYwqpFriYMpzPJPI++RXoPXKXHrIlYgUi0kKQmB8hmYc+bhfcTNuSMEJRgF
++34nRwTJEruI8aOczBnqD3t/fNsXXappC8GIaOhqAvkZIGmw/oAHss7oNc83qgRW
+YajyFoZt1zcw2zBbch9PHFpgj/9zOZfSuy47/irzeioqYLfXSs4HcZJB08Nan5Hn
+NZc4QgW5ggu/fCg80BCaKCwiQXl7df6dKQ62+eAgt/KGKg24oGbYfYc7yNgMTYVo
+c/ihaAV3NzZPZAEnwgVU4yS3ygBavS/Dnoas5hsl/cqzdXJFiu5lewIriRl6/ldk
+y7xp71Vyxm1O22iMwZGuHCt0JUc9UsXxp8+4lROo5sz42rqD0RZnXYVT5OVSYsfF
+09mvC2u9xMvxOt4kFsPQXYeYF6nqAU0yDZJ0xpCXCrZ3d5chy3lMbxN178KH843A
+YBQ6xTsopIHEvCMaM55KckzdmKF5zwFTFlVSBsRGtQhjHGF+q/DwwTvYV58YXC0W
+3K5j2SIcWgHeA0ThmQOTkIQogHmSS2nJTh6g4mAAFXOXjGO1C4N/TigPj0G1EHsn
+oyQd0Icgj/uS/uNK+92otBPkL2J6EVHdoJaUS+gJM13WzlYAznw=
+=FhHN
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
