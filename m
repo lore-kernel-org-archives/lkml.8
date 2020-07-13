@@ -2,161 +2,175 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9CEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C35C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E61B2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B5A2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyhHhG8j"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="adIJPSf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgGMKhR (ORCPT
+        id S1729545AbgGMKiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgGMKhP (ORCPT
+        Mon, 13 Jul 2020 06:38:07 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:32617 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbgGMKiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:37:15 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA40C061755;
-        Mon, 13 Jul 2020 03:37:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h22so16928443lji.9;
-        Mon, 13 Jul 2020 03:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V2wzk0nXU0h78C8JoXPc0o3B8umh3R1NSlPKrClAK2A=;
-        b=TyhHhG8j/g6D1lSP/mCH5hOH6d9SmAX5lAOb/D5HgVekJMckmZRR8I+EfaS5IV0XKf
-         oXo/1/gCZ3zeTexVUDX9oxOIMR/p63F+auwHIO1hoX/xDfITGS2hwkz7lmUcB+5Ai7vW
-         T+Nc4ZCMqYd3yIRLU9kAx8LZZVUXOy/fgZJq6Kj4Hw7r3VQsPdcY4fqQ5j5Lx1WBlCAJ
-         JvWIK0c34qhyPT3kAGXV6R2LlvqYsWH3CVMUN4tnHmve6g5+K9+axWbb5fA8cE24Onjk
-         ht2Tp6Ujud9eydh3mFYNqi32syvnJQH5283rbP6UCdQcgO35oq7tq4QF3D/+aEFoQxuD
-         qg5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V2wzk0nXU0h78C8JoXPc0o3B8umh3R1NSlPKrClAK2A=;
-        b=dCLV1NC09E4bGDFWkrNbcVnCaELiK5vAQ+YbctI8rNl+lqm0L6AFItzvyeVzhdfe/e
-         lrH65EZZ5XEBRg5wQxKlh8YWflKkWUeDOdYO1gtngxXx1lvzrm0lu0rRYbHU1EZ1Mt8G
-         W5khGz8WCxFUh0c680AWFUel361eEsrzelA7NTInlcI8IMkwGMnRn+PNCOyMBph05Muz
-         par+bCU7EP/EThK1UMwAWbaImunfkEboWLL8qsRopfo/bpqxdzRbL6DzLJt8bXdzUNA6
-         SpvXG9MavF8vyp76Ds22Rh0va03yCaJbpU9Z4nDTCJcbaEXts04tN/7Gig4EBSlEAOnh
-         SgAA==
-X-Gm-Message-State: AOAM5307ZAbUxDMoWXD557PWsZyjz9WGjv2+PPcfg+UVySn9IHDDOkkz
-        eY4DhAJPxLttWzjOKIINU3dzb81m
-X-Google-Smtp-Source: ABdhPJw1mX+th01sqvBL0LiigLJOOcm7zQ4+2MSaYxvjj+Se4p5aTPeFDDQKmosYyI4JaFgfju0m4w==
-X-Received: by 2002:a05:651c:21a:: with SMTP id y26mr32660693ljn.106.1594636633051;
-        Mon, 13 Jul 2020 03:37:13 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id k20sm3978640ljc.111.2020.07.13.03.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 03:37:12 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] PM / devfreq: Add governor flags to clarify the
- features
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
-        enric.balletbo@collabora.com, hl@rock-chips.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20200713083113.5595-1-cw00.choi@samsung.com>
- <CGME20200713081944epcas1p22871b6d8a9455226e6cccd08ac0baa73@epcas1p2.samsung.com>
- <20200713083113.5595-3-cw00.choi@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <746837bc-6734-3e52-453f-2b59bbca0230@gmail.com>
-Date:   Mon, 13 Jul 2020 13:37:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200713083113.5595-3-cw00.choi@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jul 2020 06:38:06 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200713103802epoutp010eb1634b3097c8c39bb4b5ebd429602c~hSZ1Bs80Q1932219322epoutp01i
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:38:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200713103802epoutp010eb1634b3097c8c39bb4b5ebd429602c~hSZ1Bs80Q1932219322epoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594636682;
+        bh=TsllOloAjz1ijwnKXX/vl6usMGPlqLbq3iNQKSuyKIQ=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=adIJPSf/0ULO9450sUAMA7MIwduztNetgm3ATGc7TZ8kZWiSGDaE7A0KRN5mJ0Lsd
+         +QOhVEcz6+7VdJvjbgL4UjMX6dWn6YVP80NHvU75al83GsZRfOVKqALXYlRZ4L42EA
+         NbE6sYQSytawMsPw+1M5u8aY/LATOfTjchhAjjSI=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200713103802epcas1p1a53731734d59978cc980b40df641d0a3~hSZ0ahT_T0591705917epcas1p1Y;
+        Mon, 13 Jul 2020 10:38:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 13 Jul 2020 19:34:23 +0900
+X-CMS-MailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.07.2020 11:31, Chanwoo Choi пишет:
-> DEVFREQ supports the default governors like performance, powersave and also
-> allows the devfreq driver to add their own governor like tegra30-devfreq.c
-> according to their requirement. In result, some sysfs attributes are
-> useful or not useful. Prior to that the user can access all sysfs attributes
-> regardless of availability.
-> 
-> So, clarify the access permission of sysfs attributes according to governor.
-> When adding the devfreq governor, can specify the available attribute
-> information by using DEVFREQ_GOV_ATTR_* constant variable. The user can
-> read or write the sysfs attributes in accordance to the specified attributes.
-> 
-> /* Devfreq governor flags for attributes and features */
-> [Definition for sysfs attributes]
-> - DEVFREQ_GOV_ATTR_GOVERNOR
-> - DEVFREQ_GOV_ATTR_AVAIL_GOVERNORS
-> - DEVFREQ_GOV_ATTR_AVAIL_FREQUENCIES
-> - DEVFREQ_GOV_ATTR_CUR_FREQ
-> - DEVFREQ_GOV_ATTR_TARGET_FREQ
-> - DEVFREQ_GOV_ATTR_MIN_FREQ
-> - DEVFREQ_GOV_ATTR_MAX_FREQ
-> - DEVFREQ_GOV_ATTR_TRANS_STAT
-> - DEVFREQ_GOV_ATTR_POLLING_INTERVAL
-> - DEVFREQ_GOV_ATTR_TIMER
-> 
-> Also, the devfreq governor is able to have the specific flag as follows
-> in order to implement the specific feature. For example, Devfreq allows
-> user to change the governors on runtime via sysfs interface.
-> But, if devfreq device uses 'passive' governor, don't allow user to change
-> the governor. For this case, define the DEVFREQ_GOV_FLAT_IMMUTABLE
-> and set it to flag of passive governor.
-> 
-> [Definition for governor flag]
-> - DEVFREQ_GOV_FLAG_IMMUTABLE
-> : If immutable flag is set, governor is never changeable to other governors.
-> - DEVFREQ_GOV_FLAG_IRQ_DRIVEN
-> : Devfreq core won't schedule polling work for this governor if value is set.
-> 
-> [Table of governor flag for devfreq governors]
-> ------------------------------------------------------------------------------
->                       | simple    | perfor | power | user | passive | tegra30
-> 		      | ondemand  | mance  | save  | space|         |
-> ------------------------------------------------------------------------------
-> governor              | O         | O      | O     | O    | O       | O
-> available_governors   | O         | O      | O     | O    | O       | O
-> available_frequencies | O         | O      | O     | O    | O       | O
-> cur_freq              | O         | O      | O     | O    | O       | O
-> target_freq           | O         | O      | O     | O    | O       | O
-> min_freq              | O         | O      | O     | O    | O       | O
-> max_freq              | O         | O      | O     | O    | O       | O
-> trans_stat            | O         | O      | O     | O    | O       | O
->                       --------------------------------------------------------
-> polling_interval      | O         | X      | X     | X    | X       | O
-> timer                 | O         | X      | X     | X    | X       | X
-> ------------------------------------------------------------------------------
-> immutable             | X         | X      | X     | X    | O       | O
-> interrupt_driven      | X(polling)| X      | X     | X    | X       | O (irq)
-> ------------------------------------------------------------------------------
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
+Changelog:
 
-Hello, Chanwoo! I tested this series on NVIDIA Tegra30 and everything
-working fine!
+v5 -> v6
+Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+v4 -> v5
+Delete unused macro define.
 
+v3 -> v4
+1. Cleanup.
 
-BTW, I'm curious what do you think about hiding the unsupported debugfs
-attributes per-device instead of returning the -EACCES?
+v2 -> v3
+1. Add checking input module parameter value.
+2. Change base commit from 5.8/scsi-queue to 5.9/scsi-queue.
+3. Cleanup for unused variables and label.
+
+v1 -> v2
+1. Change the full boilerplate text to SPDX style.
+2. Adopt dynamic allocation for sub-region data structure.
+3. Cleanup.
+
+NAND flash memory-based storage devices use Flash Translation Layer (FTL)
+to translate logical addresses of I/O requests to corresponding flash
+memory addresses. Mobile storage devices typically have RAM with
+constrained size, thus lack in memory to keep the whole mapping table.
+Therefore, mapping tables are partially retrieved from NAND flash on
+demand, causing random-read performance degradation.
+
+To improve random read performance, JESD220-3 (HPB v1.0) proposes HPB
+(Host Performance Booster) which uses host system memory as a cache for the
+FTL mapping table. By using HPB, FTL data can be read from host memory
+faster than from NAND flash memory. 
+
+The current version only supports the DCM (device control mode).
+This patch consists of 4 parts to support HPB feature.
+
+1) UFS-feature layer
+2) HPB probe and initialization process
+3) READ -> HPB READ using cached map information
+4) L2P (logical to physical) map management
+
+The UFS-feature is an additional layer to avoid the structure in which the
+UFS-core driver and the UFS-feature are entangled with each other in a 
+single module.
+By adding the layer, UFS-features composed of various combinations can be
+supported. Also, even if a new feature is added, modification of the 
+UFS-core driver can be minimized.
+
+In the HPB probe and init process, the device information of the UFS is
+queried. After checking supported features, the data structure for the HPB
+is initialized according to the device information.
+
+A read I/O in the active sub-region where the map is cached is changed to
+HPB READ by the HPB module.
+
+The HPB module manages the L2P map using information received from the
+device. For active sub-region, the HPB module caches through ufshpb_map
+request. For the in-active region, the HPB module discards the L2P map.
+When a write I/O occurs in an active sub-region area, associated dirty
+bitmap checked as dirty for preventing stale read.
+
+HPB is shown to have a performance improvement of 58 - 67% for random read
+workload. [1]
+
+This series patches are based on the 5.9/scsi-queue branch.
+
+[1]:
+https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
+
+Daejun park (5):
+ scsi: ufs: Add UFS feature related parameter
+ scsi: ufs: Add UFS feature layer
+ scsi: ufs: Introduce HPB module
+ scsi: ufs: L2P map management for HPB read
+ scsi: ufs: Prepare HPB read for cached sub-region
+ 
+ drivers/scsi/ufs/Kconfig      |    9 +
+ drivers/scsi/ufs/Makefile     |    3 +-
+ drivers/scsi/ufs/ufs.h        |   12 +
+ drivers/scsi/ufs/ufsfeature.c |  148 +++
+ drivers/scsi/ufs/ufsfeature.h |   69 ++
+ drivers/scsi/ufs/ufshcd.c     |   19 +
+ drivers/scsi/ufs/ufshcd.h     |    2 +
+ drivers/scsi/ufs/ufshpb.c     | 1997 ++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h     |  232 +++++
+ 9 files changed, 2490 insertions(+), 1 deletion(-)
+ created mode 100644 drivers/scsi/ufs/ufsfeature.c
+ created mode 100644 drivers/scsi/ufs/ufsfeature.h
+ created mode 100644 drivers/scsi/ufs/ufshpb.c
+ created mode 100644 drivers/scsi/ufs/ufshpb.h
