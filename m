@@ -2,94 +2,148 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FA8C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350FC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9B4820791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BD8206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VswAJyQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730407AbgGMRWF (ORCPT
+        id S1730430AbgGMRWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 Jul 2020 13:22:08 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3758 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbgGMRWF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jul 2020 13:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbgGMRWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:22:04 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96F82206F5;
-        Mon, 13 Jul 2020 17:22:01 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 18:21:59 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Zhenyu Ye <yezhenyu2@huawei.com>, will@kernel.org,
-        suzuki.poulose@arm.com, maz@kernel.org, steven.price@arm.com,
-        guohanjun@huawei.com, olof@lixom.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-Message-ID: <20200713172158.GE15829@gaia>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <20200710094420.517-3-yezhenyu2@huawei.com>
- <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
- <cee60718-ced2-069f-8dad-48941c6fc09b@huawei.com>
- <7237888d-2168-cd8b-c83d-c8e54871793d@nvidia.com>
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c97cd0000>; Mon, 13 Jul 2020 10:20:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 10:22:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 10:22:05 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 17:21:59 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 13 Jul 2020 17:21:59 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0c98360005>; Mon, 13 Jul 2020 10:21:59 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH v2 1/5] nouveau: fix storing invalid ptes
+Date:   Mon, 13 Jul 2020 10:21:45 -0700
+Message-ID: <20200713172149.2310-2-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200713172149.2310-1-rcampbell@nvidia.com>
+References: <20200713172149.2310-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7237888d-2168-cd8b-c83d-c8e54871793d@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594660813; bh=rz9ii3/rSLaotraZODv9PDOOFrnasJhkv9z9XY7GWhs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=VswAJyQZ7manJ2SfOLznJm8rAKzIbt64JdSJ43MkwLlhuHyXzmFh52wAvmFtpNPDW
+         +jyEcn970ykf8LGntBY+F+RIDnr2nFHfOC0b9btqH8RNqeo+T+haRZmc9tLLE0cifQ
+         wrWYu1OALfcGxVn3Q1f0RqDYOB8vZCa3Wg3CZgHjJE6Nm2acpHo0M01MG0oJpsyphH
+         ANNoa0KS+FojsYBXaBordvpqiTpWIlC14Z3XmoijCG5KmSRaXVJoZb6yy/Ie6hxDYu
+         8I7ZtUJ9uwHhYIOBrHIiXkklut9fRHTrxiR0UD7Vqc6pulM5yOXNyn9amCeRJf1913
+         x68cXPgjrdxtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:44:16PM +0100, Jon Hunter wrote:
-> On 13/07/2020 15:39, Zhenyu Ye wrote:
-> > On 2020/7/13 22:27, Jon Hunter wrote:
-> >> After this change I am seeing the following build errors ...
-> >>
-> >> /tmp/cckzq3FT.s: Assembler messages:
-> >> /tmp/cckzq3FT.s:854: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:870: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:1095: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:1111: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:1964: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:1980: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:2286: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:2302: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
-> >> /tmp/cckzq3FT.s:4833: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-> >> /tmp/cckzq3FT.s:4849: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-> >> /tmp/cckzq3FT.s:5090: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-> >> /tmp/cckzq3FT.s:5106: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
-> >> /tmp/cckzq3FT.s:874: Error: attempt to move .org backwards
-> >> /tmp/cckzq3FT.s:1115: Error: attempt to move .org backwards
-> >> /tmp/cckzq3FT.s:1984: Error: attempt to move .org backwards
-> >> /tmp/cckzq3FT.s:2306: Error: attempt to move .org backwards
-> >> /tmp/cckzq3FT.s:4853: Error: attempt to move .org backwards
-> >> /tmp/cckzq3FT.s:5110: Error: attempt to move .org backwards
-> >> scripts/Makefile.build:280: recipe for target 'arch/arm64/mm/hugetlbpage.o' failed
-> >> make[3]: *** [arch/arm64/mm/hugetlbpage.o] Error 1
-> >> scripts/Makefile.build:497: recipe for target 'arch/arm64/mm' failed
-> >> make[2]: *** [arch/arm64/mm] Error 2
-> > 
-> > The code must be built with binutils >= 2.30.
-> > Maybe I should add  a check on whether binutils supports ARMv8.4-a instructions...
-> 
-> Yes I believe so.
+When migrating a range of system memory to device private memory, some
+of the pages in the address range may not be migrating. In this case,
+the non migrating pages won't have a new GPU MMU entry to store but
+the nvif_object_ioctl() NVIF_VMM_V0_PFNMAP method doesn't check the input
+and stores a bad valid GPU page table entry.
+Fix this by skipping the invalid input PTEs when updating the GPU page
+tables.
 
-The binutils guys in Arm confirmed that assembling "tlbi rvae1is"
-without -march=armv8.4-a is a bug. When it gets fixed, checking for the
-binutils version is not sufficient without passing -march. I think we
-are better off with a manual encoding of the instruction.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
--- 
-Catalin
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c b/drivers/g=
+pu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
+index ed37fddd063f..7eabe9fe0d2b 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
+@@ -79,8 +79,12 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu_=
+pt *pt,
+ 	dma_addr_t addr;
+=20
+ 	nvkm_kmap(pt->memory);
+-	while (ptes--) {
++	for (; ptes; ptes--, map->pfn++) {
+ 		u64 data =3D 0;
++
++		if (!(*map->pfn & NVKM_VMM_PFN_V))
++			continue;
++
+ 		if (!(*map->pfn & NVKM_VMM_PFN_W))
+ 			data |=3D BIT_ULL(6); /* RO. */
+=20
+@@ -100,7 +104,6 @@ gp100_vmm_pgt_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
+_pt *pt,
+ 		}
+=20
+ 		VMM_WO064(pt, vmm, ptei++ * 8, data);
+-		map->pfn++;
+ 	}
+ 	nvkm_done(pt->memory);
+ }
+@@ -310,9 +313,12 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mm=
+u_pt *pt,
+ 	dma_addr_t addr;
+=20
+ 	nvkm_kmap(pt->memory);
+-	while (ptes--) {
++	for (; ptes; ptes--, map->pfn++) {
+ 		u64 data =3D 0;
+=20
++		if (!(*map->pfn & NVKM_VMM_PFN_V))
++			continue;
++
+ 		if (!(*map->pfn & NVKM_VMM_PFN_W))
+ 			data |=3D BIT_ULL(6); /* RO. */
+=20
+@@ -332,7 +338,6 @@ gp100_vmm_pd0_pfn(struct nvkm_vmm *vmm, struct nvkm_mmu=
+_pt *pt,
+ 		}
+=20
+ 		VMM_WO064(pt, vmm, ptei++ * 16, data);
+-		map->pfn++;
+ 	}
+ 	nvkm_done(pt->memory);
+ }
+--=20
+2.20.1
+
