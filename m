@@ -2,158 +2,77 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E89C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AE7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4B20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="heSq42g8"
+	by mail.kernel.org (Postfix) with ESMTP id 4953B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgGMBzL (ORCPT
+        id S1728252AbgGMB4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:55:11 -0400
-Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:60993
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Sun, 12 Jul 2020 21:56:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33366 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726261AbgGMBzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:55:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LruRMIOJFrkQOpMYDRd1yBY/0DXM3V6+A1bEDdoxc9RmaRwS9HBRvq5Hoo8xHILQZW5LkamzP69XibMXDNBMw8uz5gAEJZCjk5XcroVB/x0vmXZxf0EdxhDZ+SnC4ga775AoPClrV2YFkPP2nX5x0yQdBA0CQ6qEGFNLiupejdNV+bD+2V/QSs0TVAGo419en+wm72yiZaZTnoWJW5dnfrABUesjhRfwqEmX7KqUr0B+AJ42xNCigcv42m3enWoyH3jYGja6s4+Uxwu+yYH47lKX8iqZVTAzGAR5C7N2Vc6Ez5uwcmuiWJgt3NdYuaqCN3Hfhy0C+p2ZmR5yRSiLyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0GABxCLbPG/InTruHWRpo4qulx4rYnvByLeP8nYru0E=;
- b=YjkUykQ71iQuSBu4BfIcWg+2KGefoG+bOWCDyA7KR2I5eb3EzcO4TnGTidRM51/GAwwcFHzOhVDLN0P7GSpzxCrbrG5ZUdGpwZ2ACv1y8Ckvp1pIl/sAa0MQVk3zZRT8y9Q0qn8tcjCU8cm+ZOwW/N3TgPeWiiUMUZ3EKH07PmrLdu0xF5h8D3e5oYhrwpBejTMB/TdejTxbDV+dtLxN7l1NoIsKDzgLs6N/WxGevp5Cg2slHo5qMqkjcjBhXYdJhSNAD7vdQ2qyY2k6nzTlfPrqQ/rc379jBqoSjd72nhoCFmOeiZzBlwYHG+DgSZB3lVBaQb2zXQOlwKcMBfQ6yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0GABxCLbPG/InTruHWRpo4qulx4rYnvByLeP8nYru0E=;
- b=heSq42g8WHT6NiBV2e/XNCtUZpyt80CMWW/KlzGxuWhXKHsOY5GLi5GhgTP2lifKD5lRveY7y65FuZcKKfacA5WFDt+MQOBE9BmSPh58C0EN4mN65PPF51KMh9fOZtD9JyrEYy/jC2TwsFdW1roXU1na/IPUOsPO9cUNhvalgE0=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2934.eurprd04.prod.outlook.com (2603:10a6:4:9b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Mon, 13 Jul
- 2020 01:53:47 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
- 01:53:46 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-CC:     "jgross@suse.com" <jgross@suse.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH] xen: introduce xen_vring_use_dma
-Thread-Topic: [PATCH] xen: introduce xen_vring_use_dma
-Thread-Index: AQHWSgTusARd8c8cRkWwDit233DtZajneYoAgACU6oCAAC7QAIAAEpoAgAAGSwCAAUK2gIABcSaAgAVA3oCAAnnkAIAAQwqAgAA/4wCADeHhAIADsWjQ
-Date:   Mon, 13 Jul 2020 01:53:46 +0000
-Message-ID: <DB6PR0402MB2760A98A427AA48FA325635288600@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <20200624050355-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
- <20200624163940-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
- <20200624181026-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
- <20200626110629-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006291621300.8121@sstabellini-ThinkPad-T480s>
- <20200701133456.GA23888@infradead.org>
- <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
- <20200701172219-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2007101019340.4124@sstabellini-ThinkPad-T480s>
-In-Reply-To: <alpine.DEB.2.21.2007101019340.4124@sstabellini-ThinkPad-T480s>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 99a7de08-78dc-4b39-c1f7-08d826cf94d4
-x-ms-traffictypediagnostic: DB6PR0402MB2934:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB293480B64104501E330E226088600@DB6PR0402MB2934.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HNjTjTjWrIzXfE6ltpWdBR2DeplyC5i9JvzDPZQia160JH+4EpFBFzUBzaTYh+uNrM/VAFmAV3PbNhBJHmw4II1QBugVpSYd+ZkN3p/kF1yaQTw4pm/RfS3uD0WGoDkSTdS79kgwDookFi9BKKxCd10mfxdveukGFFsjh/BIVkUj48h+STYHB61GG8gkXTt6ITZV0OnndJ8ZhM6eTVmusVfqT4VGMIOba0QJ7G5tYI+xecyBwKWGL5LPqc2bRxVYTRFcQlD97nLK37PDGgCUsc7osct3GMyYTmmMbUfTR9BNamWstINU8Hh7Y9Zp4MCrITQOw3eHM8GlxxprJogzeQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(2906002)(86362001)(478600001)(8936002)(8676002)(4326008)(83380400001)(71200400001)(26005)(7696005)(33656002)(44832011)(9686003)(55016002)(110136005)(7416002)(6506007)(316002)(54906003)(186003)(5660300002)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Iun8yMXMvh1uJny1TTawzz+RrjDW6kn8ygbIzjr3Mw6Ca8T8w5/hMDadUD5xBFjCFBsj4QPIiReVKRta2T+kh2YkRdvG58bGxrewzphSpr8HT6vhsCU/1QmupGEgZaPVUseO/ppaC+y0yTT/POW9E40JnMMr0/uKZrcYxKazMrOMAZ5quH6xrF2sj8N35RRCDqhDLSO7PVwhVKOtExLwKPDhV3juJVIk4L/5+OAIO7iJ7QreF5xC50QYFLi4bgA8BVNNt2Zqu/LbiiW+hmOWV5wVog8ablQmmxHgJkE0xIk3grgQ7hQoDvcj7g5k+s0oaD80LLjXhzmt3qHbTr4j9jD6/shsyW94xYVPdTW/caw5dVIQXvMhI5QcGOe78Yf5tKAlBryF38etGJEkPrvsO8ReuhJj6/l9q4SeAjyMwFrrWlJ5zkv4Z6OHWS60F8GC4mGuHGqOxZeHW8OwvsxL9Uw/dBc3P99uO6gTD+BH168=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726261AbgGMB4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:56:07 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 24DAEECCCE5C44844222;
+        Mon, 13 Jul 2020 09:56:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 13 Jul 2020 09:55:54 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] remoteproc: qcom: Add missing slab.h
+Date:   Mon, 13 Jul 2020 10:00:03 +0800
+Message-ID: <20200713020003.134039-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99a7de08-78dc-4b39-c1f7-08d826cf94d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 01:53:46.8602
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nhMchUJ1LWLK4MCDdWLbSri36Ld+/UF1kdGDfCfQG+NsyzpEL7vFL5ZnooxMhdUBejFSfT+ZNO67zUrafCM7YA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2934
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
->=20
-> Sorry for the late reply -- a couple of conferences kept me busy.
->=20
->=20
-> On Wed, 1 Jul 2020, Michael S. Tsirkin wrote:
-> > On Wed, Jul 01, 2020 at 10:34:53AM -0700, Stefano Stabellini wrote:
-> > > Would you be in favor of a more flexible check along the lines of
-> > > the one proposed in the patch that started this thread:
-> > >
-> > >     if (xen_vring_use_dma())
-> > >             return true;
-> > >
-> > >
-> > > xen_vring_use_dma would be implemented so that it returns true when
-> > > xen_swiotlb is required and false otherwise.
-> >
-> > Just to stress - with a patch like this virtio can *still* use DMA API
-> > if PLATFORM_ACCESS is set. So if DMA API is broken on some platforms
-> > as you seem to be saying, you guys should fix it before doing
-> > something like this..
->=20
-> Yes, DMA API is broken with some interfaces (specifically: rpmesg and tru=
-sty),
-> but for them PLATFORM_ACCESS is never set. That is why the errors weren't
-> reported before. Xen special case aside, there is no problem under normal
-> circumstances.
->=20
->=20
-> If you are OK with this patch (after a little bit of clean-up), Peng, are=
- you OK
-> with sending an update or do you want me to?
+drivers/remoteproc/qcom_common.c: In function ‘qcom_ssr_get_subsys’:
+drivers/remoteproc/qcom_common.c:210:9: error: implicit declaration of function ‘kzalloc’; did you mean ‘vzalloc’?
+[-Werror=implicit-function-declaration]
+  info = kzalloc(sizeof(*info), GFP_KERNEL);
+         ^~~~~~~
+         vzalloc
 
-If you could help, that would be great. You have more expertise in knowing
-the whole picture.
+kzalloc() is declared in linux/slab.h, add include to fix build issue.
 
-Thanks,
-Peng.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ drivers/remoteproc/qcom_common.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+index 2f45f0c79914e..085fd73fa23ae 100644
+--- a/drivers/remoteproc/qcom_common.c
++++ b/drivers/remoteproc/qcom_common.c
+@@ -15,6 +15,7 @@
+ #include <linux/remoteproc/qcom_rproc.h>
+ #include <linux/rpmsg/qcom_glink.h>
+ #include <linux/rpmsg/qcom_smd.h>
++#include <linux/slab.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+ 
+ #include "remoteproc_internal.h"
+-- 
+2.26.2
 
