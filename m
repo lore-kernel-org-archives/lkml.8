@@ -2,224 +2,400 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A222C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32185C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C95217A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P6MtUqiy"
+	by mail.kernel.org (Postfix) with ESMTP id 12818217A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGMXtJ (ORCPT
+        id S1727115AbgGMXsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:49:09 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:63956 "EHLO m43-7.mailgun.net"
+        Mon, 13 Jul 2020 19:48:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36776 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbgGMXtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:49:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594684144; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=PrpIt2QwllJBDPtjCKM+xDBX1KSoof1+57+Ty/g11Zw=; b=P6MtUqiyBuJ5NMTwy4Uo5T2rmPUozQ07jZcd2YzAn9gjeDdl4XXrZssYWEZgtR351Z3ct7eI
- vquTjDXVwSlonHqIKEaLvps7Z3paA7I//ViqjCSfB8qMroDDtOU+FnVR8hEcT90p9L72br2b
- beQjmAtIrBoPCpxttzOXXzlag3E=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f0cf2e02991e765cd790ed9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 23:48:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6FF92C433B1; Mon, 13 Jul 2020 23:48:47 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60308C433CA;
-        Mon, 13 Jul 2020 23:48:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60308C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 13 Jul 2020 17:48:42 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] drm/msm: handle for EPROBE_DEFER for of_icc_get
-Message-ID: <20200713234842.GC24345@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200713225345.20556-1-jonathan@marek.ca>
- <20200713225345.20556-4-jonathan@marek.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713225345.20556-4-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726798AbgGMXss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 19:48:48 -0400
+IronPort-SDR: GB6h46TRZIcjmIgAxYcpJ34tgBbhrM857Yv4Z1UhTz7zZHZTPYK3CfIljuGwtHNRQF6oLSCK6L
+ wknOh0JHHx9Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148748417"
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="148748417"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 16:48:43 -0700
+IronPort-SDR: t1SNtTcPoCvnONfJuRLdo45wO7y2SGSC/jwDNc1KMlfzlgAp6D4W9LsDpJMpNivO1qkUfE6xIq
+ xnKTyHCuU/Cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="281570438"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 16:48:42 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Felix Kuehling" <Felix.Kuehling@amd.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Jacob Jun Pan" <jacob.jun.pan@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Sohil Mehta" <sohil.mehta@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        "amd-gfx" <amd-gfx@lists.freedesktop.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v6 03/12] docs: x86: Add documentation for SVA (Shared Virtual Addressing)
+Date:   Mon, 13 Jul 2020 16:47:58 -0700
+Message-Id: <1594684087-61184-4-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
+References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 06:53:42PM -0400, Jonathan Marek wrote:
-> Check for errors instead of silently not using icc if the msm driver
-> probes before the interconnect driver.
-> 
-> Allow ENODATA for ocmem path, as it is optional and this error
-> is returned when "gfx-mem" path is provided but not "ocmem".
-> 
-> Because msm_gpu_cleanup assumes msm_gpu_init has been called, the icc path
-> init needs to be after msm_gpu_init for the error path to work.
+From: Ashok Raj <ashok.raj@intel.com>
 
-A possible future improvement would be to move the ocmem check to the target
-specific code for 3xx and 4xx where you could be a bit more demanding that the
-ocmem path actually exist.
+ENQCMD and Data Streaming Accelerator (DSA) and all of their associated
+features are a complicated stack with lots of interconnected pieces.
+This documentation provides a big picture overview for all of the
+features.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+v3:
+- Replace deprecated intel_svm_bind_mm() by iommu_sva_bind_mm() (Baolu)
+- Fix a couple of typos (Baolu)
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 65 +++++++++++++++----------
->  1 file changed, 38 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index ad64d4b7e8d7..3f1ecc1de965 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -895,7 +895,7 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
->  	return 0;
->  }
->  
-> -static int adreno_get_pwrlevels(struct device *dev,
-> +static void adreno_get_pwrlevels(struct device *dev,
->  		struct msm_gpu *gpu)
->  {
->  	unsigned long freq = ULONG_MAX;
-> @@ -930,24 +930,6 @@ static int adreno_get_pwrlevels(struct device *dev,
->  	}
->  
->  	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
-> -
-> -	/* Check for an interconnect path for the bus */
-> -	gpu->icc_path = of_icc_get(dev, "gfx-mem");
-> -	if (!gpu->icc_path) {
-> -		/*
-> -		 * Keep compatbility with device trees that don't have an
-> -		 * interconnect-names property.
-> -		 */
-> -		gpu->icc_path = of_icc_get(dev, NULL);
-> -	}
-> -	if (IS_ERR(gpu->icc_path))
-> -		gpu->icc_path = NULL;
-> -
-> -	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> -	if (IS_ERR(gpu->ocmem_icc_path))
-> -		gpu->ocmem_icc_path = NULL;
-> -
-> -	return 0;
->  }
->  
->  int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
-> @@ -993,9 +975,11 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		struct adreno_gpu *adreno_gpu,
->  		const struct adreno_gpu_funcs *funcs, int nr_rings)
->  {
-> -	struct adreno_platform_config *config = pdev->dev.platform_data;
-> +	struct device *dev = &pdev->dev;
-> +	struct adreno_platform_config *config = dev->platform_data;
->  	struct msm_gpu_config adreno_gpu_config  = { 0 };
->  	struct msm_gpu *gpu = &adreno_gpu->base;
-> +	int ret;
->  
->  	adreno_gpu->funcs = funcs;
->  	adreno_gpu->info = adreno_info(config->rev);
-> @@ -1007,15 +991,42 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  
->  	adreno_gpu_config.nr_rings = nr_rings;
->  
-> -	adreno_get_pwrlevels(&pdev->dev, gpu);
-> +	adreno_get_pwrlevels(dev, gpu);
->  
-> -	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> +	pm_runtime_set_autosuspend_delay(dev,
->  		adreno_gpu->info->inactive_period);
-> -	pm_runtime_use_autosuspend(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> +	pm_runtime_use_autosuspend(dev);
-> +	pm_runtime_enable(dev);
->  
-> -	return msm_gpu_init(drm, pdev, &adreno_gpu->base, &funcs->base,
-> +	ret = msm_gpu_init(drm, pdev, &adreno_gpu->base, &funcs->base,
->  			adreno_gpu->info->name, &adreno_gpu_config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Check for an interconnect path for the bus */
-> +	gpu->icc_path = of_icc_get(dev, "gfx-mem");
-> +	if (!gpu->icc_path) {
-> +		/*
-> +		 * Keep compatbility with device trees that don't have an
-> +		 * interconnect-names property.
-> +		 */
-> +		gpu->icc_path = of_icc_get(dev, NULL);
-> +	}
-> +	if (IS_ERR(gpu->icc_path)) {
-> +		ret = PTR_ERR(gpu->icc_path);
-> +		gpu->icc_path = NULL;
-> +		return ret;
-> +	}
-> +
-> +	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> +	if (IS_ERR(gpu->ocmem_icc_path)) {
-> +		ret = PTR_ERR(gpu->ocmem_icc_path);
-> +		gpu->ocmem_icc_path = NULL;
-> +		/* allow -ENODATA, ocmem icc is optional */
-> +		if (ret != -ENODATA)
-> +			return ret;
-> +	}
-> +	return 0;
->  }
->  
->  void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
-> @@ -1029,8 +1040,8 @@ void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
->  
->  	pm_runtime_disable(&priv->gpu_pdev->dev);
->  
-> +	msm_gpu_cleanup(&adreno_gpu->base);
-> +
->  	icc_put(gpu->icc_path);
->  	icc_put(gpu->ocmem_icc_path);
-> -
-> -	msm_gpu_cleanup(&adreno_gpu->base);
->  }
-> -- 
-> 2.26.1
-> 
+v2:
+- Fix the doc format and add the doc in toctree (Thomas)
+- Modify the doc for better description (Thomas, Tony, Dave)
 
+ Documentation/x86/index.rst |   1 +
+ Documentation/x86/sva.rst   | 287 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 288 insertions(+)
+ create mode 100644 Documentation/x86/sva.rst
+
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index 265d9e9a093b..e5d5ff096685 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -30,3 +30,4 @@ x86-specific Documentation
+    usb-legacy-support
+    i386/index
+    x86_64/index
++   sva
+diff --git a/Documentation/x86/sva.rst b/Documentation/x86/sva.rst
+new file mode 100644
+index 000000000000..7242a84169ef
+--- /dev/null
++++ b/Documentation/x86/sva.rst
+@@ -0,0 +1,287 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===========================================
++Shared Virtual Addressing (SVA) with ENQCMD
++===========================================
++
++Background
++==========
++
++Shared Virtual Addressing (SVA) allows the processor and device to use the
++same virtual addresses avoiding the need for software to translate virtual
++addresses to physical addresses. SVA is what PCIe calls Shared Virtual
++Memory (SVM)
++
++In addition to the convenience of using application virtual addresses
++by the device, it also doesn't require pinning pages for DMA.
++PCIe Address Translation Services (ATS) along with Page Request Interface
++(PRI) allow devices to function much the same way as the CPU handling
++application page-faults. For more information please refer to PCIe
++specification Chapter 10: ATS Specification.
++
++Use of SVA requires IOMMU support in the platform. IOMMU also is required
++to support PCIe features ATS and PRI. ATS allows devices to cache
++translations for the virtual address. IOMMU driver uses the mmu_notifier()
++support to keep the device tlb cache and the CPU cache in sync. PRI allows
++the device to request paging the virtual address before using if they are
++not paged in the CPU page tables.
++
++
++Shared Hardware Workqueues
++==========================
++
++Unlike Single Root I/O Virtualization (SRIOV), Scalable IOV (SIOV) permits
++the use of Shared Work Queues (SWQ) by both applications and Virtual
++Machines (VM's). This allows better hardware utilization vs. hard
++partitioning resources that could result in under utilization. In order to
++allow the hardware to distinguish the context for which work is being
++executed in the hardware by SWQ interface, SIOV uses Process Address Space
++ID (PASID), which is a 20bit number defined by the PCIe SIG.
++
++PASID value is encoded in all transactions from the device. This allows the
++IOMMU to track I/O on a per-PASID granularity in addition to using the PCIe
++Resource Identifier (RID) which is the Bus/Device/Function.
++
++
++ENQCMD
++======
++
++ENQCMD is a new instruction on Intel platforms that atomically submits a
++work descriptor to a device. The descriptor includes the operation to be
++performed, virtual addresses of all parameters, virtual address of a completion
++record, and the PASID (process address space ID) of the current process.
++
++ENQCMD works with non-posted semantics and carries a status back if the
++command was accepted by hardware. This allows the submitter to know if the
++submission needs to be retried or other device specific mechanisms to
++implement fairness or ensure forward progress can be made.
++
++ENQCMD is the glue that ensures applications can directly submit commands
++to the hardware and also permit hardware to be aware of application context
++to perform I/O operations via use of PASID.
++
++Process Address Space Tagging
++=============================
++
++A new thread scoped MSR (IA32_PASID) provides the connection between
++user processes and the rest of the hardware. When an application first
++accesses an SVA capable device this MSR is initialized with a newly
++allocated PASID. The driver for the device calls an IOMMU specific api
++that sets up the routing for DMA and page-requests.
++
++For example, the Intel Data Streaming Accelerator (DSA) uses
++iommu_sva_bind_device(), which will do the following.
++
++- Allocate the PASID, and program the process page-table (cr3) in the PASID
++  context entries.
++- Register for mmu_notifier() to track any page-table invalidations to keep
++  the device tlb in sync. For example, when a page-table entry is invalidated,
++  IOMMU propagates the invalidation to device tlb. This will force any
++  future access by the device to this virtual address to participate in
++  ATS. If the IOMMU responds with proper response that a page is not
++  present, the device would request the page to be paged in via the PCIe PRI
++  protocol before performing I/O.
++
++This MSR is managed with the XSAVE feature set as "supervisor state" to
++ensure the MSR is updated during context switch.
++
++PASID Management
++================
++
++The kernel must allocate a PASID on behalf of each process and program it
++into the new MSR to communicate the process identity to platform hardware.
++ENQCMD uses the PASID stored in this MSR to tag requests from this process.
++When a user submits a work descriptor to a device using the ENQCMD
++instruction, the PASID field in the descriptor is auto-filled with the
++value from MSR_IA32_PASID. Requests for DMA from the device are also tagged
++with the same PASID. The platform IOMMU uses the PASID in the transaction to
++perform address translation. The IOMMU api's setup the corresponding PASID
++entry in IOMMU with the process address used by the CPU (for e.g cr3 in x86).
++
++The MSR must be configured on each logical CPU before any application
++thread can interact with a device. Threads that belong to the same
++process share the same page tables, thus the same MSR value.
++
++PASID is cleared when a process is created. The PASID allocation and MSR
++programming may occur long after a process and its threads have been created.
++One thread must call bind() to allocate the PASID for the process. If a
++thread uses ENQCMD without the MSR first being populated, it will cause #GP.
++The kernel will fix up the #GP by writing the process-wide PASID into the
++thread that took the #GP. A single process PASID can be used simultaneously
++with multiple devices since they all share the same address space.
++
++New threads could inherit the MSR value from the parent. But this would
++involve additional state management for those threads which may never use
++ENQCMD. Clearing the MSR at thread creation permits all threads to have a
++consistent behavior; the PASID is only programmed when the thread calls
++the bind() api (iommu_sva_bind_device()()), or when a thread calls ENQCMD for
++the first time.
++
++PASID Lifecycle Management
++==========================
++
++Only processes that access SVA capable devices need to have a PASID
++allocated. This allocation happens when a process first opens an SVA
++capable device (subsequent opens of the same, or other devices will
++share the same PASID).
++
++Although the PASID is allocated to the process by opening a device,
++it is not active in any of the threads of that process. Activation is
++done lazily when a thread tries to submit a work descriptor to a device
++using the ENQCMD.
++
++That first access will trigger a #GP fault because the IA32_PASID MSR
++has not been initialized with the PASID value assigned to the process
++when the device was opened. The Linux #GP handler notes that a PASID as
++been allocated for the process, and so initializes the IA32_PASID MSR
++and returns so that the ENQCMD instruction is re-executed.
++
++On fork(2) or exec(2) the PASID is removed from the process as it no
++longer has the same address space that it had when the device was opened.
++
++On clone(2) the new task shares the same address space, so will be
++able to use the PASID allocated to the process. The IA32_PASID is not
++preemptively initialized as the kernel does not know whether this thread
++is going to access the device.
++
++On exit(2) the PASID is freed. The device driver ensures that any pending
++operations queued to the device are either completed or aborted before
++allowing the PASID to be reallocated.
++
++Relationships
++=============
++
++ * Each process has many threads, but only one PASID
++ * Devices have a limited number (~10's to 1000's) of hardware
++   workqueues and each portal maps down to a single workqueue.
++   The device driver manages allocating hardware workqueues.
++ * A single mmap() maps a single hardware workqueue as a "portal"
++ * For each device with which a process interacts, there must be
++   one or more mmap()'d portals.
++ * Many threads within a process can share a single portal to access
++   a single device.
++ * Multiple processes can separately mmap() the same portal, in
++   which case they still share one device hardware workqueue.
++ * The single process-wide PASID is used by all threads to interact
++   with all devices.  There is not, for instance, a PASID for each
++   thread or each thread<->device pair.
++
++FAQ
++===
++
++* What is SVA/SVM?
++
++Shared Virtual Addressing (SVA) permits I/O hardware and the processor to
++work in the same address space. In short, sharing the address space. Some
++call it Shared Virtual Memory (SVM), but Linux community wanted to avoid
++it with Posix Shared Memory and Secure Virtual Machines which were terms
++already in circulation.
++
++* What is a PASID?
++
++A Process Address Space ID (PASID) is a PCIe-defined TLP Prefix. A PASID is
++a 20 bit number allocated and managed by the OS. PASID is included in all
++transactions between the platform and the device.
++
++* How are shared work queues different?
++
++Traditionally to allow user space applications interact with hardware,
++there is a separate instance required per process. For example, consider
++doorbells as a mechanism of informing hardware about work to process. Each
++doorbell is required to be spaced 4k (or page-size) apart for process
++isolation. This requires hardware to provision that space and reserve in
++MMIO. This doesn't scale as the number of threads becomes quite large. The
++hardware also manages the queue depth for Shared Work Queues (SWQ), and
++consumers don't need to track queue depth. If there is no space to accept
++a command, the device will return an error indicating retry. Also
++submitting a command to an MMIO address that can't accept ENQCMD will
++return retry in response. In the new DMWr PCIe terminology, devices need to
++support DMWr completer capability. In addition it requires all switch ports
++to support DMWr routing and must be enabled by the PCIe subsystem, much
++like how PCIe Atomics() are managed for instance.
++
++SWQ allows hardware to provision just a single address in the device. When
++used with ENQCMD to submit work, the device can distinguish the process
++submitting the work since it will include the PASID assigned to that
++process. This decreases the pressure of hardware requiring to support
++hardware to scale to a large number of processes.
++
++* Is this the same as a user space device driver?
++
++Communicating with the device via the shared work queue is much simpler
++than a full blown user space driver. The kernel driver does all the
++initialization of the hardware. User space only needs to worry about
++submitting work and processing completions.
++
++* Is this the same as SR-IOV?
++
++Single Root I/O Virtualization (SR-IOV) focuses on providing independent
++hardware interfaces for virtualizing hardware. Hence its required to be
++almost fully functional interface to software supporting the traditional
++BAR's, space for interrupts via MSI-x, its own register layout.
++Virtual Functions (VFs) are assisted by the Physical Function (PF)
++driver.
++
++Scalable I/O Virtualization builds on the PASID concept to create device
++instances for virtualization. SIOV requires host software to assist in
++creating virtual devices, each virtual device is represented by a PASID
++along with the BDF of the device.  This allows device hardware to optimize
++device resource creation and can grow dynamically on demand. SR-IOV creation
++and management is very static in nature. Consult references below for more
++details.
++
++* Why not just create a virtual function for each app?
++
++Creating PCIe SRIOV type virtual functions (VF) are expensive. They create
++duplicated hardware for PCI config space requirements, Interrupts such as
++MSIx for instance. Resources such as interrupts have to be hard partitioned
++between VF's at creation time, and cannot scale dynamically on demand. The
++VF's are not completely independent from the Physical function (PF). Most
++VF's require some communication and assistance from the PF driver. SIOV
++creates a software defined device. Where all the configuration and control
++aspects are mediated via the slow path. The work submission and completion
++happen without any mediation.
++
++* Does this support virtualization?
++
++ENQCMD can be used from within a guest VM. In these cases the VMM helps
++with setting up a translation table to translate from Guest PASID to Host
++PASID. Please consult the ENQCMD instruction set reference for more
++details.
++
++* Does memory need to be pinned?
++
++When devices support SVA, along with platform hardware such as IOMMU
++supporting such devices, there is no need to pin memory for DMA purposes.
++Devices that support SVA also support other PCIe features that remove the
++pinning requirement for memory.
++
++Device TLB support - Device requests the IOMMU to lookup an address before
++use via Address Translation Service (ATS) requests.  If the mapping exists
++but there is no page allocated by the OS, IOMMU hardware returns that no
++mapping exists.
++
++Device requests that virtual address to be mapped via Page Request
++Interface (PRI). Once the OS has successfully completed  the mapping, it
++returns the response back to the device. The device continues again to
++request for a translation and continues.
++
++IOMMU works with the OS in managing consistency of page-tables with the
++device. When removing pages, it interacts with the device to remove any
++device-tlb that might have been cached before removing the mappings from
++the OS.
++
++References
++==========
++
++VT-D:
++https://01.org/blogs/ashokraj/2018/recent-enhancements-intel-virtualization-technology-directed-i/o-intel-vt-d
++
++SIOV:
++https://01.org/blogs/2019/assignable-interfaces-intel-scalable-i/o-virtualization-linux
++
++ENQCMD in ISE:
++https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
++
++DSA spec:
++https://software.intel.com/sites/default/files/341204-intel-data-streaming-accelerator-spec.pdf
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.19.1
+
