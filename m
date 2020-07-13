@@ -2,392 +2,102 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92884C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A58C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698D8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:29:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CknCJIJc"
+	by mail.kernel.org (Postfix) with ESMTP id C86342065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgGMQ3n (ORCPT
+        id S1730391AbgGMQ3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:29:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44998 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730369AbgGMQ3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:29:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594657779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u815asTbNRwuIgvs32hEAhglzjfhcTrzR83RO3RMe18=;
-        b=CknCJIJcpj1t+4mLLTOKKVpQGQ02XOYnsFLvkZovjqt2Dj4rIbh0wXUmBdLe/OfuhSqKLy
-        aJlZF1E8xCtdvo21JKSp23Fxlj+RexS9o4ieb+KSg9qG9AZlq2+GLndHX55L3S+gFwv49G
-        tIff19e1a5v92fVzjOo9O+Q7ETHGDHk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-0UBFd8soNuW0o_VuBYLEyg-1; Mon, 13 Jul 2020 12:29:37 -0400
-X-MC-Unique: 0UBFd8soNuW0o_VuBYLEyg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B59F801E6A;
-        Mon, 13 Jul 2020 16:29:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 305186FEF3;
-        Mon, 13 Jul 2020 16:29:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 09/14] fscache: Remove fscache_check_consistency()
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:29:28 +0100
-Message-ID: <159465776835.1376105.506575780912400392.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159465766378.1376105.11619976251039287525.stgit@warthog.procyon.org.uk>
-References: <159465766378.1376105.11619976251039287525.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Mon, 13 Jul 2020 12:29:44 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2470 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730240AbgGMQ3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:29:42 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 6E89987888D39E689AE0;
+        Mon, 13 Jul 2020 17:29:40 +0100 (IST)
+Received: from [127.0.0.1] (10.47.2.10) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 13 Jul
+ 2020 17:29:39 +0100
+Subject: Re: [PATCH 11/18] perf metric: Add referenced metrics to hash data
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+References: <20200712132634.138901-1-jolsa@kernel.org>
+ <20200712132634.138901-12-jolsa@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <c55188aa-d8ff-ea5c-c8ed-a6f36d20c652@huawei.com>
+Date:   Mon, 13 Jul 2020 17:27:53 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200712132634.138901-12-jolsa@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.2.10]
+X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove fscache_check_consistency() as that allows the netfs to pry into the
-inner working of the cache - and what's in the cookie should be taken as
-consistent with the disk (possibly lazily).
+On 12/07/2020 14:26, Jiri Olsa wrote:
+>   
+> +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+> +{
+> +	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
+> +	char *old_key = NULL;
+> +	char *name;
+> +	int ret;
+> +
+> +	data_ptr = zalloc(sizeof(*data_ptr));
+> +	if (!data_ptr)
+> +		return -ENOMEM;
+> +
+> +	name = strdup(ref->metric_name);
+> +	if (!name) {
+> +		free(data_ptr);
+> +		return -ENOMEM;
+> +	}
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+JFYI, this was not compiling for me:
 
- fs/cachefiles/interface.c     |   26 -------------
- fs/fscache/cookie.c           |   79 ----------------------------------------
- fs/fscache/internal.h         |    9 -----
- fs/fscache/page.c             |   82 -----------------------------------------
- include/linux/fscache-cache.h |    4 --
- include/linux/fscache.h       |   23 ------------
- 6 files changed, 223 deletions(-)
+util/expr.c: In function ‘expr__add_ref’:
+util/expr.c:84:13: error: implicit declaration of function ‘zalloc’; did 
+you mean ‘valloc’? [-Werror=implicit-function-declaration]
+  data_ptr = zalloc(sizeof(*data_ptr));
+  ^~~~~~
+  valloc
+util/expr.c:84:13: error: nested extern declaration of ‘zalloc’ 
+[-Werror=nested-externs]
+util/expr.c:84:11: error: assignment to ‘struct expr_id_data *’ from 
+‘int’ makes pointer from integer without a cast [-Werror=int-conversion]
+  data_ptr = zalloc(sizeof(*data_ptr));
+^
+  LDutil/arm-spe-decoder/perf-in.o
+cc1: all warnings being treated as errors
 
-diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
-index a5d348581bcc..a3837ed090a8 100644
---- a/fs/cachefiles/interface.c
-+++ b/fs/cachefiles/interface.c
-@@ -320,31 +320,6 @@ static void cachefiles_sync_cache(struct fscache_cache *_cache)
- 				    ret);
- }
- 
--/*
-- * check if the backing cache is updated to FS-Cache
-- * - called by FS-Cache when evaluates if need to invalidate the cache
-- */
--static int cachefiles_check_consistency(struct fscache_operation *op)
--{
--	struct cachefiles_object *object;
--	struct cachefiles_cache *cache;
--	const struct cred *saved_cred;
--	int ret;
--
--	_enter("{OBJ%x}", op->object->debug_id);
--
--	object = container_of(op->object, struct cachefiles_object, fscache);
--	cache = container_of(object->fscache.cache,
--			     struct cachefiles_cache, cache);
--
--	cachefiles_begin_secure(cache, &saved_cred);
--	ret = cachefiles_check_auxdata(object);
--	cachefiles_end_secure(cache, saved_cred);
--
--	_leave(" = %d", ret);
--	return ret;
--}
--
- /*
-  * notification the attributes on an object have changed
-  * - called with reads/writes excluded by FS-Cache
-@@ -468,5 +443,4 @@ const struct fscache_cache_ops cachefiles_cache_ops = {
- 	.put_object		= cachefiles_put_object,
- 	.sync_cache		= cachefiles_sync_cache,
- 	.attr_changed		= cachefiles_attr_changed,
--	.check_consistency	= cachefiles_check_consistency,
- };
-diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
-index 7811fe935b47..a50fd9e384a6 100644
---- a/fs/fscache/cookie.c
-+++ b/fs/fscache/cookie.c
-@@ -883,85 +883,6 @@ void fscache_cookie_put(struct fscache_cookie *cookie,
- 	_leave("");
- }
- 
--/*
-- * check the consistency between the netfs inode and the backing cache
-- *
-- * NOTE: it only serves no-index type
-- */
--int __fscache_check_consistency(struct fscache_cookie *cookie,
--				const void *aux_data)
--{
--	struct fscache_operation *op;
--	struct fscache_object *object;
--	bool wake_cookie = false;
--	int ret;
--
--	_enter("%p,", cookie);
--
--	ASSERTCMP(cookie->type, ==, FSCACHE_COOKIE_TYPE_DATAFILE);
--
--	if (fscache_wait_for_deferred_lookup(cookie) < 0)
--		return -ERESTARTSYS;
--
--	if (hlist_empty(&cookie->backing_objects))
--		return 0;
--
--	op = kzalloc(sizeof(*op), GFP_NOIO | __GFP_NOMEMALLOC | __GFP_NORETRY);
--	if (!op)
--		return -ENOMEM;
--
--	fscache_operation_init(cookie, op, NULL, NULL, NULL);
--	op->flags = FSCACHE_OP_MYTHREAD |
--		(1 << FSCACHE_OP_WAITING) |
--		(1 << FSCACHE_OP_UNUSE_COOKIE);
--	trace_fscache_page_op(cookie, NULL, op, fscache_page_op_check_consistency);
--
--	spin_lock(&cookie->lock);
--
--	fscache_update_aux(cookie, aux_data);
--
--	if (!fscache_cookie_enabled(cookie) ||
--	    hlist_empty(&cookie->backing_objects))
--		goto inconsistent;
--	object = hlist_entry(cookie->backing_objects.first,
--			     struct fscache_object, cookie_link);
--	if (test_bit(FSCACHE_IOERROR, &object->cache->flags))
--		goto inconsistent;
--
--	op->debug_id = atomic_inc_return(&fscache_op_debug_id);
--
--	__fscache_use_cookie(cookie);
--	if (fscache_submit_op(object, op) < 0)
--		goto submit_failed;
--
--	/* the work queue now carries its own ref on the object */
--	spin_unlock(&cookie->lock);
--
--	ret = fscache_wait_for_operation_activation(object, op, NULL, NULL);
--	if (ret == 0) {
--		/* ask the cache to honour the operation */
--		ret = object->cache->ops->check_consistency(op);
--		fscache_op_complete(op, false);
--	} else if (ret == -ENOBUFS) {
--		ret = 0;
--	}
--
--	fscache_put_operation(op);
--	_leave(" = %d", ret);
--	return ret;
--
--submit_failed:
--	wake_cookie = __fscache_unuse_cookie(cookie);
--inconsistent:
--	spin_unlock(&cookie->lock);
--	if (wake_cookie)
--		__fscache_wake_unused_cookie(cookie);
--	kfree(op);
--	_leave(" = -ESTALE");
--	return -ESTALE;
--}
--EXPORT_SYMBOL(__fscache_check_consistency);
--
- /*
-  * Generate a list of extant cookies in /proc/fs/fscache/cookies
-  */
-diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
-index bc66bf7182ed..20cbd1288b5a 100644
---- a/fs/fscache/internal.h
-+++ b/fs/fscache/internal.h
-@@ -151,15 +151,6 @@ extern void fscache_abort_object(struct fscache_object *);
- extern void fscache_start_operations(struct fscache_object *);
- extern void fscache_operation_gc(struct work_struct *);
- 
--/*
-- * page.c
-- */
--extern int fscache_wait_for_deferred_lookup(struct fscache_cookie *);
--extern int fscache_wait_for_operation_activation(struct fscache_object *,
--						 struct fscache_operation *,
--						 atomic_t *,
--						 atomic_t *);
--
- /*
-  * proc.c
-  */
-diff --git a/fs/fscache/page.c b/fs/fscache/page.c
-index fd9cc16abc18..73636e9d652d 100644
---- a/fs/fscache/page.c
-+++ b/fs/fscache/page.c
-@@ -96,85 +96,3 @@ int __fscache_attr_changed(struct fscache_cookie *cookie)
- 	return -ENOBUFS;
- }
- EXPORT_SYMBOL(__fscache_attr_changed);
--
--/*
-- * wait for a deferred lookup to complete
-- */
--int fscache_wait_for_deferred_lookup(struct fscache_cookie *cookie)
--{
--	unsigned long jif;
--
--	_enter("");
--
--	if (!test_bit(FSCACHE_COOKIE_LOOKING_UP, &cookie->flags)) {
--		_leave(" = 0 [imm]");
--		return 0;
--	}
--
--	fscache_stat(&fscache_n_retrievals_wait);
--
--	jif = jiffies;
--	if (wait_on_bit(&cookie->flags, FSCACHE_COOKIE_LOOKING_UP,
--			TASK_INTERRUPTIBLE) != 0) {
--		fscache_stat(&fscache_n_retrievals_intr);
--		_leave(" = -ERESTARTSYS");
--		return -ERESTARTSYS;
--	}
--
--	ASSERT(!test_bit(FSCACHE_COOKIE_LOOKING_UP, &cookie->flags));
--
--	smp_rmb();
--	fscache_hist(fscache_retrieval_delay_histogram, jif);
--	_leave(" = 0 [dly]");
--	return 0;
--}
--
--/*
-- * wait for an object to become active (or dead)
-- */
--int fscache_wait_for_operation_activation(struct fscache_object *object,
--					  struct fscache_operation *op,
--					  atomic_t *stat_op_waits,
--					  atomic_t *stat_object_dead)
--{
--	int ret;
--
--	if (!test_bit(FSCACHE_OP_WAITING, &op->flags))
--		goto check_if_dead;
--
--	_debug(">>> WT");
--	if (stat_op_waits)
--		fscache_stat(stat_op_waits);
--	if (wait_on_bit(&op->flags, FSCACHE_OP_WAITING,
--			TASK_INTERRUPTIBLE) != 0) {
--		trace_fscache_op(object->cookie, op, fscache_op_signal);
--		ret = fscache_cancel_op(op, false);
--		if (ret == 0)
--			return -ERESTARTSYS;
--
--		/* it's been removed from the pending queue by another party,
--		 * so we should get to run shortly */
--		wait_on_bit(&op->flags, FSCACHE_OP_WAITING,
--			    TASK_UNINTERRUPTIBLE);
--	}
--	_debug("<<< GO");
--
--check_if_dead:
--	if (op->state == FSCACHE_OP_ST_CANCELLED) {
--		if (stat_object_dead)
--			fscache_stat(stat_object_dead);
--		_leave(" = -ENOBUFS [cancelled]");
--		return -ENOBUFS;
--	}
--	if (unlikely(fscache_object_is_dying(object) ||
--		     fscache_cache_is_broken(object))) {
--		enum fscache_operation_state state = op->state;
--		trace_fscache_op(object->cookie, op, fscache_op_signal);
--		fscache_cancel_op(op, true);
--		if (stat_object_dead)
--			fscache_stat(stat_object_dead);
--		_leave(" = -ENOBUFS [obj dead %d]", state);
--		return -ENOBUFS;
--	}
--	return 0;
--}
-diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
-index fd07843e3d69..bd9411cd466f 100644
---- a/include/linux/fscache-cache.h
-+++ b/include/linux/fscache-cache.h
-@@ -167,10 +167,6 @@ struct fscache_cache_ops {
- 	/* unpin an object in the cache */
- 	void (*unpin_object)(struct fscache_object *object);
- 
--	/* check the consistency between the backing cache and the FS-Cache
--	 * cookie */
--	int (*check_consistency)(struct fscache_operation *op);
--
- 	/* store the updated auxiliary data on an object */
- 	void (*update_object)(struct fscache_object *object);
- 
-diff --git a/include/linux/fscache.h b/include/linux/fscache.h
-index f855f6d04667..76cfec6868de 100644
---- a/include/linux/fscache.h
-+++ b/include/linux/fscache.h
-@@ -139,7 +139,6 @@ extern struct fscache_cookie *__fscache_acquire_cookie(
- 	const void *, size_t,
- 	loff_t, bool);
- extern void __fscache_relinquish_cookie(struct fscache_cookie *, const void *, bool);
--extern int __fscache_check_consistency(struct fscache_cookie *, const void *);
- extern void __fscache_update_cookie(struct fscache_cookie *, const void *);
- extern int __fscache_attr_changed(struct fscache_cookie *);
- extern void __fscache_invalidate(struct fscache_cookie *);
-@@ -290,28 +289,6 @@ void fscache_relinquish_cookie(struct fscache_cookie *cookie,
- 		__fscache_relinquish_cookie(cookie, aux_data, retire);
- }
- 
--/**
-- * fscache_check_consistency - Request validation of a cache's auxiliary data
-- * @cookie: The cookie representing the cache object
-- * @aux_data: The updated auxiliary data for the cookie (may be NULL)
-- *
-- * Request an consistency check from fscache, which passes the request to the
-- * backing cache.  The auxiliary data on the cookie will be updated first if
-- * @aux_data is set.
-- *
-- * Returns 0 if consistent and -ESTALE if inconsistent.  May also
-- * return -ENOMEM and -ERESTARTSYS.
-- */
--static inline
--int fscache_check_consistency(struct fscache_cookie *cookie,
--			      const void *aux_data)
--{
--	if (fscache_cookie_valid(cookie) && fscache_cookie_enabled(cookie))
--		return __fscache_check_consistency(cookie, aux_data);
--	else
--		return 0;
--}
--
- /**
-  * fscache_update_cookie - Request that a cache object be updated
-  * @cookie: The cookie representing the cache object
+I think the zalloc.h include is missing.
 
-
+Thanks,
+john
