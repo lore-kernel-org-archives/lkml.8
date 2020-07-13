@@ -2,125 +2,114 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D516C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EBAC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D46C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tsYSVg/7"
+	by mail.kernel.org (Postfix) with ESMTP id C314D21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594683970;
+	bh=IH410DAcFk46Lx8pUTok0E9m5+TRS+PuVTuiS326vA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SMWwwySz54eVRXdaAKo2d8SAXFSX0sn6B7WViR4zKL8om54jy16rVYoMwFz/+hA7q
+	 J0c4e9i2UUI9Ak98ya+C3CmnTeU/Lp+pWGb78QmN27yBXoaaZNaPXyiLywrqOgK2tG
+	 rD2jf7Tam3zasL2gbC7h8hq0pv2wsRL53mZBcCCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgGMXp6 (ORCPT
+        id S1727065AbgGMXqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:45:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26407 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727037AbgGMXp6 (ORCPT
+        Mon, 13 Jul 2020 19:46:09 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45453 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgGMXqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:45:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594683957; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=xRE5cE+HELeOkE681nuM7JY4je2wJ10eEFI/T4uvlMc=; b=tsYSVg/7nGLYhN3rnugksl8CshwqLmGwq0m9eamUrPWPcbnKiIBkkNWbg1Zi5QHml0xjnJ64
- gigGi0ijRGR71HSAVsSnyPzBWoHcuKxLDdnu8g+J48JQUoBw/ShddFHni3o/9LRN9vfRmkSA
- iRHdY0S7+yoODBcznvY6cc7ulsY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f0cf21c65270fa595949df1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 23:45:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8A91CC433A1; Mon, 13 Jul 2020 23:45:31 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6048C433C8;
-        Mon, 13 Jul 2020 23:45:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B6048C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 13 Jul 2020 17:45:26 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 13 Jul 2020 19:46:07 -0400
+Received: by mail-io1-f67.google.com with SMTP id e64so15422853iof.12;
+        Mon, 13 Jul 2020 16:46:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T6nZ0cOZJ7RCB/ypig9TkUxlGlTFi3/Lq9vMup5t3BA=;
+        b=pFhD2aYYIkU4iaBaOATeWmjCgdY7eknkoonQy/MXwe38VIic2iqELxqHj1BxeIFDy/
+         NTNMz1X/D4bLmxfMNuEY0tpvluUSDP8DdPSQyljAdeiaZDSglSDNKW9FkxImMvJoAOus
+         c+fiVw118ZihcURX3es/IFJWbE9ygT5NCdTCsZuf1PkDUkP6F1dgGXQzkAiH9qX8On+3
+         1/N0yKTC4j4RGNPeWN7dIJi1wT+VxP9tDgYz2EvcN0QOIPfi2pDOV4+r9WZq/pTplWpk
+         WCpS9xzxCMfeKCX2WOLszd4+pqscjZHwZ6ysEwHgqFQ1OkXNLbvP/nMRlwbLMhWd5Aen
+         xZ7g==
+X-Gm-Message-State: AOAM531uupBHjxL8FRv0yKDL3Zc6hhjf47ALIMqE6T2EaTVqcHTtjb2h
+        jAE90BGFLD96kGKXWJb7pQ==
+X-Google-Smtp-Source: ABdhPJxh2RFsFJKfNQScdvILUrL+KW2m+tSrDtRyy1/vJm0JpYuo8Qyed6+ngOPyOJBA3WccAVXQzA==
+X-Received: by 2002:a02:c903:: with SMTP id t3mr2902964jao.30.1594683966700;
+        Mon, 13 Jul 2020 16:46:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p9sm9379929ilc.78.2020.07.13.16.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 16:46:06 -0700 (PDT)
+Received: (nullmailer pid 943326 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:46:04 -0000
+Date:   Mon, 13 Jul 2020 17:46:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/3] drm/msm: fix unbalanced pm_runtime_enable in
- adreno_gpu_{init,cleanup}
-Message-ID: <20200713234526.GA24345@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200713225345.20556-1-jonathan@marek.ca>
- <20200713225345.20556-2-jonathan@marek.ca>
+        David Heidelberg <david@ixit.cz>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>
+Subject: Re: [PATCH v2 2/9] dt-bindings: battery: Add temperature properties
+Message-ID: <20200713234604.GA935472@bogus>
+References: <20200607144113.10202-1-digetx@gmail.com>
+ <20200607144113.10202-3-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713225345.20556-2-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200607144113.10202-3-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 06:53:40PM -0400, Jonathan Marek wrote:
-> adreno_gpu_init calls pm_runtime_enable, so adreno_gpu_cleanup needs to
-> call pm_runtime_disable.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+On Sun, Jun 07, 2020 at 05:41:06PM +0300, Dmitry Osipenko wrote:
+> Document generic battery temperature properties.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 89673c7ed473..ad64d4b7e8d7 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -1021,11 +1021,14 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
->  {
->  	struct msm_gpu *gpu = &adreno_gpu->base;
-> +	struct msm_drm_private *priv = gpu->dev->dev_private;
->  	unsigned int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(adreno_gpu->info->fw); i++)
->  		release_firmware(adreno_gpu->fw[i]);
->  
-> +	pm_runtime_disable(&priv->gpu_pdev->dev);
-> +
->  	icc_put(gpu->icc_path);
->  	icc_put(gpu->ocmem_icc_path);
->  
-> -- 
-> 2.26.1
-> 
+>  .../devicetree/bindings/power/supply/battery.txt       | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This is close to being converted to schema:
+
+https://lore.kernel.org/linux-pm/20200707212914.31540-1-r-rivera-matos@ti.com/
+ 
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 5e29595edd74..e0c35eff9d3f 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -45,6 +45,16 @@ Optional Properties:
+>     and corresponding battery internal resistance percent, which is used to look
+>     up the resistance percent according to current temperature to get a accurate
+>     batterty internal resistance in different temperatures.
+> + - temperature-ambient-min-alert-celsius: Alert when ambient temperature of a
+> +   battery is lower than threshold value.
+> + - temperature-ambient-max-alert-celsius: Alert when ambient temperature of a
+> +   battery is higher than threshold value.
+> + - temperature-min-alert-celsius: Alert when battery temperature is lower
+> +   than threshold value.
+> + - temperature-max-alert-celsius: Alert when battery temperature is higher
+> +   than threshold value.
+> + - temperature-min-celsius: minimum temperature at which battery can operate
+> + - temperature-max-celsius: maximum temperature at which battery can operate
+
+Perhaps 'temperature' is redundant since we have units.
+
+Perhaps do <min max> properties given specifying only min or max is 
+probably not valid?
+
+Rob
