@@ -2,82 +2,81 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4492072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594641036;
-	bh=A3xNlAR4ygLcLPhZ8CqcVOYL8/NUwzBP6NZpl/Tp4u4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a3Owr4cCl8sHbyk3PXUJb8f5W6Bb/BI56wOIdNo2wGgGIOJ7XV3X74/cRZ0ocwJpT
-	 EyuOSuvW75x0RbxD2sKYLfTNseJPzlggkv1s+O/IGVovbT9pBY3X/8Sgpa8P6Q2Q1I
-	 zEYhkVmL3x2xoAWoduP6nKo4yiUIV2xAwCmewlnw=
+	by mail.kernel.org (Postfix) with ESMTP id AB37020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="K9z4OQXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgGMLuf (ORCPT
+        id S1729607AbgGMLvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgGMLue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:50:34 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD72E206F4;
-        Mon, 13 Jul 2020 11:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594641034;
-        bh=A3xNlAR4ygLcLPhZ8CqcVOYL8/NUwzBP6NZpl/Tp4u4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dfolvZ7+TGYVruQAoIFKZCUfG+gpQhUeSzsfUiO0LKQ50+ttQOzy7nM/i8+GM8slt
-         Wd6XoVU+vvy8FwpYP/+0VLUCHMZzDQ5W5uIwi1BKG8SZdBkmPfA1fAlc5r+Ha2E83v
-         hVvC/2gfPufpfKEMWKrDApXiPgOCc1dQ9bDMZ9kQ=
-Date:   Mon, 13 Jul 2020 19:50:29 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mon, 13 Jul 2020 07:51:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgGMLvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:51:40 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A000BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:51:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y10so16733455eje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N/DHlb+/nZGG7qN0r183zUnGDtK3Lw0uwrnh4HpX2MQ=;
+        b=K9z4OQXgZqe68WhodObjskXGXhCveTrRy/diBpkEHckhZqpZTCKRqwWhv8gL/c0eJQ
+         HE/ddd4Que9btx6TMvG1ZAjd5MQ39PL1LEH6CtGVG0IrQy0m2Ri/anZu1dieNaHGnA5Q
+         95BZwQjw2WGS50mSmx9I5AIEuFbYZ51P7KjRs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N/DHlb+/nZGG7qN0r183zUnGDtK3Lw0uwrnh4HpX2MQ=;
+        b=Lrh9OlrC7yvrasP9KS0r3IFQPZrYXq7OWelpummnEQ1yq0GbwYgcCjR1TfMvBRk5Jy
+         5Br5jIiMTDGEOoB5oGLESoTxxcEp8FwjPo4Ja3RS9999O/zl6n7t+6+/ArpIRcPZi8JS
+         SeWfoxiYPka5yhVIaqESL9zAwO7QJ9XhBcCDuDzchPo/FBVRzepsF2kxJfnzNqgF5tf8
+         vnFJyYJ1MK2NTAT72+WknfI4ZS0dGa7Aq7bPm2yb1dOzfK6cHRcCTa0gckTWQtgeJ5Q6
+         GVG+5kASll4L/sBGWxN7PVlELnrD5LggujD4lZsuYgyOF5kxbQTaMNkWqxeMeWh+wopY
+         CpaA==
+X-Gm-Message-State: AOAM532gQLikaXmZUnp4jySAM6HFdo8sjtN9ImNaFl+0wET42MAy+XBL
+        0sMJX3DaA1TK+h4J3RKF0uRodw==
+X-Google-Smtp-Source: ABdhPJyPC6ve+saeYmK+j2jidO9325RIY86E6K3eIRiMv5vbBmkdi1CVDxd1dgGuDRIoWh87T+IKCQ==
+X-Received: by 2002:a17:907:94cf:: with SMTP id dn15mr78740469ejc.457.1594641098243;
+        Mon, 13 Jul 2020 04:51:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:ef88])
+        by smtp.gmail.com with ESMTPSA id s1sm11306128edy.1.2020.07.13.04.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 04:51:37 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:51:37 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     linux-wireless@vger.kernel.org
+Cc:     Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw: add Gateworks System Controller
- support
-Message-ID: <20200713115028.GO15718@dragon>
-References: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
- <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
+Subject: Re: [PATCH] iwlwifi: Don't IWL_WARN on FW reconfiguration
+Message-ID: <20200713115137.GA1065134@chrisdown.name>
+References: <20191017144841.GA16393@chrisdown.name>
+ <20191017145321.GA1609@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191017145321.GA1609@chrisdown.name>
+User-Agent: Mutt/1.14.5 (2020-06-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:35:47AM -0700, Tim Harvey wrote:
-> Add Gateworks System Controller support to Gateworks Ventana boards:
-> - add dt bindings for GSC mfd driver and hwmon driver for ADC's and
->   fan controllers.
-> - add dt bindings for gpio-keys driver for push-button and interrupt events
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Just to check in again since this is still happening: is this expected?
 
-It causes DTC warnings like below.
-
-../arch/arm/boot/dts/imx6qdl-gw5912.dtsi:248.4-17: Warning (reg_format): /soc/bus@2100000/i2c@21a0000/gsc@20/fan-controller@a:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 0)
-arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-../arch/arm/boot/dts/imx6qdl-gw5912.dtsi:244.20-249.5: Warning (avoid_default_addr_size): /soc/bus@2100000/i2c@21a0000/gsc@20/fan-controller@a: Relying on default #address-cells value
-
-Patch dropped.
+I expect that if this is IWL_WARN, it should indicate some unexpected or 
+non-ideal state, but the card seems to operate just fine afterwards.
