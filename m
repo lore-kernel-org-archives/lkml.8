@@ -2,120 +2,90 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF302C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2425EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0272077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHFwLI6t"
+	by mail.kernel.org (Postfix) with ESMTP id E99012077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594674946;
+	bh=Kti5FHv5lyqOKSTbMwoqPH+shEQFt2q/7EjUOmrbj7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uLndZKSXc+tYwQWQz6osjFs60/tUkv7ywTALhN1DKFEDxvAdRulBmEZh9qGn+XAH5
+	 A4rahmzkFQJLSNTp/9RqKdONjzi7e1k5/sXPaacD/VtpkuWjENh0wJQX1h+lHQctZF
+	 2SYM373bgoCRBGjUnAIN/1SLQxkn0jjuDz0Ttgis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGMVNY (ORCPT
+        id S1726602AbgGMVPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgGMVNY (ORCPT
+        Mon, 13 Jul 2020 17:15:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36476 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgGMVPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:13:24 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0A5C061755;
-        Mon, 13 Jul 2020 14:13:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k5so486522pjg.3;
-        Mon, 13 Jul 2020 14:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GFFtVBi0HSpUYn8AGsyHnTvFEzCVFTNzBhRqHb3wbuM=;
-        b=HHFwLI6tmgvIy66L0Ly3bb+VZRnO8OyG/nDqoH9lxt+3yQqzjvLx9PYXjF9j2T1hYX
-         FUUbV7Qzw/ozSEQ4GR0BdRuUpPMFObLAomFrNFaasdv520z9OHdFYDXbwH6tTJWg+phz
-         5QY7uWROElqO3rcGG0XYCQFonabWdAWDcBSxsk5EOvTkjX4dE/RtlRYc6m3DuiVlawz4
-         UZTh+gPqQr7SZIt0fQbtvzmtgk+g/AAYUH1X1W+Me3EAKiRrxAfDb4+MGgHzqtciUJmi
-         ooDTtEtSnKhMm7K/Zn2BxRyf7W11QVeT1Ae36HfwQze8XeNX3AOgRynZZWvkkzCsDIn5
-         k8/w==
+        Mon, 13 Jul 2020 17:15:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id y2so15089940ioy.3;
+        Mon, 13 Jul 2020 14:15:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GFFtVBi0HSpUYn8AGsyHnTvFEzCVFTNzBhRqHb3wbuM=;
-        b=Qdqv67EFKxQ0bBb9vpPjqsVgHlxXLmtFSKjUz/bJCD1g7fCEmYCRLgswptEyydZlYU
-         mh0ksMq6Nyacr+h/cehSfB2npF7zdMDbwSXtqlFvRDHi7f7XUXUxwSHD0b+Q9p10jBdK
-         ZXrptAmb9DNcGPe9QezYauC828AWqvaT7xfpHhMe+OHSnKRN1w/nujkdB6qeseszCk5b
-         0B/5f72ipXx3o73N55MRJhFs4Ln0x47GUjE3tNiUDdqCfG6KcHmi9DCaKv5A5WtMcogg
-         wMc3OirqwTphsYbA5EVjinnOc6DpRb+yoZwaSSldLqLvMPmovN8RifSsvW2J0XwQLj1G
-         SzIg==
-X-Gm-Message-State: AOAM533gHOaTmQ6yoJrQqloVwJXDHjeCRj3NUod1VL9e+u6PfGGd4e/Y
-        p48y1qKio1ymp/odBVX4wSHh+Vw27A==
-X-Google-Smtp-Source: ABdhPJzbeEMeKcNLxHDebrt2Na4dXkZPoL24OaG7qnTCAkM8pplx3jxvfivkC1lBENOWe5MEnslkDQ==
-X-Received: by 2002:a17:902:788b:: with SMTP id q11mr1326079pll.216.1594674803373;
-        Mon, 13 Jul 2020 14:13:23 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2409:4071:200a:9520:4919:edd3:5dbd:ffec])
-        by smtp.gmail.com with ESMTPSA id g19sm15305137pfb.152.2020.07.13.14.13.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jul 2020 14:13:22 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Tue, 14 Jul 2020 02:43:16 +0530
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     madhuparnabhowmik10@gmail.com, joel@joelfernandes.org,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rculist: Fix _list_check_srcu() macro
-Message-ID: <20200713211315.GA19516@madhuparna-HP-Notebook>
-References: <20200713174846.8681-1-madhuparnabhowmik10@gmail.com>
- <20200713210244.GL9247@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TLAmIh7PGiy8Elkp9WfdHWsiIaBqblmgqgbJwsBm6fc=;
+        b=c8b79tEb/oPhiWsJPYUFTqmtnYTQrcp02k/JfGiaIJSdgkEsu9WCTSpwKFQVniqHc5
+         xdghb9mQelLbtLatS1RcrtXXga73nVziZXGogKIwd4dPjo9ml/EdniqY/eOUn3e8nQpM
+         ftyYpbdmyR2z3IddtevLrYzXyyzr7m6D5a1YFDlY4V72XjrPDj5PZRRInXXA+UiwHHa/
+         NlVAgGESyEvQFe9N9RZuCtZhpDLNh9ybUmL1ZeT6f9VkiLwtQ790kpnen/C0wt2AYN8T
+         JY5xu754OQQk32Eh8dsXdfLCGeSG8Llu+Rk2JYDXXl/BX43PLSfK8QvD6PvIacJ/7PRH
+         HGvw==
+X-Gm-Message-State: AOAM532pybpffIx1e5QTFa0a0EbFTEIYDpCwv6K7VqULu0VdiXcrQw/G
+        vSJcUYsyQd1Lvj8llhZCQg==
+X-Google-Smtp-Source: ABdhPJyz9AdNVksfPY6LcZ1FntFB0jMTvlZlVxQt3pFsHDsgWUb1QWLWtG8R3kxLoEFWfBrXh5P/3Q==
+X-Received: by 2002:a6b:3ec6:: with SMTP id l189mr1794349ioa.32.1594674943360;
+        Mon, 13 Jul 2020 14:15:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t14sm9372021ilk.17.2020.07.13.14.15.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 14:15:42 -0700 (PDT)
+Received: (nullmailer pid 742503 invoked by uid 1000);
+        Mon, 13 Jul 2020 21:15:41 -0000
+Date:   Mon, 13 Jul 2020 15:15:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomas Novotny <tomas@novotny.cz>, Chen-Yu Tsai <wens@csie.org>,
+        Luca Weiss <luca@z3ntu.xyz>
+Subject: Re: [PATCH v3 1/4] dt-bindings: input: gpio-vibrator: Don't require
+ enable-gpios
+Message-ID: <20200713211541.GA742453@bogus>
+References: <20200702112041.1942707-1-megous@megous.com>
+ <20200702112041.1942707-2-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713210244.GL9247@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200702112041.1942707-2-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 02:02:44PM -0700, Paul E. McKenney wrote:
-> On Mon, Jul 13, 2020 at 11:18:46PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > This patch fixes the macro _list_check_srcu() for CONFIG_PROVE_RCU_LIST =
-> > False.
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu, 02 Jul 2020 13:20:38 +0200, Ondrej Jirman wrote:
+> It is possible to turn the motor on/off just by enabling/disabling
+> the vcc-supply. Change the binding to require either enable-gpios
+> or vcc-supply or both.
 > 
-> Thank you, Madhuparna!  I am folding this into your original, but
-> with lowercase "true".
->
-I am really sorry and thanks for applying this with the correction.
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
 
-Regards,
-Madhuparna
-> 							Thanx, Paul
-> 
-> > ---
-> >  include/linux/rculist.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > index 516b4feb2682..a435ad62b90b 100644
-> > --- a/include/linux/rculist.h
-> > +++ b/include/linux/rculist.h
-> > @@ -73,7 +73,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> >  #define __list_check_rcu(dummy, cond, extra...)				\
-> >  	({ check_arg_count_one(extra); })
-> >  
-> > -#define __list_check_srcu(cond)
-> > +#define __list_check_srcu(cond)	TRUE
-> >  #endif
-> >  
-> >  /*
-> > -- 
-> > 2.17.1
-> > 
+Reviewed-by: Rob Herring <robh@kernel.org>
