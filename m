@@ -2,158 +2,308 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F67C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAD6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A0320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgGMNHy (ORCPT
+        id S1729758AbgGMNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:07:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:33504 "EHLO foss.arm.com"
+        Mon, 13 Jul 2020 09:09:55 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:46942 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMNHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:07:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C7630E;
-        Mon, 13 Jul 2020 06:07:52 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF5443F887;
-        Mon, 13 Jul 2020 06:07:51 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 14:07:49 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de, sudeep.holla@arm.com
-Subject: Re: [PATCH 2/3] firmware: arm_scmi: Remove unneeded __packed
- attribute
-Message-ID: <20200713130749.GA31938@e119603-lin.cambridge.arm.com>
-References: <20200710133919.39792-1-cristian.marussi@arm.com>
- <20200710133919.39792-2-cristian.marussi@arm.com>
- <751ee628-ff38-a383-5832-aab4905af32b@arm.com>
+        id S1729523AbgGMNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:09:54 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2E447BC0D3;
+        Mon, 13 Jul 2020 13:09:50 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] erofs: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 15:09:44 +0200
+Message-Id: <20200713130944.34419-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <751ee628-ff38-a383-5832-aab4905af32b@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-thanks for the review.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-On Mon, Jul 13, 2020 at 12:20:43PM +0100, Steven Price wrote:
-> On 10/07/2020 14:39, Cristian Marussi wrote:
-> >Remove __packed attribute from struct scmi_event_header.
-> >
-> >Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> 
-> A drive-by review. But this doesn't look safe to me. sizeof(struct
-> scmi_event_header) is used in several places and this change will modify
-> that from 13 to 16, but leave the structure members at the same offset (as
-> the members are naturally aligned). In particular the naïve header size is
-> now bigger than the offset to payld.
-> 
-> What is the justification for __packed being 'unneeded'?
-> 
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Arnd pointed out at first that this structure in the original series had a mix of
-fixed and non-fixed types in its fields and that the __packed rendered some fields
-misaglined.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-Removing that as it is, in fact left also some unexplained implicit padding which is
-at odd for a struct containing fixed-sized types.
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-In a following fix in the series I have indeed moved this struct's fields  and others
-to generic non fixed type fields and shuffled around the fields to avoid misalignment
-and implicit internal padding (except for the trailing padding due to the variable
-size array)
+ If you apply the patch, please let me know.
 
-It was probably better to squash also this patch in that following patch.
-
-This structure is used internally to push variable-sized (through the means of the payld[])
-events descriptors through a fifo from the ISR to the deferred workqueus, so that's whhy I
-originally thought to avoid to carry around unneeded padding into the fifos and use the
-__packed.
-
-On the correctness side, as you pointed out, the header with padding is now 16 so when
-I push thorugh the kfifos this header and the payload there's a hole in the data as
-represented in the fifo buffer as such
-
-@end_of hdr+payld kfifo writes:
-  kifo_in(fifo, h, sizeof(*h)) + kfifo_in(fifo, payld, h->payld_sz)
-
-0       14   16
-+-------+----+------------
-|header - pad| payload...
--------------------------
-        ^
-	|
-	.payld
-
-(Note that header and payload comes from two distinct place so I have push it with two kfifo_in()
-in order to avoid a redundant memcpy on an intermediate buffer to collate them...thing
-that was pointed out as undesirable in a review)
-
-and when I read it back from the fifo such hole is just transparently overwritten:
-
-@header read:
- kfifo_out(fifo, h, sizeof(*h))
-
-0       14   16
-+-------+----+--------------
-|header - pad| 
-----------------------------
-
-@payload_read:
- kfifo_out(fifo, h->payld, h->payld_sz)
-
-0       14   
-+-------+----+--------------
-|header | payload....
-----------------------------
-        ^
-	|
-	.payld
-
-So since anyway the drawback of packing is that the misaglined access potentially slows down the
-reads, I was not sure anymore it was worth to pack and misalign, and, given that it seemed not
-to be liked so much, I dropped it and moved to generic non-fixed types without packing.
-
-A better (and shorter) explanation of all of the above is possibly needed (but I'd still prefer
-the fixed sized typing and __packed 'holeless' approach...)
-
-Thanks
-
-Cristian
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-> Steve
-> 
-> >---
-> >  drivers/firmware/arm_scmi/notify.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> >index c4d006cfde88..752415367305 100644
-> >--- a/drivers/firmware/arm_scmi/notify.c
-> >+++ b/drivers/firmware/arm_scmi/notify.c
-> >@@ -258,7 +258,7 @@ struct scmi_event_header {
-> >  	u8	evt_id;
-> >  	size_t	payld_sz;
-> >  	u8	payld[];
-> >-} __packed;
-> >+};
-> >  struct scmi_registered_event;
-> >
-> 
+ fs/erofs/compress.h     | 2 +-
+ fs/erofs/data.c         | 2 +-
+ fs/erofs/decompressor.c | 2 +-
+ fs/erofs/dir.c          | 2 +-
+ fs/erofs/erofs_fs.h     | 2 +-
+ fs/erofs/inode.c        | 2 +-
+ fs/erofs/internal.h     | 2 +-
+ fs/erofs/namei.c        | 2 +-
+ fs/erofs/super.c        | 2 +-
+ fs/erofs/utils.c        | 2 +-
+ fs/erofs/xattr.c        | 2 +-
+ fs/erofs/xattr.h        | 2 +-
+ fs/erofs/zdata.c        | 2 +-
+ fs/erofs/zdata.h        | 2 +-
+ fs/erofs/zmap.c         | 2 +-
+ fs/erofs/zpvec.h        | 2 +-
+ 16 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 07d279fd5d67..3d452443c545 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (C) 2019 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_FS_COMPRESS_H
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 64b56c7df023..03b5a971a8c6 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 7628816f2453..cbadbf55c6c2 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2019 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "compress.h"
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+index d28c623dfef9..2776bb832127 100644
+--- a/fs/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 385fa49c7749..9ad1615f4474 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -3,7 +3,7 @@
+  * EROFS (Enhanced ROM File System) on-disk format definition
+  *
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_FS_H
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 7dd4bbe9674f..577fc9df4471 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "xattr.h"
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 1c077b7bb43d..67a7ec945686 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_INTERNAL_H
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index 52f201e03c62..5f8cc7346c69 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "xattr.h"
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 7a13ffb07c23..ddaa516c008a 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include <linux/module.h>
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index 52d0be10f1aa..ecb85b3d4013 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index 87e437e7b34f..c8c381eadcd6 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include <linux/security.h>
+diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
+index e4e5093f012c..815304bd335f 100644
+--- a/fs/erofs/xattr.h
++++ b/fs/erofs/xattr.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (C) 2017-2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_XATTR_H
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index be50a4d9d273..80bf09c4de09 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "zdata.h"
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index 9b66c28b3ae9..68c9b29fc0ca 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (C) 2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_FS_ZDATA_H
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 736db3a4cdef..7d40d78ea864 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (C) 2018-2019 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
+diff --git a/fs/erofs/zpvec.h b/fs/erofs/zpvec.h
+index 58556903aa94..1d67cbd38704 100644
+--- a/fs/erofs/zpvec.h
++++ b/fs/erofs/zpvec.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (C) 2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
++ *             https://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #ifndef __EROFS_FS_ZPVEC_H
+-- 
+2.27.0
+
