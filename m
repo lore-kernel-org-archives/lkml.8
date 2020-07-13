@@ -2,308 +2,164 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAD6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668CAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A0320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF50206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:11:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZKV+SG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgGMNJz (ORCPT
+        id S1729764AbgGMNL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:09:55 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:46942 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:09:54 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2E447BC0D3;
-        Mon, 13 Jul 2020 13:09:50 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] erofs: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 15:09:44 +0200
-Message-Id: <20200713130944.34419-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 09:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729578AbgGMNLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:11:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D5AC061755;
+        Mon, 13 Jul 2020 06:11:55 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w6so17082807ejq.6;
+        Mon, 13 Jul 2020 06:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=/LcskTFE0ftRjKPkrUkg9e4RKK6cWyQd9LPAwkcR1i0=;
+        b=hZKV+SG/j73cRLtgscm/TJyIzdnydZ66AbZXwMbTphprnLoRp7PIavE3QkrS1SfgEG
+         hK90ffaMF3j67xJJfmR4kpuHeBuurRipPAWo1bcckI+J8H00pMlcOFh/ubztIUM/CcGH
+         rX+tt0V3v1BYqWVuTrZN6fgyfYAs4vSUfuJdRLuHZHSPcT2rRbIhQ4FyjtVkxZ1ClIiZ
+         LRH8OeiJnyQW4+2je7p4ZWWXCshRaU+qWhMTOGFd4ZFekv32iwJK5x0iKO0+1ENLvwYy
+         ghlRSlLxGT3l0T9Tge53/iQ5QV+vjd8QJSO7YdN9mIz/lEfsT2K4HpcX+08Q6mAwod+E
+         WcoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=/LcskTFE0ftRjKPkrUkg9e4RKK6cWyQd9LPAwkcR1i0=;
+        b=HINuQT9/eN1KQjYGmMcFEuso9QFJ9z+Sn9ygL9kkigFyj3dgQqS7dAPSEyuT7yhMB1
+         XpN8hXGJqdKQf5WQEIzp/2WcfVrBN8KbuJoVDS1kWDX8ijTKhWXHojSwEsLp4jI8sJa2
+         8BHoEDrrNacCO1Y10oMWxuTcmv5cEwPeJCYqz9gc+T76A/hW9jOHta1VlSOSTL4sde9s
+         ZakGHKaaU+Sh6/zR+BJseTK8/s/VVSGJsAaiDgNBp5NfaMrkGt5PK1PtXGcz8cafn8NU
+         DZxqiICVXQOUoGoqx2e29E9q24kxl/CT4/9yMuexpRXk4SfC7cptSlcUrHAWqVy3+A57
+         a/VQ==
+X-Gm-Message-State: AOAM5327C3b6OgBe2AnTDl4Kds346E87X59DstGDprxqq6pEdSenNw+c
+        yXPAKtrcoPITtesbH86t9VQ=
+X-Google-Smtp-Source: ABdhPJzqKrgmo4lKRir8KbulNZTXvb76s7hasIFMZVuNbjy0t50dr1lBBC95p7fNtwPq1t+mPzKpzw==
+X-Received: by 2002:a17:906:3acd:: with SMTP id z13mr56514418ejd.69.1594645914066;
+        Mon, 13 Jul 2020 06:11:54 -0700 (PDT)
+Received: from AnsuelXPS (host-87-16-250-131.retail.telecomitalia.it. [87.16.250.131])
+        by smtp.gmail.com with ESMTPSA id u18sm11430586edx.34.2020.07.13.06.11.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 06:11:53 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Vinod Koul'" <vkoul@kernel.org>
+Cc:     "'Andy Gross'" <agross@codeaurora.org>,
+        "'Jonathan McDowell'" <noodles@earth.li>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200615205333.20747-1-ansuelsmth@gmail.com> <20200713053255.GY34333@vkoul-mobl>
+In-Reply-To: <20200713053255.GY34333@vkoul-mobl>
+Subject: R: [RESEND PATCH v7 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Date:   Mon, 13 Jul 2020 15:11:48 +0200
+Message-ID: <019d01d65917$2bff9ba0$83fed2e0$@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQJO0Cndc+Pketd50VjNHRY/HVB9ygG/2AhjqAaOrYA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
-
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
 
 
- fs/erofs/compress.h     | 2 +-
- fs/erofs/data.c         | 2 +-
- fs/erofs/decompressor.c | 2 +-
- fs/erofs/dir.c          | 2 +-
- fs/erofs/erofs_fs.h     | 2 +-
- fs/erofs/inode.c        | 2 +-
- fs/erofs/internal.h     | 2 +-
- fs/erofs/namei.c        | 2 +-
- fs/erofs/super.c        | 2 +-
- fs/erofs/utils.c        | 2 +-
- fs/erofs/xattr.c        | 2 +-
- fs/erofs/xattr.h        | 2 +-
- fs/erofs/zdata.c        | 2 +-
- fs/erofs/zdata.h        | 2 +-
- fs/erofs/zmap.c         | 2 +-
- fs/erofs/zpvec.h        | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
+> -----Messaggio originale-----
+> Da: Vinod Koul <vkoul@kernel.org>
+> Inviato: luned=EC 13 luglio 2020 07:33
+> A: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: Andy Gross <agross@codeaurora.org>; Jonathan McDowell
+> <noodles@earth.li>; Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Kishon Vijay Abraham I <kishon@ti.com>;
+> Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Oggetto: Re: [RESEND PATCH v7 1/2] phy: qualcomm: add qcom ipq806x
+> dwc usb phy driver
+>=20
+> On 15-06-20, 22:53, Ansuel Smith wrote:
+>=20
+> > @@ -0,0 +1,593 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright (c) 2014-2015, Code Aurora Forum. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or =
+modify
+> > + * it under the terms of the GNU General Public License version 2 =
+and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+>=20
+> You have SPDX tag, so we dont need the license text, please remove =
+this.
+> Also we are in 2020 now so Copyright looks incorrect
+>=20
+> > +static int qcom_ipq806x_usb_ss_phy_init(struct phy *phy)
+> > +{
+> > +	struct usb_phy *phy_dwc3 =3D phy_get_drvdata(phy);
+> > +	int ret;
+> > +	u32 data =3D 0;
+>=20
+> Superfluous init
+>=20
+> > +static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct usb_phy	*phy_dwc3;
+> > +	struct phy_provider		*phy_provider;
+> > +	struct phy			*generic_phy;
+> > +	const struct of_device_id *match;
+> > +	const struct phy_drvdata *data;
+> > +	struct resource			*res;
+> > +	resource_size_t			size;
+>=20
+> Pls pick one, tabs or single spaces, not both. and reverse christmas
+> looks better :)
+>=20
+> > +	struct device_node *np;
+> > +
+> > +	phy_dwc3 =3D devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3),
+> GFP_KERNEL);
+> > +	if (!phy_dwc3)
+> > +		return -ENOMEM;
+> > +
+> > +	match =3D of_match_node(qcom_ipq806x_usb_phy_table, pdev-
+> >dev.of_node);
+> > +	data =3D match->data;
+>=20
+> How about using of_device_get_match_data() instead?
+> --
+> ~Vinod
 
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 07d279fd5d67..3d452443c545 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2019 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_FS_COMPRESS_H
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 64b56c7df023..03b5a971a8c6 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "internal.h"
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 7628816f2453..cbadbf55c6c2 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2019 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "compress.h"
-diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-index d28c623dfef9..2776bb832127 100644
---- a/fs/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "internal.h"
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 385fa49c7749..9ad1615f4474 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -3,7 +3,7 @@
-  * EROFS (Enhanced ROM File System) on-disk format definition
-  *
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_FS_H
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 7dd4bbe9674f..577fc9df4471 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "xattr.h"
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 1c077b7bb43d..67a7ec945686 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_INTERNAL_H
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index 52f201e03c62..5f8cc7346c69 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "xattr.h"
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 7a13ffb07c23..ddaa516c008a 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include <linux/module.h>
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index 52d0be10f1aa..ecb85b3d4013 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "internal.h"
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 87e437e7b34f..c8c381eadcd6 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include <linux/security.h>
-diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
-index e4e5093f012c..815304bd335f 100644
---- a/fs/erofs/xattr.h
-+++ b/fs/erofs/xattr.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2017-2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_XATTR_H
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index be50a4d9d273..80bf09c4de09 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "zdata.h"
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 9b66c28b3ae9..68c9b29fc0ca 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_FS_ZDATA_H
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 736db3a4cdef..7d40d78ea864 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2018-2019 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #include "internal.h"
-diff --git a/fs/erofs/zpvec.h b/fs/erofs/zpvec.h
-index 58556903aa94..1d67cbd38704 100644
---- a/fs/erofs/zpvec.h
-+++ b/fs/erofs/zpvec.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (C) 2018 HUAWEI, Inc.
-- *             http://www.huawei.com/
-+ *             https://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
- #ifndef __EROFS_FS_ZPVEC_H
--- 
-2.27.0
+match is also used in the function to compare compatible.=20
 
