@@ -2,293 +2,427 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D45DC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEAF206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0144C2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHYBl9E3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LdVtWo+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgGMQji (ORCPT
+        id S1729869AbgGMQjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730353AbgGMQja (ORCPT
+        Mon, 13 Jul 2020 12:39:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30502 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730831AbgGMQjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:39:30 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A75C061755;
-        Mon, 13 Jul 2020 09:39:30 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id br7so4127421ejb.5;
-        Mon, 13 Jul 2020 09:39:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sYYg1qVVGGXBw/GUUamnS1vUTMkh98TJM2wDPy9E+j4=;
-        b=SHYBl9E3+A41UcKb+jbw6VSpFlUDrtsHwWFZk1ystren5dx23MjEphN+eTUT5A1bSW
-         QU/5NLfnhiZDH78f4gJ2PDcF1PHYDzOAweMxS0lRBkLXJ8ad3MRKfTkyoPSj06/NioHJ
-         QX/qy4BTTwisESW3al5cXEpBFuRHoByfHKqVa495KL7e6vr67VGquuzVlElI/zBeQxN8
-         MLP6SjmiQD/g62jYj/AYxcrw2nDtr2WlIbyM428H7E5dJvhiG0NZ6KNgKemuttCrdoxD
-         QRCRF+DEhlpongtLJofakux1gsbV8dcZdDOElixlXIE1G/zj7cHAS8LqWwgzntmNFVkP
-         n3MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sYYg1qVVGGXBw/GUUamnS1vUTMkh98TJM2wDPy9E+j4=;
-        b=BMb+RcHu5j9z20NrAdlR29r//AjXKacl8VBpjWhVVwqKwGP+uFOdTypQstOLJA3UAi
-         h78ksKBog3YrTDH0fg9QW+GNq7p4RF28LFmFGikGggJW7rcTL1sdEqWRDZuwLYoG5yoQ
-         +XdYapNkbQ6EzwVPUiEGVgFCJ2sByD7Sj72W1G5Z2j/byGDbRNn2m6sm0rSleXrNNUFr
-         tbA1jkgxMYJKrI8SRLsevdPN15vBWIzJMv89nAqMt4a8FVqh/NiWlZQTWpSMbSauS/gd
-         Tbdqr0C8kAoKYQLlthL/8pD24q6t4krRnZLTMqG9/tXGFZP6Sx9JYYnI5l+xQU9xHsCk
-         vMgA==
-X-Gm-Message-State: AOAM5315wGC6CI/xKmxHJFIEQ2l6/pZm4+n8i6K9dQepBjExXW1EEU6+
-        IcO+WMBe3hiIk8BuniufECI=
-X-Google-Smtp-Source: ABdhPJyx7i+hwbB0vK4h17NpnnPrlSd3LofIULxCm29FZ+oqdXNoVPuU+MFG5DiOkixIAQck9L8xMg==
-X-Received: by 2002:a17:906:7694:: with SMTP id o20mr544368ejm.289.1594658369264;
-        Mon, 13 Jul 2020 09:39:29 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id c9sm11945116edv.8.2020.07.13.09.39.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:39:28 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 19:39:26 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v6 4/4] net: enetc: Use DT protocol information
- to set up the ports
-Message-ID: <20200713163926.fawm3qdfnr33bdhj@skbuf>
-References: <20200709213526.21972-1-michael@walle.cc>
- <20200709213526.21972-5-michael@walle.cc>
+        Mon, 13 Jul 2020 12:39:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594658380;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZltF3kTtRDCqeiMAKnWdkROIh1F0y4ZuBnVQ0RqDrdI=;
+        b=LdVtWo+RCJIB9mO1BUDEkea7cw2nwLNbT4D/S/tYQPRQZFrH9VBbqVpf7p4uuucVoT5Kpo
+        TWuTaI/jDbU1Rs5dQp4Co+H7BfFFsownOa9k8aIQYt/705gxE+0dzMd9TWtSB4JdkvWoPi
+        aqEqgE0XLzLj7F18PEpGvV1l8VukTco=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-HML89eGQOUm5MGBgYTDxLA-1; Mon, 13 Jul 2020 12:39:39 -0400
+X-MC-Unique: HML89eGQOUm5MGBgYTDxLA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46AE7800400;
+        Mon, 13 Jul 2020 16:39:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FF2072E41;
+        Mon, 13 Jul 2020 16:39:31 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 13/13] afs: Add O_DIRECT read support
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jul 2020 17:39:30 +0100
+Message-ID: <159465837067.1377938.13569650454944979305.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
+References: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709213526.21972-5-michael@walle.cc>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:35:26PM +0200, Michael Walle wrote:
-> From: Alex Marginean <alexandru.marginean@nxp.com>
-> 
-> Use DT information rather than in-band information from bootloader to
-> set up MAC for XGMII. For RGMII use the DT indication in addition to
-> RGMII defaults in hardware.
-> However, this implies that PHY connection information needs to be
-> extracted before netdevice creation, when the ENETC Port MAC is
-> being configured.
-> 
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
+Add synchronous O_DIRECT read support to AFS (no AIO yet).  It can
+theoretically handle reads up to the maximum size describable by loff_t -
+and given an iterator with sufficiently capacity to handle that and given
+support on the server.
 
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
->  .../net/ethernet/freescale/enetc/enetc_pf.c   | 57 ++++++++++---------
->  .../net/ethernet/freescale/enetc/enetc_pf.h   |  3 +
->  2 files changed, 34 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> index 662740874841..dfc3acc841df 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> @@ -482,7 +482,8 @@ static void enetc_port_si_configure(struct enetc_si *si)
->  	enetc_port_wr(hw, ENETC_PSIVLANFMR, ENETC_PSIVLANFMR_VS);
->  }
->  
-> -static void enetc_configure_port_mac(struct enetc_hw *hw)
-> +static void enetc_configure_port_mac(struct enetc_hw *hw,
-> +				     phy_interface_t phy_mode)
->  {
->  	enetc_port_wr(hw, ENETC_PM0_MAXFRM,
->  		      ENETC_SET_MAXFRM(ENETC_RX_MAXFRM_SIZE));
-> @@ -498,9 +499,11 @@ static void enetc_configure_port_mac(struct enetc_hw *hw)
->  		      ENETC_PM0_CMD_TXP	| ENETC_PM0_PROMISC |
->  		      ENETC_PM0_TX_EN | ENETC_PM0_RX_EN);
->  	/* set auto-speed for RGMII */
-> -	if (enetc_port_rd(hw, ENETC_PM0_IF_MODE) & ENETC_PMO_IFM_RG)
-> +	if (enetc_port_rd(hw, ENETC_PM0_IF_MODE) & ENETC_PMO_IFM_RG ||
-> +	    phy_interface_mode_is_rgmii(phy_mode))
->  		enetc_port_wr(hw, ENETC_PM0_IF_MODE, ENETC_PM0_IFM_RGAUTO);
-> -	if (enetc_global_rd(hw, ENETC_G_EPFBLPR(1)) == ENETC_G_EPFBLPR1_XGMII)
-> +
-> +	if (phy_mode == PHY_INTERFACE_MODE_USXGMII)
->  		enetc_port_wr(hw, ENETC_PM0_IF_MODE, ENETC_PM0_IFM_XGMII);
->  }
->  
-> @@ -524,7 +527,7 @@ static void enetc_configure_port(struct enetc_pf *pf)
->  
->  	enetc_configure_port_pmac(hw);
->  
-> -	enetc_configure_port_mac(hw);
-> +	enetc_configure_port_mac(hw, pf->if_mode);
->  
->  	enetc_port_si_configure(pf->si);
->  
-> @@ -776,27 +779,27 @@ static void enetc_mdio_remove(struct enetc_pf *pf)
->  		mdiobus_unregister(pf->mdio);
->  }
->  
-> -static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
-> +static int enetc_of_get_phy(struct enetc_pf *pf)
->  {
-> -	struct enetc_pf *pf = enetc_si_priv(priv->si);
-> -	struct device_node *np = priv->dev->of_node;
-> +	struct device *dev = &pf->si->pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  	struct device_node *mdio_np;
->  	int err;
->  
-> -	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> -	if (!priv->phy_node) {
-> +	pf->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> +	if (!pf->phy_node) {
->  		if (!of_phy_is_fixed_link(np)) {
-> -			dev_err(priv->dev, "PHY not specified\n");
-> +			dev_err(dev, "PHY not specified\n");
->  			return -ENODEV;
->  		}
->  
->  		err = of_phy_register_fixed_link(np);
->  		if (err < 0) {
-> -			dev_err(priv->dev, "fixed link registration failed\n");
-> +			dev_err(dev, "fixed link registration failed\n");
->  			return err;
->  		}
->  
-> -		priv->phy_node = of_node_get(np);
-> +		pf->phy_node = of_node_get(np);
->  	}
->  
->  	mdio_np = of_get_child_by_name(np, "mdio");
-> @@ -804,15 +807,15 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
->  		of_node_put(mdio_np);
->  		err = enetc_mdio_probe(pf);
->  		if (err) {
-> -			of_node_put(priv->phy_node);
-> +			of_node_put(pf->phy_node);
->  			return err;
->  		}
->  	}
->  
-> -	err = of_get_phy_mode(np, &priv->if_mode);
-> +	err = of_get_phy_mode(np, &pf->if_mode);
->  	if (err) {
-> -		dev_err(priv->dev, "missing phy type\n");
-> -		of_node_put(priv->phy_node);
-> +		dev_err(dev, "missing phy type\n");
-> +		of_node_put(pf->phy_node);
->  		if (of_phy_is_fixed_link(np))
->  			of_phy_deregister_fixed_link(np);
->  		else
-> @@ -824,14 +827,14 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
->  	return 0;
->  }
->  
-> -static void enetc_of_put_phy(struct enetc_ndev_priv *priv)
-> +static void enetc_of_put_phy(struct enetc_pf *pf)
->  {
-> -	struct device_node *np = priv->dev->of_node;
-> +	struct device_node *np = pf->si->pdev->dev.of_node;
->  
->  	if (np && of_phy_is_fixed_link(np))
->  		of_phy_deregister_fixed_link(np);
-> -	if (priv->phy_node)
-> -		of_node_put(priv->phy_node);
-> +	if (pf->phy_node)
-> +		of_node_put(pf->phy_node);
->  }
->  
->  static int enetc_imdio_init(struct enetc_pf *pf, bool is_c45)
-> @@ -994,6 +997,10 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	pf->si = si;
->  	pf->total_vfs = pci_sriov_get_totalvfs(pdev);
->  
-> +	err = enetc_of_get_phy(pf);
-> +	if (err)
-> +		dev_warn(&pdev->dev, "Fallback to PHY-less operation\n");
-> +
->  	enetc_configure_port(pf);
->  
->  	enetc_get_si_caps(si);
-> @@ -1008,6 +1015,8 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	enetc_pf_netdev_setup(si, ndev, &enetc_ndev_ops);
->  
->  	priv = netdev_priv(ndev);
-> +	priv->phy_node = pf->phy_node;
-> +	priv->if_mode = pf->if_mode;
->  
->  	enetc_init_si_rings_params(priv);
->  
-> @@ -1023,10 +1032,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  		goto err_alloc_msix;
->  	}
->  
-> -	err = enetc_of_get_phy(priv);
-> -	if (err)
-> -		dev_warn(&pdev->dev, "Fallback to PHY-less operation\n");
-> -
->  	err = enetc_configure_serdes(priv);
->  	if (err)
->  		dev_warn(&pdev->dev, "Attempted SerDes config but failed\n");
-> @@ -1040,7 +1045,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	return 0;
->  
->  err_reg_netdev:
-> -	enetc_of_put_phy(priv);
->  	enetc_free_msix(priv);
->  err_alloc_msix:
->  	enetc_free_si_resources(priv);
-> @@ -1048,6 +1052,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	si->ndev = NULL;
->  	free_netdev(ndev);
->  err_alloc_netdev:
-> +	enetc_of_put_phy(pf);
->  err_map_pf_space:
->  	enetc_pci_remove(pdev);
->  
-> @@ -1068,7 +1073,7 @@ static void enetc_pf_remove(struct pci_dev *pdev)
->  
->  	enetc_imdio_remove(pf);
->  	enetc_mdio_remove(pf);
-> -	enetc_of_put_phy(priv);
-> +	enetc_of_put_phy(pf);
->  
->  	enetc_free_msix(priv);
->  
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-> index 2cb922b59f46..0d0ee91282a5 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-> @@ -46,6 +46,9 @@ struct enetc_pf {
->  	struct mii_bus *mdio; /* saved for cleanup */
->  	struct mii_bus *imdio;
->  	struct phy_device *pcs;
-> +
-> +	struct device_node *phy_node;
-> +	phy_interface_t if_mode;
->  };
->  
->  int enetc_msg_psi_init(struct enetc_pf *pf);
-> -- 
-> 2.20.1
-> 
+ fs/afs/file.c      |   59 +++++++++++++++++++++++++++++++++++++++
+ fs/afs/fsclient.c  |   18 +++++++++---
+ fs/afs/internal.h  |    2 +
+ fs/afs/write.c     |   78 ++++++++++++++++++++++++++++++++++++++++++++++------
+ fs/afs/yfsclient.c |   12 +++++---
+ mm/filemap.c       |    9 +++++-
+ 6 files changed, 159 insertions(+), 19 deletions(-)
+
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index 5aa7b89e7359..0ee0e94ba042 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -24,6 +24,7 @@ static int afs_releasepage(struct page *page, gfp_t gfp_flags);
+ 
+ static int afs_readpages(struct file *filp, struct address_space *mapping,
+ 			 struct list_head *pages, unsigned nr_pages);
++static ssize_t afs_direct_IO(struct kiocb *iocb, struct iov_iter *iter);
+ 
+ const struct file_operations afs_file_operations = {
+ 	.open		= afs_open,
+@@ -52,6 +53,7 @@ const struct address_space_operations afs_fs_aops = {
+ 	.launder_page	= afs_launder_page,
+ 	.releasepage	= afs_releasepage,
+ 	.invalidatepage	= afs_invalidatepage,
++	.direct_IO	= afs_direct_IO,
+ 	.write_begin	= afs_write_begin,
+ 	.write_end	= afs_write_end,
+ 	.writepage	= afs_writepage,
+@@ -586,3 +588,60 @@ static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 		vma->vm_ops = &afs_vm_ops;
+ 	return ret;
+ }
++
++/*
++ * Direct file read operation for an AFS file.
++ *
++ * TODO: To support AIO, the pages in the iterator have to be copied and
++ * refs taken on them.  Then -EIOCBQUEUED needs to be returned.
++ * iocb->ki_complete must then be called upon completion of the operation.
++ */
++static ssize_t afs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct file *file = iocb->ki_filp;
++	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
++	struct afs_read *req;
++	ssize_t ret, transferred;
++
++	_enter("%llx,%zx", iocb->ki_pos, iov_iter_count(iter));
++
++	req = afs_alloc_read(GFP_KERNEL);
++	if (!req)
++		return -ENOMEM;
++
++	req->vnode	= vnode;
++	req->key	= key_get(afs_file_key(file));
++	req->cache.pos	= iocb->ki_pos;
++	req->cache.len	= iov_iter_count(iter);
++	req->iter	= iter;
++
++	task_io_account_read(req->cache.len);
++
++	// TODO nfs_start_io_direct(inode);
++	ret = afs_fetch_data(vnode, req);
++	if (ret == 0)
++		transferred = req->cache.transferred;
++	afs_put_read(req);
++
++	// TODO nfs_end_io_direct(inode);
++
++	if (ret == 0)
++		ret = transferred;
++
++	BUG_ON(ret == -EIOCBQUEUED); // TODO
++	//if (iocb->ki_complete)
++	//	iocb->ki_complete(iocb, ret, 0); // only if ret == -EIOCBQUEUED
++
++	_leave(" = %zu", ret);
++	return ret;
++}
++
++/*
++ * Do direct I/O.
++ */
++static ssize_t afs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
++{
++	if (iov_iter_rw(iter) == READ)
++		return afs_file_direct_read(iocb, iter);
++	return afs_file_direct_write(iocb, iter);
++}
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index e729a19f28c5..1d0465654256 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -446,7 +446,7 @@ static void afs_fs_fetch_data64(struct afs_operation *op)
+ 	bp[3] = htonl(vp->fid.unique);
+ 	bp[4] = htonl(upper_32_bits(req->cache.pos));
+ 	bp[5] = htonl(lower_32_bits(req->cache.pos));
+-	bp[6] = 0;
++	bp[6] = htonl(upper_32_bits(req->cache.len));
+ 	bp[7] = htonl(lower_32_bits(req->cache.len));
+ 
+ 	trace_afs_make_fs_call(call, &vp->fid);
+@@ -1066,6 +1066,7 @@ static void afs_fs_store_data64(struct afs_operation *op)
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+ 	__be32 *bp;
++	u32 mask = 0;
+ 
+ 	_enter(",%x,{%llx:%llu},,",
+ 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
+@@ -1078,6 +1079,9 @@ static void afs_fs_store_data64(struct afs_operation *op)
+ 
+ 	call->write_iter = op->store.write_iter;
+ 
++	if (op->flags & AFS_OPERATION_SET_MTIME)
++		mask |= AFS_SET_MTIME;
++
+ 	/* marshall the parameters */
+ 	bp = call->request;
+ 	*bp++ = htonl(FSSTOREDATA64);
+@@ -1085,8 +1089,8 @@ static void afs_fs_store_data64(struct afs_operation *op)
+ 	*bp++ = htonl(vp->fid.vnode);
+ 	*bp++ = htonl(vp->fid.unique);
+ 
+-	*bp++ = htonl(AFS_SET_MTIME); /* mask */
+-	*bp++ = htonl(op->mtime.tv_sec); /* mtime */
++	*bp++ = htonl(mask);
++	*bp++ = htonl(op->mtime.tv_sec);
+ 	*bp++ = 0; /* owner */
+ 	*bp++ = 0; /* group */
+ 	*bp++ = 0; /* unix mode */
+@@ -1111,6 +1115,7 @@ void afs_fs_store_data(struct afs_operation *op)
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+ 	__be32 *bp;
++	u32 mask = 0;
+ 
+ 	_enter(",%x,{%llx:%llu},,",
+ 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode);
+@@ -1133,6 +1138,9 @@ void afs_fs_store_data(struct afs_operation *op)
+ 
+ 	call->write_iter = op->store.write_iter;
+ 
++	if (op->flags & AFS_OPERATION_SET_MTIME)
++		mask |= AFS_SET_MTIME;
++
+ 	/* marshall the parameters */
+ 	bp = call->request;
+ 	*bp++ = htonl(FSSTOREDATA);
+@@ -1140,8 +1148,8 @@ void afs_fs_store_data(struct afs_operation *op)
+ 	*bp++ = htonl(vp->fid.vnode);
+ 	*bp++ = htonl(vp->fid.unique);
+ 
+-	*bp++ = htonl(AFS_SET_MTIME); /* mask */
+-	*bp++ = htonl(op->mtime.tv_sec); /* mtime */
++	*bp++ = htonl(mask);
++	*bp++ = htonl(op->mtime.tv_sec);
+ 	*bp++ = 0; /* owner */
+ 	*bp++ = 0; /* group */
+ 	*bp++ = 0; /* unix mode */
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 8c9abfa33a91..7bb26975080f 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -843,6 +843,7 @@ struct afs_operation {
+ #define AFS_OPERATION_TRIED_ALL		0x0400	/* Set if we've tried all the fileservers */
+ #define AFS_OPERATION_RETRY_SERVER	0x0800	/* Set if we should retry the current server */
+ #define AFS_OPERATION_DIR_CONFLICT	0x1000	/* Set if we detected a 3rd-party dir change */
++#define AFS_OPERATION_SET_MTIME		0x2000	/* Set if we should try to store the mtime */
+ };
+ 
+ /*
+@@ -1440,6 +1441,7 @@ extern int afs_fsync(struct file *, loff_t, loff_t, int);
+ extern vm_fault_t afs_page_mkwrite(struct vm_fault *vmf);
+ extern void afs_prune_wb_keys(struct afs_vnode *);
+ extern int afs_launder_page(struct page *);
++extern ssize_t afs_file_direct_write(struct kiocb *, struct iov_iter *);
+ 
+ /*
+  * xattr.c
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 10c60837775e..14d31adf4825 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -377,7 +377,7 @@ static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter,
+ 	op->store.size = size;
+ 	op->store.i_size = max(pos + size, i_size);
+ 	op->mtime = vnode->vfs_inode.i_mtime;
+-	op->flags |= AFS_OPERATION_UNINTR;
++	op->flags |= AFS_OPERATION_SET_MTIME | AFS_OPERATION_UNINTR;
+ 	op->ops = &afs_store_data_operation;
+ 
+ try_next_key:
+@@ -732,7 +732,6 @@ int afs_writepages(struct address_space *mapping,
+ ssize_t afs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	struct afs_vnode *vnode = AFS_FS_I(file_inode(iocb->ki_filp));
+-	ssize_t result;
+ 	size_t count = iov_iter_count(from);
+ 
+ 	_enter("{%llx:%llu},{%zu},",
+@@ -744,13 +743,7 @@ ssize_t afs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 		return -EBUSY;
+ 	}
+ 
+-	if (!count)
+-		return 0;
+-
+-	result = generic_file_write_iter(iocb, from);
+-
+-	_leave(" = %zd", result);
+-	return result;
++	return generic_file_write_iter(iocb, from);
+ }
+ 
+ /*
+@@ -992,3 +985,70 @@ static void afs_write_to_cache(struct afs_vnode *vnode,
+ abandon:
+ 	afs_clear_fscache_bits(vnode->vfs_inode.i_mapping, start, last);
+ }
++
++static void afs_dio_store_data_success(struct afs_operation *op)
++{
++	struct afs_vnode *vnode = op->file[0].vnode;
++
++	op->ctime = op->file[0].scb.status.mtime_client;
++	afs_vnode_commit_status(op, &op->file[0]);
++	if (op->error == 0) {
++		afs_stat_v(vnode, n_stores);
++		atomic_long_add(op->store.size, &afs_v2net(vnode)->n_store_bytes);
++	}
++}
++
++static const struct afs_operation_ops afs_dio_store_data_operation = {
++	.issue_afs_rpc	= afs_fs_store_data,
++	.issue_yfs_rpc	= yfs_fs_store_data,
++	.success	= afs_dio_store_data_success,
++};
++
++/*
++ * Direct file write operation for an AFS file.
++ *
++ * TODO: To support AIO, the pages in the iterator have to be copied and
++ * refs taken on them.  Then -EIOCBQUEUED needs to be returned.
++ * iocb->ki_complete must then be called upon completion of the operation.
++ */
++ssize_t afs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct file *file = iocb->ki_filp;
++	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
++	struct afs_operation *op;
++	loff_t size = iov_iter_count(iter), i_size;
++	ssize_t ret;
++
++	_enter("%s{%llx:%llu.%u},%llx,%llx",
++	       vnode->volume->name,
++	       vnode->fid.vid,
++	       vnode->fid.vnode,
++	       vnode->fid.unique,
++	       size, iocb->ki_pos);
++
++	op = afs_alloc_operation(afs_file_key(file), vnode->volume);
++	if (IS_ERR(op))
++		return -ENOMEM;
++
++	i_size = i_size_read(&vnode->vfs_inode);
++
++	afs_op_set_vnode(op, 0, vnode);
++	op->file[0].dv_delta	= 1;
++	op->store.write_iter	= iter;
++	op->store.pos		= iocb->ki_pos;
++	op->store.size		= size;
++	op->store.i_size	= max(iocb->ki_pos + size, i_size);
++	op->ops			= &afs_dio_store_data_operation;
++
++	//if (!is_sync_kiocb(iocb)) {
++
++	ret = afs_do_sync_operation(op);
++	if (ret == 0)
++		ret = size;
++
++	//if (iocb->ki_complete)
++	//	iocb->ki_complete(iocb, ret, 0); // only if ret == -EIOCBQUEUED
++
++	_leave(" = %zd", ret);
++	return ret;
++}
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 4ead0c1f9014..04c285e6b4ed 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -95,12 +95,16 @@ static __be32 *xdr_encode_YFSStoreStatus_mode(__be32 *bp, mode_t mode)
+ 	return bp + xdr_size(x);
+ }
+ 
+-static __be32 *xdr_encode_YFSStoreStatus_mtime(__be32 *bp, const struct timespec64 *t)
++static __be32 *xdr_encode_YFSStoreStatus_mtime(__be32 *bp, struct afs_operation *op)
+ {
+ 	struct yfs_xdr_YFSStoreStatus *x = (void *)bp;
+-	s64 mtime = linux_to_yfs_time(t);
++	s64 mtime = linux_to_yfs_time(&op->mtime);
++	u32 mask = 0;
+ 
+-	x->mask		= htonl(AFS_SET_MTIME);
++	if (op->flags & AFS_OPERATION_SET_MTIME)
++		mask |= AFS_SET_MTIME;
++
++	x->mask		= htonl(mask);
+ 	x->mode		= htonl(0);
+ 	x->mtime_client	= u64_to_xdr(mtime);
+ 	x->owner	= u64_to_xdr(0);
+@@ -1112,7 +1116,7 @@ void yfs_fs_store_data(struct afs_operation *op)
+ 	bp = xdr_encode_u32(bp, YFSSTOREDATA64);
+ 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
+ 	bp = xdr_encode_YFSFid(bp, &vp->fid);
+-	bp = xdr_encode_YFSStoreStatus_mtime(bp, &op->mtime);
++	bp = xdr_encode_YFSStoreStatus_mtime(bp, op);
+ 	bp = xdr_encode_u64(bp, op->store.pos);
+ 	bp = xdr_encode_u64(bp, op->store.size);
+ 	bp = xdr_encode_u64(bp, op->store.i_size);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 4894e9705d34..6c52de0674eb 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -3245,7 +3245,14 @@ generic_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
+ 		}
+ 		iocb->ki_pos = pos;
+ 	}
+-	iov_iter_revert(from, write_len - iov_iter_count(from));
++	{
++		size_t unroll = write_len - iov_iter_count(from);
++		if (unroll > MAX_RW_COUNT)
++			pr_warn("XXX unroll %zd [%zd - %zd]",
++				unroll, write_len, iov_iter_count(from));
++		else
++			iov_iter_revert(from, unroll);
++	}
+ out:
+ 	return written;
+ }
+
+
