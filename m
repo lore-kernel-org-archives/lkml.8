@@ -2,169 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A17C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 174F7206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42532206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="F39RfS2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgGMDaX (ORCPT
+        id S1728769AbgGMDbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:30:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726261AbgGMDaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:30:22 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C03845CF625A9997552B;
-        Mon, 13 Jul 2020 11:30:17 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.214) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
- 11:30:10 +0800
-Subject: Re: [PATCH] ubifs: Fix a potential space leak problem while linking
- tmpfile
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     Richard Weinberger <richard@nod.at>
-CC:     Richard Weinberger <richard.weinberger@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        yi zhang <yi.zhang@huawei.com>
-References: <20200701112643.726986-1-chengzhihao1@huawei.com>
- <CAFLxGvyO_aXGfgoO0mrNsoGP4Bfh3n6CUQxDx=ecH6o2ZDNYDg@mail.gmail.com>
- <082f18e0-d6f0-6389-43af-3159edb244cb@huawei.com>
- <1463101229.103384.1594123741187.JavaMail.zimbra@nod.at>
- <963fa5c8-414f-783f-871e-47e751b54d87@huawei.com>
- <1480699627.103583.1594126053947.JavaMail.zimbra@nod.at>
- <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
-Message-ID: <4b59ffcc-fbbb-e62e-779b-ce4d795f51c7@huawei.com>
-Date:   Mon, 13 Jul 2020 11:30:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 12 Jul 2020 23:31:16 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:25052 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726261AbgGMDbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:31:16 -0400
+X-UUID: 202c5ae90e964ac088e2b85650f63f05-20200713
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=JuW3jP9J1lIS5V8IiLWPSVxE4HCb/Oj2hKarwYDEQFg=;
+        b=F39RfS2lfJlj5/DOJsZj+DHVxj3HTSsLROaSSuBi7UWZUekcJT4E7Y+irMlgdN6aO0s7OSpVXIt3I0tBG06qyFllSZad8TQgOXiDXOT9ARLQSskcdtYhypuYKYLabLBx1jRAFRhIjsO8+XMQbXe2MJEkBZWXBeCp2I0nAysh+yg=;
+X-UUID: 202c5ae90e964ac088e2b85650f63f05-20200713
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 666783389; Mon, 13 Jul 2020 11:31:12 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 13 Jul 2020 11:31:11 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 13 Jul 2020 11:31:09 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [v2 PATCH] usb: gadget: bdc: use readl_poll_timeout() to simplify code
+Date:   Mon, 13 Jul 2020 11:30:17 +0800
+Message-ID: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <0c543297-d94f-ad40-7dd0-2198f39336bb@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.214]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 68E0EF0317ACCA01D29A26B236ED2441F27383EAF5EEF084C4683CE8F0DE3D5E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/7/11 14:37, Zhihao Cheng 写道:
-> 在 2020/7/7 20:47, Richard Weinberger 写道:
->> ----- Ursprüngliche Mail -----
->>>>> Perhaps I misunderstood what commit 32fe905c17f001 ("ubifs: Fix
->>>>> O_TMPFILE corner case in ubifs_link()") wanted to fix.
->>>>> I think orphan area is used to remind filesystem don't forget to 
->>>>> delete
->>>>> inodes (whose nlink is 0) in next unclean rebooting. Generally, 
->>>>> the file
->>>>> system is not corrupted caused by replaying orphan nodes.
->>>>> Ralph reported a filesystem corruption in combination with overlayfs.
->>>>> Can you tell me the details about that problem? Thanks.
->>>> On my test bed I didn't see a fs corruption, what I saw was a 
->>>> failing orphan
->>>> self test while playing with O_TMPFILE and linkat().
->>> Do we have a reproducer, or can I get the fail testcase? Is it a 
->>> xfstest
->>> case?
->> I think xfstests triggered it, yes.
->> Later today I can check. :)
->>
->> Thanks,
->> //richard
->>
->> .
->
-> I think I have found the testcases, overlay/006 and overlay/041.
->
-> The 'mv' and 'rm' operations will put lowertestfile into orphan list 
-> twice, so we must reseve the orphan deletion operation in 
-> ubifs_link(), otherwise the testcase fails and we will see the 
-> following msg:
-Sorry, not lowertestfile, it's tempfile which is generated by ovl 
-copy-up (mv operation). The tempfile is linked after copy-up finished. 
-The tempfile is then unlinked by 'rm' operation.
->
->   overlay/006 2s ... - output mismatch (see 
-> /root/git/xfstests-dev/results//overlay/006.out.bad)
->     --- tests/overlay/006.out    2020-07-07 21:42:57.737000000 +0800
->     +++ /root/git/xfstests-dev/results//overlay/006.out.bad 2020-07-11 
-> 14:31:55.340000000 +0800
->     @@ -1,2 +1,4 @@
->      QA output created by 006
->      Silence is golden
->     +rm: cannot remove 
-> '/tmp/scratch/ovl-mnt/uppertestdir/lowertestfile': Invalid argument
->     +lowertestfile
->     ...
->
->   [  382.258210] UBIFS error (ubi0:1 pid 11896): orphan_add [ubifs]: 
-> orphaned twice
->   [  382.352535] UBIFS error (ubi0:1 pid 11930): free_orphans [ubifs]: 
-> orphan list not empty at unmount
->
->
-> So, how about moving ubifs_delete_orphan() after ubifs_jnl_update() in 
-> function ubifs_link(). Following modifications applied in linux-5.8 
-> has been tested by overlay/041, overlay/006 and  other tmpfile cases 
-> (generic/531, generic/530, generic/509, generic/389, generic/004).
->
-> diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-> index ef85ec167a84..fd4443a5e8c6 100644
-> --- a/fs/ubifs/dir.c
-> +++ b/fs/ubifs/dir.c
-> @@ -722,11 +722,6 @@ static int ubifs_link(struct dentry *old_dentry, 
-> struct inode *dir,
->                 goto out_fname;
->
->         lock_2_inodes(dir, inode);
-> -
-> -       /* Handle O_TMPFILE corner case, it is allowed to link a 
-> O_TMPFILE. */
-> -       if (inode->i_nlink == 0)
-> -               ubifs_delete_orphan(c, inode->i_ino);
-> -
-> inc_nlink(inode);
-> ihold(inode);
->         inode->i_ctime = current_time(inode);
-> @@ -736,6 +731,11 @@ static int ubifs_link(struct dentry *old_dentry, 
-> struct inode *dir,
->         err = ubifs_jnl_update(c, dir, &nm, inode, 0, 0);
->         if (err)
->                 goto out_cancel;
-> +
-> +       /* Handle O_TMPFILE corner case, it is allowed to link a 
-> O_TMPFILE. */
-> +       if (inode->i_nlink == 1)
-> +               ubifs_delete_orphan(c, inode->i_ino);
-> +
->         unlock_2_inodes(dir, inode);
->
->         ubifs_release_budget(c, &req);
-> @@ -747,8 +747,6 @@ static int ubifs_link(struct dentry *old_dentry, 
-> struct inode *dir,
->         dir->i_size -= sz_change;
->         dir_ui->ui_size = dir->i_size;
-> drop_nlink(inode);
-> -       if (inode->i_nlink == 0)
-> -               ubifs_add_orphan(c, inode->i_ino);
->         unlock_2_inodes(dir, inode);
->         ubifs_release_budget(c, &req);
-> iput(inode);
-> -- 
->
->
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
+VXNlIHJlYWRsX3BvbGxfdGltZW91dCgpIHRvIHBvbGwgcmVnaXN0ZXIgc3RhdHVzDQoNCkNjOiBG
+bG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NClNpZ25lZC1vZmYtYnk6IENo
+dW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KdjIgY2hhbmdlcywg
+c3VnZ2VzdGVkIGJ5IFN0ZXBoZW46DQogIDEuIHVzZSB1bnNpZ25lZCBpbnQgaW5zdGVhZCBvZiBp
+bnQgZm9yIEB1c2VjIHBhcmFtZXRlcg0KICAyLiBhZGQgZGV2X2xvZygpIGJhY2sNCiAgMy4gZHJv
+cCAiRXJyIiBpbiBlcnJvciBsb2cNCi0tLQ0KIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2Jk
+Y19jb3JlLmMgfCAyNiArKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxMSBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19jb3JlLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRj
+L2JkYy9iZGNfY29yZS5jDQppbmRleCAwMmEzYTc3Li41M2RjY2IxIDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NvcmUuYw0KKysrIGIvZHJpdmVycy91c2IvZ2Fk
+Z2V0L3VkYy9iZGMvYmRjX2NvcmUuYw0KQEAgLTEyLDYgKzEyLDcgQEANCiAjaW5jbHVkZSA8bGlu
+dXgvc3BpbmxvY2suaD4NCiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQogI2lu
+Y2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCiAj
+aW5jbHVkZSA8bGludXgvaW9wb3J0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQogI2luY2x1
+ZGUgPGxpbnV4L2xpc3QuaD4NCkBAIC0yOSwyNCArMzAsMTkgQEANCiAjaW5jbHVkZSAiYmRjX2Ri
+Zy5oIg0KIA0KIC8qIFBvbGwgdGlsbCBjb250cm9sbGVyIHN0YXR1cyBpcyBub3QgT0lQICovDQot
+c3RhdGljIGludCBwb2xsX29pcChzdHJ1Y3QgYmRjICpiZGMsIGludCB1c2VjKQ0KK3N0YXRpYyBp
+bnQgcG9sbF9vaXAoc3RydWN0IGJkYyAqYmRjLCB1MzIgdXNlYykNCiB7DQogCXUzMiBzdGF0dXM7
+DQotCS8qIFBvbGwgdGlsbCBTVFMhPSBPSVAgKi8NCi0Jd2hpbGUgKHVzZWMpIHsNCi0JCXN0YXR1
+cyA9IGJkY19yZWFkbChiZGMtPnJlZ3MsIEJEQ19CRENTQyk7DQotCQlpZiAoQkRDX0NTVFMoc3Rh
+dHVzKSAhPSBCRENfT0lQKSB7DQotCQkJZGV2X2RiZyhiZGMtPmRldiwNCi0JCQkJInBvbGxfb2lw
+IGNvbXBsZXRlIHN0YXR1cz0lZCIsDQotCQkJCUJEQ19DU1RTKHN0YXR1cykpOw0KLQkJCXJldHVy
+biAwOw0KLQkJfQ0KLQkJdWRlbGF5KDEwKTsNCi0JCXVzZWMgLT0gMTA7DQotCX0NCi0JZGV2X2Vy
+cihiZGMtPmRldiwgIkVycjogb3BlcmF0aW9uIHRpbWVkb3V0IEJEQ1NDOiAweCUwOHhcbiIsIHN0
+YXR1cyk7DQorCWludCByZXQ7DQogDQotCXJldHVybiAtRVRJTUVET1VUOw0KKwlyZXQgPSByZWFk
+bF9wb2xsX3RpbWVvdXQoYmRjLT5yZWdzICsgQkRDX0JEQ1NDLCBzdGF0dXMsDQorCQkoQkRDX0NT
+VFMoc3RhdHVzKSAhPSBCRENfT0lQKSwgMTAsIHVzZWMpOw0KKwlpZiAocmV0KQ0KKwkJZGV2X2Vy
+cihiZGMtPmRldiwgIm9wZXJhdGlvbiB0aW1lZG91dCBCRENTQzogMHglMDh4XG4iLCBzdGF0dXMp
+Ow0KKwllbHNlDQorCQlkZXZfZGJnKGJkYy0+ZGV2LCAiJXMgY29tcGxldGUgc3RhdHVzPSVkIiwg
+X19mdW5jX18sIEJEQ19DU1RTKHN0YXR1cykpOw0KKw0KKwlyZXR1cm4gcmV0Ow0KIH0NCiANCiAv
+KiBTdG9wIHRoZSBCREMgY29udHJvbGxlciAqLw0KLS0gDQoxLjkuMQ0K
 
