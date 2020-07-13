@@ -2,248 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B566DC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B15C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93313206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32663206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594639071;
+	bh=BxHZ+WJ7gl/kfFuw5mZWEwR5qtLWbkNAErzAGlqlI+M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GeSoo5oZYWnkAqJIp6F8Yk6uJjssp/DbvJyq0ciELGRCYcSdcvFWJTvx3bR79oIL3
+	 YHqFIWNo2992Q15vjnCpJsMzKeeImcBwIfeiozAU2W/cogO1f1wSdi4e/869EUC39U
+	 LgeeyTiE+IkjUt+z8IXJAIW/PBu+IKAYakXXRQWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgGMLRB (ORCPT
+        id S1729597AbgGMLRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:17:01 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:35130 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgGMLRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:17:00 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0456FBC0E4;
-        Mon, 13 Jul 2020 11:16:52 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     vkoul@kernel.org, dan.j.williams@intel.com, vz@mleia.com,
-        peter.ujfalusi@ti.com, wenwen@cs.uga.edu, chenqiwu@xiaomi.com,
-        grygorii.strashko@ti.com, christophe.jaillet@wanadoo.fr,
-        zou_wei@huawei.com, colin.king@canonical.com,
-        gustavoars@kernel.org, vigneshr@ti.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] dmaengine: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 13:16:46 +0200
-Message-Id: <20200713111646.33625-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 07:17:50 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37691 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgGMLRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:17:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 12so10656097oir.4;
+        Mon, 13 Jul 2020 04:17:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BxHZ+WJ7gl/kfFuw5mZWEwR5qtLWbkNAErzAGlqlI+M=;
+        b=XXIg+d9Nu26xRIcZvGf/WkvVP9EmZ/uo6l2+DkL9UPyAiacOuX35vvjV1TXPYr/LtQ
+         iAchSaUvETOZVE/1ZRtpiGsH0/mw9vaNv7tCmFRnmeRK9Zdm9ZPGL/A2Eyudw7aOJfBC
+         P4t1e/KS9qhYE/aaFHONal2rdKe4JwtlmGd8ME6hZ1hcoeHPWRwgZJPOkV9uGFrwf2cR
+         x+Mn6TAcIP+lznSx8X8vGHrUklA+ZIviwco5vzuRZ265WsYUdwh2MrsKrZRXRKMx/OBC
+         rE2qKvqEgCLDoIEgYM9a6WdlMkwabl1mcs+lQoGb85jD8QFl+ZqiAK92/SF9p5CUSnS4
+         Z3lQ==
+X-Gm-Message-State: AOAM532dU4700m4FhqJ2Mv71oH1qJ3n0UMrSQ5uZr6CGcC7Qz2OxHSxm
+        eDyuR2Ufpe8OU8PX8QX1DBVXGFS6Fy1FdtEEVhw=
+X-Google-Smtp-Source: ABdhPJyoLEUbgUanvggbAuiWxx6tG0pbvTKcqE019Cf4J51+OoImh2nW2kLi3Y6TzKoBvHUOr7Wm7P7xrszUfxIFw6w=
+X-Received: by 2002:a54:4e87:: with SMTP id c7mr13870224oiy.110.1594639068426;
+ Mon, 13 Jul 2020 04:17:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <20200622120527.690-1-shiju.jose@huawei.com> <20200622120527.690-2-shiju.jose@huawei.com>
+ <05c8916f4f85421f871e9cbff112512b@huawei.com>
+In-Reply-To: <05c8916f4f85421f871e9cbff112512b@huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 13 Jul 2020 13:17:31 +0200
+Message-ID: <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
+Subject: Re: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 10:35 AM Shiju Jose <shiju.jose@huawei.com> wrote:
+>
+> Hi Rafael, Hi James,
+>
+> Can you help to merge this patch because I added and tested all the suggestions from James.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+I could apply the [1/2] in principle, but I need an ACK for the [2/2]
+from the PCI side.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+That said, it looks like the [1/2] is a James' patch that you are
+sending with some changes made by you.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+In that case the ordering of the S-o-b tags under it should be
+different (the S-o-b from James, the what-you-have-change line and the
+S-o-b from you) and also the From: tag should point to James.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/dma/Kconfig              | 2 +-
- drivers/dma/lpc18xx-dmamux.c     | 2 +-
- drivers/dma/of-dma.c             | 2 +-
- drivers/dma/ti/dma-crossbar.c    | 2 +-
- drivers/dma/ti/k3-psil-am654.c   | 2 +-
- drivers/dma/ti/k3-psil-j721e.c   | 2 +-
- drivers/dma/ti/k3-psil-priv.h    | 2 +-
- drivers/dma/ti/k3-psil.c         | 2 +-
- drivers/dma/ti/k3-udma-glue.c    | 2 +-
- drivers/dma/ti/k3-udma-private.c | 2 +-
- drivers/dma/ti/k3-udma.c         | 2 +-
- drivers/dma/ti/k3-udma.h         | 2 +-
- 12 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index de41d7928bff..c7f3d4f2ba9e 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -333,7 +333,7 @@ config INTEL_MIC_X100_DMA
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config K3_DMA
- 	tristate "Hisilicon K3 DMA support"
-diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
-index df98cae8792b..f3048340ad78 100644
---- a/drivers/dma/lpc18xx-dmamux.c
-+++ b/drivers/dma/lpc18xx-dmamux.c
-@@ -5,7 +5,7 @@
-  * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
-  *
-  * Based on TI DMA Crossbar driver by:
-- *   Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ *   Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com
-  *   Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index b2c2b5e8093c..7c35f20d7cd6 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -4,7 +4,7 @@
-  *
-  * Based on of_gpio.c
-  *
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <linux/device.h>
-diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-index 4ba8fa5d9c36..d6d16c066042 100644
---- a/drivers/dma/ti/dma-crossbar.c
-+++ b/drivers/dma/ti/dma-crossbar.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- *  Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- #include <linux/slab.h>
-diff --git a/drivers/dma/ti/k3-psil-am654.c b/drivers/dma/ti/k3-psil-am654.c
-index a896a15908cf..e3821e4dd44e 100644
---- a/drivers/dma/ti/k3-psil-am654.c
-+++ b/drivers/dma/ti/k3-psil-am654.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
-index e3cfd5f66842..758d5d331c34 100644
---- a/drivers/dma/ti/k3-psil-j721e.c
-+++ b/drivers/dma/ti/k3-psil-j721e.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
-index a1f389ca371e..23eddd2fdbd3 100644
---- a/drivers/dma/ti/k3-psil-priv.h
-+++ b/drivers/dma/ti/k3-psil-priv.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  */
- 
- #ifndef K3_PSIL_PRIV_H_
-diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-index fb7c8150b0d1..ac2068dac70f 100644
---- a/drivers/dma/ti/k3-psil.c
-+++ b/drivers/dma/ti/k3-psil.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index 64c8955e0cf1..ecf3ed3178e1 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -2,7 +2,7 @@
- /*
-  * K3 NAVSS DMA glue interface
-  *
-- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *
-  */
- 
-diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index 0b8f3dd6b146..32128beeceb2 100644
---- a/drivers/dma/ti/k3-udma-private.c
-+++ b/drivers/dma/ti/k3-udma-private.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index c91e2dc1bb72..e0b87b9d1d95 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-  */
- 
-diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index 128d8744a435..09798c2820af 100644
---- a/drivers/dma/ti/k3-udma.h
-+++ b/drivers/dma/ti/k3-udma.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com
-  */
- 
- #ifndef K3_UDMA_H_
--- 
-2.27.0
-
+Thanks!
