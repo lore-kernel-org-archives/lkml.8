@@ -2,128 +2,122 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB27C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03E520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E277120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgGMTGj (ORCPT
+        id S1727034AbgGMTGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:06:39 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:53544 "EHLO smtp.al2klimov.de"
+        Mon, 13 Jul 2020 15:06:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31274 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgGMTGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:06:38 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 72635BC0E4;
-        Mon, 13 Jul 2020 19:06:35 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 21:06:28 +0200
-Message-Id: <20200713190629.37242-1-grandmaster@al2klimov.de>
+        id S1726338AbgGMTGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 15:06:50 -0400
+IronPort-SDR: vQHrsfCipWGYTVBzFMUSlhPOtgeX43CZOlGnv7rRqZE1TwHJk0anVPZKjJkYGeyJ1dCDVfhvHz
+ qlL0CImlQ6pg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128274173"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="128274173"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 12:06:50 -0700
+IronPort-SDR: eUaCJEPnu90pPzudvr8vulVtOdjZGIcFc/6MyjgagYhI3dMsNSh3DdNLegDhKN7oA2bipNXj2i
+ Bj5ZHPZaJw9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="360148697"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jul 2020 12:06:50 -0700
+Date:   Mon, 13 Jul 2020 12:06:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiong Zhang <xiong.y.zhang@intel.com>,
+        Wayne Boyer <wayne.boyer@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
+ affected memslot
+Message-ID: <20200713190649.GE29725@linux.intel.com>
+References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
+ <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
+ <20200709211253.GW24919@linux.intel.com>
+ <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
+ <20200710042922.GA24919@linux.intel.com>
+ <20200713122226.28188f93@x1.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713122226.28188f93@x1.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 12:22:26PM -0600, Alex Williamson wrote:
+> On Thu, 9 Jul 2020 21:29:22 -0700
+> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> 
+> > +Alex, whom I completely spaced on Cc'ing.
+> > 
+> > Alex, this is related to the dreaded VFIO memslot zapping issue from last
+> > year.  Start of thread: https://patchwork.kernel.org/patch/11640719/.
+> > 
+> > The TL;DR of below: can you try the attached patch with your reproducer
+> > from the original bug[*]?  I honestly don't know whether it has a legitimate
+> > chance of working, but it's the one thing in all of this that I know was
+> > definitely a bug.  I'd like to test it out if only to sate my curiosity.
+> > Absolutely no rush.
+> 
+> Mixed results, maybe you can provide some guidance.  Running this
+> against v5.8-rc4, I haven't reproduced the glitch.  But it's been a
+> long time since I tested this previously, so I went back to v5.3-rc5 to
+> make sure I still have a recipe to trigger it.  I can still get the
+> failure there as the selective flush commit was reverted in rc6.  Then
+> I wondered, can I take broken v5.3-rc5 and apply this fix to prove that
+> it works?  No, v5.3-rc5 + this patch still glitches.  So I thought
+> maybe I could make v5.8-rc4 break by s/true/false/ in this patch.
+> Nope.  Then I applied the original patch from[1] to try to break it.
+> Nope.  So if anything, I think the evidence suggests this was broken
+> elsewhere and is now fixed, or maybe it is a timing issue that I can't
+> trigger on newer kernels.  If the reproducer wasn't so touchy and time
+> consuming, I'd try to bisect, but I don't have that sort of bandwidth.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Ow.  That manages to be both a best case and worst case scenario.  I can't
+think of any clever way to avoid bisecting.  There have been a number of
+fixes in tangentially related code since 5.3, e.g. memslots, MMU, TLB,
+etc..., but trying to isolate which one, if any of them, fixed the bug has
+a high probability of being a wild goose chase.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+The only ideas I have going forward are to:
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+  a) Reproduce the bug outside of your environment and find a resource that
+     can go through the painful bisection.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+  b) Add a module param to toggle the new behavior and see if anything
+     breaks.
 
- If you apply the patch, please let me know.
+I can ask internally if it's possible to get a resource on my end to go
+after (a).  (b) is a question for Paolo.
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+Thanks much for testing!
 
-
- drivers/platform/x86/thinkpad_acpi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ff7f0a4f2475..24fc16eca550 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -7957,7 +7957,7 @@ static struct ibm_struct volume_driver_data = {
-  *	does so, its initial value is meaningless (0x07).
-  *
-  *	For firmware bugs, refer to:
-- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-+ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-  *
-  * 	----
-  *
-@@ -7982,7 +7982,7 @@ static struct ibm_struct volume_driver_data = {
-  *	mode.
-  *
-  *	For firmware bugs, refer to:
-- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-+ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-  *
-  *	----
-  *
-@@ -10094,7 +10094,7 @@ static int __must_check __init get_thinkpad_model_data(
- 	 * X32 or newer, all Z series;  Some models must have an
- 	 * up-to-date BIOS or they will not be detected.
- 	 *
--	 * See http://thinkwiki.org/wiki/List_of_DMI_IDs
-+	 * See https://thinkwiki.org/wiki/List_of_DMI_IDs
- 	 */
- 	while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
- 		if (sscanf(dev->name,
-@@ -10613,8 +10613,8 @@ MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
- /*
-  * DMI matching for module autoloading
-  *
-- * See http://thinkwiki.org/wiki/List_of_DMI_IDs
-- * See http://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
-+ * See https://thinkwiki.org/wiki/List_of_DMI_IDs
-+ * See https://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
-  *
-  * Only models listed in thinkwiki will be supported, so add yours
-  * if it is not there yet.
--- 
-2.27.0
-
+> Thanks,
+> 
+> Alex
+> 
+> [1] https://patchwork.kernel.org/patch/10798453/
+> 
