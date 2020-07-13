@@ -2,125 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDD3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D2A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:58:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iG1eowlp"
+	by mail.kernel.org (Postfix) with ESMTP id 827622075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgGMG6x (ORCPT
+        id S1728803AbgGMG7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42970 "EHLO
+        Mon, 13 Jul 2020 02:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgGMG6w (ORCPT
+        with ESMTP id S1726360AbgGMG7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:58:52 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6155C061794;
-        Sun, 12 Jul 2020 23:58:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4vd36LH5z9sR4;
-        Mon, 13 Jul 2020 16:58:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594623529;
-        bh=luQio5Oo9CYwRultNKJhxs2HHiwp/p2cOZqnLur5m0k=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iG1eowlp6weSZO4gxHVQs24lWYkN+tnjqQtoIEmWTjIOpM+inp7VoZ0aJgVdv7FVM
-         SGMz09lo3EoXiy8qMWkXErIBDwVxziHICpkbpwkxSZMrjUysDotxMTXbsvFq/hBVPu
-         KxxMeyszjurFUQGcWUPoRZHSEf+sd7yy1DoDPHNCuqW1DxbWYbEhs3m3AnlXFykUoN
-         bogr/FhrqclesA2HOfqr66hIbIKoNSIjArVez0Z+BWV6k2Kok6sHakBdmi/596kr+5
-         6ACgkEv7unF4eHCg69v9kJi/dFn1izPZ/o6sf3bNsdqMrUhls5xfYKBIkWvueY070j
-         uw95EOrKpGsCg==
-Date:   Mon, 13 Jul 2020 16:58:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Tobias Klauser <tklauser@distanz.ch>
-Subject: linux-next: manual merge of the pidfd tree with the risc-v tree
-Message-ID: <20200713165846.5166ff82@canb.auug.org.au>
+        Mon, 13 Jul 2020 02:59:08 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FE8C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:59:08 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id EC4C7BC053;
+        Mon, 13 Jul 2020 06:59:05 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     linux@armlinux.org.uk, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ARM: at91: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 08:58:59 +0200
+Message-Id: <20200713065859.31770-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7DTP4JIE5QhI2h_EU1JNPOo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7DTP4JIE5QhI2h_EU1JNPOo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Hi all,
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Today's linux-next merge of the pidfd tree got a conflict in:
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-  arch/riscv/Kconfig
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-between commit:
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-  95ce6c73da3b ("riscv: Enable context tracking")
-  929f6a183839 ("riscv: Add kmemleak support")
+ If you apply the patch, please let me know.
 
-from the risc-v tree and commit:
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
-  140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
 
-from the pidfd tree.
+ arch/arm/mach-at91/Makefile.boot | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+diff --git a/arch/arm/mach-at91/Makefile.boot b/arch/arm/mach-at91/Makefile.boot
+index cec195d4fcba..5dde7328a7a9 100644
+--- a/arch/arm/mach-at91/Makefile.boot
++++ b/arch/arm/mach-at91/Makefile.boot
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Empty file waiting for deletion once Makefile.boot isn't needed any more.
+ # Patch waits for application at
+-# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
++# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+-- 
+2.27.0
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/riscv/Kconfig
-index 76a0cfad3367,f6a3a2bea3d8..000000000000
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@@ -57,9 -52,6 +57,8 @@@ config RISC
-  	select HAVE_ARCH_SECCOMP_FILTER
-  	select HAVE_ARCH_TRACEHOOK
-  	select HAVE_ASM_MODVERSIONS
- +	select HAVE_CONTEXT_TRACKING
-- 	select HAVE_COPY_THREAD_TLS
- +	select HAVE_DEBUG_KMEMLEAK
-  	select HAVE_DMA_CONTIGUOUS if MMU
-  	select HAVE_EBPF_JIT if MMU
-  	select HAVE_FUTEX_CMPXCHG if FUTEX
-
---Sig_/7DTP4JIE5QhI2h_EU1JNPOo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8MBiYACgkQAVBC80lX
-0GzjyQf/XQpISQlEFenm4EapmmIpxMa5oQF9THQbASEtmpjtjQlP2M/sqw7u4i35
-mZ2XKLc/QchK3hCap87RBSriJPSyNFcc2tMJi4U2O8xly4oeVtm9ceFsCyW0e2Eq
-o1rmVrdCetbsqiPFMLHzTZj7B5r4iytHXDsLXJ+sp9YoTuI6i8amAJTgV4Gu8azM
-pt14tNVD45Z45SzBvnqW+xLMgUkoYvFtsBPJj78fD2WKyQ2nOg4Hqmn+R4Kq1Cu/
-Cfgel/vjQ53jOPxtF0AgWv6RGuRCvC2yUU0XCOy9q9UWDd/o6o2pakCcCy5fIddf
-kWksBTGsPQDTcTMQfLxSzMIwKgh5Kg==
-=zB9c
------END PGP SIGNATURE-----
-
---Sig_/7DTP4JIE5QhI2h_EU1JNPOo--
