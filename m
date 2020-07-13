@@ -2,135 +2,122 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E278EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02821C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0B2206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594638689;
-	bh=q/ufI9pax7jCOPNndBGI42Z7xYEkMCMsKVzBMf55igs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdSXjukDKCQ59iY80Qyq6/B7QuwCJFH2RVuY4+dXcjiP4Xh30yA+ce+IGDkNFyvpi
-	 dal//yN15EVR4db8ah3lMl6t7AfquwN7Ru+W29cJnkQ5swLkwNrqUuhsLFNs05MQzC
-	 ckNeQWf3qIk8P8zYmBOWKXkcZadWz+zshy4MCDjs=
+	by mail.kernel.org (Postfix) with ESMTP id D66ED206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dalbMtPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgGMLL2 (ORCPT
+        id S1729390AbgGMLLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgGMLL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:11:27 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8DD620738;
-        Mon, 13 Jul 2020 11:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594638687;
-        bh=q/ufI9pax7jCOPNndBGI42Z7xYEkMCMsKVzBMf55igs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m1lYZjr481W0UsW/jUxDhuBrTyGPmajq7vz4Sf+oxtHIBjJMniYjmocprjBr6zK50
-         8sUF0bpu2+Hd5XUYwKl5n9ovgA+TgTGozPOrCsFokdwOvvXOYtbwBBfAB/kIiw8bYZ
-         iQSBkr0zQRSU3hJLHlSAqSIaCeY4WU0Mb/gHtQzQ=
-Date:   Mon, 13 Jul 2020 16:41:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org, maxime@cerno.tech,
-        mparab@cadence.com, yamonkar@cadence.com, nsekhar@ti.com,
-        tomi.valkeinen@ti.com, jsarha@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v3 1/2] phy: Add new PHY attribute max_link_rate and APIs
- to get/set PHY attributes
-Message-ID: <20200713111120.GI34333@vkoul-mobl>
-References: <1594633112-4155-1-git-send-email-sjakhade@cadence.com>
- <1594633112-4155-2-git-send-email-sjakhade@cadence.com>
+        Mon, 13 Jul 2020 07:11:21 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30583 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727890AbgGMLLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:11:21 -0400
+X-UUID: 769eda0855344af89307eb0a729d908b-20200713
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=q42cPTjFuRIZprsAfqDWm9AEfpK4UiJ6KtTPS0h5+gQ=;
+        b=dalbMtPHsYCfr+r3BRPVH2AY+70HcHJ/jTZX2aVoadN7tBsdL9FyPz8mi5OL8//bsV3AaeRoU3xn7c18LHJvO4QWDNNfdeG2MlRYZqP83ehBSw5vj3o4EEeCG/cFAdnTv/a5sDeLJGS9MadUPsK1w3yEZ8XIjTrW4ShU/aHsCII=;
+X-UUID: 769eda0855344af89307eb0a729d908b-20200713
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 602377913; Mon, 13 Jul 2020 19:11:18 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 13 Jul 2020 19:11:14 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 13 Jul 2020 19:11:14 +0800
+Message-ID: <1594638676.29621.1.camel@mtkswgap22>
+Subject: Re: [PATCH v7 7/7] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Mon, 13 Jul 2020 19:11:16 +0800
+In-Reply-To: <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+         <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
+         <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594633112-4155-2-git-send-email-sjakhade@cadence.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-07-20, 11:38, Swapnil Jakhade wrote:
-> Add new PHY attribute max_link_rate to struct phy_attrs.
-> Add a pair of PHY APIs to get/set all the PHY attributes.
-> Use phy_set_attrs() to set attribute values in the PHY provider driver.
-> Use phy_get_attrs() to get attribute values in the controller driver.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> ---
->  include/linux/phy/phy.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index bcee8eba62b3..7fb59359ab7b 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -115,10 +115,12 @@ struct phy_ops {
->  /**
->   * struct phy_attrs - represents phy attributes
->   * @bus_width: Data path width implemented by PHY
-> + * @max_link_rate: Maximum link rate supported by PHY (in Mbps)
->   * @mode: PHY mode
->   */
->  struct phy_attrs {
->  	u32			bus_width;
-> +	u32			max_link_rate;
->  	enum phy_mode		mode;
->  };
->  
-> @@ -231,6 +233,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
->  {
->  	phy->attrs.bus_width = bus_width;
->  }
-> +
-> +static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
-> +{
-> +	memcpy(attrs, &phy->attrs, sizeof(struct phy_attrs));
-> +}
-> +
-> +static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
-> +{
-> +	memcpy(&phy->attrs, &attrs, sizeof(struct phy_attrs));
-> +}
+T24gRnJpLCAyMDIwLTA3LTEwIGF0IDE1OjQ3ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMDIvMDcvMjAyMCAxNDo1NywgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiB0aGlz
+IGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0KPiA+
+IGluY2x1ZGluZyBjcHUsIGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydCwgc3lzaXJxLi4u
+ZXRjLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhbmtzIENoZW4gPGhhbmtzLmNoZW5AbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9N
+YWtlZmlsZSAgICAgICB8ICAgIDEgKw0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
+ay9tdDY3NzktZXZiLmR0cyB8ICAgMzEgKysrDQo+ID4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc3OS5kdHNpICAgIHwgIDI3MSArKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gPiAgIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykNCj4gPiAgIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIuZHRzDQo+
+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3
+NzkuZHRzaQ0KPiA+IA0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArCQl1YXJ0Mjogc2VyaWFsQDExMDA0
+MDAwIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFydCIsDQo+ID4g
+KwkJCQkgICAgICJtZWRpYXRlayxtdDY1NzctdWFydCI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MTEw
+MDQwMDAgMCAweDQwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTcgSVJRX1RZ
+UEVfTEVWRUxfTE9XPjsNCj4gPiArCQkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmluZnJhY2ZnX2Fv
+IENMS19JTkZSQV9VQVJUMT47DQo+IA0KPiBJIHN1cHBvc2UgdGhhdCBzaG91bGQgYmU6DQo+IA0K
+PiBjbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQyPjsNCj4g
+DQpNeSBmYXVsdCwgSSdsbCBmaXggdGhlIHR5cG8gaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFua3Mh
+DQoNCkhhbmtzDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IE1hdHRoaWFzDQo+IA0KPiA+ICsJCQljbG9j
+ay1uYW1lcyA9ICJiYXVkIiwgImJ1cyI7DQo+ID4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+
+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJYXVkaW86IGNsb2NrLWNvbnRyb2xsZXJAMTEyMTAwMDAg
+ew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1hdWRpbyIsICJzeXNjb24i
+Ow0KPiA+ICsJCQlyZWcgPSA8MCAweDExMjEwMDAwIDAgMHgxMDAwPjsNCj4gPiArCQkJI2Nsb2Nr
+LWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCW1mZ2NmZzogY2xvY2stY29u
+dHJvbGxlckAxM2ZiZjAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5
+LW1mZ2NmZyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcgPSA8MCAweDEzZmJmMDAwIDAgMHgxMDAw
+PjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJ
+CW1tc3lzOiBzeXNjb25AMTQwMDAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10Njc3OS1tbXN5cyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcgPSA8MCAweDE0MDAwMDAwIDAg
+MHgxMDAwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0K
+PiA+ICsJCWltZ3N5czogY2xvY2stY29udHJvbGxlckAxNTAyMDAwMCB7DQo+ID4gKwkJCWNvbXBh
+dGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LWltZ3N5cyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcg
+PSA8MCAweDE1MDIwMDAwIDAgMHgxMDAwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0K
+PiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXZkZWNzeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTYwMDAw
+MDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS12ZGVjc3lzIiwgInN5
+c2NvbiI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MTYwMDAwMDAgMCAweDEwMDA+Ow0KPiA+ICsJCQkj
+Y2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJdmVuY3N5czogY2xv
+Y2stY29udHJvbGxlckAxNzAwMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWss
+bXQ2Nzc5LXZlbmNzeXMiLCAic3lzY29uIjsNCj4gPiArCQkJcmVnID0gPDAgMHgxNzAwMDAwMCAw
+IDB4MTAwMD47DQo+ID4gKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gPiArCQl9Ow0KPiA+ICsN
+Cj4gPiArCQljYW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMWEwMDAwMDAgew0KPiA+ICsJCQljb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1jYW1zeXMiLCAic3lzY29uIjsNCj4gPiArCQkJcmVn
+ID0gPDAgMHgxYTAwMDAwMCAwIDB4MTAwMDA+Ow0KPiA+ICsJCQkjY2xvY2stY2VsbHMgPSA8MT47
+DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJaXBlc3lzOiBjbG9jay1jb250cm9sbGVyQDFiMDAw
+MDAwIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktaXBlc3lzIiwgInN5
+c2NvbiI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MWIwMDAwMDAgMCAweDEwMDA+Ow0KPiA+ICsJCQkj
+Y2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwl9Ow0KPiA+ICt9Ow0K
+PiA+IA0KDQo=
 
-we already have APIs for mode and bus_width so why not add one for
-link_rate and call them?
-
-Also I see you are using phy_set_attrs() in second patch, why add
-phy_get_attrs() when we have no user?
-
->  struct phy *phy_get(struct device *dev, const char *string);
->  struct phy *phy_optional_get(struct device *dev, const char *string);
->  struct phy *devm_phy_get(struct device *dev, const char *string);
-> @@ -389,6 +401,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
->  	return;
->  }
->  
-> +static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
-> +{
-> +	return;
-> +}
-> +
-> +static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
-> +{
-> +	return;
-> +}
-> +
->  static inline struct phy *phy_get(struct device *dev, const char *string)
->  {
->  	return ERR_PTR(-ENOSYS);
-> -- 
-> 2.26.1
-
--- 
-~Vinod
