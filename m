@@ -2,92 +2,353 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC58C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C856C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5CE20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594667261;
-	bh=99c9WotpWDYCYyyJ+YArcaiXUFJZe09iJEf+IvCMxng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L769MgPtjSRc177c1m0hXmjEatSr/CTuHUswVyFObIkKoXn84Ms2XkwrgYJejJ8md
-	 YFb/QEcwnovmDCSdXA7ENK0TEfSNHM4etOQ9iJzYxKqll8V+T3BNkNzX3RKjPz2g5k
-	 7lX+qhEx6G7izqCForMTefdTqW6nViLGAg+8UPcU=
+	by mail.kernel.org (Postfix) with ESMTP id 6E1F320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CAQlkaRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGMTHk (ORCPT
+        id S1726818AbgGMTIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:07:40 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42173 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMTHj (ORCPT
+        Mon, 13 Jul 2020 15:08:10 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18864 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:07:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id c16so14679763ioi.9;
-        Mon, 13 Jul 2020 12:07:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3VFQYqDxsT9U9IQFzCUk7jP4l7LP6d4PWhMtTAVSyxc=;
-        b=O3HBrKbV2CGFehkZbUC+m9QcEJjRgimsYOE9X0bjEpoBcaMspj2MbB9tSIMOlMxHx5
-         ampFR4g3+t5NGga4kaEsFVuZmaOM7TS08jHKZr3LZ2/ibHy8a5TZ6ZhKqR8P40FcdQPv
-         8jwLM8A57/NR+BMT+EurnJqN5BtdWdKj8GtTw1BOdtAodJJ1O6pW5mkulw5rhyBXvIYq
-         sY0xOc9c1kAsuBQ05SzP64qX7xngqaZ5Rbb5vMouqqTyy33xKBm9UKhnytD2KDaKcXKV
-         bFJx9MwpxOaMiCkEKg6x5wDO9AnpUHJRE8Gtz4rL3KGQbiK3qjLzz3BuM2H4ME9Ntkur
-         MM6Q==
-X-Gm-Message-State: AOAM532J6wm8RgZub4dv7Kv1YlpNT8Q8QDxlaVodYgqX+wwjW9oaptVG
-        zZjncm0r1D5PWU79wnWPVG9nuWhUzg==
-X-Google-Smtp-Source: ABdhPJz5QIod6AWLH4QLE3qJDD1EUzl5zW5UETJ/zfRcFFUiY1Gdz3A4LuaLntKKgiMfc+BNAo4eZg==
-X-Received: by 2002:a05:6638:61b:: with SMTP id g27mr1671542jar.123.1594667258675;
-        Mon, 13 Jul 2020 12:07:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q5sm8726237ilm.73.2020.07.13.12.07.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:07:37 -0700 (PDT)
-Received: (nullmailer pid 553772 invoked by uid 1000);
-        Mon, 13 Jul 2020 19:07:35 -0000
-Date:   Mon, 13 Jul 2020 13:07:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-Message-ID: <20200713190735.GA553719@bogus>
-References: <20200630160736.1196697-1-mans0n@gorani.run>
- <20200630160934.1197066-1-mans0n@gorani.run>
+        Mon, 13 Jul 2020 15:08:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0cb10c0000>; Mon, 13 Jul 2020 12:07:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 12:08:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 12:08:09 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 19:08:09 +0000
+Subject: Re: [PATCH v2 6/8] selftests/harness: Refactor XFAIL into SKIP
+To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
+CC:     Christian Brauner <christian@brauner.io>,
+        David Gow <davidgow@google.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Bird, Tim" <Tim.Bird@sony.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200622181651.2795217-1-keescook@chromium.org>
+ <20200622181651.2795217-7-keescook@chromium.org>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <90fa90dc-7155-6096-678d-b6c103c1b0a6@nvidia.com>
+Date:   Mon, 13 Jul 2020 12:08:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630160934.1197066-1-mans0n@gorani.run>
+In-Reply-To: <20200622181651.2795217-7-keescook@chromium.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594667277; bh=k8Rx8egc4VWrtLEdkdOsk8Genda7v6yEkwOh6bRFBeU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CAQlkaRyw9RfvrZEDo595b5cxQE0RQu7d6lFMphiZdNTTnI/7zwFPomTWJnRuq6Pd
+         HqectkwD+USkWatPxIA/A06z6M6ZNhk8HM4UcswNdQnTK+BAXVcrRCTaWoOia12vj5
+         LKB+ZNevNpbyGtUt0qFrHkLlmtDLKnzryiscEKSaSevw5x6wgt9dXD7CsU35vwxj/+
+         eYhSwC1ucJhtekwhUmH4MhKzWqdEskeyQboj2Pq0JxTSLIdsUpfDMd1UTstll2oTon
+         715Y1ewcO81T+4cKPBJ11NePym2rCUQo56LhofLziIS0V75Mfz1bOrgTeWeaRcUbA2
+         llFHbjzt5Tzwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 01 Jul 2020 01:09:34 +0900, Sungbo Eo wrote:
-> This patch adds device tree bindings for the NXP PCA9570,
-> a 4-bit I2C GPO expander.
-> 
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-> ---
-> v3:
-> * fixed dt_binding_check error
-> 
-> v2:
-> I don't feel I can really maintain this driver, but it seems all yaml docs
-> have a maintainers field so I just added it...
-> ---
->  .../bindings/gpio/gpio-pca9570.yaml           | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 6/22/20 11:16 AM, Kees Cook wrote:
+> Plumb the old XFAIL result into a TAP SKIP.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   tools/testing/selftests/kselftest_harness.h   | 64 ++++++++++++++-----
+>   tools/testing/selftests/seccomp/seccomp_bpf.c |  8 +--
+>   2 files changed, 52 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index f8f7e47c739a..b519765904a6 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -112,22 +112,22 @@
+>   			__FILE__, __LINE__, _metadata->name, ##__VA_ARGS__)
+>   
+>   /**
+> - * XFAIL(statement, fmt, ...)
+> + * SKIP(statement, fmt, ...)
+>    *
+> - * @statement: statement to run after reporting XFAIL
+> + * @statement: statement to run after reporting SKIP
+>    * @fmt: format string
+>    * @...: optional arguments
+>    *
+> - * This forces a "pass" after reporting a failure with an XFAIL prefix,
+> + * This forces a "pass" after reporting why something is being skipped
+>    * and runs "statement", which is usually "return" or "goto skip".
+>    */
+> -#define XFAIL(statement, fmt, ...) do { \
+> +#define SKIP(statement, fmt, ...) do { \
+>   	if (TH_LOG_ENABLED) { \
+> -		fprintf(TH_LOG_STREAM, "#      XFAIL     " fmt "\n", \
+> +		fprintf(TH_LOG_STREAM, "#      SKIP     " fmt "\n", \
+>   			##__VA_ARGS__); \
+>   	} \
+> -	/* TODO: find a way to pass xfail to test runner process. */ \
+>   	_metadata->passed = 1; \
+> +	_metadata->skip = 1; \
+>   	_metadata->trigger = 0; \
+>   	statement; \
+>   } while (0)
+> @@ -777,6 +777,7 @@ struct __test_metadata {
+>   	struct __fixture_metadata *fixture;
+>   	int termsig;
+>   	int passed;
+> +	int skip;	/* did SKIP get used? */
+>   	int trigger; /* extra handler after the evaluation */
+>   	int timeout;	/* seconds to wait for test timeout */
+>   	bool timed_out;	/* did this test timeout instead of exiting? */
+> @@ -866,17 +867,31 @@ void __wait_for_test(struct __test_metadata *t)
+>   		fprintf(TH_LOG_STREAM,
+>   			"# %s: Test terminated by timeout\n", t->name);
+>   	} else if (WIFEXITED(status)) {
+> -		t->passed = t->termsig == -1 ? !WEXITSTATUS(status) : 0;
+>   		if (t->termsig != -1) {
+> +			t->passed = 0;
+>   			fprintf(TH_LOG_STREAM,
+>   				"# %s: Test exited normally instead of by signal (code: %d)\n",
+>   				t->name,
+>   				WEXITSTATUS(status));
+> -		} else if (!t->passed) {
+> -			fprintf(TH_LOG_STREAM,
+> -				"# %s: Test failed at step #%d\n",
+> -				t->name,
+> -				WEXITSTATUS(status));
+> +		} else {
+> +			switch (WEXITSTATUS(status)) {
+> +			/* Success */
+> +			case 0:
+> +				t->passed = 1;
+> +				break;
+> +			/* SKIP */
+> +			case 255:
+> +				t->passed = 1;
+> +				t->skip = 1;
+> +				break;
+> +			/* Other failure, assume step report. */
+> +			default:
+> +				t->passed = 0;
+> +				fprintf(TH_LOG_STREAM,
+> +					"# %s: Test failed at step #%d\n",
+> +					t->name,
+> +					WEXITSTATUS(status));
+> +			}
+>   		}
+>   	} else if (WIFSIGNALED(status)) {
+>   		t->passed = 0;
+> @@ -906,6 +921,7 @@ void __run_test(struct __fixture_metadata *f,
+>   {
+>   	/* reset test struct */
+>   	t->passed = 1;
+> +	t->skip = 0;
+>   	t->trigger = 0;
+>   	t->step = 0;
+>   	t->no_print = 0;
+> @@ -918,15 +934,31 @@ void __run_test(struct __fixture_metadata *f,
+>   		t->passed = 0;
+>   	} else if (t->pid == 0) {
+>   		t->fn(t, variant);
+> -		/* return the step that failed or 0 */
+> -		_exit(t->passed ? 0 : t->step);
+> +		/* Make sure step doesn't get lost in reporting */
+> +		if (t->step >= 255) {
+> +			ksft_print_msg("Too many test steps (%u)!?\n", t->step);
+> +			t->step = 254;
+> +		}
+
+I noticed that this message is now appearing in the HMM self tests.
+I haven't quite tracked down why ->steps should be 255 after running
+the first test. I did notice that ASSERT*() calls __INC_STEP() but
+that doesn't explain it.
+Separately, maybe __INC_STEP() should check for < 254 instead of < 255?
+
+     Set CONFIG_HMM_TESTS=m, build and install kernel and modules.
+     cd tools/testing/selftests/vm
+     make
+     ./test_hmm.sh smoke
+     Running smoke test. Note, this test provides basic coverage.
+     [  106.803476] memmap_init_zone_device initialised 65536 pages in 7ms
+     [  106.810141] added new 256 MB chunk (total 1 chunks, 256 MB) PFNs [0x3ffff0000 0x400000000)
+     [  106.823703] memmap_init_zone_device initialised 65536 pages in 4ms
+     [  106.829968] added new 256 MB chunk (total 1 chunks, 256 MB) PFNs [0x3fffe0000 0x3ffff0000)
+     [  106.838655] HMM test module loaded. This is only for testing HMM.
+     TAP version 13
+     1..20
+     # Starting 20 tests from 3 test cases.
+     #  RUN           hmm.open_close ...
+     #            OK  hmm.open_close
+     ok 1 hmm.open_close
+     #  RUN           hmm.anon_read ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_read
+     ok 2 hmm.anon_read
+     #  RUN           hmm.anon_read_prot ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_read_prot
+     ok 3 hmm.anon_read_prot
+     #  RUN           hmm.anon_write ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write
+     ok 4 hmm.anon_write
+     #  RUN           hmm.anon_write_prot ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write_prot
+     ok 5 hmm.anon_write_prot
+     #  RUN           hmm.anon_write_child ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write_child
+     ok 6 hmm.anon_write_child
+     #  RUN           hmm.anon_write_child_shared ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write_child_shared
+     ok 7 hmm.anon_write_child_shared
+     #  RUN           hmm.anon_write_huge ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write_huge
+     ok 8 hmm.anon_write_huge
+     #  RUN           hmm.anon_write_hugetlbfs ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_write_hugetlbfs
+     ok 9 hmm.anon_write_hugetlbfs
+     #  RUN           hmm.file_read ...
+     # Too many test steps (255)!?
+     #            OK  hmm.file_read
+     ok 10 hmm.file_read
+     #  RUN           hmm.file_write ...
+     # Too many test steps (255)!?
+     #            OK  hmm.file_write
+     ok 11 hmm.file_write
+     #  RUN           hmm.migrate ...
+     # Too many test steps (255)!?
+     #            OK  hmm.migrate
+     ok 12 hmm.migrate
+     #  RUN           hmm.migrate_fault ...
+     # Too many test steps (255)!?
+     #            OK  hmm.migrate_fault
+     ok 13 hmm.migrate_fault
+     #  RUN           hmm.migrate_shared ...
+     #            OK  hmm.migrate_shared
+     ok 14 hmm.migrate_shared
+     #  RUN           hmm.migrate_multiple ...
+     # Too many test steps (255)!?
+     #            OK  hmm.migrate_multiple
+     ok 15 hmm.migrate_multiple
+     #  RUN           hmm.anon_read_multiple ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_read_multiple
+     ok 16 hmm.anon_read_multiple
+     #  RUN           hmm.anon_teardown ...
+     # Too many test steps (255)!?
+     #            OK  hmm.anon_teardown
+     ok 17 hmm.anon_teardown
+     #  RUN           hmm2.migrate_mixed ...
+     #            OK  hmm2.migrate_mixed
+     ok 18 hmm2.migrate_mixed
+     #  RUN           hmm2.snapshot ...
+     #            OK  hmm2.snapshot
+     ok 19 hmm2.snapshot
+     #  RUN           hmm2.double_map ...
+     # Too many test steps (255)!?
+     #            OK  hmm2.double_map
+     ok 20 hmm2.double_map
+     # PASSED: 20 / 20 tests passed.
+     # Totals: pass:20 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+> +		/* Use 255 for SKIP */
+> +		if (t->skip)
+> +			_exit(255);
+> +		/* Pass is exit 0 */
+> +		if (t->passed)
+> +			_exit(0);
+> +		/* Something else happened, report the step. */
+> +		_exit(t->step);
+>   	} else {
+>   		__wait_for_test(t);
+>   	}
+>   	ksft_print_msg("         %4s  %s%s%s.%s\n", t->passed ? "OK" : "FAIL",
+>   	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
+> -	ksft_test_result(t->passed, "%s%s%s.%s\n",
+> -	       f->name, variant->name[0] ? "." : "", variant->name, t->name);
+> +
+> +	if (t->skip)
+> +		ksft_test_result_skip("%s%s%s.%s\n",
+> +			f->name, variant->name[0] ? "." : "", variant->name, t->name);
+> +	else
+> +		ksft_test_result(t->passed, "%s%s%s.%s\n",
+> +			f->name, variant->name[0] ? "." : "", variant->name, t->name);
+>   }
+>   
+>   static int test_harness_run(int __attribute__((unused)) argc,
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 252140a52553..8c1cc8033c09 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -3069,7 +3069,7 @@ TEST(get_metadata)
+>   
+>   	/* Only real root can get metadata. */
+>   	if (geteuid()) {
+> -		XFAIL(return, "get_metadata requires real root");
+> +		SKIP(return, "get_metadata requires real root");
+>   		return;
+>   	}
+>   
+> @@ -3112,7 +3112,7 @@ TEST(get_metadata)
+>   	ret = ptrace(PTRACE_SECCOMP_GET_METADATA, pid, sizeof(md), &md);
+>   	EXPECT_EQ(sizeof(md), ret) {
+>   		if (errno == EINVAL)
+> -			XFAIL(goto skip, "Kernel does not support PTRACE_SECCOMP_GET_METADATA (missing CONFIG_CHECKPOINT_RESTORE?)");
+> +			SKIP(goto skip, "Kernel does not support PTRACE_SECCOMP_GET_METADATA (missing CONFIG_CHECKPOINT_RESTORE?)");
+>   	}
+>   
+>   	EXPECT_EQ(md.flags, SECCOMP_FILTER_FLAG_LOG);
+> @@ -3673,7 +3673,7 @@ TEST(user_notification_continue)
+>   	resp.val = 0;
+>   	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0) {
+>   		if (errno == EINVAL)
+> -			XFAIL(goto skip, "Kernel does not support SECCOMP_USER_NOTIF_FLAG_CONTINUE");
+> +			SKIP(goto skip, "Kernel does not support SECCOMP_USER_NOTIF_FLAG_CONTINUE");
+>   	}
+>   
+>   skip:
+> @@ -3681,7 +3681,7 @@ TEST(user_notification_continue)
+>   	EXPECT_EQ(true, WIFEXITED(status));
+>   	EXPECT_EQ(0, WEXITSTATUS(status)) {
+>   		if (WEXITSTATUS(status) == 2) {
+> -			XFAIL(return, "Kernel does not support kcmp() syscall");
+> +			SKIP(return, "Kernel does not support kcmp() syscall");
+>   			return;
+>   		}
+>   	}
+> 
