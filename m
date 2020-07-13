@@ -2,114 +2,121 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415BEC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE25C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3672067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AB52067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSPewnin"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0g0m2Hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgGMQzb (ORCPT
+        id S1730340AbgGMQ4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbgGMQzP (ORCPT
+        Mon, 13 Jul 2020 12:56:22 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33523 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729751AbgGMQ4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:55:15 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7B7C061755;
-        Mon, 13 Jul 2020 09:55:14 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id dg28so14289441edb.3;
-        Mon, 13 Jul 2020 09:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e583Pj41mbGa0akKyeW2rYwc3SOFBc4BRiRYVhykVn0=;
-        b=NSPewnin+umq+Hpw1VWQZYiIMe8GpYsUXwfzptgWDWoPiRg5JdRkQnTxGPG5XIcKLi
-         UUpNEzCE0J/2F+81HVw1NIlylHNjNmYp+qtI8ey59l45x6EqCxhfqzxJLFlE3ViR3tt4
-         zBgFSTsenkoT784l1whYtML/oIG5HU9WWWJbol4bUzzLcgUnuK4xRLw49BMrPrYf1CkA
-         Jn3hbTiIT1KUEph4CzyOnMiLetZlrOxRM6l/pkEpJA0NtPVqY/sMvCdJVyBd8cwBBf92
-         GmQLYC2DxDBpG/6rydAcun+L5sogjQM9CykfTBM+Yux9ijI2LhF9iQWN1rXROIgt8JRC
-         jKWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=e583Pj41mbGa0akKyeW2rYwc3SOFBc4BRiRYVhykVn0=;
-        b=Y5T7XbmRbFhwcPiKkHZEXRJ5hFHruyYt9oNxePjN0BLA5s/rkQVkI7I/TdoXbK5UEz
-         2Op5eeoGSecMFHbTq8LJDPY90kFj8MIO9hQs9tb6ngGSEe5+BVt21ys2tlDOXDd8CSpY
-         nzSS8y30wQF1xtQ1euVsINiytnPxOkrZ7lWZdprawX5jasxmgvv8n0hBM0DDUV9K1t33
-         4QHxRL0PvNPCd34GTA5OWIetD9Q91QwsFOSug24fVPNotiQgs4uxL2Ijyhcs246ftkKl
-         xruh/U/PktLm8YkgQH9xN+sAh2+gCp09lW9HrX7SOfqDWfCKHroyAZ64dlzLydhSoTnD
-         b17w==
-X-Gm-Message-State: AOAM533dQ3qo8xg0uXSZJdQU5lRTWUkBGjlx13qHe/SLGlIZbHsWmbwz
-        bIJ0joHUX7J56hR1MrEs6I4=
-X-Google-Smtp-Source: ABdhPJzFuefoL/4Rxcgaj8jw3dS3fKhP7a3GskQbwngqBSIPoeJgKGthmRz4CpvHrLMQeri2oZC1DQ==
-X-Received: by 2002:a05:6402:b86:: with SMTP id cf6mr358151edb.42.1594659313535;
-        Mon, 13 Jul 2020 09:55:13 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id w3sm11838938edq.65.2020.07.13.09.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:55:13 -0700 (PDT)
-From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Stanislaw Gruszka <stf_xl@wp.pl>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4/14 v3] iwlegacy: Check the return value of pcie_capability_read_*()
-Date:   Mon, 13 Jul 2020 19:55:27 +0200
-Message-Id: <20200713175529.29715-3-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200713175529.29715-1-refactormyself@gmail.com>
-References: <20200713175529.29715-1-refactormyself@gmail.com>
+        Mon, 13 Jul 2020 12:56:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594659381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zhbk/UAwQj549JRj3+RaAGwYTtXDrPNunb4lWnrp4Q0=;
+        b=U0g0m2HsLwO+zwFui71DfTdV5TmTC0FPBYadypmBUarIfAqnILki0moUdyaviAqp8QV/mA
+        XRIwNL8OyXdP7lpTDJyPn0r1gCyfAjwTiTTEOkqr4Cvf27CAZPuege+BUFwGtGZrjCU5TO
+        pPdFB2ysxw+0ye/JlEki1tZQSX3O7rQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-I4HWmZ48OuiUcwtUuKK2sg-1; Mon, 13 Jul 2020 12:56:17 -0400
+X-MC-Unique: I4HWmZ48OuiUcwtUuKK2sg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1082885D980;
+        Mon, 13 Jul 2020 16:56:15 +0000 (UTC)
+Received: from krava (unknown [10.40.192.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB88B5C1D0;
+        Mon, 13 Jul 2020 16:56:11 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 18:56:10 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 11/18] perf metric: Add referenced metrics to hash data
+Message-ID: <20200713165610.GC183694@krava>
+References: <20200712132634.138901-1-jolsa@kernel.org>
+ <20200712132634.138901-12-jolsa@kernel.org>
+ <c55188aa-d8ff-ea5c-c8ed-a6f36d20c652@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c55188aa-d8ff-ea5c-c8ed-a6f36d20c652@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Mon, Jul 13, 2020 at 05:27:53PM +0100, John Garry wrote:
+> On 12/07/2020 14:26, Jiri Olsa wrote:
+> > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+> > +{
+> > +	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
+> > +	char *old_key = NULL;
+> > +	char *name;
+> > +	int ret;
+> > +
+> > +	data_ptr = zalloc(sizeof(*data_ptr));
+> > +	if (!data_ptr)
+> > +		return -ENOMEM;
+> > +
+> > +	name = strdup(ref->metric_name);
+> > +	if (!name) {
+> > +		free(data_ptr);
+> > +		return -ENOMEM;
+> > +	}
+> 
+> JFYI, this was not compiling for me:
+> 
+> util/expr.c: In function ‘expr__add_ref’:
+> util/expr.c:84:13: error: implicit declaration of function ‘zalloc’; did you
+> mean ‘valloc’? [-Werror=implicit-function-declaration]
+>  data_ptr = zalloc(sizeof(*data_ptr));
+>  ^~~~~~
+>  valloc
+> util/expr.c:84:13: error: nested extern declaration of ‘zalloc’
+> [-Werror=nested-externs]
+> util/expr.c:84:11: error: assignment to ‘struct expr_id_data *’ from ‘int’
+> makes pointer from integer without a cast [-Werror=int-conversion]
+>  data_ptr = zalloc(sizeof(*data_ptr));
+> ^
+>  LDutil/arm-spe-decoder/perf-in.o
+> cc1: all warnings being treated as errors
+> 
+> I think the zalloc.h include is missing.
 
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+yea, strange it compiles for me.. I'll add it
 
-This bug can be avoided without changing the function's behaviour if the
-return value of pcie_capability_read_dword is checked to confirm success.
-
-Check the return value of pcie_capability_read_dword() to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-
----
- drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 348c17ce72f5..f78e062df572 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
- 	 *    power savings, even without L1.
- 	 */
- 	if (il->cfg->set_l0s) {
--		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
--		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
-+		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
-+		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
- 			/* L1-ASPM enabled; disable(!) L0S  */
- 			il_set_bit(il, CSR_GIO_REG,
- 				   CSR_GIO_REG_VAL_L0S_ENABLED);
--- 
-2.18.2
+thanks,
+jirka
 
