@@ -2,148 +2,138 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24213C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2741820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:44:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDvPVGc+"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC342065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgGMSok (ORCPT
+        id S1726456AbgGMSqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgGMSok (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:44:40 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5B7C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:44:40 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mn17so292524pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tLX8O7u4HG3oJutmzS/3ks9fr4x8cW4dpW31dsdrzm8=;
-        b=vDvPVGc+HzTlKuUpgJ31Ow90USeYsR0dL2NviScR0mAwqICSYVNRAPTzB9A4PPzdpB
-         kK6RWKOvY6NQxrOzD/axa9BK17sZDx5UNLOz81LTdy+ew8gWIFsAXXG1stNhTS77oLoj
-         UxmmsNE029CabzEytOyy853z+YM8tjrEjlePjMiv9AwwoRiX0M4u3NYzDBlfame79vag
-         zFv1nzgTHaHVwGVIW9PjeDj5VxI/5o3SHtYxcEn4tI8bYa4EQMr23lcPwCMEYMgae+rb
-         FqxUjlp3LfhaIDkjwxEaymUTDtrKHblafr5O9zzIR9wY83+eG6rFneHyCUSmEPXwjLn0
-         /j4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tLX8O7u4HG3oJutmzS/3ks9fr4x8cW4dpW31dsdrzm8=;
-        b=CNBBUYmVMFhHfpUTeCXnyI6m8EPCrot1gmqD3MIQxsr4zsXb6Z187o+vvQOk0ZV4fu
-         +EwxzBPM8uMfisF1EhIiNcvRz24KmgOO0Z1Fnh4UaJv/O3vR8YXiaA7XCGUpc6mJILxR
-         fYkTzqoWyo6RRl6cDeuEVsu1bUVgnKJpNOXJkYUUCP+V94aWLfLUeq/t1zA8o2UTNltc
-         tafgcpY2DP+dtP48SFLgX31scyCJfjUiT/hC6DVFurTzjTpVDSchs5HnkFw8/+7PxK6e
-         uESTkb5iDnuRlB8HHG/B0ZiSTxnz5rEGr3NoqwjSHUsz78+vVevsBFiqBXQ68wJuFnnB
-         PftA==
-X-Gm-Message-State: AOAM530KINxbPGjyVwPwJlM2pnB0BP7WN7u6Cgw0mTzy928DROiVGxMs
-        +AQVcF8CEZfeE5zbp5aVz8/Ukw==
-X-Google-Smtp-Source: ABdhPJyRkCJPUu0eTqNQFd/kkk8ISMpy6OIWqkpqFVqukFgwI97BsvcmN4kHAC/1s2o/Fqmby9OEmw==
-X-Received: by 2002:a17:90a:e60b:: with SMTP id j11mr753528pjy.189.1594665879339;
-        Mon, 13 Jul 2020 11:44:39 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h15sm15371601pfo.192.2020.07.13.11.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:44:38 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 11:42:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     Jonathan McDowell <noodles@earth.li>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: qcom_scm: Fix legacy convention SCM accessors
-Message-ID: <20200713184230.GB1218486@builder.lan>
-References: <20200704172334.GA759@earth.li>
- <d38c8e7c-443c-33f0-be8d-dedd58dd4fe1@codeaurora.org>
+        Mon, 13 Jul 2020 14:46:17 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:47142 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgGMSqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:46:17 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 631BABC070;
+        Mon, 13 Jul 2020 18:46:12 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     dvhart@infradead.org, andy@infradead.org,
+        mika.westerberg@linux.intel.com, lee.jones@linaro.org,
+        dmitry.torokhov@gmail.com, mchehab+huawei@kernel.org,
+        ayman.bagabas@gmail.com, masahiroy@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 20:46:06 +0200
+Message-Id: <20200713184606.37033-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d38c8e7c-443c-33f0-be8d-dedd58dd4fe1@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13 Jul 09:35 PDT 2020, Elliot Berman wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> For the Qualcomm TrustZone firmwares which I am familiar with:
-> 
-> Reviewed-by: Elliot Berman <eberman@codeaurora.org>
-> 
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Thanks for the patch Jonathan and thanks for the review Elliot!
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Applied
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-Regards,
-Bjorn
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-> On 7/4/2020 10:23 AM, Jonathan McDowell wrote:
-> > The move to a combined driver for the QCOM SCM hardware changed the
-> > io_writel and io_readl helpers to use non-atomic calls, despite the
-> > commit message saying that atomic was a better option. This breaks these
-> > helpers on hardware that uses the old legacy convention (access fails
-> > with a -95 return code). Switch back to using the atomic calls.
-> > 
-> > Observed as a failure routing GPIO interrupts to the Apps processor on
-> > an IPQ8064; fix is confirmed as correctly allowing the interrupts to be
-> > routed and observed.
-> > 
-> > Fixes: 57d3b816718c ("firmware: qcom_scm: Remove thin wrappers")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> > ---
-> >  drivers/firmware/qcom_scm.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> > index 0e7233a20f34..d4fda210adfe 100644
-> > --- a/drivers/firmware/qcom_scm.c
-> > +++ b/drivers/firmware/qcom_scm.c
-> > @@ -391,7 +391,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
-> >  
-> >  	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
-> >  
-> > -	return qcom_scm_call(__scm->dev, &desc, NULL);
-> > +	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
-> >  }
-> >  
-> >  static void qcom_scm_set_download_mode(bool enable)
-> > @@ -650,7 +650,7 @@ int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
-> >  	int ret;
-> >  
-> >  
-> > -	ret = qcom_scm_call(__scm->dev, &desc, &res);
-> > +	ret = qcom_scm_call_atomic(__scm->dev, &desc, &res);
-> >  	if (ret >= 0)
-> >  		*val = res.result[0];
-> >  
-> > @@ -669,8 +669,7 @@ int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
-> >  		.owner = ARM_SMCCC_OWNER_SIP,
-> >  	};
-> >  
-> > -
-> > -	return qcom_scm_call(__scm->dev, &desc, NULL);
-> > +	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
-> >  }
-> >  EXPORT_SYMBOL(qcom_scm_io_writel);
-> >  
-> > 
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/platform/x86/Kconfig      |  2 +-
+ drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0581a54cf562..1d96e07b2a02 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -140,7 +140,7 @@ config ACERHDF
+ 	  in the same node directory will tell you if it is "acerhdf".
+ 
+ 	  For more information about this driver see
+-	  <http://piie.net/files/acerhdf_README.txt>
++	  <https://piie.net/files/acerhdf_README.txt>
+ 
+ 	  If you have an Acer Aspire One netbook, say Y or M
+ 	  here.
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 7e3083deb1c5..9aae45a45200 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+  * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+  * use a `TI LP8545`_.
+  *
+- * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+- * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
++ * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
++ * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+  */
+ 
+ static int gmux_get_brightness(struct backlight_device *bd)
+@@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+  * switch the panel and the external DP connector and allocates a framebuffer
+  * for the selected GPU.
+  *
+- * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+- * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+- * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+- * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
++ * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
++ * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
++ * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
++ * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+  * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+- * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
++ * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+  * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+- * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
++ * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+  */
+ 
+ static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
+-- 
+2.27.0
+
