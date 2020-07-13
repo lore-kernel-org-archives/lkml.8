@@ -2,108 +2,200 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C34220758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D541C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHA9Q1HX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="df6ntnJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgGMJ36 (ORCPT
+        id S1729403AbgGMJbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:29:58 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44298 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726523AbgGMJ36 (ORCPT
+        Mon, 13 Jul 2020 05:31:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:36666 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728833AbgGMJbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:29:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594632597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FkdClRISCLaiArFjVxkA+fHx1NW3jZ3pECNBcgR6TSM=;
-        b=KHA9Q1HXbcVDP+jdS3LTDUkV26jNrcabe/JiBTQdwJgN7Q3RiWHuEod1xP2tJlG7KbSC89
-        gx/cJsmynV7xB7kNdxYiDszTF5De8e9KNf7GgVnJhJxQhi8XRfV3fnRdH50Un8WOjfqjUZ
-        BDun3XPL4EG1cahYpqmmb6JePLlBYcU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-wUIIf35hMS-KCLeMBOln2Q-1; Mon, 13 Jul 2020 05:29:55 -0400
-X-MC-Unique: wUIIf35hMS-KCLeMBOln2Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5AF5107ACCA;
-        Mon, 13 Jul 2020 09:29:53 +0000 (UTC)
-Received: from localhost (ovpn-114-66.ams2.redhat.com [10.36.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37CDD74F44;
-        Mon, 13 Jul 2020 09:29:50 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 10:29:49 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] vhost/scsi: fix up req type endian-ness
-Message-ID: <20200713092949.GE28639@stefanha-x1.localdomain>
-References: <20200710104849.406023-1-mst@redhat.com>
+        Mon, 13 Jul 2020 05:31:23 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200713093121euoutp0118dfbbc3cbbae19b384d98d85778eeee~hRfmObOsX2836028360euoutp01u
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:31:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200713093121euoutp0118dfbbc3cbbae19b384d98d85778eeee~hRfmObOsX2836028360euoutp01u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594632681;
+        bh=lhTH4DSK/6+Ag7ZxkZXN1caokc45eKCzYCQCPnhjUYc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=df6ntnJkpbO3sut7G89kvPLWwSukwjZ0GPWv+evjH7PJp3T2aUycrBclmuVviKC8i
+         bw6JcuwpZhVz6eA447R9XXfWhjkbl/vYOVMFvKWOrO89t2KSwbn326M306SMFZZDMx
+         INffcKkpcNiCmds95GPwB7VHKXCWm5cndRn8oB1M=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200713093120eucas1p2f772b7e0ab36759a364db1d3483ec3a0~hRfluNjMu0753407534eucas1p2G;
+        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5A.89.06318.8E92C0F5; Mon, 13
+        Jul 2020 10:31:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200713093120eucas1p20559a77ab67ac05958a4ba76c4bb20e0~hRflUVwHo0754007540eucas1p23;
+        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200713093120eusmtrp28bc43157b17eb75a48604795c6414ac3~hRflTmibD1167711677eusmtrp28;
+        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-74-5f0c29e8d687
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 78.CC.06017.8E92C0F5; Mon, 13
+        Jul 2020 10:31:20 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200713093119eusmtip1c8791d44252feb62943156bcdec1a1d2~hRfkzpE6c1408514085eusmtip1O;
+        Mon, 13 Jul 2020 09:31:19 +0000 (GMT)
+Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
+ framework
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
+Date:   Mon, 13 Jul 2020 11:31:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200710104849.406023-1-mst@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=stefanha@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n+lFg1Zro7sl44OB"
-Content-Disposition: inline
+In-Reply-To: <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7djPc7ovNHniDX4sVrdobljMZLFxxnpW
+        i3mfZS0u75rDZvG59wijxedts9gtnjzsY7OYsHgjuwOHx+W+XiaPxXteMnncubaHzWPeyUCP
+        vi2rGD0+b5ILYIvisklJzcksSy3St0vgynh7ir/gjlTFkrl1DYzHxLoYOTkkBEwkrn46zd7F
+        yMUhJLCCUaL922xGCOcLo8SUxZuZIJzPjBKX33xlhGn5/OAsE4gtJLCcUaLjvyFE0XtGif+9
+        y8ESwgIhEr9+fARrYBMwlOh628UGYosIOEtcPXkXbB+zwDlGiUen14MV8QrYSZx60gHWzCKg
+        KnF13g52EFtUIE5i/cvtTBA1ghInZz5hAbE5BewlHk28BjaUWUBeonnrbGYIW1zi1pP5YGdL
+        CGxjl3j0YikLxNkuEscWtzJB2MISr45vYYewZST+74RpaGaUeHhuLTuE0wP0dNMMqKetJe6c
+        +wW0jgNohabE+l36EGFHiadvd4CFJQT4JG68FYQ4gk9i0rbpzBBhXomONiGIajWJWcfXwa09
+        eOES8wRGpVlIXpuF5J1ZSN6ZhbB3ASPLKkbx1NLi3PTUYuO81HK94sTc4tK8dL3k/NxNjMCU
+        dPrf8a87GPf9STrEKMDBqMTDe0GPO16INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWl
+        OanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTBGtW26PXNp+Kf50mm3r8wzZ5ut
+        fu/vayEp9n0yXd5O3vnsM3y2bD6xXOuhEkvPh0cTXz6Kf3a2/aCyvayMTaun5CbvNE029hVz
+        Dd2n6Xv9fK3WtCHOa3daMR9DtfV8SxeBgO2NdTYrlTQ/PXI68D/VOuk5X/nLjv5LJ82CWNnq
+        thSUh3uFhCqxFGckGmoxFxUnAgCkzq3yRQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7ovNHniDZoWclg0Nyxmstg4Yz2r
+        xbzPshaXd81hs/jce4TR4vO2WewWTx72sVlMWLyR3YHD43JfL5PH4j0vmTzuXNvD5jHvZKBH
+        35ZVjB6fN8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSW
+        pRbp2yXoZbw9xV9wR6piydy6BsZjYl2MnBwSAiYSnx+cZQKxhQSWMkpsahKAiMtInJzWwAph
+        C0v8udbF1sXIBVTzllHiyfLd7CAJYYEQiV8/PjKC2GwChhJdb0GKODlEBJwlrp68C1bDLHCO
+        UWL9/QqI5sdMEs+OnQBL8ArYSZx60gG2mUVAVeLqvB1gcVGBOInlW+ZD1QhKnJz5hAXE5hSw
+        l3g08RobxFAziXmbHzJD2PISzVtnQ9niEreezGeawCg0C0n7LCQts5C0zELSsoCRZRWjSGpp
+        cW56brGRXnFibnFpXrpecn7uJkZgBG479nPLDsaud8GHGAU4GJV4eC/occcLsSaWFVfmHmKU
+        4GBWEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgckhryTe0NTQ3MLS0NzY3NjM
+        Qkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo/ufO3c+9Hi9jz6hyMrbHNV9qfia/433DL/0
+        OL/qPM6xf3zJPeb55lI7raX7V7l9NrKx+x5zwpTrwhRNnT070mYvXG5V5OZVx7ig7d1m1qSn
+        rL949q2MqohOvMU/U8c+LfFaUpjp83tl4lt+8tYFTLNZXZE/92ds9sQL7J2FzQbMV7kjInlT
+        lFiKMxINtZiLihMBZayc89YCAAA=
+X-CMS-MailID: 20200713093120eucas1p20559a77ab67ac05958a4ba76c4bb20e0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200706131708eucas1p1487955a7632584c17df724399f48825a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200706131708eucas1p1487955a7632584c17df724399f48825a
+References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
+        <20200706105538.2159-4-daniel.lezcano@linaro.org>
+        <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
+        <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
+        <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
+        <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---n+lFg1Zro7sl44OB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-On Fri, Jul 10, 2020 at 06:48:51AM -0400, Michael S. Tsirkin wrote:
-> vhost/scsi doesn't handle type conversion correctly
-> for request type when using virtio 1.0 and up for BE,
-> or cross-endian platforms.
->=20
-> Fix it up using vhost_32_to_cpu.
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/vhost/scsi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 07.07.2020 11:15, Marek Szyprowski wrote:
+> On 06.07.2020 15:46, Daniel Lezcano wrote:
+>> On 06/07/2020 15:17, Marek Szyprowski wrote:
+>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
+>>>> The generic netlink protocol is implemented but the different
+>>>> notification functions are not yet connected to the core code.
+>>>>
+>>>> These changes add the notification calls in the different
+>>>> corresponding places.
+>>>>
+>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
+>>> ("thermal: core: Add notifications call in the framework"). Sadly it
+>>> breaks booting various Samsung Exynos based boards. Here is an example
+>>> log from Odroid U3 board:
+>>>
+>>> Unable to handle kernel NULL pointer dereference at virtual address 
+>>> 00000010
+>>> pgd = (ptrval)
+>>> [00000010] *pgd=00000000
+>>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+>>> Modules linked in:
+>>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
+>>> #1146
+>>> Hardware name: Samsung Exynos (Flattened Device Tree)
+>>> PC is at kmem_cache_alloc+0x13c/0x418
+>>> LR is at kmem_cache_alloc+0x48/0x418
+>>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
+>>> ...
+>>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
+>>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
+>>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+>>> Stack: (0xee8f1cf8 to 0xee8f2000)
+>>> ...
+>>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] 
+>>> (__alloc_skb+0x5c/0x170)
+>>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
+>>> (thermal_genl_send_event+0x24/0x174)
+>>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
+>>> (thermal_notify_tz_create+0x58/0x74)
+>>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
+>>> (thermal_zone_device_register+0x358/0x650)
+>>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
+>>> (of_parse_thermal_zones+0x304/0x7a4)
+>>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
+>>> (thermal_init+0xdc/0x154)
+>>> [<c1028964>] (thermal_init) from [<c0102378>] 
+>>> (do_one_initcall+0x8c/0x424)
+>>> [<c0102378>] (do_one_initcall) from [<c1001158>]
+>>> (kernel_init_freeable+0x190/0x204)
+>>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
+>>> (kernel_init+0x8/0x118)
+>>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
+>>>
+>>> Reverting it on top of linux-next fixes the boot issue. I will
+>>> investigate it further soon.
+>> Thanks for reporting this.
+>>
+>> Can you send the addr2line result and code it points to ?
+>
+> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to 
+> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks 
+> like some trashed memory somewhere, but I don't have time right now to 
+> analyze it further now...
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Just one more thing I've noticed. The crash happens only if the kernel 
+is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC 
+4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like 
+arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works 
+fine...
 
---n+lFg1Zro7sl44OB
-Content-Type: application/pgp-signature; name="signature.asc"
+This happens also with Linux next-20200710, which again got this commit.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl8MKY0ACgkQnKSrs4Gr
-c8gQOQf+KmgjzVnEXU62hGmZBNsGZ9+2r2VBviBdhlBL0AB0927CK0A8v4HXZ/5+
-8Y6UwKNT0GZnj67/+PBXAVvJm4Jny+4TTgTafuZY0gnlNZKS6PpmSoztnzwjqtgI
-ddm2TVEWDF/lDZNRcWZ1a0cURg8If2ZQPxNepxT3uqa5LnbYXiwuIlnFG6eetsHV
-Cl751SmdjCSXzCDBvEE6eboXtzt3ok1TWIx3L2jU034AyexssehBz6C0G9LVQhau
-pVJs0q2BfsF95xxX6k2Bo/8Paj4EqzUKxG4jEXteR9SIHwZH3anw0PKPygh96FWF
-XrsnZG1MAaXY8ybmuVlQkaJofLFlMA==
-=4fi+
------END PGP SIGNATURE-----
-
---n+lFg1Zro7sl44OB--
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
