@@ -8,57 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA88C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB004C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F394C206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA218206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HC46yhzE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AEjD8IjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGMUio (ORCPT
+        id S1726935AbgGMUiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
+        Mon, 13 Jul 2020 16:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgGMUin (ORCPT
+        with ESMTP id S1726510AbgGMUiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:38:43 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C92C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:38:43 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id i6so11595854qkn.22
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:38:43 -0700 (PDT)
+        Mon, 13 Jul 2020 16:38:50 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7887AC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:38:50 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id k127so18669824ybk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=dGP3NBiuPYOp4kG6UmTmoWb3Yy//DSuALfFpCez22cA=;
-        b=HC46yhzEbc7uMnOMe0PWMfCPdnyTNb0RHGlCBCN93asvKXs8drlpZCe88L2xLYlpIj
-         N1/q9PF2f07DYTy5b5lvFqFlRGXcq9miO5L430N/PxUxTiAp5ThT806l0nHaT4jYWbP+
-         E5XlhYpR0qkolCuNP1G4eMAU8Km8Kxpbg6JmZ7/TKs/z/kuzshXLQ6uvt41HiIfe4XVC
-         UNHr8ps0dACDZ1xnJuKHt0xVxx4gb7ahEjto7DG70F6zDo+b2zAf0VBUVfWPNINKolLt
-         d1uXQPUQWPOPME/NCDLD53H5Jy4mcAoohlKFJ/HhelPdgaK9wUfPyo1G7kkDzMq6kKHZ
-         9ybA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=VaRPD418ICZmuo4SvaU+Y0dC9FFgnGHoJ8TNq0YfGNQ=;
+        b=AEjD8IjTY2eWYNj21fRvI03XgcUm1AXq7+rOI0xI5jidgdiZOxUpzRQ5zr7YS8/8zj
+         m2sFbC124wzn8zaz7ntnconQsBiYHhEoTOvTucliIgUg8bFQ6ge3KWtm99SMqM/JHd8r
+         yWDTbn3Q7S7Fwe59nbPMi+djsVnY+n2oz4KlzxNY0UlmxzLAf93Ms9mQS4cQPzgIDoGC
+         yINLGaESNldzKDQIFj0vshZH8F7Afg8norBpKbP0sv9FR5ez4weX2ZghGBcvdbZ+kX9L
+         kJaHvv/E6OFzf1lkPvNV7m+M0D+sSDTOjczG1byzvLnizbv7mqBGaXZy/MGU2N1Jp1EY
+         xXbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=dGP3NBiuPYOp4kG6UmTmoWb3Yy//DSuALfFpCez22cA=;
-        b=SGSlC4ZWnk9Ezftlqxs2h3+Yv+d0YwriAZBfFdtmS9BVIsmO4effBZyypEzVjBDm5B
-         5+kg9MgjtHoqe4LvT8OrLd3/rr8n8kiB+Yym2GFWGMnb5yAYMc7aRGXxhroJDCh0GVVR
-         EAN6L5QYiYh6WejYyH5dK7VrnRdz/e+ENgpGIU1c7szFP5crNvT7AELSGArfsqBbSEXh
-         VMrHl/vA1Xs1LPhEsagMTMvEAl3pAYX9lytpCmlbPOZVDP5hpKMbjBlKehBZ+4iNWX4D
-         bip2KlehKXivCriu/Z5rP1R2PmFiyKJyKRY/ZblfQ5gwnf/VUGWRv3hmN3SI3OWI+0TQ
-         bacA==
-X-Gm-Message-State: AOAM532B6wt1sMTARFZC8LHyRNJOF0LdfxsYmW5BQqynkjucRFw1I2+o
-        i2T4LWDXYj5J2wKIYewV4lnu2oa0eVE=
-X-Google-Smtp-Source: ABdhPJzRvmcMJE/hMn2ryQpDopXmW4JA+HZ4UObh+jH6v+Sn6OcL47jpUcPp0QvVmneZvzPwEqdWhlJkNfk=
-X-Received: by 2002:a05:6214:26:: with SMTP id b6mr1239373qvr.239.1594672722444;
- Mon, 13 Jul 2020 13:38:42 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 13:38:37 -0700
-Message-Id: <20200713203838.339297-1-badhri@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=VaRPD418ICZmuo4SvaU+Y0dC9FFgnGHoJ8TNq0YfGNQ=;
+        b=AHG4kvUKIF1a1rJ3tUZsxoSmVDuqr0SbyLMLDP+PtGCnxlCiVeXqd9wnC7YDKc3tWf
+         2LuGSWf6x7d5TMLTO2S3IySGbduccONOnVJJKB7XWTbb4+2npiQ8cF+fKZUVp7i8uHXR
+         jHg6nrkKWkCCk4edSYQHf1MrGHM+fd0Lwq1vUeob15Qh5YTjz/PE6wHOqwMgVXjVRnlT
+         lpstPIXr/Xz9F6xoanZJQfflTIfA7fo61VJDsMQaamlURMRphWruB1865aA+uGf4ge6s
+         WyezkGBDQLO39/KzCwAhPA/Lu7BIhGDkGSEwXbkK1FU7VNFxhhSrVWvIK+lDcp8flPJf
+         ZiFw==
+X-Gm-Message-State: AOAM532Us1pAgsi5NkknuYhEb29BpW9lFB9gK4gGuqiuWO9fjptnUxGV
+        /NJBefrRgEacIwZkhqR/JIo4JkvdVwY=
+X-Google-Smtp-Source: ABdhPJzs+eUF1WANjiYQRMZi3lU1vKc14YuAXAKAvmDhlbdzmW51ENBer6EiiE+wrR7YwTcvs7Q3rfg2vZI=
+X-Received: by 2002:a25:2008:: with SMTP id g8mr3085446ybg.17.1594672729626;
+ Mon, 13 Jul 2020 13:38:49 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 13:38:38 -0700
+In-Reply-To: <20200713203838.339297-1-badhri@google.com>
+Message-Id: <20200713203838.339297-2-badhri@google.com>
 Mime-Version: 1.0
+References: <20200713203838.339297-1-badhri@google.com>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH 1/2] usb: typec: tcpm: Support bist test data mode for compliance
+Subject: [PATCH 2/2] usb: typec: tcpm: Stay in BIST mode till hardreset or unattached
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -66,120 +70,81 @@ To:     Guenter Roeck <linux@roeck-us.net>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Badhri Jagan Sridharan <badhri@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCPM supports BIST carried mode. PD compliance tests require
-BIST Test Data to be supported as well.
+Port starts to toggle when transitioning to unattached state.
+This is incorrect while in BIST mode.
+
+6.4.3.1 BIST Carrier Mode
+Upon receipt of a BIST Message, with a BIST Carrier Mode BIST Data Object,
+the UUT Shall send out a continuous string of BMC encoded alternating "1"s
+and =E2=80=9C0=E2=80=9Ds. The UUT Shall exit the Continuous BIST Mode withi=
+n
+tBISTContMode of this Continuous BIST Mode being enabled(see
+Section 6.6.7.2).
+
+6.4.3.2 BIST Test Data
+Upon receipt of a BIST Message, with a BIST Test Data BIST Data Object,
+the UUT Shall return a GoodCRC Message and Shall enter a test mode in which
+it sends no further Messages except for GoodCRC Messages in response to
+received Messages. See Section 5.9.2 for the definition of the Test Data
+Frame. The test Shall be ended by sending Hard Reset Signaling to reset the
+UUT.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
- drivers/usb/typec/tcpm/tcpci.c | 14 ++++++++++++++
- drivers/usb/typec/tcpm/tcpci.h |  3 +++
- drivers/usb/typec/tcpm/tcpm.c  |  7 +++++++
- include/linux/usb/tcpm.h       |  2 ++
- 4 files changed, 26 insertions(+)
+ drivers/usb/typec/tcpm/tcpm.c | 8 ++++++--
+ include/linux/usb/pd.h        | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index 753645bb25273a..3616263f661233 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -227,6 +227,19 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
- 				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
- }
- 
-+static int tcpci_set_bist_data(struct tcpc_dev *tcpc, bool enable)
-+{
-+	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-+	int ret;
-+
-+	dev_info(tcpci->dev, "set bist %s\n", enable ? "true" : "false");
-+	ret = regmap_update_bits(tcpci->regmap, TCPC_TCPC_CTRL,
-+				 TCPC_TCPC_CTRL_BIST_TM, enable ?
-+				 TCPC_TCPC_CTRL_BIST_TM : 0);
-+
-+	return ret;
-+}
-+
- static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
- 			   enum typec_role role, enum typec_data_role data)
- {
-@@ -530,6 +543,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
- 	tcpci->tcpc.set_pd_rx = tcpci_set_pd_rx;
- 	tcpci->tcpc.set_roles = tcpci_set_roles;
- 	tcpci->tcpc.pd_transmit = tcpci_pd_transmit;
-+	tcpci->tcpc.set_bist_data = tcpci_set_bist_data;
- 
- 	err = tcpci_parse_config(tcpci);
- 	if (err < 0)
-diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
-index 303ebde265465c..a29c8b6c2efe07 100644
---- a/drivers/usb/typec/tcpm/tcpci.h
-+++ b/drivers/usb/typec/tcpm/tcpci.h
-@@ -36,6 +36,7 @@
- 
- #define TCPC_TCPC_CTRL			0x19
- #define TCPC_TCPC_CTRL_ORIENTATION	BIT(0)
-+#define TCPC_TCPC_CTRL_BIST_TM		BIT(1)
- 
- #define TCPC_ROLE_CTRL			0x1a
- #define TCPC_ROLE_CTRL_DRP		BIT(6)
-@@ -130,6 +131,8 @@ struct tcpci_data {
- 			 bool enable);
- 	int (*start_drp_toggling)(struct tcpci *tcpci, struct tcpci_data *data,
- 				  enum typec_cc_status cc);
-+	int (*set_bist_data)(struct tcpci *tcpci, struct tcpci_data *data,
-+			     bool enable);
- };
- 
- struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data);
 diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 82b19ebd7838e0..525379798d6c5c 100644
+index 525379798d6c5c..61d854f16e4eda 100644
 --- a/drivers/usb/typec/tcpm/tcpm.c
 +++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -2746,6 +2746,9 @@ static void tcpm_detach(struct tcpm_port *port)
- 	if (!port->attached)
- 		return;
- 
-+	if (port->tcpc->set_bist_data)
-+		port->tcpc->set_bist_data(port->tcpc, false);
-+
- 	if (tcpm_port_is_disconnected(port))
- 		port->hard_reset_count = 0;
- 
-@@ -3555,6 +3558,10 @@ static void run_state_machine(struct tcpm_port *port)
+@@ -3557,6 +3557,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 		switch (BDO_MODE_MASK(port->bist_request)) {
  		case BDO_MODE_CARRIER2:
  			tcpm_pd_transmit(port, TCPC_TX_BIST_MODE_2, NULL);
++			tcpm_set_state(port, unattached_state(port),
++				       PD_T_BIST_CONT_MODE);
  			break;
-+		case BDO_MODE_TESTDATA:
-+			if (port->tcpc->set_bist_data)
-+				port->tcpc->set_bist_data(port->tcpc, true);
-+			break;
+ 		case BDO_MODE_TESTDATA:
+ 			if (port->tcpc->set_bist_data)
+@@ -3565,8 +3567,6 @@ static void run_state_machine(struct tcpm_port *port)
  		default:
  			break;
  		}
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index e7979c01c3517c..89f58760cf4800 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -79,6 +79,7 @@ enum tcpm_transmit_type {
-  * @try_role:	Optional; called to set a preferred role
-  * @pd_transmit:Called to transmit PD message
-  * @mux:	Pointer to multiplexer data
-+ * @set_bist_data: Turn on/off bist data mode for compliance testing
-  */
- struct tcpc_dev {
- 	struct fwnode_handle *fwnode;
-@@ -103,6 +104,7 @@ struct tcpc_dev {
- 	int (*try_role)(struct tcpc_dev *dev, int role);
- 	int (*pd_transmit)(struct tcpc_dev *dev, enum tcpm_transmit_type type,
- 			   const struct pd_message *msg);
-+	int (*set_bist_data)(struct tcpc_dev *dev, bool on);
- };
- 
- struct tcpm_port;
--- 
+-		/* Always switch to unattached state */
+-		tcpm_set_state(port, unattached_state(port), 0);
+ 		break;
+ 	case GET_STATUS_SEND:
+ 		tcpm_pd_send_control(port, PD_CTRL_GET_STATUS);
+@@ -3956,6 +3956,10 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port=
+)
+ static void _tcpm_pd_hard_reset(struct tcpm_port *port)
+ {
+ 	tcpm_log_force(port, "Received hard reset");
++	if (port->bist_request =3D=3D  BDO_MODE_TESTDATA &&
++	    port->tcpc->set_bist_data)
++		port->tcpc->set_bist_data(port->tcpc, false);
++
+ 	/*
+ 	 * If we keep receiving hard reset requests, executing the hard reset
+ 	 * must have failed. Revert to error recovery if that happens.
+diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+index a665d7f211424d..b420d8d613cd23 100644
+--- a/include/linux/usb/pd.h
++++ b/include/linux/usb/pd.h
+@@ -483,4 +483,5 @@ static inline unsigned int rdo_max_power(u32 rdo)
+ #define PD_N_CAPS_COUNT		(PD_T_NO_RESPONSE / PD_T_SEND_SOURCE_CAP)
+ #define PD_N_HARD_RESET_COUNT	2
+=20
++#define PD_T_BIST_CONT_MODE	60 /* 30 - 60 ms */
+ #endif /* __LINUX_USB_PD_H */
+--=20
 2.27.0.383.g050319c2ae-goog
 
