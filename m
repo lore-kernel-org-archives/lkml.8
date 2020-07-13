@@ -2,202 +2,151 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F92C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0838BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3430220720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D856820720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="OXfyeza5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUq0akRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgGMGju (ORCPT
+        id S1728341AbgGMGmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:39:50 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:31932 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbgGMGjM (ORCPT
+        Mon, 13 Jul 2020 02:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGMGmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:39:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594622349;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0FtSo+s3Xq4DNfeZ4uKVPtQ8C50oee0gTRDuz+8JCS8=;
-        b=OXfyeza5eGjwEjcilC1FxmnFsAB//SZc99DrhyeIts4nqA+LW6OCO7AWwf+m8eOPuB
-        GTHZOr5sK/N9lhpIyhcGvLwZ8I3k5/g873SPURvLCoDbDEDcF289TtqpWEqmeuOx9fWX
-        vd9SpPuuZIfdM3evq0Ub1JvfM1b2p8PxkSpkDNHt5xcBZ0dVOs1Amgi9e8rACsVOcnqE
-        RK6pQYnln0erT3QI9ByKMadchZmq/2EhqzBzVYs+GO2REfQDjdrX5w+vcHskhCNKsg6u
-        V2AX5hkzW5Wpw31DVrKdFrlU/+coLEYU3cEaGJs3atMjZQBELlcqFgOAfZW5rP6RmssR
-        BMEA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaIvSfHReW"
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id y0546bw6D6bok2J
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 13 Jul 2020 08:37:50 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v31 08/12] crypto: provide access to a static Jitter RNG state
-Date:   Mon, 13 Jul 2020 08:20:44 +0200
-Message-ID: <14128491.tv2OnDr8pf@positron.chronox.de>
-In-Reply-To: <2050754.Mh6RI2rZIc@positron.chronox.de>
-References: <2050754.Mh6RI2rZIc@positron.chronox.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Mon, 13 Jul 2020 02:42:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07FD0C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:42:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o13so5629775pgf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xZcJpPVurLpF2R6ERLd9Bv0+pjW0oNaNoGLeOeK6As0=;
+        b=hUq0akRxK+b1u+RVUmJQqCczhkyfN73GCfrkypfbNaCa4Gk5cTtoEeVhZCesNkboGV
+         j432akK6NnI8/tr8zgYn+1eKTb2lrT2fkAFO4y91K1jXKidR2oaDookctgCYz1CyoEvC
+         cDo82JqQYerphv21fk1Ph96Ct1LLw0heBrN41PMUI3D6Rc3KfAPY7/YPgaJCQBli77Wm
+         BLLnWynd5yebQS8mUsRp7h9MMeCOh1fhmGCFi12gCBpRb30ccEIvaM3PjeIqGS7FYuCp
+         JHbFnd4lhBPgftC3ZscphoNV/sWui/zJ18BJYm9xx4q/5lwpl6zW2dn7q0VrbJOuC5ia
+         J66Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xZcJpPVurLpF2R6ERLd9Bv0+pjW0oNaNoGLeOeK6As0=;
+        b=JXazoDA/GzZ+vh9Ea27RKqfUCKCqeZVY4fc5yT17mnzlo/otXAMdl49brmxqWzGxhh
+         liBc+GaBose6mdwG5Iq5ynToUQST4mmgRuNPzODOQGTF28O54hr176lz32vu1UKTodf/
+         ELemsud9QpMeP/wBL8Kw/rpP2YkZh3nkyVZXJMMUpMt15XXucWX9DcLyQfQa/BgYx8WN
+         pq3nzp/ohDuA7+5CGsNgHyyNgLmOwF8qYUVOOB/Y8s5WycQB3mWCJNs6MM62xTiEQ+53
+         aAIXHHWRZqBr60/RZRguUfxKIPuSErAgpPRnQWAvMsBAQ9JA3IdUCt8su4q1wNqOqr4R
+         QBLA==
+X-Gm-Message-State: AOAM532zl2h7iXLSxYDfFYhoqC4LAMPTTVysVbKW5ZYZB/cF2TnnK73k
+        /I3DEQMFMure6ysCe3uowFUzCFUv
+X-Google-Smtp-Source: ABdhPJx5a0jLPBWyMbEJv7QlTZnVxSYGwAlAhrh1isrTw55i5OaPwY4iGtwoPj9AeSDAa1L+1cAtMQ==
+X-Received: by 2002:a63:2b93:: with SMTP id r141mr67293886pgr.171.1594622536338;
+        Sun, 12 Jul 2020 23:42:16 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id l134sm12448695pga.50.2020.07.12.23.42.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Jul 2020 23:42:15 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v5 0/9] clean-up the migration target allocation functions
+Date:   Mon, 13 Jul 2020 15:41:48 +0900
+Message-Id: <1594622517-20681-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support the LRNG operation which uses the Jitter RNG separately
-from the kernel crypto API, at a time where potentially the regular
-memory management is not yet initialized, the Jitter RNG needs to
-provide a state whose memory is defined at compile time. As only once
-instance will ever be needed by the LRNG, define once static memory
-block which is solely to be used by the LRNG.
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-CC: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-CC: Willy Tarreau <w@1wt.eu>
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: Vito Caputo <vcaputo@pengaru.com>
-CC: Andreas Dilger <adilger.kernel@dilger.ca>
-CC: Jan Kara <jack@suse.cz>
-CC: Ray Strode <rstrode@redhat.com>
-CC: William Jon McCann <mccann@jhu.edu>
-CC: zhangjs <zachary@baishancloud.com>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>
-CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Tested-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
-=2D--
- crypto/jitterentropy-kcapi.c                  |  3 +-
- crypto/jitterentropy.c                        | 31 ++++++++++++++++++-
- .../crypto/internal}/jitterentropy.h          |  3 ++
- 3 files changed, 34 insertions(+), 3 deletions(-)
- rename {crypto =3D> include/crypto/internal}/jitterentropy.h (84%)
+This patchset clean-up the migration target allocation functions.
 
-diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
-index b43684c0dade..ed21fab13da6 100644
-=2D-- a/crypto/jitterentropy-kcapi.c
-+++ b/crypto/jitterentropy-kcapi.c
-@@ -43,8 +43,7 @@
- #include <linux/time.h>
- #include <linux/crypto.h>
- #include <crypto/internal/rng.h>
-=2D
-=2D#include "jitterentropy.h"
-+#include <crypto/internal/jitterentropy.h>
-=20
- /*************************************************************************=
-**
-  * Helper function
-diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
-index 57f4a1ac738b..7ab229c6c96b 100644
-=2D-- a/crypto/jitterentropy.c
-+++ b/crypto/jitterentropy.c
-@@ -117,7 +117,7 @@ struct rand_data {
- #define JENT_EHEALTH		9 /* Health test failed during initialization */
- #define JENT_ERCT		10 /* RCT failed during initialization */
-=20
-=2D#include "jitterentropy.h"
-+#include <crypto/internal/jitterentropy.h>
-=20
- /*************************************************************************=
-**
-  * Adaptive Proportion Test
-@@ -854,3 +854,32 @@ int jent_entropy_init(void)
-=20
- 	return 0;
- }
-+
-+struct rand_data *jent_lrng_entropy_collector(void)
-+{
-+	static unsigned char lrng_jent_mem[JENT_MEMORY_SIZE];
-+	static struct rand_data lrng_jent_state =3D {
-+		.data		=3D 0,
-+		.old_data	=3D 0,
-+		.prev_time	=3D 0,
-+		.last_delta	=3D 0,
-+		.last_delta2	=3D 0,
-+		.osr		=3D 1,
-+		.mem		=3D lrng_jent_mem,
-+		.memlocation	=3D 0,
-+		.memblocks	=3D JENT_MEMORY_BLOCKSIZE,
-+		.memblocksize	=3D JENT_MEMORY_BLOCKS,
-+		.memaccessloops	=3D JENT_MEMORY_ACCESSLOOPS,
-+		.rct_count	=3D 0,
-+		.apt_observations =3D 0,
-+		.apt_count	=3D 0,
-+		.apt_base	=3D 0,
-+		.apt_base_set	=3D 0,
-+		.health_failure =3D 0
-+	};
-+
-+	if (jent_entropy_init())
-+		return NULL;
-+
-+	return &lrng_jent_state;
-+}
-diff --git a/crypto/jitterentropy.h b/include/crypto/internal/jitterentropy=
-=2Eh
-similarity index 84%
-rename from crypto/jitterentropy.h
-rename to include/crypto/internal/jitterentropy.h
-index c83fff32d130..6e07d86eac82 100644
-=2D-- a/crypto/jitterentropy.h
-+++ b/include/crypto/internal/jitterentropy.h
-@@ -15,3 +15,6 @@ extern int jent_read_entropy(struct rand_data *ec, unsign=
-ed char *data,
- extern struct rand_data *jent_entropy_collector_alloc(unsigned int osr,
- 						      unsigned int flags);
- extern void jent_entropy_collector_free(struct rand_data *entropy_collecto=
-r);
-+
-+/* Access to statically allocated Jitter RNG instance */
-+extern struct rand_data *jent_lrng_entropy_collector(void);
-=2D-=20
-2.26.2
+* Changes on v5
+- remove new_non_cma_page() related patches
+(implementation for memalloc_nocma_{save,restore} has a critical bug that
+cannot exclude CMA memory in some cases so cannot use them here. Need to
+fix them first.)
+- introduce a wrapper to handle gfp_mask for hugetlb use it
 
+* Changes on v4
+- use full gfp_mask
+- use memalloc_nocma_{save,restore} to exclude CMA memory
+- separate __GFP_RECLAIM handling for THP allocation
+- remove more wrapper functions
 
+* Changes on v3
+- As Vlastimil suggested, do not introduce alloc_control for hugetlb functions
+- do not change the signature of migrate_pages()
+- rename alloc_control to migration_target_control
 
+* Changes on v2
+- add acked-by tags
+- fix missing compound_head() call for patch #3
+- remove thisnode field on alloc_control and use __GFP_THISNODE directly
+- fix missing __gfp_mask setup for patch
+"mm/hugetlb: do not modify user provided gfp_mask"
+
+* Cover-letter
+
+Contributions of this patchset are:
+
+1. unify two hugetlb alloc functions. As a result, one is remained.
+2. remove one implementation for migration target allocaion
+3. remove three wrapper for migration target allocation
+
+The patchset is based on next-20200703 + revert following commits.
+ddc017c727e429488cccd401a7794c8152e50a5b~1..583c2617fd3244fff79ba3b445964884c5cd7780
+
+The patchset is available on:
+
+https://github.com/JoonsooKim/linux/tree/cleanup-migration-target-allocation-v5.00-next-20200703
+
+Thanks.
+Joonsoo Kim (9):
+  mm/page_isolation: prefer the node of the source page
+  mm/migrate: move migration helper from .h to .c
+  mm/hugetlb: unify migration callbacks
+  mm/migrate: clear __GFP_RECLAIM to make the migration callback
+    consistent with regular THP allocations
+  mm/migrate: make a standard migration target allocation function
+  mm/mempolicy: use a standard migration target allocation callback
+  mm/page_alloc: remove a wrapper for alloc_migration_target()
+  mm/memory-failure: remove a wrapper for alloc_migration_target()
+  mm/memory_hotplug: remove a wrapper for alloc_migration_target()
+
+ include/linux/hugetlb.h | 41 +++++++++++++++++++++++++++++++--------
+ include/linux/migrate.h | 34 ++++++---------------------------
+ mm/hugetlb.c            | 35 ++-------------------------------
+ mm/internal.h           |  8 +++++++-
+ mm/memory-failure.c     | 15 ++++++---------
+ mm/memory_hotplug.c     | 42 +++++++++++++++++++++-------------------
+ mm/mempolicy.c          | 29 ++++++----------------------
+ mm/migrate.c            | 51 +++++++++++++++++++++++++++++++++++++++++++++++--
+ mm/page_alloc.c         |  8 ++++++--
+ mm/page_isolation.c     |  5 -----
+ 10 files changed, 137 insertions(+), 131 deletions(-)
+
+-- 
+2.7.4
 
