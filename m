@@ -2,101 +2,179 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99329C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF442067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE0820809
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGMUzR (ORCPT
+        id S1726675AbgGMU53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:55:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49219 "EHLO mga07.intel.com"
+        Mon, 13 Jul 2020 16:57:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49428 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgGMUzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:55:17 -0400
-IronPort-SDR: EbeLArq4HkKuXrlRxYpB/WS2qvAXL+eK3WEI4G9/favHK5tDRXMs139ILa9JUq6sYcrvGIBs++
- dPhiTZl6KmIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213545772"
+        id S1726325AbgGMU53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:57:29 -0400
+IronPort-SDR: o3A608ekfjNc5dPH9f0I2Sck/Ef41jagYkUDwBwAsuXkrcaj+D884EHZqyBSy5XNAw0LP17rTH
+ 4hDfmTOTaD1w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213545938"
 X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="213545772"
+   d="scan'208";a="213545938"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 13:55:16 -0700
-IronPort-SDR: 7szJfcXPONfImWsDE0U1Og3oR6gRPzY9NXu27bBlEUhLsXyTzhLMHYMpnGwjaJkpOUSxedhjvm
- WmmYlkewsJUA==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 13:57:25 -0700
+IronPort-SDR: IlhdM+NGDZW1h2RjwG/6dq1Ukn48CdCpzdoF83Xno+A3i0qrsSZf5KveIrUGaUZymvThVIgqFR
+ JV0GNMhmHEZg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="390288665"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.172.11]) ([10.212.172.11])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 13:55:15 -0700
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
-Date:   Mon, 13 Jul 2020 13:55:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="268467769"
+Received: from bcope-mobl.ger.corp.intel.com (HELO localhost) ([10.249.32.223])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Jul 2020 13:57:20 -0700
+Date:   Mon, 13 Jul 2020 23:57:19 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Ard Biesheuvel <ardb@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
+Subject: Re: [PATCH v2] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+Message-ID: <20200713205719.GA1419951@linux.intel.com>
+References: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710093834.su3nsjesnhntpd6d@mobilestation>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 02:29:55PM -0500, Tyler Hicks wrote:
+> Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> TCG_PCClientPCREvent event log header. Also require that
+> TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+> 
+> The TCG PC Client Platform Firmware Profile Specification section 9.1
+> (Family "2.0", Level 00 Revision 1.04) states:
+> 
+>  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+>  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+>  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+> 
+> Section 9.4.5.1 provides this description of
+> TCG_EfiSpecIdEvent.numberOfAlgorithms:
+> 
+>  The number of Hash algorithms in the digestSizes field. This field MUST
+>  be set to a value of 0x01 or greater.
+> 
+> Enforce these restrictions, as required by the above specification, in
+> order to better identify and ignore invalid sequences of bytes at the
+> end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> the means necessary to inform the kernel of the actual event log size so
+> the kernel's event log parsing code should be stringent when parsing the
+> event log for resiliency against firmware bugs. This is true, for
+> example, when firmware passes the event log to the kernel via a reserved
+> memory region described in device tree.
+> 
+> POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
+> device tree properties to describe the memory region used to pass the
+> event log from firmware to the kernel. Unfortunately, the
+> "linux,sml-size" property describes the size of the entire reserved
+> memory region rather than the size of the event long within the memory
+> region and the event log format does not include information describing
+> the size of the event log.
+> 
+> tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
+> "linux,sml-size" property is used. At the end of that function,
+> log->bios_event_log_end is pointing at the end of the reserved memory
+> region. That's typically 0x10000 bytes offset from "linux,sml-base",
+> depending on what's defined in the device tree source.
+> 
+> The firmware event log only fills a portion of those 0x10000 bytes and
+> the rest of the memory region should be zeroed out by firmware. Even in
+> the case of a properly zeroed bytes in the remainder of the memory
+> region, the only thing allowing the kernel's event log parser to detect
+> the end of the event log is the following conditional in
+> __calc_tpm2_event_size():
+> 
+>         if (event_type == 0 && event_field->event_size == 0)
+>                 size = 0;
+> 
+> If that wasn't there, __calc_tpm2_event_size() would think that a 16
+> byte sequence of zeroes, following an otherwise valid event log, was
+> a valid event.
+> 
+> However, problems can occur if a single bit is set in the offset
+> corresponding to either the TCG_PCR_EVENT2.eventType or
+> TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
+> This could confuse the parser into thinking that an additional entry is
+> present in the event log and exposing this invalid entry to userspace in
+> the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
+> problems have been seen if firmware does not fully zero the memory
+> region upon a warm reboot.
+> 
+> This patch significantly raises the bar on how difficult it is for
+> stale/invalid memory to confuse the kernel's event log parser but
+> there's still, ultimately, a reliance on firmware to properly initialize
+> the remainder of the memory region reserved for the event log as the
+> parser cannot be expected to detect a stale but otherwise properly
+> formatted firmware event log entry.
+> 
+> Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+> 
+> * v2
+>   - Rebase the patch on top of the TPM next branch, commit 786a2aa281f4
+>     ("Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")")
+>   - Expand on the technical reasoning for needing strict event
+>     validation in the commit message
+>   - Improve the inline comment explaining the need for detecting
+>     malformed events
+> 
+>  include/linux/tpm_eventlog.h | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> index 64356b199e94..739ba9a03ec1 100644
+> --- a/include/linux/tpm_eventlog.h
+> +++ b/include/linux/tpm_eventlog.h
+> @@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>  
+>  	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+>  
+> -	/* Check if event is malformed. */
+> +	/*
+> +	 * Perform validation of the event in order to identify malformed
+> +	 * events. This function may be asked to parse arbitrary byte sequences
+> +	 * immediately following a valid event log. The caller expects this
+> +	 * function to recognize that the byte sequence is not a valid event
+> +	 * and to return an event size of 0.
+> +	 */
+>  	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
+> -		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
+> +		   sizeof(TCG_SPECID_SIG)) ||
+> +	    !efispecid->num_algs || count != efispecid->num_algs) {
+>  		size = 0;
+>  		goto out;
+>  	}
+> -- 
+> 2.25.1
+> 
 
 
-On 7/10/2020 2:38 AM, Serge Semin wrote:
-> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
->> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
->>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
->>> DMA capabilities non-uniformly redistributed between the device channels.
->>> In order to provide a way of exposing the channel-specific parameters to
->>> the DMA engine consumers, we introduce a new DMA-device callback. In case
->>> if provided it gets called from the dma_get_slave_caps() method and is
->>> able to override the generic DMA-device capabilities.
->>
-> 
->> In light of recent developments consider not to add 'slave' and a such words to the kernel.
-> 
-> As long as the 'slave' word is used in the name of the dma_slave_caps
-> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-> to use some else terminology. If renaming needs to be done, then it should be
-> done synchronously for the whole subsystem.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-What about just calling it dma_device_caps? Consider this is a useful function 
-not only slave DMA will utilize this. I can see this being useful for some of my 
-future code with idxd driver.
-
-> 
-> -Sergey
-> 
->>
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->>
->>
+/Jarkko
