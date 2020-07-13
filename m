@@ -2,100 +2,99 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E0D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:08:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiQgbcp1"
+	by mail.kernel.org (Postfix) with ESMTP id 57AF42072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgGMOIt (ORCPT
+        id S1729910AbgGMOKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729689AbgGMOIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:08:48 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19F3C061755;
-        Mon, 13 Jul 2020 07:08:48 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l12so17341857ejn.10;
-        Mon, 13 Jul 2020 07:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=jFx3xxix0F8ETQCtd//YrBkRHyNpSKt8DUbehu81nM0=;
-        b=hiQgbcp1vIlX39x6+QVdnLHGJ77oa5e1fwPasSS2+sV8zK6rqOW6JJ5Z0pNLWQ3fyH
-         odx7b6feIbBRhv8AmdyCvjpu0Er3BjW++icYFpMcdLmYGXMb77ApdSCFPHQ7PYZx99Pk
-         I8Mkstkgkprd7gWz2X1JGLeP0HTASvNy6CqmbcfoqDEDZQChTyxcj63JpPe2R9IPFeT2
-         /H1agutVggOmAMHTMBd1fVRznJhJOpwoIKMNSwMgPNuLntSS4oJmPdK6ISJkxSSBE833
-         eVGo5j4lAbf7jgdbIbwlcZJzo8zXY3jvhHGQazORWLnEKzUgjRXdpzLO50YpqLvoskPU
-         1YgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=jFx3xxix0F8ETQCtd//YrBkRHyNpSKt8DUbehu81nM0=;
-        b=kD7MaVRXN9n2i/OypgDP4Fmg0zWlPtBbDbm4xk6d5F/0u7tey1nc/1iru5L0kBqTMx
-         pVrWpsPBb3BLC8rj3bYFPAiaDsjO8xLe1RAsaDXbOasi347A+ECN+p8+8IpK+/NI3cAr
-         UNWSpyDTCRGbimiOibjm1RTxUGHkkkHNo6SQaMAVbWogjwwb3mkYgslB65MSotnvLPsn
-         kYnkv3qq464uEN1Z1mlFndLp/6EKm5hYpLYtYDGbYdeiEjBn2vA3J6qndcYDDoHgXRqG
-         9Srp1GU8Ig4b/ItdAF7CQncEtmSb+Z8yEIC1bdrGtJ6fQtUErYIYfReSPo5BB1rWd3Bt
-         AjEw==
-X-Gm-Message-State: AOAM533VKLkC2bSbeMWfgFSc9cbR8HvdSXBqryh0elIdqkaBtxbVXghw
-        dDmACm/OZbSaht8nAp/3Unbnaj2Y9UL7eA==
-X-Google-Smtp-Source: ABdhPJx6tmdfVPPqPXF73jvefigbV9HS5iNfnxRnmUOs/bTLDWDUL20JfnLrxQhjKR+rCuUnUBZ6NA==
-X-Received: by 2002:a17:906:7017:: with SMTP id n23mr56573249ejj.262.1594649326677;
-        Mon, 13 Jul 2020 07:08:46 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id p4sm9800064eja.9.2020.07.13.07.08.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 07:08:45 -0700 (PDT)
-Subject: Re: [RFC PATCH 12/35] r8169: Tidy Success/Failure checks
-To:     Heiner Kallweit <hkallweit1@gmail.com>, helgaas@kernel.org,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-13-refactormyself@gmail.com>
- <e6610668-4d16-cbaa-8513-9ca335b06225@gmail.com>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <c42ddef7-d6b0-158d-8278-80a582d2cca4@gmail.com>
-Date:   Mon, 13 Jul 2020 15:09:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Jul 2020 10:10:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:37166 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729776AbgGMOKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:10:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18D3E30E;
+        Mon, 13 Jul 2020 07:10:45 -0700 (PDT)
+Received: from [10.57.62.178] (unknown [10.57.62.178])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA2E43F7BB;
+        Mon, 13 Jul 2020 07:10:40 -0700 (PDT)
+Subject: Re: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
+ SMMU
+To:     Krishna Reddy <vdumpa@nvidia.com>, Rob Herring <robh@kernel.org>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Yu-Huan Hsu <YHsu@nvidia.com>,
+        Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200708050017.31563-5-vdumpa@nvidia.com> <20200709201348.GA808454@bogus>
+ <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <c2ab2a0d-419d-555f-c124-2cfa1ecb2a81@arm.com>
+Date:   Mon, 13 Jul 2020 15:10:25 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <e6610668-4d16-cbaa-8513-9ca335b06225@gmail.com>
+In-Reply-To: <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for the review.
+On 2020-07-10 21:29, Krishna Reddy wrote:
+> Thanks Rob. One question on setting "minItems: ". Please see below.
+> 
+>>> +allOf:
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - nvidia,tegra194-smmu
+>>> +    then:
+>>> +      properties:
+>>> +        reg:
+>>> +          minItems: 2
+>>> +          maxItems: 2
+> 
+>> This doesn't work. The main part of the schema already said there's only
+>> 1 reg region. This part is ANDed with that, not an override. You need to add an else clause with 'maxItems: 1' and change the base schema to
+>> {minItems: 1, maxItems: 2}.
+> 
+> As the earlier version of base schema doesn't have "minItems: " set, should it be set to 0 for backward compatibility?  Or can it just be omitted setting in base schema as before?
 
-On 7/13/20 3:45 PM, Heiner Kallweit wrote:
->
-> Patches 11 and 12 are both trivial, wouldn't it make sense to merge them?
-> Apart from that: Acked-by: Heiner Kallweit <hkallweit1@gmail.com>
+We've always needed at least 1 "reg" specifier in practice, so I don't 
+think being backwards-compatible with broken DTs is a concern :)
 
-I separated them for easy review, I will merge them in the next version.
+Robin.
 
-- Saheed
-
+> 
+> "else" part to set "maxItems: 1" and setting "maxItems: 2" in base schema is clear to me.
+> 
+> 
+> -KR
+> 
