@@ -2,137 +2,132 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E833C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53328C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0203E206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CMkxtAGi"
+	by mail.kernel.org (Postfix) with ESMTP id 39C9D206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgGMNug (ORCPT
+        id S1729947AbgGMNu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbgGMNue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:50:34 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34C6C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:50:33 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g13so9916337qtv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vlrDlUYUKGml5UggZTrPldaeCrJJpueT2vaP2F68WPk=;
-        b=CMkxtAGi5opCIFDLDXatbH+st+eB5Ijn5qpYvzvMWfQ90tknvaEy3MWVjkhemIW8eG
-         U5/7yxTthqhhWaMF/SpDUkLPGfC8wmS+ZoPJxCjfWU4vs+KvgGotLhm8u/F79uArh6vf
-         1Ds0opoMWMhCcpz6uuq1Ant+g33AgkPod8rY6ovOdjQnv8ZkjVJBbP5HvcAIVonbgi6+
-         940mziew1e1lRJYw16UpuD1W1jd+ofNNjVqHZvyIf8Dxe0jyq4mjBrXTtjfA4Gy45JyL
-         mxhnBofUAvf8q4M4qCdC5UnJ4rTOMRmGIXxgyz/SWGDdf5yxktbW9ueC4//mrcduf65f
-         sCDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vlrDlUYUKGml5UggZTrPldaeCrJJpueT2vaP2F68WPk=;
-        b=AmAF9bMgC5igplKHaPRmKjQ7o9uUCkf+tbIdrRUjrmdPD/zMwr595I5w94Rsa8czCh
-         3PyOScg92B+GtgflN4vM+He63xDY8dmEHEld95Ja9PvytUrtyfa+nSdNAT6JOAw9lDdi
-         n2My9RXJDEkJ3+WSy5mQwxTqQb0k8KTz/cyfBww1otpsLkX8Bbp/ckVgUEdY1An5tc5q
-         J8syqF7c81nxv/bYTKtmh0BFz44sNfpK63OZV3HTY/mGL1U5Z41vaqsw/rKl7iS3LzCK
-         UwizW2vu60anx6gOdf9idB9vLbD+Y6QWPz4EY1WBcibnvHGR/RL6Ly5Od8GWMtkkgFjn
-         qwgQ==
-X-Gm-Message-State: AOAM531wr3XDh9JaiSAIUCVJj25C9ZZXAnrO6bUJFyhXFxYXw99h6x2o
-        60rnH9yWT4IIiSFdmPELYi5HY3asTe3ZWg==
-X-Google-Smtp-Source: ABdhPJwLXMUyr7KJNqN8opqxSnS0V/qOb48twXlcI7xQ5LwDgvA+ZzNgxKc5tOh2DjVsaADIqEy1Gw==
-X-Received: by 2002:ac8:4588:: with SMTP id l8mr85227289qtn.189.1594648232276;
-        Mon, 13 Jul 2020 06:50:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id a185sm18070623qkg.3.2020.07.13.06.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:50:31 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1juyql-009hrJ-6b; Mon, 13 Jul 2020 10:50:31 -0300
-Date:   Mon, 13 Jul 2020 10:50:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Bart Van Assche <bvanassche@acm.org>, dledford@redhat.com,
-        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] SCSI RDMA PROTOCOL (SRP) TARGET: Replace HTTP links with
- HTTPS ones
-Message-ID: <20200713135031.GA25301@ziepe.ca>
-References: <20200709194820.27032-1-grandmaster@al2klimov.de>
- <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
- <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
- <bf85e454-cccc-37ef-d55f-d44a5c5c51df@acm.org>
- <c6b97005-e4c7-0a46-37eb-b5bb187ee919@al2klimov.de>
+        Mon, 13 Jul 2020 09:50:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2458 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729492AbgGMNu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:50:27 -0400
+Received: from lhreml713-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2AD8B535D0E24ED2A09F;
+        Mon, 13 Jul 2020 14:50:25 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml713-chm.china.huawei.com (10.201.108.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 14:50:24 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Mon, 13 Jul 2020 14:50:24 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Topic: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Index: AQHWSI3SBRG6MT5ZnEeiXXWtP5HqWakFTx6ggAAdaICAADIgMP//9UIAgAARyYA=
+Date:   Mon, 13 Jul 2020 13:50:24 +0000
+Message-ID: <9009d75f37a34c7b82ead695bbab147b@huawei.com>
+References: <20200622120527.690-1-shiju.jose@huawei.com>
+ <20200622120527.690-2-shiju.jose@huawei.com>
+ <05c8916f4f85421f871e9cbff112512b@huawei.com>
+ <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
+ <9a5b81441f7149f8bfc4e65a4309a2c5@huawei.com>
+ <CAJZ5v0jXV6MCxoYk7h2vVzvraFeyeWUhEarNK2R02Kb9pscodg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jXV6MCxoYk7h2vVzvraFeyeWUhEarNK2R02Kb9pscodg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.82.58]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6b97005-e4c7-0a46-37eb-b5bb187ee919@al2klimov.de>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 10:15:29PM +0200, Alexander A. Klimov wrote:
-> 
-> 
-> Am 12.07.20 um 21:52 schrieb Bart Van Assche:
-> > On 2020-07-10 11:12, Alexander A. Klimov wrote:
-> > > Am 10.07.20 um 16:22 schrieb Bart Van Assche:
-> > > > On 2020-07-09 12:48, Alexander A. Klimov wrote:
-> > > > > diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
-> > > > > index 4b5d9b792cfa..f63b34d9ae32 100644
-> > > > > +++ b/drivers/infiniband/ulp/srpt/Kconfig
-> > > > > @@ -10,4 +10,4 @@ config INFINIBAND_SRPT
-> > > > >          that supports the RDMA protocol. Currently the RDMA protocol is
-> > > > >          supported by InfiniBand and by iWarp network hardware. More
-> > > > >          information about the SRP protocol can be found on the website
-> > > > > -      of the INCITS T10 technical committee (http://www.t10.org/).
-> > > > > +      of the INCITS T10 technical committee (https://www.t10.org/).
-> > > > 
-> > > > It is not clear to me how modifying an URL in a Kconfig file helps to
-> > > > reduce the attack surface on kernel devs?
-> > > 
-> > > Not on all, just on the ones who open it.
-> > 
-> > Is changing every single HTTP URL in the kernel into a HTTPS URL the best
-> > solution? Is this the only solution? Has it been considered to recommend
-> > kernel developers who are concerned about MITM attacks to install a browser
-> > extension like HTTPS Everywhere instead?
-> I've installed that addon myself.
-> But IMAO it's just a workaround which is (not available to all browsers, not
-> installed by default in any of them and) not even 100% secure unless you
-> tick a particular checkbox.
-> 
-> Anyway the majority of maintainers and Torvalds himself agree with my
-> solution.
-> 
-> I mean, just look at
-> git log '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' \
-> 
-> Or (better) wait for v5.9-rc1 (and all the yet just applied patches it will
-> consist of) *and then* run the command.
-
-Well, if you are going to do this please send just one patch for all
-of drivers/infiniband/ and include/rdma
-
-I don't need to see it broken up any more than that
-
-Jason
+SGkgUmFmYWVsLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBsaW51eC1w
+Y2ktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcGNpLQ0KPm93bmVyQHZnZXIu
+a2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFJhZmFlbCBKLiBXeXNvY2tpDQo+U2VudDogMTMgSnVs
+eSAyMDIwIDE0OjM4DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5D
+YzogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbEBrZXJuZWwub3JnPjsgbGludXgtYWNwaUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LQ0KPnBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0Ow0KPmhlbGdhYXNAa2VybmVsLm9yZzsg
+YnBAYWxpZW44LmRlOyBqYW1lcy5tb3JzZUBhcm0uY29tOw0KPmxlbmJAa2VybmVsLm9yZzsgdG9u
+eS5sdWNrQGludGVsLmNvbTsgZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tOw0KPnpoYW5nbGlndWFu
+Z0BsaW51eC5hbGliYWJhLmNvbTsgYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tOw0K
+PldhbmdrZWZlbmcgKE9TIEtlcm5lbCBMYWIpIDx3YW5na2VmZW5nLndhbmdAaHVhd2VpLmNvbT47
+DQo+anJvZWRlbEBzdXNlLmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT47IHlhbmd5
+aWNvbmcNCj48eWFuZ3lpY29uZ0BodWF3ZWkuY29tPjsgSm9uYXRoYW4gQ2FtZXJvbg0KPjxqb25h
+dGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+OyB0YW54aWFvZmVpIDx0YW54aWFvZmVpQGh1YXdlaS5j
+b20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMS8yXSBBQ1BJIC8gQVBFSTogQWRkIGEgbm90
+aWZpZXIgY2hhaW4gZm9yIHVua25vd24NCj4odmVuZG9yKSBDUEVSIHJlY29yZHMNCj4NCj5PbiBN
+b24sIEp1bCAxMywgMjAyMCBhdCAzOjMzIFBNIFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2Vp
+LmNvbT4gd3JvdGU6DQo+Pg0KPj4gSGkgUmFmYWVsLA0KPj4NCj4+ID4tLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPj4gPkZyb206IFJhZmFlbCBKLiBXeXNvY2tpIFttYWlsdG86cmFmYWVsQGtl
+cm5lbC5vcmddDQo+PiA+U2VudDogMTMgSnVseSAyMDIwIDEyOjE4DQo+PiA+VG86IFNoaWp1IEpv
+c2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj4+ID5DYzogbGludXgtYWNwaUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPj4gPmtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5vcmc7DQo+PiA+
+YnBAYWxpZW44LmRlOyBqYW1lcy5tb3JzZUBhcm0uY29tOyBsZW5iQGtlcm5lbC5vcmc7DQo+PiA+
+dG9ueS5sdWNrQGludGVsLmNvbTsgZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tOw0KPj4gPnpoYW5n
+bGlndWFuZ0BsaW51eC5hbGliYWJhLmNvbTsgYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwu
+Y29tOw0KPj4gPldhbmdrZWZlbmcgKE9TIEtlcm5lbCBMYWIpIDx3YW5na2VmZW5nLndhbmdAaHVh
+d2VpLmNvbT47DQo+PiA+anJvZWRlbEBzdXNlLmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVhd2Vp
+LmNvbT47IHlhbmd5aWNvbmcNCj4+ID48eWFuZ3lpY29uZ0BodWF3ZWkuY29tPjsgSm9uYXRoYW4g
+Q2FtZXJvbg0KPj4gPjxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+OyB0YW54aWFvZmVpIDx0
+YW54aWFvZmVpQGh1YXdlaS5jb20+DQo+PiA+U3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMS8yXSBB
+Q1BJIC8gQVBFSTogQWRkIGEgbm90aWZpZXIgY2hhaW4gZm9yDQo+PiA+dW5rbm93bg0KPj4gPih2
+ZW5kb3IpIENQRVIgcmVjb3Jkcw0KPj4gPg0KPj4gPk9uIE1vbiwgSnVsIDEzLCAyMDIwIGF0IDEw
+OjM1IEFNIFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj4+ID53cm90ZToNCj4+
+ID4+DQo+PiA+PiBIaSBSYWZhZWwsIEhpIEphbWVzLA0KPj4gPj4NCj4+ID4+IENhbiB5b3UgaGVs
+cCB0byBtZXJnZSB0aGlzIHBhdGNoIGJlY2F1c2UgSSBhZGRlZCBhbmQgdGVzdGVkIGFsbCB0aGUN
+Cj4+ID5zdWdnZXN0aW9ucyBmcm9tIEphbWVzLg0KPj4gPg0KPj4gPkkgY291bGQgYXBwbHkgdGhl
+IFsxLzJdIGluIHByaW5jaXBsZSwgYnV0IEkgbmVlZCBhbiBBQ0sgZm9yIHRoZSBbMi8yXQ0KPj4g
+PmZyb20gdGhlIFBDSSBzaWRlLg0KPj4gPg0KPj4gPlRoYXQgc2FpZCwgaXQgbG9va3MgbGlrZSB0
+aGUgWzEvMl0gaXMgYSBKYW1lcycgcGF0Y2ggdGhhdCB5b3UgYXJlDQo+PiA+c2VuZGluZyB3aXRo
+IHNvbWUgY2hhbmdlcyBtYWRlIGJ5IHlvdS4NCj4+IEphbWVzIGFkZGVkIGZvbGxvd2luZyBjaGFu
+Z2VzIG9uIHRvcCBvZiB0aGUgb3JpZ2luYWwgcGF0Y2goVjEwKSBieSBtZSwNCj4+IFsgUmVtb3Zl
+ZCBrZmlmbyBhbmQgZ2hlc19nZGF0YV9wb29sLiBFeHBhbmRlZCBjb21taXQgbWVzc2FnZSBdIEkg
+aGFkDQo+PiBjb25mdXNpb24gaG93IHRoZSBTLW8tYiB0YWcgdG8gYmUgYWRkZWQgZm9yIEphbWVz
+J3MgY2hhbmdlcyBpbiB0aGUgVjExDQo+cGF0Y2ggcG9zdGVkLg0KPg0KPlNvIEphbWVzIHNob3Vs
+ZCBoYXZlIHNlbnQgdGhlIHBhdGNoIHdpdGggaGlzIFMtby1iIHVuZGVyIGl0Lg0KPg0KPllvdSBj
+YW5ub3QgYWRkIFMtby1iIGZvciBzb21lYm9keSBlbHNlIHRvIGFueSBwYXRjaGVzLiAgWW91IGNh
+biBvbmx5IGFkZA0KPnlvdXIgUy1vLWIgdG8gc29tZWJvZHkgZWxzZSdzIHBhdGNoIGlmIHlvdSBo
+YXZlIG1hZGUgYW55IGNoYW5nZXMgb24gdG9wIG9mDQo+dGhlIG9yaWdpbmFsLg0KPg0KPkluIGNh
+c2UgeW91IHdhbnQgdG8gbWFrZSBhIHJlY29yZCBvZiBzb21lYm9keSBlbHNlJ3MgY29udHJpYnV0
+aW9uIHRvIHlvdXINCj5wYXRjaCwgeW91IGNhbiB1c2UgdGhlIENvLWRldmVsb3BlZC1ieSB0YWcu
+DQoNCk9rLiBJIHdpbGwgcmVzZW5kIHRoZSBwYXRjaCB3aXRoIENvLWRldmVsb3BlZC1ieSB0YWcu
+DQoNCj4NCj5UaGFua3MhDQoNClRoYW5rcywNClNoaWp1DQo=
