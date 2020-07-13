@@ -2,196 +2,212 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C49C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B2620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0102075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXkjoQfx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Khv7GQHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgGMOhQ (ORCPT
+        id S1730078AbgGMOne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMOhQ (ORCPT
+        Mon, 13 Jul 2020 10:43:34 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53493 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729689AbgGMOnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:37:16 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1554DC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:37:16 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so5597544pls.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6h4nc4PcIrIUv15+ByYYiTsFlJJxjA7wtMBBwHQX5v0=;
-        b=BXkjoQfx48H2e6nBUni5xxwkx5mRQrvIrPnoDE+R8Qva8vJwI+BS0BPVCEmsH2q+yr
-         I461L736DFMAP+3S4jPi5ynyR4LyBhETmOpXzWTiiqyk4YmxNBwsq0WEd7oO3+VhErRV
-         KgrrHOYFYzLdSRBB2j/v9xLwH3OW5YWoNyrbPKjI29gNCrTPxpsUaYZwSPPZ0Z8pq02M
-         YjiCkTmMqXlm5j4kXJARs4goGChtn3lzj25n4TcqDtII8yUu78H+SZnMSq68BFAFOBon
-         mlZfie0wJtmVDmzqmRxXeiCsHE5S5v1g9drYRQGuj6IdyRPTxwrIzGsxDYLqZJ+yxZWU
-         tFvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6h4nc4PcIrIUv15+ByYYiTsFlJJxjA7wtMBBwHQX5v0=;
-        b=HJ17lgkHnb0Hv8JeF4N4dtXji+ahpGXm5i6nhPBiiyDJV8OavYVIzM8AV9ouYZxcCu
-         npWt8jtzhioaU8T4NAxOkAzb8fIUTZI2psl5waZD7VVq1MQXWaxbyAJfbaewUR8ULNut
-         VejDBZFzwzl10hZ/rFhLJD3qJbr1EUaOwgfR3jh2VK2KNZ23/m4mQ6gutNcWxoEaRMBQ
-         rFRKtPJLi0ytX2KV8LNe3+XnJKAK4K9W2lmkjJt25FGqNxaHBxu8TTWsD3b/k2+Y4K0P
-         pA9myfNur6O3OLLP3gloLzrD/xx+7DPEAxNQqDnrvFdAuCjqreRFtq6xdMtKNYt9m17J
-         Hg2Q==
-X-Gm-Message-State: AOAM530Vw94oCXWM9sbjoM2clL+R2dE5dBBGeKwPD7oEzBXp+pp0FUT+
-        nllJ28qVSYDfmTn6X/rhax4=
-X-Google-Smtp-Source: ABdhPJxlYOPflhEqsOIGOMz/15FQEGURw1GaUxETKRiOmGKPsMhrDUr8X9XyvRWLjRPkZMdC/uXvvQ==
-X-Received: by 2002:a17:902:b113:: with SMTP id q19mr1388plr.170.1594651035151;
-        Mon, 13 Jul 2020 07:37:15 -0700 (PDT)
-Received: from localhost.localdomain ([103.88.59.5])
-        by smtp.googlemail.com with ESMTPSA id b13sm15094820pjl.7.2020.07.13.07.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:37:14 -0700 (PDT)
-From:   Baidyanath Kundu <kundubaidya99@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Baidyanath Kundu <kundubaidya99@gmail.com>
-Subject: [PATCH] Staging: vc04_services: Fix unsigned int warnings
-Date:   Mon, 13 Jul 2020 20:06:53 +0530
-Message-Id: <20200713143653.32332-1-kundubaidya99@gmail.com>
+        Mon, 13 Jul 2020 10:43:33 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200713144332euoutp02f0e1c0150f87a9745b1e4c14fe416ccf~hVwLOBsjz2797427974euoutp02H
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:43:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200713144332euoutp02f0e1c0150f87a9745b1e4c14fe416ccf~hVwLOBsjz2797427974euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594651412;
+        bh=l2lxSqoqhRbb4X9ynL2i6rkNRlCJlfLxzfEp8Lhp6UE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Khv7GQHxGcl1oNaYb80IKm+Iq2S9vWfliopuPMKNnkTCdyxa+MMzxIeUrv0Hz4O23
+         ohUn88mudgrw1inCZ6nY5iot35nZOtPZo6YnYkxRcKmbn2GWOInb6egNNAqhbLQz/S
+         JL3DaRKTvZ2XIYR9gTPqaT+NEDvZ9uCUGbvTR+lU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200713144332eucas1p10094fde0732d18b7b6d4037c81020c76~hVwKyo-Hy1041510415eucas1p1v;
+        Mon, 13 Jul 2020 14:43:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F4.22.05997.4137C0F5; Mon, 13
+        Jul 2020 15:43:32 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200713144331eucas1p24107a30783dacc92887b80cf082be9fb~hVwKWZbq20910209102eucas1p2k;
+        Mon, 13 Jul 2020 14:43:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200713144331eusmtrp21fa81494749fc5dfc3a964686afaec07~hVwKVj3bD1147711477eusmtrp2w;
+        Mon, 13 Jul 2020 14:43:31 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-11-5f0c7314b2b1
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 05.2A.06314.3137C0F5; Mon, 13
+        Jul 2020 15:43:31 +0100 (BST)
+Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200713144330eusmtip1ebe4f1fbd587ac6c7a4eaf92371da882~hVwJpKMJY1706817068eusmtip1Y;
+        Mon, 13 Jul 2020 14:43:30 +0000 (GMT)
+From:   Andrzej Hajda <a.hajda@samsung.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Subject: [PATCH v9 1/4] driver core: add device probe log helper
+Date:   Mon, 13 Jul 2020 16:43:21 +0200
+Message-Id: <20200713144324.23654-2-a.hajda@samsung.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200713144324.23654-1-a.hajda@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHObuP3S0nt7nypJU0CHqQlgadHtSKgksQFmFFUbryqpmbsesj
+        CzKs5iPzkWm6Hmqp6axm85UTH6zwkW2kpqj5yJLALLTUrGGZ8yr99/19f5/f63AoTGohXKiz
+        6jBWo1aGyEkxXtHw27pBxjn4bjQVEajnmZVAwykvAXqeaSBQ+uAQiWYqUjH0bnKURFcfGUjU
+        MTWMoeavHTiKT80TIuOnTgK1m+6RyJxeA9DTV31CZE46ge5PpGMKmmnvbMWY0a7rQqbmZw7O
+        VOn6hMzduCyCMerjSaYppU3A1N1/ImQGbjQKmNK8aCapTA+Y+ptpODNuXHlQcly8w58NORvB
+        ajx2+omD6gxxgvOmpRemc2rxK6BamgAoCtKbYfddRQIQU1K6EEBr0hjggwkAc43fST4YBzDf
+        nI8nANFcRVvbZ4JPPAbQ+GaBmi0Zqikn7BRJr4V/SrtJu5bRXjDZohPaIYy24bAjVjsHOdEK
+        WBL7bg7C6dUwdaoYs2sJjeAHs25+nBssLqnH7MuK6K0wO+movQ+kvwnhg+qPQp7ZC9umWwW8
+        doJfGsvm/eVwpip73o+GA4XXML44DsDykiqMT2yHvVYbaR+AzW5tMHnw9m4Y2zyC84/kCLu+
+        Lbbb2Ky8VXEH420JjNNKeXoVHLCUzzd0hvlvJ0leM7DgdebcJVI6EcCGmegU4Kb7PysHAD1w
+        ZsM5VSDLearZSHdOqeLC1YHuZ0JVRjD7yVr+Nk68AKbp02ZAU0DuIIHeDr5SQhnBRanMAFKY
+        XCbZY2k5JZX4K6MusppQX014CMuZgSuFy50lXg+HT0rpQGUYe45lz7OahayAErlcAWV0kDXK
+        p7lojWjwlM8vKvdIb2Vk0VP5kgBlQViAQi/rF/uNypYomoqD98bLI/AYT1I7Ol4Ymda/pceW
+        MWRxFSdmOdUeOlD6I/Cky3vH0NsDhhWyzku9+WmX91cme7U4TTzxWO+9zFubmbGo6rZfj9g0
+        Fvw9Zuywbdsun33o2OUROc4FKTetwzSc8h9uQOSkYAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7rCxTzxBvNXq1jcWneO1eLlhMOM
+        FhtnrGe1mPrwCZvF/20TmS2ufH3PZtG8eD2bxdXvL5ktTr65ymLROXEJu8Wmx9dYLS7vmsNm
+        cWjqXkaLtUfuslsc6ou2mPtlKrODgMflaxeZPd7faGX32PttAYvHzll32T1md8xk9di0qpPN
+        48SES0we++euYfe4332cyWPzknqPvi2rGD0O9E5m8fi8SS6AN0rPpii/tCRVISO/uMRWKdrQ
+        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY//6DqaCXWIVfxbsY2lg3C3UxcjJ
+        ISFgInHp0jPWLkYuDiGBpYwSHw5dZYNIiEvsnv+WGcIWlvhzrYsNougTo8Tsk2vYQRJsApoS
+        fzffBGsQETCW6D87ix2kiFmgjVVi7vknYEXCAg4SG9qvgBWxCKhKTPy+Gmwqr4CFxINDs1gg
+        NshLrN5wACjOwcEpYCkxvy8cxBQCKjnx1nMCI98CRoZVjCKppcW56bnFhnrFibnFpXnpesn5
+        uZsYgZG17djPzTsYL20MPsQowMGoxMMr4c8TL8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrU
+        ovz4otKc1OJDjKZAJ01klhJNzgdGfV5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTU
+        gtQimD4mDk6pBsbMW6GftLkONjmathxTS4ual39tg77Gnefl9ZX7bDiZbvifebZ45f/So54J
+        K+6uS/l4KOLq34WCRcvKZ31IXmCWXbVPrtdB77vH7Hiri95ua492tO4WbFhw9ZTtdxnHhJV9
+        Bz8eX7ZoBtvvs9M6Pn5NC2ta+i2pLYvV4lvj3Td/vxw9PV1ovr2iEktxRqKhFnNRcSIAvpDW
+        98ICAAA=
+X-CMS-MailID: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200713144331eucas1p24107a30783dacc92887b80cf082be9fb
+References: <20200713144324.23654-1-a.hajda@samsung.com>
+        <CGME20200713144331eucas1p24107a30783dacc92887b80cf082be9fb@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the checkpatch.pl warning:
+During probe every time driver gets resource it should usually check for
+error printk some message if it is not -EPROBE_DEFER and return the error.
+This pattern is simple but requires adding few lines after any resource
+acquisition code, as a result it is often omitted or implemented only
+partially.
+dev_err_probe helps to replace such code sequences with simple call,
+so code:
+	if (err != -EPROBE_DEFER)
+		dev_err(dev, ...);
+	return err;
+becomes:
+	return dev_err_probe(dev, err, ...);
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-
-Signed-off-by: Baidyanath Kundu <kundubaidya99@gmail.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- .../staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c   | 4 ++--
- .../vc04_services/include/linux/raspberrypi/vchiq.h       | 8 ++++----
- .../vc04_services/interface/vchiq_arm/vchiq_core.c        | 6 +++---
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c     | 4 ++--
- 4 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/base/core.c    | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  3 +++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-index 8c9ddd86fbbd..292fcee9d6f2 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-@@ -9,7 +9,7 @@
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 67d39a90b45c..3a827c82933f 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3953,6 +3953,48 @@ define_dev_printk_level(_dev_info, KERN_INFO);
  
- struct bcm2835_audio_instance {
- 	struct device *dev;
--	unsigned service_handle;
-+	unsigned int service_handle;
- 	struct completion msg_avail_comp;
- 	struct mutex vchi_mutex;
- 	struct bcm2835_alsa_stream *alsa_stream;
-@@ -91,7 +91,7 @@ static int bcm2835_audio_send_simple(struct bcm2835_audio_instance *instance,
+ #endif
  
- static enum vchiq_status audio_vchi_callback(enum vchiq_reason reason,
- 					     struct vchiq_header *header,
--					     unsigned handle, void *userdata)
-+					     unsigned int handle, void *userdata)
++/**
++ * dev_err_probe - probe error check and log helper
++ * @dev: the pointer to the struct device
++ * @err: error value to test
++ * @fmt: printf-style format string
++ * @...: arguments as specified in the format string
++ *
++ * This helper implements common pattern present in probe functions for error
++ * checking: print debug or error message depending if the error value is
++ * -EPROBE_DEFER and propagate error upwards.
++ * It replaces code sequence:
++ * 	if (err != -EPROBE_DEFER)
++ * 		dev_err(dev, ...);
++ * 	else
++ * 		dev_dbg(dev, ...);
++ * 	return err;
++ * with
++ * 	return dev_err_probe(dev, err, ...);
++ *
++ * Returns @err.
++ *
++ */
++int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
++{
++	struct va_format vaf;
++	va_list args;
++
++	va_start(args, fmt);
++	vaf.fmt = fmt;
++	vaf.va = &args;
++
++	if (err != -EPROBE_DEFER)
++		dev_err(dev, "error %d: %pV", err, &vaf);
++	else
++		dev_dbg(dev, "error %d: %pV", err, &vaf);
++
++	va_end(args);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(dev_err_probe);
++
+ static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
  {
- 	struct bcm2835_audio_instance *instance = vchiq_get_service_userdata(handle);
- 	struct vc_audio_msg *m;
-diff --git a/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h b/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-index cb9ef9a4150b..18d63df368c4 100644
---- a/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-+++ b/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-@@ -84,11 +84,11 @@ extern enum vchiq_status vchiq_open_service(struct vchiq_instance *instance,
- extern enum vchiq_status vchiq_close_service(unsigned int service);
- extern enum vchiq_status vchiq_use_service(unsigned int service);
- extern enum vchiq_status vchiq_release_service(unsigned int service);
--extern void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header);
-+extern void vchiq_msg_queue_push(unsigned int handle, struct vchiq_header *header);
- extern void           vchiq_release_message(unsigned int service,
- 	struct vchiq_header *header);
--extern int vchiq_queue_kernel_message(unsigned handle, void *data,
--				      unsigned size);
-+extern int vchiq_queue_kernel_message(unsigned int handle, void *data,
-+				      unsigned int size);
- extern enum vchiq_status vchiq_bulk_transmit(unsigned int service,
- 	const void *data, unsigned int size, void *userdata,
- 	enum vchiq_bulk_mode mode);
-@@ -98,6 +98,6 @@ extern enum vchiq_status vchiq_bulk_receive(unsigned int service,
- extern void *vchiq_get_service_userdata(unsigned int service);
- extern enum vchiq_status vchiq_get_peer_version(unsigned int handle,
-       short *peer_version);
--extern struct vchiq_header *vchiq_msg_hold(unsigned handle);
-+extern struct vchiq_header *vchiq_msg_hold(unsigned int handle);
+ 	return fwnode && !IS_ERR(fwnode->secondary);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 15460a5ac024..6b2272ae9af8 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -964,6 +964,9 @@ void device_link_remove(void *consumer, struct device *supplier);
+ void device_links_supplier_sync_state_pause(void);
+ void device_links_supplier_sync_state_resume(void);
  
- #endif /* VCHIQ_H */
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 1bc4ce577614..af64cde82d36 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2275,7 +2275,7 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
- 	return VCHIQ_ERROR;
- }
- 
--void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header)
-+void vchiq_msg_queue_push(unsigned int handle, struct vchiq_header *header)
- {
- 	struct vchiq_service *service = find_service_by_handle(handle);
- 	int pos;
-@@ -2293,7 +2293,7 @@ void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header)
- }
- EXPORT_SYMBOL(vchiq_msg_queue_push);
- 
--struct vchiq_header *vchiq_msg_hold(unsigned handle)
-+struct vchiq_header *vchiq_msg_hold(unsigned int handle)
- {
- 	struct vchiq_service *service = find_service_by_handle(handle);
- 	struct vchiq_header *header;
-@@ -3214,7 +3214,7 @@ vchiq_queue_message(unsigned int handle,
- 	return status;
- }
- 
--int vchiq_queue_kernel_message(unsigned handle, void *data, unsigned size)
-+int vchiq_queue_kernel_message(unsigned int handle, void *data, unsigned int size)
- {
- 	enum vchiq_status status;
- 
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index a075cd63da7f..dc767730db43 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -163,7 +163,7 @@ struct mmal_msg_context {
- };
- 
- struct vchiq_mmal_instance {
--	unsigned service_handle;
-+	unsigned int service_handle;
- 
- 	/* ensure serialised access to service */
- 	struct mutex vchiq_mutex;
-@@ -548,7 +548,7 @@ static void bulk_abort_cb(struct vchiq_mmal_instance *instance,
- /* incoming event service callback */
- static enum vchiq_status service_callback(enum vchiq_reason reason,
- 					  struct vchiq_header *header,
--					  unsigned handle, void *bulk_ctx)
-+					  unsigned int handle, void *bulk_ctx)
- {
- 	struct vchiq_mmal_instance *instance = vchiq_get_service_userdata(handle);
- 	u32 msg_len;
++extern __printf(3, 4)
++int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
++
+ /* Create alias, so I can be autoloaded. */
+ #define MODULE_ALIAS_CHARDEV(major,minor) \
+ 	MODULE_ALIAS("char-major-" __stringify(major) "-" __stringify(minor))
 -- 
 2.17.1
 
