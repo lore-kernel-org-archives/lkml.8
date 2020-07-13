@@ -2,124 +2,159 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFCA20899
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC23A20B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iAFVfplI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JaNR1TLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGMWY3 (ORCPT
+        id S1726859AbgGMWYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
+        Mon, 13 Jul 2020 18:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgGMWY2 (ORCPT
+        with ESMTP id S1726358AbgGMWYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:24:28 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17BDC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:24:28 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ch3so591726pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:24:28 -0700 (PDT)
+        Mon, 13 Jul 2020 18:24:46 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02279C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:24:46 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id c139so13862245qkg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VTtkH3MGYL+kpdst+fFlW3U8UfnKxPxTFUgVE1D6ZEY=;
-        b=iAFVfplIK2+wAu/OomucjOsTbnZuYA67YGKTgwYn+qbg5vYX9QCLJXafJ4TvxpIivJ
-         eU1635K7cglWpc8uRvkND6lI2cvX8j3a7XI4/+gDGj5ykhrR07bKBmm3/s1wKRpO514w
-         lXb0orYT16Iu2Gjnkyy3ivQZekDoVa5OH4XoEr3Ox19DgGh/wXrB86bTohUtYeVUlJsq
-         HQOjNVpK+8PN28dHVv3xpg/yMpwI9wS/xPZU7C5vazOM0PcZaXinvyzGEFRbLN8N0i9Y
-         lY8okoCQi4YMHmKwFoG8+C5z5cm5OwucWbv9XXz7u+BXaeeawtbCu+9s5Sa64Q4PbPhb
-         Gywg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=OcHsM2BvDJutedC1r/JVX8yoOxfS5PqyzzhHipn6B9A=;
+        b=JaNR1TLSKZ1KaEsgcdcLgp0I8nK+ZjumVOIMW8Hlc2bTvH20yd13nv5rKA1NOBNCXa
+         ho6iUoOSbxkFc3KdcwwFzzhuynWrfY8Fr5bnFExJPPir5EX7bm7wgYZVpIO6O3Ec7dY6
+         n1FqlBf/yRFC2XfQ/eqbcQCQqaubqUGSJ8fPEA0yYVhiwfQ8b4M8zqLB5eA6rn2JnNfZ
+         T8dOjaoKqAi5G3qcf6yhQivmskrCoBomsaR11sO1CYo10Ya/KKLnR5ZCB2fl1mPX+Xy7
+         BKgNP7Wj2Ce3wz/NW9PlTc7UoPLbJT0ppESPCvgkzws7shU+PDoThWTK6/Yn0qMNH/ZC
+         7J3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VTtkH3MGYL+kpdst+fFlW3U8UfnKxPxTFUgVE1D6ZEY=;
-        b=LAa87NMoOqls8DeSJNckqA7eOEQVfcsFIyqhNaZPAD9vDJZTubF7SOpTPNBNPXzu2o
-         34DRHv8AVhPX16yNbbQGl1KLACOtsydz3hG8z08C+7bY+PCgyknI2X7pMiMlu2GDE7CH
-         mekZ+rCgS/+RQe/8q1qZ8xAb6+4Hbk2W06YcQsbfYHkzHSkACcCjaqXY1H5ZaTF7vR+z
-         qo8o0d+nIiW2azzwC2YXZvZQuPq6Rf5AdnUuLPbxe7qHlsPY+KRK/dCQYQjhx/3m57M3
-         Y/r/oWdCnqDW8B/xIUJs1KmbPho8SW8w2trCIfP7DnkhLsMe9f2YtOmgvW5LMQb4nD2Y
-         aMfA==
-X-Gm-Message-State: AOAM531HKMFBPtf8XTQuRyymKoX+FsJsJxOvO0pDRVul7nyGE74YJkD1
-        vL6D+b/o5kaQiKBoYeqvlO69Wff32tn/6bF6ySnPOw==
-X-Google-Smtp-Source: ABdhPJzZIQDm121xN3wRxyEptFl4bzQHqgsmaNn/Bk73TzwN9a7cXEVkIAMdBmPJAt8Xw0WF2dTkqyqSywU+VaPn1xs=
-X-Received: by 2002:a17:902:a50c:: with SMTP id s12mr1371343plq.119.1594679068150;
- Mon, 13 Jul 2020 15:24:28 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=OcHsM2BvDJutedC1r/JVX8yoOxfS5PqyzzhHipn6B9A=;
+        b=gLf65f61NSWsw8p6cf08AwXqECyAlSnUjLPsfjlx4pzETtrtht/Qar5cmuZD6olVdi
+         Hqj/W6X0Tbva9WCVR844SbH/3OAltOrzUumWhgECokR+OtNe3nQDYqELhms5J14khDd5
+         +7D97QR61eVpI1SBMwKItgWCu+6LpxRHCle8XB883zQSSDXUw7poZ0bu9pSJrTJLnwHh
+         7RStqO7cn/t9zx9pMV6bHenO2AjUidG1Z7ADLvWT7fIocl9W2Phy/UE703cXgBMyf7R/
+         cFOWZY32SM9YzA9CffrmTC9oiOvT9BEK8UJszAY3ZFYN63XDAfHOeSb72Y+iFPQG4Txf
+         NIRw==
+X-Gm-Message-State: AOAM532/jzYrdC+rQW9O0t2t0PdeHDoty7lqw5nQKOXnEXSwbJFgRtAj
+        hdnxcciQLViA0ttJSp5M9OfTOVVzU6MxhBlJwAs=
+X-Google-Smtp-Source: ABdhPJzIBhaNuCKwKcWrv7zpOoTN6FH3FI/H6EL1Q9xcFhfLzY8lI+cZI4JnEdCE/gbdEzrIDbPfRFI0JZgpGMSxSVQ=
+X-Received: by 2002:a37:7dc3:: with SMTP id y186mr1598119qkc.160.1594679085217;
+ Mon, 13 Jul 2020 15:24:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
- <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
-In-Reply-To: <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 13 Jul 2020 15:24:16 -0700
-Message-ID: <CAKwvOdmGtZtqF5f-5x0n4GNCWLOnrk2r6e3X2XHGmoOL7f7u0g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] x86: Clean up percpu operations
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Alistair Delva <adelva@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+From:   Nathan Royce <nroycea+kernel@gmail.com>
+Date:   Mon, 13 Jul 2020 17:24:34 -0500
+Message-ID: <CALaQ_hosk7627nTx97+xSSsGiN-qt=pTGNW4DZn4TOcAeRSC8g@mail.gmail.com>
+Subject: F2FS Segmentation Fault
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 12:36 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Jun 1, 2020 at 2:00 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
-> > >
-> > > The core percpu operations already have a switch on the width of the
-> > > data type, which resulted in an extra amount of dead code being
-> > > generated with the x86 operations having another switch.  This patch set
-> > > rewrites the x86 ops to remove the switch.  Additional cleanups are to
-> > > use named assembly operands, and to cast variables to the width used in
-> > > the assembly to make Clang happy.
-> >
-> > Thanks for all of the work that went into this series.  I think I've
-> > reviewed all of them.
-> > With this series plus this hunk:
-> > https://github.com/ClangBuiltLinux/continuous-integration/blob/master/patches/llvm-all/linux-next/x86/x86-support-i386-with-Clang.patch#L219-L237
-> > I can build and boot i386_defconfig with Clang! So for the series:
-> >
-> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
->
-> tglx, Ingo, Boris, Linus,
-> Do you all have thoughts on this series?  I can understand "let
-> sleeping dogs lie" but some Android folks are really interested in
-> i386 testing, and randconfigs/allnoconfigs are doing i386 builds which
-> are currently broken w/ Clang. This series gets us closer to having
-> test coverage of this ISA with another toolchain, FWIW.
+I won't re-format unless I hear something within a few days in case
+you want me to try something.
 
-I'm trying to organize an LLVM micro conference at plumbers.  I think
-a session on "clang and remaining i386 blockers" might be of interest,
-which would cover why the existing code pattern is problematic for
-compiler portability.  This series in particular would be brought up.
+Preface: There was a notable power outage a couple of nights ago.
+When the power returned, everything seemed fine. No issues during
+bootup or anything.
+Then today, I went to open an application and my system started
+schitzing out with programs suddenly closing(/crashing?).
+I switched tty and tried to log in but was unable to even be allowed
+to enter in my password.
+I switched to another and tried logging in as root which succeeded (somehow).
+I looked at the journal and saw an entry saying something about
+/bin/login not being a valid exec format.
+I went to reboot and when it got to fsck part of initramfs, it failed
+and I was kicked to root.
+I ran fsck and saw a bunch of issues, but I guess nothing could get
+resolved enough to let me reboot.
+Oh, in case you're wondering, my / (system) is on a 64GB SDHC card.
+I just happened to also have an older / system on my mechanical drive
+using BTRFS which I could boot to (which I'm on now).
+I ran fsck from this older system and it seems I got the same results:
 
-Are you all planning on attending plumbers this year?  Might such a
-session be of interest?
+*****
+Info: Fix the reported corruption.
+Info: Force to fix corruption
+Info: Segments per section = 1
+Info: Sections per zone = 1
+Info: sector size = 512
+Info: total sectors = 124168159 (60628 MB)
+Info: MKFS version
+  "Linux version 5.1.15.a-1-hardened (builduser@slave-1) (gcc version
+9.1.0 (GCC)) #1 SMP PREEMPT Thu Jun 27 11:33:04 CEST 2019"
+Info: FSCK version
+  from "Linux version 4.19.13-dirty (userName@computerName) (gcc
+version 8.2.1 20181127 (GCC)) #2 SMP PREEMPT Mon Dec 31 00:15:50 CST
+2018"
+    to "Linux version 4.19.13-dirty (userName@computerName) (gcc
+version 8.2.1 20181127 (GCC)) #2 SMP PREEMPT Mon Dec 31 00:15:50 CST
+2018"
+Info: superblock features = 0 :
+Info: superblock encrypt level = 0, salt = 00000000000000000000000000000000
+Info: total FS sectors = 124168152 (60628 MB)
+Info: CKPT version = 63f2b4a
+Info: checkpoint state = 55 :  crc fsck compacted_summary unmount
 
-Otherwise, is there any additional feedback on this series or is it good to go?
--- 
-Thanks,
-~Nick Desaulniers
+NID[0x18eca] is unreachable, blkaddr:0xcf1d9d3c
+NID[0x18ecb] is unreachable, blkaddr:0x5db5f91f
+NID[0x18ecc] is unreachable, blkaddr:0x4653d
+NID[0x18ee3] is unreachable, blkaddr:0x144dc401
+NID[0x18ee4] is unreachable, blkaddr:0x558cfba9
+NID[0x18ee5] is unreachable, blkaddr:0x45553
+NID[0x18f78] is unreachable, blkaddr:0x560555ac
+NID[0x18f79] is unreachable, blkaddr:0x58cccb0d
+NID[0x18f7a] is unreachable, blkaddr:0x53d84
+NID[0x4d621] is unreachable, blkaddr:0x4fc1d
+NID[0x4d622] is unreachable, blkaddr:0x4fc1e
+NID[0x7fa32] is unreachable, blkaddr:0x20b0ca3a
+NID[0x7fa33] is unreachable, blkaddr:0xf71b60
+[FSCK] Unreachable nat entries                        [Fail] [0xd]
+[FSCK] SIT valid block bitmap checking                [Fail]
+[FSCK] Hard link checking for regular file            [Ok..] [0x4f6]
+[FSCK] valid_block_count matching with CP             [Fail] [0x736fcb]
+[FSCK] valid_node_count matcing with CP (de lookup)   [Fail] [0x70327]
+[FSCK] valid_node_count matcing with CP (nat lookup)  [Ok..] [0x70334]
+[FSCK] valid_inode_count matched with CP              [Fail] [0x6f09e]
+[FSCK] free segment_count matched with CP             [Ok..] [0x3bfc]
+[FSCK] next block offset is free                      [Ok..]
+[FSCK] fixing SIT types
+[FSCK] other corrupted bugs                           [Fail]
+
+Do you want to restore lost files into ./lost_found/? [Y/N] Y
+Segmentation fault
+*****
+
+*****
+       Message: Process 3425 (fsck.f2fs) of user 0 dumped core.
+
+                Stack trace of thread 3425:
+                #0  0x000055f8515739c8 n/a (fsck.f2fs)
+                #1  0x000055f851575261 n/a (fsck.f2fs)
+                #2  0x000055f851572c56 n/a (fsck.f2fs)
+                #3  0x000055f85156a3f0 n/a (fsck.f2fs)
+                #4  0x00007f51420feee3 __libc_start_main (libc.so.6)
+                #5  0x000055f85156a95e n/a (fsck.f2fs)
+*****
+
+So if you want more information or need me to try something, let me
+know soon if you would. Otherwise, I'll just be reformatting my card
+in a few days.
+It just could've been a fluke occurred because of the power outage but
+didn't manifest itself until today.
