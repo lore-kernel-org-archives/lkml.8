@@ -2,118 +2,68 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A747C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3966AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F48D2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1497B206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594629866;
-	bh=KUdb4nh41mZvjlnlcASUhBfHECGZowa9Yivz08Vx3c0=;
+	s=default; t=1594629872;
+	bh=nCn6KLtowL+Z2VGZqiDZtOX/k4cPWGWYXEH+Yjoe2ws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aOYv7mVZsiXnheGhXtDXXU1a2SpT9AgFMTgWVfnhOR7y5fDoseTL4fnKJMoAFbMN8
-	 37L6ggPOuqsdhwI72vL/ZBOx48DMxiXF/VhwbVwXaBy5r333IOcGhbvrluKtHSOqsg
-	 EKugLzTo18jS/BCsjgYmm8gb9rCBXL0w7UZjIFjs=
+	b=DRbESNGGWGHLHPqvD/kImvtoubrUilqTEJy+Li1Qq6UqOp2IZEZIddj1OqynT4HhB
+	 i/nlXd2YHRKuYI3T/8tAs2rbOWiNHumKTLWkpoQpcPP09VdzxY+uoQxExLciwpNwb/
+	 cVHUoEHqNk75DmPmos0fAF+4PNA9X8iY5tAxYBqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgGMIoZ (ORCPT
+        id S1729437AbgGMIoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 04:44:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgGMIoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:44:23 -0400
-Received: from localhost (unknown [84.241.194.92])
+        id S1725830AbgGMIo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:44:29 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9A82065D;
-        Mon, 13 Jul 2020 08:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A4A2065D;
+        Mon, 13 Jul 2020 08:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594629863;
-        bh=KUdb4nh41mZvjlnlcASUhBfHECGZowa9Yivz08Vx3c0=;
+        s=default; t=1594629869;
+        bh=nCn6KLtowL+Z2VGZqiDZtOX/k4cPWGWYXEH+Yjoe2ws=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VIlENMKrtnWBKZlCO6EVwM2WrgbGAkj8finWzrL4GnFY8kjCPVIKika9QBfPMkyPk
-         wZatrsBZv9oRcEz1zY2xiRtUnbM+/7Lx0VPDIQY5jOVbfhuU0Vv6WuGzYpuVxQ0ESM
-         RxDvujEwgIY+t7D2H5dbk8Egv3Fkb1GQ/djKpTvE=
-Date:   Mon, 13 Jul 2020 10:44:20 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v2 5/5] power: supply: core: supply battery soc with
- decimal form
-Message-ID: <20200713084420.GE215949@kroah.com>
-References: <cover.1594612572.git.huangqiwu@xiaomi.com>
- <d7b0e268892b6143e537cf823d3a74214f6e6b1c.1594612572.git.huangqiwu@xiaomi.com>
+        b=dkRcHsIjd0l4Dp7Du9NEDGIXb+ThB2tm8kUa68ZIHPt+4BoIEYsKcb9VsxmDRHFxP
+         5ImgOe+Kfe7Yfl+SkKZWUq7JFvcWPx9kT7xCEHDFHCAqCsdcsNMp+3Tw0sr2N/PoVp
+         E/+2z4P/G86rNBw9orB026wOc7rBQCkjlwu6G8/Q=
+Date:   Mon, 13 Jul 2020 16:44:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     s.hauer@pengutronix.de, arnd@arndb.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: imx_v6_v7_defconfig: Support i.MX8MM
+Message-ID: <20200713084424.GF15718@dragon>
+References: <1594347053-30361-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d7b0e268892b6143e537cf823d3a74214f6e6b1c.1594612572.git.huangqiwu@xiaomi.com>
+In-Reply-To: <1594347053-30361-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 12:03:40PM +0800, Qiwu Huang wrote:
-> From: Qiwu Huang <huangqiwu@xiaomi.com>
+On Fri, Jul 10, 2020 at 10:10:53AM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Broadcast battery soc with decimal form.
-> soc_decimal is the decimal part of battery soc.
-> soc_decimal_rate is update frequency of decimal
-> part of battery soc.
-> We want to report such as 0.01 to 99.99% to
-> user space to improve user experience
-> when do very quick charging.
+> i.MX8MM is built with AArch64 hardware, this is to support
+> it could run in Aarch32 mode with clock and pinctrl driver enabled.
 > 
-> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 20 ++++++++++++++++++++
->  drivers/power/supply/power_supply_sysfs.c   |  2 ++
->  include/linux/power_supply.h                |  2 ++
->  3 files changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index f4234ba1684a..bcc8ccad8163 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -349,6 +349,26 @@ Description:
->  		Access: Read
->  		Valid values: Represented in microvolts
->  
-> +What:		/sys/class/power_supply/<supply_name>/soc_decimal,
-> +Date:		Jul 2020
-> +Contact:	jiangfei1@xiaomi.com
-> +Description:
-> +		Broadcast battery soc with decimal form.
-> +		soc_decimal is the start decimal part of battery soc.
-> +
-> +		Access: Read
-> +		Valid values: 0 - 100
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-How can "100" be a valid decimal form here if this is a percent?
-
-
-> +
-> +What:		/sys/class/power_supply/<supply_name>/soc_decimal_rate,
-> +Date:		Jul 2020
-> +Contact:	jiangfei1@xiaomi.com
-> +Description:
-> +		Broadcast battery soc with decimal form.
-> +		soc_decimal_rate is the decimal part of battery soc update freqency.
-> +
-> +		Access: Read
-> +		Valid values: 0 - 100
-
-I think you need to document this a lot better as I still don't really
-understand what this is for or how to use it or report it.
-
-And what does "soc" mean here?
-
-thanks,
-
-greg k-h
+Applied, thanks.
