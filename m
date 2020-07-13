@@ -2,141 +2,131 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EDAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1032220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5483420773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppdYDAQa"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oxMYpFiX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgGMMWh (ORCPT
+        id S1729788AbgGMMXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729594AbgGMMWh (ORCPT
+        Mon, 13 Jul 2020 08:23:03 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:18062 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:22:37 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B7EC061755;
-        Mon, 13 Jul 2020 05:22:37 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so5935903pge.12;
-        Mon, 13 Jul 2020 05:22:37 -0700 (PDT)
+        Mon, 13 Jul 2020 08:23:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0RMDbjaPD2Rgozcz6NNzoKM+l4091XQ9SNeTMWL0Djo=;
-        b=ppdYDAQatitZqfG1im4awtx1FD2ZWYLFRQ4caN3iGHDAnmexJuv1UdgtD7sIQ56iig
-         GS/uH9soZQseDl03wLejO4gbd9nP6oTvbTvKbN54kvarJ7E1iVirTNKwOj1t1GjaupEj
-         hVknIgqFmpYo9Ojr5PVhnroM9s39cUtPzXId76W1sJy/sVyKCRPyNv18WIHyEJ0/3vIi
-         7RCo4m1ru+NSmfsoysQT641FbqJnxQ3Z+eg9QLI//y3ihz8zHTfsYtnyk9jw3PT8PB7Z
-         ttolZHnBmeAHYC494ciIuw0GwhFMyWZU6BmUMNxD4bvTB69KMPSTlGU0Z7vuR5IB5Kh/
-         SSqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0RMDbjaPD2Rgozcz6NNzoKM+l4091XQ9SNeTMWL0Djo=;
-        b=ZFVdQ53uVh7rMJY8Nyi+Q+IYOYNsQ+KuSWzriY2ZkqgoKdEelpBqUkNukvTMw9RWWF
-         FE77sIgaCSkjVCcC9fh/JXJcuoTFMLdGRlMek+URE0AKUH2bSUrR/mPFwKU4fA6xCoAT
-         hrbkRJwAympv/0IDvysWEqgdj395SB96i21CJR8BZ7QEJz/+W158+svj1G37u+bwU1s1
-         1HXJTIjIHYB5LIOrqXZeNotZasZzCEQaELBDoXQMqt6zLmsB+MjsATXyycnGaZXLAg8P
-         yDTagxkzjYYdp9ReJ30g5QjzsA6r3Chw1e9Ys7BuRVCzkARVWkB7yltfiPxfRYUql1xt
-         NDwA==
-X-Gm-Message-State: AOAM5305uigY8zc3DHOc6UhOHc/IqjxH+qIxpeDy14xOtv64vgNgJg9Y
-        EBNd5DYg/agBpiN5MLC0W4Gz01PZvVVBZw==
-X-Google-Smtp-Source: ABdhPJw8t3H2TIVAP/iCVBWVk67F2HutQVfsdtkW++vfH6Goo3lwW01UFXj5eDxTuDeQuD0JRh2yLw==
-X-Received: by 2002:a63:fc43:: with SMTP id r3mr69027673pgk.423.1594642956799;
-        Mon, 13 Jul 2020 05:22:36 -0700 (PDT)
-Received: from blackclown ([103.88.82.220])
-        by smtp.gmail.com with ESMTPSA id z11sm14572417pfg.169.2020.07.13.05.22.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jul 2020 05:22:36 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:52:22 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org
-Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] staging: qlge: qlge_ethtool: Remove one byte memset.
-Message-ID: <b5eb87576cef4bf1b968481d6341013e6c7e9650.1594642213.git.usuraj35@gmail.com>
-References: <cover.1594642213.git.usuraj35@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594642983; x=1626178983;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=TwoQ8bDC2XXe2mOguI1vCZOlb/uARXgWALhiWYIJob0=;
+  b=oxMYpFiXp+a6PMcba4654bKBdZd2uOq8blBEdDz6OK2bx5Sl9lkCbiPN
+   P6TnxTpimqkOKdEryqEklHz1dH6MhnatZlS+YwcbpGzPOKPzbZXvBBnFx
+   /YCqrKlYOShY3bSS/nlkJRHcgyB4wUAVUmwYsnwDVeG+hrOr7MuqFQ2n+
+   g=;
+IronPort-SDR: +PigRIvLE03mwAyDt7JldlA+KMu5Cs8Tlez+JFwI3u3KzRMYY5FIriCJixMJRrTFgRcJ0OKGGU
+ Mb4S/MyhrDvg==
+X-IronPort-AV: E=Sophos;i="5.75,347,1589241600"; 
+   d="scan'208";a="42967769"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 13 Jul 2020 12:23:02 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 52AADA237C;
+        Mon, 13 Jul 2020 12:22:50 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 13 Jul 2020 12:22:50 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 13 Jul 2020 12:22:33 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Mike Rapoport <rppt@kernel.org>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v18 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
+Date:   Mon, 13 Jul 2020 14:21:43 +0200
+Message-ID: <20200713122143.25493-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200713120842.GA707159@kernel.org> (raw)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-In-Reply-To: <cover.1594642213.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D41UWC001.ant.amazon.com (10.43.162.107) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Jul 2020 15:08:42 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi,
+> 
+> On Mon, Jul 13, 2020 at 10:41:31AM +0200, SeongJae Park wrote:
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
+> > by DAMON in following commit for the implementation of the region based
+> > sampling.
+> 
+> Maybe I'm missing something, but why is DAMON a module?
 
-Use direct assignment instead of using memset with just one byte as an
-argument.
-Issue found by checkpatch.pl.
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
-Hii Maintainers,
-	Please correct me if I am wrong here.
----
-
- drivers/staging/qlge/qlge_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlg=
-e_ethtool.c
-index 16fcdefa9687..d44b2dae9213 100644
---- a/drivers/staging/qlge/qlge_ethtool.c
-+++ b/drivers/staging/qlge/qlge_ethtool.c
-@@ -516,8 +516,8 @@ static void ql_create_lb_frame(struct sk_buff *skb,
- 	memset(skb->data, 0xFF, frame_size);
- 	frame_size &=3D ~1;
- 	memset(&skb->data[frame_size / 2], 0xAA, frame_size / 2 - 1);
--	memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
--	memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
-+	skb->data[frame_size / 2 + 10] =3D (unsigned char)0xBE;
-+	skb->data[frame_size / 2 + 12] =3D (unsigned char)0xAF;
- }
-=20
- void ql_check_lb_frame(struct ql_adapter *qdev,
---=20
-2.17.1
+I made it loadable just for easier adoption from downstream kernels.  I could
+drop the module build support if asked.
 
 
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+SeongJae Park
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8MUf4ACgkQ+gRsbIfe
-745MeA//eOPYUZZBvikSwuQ7vENTroFg8ffHtqpBbvzHEJA2XVt7DVijXmBYLAaR
-Le2O0Ytq+m5UiqehER9G6cHZaNa0094RPbJN9l/cuRwcdk/C68djuKXHUb4Y7Jbp
-Dq8obmx1k+PvJlxnXVYuT3731oKdVH9nmtOKtVa0np+Kk2qBugL7cxYGpQZdV8dw
-gfqr472+YOhZCfH3yjo2LqUQECmhsJaLLTn5yN7Y9Zok1UhgsBxF0jj7uh+545iW
-zuY/EfWmj2AmDA8YcwuqngQ80z6OFJZuxkRUEDDep860IVhWszgNaWEhVSgV8hb8
-e4ey6AeefyVzEhXg3j/1slrCkt++o0lRCuAEm49H5mMx/1qF3122Y8/OQH2P1RMo
-mK0Kvowu3wlS+pYsSfh8hLtpAcig2/lvuAB/GR9wmsS7uChNguuwtv7u41u2iwNR
-OQ+PJicb+IDOHo7qQ1LN7NHnseeFVwqBfeLfoX6O8zvQ6TpkWI+nfZwidLhWaAIP
-aGPqrA9yS/Bkg/J/uOtnQFNcMBzw36PS78yM/NNBQil6x5cp67zf2Gbjt3//xfmZ
-fT8yx4akaNZDd5lSjLZeN2ruDo65Kodp94ldBTNJm/rnrDzZphkLOlA6nXtzUtfb
-vcBY5NlTXg6nflu3SKQPCT4+mg8CB4MJBjl3Vs1FconaBmZxQGA=
-=DaQ8
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
+> 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+> > Reviewed-by: Varad Gautam <vrd@amazon.de>
+> > ---
+> >  mm/page_ext.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/mm/page_ext.c b/mm/page_ext.c
+> > index a3616f7a0e9e..9d802d01fcb5 100644
+> > --- a/mm/page_ext.c
+> > +++ b/mm/page_ext.c
+> > @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
+> >  					MAX_ORDER_NR_PAGES);
+> >  	return get_entry(base, index);
+> >  }
+> > +EXPORT_SYMBOL_GPL(lookup_page_ext);
+> >  
+> >  static int __init alloc_node_page_ext(int nid)
+> >  {
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
