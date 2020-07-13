@@ -2,107 +2,163 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF22C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0A22072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A78D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kc5iLI/i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMscau92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgGMHpv (ORCPT
+        id S1728895AbgGMHqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        Mon, 13 Jul 2020 03:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMHps (ORCPT
+        with ESMTP id S1725818AbgGMHqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:45:48 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4627EC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:45:48 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id s26so5651867pfm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:45:48 -0700 (PDT)
+        Mon, 13 Jul 2020 03:46:49 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458ADC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:49 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so12317516wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+xSpopuz70JG6iQfzM5HgibXAJUo1c/P7qmmEsvws9s=;
-        b=Kc5iLI/iQywUAZzcS/x0aAofjXobkcKggku2JP87VotyNaCUPk2Py7OWxK8E9eVaxa
-         CahAMnsRsqRjstEh9jYRglZqFJ7nQJNIVORRbfGSzjOG/UdG8t6tQqFc39Acu563iNdX
-         74kCvC+jQYgz/0vCK77oVtwe7UbVamVpsCR9Y=
+        bh=25A0DNh94uDAwTRVOnoqazisStMi7w4KenkXTOS40VY=;
+        b=FMscau92B/Kn9iOgY9/nhvxdFFGi5eYsGXjuJHfYIPqyqyyXGBmKaLgaD7dlArcrIX
+         g32DbvicFtnn2dVQMo5lFmwtjbLAQcqc77myliOR2N/vpvFEnvScvYlR43tJwqx05loI
+         TM0Bzy094tngfkKpYgxZSJykLb1gn8XLrguoMlrxuVGOkBiCSKbhznRZ6uY5DE9jP3MT
+         jfVrh+kqyCNbK94P9QNYhOxQP2xOMBReQSlBnQZvlqKRdPeKMK1+StVUiOnd57VofXIU
+         Ne2f5YwcgXZHkcGV+Anm7i/WJ1oTRId/VDVlshUJSC1+UDudau5fbRIorlzFR6khwhGK
+         cKrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+xSpopuz70JG6iQfzM5HgibXAJUo1c/P7qmmEsvws9s=;
-        b=Vr4V/AJGr0iEdiQDhjKK5ymw5TRiQp3Ez+cc0PjnPoTeUC5jPDQEZpNhzTNV1Tk36E
-         RUYt+1+rbyLW02xbeqZy6Nflq1RXFtwiAB6OtLMR+gZ44oxrbBTdS3iWjwa5X+AH67rP
-         wvW7ifrNllwh90XYFszw7dihmjnmfwLPx1AmkTTKIsgNNoyb/zXxE9kgW+zCnljUDxUG
-         HI+U3j2/xg5RJcvan8NMBSZbnQF0xrYf46leJgsC4va7m53uaCUGW3ycB47JXgvEYp9W
-         FtAaeKi/k+deOrIOADF2ktz2Ckp1WapsDN5JhO2QNtlPTkrT7KDqAXnjMj14eyvJJS1Q
-         KYtQ==
-X-Gm-Message-State: AOAM532zQiaA3O3cAXqYvhVh5Q/sW6h4IxU2TPTktATdnRob9R5iCQCt
-        NkjGDT5+529ZrMMIVYPjYPSj6w==
-X-Google-Smtp-Source: ABdhPJzW69Vm+lK8/pCwW1u4QfMsHRO3SS16AexP6hozF17c7XNzQfwn82/Bxo+zSG+hxNagRn79rQ==
-X-Received: by 2002:a65:4bc8:: with SMTP id p8mr67352267pgr.418.1594626347737;
-        Mon, 13 Jul 2020 00:45:47 -0700 (PDT)
-Received: from josephsih-z840.tpe.corp.google.com ([2401:fa00:1:10:de4a:3eff:fe7d:ff5f])
-        by smtp.gmail.com with ESMTPSA id g8sm12691498pgr.70.2020.07.13.00.45.45
+        bh=25A0DNh94uDAwTRVOnoqazisStMi7w4KenkXTOS40VY=;
+        b=kQ87+n688uWL0tmUz54PIOg4FPbZL+Z/zFllvgTJRpwdVoHxPxSgCWb2PZBah6ABzz
+         8w+6CR6PdbjFzn4rUTAu9Wlij9inewXpTgA3IMO3KtVOChTA7Aug1XkK65pyGOsEBgHc
+         zrj7DAzzFGyHrnOwHVV30VBeyPHCQ86fB2sjbtbIWojf4R4gTrcIBsEdf91BxpwuQK4K
+         hjLZFZ31xFFKl4ZbB7pItpA97QUDUFsbIOx0mWREyYXABhL0sdgMwQGicib5FALoLJ+p
+         vAo3UncFi5yAMrPcGOY0R0+fWS2JZ3ixoLaB7/645hm67saepY/ohg9WJja9OH5EJkuE
+         04WQ==
+X-Gm-Message-State: AOAM533YuHwJEfSBNuuYl0ZGrBRidWuHX8QhGVW7kA63h0y0JAnfMoMc
+        t+EozdKc8xtydacAvjjgxP45Ow==
+X-Google-Smtp-Source: ABdhPJwHHQGD+YW9ySoK+Fa+ZTUh/gG5Athu/oAFZbb9J4bQHGlzJPMTOFjVx1fCHoOeke6LoMzZ7A==
+X-Received: by 2002:a1c:9c89:: with SMTP id f131mr9910553wme.126.1594626407933;
+        Mon, 13 Jul 2020 00:46:47 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.6])
+        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.46.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 00:45:46 -0700 (PDT)
-From:   Joseph Hwang <josephsih@chromium.org>
-To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        luiz.dentz@gmail.com
-Cc:     chromeos-bluetooth-upstreaming@chromium.org, josephsih@google.com,
-        Joseph Hwang <josephsih@chromium.org>, alainm@chromium.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: btusb: add Realtek 8822CE to usb_device_id table
-Date:   Mon, 13 Jul 2020 15:45:29 +0800
-Message-Id: <20200713154512.v2.1.I63705bf6abab9cb79c14f7959a59b201af2b8827@changeid>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+        Mon, 13 Jul 2020 00:46:47 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 00/29] Fix a bunch more SCSI related W=1 warnings
+Date:   Mon, 13 Jul 2020 08:46:16 +0100
+Message-Id: <20200713074645.126138-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the Realtek 8822CE controller to the usb_device_id
-table to support the wideband speech capability.
+This set is part of a larger effort attempting to clean-up W=1
+kernel builds, which are currently overwhelmingly riddled with
+niggly little warnings.
 
-Reviewed-by: alainm@chromium.org
-Signed-off-by: Joseph Hwang <josephsih@chromium.org>
----
+Slowly working through the SCSI related ones.  There are many.
 
-Changes in v2:
-- Fixed the commit subject and message body.
+Change-log:
 
- drivers/bluetooth/btusb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v1 => v2
+ - Collected *-by tags
+ - Squashed patch 13 => 11
+   - Suggested by Johannes Thumshirn
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index faa863dd5d0a33..aa0bc9942afda9 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -359,6 +359,10 @@ static const struct usb_device_id blacklist_table[] = {
- 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
- 	  .driver_info = BTUSB_IGNORE },
- 
-+	/* Realtek 8822CE Bluetooth devices */
-+	{ USB_DEVICE(0x0bda, 0xb00c), .driver_info = BTUSB_REALTEK |
-+						     BTUSB_WIDEBAND_SPEECH },
-+
- 	/* Realtek Bluetooth devices */
- 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
- 	  .driver_info = BTUSB_REALTEK },
+Lee Jones (29):
+  scsi: libfc: fc_exch: Supply some missing kerneldoc struct/function
+    attributes/params
+  include: scsi: scsi_transport_fc: Match HBA Attribute Length with
+    HBAAPI V2.0 definitions
+  scsi: libfc: fc_disc: trivial: Fix spelling mistake of 'discovery'
+  scsi: fcoe: fcoe: Fix various kernel-doc infringements
+  scsi: fcoe: fcoe_ctlr: Fix a myriad of documentation issues
+  scsi: fcoe: fcoe_transport: Correct some kernel-doc issues
+  scsi: bnx2fc: bnx2fc_fcoe: Repair a range of kerneldoc issues
+  scsi: qedf: qedf_main: Demote obvious misuse of kerneldoc to standard
+    comment blocks
+  scsi: qedf: qedf_main: Remove set but not checked variable 'tmp'
+  scsi: libfc: fc_lport: Repair function parameter documentation
+  scsi: libfc: fc_rport: Fix a couple of misdocumented function
+    parameters
+  scsi: libfc: fc_fcp: Provide missing and repair existing function
+    documentation
+  scsi: bnx2fc: bnx2fc_hwi: Fix a couple  of bitrotted function
+    documentation headers
+  scsi: arcmsr: arcmsr_hba: Remove some set but unused variables
+  scsi: arcmsr: arcmsr_hba: Make room for the trailing NULL, even if it
+    is over-written
+  scsi: qedf: qedf_io: Remove a whole host of unused variables
+  scsi: bnx2fc: bnx2fc_tgt: Demote obvious misuse of kerneldoc to
+    standard comment blocks
+  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'tinfo'
+  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'ahc'
+  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'targ'
+  scsi: aic7xxx: aic7xxx_osm: Fix 'amount_xferred' set but not used
+    issue
+  scsi: qedf: qedf_debugfs: Demote obvious misuse of kerneldoc to
+    standard comment blocks
+  scsi: aacraid: linit: Provide suggested curly braces around empty body
+    of if()
+  scsi: aacraid: linit: Fix a couple of small kerneldoc issues
+  scsi: aic94xx: aic94xx_init: Demote seemingly unintentional kerneldoc
+    header
+  scsi: pm8001: pm8001_init: Demote obvious misuse of kerneldoc and
+    update others
+  scsi: aic94xx: aic94xx_hwi: Repair kerneldoc formatting error and
+    remove extra param
+  scsi: aacraid: aachba: Fix a bunch of function doc formatting errors
+  scsi: qla4xxx: ql4_init: Provide a missing function param description
+    and fix formatting
+
+ drivers/scsi/aacraid/aachba.c       | 17 +++-------------
+ drivers/scsi/aacraid/linit.c        |  6 +++---
+ drivers/scsi/aic7xxx/aic7xxx_osm.c  | 13 ++----------
+ drivers/scsi/aic94xx/aic94xx_hwi.c  |  3 +--
+ drivers/scsi/aic94xx/aic94xx_init.c |  2 +-
+ drivers/scsi/arcmsr/arcmsr_hba.c    | 31 ++++++++++++-----------------
+ drivers/scsi/bnx2fc/bnx2fc_fcoe.c   | 18 ++++++++---------
+ drivers/scsi/bnx2fc/bnx2fc_hwi.c    |  6 +++---
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c    |  7 +++----
+ drivers/scsi/fcoe/fcoe.c            | 10 ++++------
+ drivers/scsi/fcoe/fcoe_ctlr.c       | 26 ++++++++++++------------
+ drivers/scsi/fcoe/fcoe_transport.c  |  4 +++-
+ drivers/scsi/libfc/fc_disc.c        |  2 +-
+ drivers/scsi/libfc/fc_exch.c        |  7 ++++++-
+ drivers/scsi/libfc/fc_fcp.c         | 11 ++++++----
+ drivers/scsi/libfc/fc_lport.c       |  7 +++++--
+ drivers/scsi/libfc/fc_rport.c       |  4 ++--
+ drivers/scsi/pm8001/pm8001_init.c   | 30 ++++++++++++++--------------
+ drivers/scsi/qedf/qedf_debugfs.c    | 18 ++++++++---------
+ drivers/scsi/qedf/qedf_io.c         | 30 ++++------------------------
+ drivers/scsi/qedf/qedf_main.c       | 10 ++++------
+ drivers/scsi/qla4xxx/ql4_init.c     |  7 ++++---
+ include/scsi/fc/fc_ms.h             |  4 ++--
+ 23 files changed, 115 insertions(+), 158 deletions(-)
+
 -- 
-2.27.0.383.g050319c2ae-goog
+2.25.1
 
