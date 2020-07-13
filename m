@@ -2,102 +2,81 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A07C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D923C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B0206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LZ6xsIns"
+	by mail.kernel.org (Postfix) with ESMTP id 5EB0C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgGMDb7 (ORCPT
+        id S1728670AbgGMDdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:31:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728614AbgGMDb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:31:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594611117;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fyZHuYtJrGj2meth1Sm/wJxgmzcWzcHt3+2ZKG1/cLQ=;
-        b=LZ6xsInsUKdXrdg9pOpQgApxG7dqEqgfNN0KrGu0jPbnfoG+iWvQFeZSkS+NlietsAfhRR
-        EFR5w+HlyK/pOPsh1ZzgLiNpLnngDwV/1dftVhLZhxU16nW8HXiCmkcRYUW84Zlpv8WMfN
-        l077Ej5+cXoZL2jA18Xq4z1v3DzPgi8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-nd3WMGC_Mj-Yat-odoEbZw-1; Sun, 12 Jul 2020 23:31:54 -0400
-X-MC-Unique: nd3WMGC_Mj-Yat-odoEbZw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5A41800597;
-        Mon, 13 Jul 2020 03:31:52 +0000 (UTC)
-Received: from [10.72.13.177] (ovpn-13-177.pek2.redhat.com [10.72.13.177])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EDFF5C6C0;
-        Mon, 13 Jul 2020 03:31:44 +0000 (UTC)
-Subject: Re: [PATCH] vhost/scsi: fix up req type endian-ness
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200710104849.406023-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <8acbce23-275a-141a-0bfb-1535c6edcbb4@redhat.com>
-Date:   Mon, 13 Jul 2020 11:31:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200710104849.406023-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Sun, 12 Jul 2020 23:33:32 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:52530 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726523AbgGMDdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:33:31 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-01 (Coremail) with SMTP id qwCowADnhpj71Qtf7eZaAA--.61347S2;
+        Mon, 13 Jul 2020 11:33:15 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     jk@ozlabs.org, joel@jms.id.au, alistair@popple.id.au,
+        eajames@linux.ibm.com, linux-fsi@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] fsi: fsi-occ: fix return value check in occ_probe()
+Date:   Mon, 13 Jul 2020 03:33:13 +0000
+Message-Id: <20200713033313.21487-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: qwCowADnhpj71Qtf7eZaAA--.61347S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWfAF1kuF43Cw48CFy7trb_yoW3AFgEkw
+        4UurZ7XFs7GFnIq3s8tayFyryj9a4kWFs7AF4Ut3W3t348Xry5Ja4UZrs7Aa15WrWUArWD
+        AFnrtFyfCr13GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
+        Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+        4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUenmRUU
+        UUU
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAgsQA1Jhbjl5ZQADsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In case of error, the function platform_device_register_full()
+returns ERR_PTR() and never returns NULL. The NULL test in the
+return value check should be replaced with IS_ERR().
 
-On 2020/7/10 下午6:48, Michael S. Tsirkin wrote:
-> vhost/scsi doesn't handle type conversion correctly
-> for request type when using virtio 1.0 and up for BE,
-> or cross-endian platforms.
->
-> Fix it up using vhost_32_to_cpu.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/vhost/scsi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-> index 6fb4d7ecfa19..b22adf03f584 100644
-> --- a/drivers/vhost/scsi.c
-> +++ b/drivers/vhost/scsi.c
-> @@ -1215,7 +1215,7 @@ vhost_scsi_ctl_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
->   			continue;
->   		}
->   
-> -		switch (v_req.type) {
-> +		switch (vhost32_to_cpu(vq, v_req.type)) {
->   		case VIRTIO_SCSI_T_TMF:
->   			vc.req = &v_req.tmf;
->   			vc.req_size = sizeof(struct virtio_scsi_ctrl_tmf_req);
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/fsi/fsi-occ.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
+diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
+index 7da9c81759ac..9eeb856c8905 100644
+--- a/drivers/fsi/fsi-occ.c
++++ b/drivers/fsi/fsi-occ.c
+@@ -555,7 +555,7 @@ static int occ_probe(struct platform_device *pdev)
+ 
+ 	hwmon_dev_info.id = occ->idx;
+ 	hwmon_dev = platform_device_register_full(&hwmon_dev_info);
+-	if (!hwmon_dev)
++	if (IS_ERR(hwmon_dev))
+ 		dev_warn(dev, "failed to create hwmon device\n");
+ 
+ 	return 0;
+-- 
+2.17.1
 
