@@ -2,98 +2,125 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDFFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A43DC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C221B2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CED02076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594655547;
+	bh=Hcixoq4GgPe0VCO4s6wUL8CqrZev3dIhKbWRkkOIrHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pS8qZmbEoapPqCvBLsS6qVOY2xwiVZJdgFk56ehTDxH9er7vTzlp4UKm/YLPnPssf
+	 gm/nfH7il2wzLCu8RS66tVvflius9f5vozBj+/wnEhweL1B1mX9hmIqKtE391Kppom
+	 Evinwzs0Dl7SFSqD8h3t75QkTWWt3EEXoa+WORXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgGMPwW (ORCPT
+        id S1730266AbgGMPwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:52:22 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:45356 "EHLO smtp.al2klimov.de"
+        Mon, 13 Jul 2020 11:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgGMPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:52:21 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 13449BC070;
-        Mon, 13 Jul 2020 15:52:17 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     crope@iki.fi, mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] media: rtl2832_sdr: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 17:52:10 +0200
-Message-Id: <20200713155210.35545-1-grandmaster@al2klimov.de>
+        id S1729593AbgGMPwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:52:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE59D20663;
+        Mon, 13 Jul 2020 15:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594655542;
+        bh=Hcixoq4GgPe0VCO4s6wUL8CqrZev3dIhKbWRkkOIrHc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wl1NZRBGSi7cAVo8NztdIgBUgTQWNZEa4wL/fa93EpRcWtMHAVzi3ljykDEsPT7wY
+         BSBmd7lLUo8a3wfMaWGkV93gEjLWGvbSbLjl6M/KlXZmAT7YEM7cfQHpIRkS5IlY1V
+         vqCxN5LtjDOFOi7FWjtCOOK9yB+Z9NghG6kRstTs=
+Date:   Mon, 13 Jul 2020 17:52:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Joao Martins <joao.m.martins@oracle.com>
+Subject: Re: [PATCH v2 17/22] drivers/base: Make device_find_child_by_name()
+ compatible with sysfs inputs
+Message-ID: <20200713155222.GB267581@kroah.com>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457125753.754248.6000936585361264069.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200712170945.GA194499@kroah.com>
+ <CAPcyv4h=7oB+PHEUa6otkoXYx+r_8GFbmuF-j_kOmHjpGB-=eg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4h=7oB+PHEUa6otkoXYx+r_8GFbmuF-j_kOmHjpGB-=eg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 08:39:43AM -0700, Dan Williams wrote:
+> On Sun, Jul 12, 2020 at 10:09 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Jul 12, 2020 at 09:27:37AM -0700, Dan Williams wrote:
+> > > Use sysfs_streq() in device_find_child_by_name() to allow it to use a
+> > > sysfs input string that might contain a trailing newline.
+> > >
+> > > The other "device by name" interfaces,
+> > > {bus,driver,class}_find_device_by_name(), already account for sysfs
+> > > strings.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > >  drivers/base/core.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index 67d39a90b45c..5d31b962c898 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -3078,7 +3078,7 @@ struct device *device_find_child_by_name(struct device *parent,
+> > >
+> > >       klist_iter_init(&parent->p->klist_children, &i);
+> > >       while ((child = next_device(&i)))
+> > > -             if (!strcmp(dev_name(child), name) && get_device(child))
+> > > +             if (sysfs_streq(dev_name(child), name) && get_device(child))
+> >
+> > Who wants to call this function with a name passed from userspace?
+> >
+> > Not objecting to it, just curious...
+> >
+> 
+> The series that incorporates this patch adds a partitioning mechanism
+> to "device-dax region" devices with an:
+>     "echo 1 > regionX/create" to create a new partition / sub-instance
+> of a region, and...
+>     "echo $devname > regionX/delete" to delete. Where $devname is
+> searched in the child devices of regionX to trigger device_del().
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Shouldn't that be done in configfs, not sysfs?
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> This arrangement avoids one of the design mistakes of libnvdimm which
+> uses a sysfs attribute of the device to delete itself. Parent-device
+> triggered deletion rather than self-deletion avoids those locking
+> entanglements.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Ugh, yeah, getting rid of that would be great, it's a mess.  I think
+scsi still does that :(
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+thanks,
 
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/media/dvb-frontends/rtl2832_sdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.c b/drivers/media/dvb-frontends/rtl2832_sdr.c
-index 60d1e59d2292..720756728f2d 100644
---- a/drivers/media/dvb-frontends/rtl2832_sdr.c
-+++ b/drivers/media/dvb-frontends/rtl2832_sdr.c
-@@ -5,7 +5,7 @@
-  * Copyright (C) 2013 Antti Palosaari <crope@iki.fi>
-  *
-  * GNU Radio plugin "gr-kernel" for device usage will be on:
-- * http://git.linuxtv.org/anttip/gr-kernel.git
-+ * https://git.linuxtv.org/anttip/gr-kernel.git
-  */
- 
- #include "rtl2832_sdr.h"
--- 
-2.27.0
-
+greg k-h
