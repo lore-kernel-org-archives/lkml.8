@@ -2,361 +2,122 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA66FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA85EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB207205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79EF4206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:51:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aEcItKWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGMTzR (ORCPT
+        id S1726762AbgGMTvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:55:17 -0400
-Received: from smtp11.smtpout.orange.fr ([80.12.242.133]:58692 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgGMTzQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:55:16 -0400
-Received: from localhost.localdomain ([93.22.151.12])
-        by mwinf5d22 with ME
-        id 2jv52300C0GHuWt03jv6A5; Mon, 13 Jul 2020 21:55:10 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 13 Jul 2020 21:55:10 +0200
-X-ME-IP: 93.22.151.12
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     davem@davemloft.net, kuba@kernel.org, leon@kernel.org,
-        natechancellor@gmail.com, snelson@pensando.io,
-        vaibhavgupta40@gmail.com, mst@redhat.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] amd8111e: switch from 'pci_' to 'dma_' API
-Date:   Mon, 13 Jul 2020 21:55:03 +0200
-Message-Id: <20200713195503.281339-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Mon, 13 Jul 2020 15:51:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51395 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgGMTvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 15:51:55 -0400
+Received: from [IPv6:2601:646:8600:3281:dcc1:f8b3:2766:5f92] ([IPv6:2601:646:8600:3281:dcc1:f8b3:2766:5f92])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06DJpdJE1976736
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 13 Jul 2020 12:51:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06DJpdJE1976736
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1594669902;
+        bh=xsbJbZCdYxgAVLE9/erfYMtoi9stuou0k1pR0NinwvU=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=aEcItKWwPyhV0FS1rLyTeoj17iXzSEJsBZReuYGCs9al2tqbKSm+GMoKIwSXdm94Y
+         U3Bt5JO+5j7sG6/c8CS/uw18vK43k0z8iFs+nD7gnhutfLMXd0aAYiiMQN2tLXzEzC
+         /CoahDO5+K1/8rUTf0ys4gtSpNFvwlESNe7Fyx/sZ9IQhQoRZMxdgfCf4vECfjwfxn
+         BvZrDAgQimYCfMeT6+L45rmV79C2lARAqGYWu/cNUjMM9RcDIuhdgMiOpzPYO75avT
+         9otjsvoASBbOH2BR99Wh1h+E/jpTOVsLMdRyPo0uK4FESZYaDvhMuFjKt07A7KsqNt
+         55ym9cR+HAlMQ==
+Date:   Mon, 13 Jul 2020 12:51:30 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <6a73bb96-1390-ecca-2429-12b71e2aefc2@redhat.com>
+References: <20200712125952.8809-1-trix@redhat.com> <639c8ef5-2755-7172-fbb8-ce45c8637feb@zytor.com> <9af191c2-0f2c-7637-433a-b557a07590ca@redhat.com> <EE11D4F0-8DA4-4030-800E-516423293987@zytor.com> <6a73bb96-1390-ecca-2429-12b71e2aefc2@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] decompress_bunzip2: fix sizeof type in start_bunzip
+To:     Tom Rix <trix@redhat.com>, alain@knaff.lu
+CC:     linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <D21C36E5-964B-4492-8104-3F56559D30FD@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+On July 13, 2020 12:27:02 PM PDT, Tom Rix <trix@redhat=2Ecom> wrote:
+>
+>On 7/12/20 3:21 PM, hpa@zytor=2Ecom wrote:
+>> On July 12, 2020 8:12:43 AM PDT, Tom Rix <trix@redhat=2Ecom> wrote:
+>>> On 7/12/20 6:09 AM, H=2E Peter Anvin wrote:
+>>>> On 2020-07-12 05:59, trix@redhat=2Ecom wrote:
+>>>>> From: Tom Rix <trix@redhat=2Ecom>
+>>>>>
+>>>>> clang static analysis flags this error
+>>>>>
+>>>>> lib/decompress_bunzip2=2Ec:671:13: warning: Result of 'malloc' is
+>>> converted
+>>>>>   to a pointer of type 'unsigned int', which is incompatible with
+>>> sizeof
+>>>>>   operand type 'int' [unix=2EMallocSizeof]
+>>>>>         bd->dbuf =3D large_malloc(bd->dbufSize * sizeof(int));
+>>>>>                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>
+>>>>> Reviewing the bunzip_data structure, the element dbuf is type
+>>>>>
+>>>>> 	/* Intermediate buffer and its size (in bytes) */
+>>>>> 	unsigned int *dbuf, dbufSize;
+>>>>>
+>>>>> So change the type in sizeof to 'unsigned int'
+>>>>>
+>>>> You must be kidding=2E
+>>>>
+>>>> If you want to change it, change it to sizeof(bd->dbuf) instead,
+>but
+>>> this flag
+>>>> is at least in my opinion a total joke=2E For sizeof(int) !=3D
+>>> sizeof(unsigned
+>>>> int) is beyond bizarre, no matter how stupid the platform=2E
+>>> Using the actual type is more correct that using a type of the same
+>>> size=2E
+>>>
+>>> trix
+>>>
+>>>> 	-hpa
+>>>>
+>> "More correct?" All it is is more verbose=2E
+>>
+>> Using the sizeof of the actual object at least adds some actual
+>safety=2E
+>
+>Sorry, I am being pedantic, I mean anything that produces the correct
+>assembly is correct=2E But there are different path to being correct=2E=
+=C2=A0
+>The path I was suggesting to follow the type of the element/final
+>pointer when allocating an memory=2E
+>
+>large_malloc(bd->dbufSize * sizeof(*bd->dbuf)) would also work
+>
+>I will respin=2E
+>
+>trix
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GPF_ with a correct flag.
-It has been compile tested.
+This isn't Linux style, but in the NASM source I have been migrating to ma=
+cros:
 
-When memory is allocated in 'amd8111e_init_ring()', GFP_ATOMIC must be used
-because a spin_lock is hold.
-One of the call chains is:
-   amd8111e_open
-   ** spin_lock_irq(&lp->lock);
-   --> amd8111e_restart
-      --> amd8111e_init_ring
-   ** spin_unlock_irq(&lp->lock);
+nasm_new(ptr);
+nasm_newn(ptr,n);
 
-The rest of the patch is produced by coccinelle with a few adjustments to
-please checkpatch.pl.
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/amd/amd8111e.c | 81 ++++++++++++++++-------------
- 1 file changed, 44 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/net/ethernet/amd/amd8111e.c b/drivers/net/ethernet/amd/amd8111e.c
-index 5d389a984394..b6c43b58ed3d 100644
---- a/drivers/net/ethernet/amd/amd8111e.c
-+++ b/drivers/net/ethernet/amd/amd8111e.c
-@@ -226,7 +226,9 @@ static int amd8111e_free_skbs(struct net_device *dev)
- 	/* Freeing transmit skbs */
- 	for(i = 0; i < NUM_TX_BUFFERS; i++){
- 		if(lp->tx_skbuff[i]){
--			pci_unmap_single(lp->pci_dev,lp->tx_dma_addr[i],					lp->tx_skbuff[i]->len,PCI_DMA_TODEVICE);
-+			dma_unmap_single(&lp->pci_dev->dev,
-+					 lp->tx_dma_addr[i],
-+					 lp->tx_skbuff[i]->len, DMA_TO_DEVICE);
- 			dev_kfree_skb (lp->tx_skbuff[i]);
- 			lp->tx_skbuff[i] = NULL;
- 			lp->tx_dma_addr[i] = 0;
-@@ -236,8 +238,9 @@ static int amd8111e_free_skbs(struct net_device *dev)
- 	for (i = 0; i < NUM_RX_BUFFERS; i++){
- 		rx_skbuff = lp->rx_skbuff[i];
- 		if(rx_skbuff != NULL){
--			pci_unmap_single(lp->pci_dev,lp->rx_dma_addr[i],
--				  lp->rx_buff_len - 2,PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&lp->pci_dev->dev,
-+					 lp->rx_dma_addr[i],
-+					 lp->rx_buff_len - 2, DMA_FROM_DEVICE);
- 			dev_kfree_skb(lp->rx_skbuff[i]);
- 			lp->rx_skbuff[i] = NULL;
- 			lp->rx_dma_addr[i] = 0;
-@@ -287,20 +290,20 @@ static int amd8111e_init_ring(struct net_device *dev)
- 		amd8111e_free_skbs(dev);
- 
- 	else{
--		 /* allocate the tx and rx descriptors */
--	     	if((lp->tx_ring = pci_alloc_consistent(lp->pci_dev,
--			sizeof(struct amd8111e_tx_dr)*NUM_TX_RING_DR,
--			&lp->tx_ring_dma_addr)) == NULL)
--
-+		/* allocate the tx and rx descriptors */
-+		lp->tx_ring = dma_alloc_coherent(&lp->pci_dev->dev,
-+			sizeof(struct amd8111e_tx_dr) * NUM_TX_RING_DR,
-+			&lp->tx_ring_dma_addr, GFP_ATOMIC);
-+		if (!lp->tx_ring)
- 			goto err_no_mem;
- 
--	     	if((lp->rx_ring = pci_alloc_consistent(lp->pci_dev,
--			sizeof(struct amd8111e_rx_dr)*NUM_RX_RING_DR,
--			&lp->rx_ring_dma_addr)) == NULL)
--
-+		lp->rx_ring = dma_alloc_coherent(&lp->pci_dev->dev,
-+			sizeof(struct amd8111e_rx_dr) * NUM_RX_RING_DR,
-+			&lp->rx_ring_dma_addr, GFP_ATOMIC);
-+		if (!lp->rx_ring)
- 			goto err_free_tx_ring;
--
- 	}
-+
- 	/* Set new receive buff size */
- 	amd8111e_set_rx_buff_len(dev);
- 
-@@ -318,8 +321,10 @@ static int amd8111e_init_ring(struct net_device *dev)
- 	}
-         /* Initilaizing receive descriptors */
- 	for (i = 0; i < NUM_RX_BUFFERS; i++) {
--		lp->rx_dma_addr[i] = pci_map_single(lp->pci_dev,
--			lp->rx_skbuff[i]->data,lp->rx_buff_len-2, PCI_DMA_FROMDEVICE);
-+		lp->rx_dma_addr[i] = dma_map_single(&lp->pci_dev->dev,
-+						    lp->rx_skbuff[i]->data,
-+						    lp->rx_buff_len - 2,
-+						    DMA_FROM_DEVICE);
- 
- 		lp->rx_ring[i].buff_phy_addr = cpu_to_le32(lp->rx_dma_addr[i]);
- 		lp->rx_ring[i].buff_count = cpu_to_le16(lp->rx_buff_len-2);
-@@ -338,15 +343,15 @@ static int amd8111e_init_ring(struct net_device *dev)
- 
- err_free_rx_ring:
- 
--	pci_free_consistent(lp->pci_dev,
--		sizeof(struct amd8111e_rx_dr)*NUM_RX_RING_DR,lp->rx_ring,
--		lp->rx_ring_dma_addr);
-+	dma_free_coherent(&lp->pci_dev->dev,
-+			  sizeof(struct amd8111e_rx_dr) * NUM_RX_RING_DR,
-+			  lp->rx_ring, lp->rx_ring_dma_addr);
- 
- err_free_tx_ring:
- 
--	pci_free_consistent(lp->pci_dev,
--		 sizeof(struct amd8111e_tx_dr)*NUM_TX_RING_DR,lp->tx_ring,
--		 lp->tx_ring_dma_addr);
-+	dma_free_coherent(&lp->pci_dev->dev,
-+			  sizeof(struct amd8111e_tx_dr) * NUM_TX_RING_DR,
-+			  lp->tx_ring, lp->tx_ring_dma_addr);
- 
- err_no_mem:
- 	return -ENOMEM;
-@@ -612,16 +617,16 @@ static void amd8111e_free_ring(struct amd8111e_priv *lp)
- {
- 	/* Free transmit and receive descriptor rings */
- 	if(lp->rx_ring){
--		pci_free_consistent(lp->pci_dev,
--			sizeof(struct amd8111e_rx_dr)*NUM_RX_RING_DR,
--			lp->rx_ring, lp->rx_ring_dma_addr);
-+		dma_free_coherent(&lp->pci_dev->dev,
-+				  sizeof(struct amd8111e_rx_dr) * NUM_RX_RING_DR,
-+				  lp->rx_ring, lp->rx_ring_dma_addr);
- 		lp->rx_ring = NULL;
- 	}
- 
- 	if(lp->tx_ring){
--		pci_free_consistent(lp->pci_dev,
--			sizeof(struct amd8111e_tx_dr)*NUM_TX_RING_DR,
--			lp->tx_ring, lp->tx_ring_dma_addr);
-+		dma_free_coherent(&lp->pci_dev->dev,
-+				  sizeof(struct amd8111e_tx_dr) * NUM_TX_RING_DR,
-+				  lp->tx_ring, lp->tx_ring_dma_addr);
- 
- 		lp->tx_ring = NULL;
- 	}
-@@ -649,9 +654,10 @@ static int amd8111e_tx(struct net_device *dev)
- 
- 		/* We must free the original skb */
- 		if (lp->tx_skbuff[tx_index]) {
--			pci_unmap_single(lp->pci_dev, lp->tx_dma_addr[tx_index],
--				  	lp->tx_skbuff[tx_index]->len,
--					PCI_DMA_TODEVICE);
-+			dma_unmap_single(&lp->pci_dev->dev,
-+					 lp->tx_dma_addr[tx_index],
-+					 lp->tx_skbuff[tx_index]->len,
-+					 DMA_TO_DEVICE);
- 			dev_consume_skb_irq(lp->tx_skbuff[tx_index]);
- 			lp->tx_skbuff[tx_index] = NULL;
- 			lp->tx_dma_addr[tx_index] = 0;
-@@ -737,14 +743,14 @@ static int amd8111e_rx_poll(struct napi_struct *napi, int budget)
- 
- 		skb_reserve(new_skb, 2);
- 		skb = lp->rx_skbuff[rx_index];
--		pci_unmap_single(lp->pci_dev,lp->rx_dma_addr[rx_index],
--				 lp->rx_buff_len-2, PCI_DMA_FROMDEVICE);
-+		dma_unmap_single(&lp->pci_dev->dev, lp->rx_dma_addr[rx_index],
-+				 lp->rx_buff_len - 2, DMA_FROM_DEVICE);
- 		skb_put(skb, pkt_len);
- 		lp->rx_skbuff[rx_index] = new_skb;
--		lp->rx_dma_addr[rx_index] = pci_map_single(lp->pci_dev,
-+		lp->rx_dma_addr[rx_index] = dma_map_single(&lp->pci_dev->dev,
- 							   new_skb->data,
--							   lp->rx_buff_len-2,
--							   PCI_DMA_FROMDEVICE);
-+							   lp->rx_buff_len - 2,
-+							   DMA_FROM_DEVICE);
- 
- 		skb->protocol = eth_type_trans(skb, dev);
- 
-@@ -1270,7 +1276,8 @@ static netdev_tx_t amd8111e_start_xmit(struct sk_buff *skb,
- 	}
- #endif
- 	lp->tx_dma_addr[tx_index] =
--	    pci_map_single(lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
-+	    dma_map_single(&lp->pci_dev->dev, skb->data, skb->len,
-+			   DMA_TO_DEVICE);
- 	lp->tx_ring[tx_index].buff_phy_addr =
- 	    cpu_to_le32(lp->tx_dma_addr[tx_index]);
- 
-@@ -1773,7 +1780,7 @@ static int amd8111e_probe_one(struct pci_dev *pdev,
- 	}
- 
- 	/* Initialize DMA */
--	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(32)) < 0) {
-+	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(32)) < 0) {
- 		dev_err(&pdev->dev, "DMA not supported\n");
- 		err = -ENODEV;
- 		goto err_free_reg;
--- 
-2.25.1
-
+=2E=2E=2E using sizeof() in exactly this manner=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
