@@ -2,226 +2,141 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ECEC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61195C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 006B02065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412232075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc+A3oOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgGMOvb (ORCPT
+        id S1729846AbgGMO6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        Mon, 13 Jul 2020 10:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOv1 (ORCPT
+        with ESMTP id S1729649AbgGMO6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:51:27 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A09CC061755;
-        Mon, 13 Jul 2020 07:51:27 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2AAAEBC09E;
-        Mon, 13 Jul 2020 14:51:24 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] leds: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 16:51:15 +0200
-Message-Id: <20200713145115.35121-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 10:58:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDDAC061755;
+        Mon, 13 Jul 2020 07:58:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d18so13811888ion.0;
+        Mon, 13 Jul 2020 07:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mr56/9hhLOah/1WskpzGTun6YF0+zSZRxtX7at7eeVk=;
+        b=Gc+A3oOTz9nxjK8Oyz2sB/jyvAya9tVKQeexSVdJCjoV2OVdcuV0hIniUbCNB6CwVZ
+         6tY79EfIWpa2RVlOKKs3UFWTSFhE8GHr7esXVeevmPwDOy3oVqXj4hnc2uQQRiRTIySw
+         JryBhJveeYTzUlsqJK+yoBd2NT6eWoHVH60yiUeOtgMme73L4+xdqzK+uptFtkMMV8f3
+         Our1KWeXztm/kR0adTbs2OqgrVgmSlL3WLs5pQ3mii/5JG5wFgyfV4CKA+3qyalk+uns
+         vKkfdSYpj0+EVH22FK8/xli/MytuOFNPdL0TvjcH7vC8l79CN4vVCKEjohHu054mLGju
+         EWGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mr56/9hhLOah/1WskpzGTun6YF0+zSZRxtX7at7eeVk=;
+        b=YuOh0JxCBDLezIRVz77pO5JbF2zW6sahcJBR3QwOCQDUvk4nZ3HLoekmpwDtTz8upc
+         jnYDxTJu/ghdylsneEHHhSKuYqOGSy7CqnOR2krPKlNL5+n0iT/aEiGGHTdxXVOn8IXB
+         2DfE7pNcmOgkxJ56W91VVr9MUAFoxzywkjE1kRkZfFYl6115BMuWrJ6D0Q17Fgalow4H
+         9EWewbneSR7SASkmBCZ9+BmXevv99KlmJDmVJlvV+AwlbLPYD8XrQZiubV9yUkaLOXTY
+         k2xz+7AHGvZ9HTpziOTeJmMgnsf7JvOoJiZ4TTUymSK0tqPx1YHXTXoRz4YFRjcWksSR
+         UKbg==
+X-Gm-Message-State: AOAM5338oANA40apsKxizRCDIY2aerG/gb+sqjUz6bWMUs2Eig+bkCUD
+        d3LS5DYbDhC4AKuNUfAOrCy+8EhCyBfZDAT6xBI=
+X-Google-Smtp-Source: ABdhPJyIb4TLaDuRzssmGjD8GlxCnRNZPX1fjJp7B0DVJOpqXfeErBQ2zLmh4Yjcd81ES/b/Ybs6G90MJv7Otmmv4ng=
+X-Received: by 2002:a02:c604:: with SMTP id i4mr442905jan.19.1594652325448;
+ Mon, 13 Jul 2020 07:58:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+References: <20200710230224.2265647-1-dianders@chromium.org> <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 13 Jul 2020 08:58:34 -0600
+Message-ID: <CAOCk7NrCXXM_RgohjhooJUcenTkV5ajs+Xg1QE-7F5BDRYppyw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
+ deferral and speed booting
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 8:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > I found that if I ever had a little mistake in my kernel config,
+> > or device tree, or graphics driver that my system would sit in a loop
+> > at bootup trying again and again and again.  An example log was:
+>
+> Why do we care about optimizing the error case?
+>
+> >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
+> >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
+> >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
+> >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
+> >   ...
+> >
+> > I finally tracked it down where this was happening:
+> >   - msm_pdev_probe() is called.
+> >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
+> >     off processing of probe deferrals.
+> >   - component_master_add_with_match() could return -EPROBE_DEFER.
+> >     making msm_pdev_probe() return -EPROBE_DEFER.
+> >   - When msm_pdev_probe() returned the processing of probe deferrals
+> >     happens.
+> >   - Loop back to the start.
+> >
+> > It looks like we can fix this by marking "mdss" as a "simple-bus".
+> > I have no idea if people consider this the right thing to do or a
+> > hack.  Hopefully it's the right thing to do.  :-)
+>
+> It's a simple test. Do the child devices have any dependency on the
+> parent to probe and/or function? If so, not a simple-bus.
+>
+> > Once I do this I notice that my boot gets marginally faster (you
+> > don't need to probe the sub devices over and over) and also if I
+>
+> Can you quantify that?
+>
+> Have you run with devlinks enabled. You need a command line option to
+> enable. That too should reduce deferred probes.
+>
+> > have a problem it doesn't loop forever (on my system it still
+> > gets upset about some stuck clocks in that case, but at least I
+> > can boot up).
+>
+> Deferred probe only runs when a device is added, so it's not like it
+> is continually running.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+But it is.  I've hit this as well, but haven't attempted a fix.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/devicetree/bindings/leds/leds-lm3532.txt  | 2 +-
- Documentation/devicetree/bindings/leds/leds-lm3601x.txt | 4 ++--
- Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
- Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 2 +-
- Documentation/devicetree/bindings/leds/leds-lm3697.txt  | 2 +-
- Documentation/devicetree/bindings/leds/leds-lp8860.txt  | 2 +-
- drivers/leds/leds-lm3532.c                              | 4 ++--
- drivers/leds/leds-lm3601x.c                             | 2 +-
- drivers/leds/leds-lm36274.c                             | 2 +-
- drivers/leds/leds-lm3692x.c                             | 2 +-
- drivers/leds/leds-lm3697.c                              | 2 +-
- 11 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-index 53793213dd52..097490a5ff91 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
-@@ -102,4 +102,4 @@ led-controller@38 {
- };
- 
- For more product information please see the links below:
--http://www.ti.com/product/LM3532
-+https://www.ti.com/product/LM3532
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-index 095dafb6ec7f..17e940025dc2 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
-@@ -47,5 +47,5 @@ led-controller@64 {
- }
- 
- For more product information please see the links below:
--http://www.ti.com/product/LM36010
--http://www.ti.com/product/LM36011
-+https://www.ti.com/product/LM36010
-+https://www.ti.com/product/LM36011
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-index 39c230d59a4d..de6f4931fb31 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-@@ -82,4 +82,4 @@ lm36274@11 {
- };
- 
- For more product information please see the link below:
--http://www.ti.com/lit/ds/symlink/lm36274.pdf
-+https://www.ti.com/lit/ds/symlink/lm36274.pdf
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-index 501468aa4d38..b1103d961d6c 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-@@ -62,4 +62,4 @@ led-controller@36 {
- }
- 
- For more product information please see the link below:
--http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
-+https://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-index 63992d732959..221b37b6049b 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-@@ -70,4 +70,4 @@ led-controller@36 {
- }
- 
- For more product information please see the link below:
--http://www.ti.com/lit/ds/symlink/lm3697.pdf
-+https://www.ti.com/lit/ds/symlink/lm3697.pdf
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-index 9863220db4ba..8bb25749a3da 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-@@ -47,4 +47,4 @@ led-controller@2d {
- }
- 
- For more product information please see the link below:
--http://www.ti.com/product/lp8860-q1
-+https://www.ti.com/product/lp8860-q1
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index aa9bf8cda673..946ad67eaecb 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // TI LM3532 LED driver
--// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
--// http://www.ti.com/lit/ds/symlink/lm3532.pdf
-+// Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
-+// https://www.ti.com/lit/ds/symlink/lm3532.pdf
- 
- #include <linux/i2c.h>
- #include <linux/leds.h>
-diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
-index fce89f2a2d92..d0e1d4814042 100644
---- a/drivers/leds/leds-lm3601x.c
-+++ b/drivers/leds/leds-lm3601x.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Flash and torch driver for Texas Instruments LM3601X LED
- // Flash driver chip family
--// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+// Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
- 
- #include <linux/delay.h>
- #include <linux/i2c.h>
-diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
-index 836b60c9a2b8..59360482e7ba 100644
---- a/drivers/leds/leds-lm36274.c
-+++ b/drivers/leds/leds-lm36274.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // TI LM36274 LED chip family driver
--// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+// Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
- 
- #include <linux/bitops.h>
- #include <linux/device.h>
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 28a51aeb28de..e1e2d2b64a56 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // TI LM3692x LED chip family driver
--// Copyright (C) 2017-18 Texas Instruments Incorporated - http://www.ti.com/
-+// Copyright (C) 2017-18 Texas Instruments Incorporated - https://www.ti.com/
- 
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-diff --git a/drivers/leds/leds-lm3697.c b/drivers/leds/leds-lm3697.c
-index 872d26f9706a..024983088d59 100644
---- a/drivers/leds/leds-lm3697.c
-+++ b/drivers/leds/leds-lm3697.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // TI LM3697 LED chip family driver
--// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+// Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
- 
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
--- 
-2.27.0
-
+So we have a parent device, with several sub devices.  The parent
+device probes which causes the sub devices to probe.  One of the sub
+devices successfully probes, and another fails with EPROBE_DEFER.
+This both caused the probe defer framework to immediately schedule
+processing the probe defer queue, and also cause all of the chile
+devices and the parent device to be removed to probe defer later.
+Since the system state doesn't change (one of the sub devices actually
+requires an independent other device to have probed), the system ends
+up an an infinite probe defer loop.
