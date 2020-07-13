@@ -2,147 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF91C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6696DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C114208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLpTnFR3"
+	by mail.kernel.org (Postfix) with ESMTP id 4662A2089D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgGMVc3 (ORCPT
+        id S1726763AbgGMVdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgGMVc2 (ORCPT
+        Mon, 13 Jul 2020 17:33:38 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59947 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgGMVdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:32:28 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A027C061755;
-        Mon, 13 Jul 2020 14:32:28 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p20so19065652ejd.13;
-        Mon, 13 Jul 2020 14:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9xk5002gZ5H7JGOgsHs7h731etRLB6WtyENiHxGGu7I=;
-        b=bLpTnFR30/+CWwAe8tAwcO+WU+hkSYANQdbkuElT0SAIi6ujeM1TQRDW+tCw7AICBj
-         5kCIWw6YVvqgCI3mI7R3rV4p4D/H1krl4pX5fIqkagHlyiEFyV329SLTFtsSHwii5Pvs
-         NeEcqyvNhCmv006c7RAJd1CQDhlH02TJpBBVtkzWG3QMAyS8lhgPxRzgN6IKJvk8TKPT
-         iOYrzrUHpGNz96WU9SoDtgqNIGpwQAbG5CIzoGQbtjCl4cby+ZNa9qJtkEVVg7PL+93M
-         vusMQSDo7Z272nWxnOj7FItu1oUHIplSVGK/K9ov0C0pGx+tmdVKK6E4IM28vEMhl+Ku
-         EEsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9xk5002gZ5H7JGOgsHs7h731etRLB6WtyENiHxGGu7I=;
-        b=QRBpNhtO7CwTYgvyvtY7Sm8pmgRxgEnvOpjePIiWbEYtPl14Jz0hsIMpCl+88SdSFZ
-         R7tSzHMKRQ3IHlNsaMLdRoMjUsFcv/ZJcyWbzo7f/1ccxUwKGas4xsErFeM/HgsA1VeQ
-         3JBv3aNnHp0IvPQUctZzDJNvVX76g7vPGwPbMaxtkIVdPqQrs3iH/TcY5BTjWK2vQOYC
-         K8Nh7ebV/27LzJ79USmOTMvvvm4ZJeFYstX9t+1qh/GhY6oWJjkcWhvbNowl+AurnvZQ
-         X7qJXoMBIR+yrJ1z0JnbksNaWkaEgrOq00BJd3BqGjl7npFfuwmAvQR2OiLfhfl1Lpqi
-         jahg==
-X-Gm-Message-State: AOAM532v6zO/9Gx9xo91LxkjFks/Csm3stAgLX+ODHjq/Mh9bqqC5xwy
-        nR3RL0tdCJO/Uc3W2LV4YClU+WEOhf16yXbtuQA=
-X-Google-Smtp-Source: ABdhPJwMoWogKyu+hB7N/OXDUjzYJXatIjRK36LwG1lOC44kvht0iMkOGCJlZyw4lHZLCW+pL24HAecjyLLmYhlZNWg=
-X-Received: by 2002:a17:906:ca4c:: with SMTP id jx12mr1508481ejb.231.1594675946837;
- Mon, 13 Jul 2020 14:32:26 -0700 (PDT)
+        Mon, 13 Jul 2020 17:33:38 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9F75F1C0002;
+        Mon, 13 Jul 2020 21:33:30 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 14:33:26 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
+        geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: Linux kernel in-tree Rust support
+Message-ID: <20200713213326.GA16462@localhost>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <875zarb7zy.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org>
- <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
- <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com> <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 13 Jul 2020 14:32:59 -0700
-Message-ID: <CAF6AEGufuFW3ba3u3A+mY+Gw0ouH2x9xY-9A+OtVff+iXdix9A@mail.gmail.com>
-Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
- speed booting
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>, Sean Paul <sean@poorly.run>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zarb7zy.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+On Mon, Jul 13, 2020 at 01:11:13PM -0500, Eric W. Biederman wrote:
+> Nick Desaulniers <ndesaulniers@google.com> writes:
+> 
+> > Hello folks,
+> > I'm working on putting together an LLVM "Micro Conference" for the
+> > upcoming Linux Plumbers Conf
+> > (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
+> > solidified yet, but I would really like to run a session on support
+> > for Rust "in tree."  I suspect we could cover technical aspects of
+> > what that might look like (I have a prototype of that, was trivial to
+> > wire up KBuild support), but also a larger question of "should we do
+> > this?" or "how might we place limits on where this can be used?"
 > >
-> > Hi,
+> > Question to folks explicitly in To:, are you planning on attending plumbers?
 > >
-> > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > I found that if I ever had a little mistake in my kernel config,
-> > > > or device tree, or graphics driver that my system would sit in a loop
-> > > > at bootup trying again and again and again.  An example log was:
-> > >
-> > > Why do we care about optimizing the error case?
-> >
-> > It actually results in a _fully_ infinite loop.  That is: if anything
-> > small causes a component of DRM to fail to probe then the whole system
-> > doesn't boot because it just loops trying to probe over and over
-> > again.  The messages I put in the commit message are printed over and
-> > over and over again.
->
-> Sounds like a bug as that's not what should happen.
->
-> If you defer during boot (initcalls), then you'll be on the deferred
-> list until late_initcall and everything is retried. After
-> late_initcall, only devices getting added should trigger probing. But
-> maybe the adding and then removing a device is causing a re-trigger.
->
-> > > >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
-> > > >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
-> > > >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
-> > > >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
-> > > >   ...
-> > > >
-> > > > I finally tracked it down where this was happening:
-> > > >   - msm_pdev_probe() is called.
-> > > >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
-> > > >     off processing of probe deferrals.
-> > > >   - component_master_add_with_match() could return -EPROBE_DEFER.
-> > > >     making msm_pdev_probe() return -EPROBE_DEFER.
-> > > >   - When msm_pdev_probe() returned the processing of probe deferrals
-> > > >     happens.
-> > > >   - Loop back to the start.
-> > > >
-> > > > It looks like we can fix this by marking "mdss" as a "simple-bus".
-> > > > I have no idea if people consider this the right thing to do or a
-> > > > hack.  Hopefully it's the right thing to do.  :-)
-> > >
-> > > It's a simple test. Do the child devices have any dependency on the
-> > > parent to probe and/or function? If so, not a simple-bus.
-> >
-> > Great!  You can see in the earlier patch in the series that the very
-> > first thing that happens when the parent device probes is that it
-> > calls devm_of_platform_populate().  That means no dependencies, right?
->
-> It should. But then I reviewed the MDSS binding today and it looks
-> like the MDSS is the interrupt parent for at least some child devices?
->
+> > If so, would this be an interesting topic that you'd participate in?
+> 
+> I have two big concerns about actually using rust.
+> 
+> 1) How large is the rust language support, and will each rust module
+>    need to duplicate it.  I seem to remember someone mentioning it is
+>    noticable in size.
 
-yes, that is correct
+There should only be a single copy, which could either be in the kernel
+(if there's Rust code compiled into the kernel) or be in a "rust.ko"
+support module. As long as you use the same version of Rust for the
+kernel and all modules, you can supply symbols dynamically.
 
-BR,
--R
+There are a few other steps we can take to control code size, as well.
+In particular, there are tradeoffs between performance and size, such as
+the amount of code in generics vs non-generics. (We also need to get
+some further optimizations into Rust on that front, such as tail
+merging.)
+
+As for the size overall, given that we'll just be providing the portions
+of "core" and "alloc" that the built code actually uses, and likely not
+providing "std" at all, I would expect the size to remain relatively
+small.
+
+I very much care about overall kernel size, and I'm happy to help make
+sure it remains reasonable.
+
+> 2) What is rust usable for?  The rust type system will not admit
+>    doubly linked lists (or anything where two pointers point at the
+>    same memory) unless you are using an unsafe block.
+
+There are libraries like intrusive-collections which implement
+kernel-style structures with potentially multiple nodes in the structure
+that put them into multiple lists at once. I would expect us to use
+those (or in some cases implement our own). They don't need to be
+written in C, just unsafe Rust that's wrapped up in a safe interface.
+
+Just as the kernel has a variety of higher-level interfaces and data
+structures that make working in the kernel sometimes *easier* than the
+average C program, I'd expect that we'll end up with common Rust
+structures that do what people need, rather than people reimplementing
+their own.
+
+- Josh Triplett
