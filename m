@@ -2,180 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE80C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEBDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2917A20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8D320702
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgGMHvS (ORCPT
+        id S1727890AbgGMHwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMHvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:51:18 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175DBC061755;
-        Mon, 13 Jul 2020 00:51:18 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 00FF2BC0CB;
-        Mon, 13 Jul 2020 07:51:14 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     gerrit@erg.abdn.ac.uk, davem@davemloft.net, kuba@kernel.org,
-        masahiroy@kernel.org, dccp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] [DCCP]: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 09:51:08 +0200
-Message-Id: <20200713075108.32143-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 03:52:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45510 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgGMHwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 03:52:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B2364ACE1;
+        Mon, 13 Jul 2020 07:52:23 +0000 (UTC)
+Subject: Re: [PATCH v5 4/9] mm/migrate: clear __GFP_RECLAIM to make the
+ migration callback consistent with regular THP allocations
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1594622517-20681-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594622517-20681-5-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <367ca602-1112-f87f-7d2a-b0a75cce7269@suse.cz>
+Date:   Mon, 13 Jul 2020 09:52:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+In-Reply-To: <1594622517-20681-5-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On 7/13/20 8:41 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> new_page_nodemask is a migration callback and it tries to use a common
+> gfp flags for the target page allocation whether it is a base page or a
+> THP. The later only adds GFP_TRANSHUGE to the given mask. This results
+> in the allocation being slightly more aggressive than necessary because
+> the resulting gfp mask will contain also __GFP_RECLAIM_KSWAPD. THP
+> allocations usually exclude this flag to reduce over eager background
+> reclaim during a high THP allocation load which has been seen during
+> large mmaps initialization. There is no indication that this is a
+> problem for migration as well but theoretically the same might happen
+> when migrating large mappings to a different node. Make the migration
+> callback consistent with regular THP allocations.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Thanks!
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Typo below (I assume Andrew will fix it)
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+> ---
+>  mm/migrate.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 3b3d918..1cfc965 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page,
+>  	}
+>  
+>  	if (PageTransHuge(page)) {
+> +		/*
+> +		 * clear __GFP_RECALIM to make the migration callback
 
- If you apply the patch, please let me know.
+                         __GFP_RECLAIM
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- net/dccp/Kconfig                    | 2 +-
- net/dccp/ccids/Kconfig              | 4 ++--
- net/dccp/ccids/ccid3.c              | 2 +-
- net/dccp/ccids/ccid3.h              | 2 +-
- net/dccp/ccids/lib/packet_history.c | 2 +-
- net/dccp/ccids/lib/packet_history.h | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/net/dccp/Kconfig b/net/dccp/Kconfig
-index 51ac2631fb48..0c7d2f66ba27 100644
---- a/net/dccp/Kconfig
-+++ b/net/dccp/Kconfig
-@@ -5,7 +5,7 @@ menuconfig IP_DCCP
- 	help
- 	  Datagram Congestion Control Protocol (RFC 4340)
- 
--	  From http://www.ietf.org/rfc/rfc4340.txt:
-+	  From https://www.ietf.org/rfc/rfc4340.txt:
- 
- 	  The Datagram Congestion Control Protocol (DCCP) is a transport
- 	  protocol that implements bidirectional, unicast connections of
-diff --git a/net/dccp/ccids/Kconfig b/net/dccp/ccids/Kconfig
-index 4d7771f36eff..a3eeb84d16f9 100644
---- a/net/dccp/ccids/Kconfig
-+++ b/net/dccp/ccids/Kconfig
-@@ -26,13 +26,13 @@ config IP_DCCP_CCID3
- 	  relatively smooth sending rate is of importance.
- 
- 	  CCID-3 is further described in RFC 4342,
--	  http://www.ietf.org/rfc/rfc4342.txt
-+	  https://www.ietf.org/rfc/rfc4342.txt
- 
- 	  The TFRC congestion control algorithms were initially described in
- 	  RFC 5348.
- 
- 	  This text was extracted from RFC 4340 (sec. 10.2),
--	  http://www.ietf.org/rfc/rfc4340.txt
-+	  https://www.ietf.org/rfc/rfc4340.txt
- 
- 	  If in doubt, say N.
- 
-diff --git a/net/dccp/ccids/ccid3.c b/net/dccp/ccids/ccid3.c
-index 9ef9bee9610f..aef72f6a2829 100644
---- a/net/dccp/ccids/ccid3.c
-+++ b/net/dccp/ccids/ccid3.c
-@@ -7,7 +7,7 @@
-  *  An implementation of the DCCP protocol
-  *
-  *  This code has been developed by the University of Waikato WAND
-- *  research group. For further information please see http://www.wand.net.nz/
-+ *  research group. For further information please see https://www.wand.net.nz/
-  *
-  *  This code also uses code from Lulea University, rereleased as GPL by its
-  *  authors:
-diff --git a/net/dccp/ccids/ccid3.h b/net/dccp/ccids/ccid3.h
-index 081c195e7f7d..02e0fc9f6334 100644
---- a/net/dccp/ccids/ccid3.h
-+++ b/net/dccp/ccids/ccid3.h
-@@ -6,7 +6,7 @@
-  *  An implementation of the DCCP protocol
-  *
-  *  This code has been developed by the University of Waikato WAND
-- *  research group. For further information please see http://www.wand.net.nz/
-+ *  research group. For further information please see https://www.wand.net.nz/
-  *  or e-mail Ian McDonald - ian.mcdonald@jandi.co.nz
-  *
-  *  This code also uses code from Lulea University, rereleased as GPL by its
-diff --git a/net/dccp/ccids/lib/packet_history.c b/net/dccp/ccids/lib/packet_history.c
-index 2d41bb036271..0bef57b908fb 100644
---- a/net/dccp/ccids/lib/packet_history.c
-+++ b/net/dccp/ccids/lib/packet_history.c
-@@ -6,7 +6,7 @@
-  *  An implementation of the DCCP protocol
-  *
-  *  This code has been developed by the University of Waikato WAND
-- *  research group. For further information please see http://www.wand.net.nz/
-+ *  research group. For further information please see https://www.wand.net.nz/
-  *  or e-mail Ian McDonald - ian.mcdonald@jandi.co.nz
-  *
-  *  This code also uses code from Lulea University, rereleased as GPL by its
-diff --git a/net/dccp/ccids/lib/packet_history.h b/net/dccp/ccids/lib/packet_history.h
-index a157d874840b..159cc9326eab 100644
---- a/net/dccp/ccids/lib/packet_history.h
-+++ b/net/dccp/ccids/lib/packet_history.h
-@@ -6,7 +6,7 @@
-  *  Copyright (c) 2005-6 The University of Waikato, Hamilton, New Zealand.
-  *
-  *  This code has been developed by the University of Waikato WAND
-- *  research group. For further information please see http://www.wand.net.nz/
-+ *  research group. For further information please see https://www.wand.net.nz/
-  *  or e-mail Ian McDonald - ian.mcdonald@jandi.co.nz
-  *
-  *  This code also uses code from Lulea University, rereleased as GPL by its
--- 
-2.27.0
+> +		 * consistent with regular THP allocations.
+> +		 */
+> +		gfp_mask &= ~__GFP_RECLAIM;
+>  		gfp_mask |= GFP_TRANSHUGE;
+>  		order = HPAGE_PMD_ORDER;
+>  	}
+> 
 
