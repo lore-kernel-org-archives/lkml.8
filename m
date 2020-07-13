@@ -2,93 +2,78 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A66C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C20C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D09920724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:10:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IR0rPtaO"
+	by mail.kernel.org (Postfix) with ESMTP id F293C2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594617068;
+	bh=u99mantlgDlYGSKWrmXRQ9Ww3mkTcScp3HJLB+/bxQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P/4dVqhu9PVPbplskd9stkH++gPqTLy6GtgjAUTLmLWtJ8x+dfWAV1Zk8lFVLZUVR
+	 Q9OYRGg6dl7Txwp6W6ua5OGsRZ3bNSHkloXekPH8Mc5YgHvN7S5RvszKTikZjrTOLR
+	 hNm2zv8Z5htNdKun3eNoh4UPfnCMaD05Kxv9wW4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgGMFKS (ORCPT
+        id S1728847AbgGMFLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgGMFKR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:10:17 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1EDAC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 22:10:17 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id y2so12129620ioy.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 22:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=u7V5THkrB6yzF4MUKuL2FvUyzEqNXVmvsb51ktC+rUc=;
-        b=IR0rPtaOfVNnncC4AETW8zpepUqNiWptqbZ0nztTAgNji91kx4Xe8hXpPMiQKIlg/B
-         O1e8fZnoyI/2UEH8HQCE/Cj3/7dl0X14zPV5a3Cq2yMpyxI2vh+HkI4Dz3sQfEpiNBOQ
-         koBphOgyASm9hWav3Jmk93O1oxMigl3X94LzdyxRjHTqfastZntEkgJge9Bnbqo6tuQV
-         dFMnTUjnwwHjWozVEgTH4YL565HHSRgmLAK5Rto4Pko90YNNOrp65AnwhYPRjh54fjld
-         EtAcQFGjxEV/RLs9HmHC7kwY38dkBNltlN5UvjxyvhxzYnpYhdmu0MUvzRNtG07kal4y
-         pzSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=u7V5THkrB6yzF4MUKuL2FvUyzEqNXVmvsb51ktC+rUc=;
-        b=g4tYteaVs+L604FharSBs6CcEo4Z6CI6URB3wsNTOVhTI+IDGUgtQRuc31Mr49J17X
-         8YbPPxQj4pK1rb7QqPpHfEpeR/L6b9EYwZhdsUvWX8fHKDe3bM798JvdhPEBrD5/jQaq
-         CjrJ0mey0Dj+RlejT4oIBsPvl05BDZjLvAATG4p1RSIxGuaGwNZ9YsFQE0vA0fXVPPmv
-         jWKFqoMenvF0nShE4yMGFRkmlTotJjW0wZTljC3KPMQDNK0KlJcwYxWhb0pRIKvhkyFk
-         KyV7X9w0QN/L9jRfYOmTBLHKF9/iKVCRC9HMpwmx+6rweDHE6Suy2Gv2wZfsn4m5FKPB
-         5Fjg==
-X-Gm-Message-State: AOAM531w+TynuOZwzQR0/Z/IGRha0izWXPgbsZ6hg8C20sc7w+QL3by0
-        9Boftn4uS9QBWT4zjywJ+bbx8P9D3n5mvIzSf/I=
-X-Google-Smtp-Source: ABdhPJxYYBMrPb5TEjCKe3Mckf7q9egCRL99OeaeI0JnqMsZd6lDZI00bnaTQ+L0TmmS78YQ9ZVxDa9c//+vnCvDhp8=
-X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr60923903iow.70.1594617016973;
- Sun, 12 Jul 2020 22:10:16 -0700 (PDT)
+        Mon, 13 Jul 2020 01:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgGMFLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:11:06 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338E520724;
+        Mon, 13 Jul 2020 05:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594617066;
+        bh=u99mantlgDlYGSKWrmXRQ9Ww3mkTcScp3HJLB+/bxQU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YtahfSmoj3Mu4y0qrtvqwCadHk8BsF4GKBGIC8KruJBvz1ciDXjyurjLM5y3Wc2VJ
+         TmKp+MMlfFXs4U17zLLSE96H1KR7ZjM/87zXFIQCcRNjXG+lDP2OJrrY1ibce5Qjwm
+         GXi0uLAB4fPg3QbAnFgWW3c5sWIFxGrwkFSLRAQ8=
+Date:   Mon, 13 Jul 2020 10:41:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] phy: allwinner: Make PHY_SUN6I_MIPI_DPHY depend on
+ COMMON_CLK
+Message-ID: <20200713051102.GU34333@vkoul-mobl>
+References: <1594113746-25393-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <20200712231050.5147-1-sedat.dilek@gmail.com>
-In-Reply-To: <20200712231050.5147-1-sedat.dilek@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 13 Jul 2020 07:10:05 +0200
-Message-ID: <CA+icZUUYxbfKz2VnkUVL5ZwT7XcwGKJFzbDyoy9cg2h3vr+hkw@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Cc:     Jian Cai <caij2003@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594113746-25393-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 1:11 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> When using Clang's Integrated Assembler (LLVM_IAS=1) we fell over
-> ClangBuiltLinux (CBL) issue #1043 where Jian Cai provided a fix.
->
+On 07-07-20, 17:22, Tiezhu Yang wrote:
+> When CONFIG_ARCH_SUNXI is not set but CONFIG_COMPILE_TEST=y,
+> CONFIG_HAVE_CLK=y, CONFIG_HAVE_LEGACY_CLK=y, there exists
+> the following build errors with CONFIG_PHY_SUN6I_MIPI_DPHY=y:
+> 
+> drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_init':
+> phy-sun6i-mipi-dphy.c:(.text+0x320): undefined reference to `clk_set_rate_exclusive'
+> drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_exit':
+> phy-sun6i-mipi-dphy.c:(.text+0x2c8): undefined reference to `clk_rate_exclusive_put'
+> 
+> clk_set_rate_exclusive() and clk_rate_exclusive_put() are defined
+> in drivers/clk/clk.c, this file is built under CONFIG_COMMON_CLK,
+> so in order to build drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+> successful used with various configs, CONFIG_PHY_SUN6I_MIPI_DPHY
+> should depend on CONFIG_COMMON_CLK.
 
-Just FYI: Patch submitted by Jian.
+Applied, thanks
 
-- Sedat -
-
-[1] https://lore.kernel.org/patchwork/patch/1271455/
-[2] https://lore.kernel.org/lkml/20200713012428.1039487-1-caij2003@gmail.com/
+-- 
+~Vinod
