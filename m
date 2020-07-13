@@ -2,115 +2,130 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4121CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2363A205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8271205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZseOkDY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgGMOaB (ORCPT
+        id S1730011AbgGMOaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:30:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3458 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729659AbgGMOaB (ORCPT
+        Mon, 13 Jul 2020 10:30:18 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12190 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbgGMOaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:30:01 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DE2A0s154676;
-        Mon, 13 Jul 2020 10:29:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3277rcyu1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 10:29:55 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DE2qM4158433;
-        Mon, 13 Jul 2020 10:29:55 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3277rcyu0x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 10:29:55 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DEG5ZH015821;
-        Mon, 13 Jul 2020 14:29:53 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03wdc.us.ibm.com with ESMTP id 327528rmej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jul 2020 14:29:53 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DEToaT4325982
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 14:29:50 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A84678063;
-        Mon, 13 Jul 2020 14:29:52 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 233677805E;
-        Mon, 13 Jul 2020 14:29:52 +0000 (GMT)
-Received: from [9.163.41.130] (unknown [9.163.41.130])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jul 2020 14:29:52 +0000 (GMT)
-Subject: Re: [PATCH 2/2] leds: pca955x: Add an IBM software implementation of
- the PCA9552 chip
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        vishwa@linux.ibm.com
-References: <20200709201220.13736-1-eajames@linux.ibm.com>
- <20200709201220.13736-3-eajames@linux.ibm.com>
- <CAHp75VcE9skpqa32bZ4AAcOa08WYSqqZodnveLSF+sZej5KnWw@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <3077dcbb-70e3-f460-b957-95d11c47be2a@linux.ibm.com>
-Date:   Mon, 13 Jul 2020 09:29:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 13 Jul 2020 10:30:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c6fed0000>; Mon, 13 Jul 2020 07:30:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 07:30:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:30:17 -0700
+Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 14:30:09 +0000
+Subject: Re: [TEGRA194_CPUFREQ PATCH v4 3/4] cpufreq: Add Tegra194 cpufreq
+ driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>,
+        <mirq-linux@rere.qmqm.pl>
+References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
+ <1593186236-12760-4-git-send-email-sumitg@nvidia.com>
+ <20200629061639.7cwxfi64drkof6yu@vireshk-i7>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <0d04d2c8-8f87-ecc7-9bd6-633d84b60e8b@nvidia.com>
+Date:   Mon, 13 Jul 2020 19:59:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcE9skpqa32bZ4AAcOa08WYSqqZodnveLSF+sZej5KnWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200629061639.7cwxfi64drkof6yu@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_11:2020-07-13,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 mlxscore=0 spamscore=0
- bulkscore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007130102
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594650605; bh=cczukomO7UcCHwxyADg2/yNUOTAA7Ksj6A5ikRcdVSA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZseOkDY3VI8BBpYTwAQpZqe6ktLrz0X4KF9iKWlMzXm81N5tZVCx7P9cwtXlKw/V/
+         cdls1zrdFWpmKpSv/v0ICmHIx5ZjCiVT2ViSPXqCvbuxRBZZYZJOJqL/XQ9lIBDYBt
+         Jlj+THatHHPaGH1xG8du4Xi13uygwwJWLIMAFtFyk6znhBTGcu4+TzmSDFDx/yHnPG
+         QSlAlx2JA0WOKpgdJY9RSv5UF8Ftc9mHWFobovQ05rfoLMRVQsEOGUFpekhZSh3WBi
+         /cUvhBKOlKDxYhxF3BxI0qnLLZ1TCDz0QoSyRAPEBcvwXFwWL0XnR4/4QK/iUFkXoj
+         7GOq0EISwKABw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/9/20 3:50 PM, Andy Shevchenko wrote:
-> On Thu, Jul 9, 2020 at 11:16 PM Eddie James <eajames@linux.ibm.com> wrote:
->> IBM created an implementation of the PCA9552 on a PIC16F
->> microcontroller. The I2C device addresses are different from the
->> hardware PCA9552, so add a new compatible string and associated
->> platform data to be able to probe this device.
-> This is weird. I would rather expect ibm prefix with corresponding part number.
 
+> 
+> On 26-06-20, 21:13, Sumit Gupta wrote:
+>> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
+>> +{
+>> +     struct tegra194_cpufreq_data *data;
+>> +     struct tegra_bpmp *bpmp;
+>> +     int err, i;
+>> +
+>> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>> +     if (!data)
+>> +             return -ENOMEM;
+>> +
+>> +     data->num_clusters = MAX_CLUSTERS;
+>> +     data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
+>> +                                 sizeof(*data->tables), GFP_KERNEL);
+>> +     if (!data->tables)
+>> +             return -ENOMEM;
+>> +
+>> +     platform_set_drvdata(pdev, data);
+>> +
+>> +     bpmp = tegra_bpmp_get(&pdev->dev);
+>> +     if (IS_ERR(bpmp))
+>> +             return PTR_ERR(bpmp);
+>> +
+>> +     read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
+>> +     if (!read_counters_wq) {
+>> +             dev_err(&pdev->dev, "fail to create_workqueue\n");
+>> +             err = -EINVAL;
+>> +             goto put_bpmp;
+> 
+> This will call destroy_workqueue() eventually and it will crash your
+> kernel.
+> 
+> Apart from this, this stuff looks okay. Don't resend the patch just
+> yet (and if required, send only this patch using --in-reply-to flag
+> for git send email). Lets wait for an Ack from Rob for the first two
+> patches.
+> 
+Sorry for the delayed response as i was on PTO.
+Thank you for the feedback.
 
-Yep I agree now, see my note to Pavel just now.
+Have posted a v5 based on v4 patch set.
 
-
-Thanks,
-
-Eddie
-
-
->
->> +       pca9552_ibm,
->> +       [pca9552_ibm] = {
->> +       { "pca9552-ibm", pca9552_ibm },
->> +       { .compatible = "nxp,pca9552-ibm", .data = (void *)pca9552_ibm },
->
+>> +     }
+>> +
+> 
+> --
+> viresh
+> 
