@@ -2,115 +2,84 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74278C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5839C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFD22073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9611620758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgGMILh (ORCPT
+        id S1728599AbgGMIKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgGMILg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:11:36 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8522FC061755;
-        Mon, 13 Jul 2020 01:11:36 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 3C9F0BC070;
-        Mon, 13 Jul 2020 08:11:33 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jbaron@akamai.com, bp@alien8.de, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] EDAC/ie31200: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 10:11:26 +0200
-Message-Id: <20200713081126.32283-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        Mon, 13 Jul 2020 04:10:19 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:37964 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726077AbgGMIKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:10:19 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAAXmQBWFgxfpA1mAA--.47566S2;
+        Mon, 13 Jul 2020 16:07:50 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        chris@chris-wilson.co.uk, mika.kuoppala@linux.intel.com,
+        tvrtko.ursulin@intel.com, andi.shyti@intel.com,
+        matthew.auld@intel.com, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] f2fs: gc: fix the variable used in PTR_ERR()
+Date:   Mon, 13 Jul 2020 08:07:49 +0000
+Message-Id: <20200713080749.21782-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAAXmQBWFgxfpA1mAA--.47566S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4UCr15AF1rGF4DWFWkCrg_yoWxuFXEkr
+        47Jrs3WFy2kF90vFnFvwsxZF90ya909F48Aw10q34ftFy2yr4UXa9xur1UXw1xXa13JrZr
+        u3W8uFySvrn3WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+        cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4UJVW0owAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VU1r-BtUUUUU==
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAw4QA13qZNpZSQAAsH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+PTR_ERR should access the value just tested by IS_ERR, so fix
+the variable used in PTR_ERR().
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ drivers/gpu/drm/i915/gt/selftest_lrc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/edac/ie31200_edac.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index d68346a8e141..b52175e7c6d2 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -9,7 +9,7 @@
-  * Since the DRAM controller is on the cpu chip, we can use its PCI device
-  * id to identify these processors.
-  *
-- * PCI DRAM controller device ids (Taken from The PCI ID Repository - http://pci-ids.ucw.cz/)
-+ * PCI DRAM controller device ids (Taken from The PCI ID Repository - https://pci-ids.ucw.cz/)
-  *
-  * 0108: Xeon E3-1200 Processor Family DRAM Controller
-  * 010c: Xeon E3-1200/2nd Generation Core Processor Family DRAM Controller
-@@ -23,9 +23,9 @@
-  * 3e..: 8th/9th Gen Core Processor Host Bridge/DRAM Registers
-  *
-  * Based on Intel specification:
-- * http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e3-1200v3-vol-2-datasheet.pdf
-+ * https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e3-1200v3-vol-2-datasheet.pdf
-  * http://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200-family-vol-2-datasheet.html
-- * http://www.intel.com/content/www/us/en/processors/core/7th-gen-core-family-mobile-h-processor-lines-datasheet-vol-2.html
-+ * https://www.intel.com/content/www/us/en/processors/core/7th-gen-core-family-mobile-h-processor-lines-datasheet-vol-2.html
-  * https://www.intel.com/content/www/us/en/products/docs/processors/core/8th-gen-core-family-datasheet-vol-2.html
-  *
-  * According to the above datasheet (p.16):
+diff --git a/drivers/gpu/drm/i915/gt/selftest_lrc.c b/drivers/gpu/drm/i915/gt/selftest_lrc.c
+index 924bc01ef526..d2587e46afe9 100644
+--- a/drivers/gpu/drm/i915/gt/selftest_lrc.c
++++ b/drivers/gpu/drm/i915/gt/selftest_lrc.c
+@@ -1349,7 +1349,7 @@ static int live_timeslice_nopreempt(void *arg)
+ 
+ 		ce = intel_context_create(engine);
+ 		if (IS_ERR(ce)) {
+-			err = PTR_ERR(rq);
++			err = PTR_ERR(ce);
+ 			goto out_spin;
+ 		}
+ 
 -- 
-2.27.0
+2.17.1
 
