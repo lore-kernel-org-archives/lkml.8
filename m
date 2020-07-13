@@ -2,106 +2,94 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BB8C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10BC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958902068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:00:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcFsCnGY"
+	by mail.kernel.org (Postfix) with ESMTP id B78162068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgGMQAj (ORCPT
+        id S1730347AbgGMQAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgGMQAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:00:38 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE214C061755;
-        Mon, 13 Jul 2020 09:00:38 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b4so12647255qkn.11;
-        Mon, 13 Jul 2020 09:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1ojmtWuhoXE+10Oa37xZFid38Sh0C/r73ASNaf7SWHQ=;
-        b=BcFsCnGYuhwgC0vVkdD/AnoRcC7YBT5Yjs0ZBhG9O2O/o2aF4ReqQps/ZfiOOvBgqA
-         7TdbWPHptfqtgF9lXpYr4UxcFudH5gBaIH/lvw9V3sn3BS+xUBL02sVcjXSB2YuZKw4L
-         Qg3Brl1eV+oFR0a/Suuw6b7G80waQicfv/86XRVeTZxW+RLHsvp0kR5BvFzhduGoQP4y
-         DfgQ0jH1/4ZG5a8Rosa40+gmhV1/SyAP869DHnNzsAM6MKWO4WJlgqklInJV7BNe/yBt
-         HaTlBYiY64hQcsMNoCWwXEJW8X72aeF7M4Dx9PXWA6r29kq2Of84dHw49ndrZklGetjK
-         FQZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1ojmtWuhoXE+10Oa37xZFid38Sh0C/r73ASNaf7SWHQ=;
-        b=sEHoXYHv084Pfzm1OaO/tPXb/S3puYfaR90/KmWbfABztkS5ZvUnUIIMlUvc9nvVMt
-         XS+aPRgjYM9fvwabgwEq7/ckaLIWihTxqSsQ7LnjzOzjxnP3qkTSTBCEkUQP4Esoivc1
-         VBGMp27D8ZnPVpWc8OWafBglZY6mmHAKI15wFQTcTQ9OUD82eqgFFgZwhesrfHm/Yz5p
-         yY4WxlUpMPbA1xzUqUkHXqRwfOaMyp/SmXU52z2ujBo8FwM2BuQKP5XA9TFyMjpYAWAt
-         uyZt2aALJ12xVKlRLeEXC+VxLHfkDgVNtIyr8wJQWMDieJwU32OJ4LWgYBLt41bXKanA
-         T32w==
-X-Gm-Message-State: AOAM5330HL44k6df1aB1NoqtVzW9ZIoZ8/k/wdWNakwC1V136TAAR4nl
-        j2dxxm0G+YbHkDFM00JzpR8pGSMqg4eCwJrDZqw=
-X-Google-Smtp-Source: ABdhPJwhM3ZE0lj3C9bvbV7DNY7AXaVeMAwiOMd7/7ldDQfk666wq76gTljckR5j86QwsbuotoGufWvliS8VdCV7FaY=
-X-Received: by 2002:a05:620a:1674:: with SMTP id d20mr248343qko.131.1594656038015;
- Mon, 13 Jul 2020 09:00:38 -0700 (PDT)
+        Mon, 13 Jul 2020 12:00:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2469 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729700AbgGMQAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:00:35 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 360788AD8E1E872DBE5E;
+        Mon, 13 Jul 2020 17:00:34 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 17:00:34 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 6/6] docs: mm: numaperf.rst Add brief description for access class 1.
+Date:   Mon, 13 Jul 2020 23:56:00 +0800
+Message-ID: <20200713155600.2272743-7-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
+References: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-References: <20200705195110.405139-1-anarsoul@gmail.com> <20200705195110.405139-2-anarsoul@gmail.com>
- <DF6CC01A-0282-45E2-A437-2E3E58CC2883@holtmann.org> <CA+E=qVeYT41Wpp4wHgoVFMa9ty-FPsxxvUB-DJDnj07SpWhpjQ@mail.gmail.com>
- <70578F86-20D3-41C7-A968-83B0605D3526@holtmann.org>
-In-Reply-To: <70578F86-20D3-41C7-A968-83B0605D3526@holtmann.org>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 13 Jul 2020 09:00:11 -0700
-Message-ID: <CA+E=qVf_8-nXP=nSbtb49bF8SxF6P_A+5ntsUHKKmONccwkSwA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] Bluetooth: Add new quirk for broken local ext
- features max_page
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 11:28 PM Marcel Holtmann <marcel@holtmann.org> wrote:
+Try to make minimal changes to the document which already describes
+access class 0 in a generic fashion (including IO initiatiors that
+are not CPUs).
 
-Hi Marcel,
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ Documentation/admin-guide/mm/numaperf.rst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> maybe just the read sync train params command is broken? Can you change the init code and not send it and see if the rest of the init phase proceeds. I would rather have the secure connections actually tested before dismissing it altogether.
+diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
+index a80c3c37226e..a9b1a30f75af 100644
+--- a/Documentation/admin-guide/mm/numaperf.rst
++++ b/Documentation/admin-guide/mm/numaperf.rst
+@@ -56,6 +56,11 @@ nodes' access characteristics share the same performance relative to other
+ linked initiator nodes. Each target within an initiator's access class,
+ though, do not necessarily perform the same as each other.
+ 
++The access class "1" is used to allow differentiation between initiators
++that are CPUs and hence suitable for generic task scheduling, and
++IO initiators such as GPUs and CPUs.  Unlike access class 0, only
++nodes containing CPUs are considered.
++
+ ================
+ NUMA Performance
+ ================
+@@ -88,6 +93,9 @@ The latency attributes are provided in nanoseconds.
+ The values reported here correspond to the rated latency and bandwidth
+ for the platform.
+ 
++Access class 1, takes the same form, but only includes values for CPU to
++memory activity.
++
+ ==========
+ NUMA Cache
+ ==========
+-- 
+2.19.1
 
-I don't think that I have any devices that support secure connections
-to test, I've got only a bluetooth mouse and headphones, both are from
-the 2.0 era.
-
-FWIW unofficial recommendation from Realtek to Pine64 was to avoid
-using any 4.1+ features on this chip. Unfortunately I don't have any
-contacts with Realtek, so I can't confirm that.
-
-> Mind you, there were broken Broadcom implementation of connectionless slave broadcast as well. Maybe this is similar.
-
-I'd prefer to stick to what works unless there's some comprehensive
-test that can figure out what's broken.
-
-Regards,
-Vasily
