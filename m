@@ -2,99 +2,113 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACB4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BA3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57AF42072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CD12072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgGMOKr (ORCPT
+        id S1729969AbgGMOKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:10:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:37166 "EHLO foss.arm.com"
+        Mon, 13 Jul 2020 10:10:49 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:39562 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbgGMOKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:10:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18D3E30E;
-        Mon, 13 Jul 2020 07:10:45 -0700 (PDT)
-Received: from [10.57.62.178] (unknown [10.57.62.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA2E43F7BB;
-        Mon, 13 Jul 2020 07:10:40 -0700 (PDT)
-Subject: Re: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
- SMMU
-To:     Krishna Reddy <vdumpa@nvidia.com>, Rob Herring <robh@kernel.org>
-Cc:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Yu-Huan Hsu <YHsu@nvidia.com>,
-        Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-5-vdumpa@nvidia.com> <20200709201348.GA808454@bogus>
- <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <c2ab2a0d-419d-555f-c124-2cfa1ecb2a81@arm.com>
-Date:   Mon, 13 Jul 2020 15:10:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729659AbgGMOKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:10:46 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id BE852BC0CA;
+        Mon, 13 Jul 2020 14:10:42 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     tony.luck@intel.com, fenghua.yu@intel.com, corbet@lwn.net,
+        linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ia64: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 16:10:36 +0200
+Message-Id: <20200713141036.34841-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB2822514F93F831507A811EE9B3650@BYAPR12MB2822.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-10 21:29, Krishna Reddy wrote:
-> Thanks Rob. One question on setting "minItems: ". Please see below.
-> 
->>> +allOf:
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - nvidia,tegra194-smmu
->>> +    then:
->>> +      properties:
->>> +        reg:
->>> +          minItems: 2
->>> +          maxItems: 2
-> 
->> This doesn't work. The main part of the schema already said there's only
->> 1 reg region. This part is ANDed with that, not an override. You need to add an else clause with 'maxItems: 1' and change the base schema to
->> {minItems: 1, maxItems: 2}.
-> 
-> As the earlier version of base schema doesn't have "minItems: " set, should it be set to 0 for backward compatibility?  Or can it just be omitted setting in base schema as before?
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-We've always needed at least 1 "reg" specifier in practice, so I don't 
-think being backwards-compatible with broken DTs is a concern :)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Robin.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-> 
-> "else" part to set "maxItems: 1" and setting "maxItems: 2" in base schema is clear to me.
-> 
-> 
-> -KR
-> 
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/ia64/xen.rst | 2 +-
+ arch/ia64/Kconfig          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ia64/xen.rst b/Documentation/ia64/xen.rst
+index 831339c74441..9da6abb02a2c 100644
+--- a/Documentation/ia64/xen.rst
++++ b/Documentation/ia64/xen.rst
+@@ -28,7 +28,7 @@ Getting and Building Xen and Dom0
+ 
+ 	# hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
+ 	# cd xen-unstable.hg
+-	# hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
++	# hg clone https://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
+ 
+  2. # make world
+ 
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 1fa2fe2ef053..f21f121a8f42 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -223,7 +223,7 @@ config SMP
+ 	  will run faster if you say N here.
+ 
+ 	  See also the SMP-HOWTO available at
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  If you don't know what to do here, say N.
+ 
+-- 
+2.27.0
+
