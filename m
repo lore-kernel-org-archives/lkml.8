@@ -2,243 +2,284 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D93C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5279FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B64C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wyr/GR20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgGMMSR (ORCPT
+        id S1729618AbgGMMUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
+        Mon, 13 Jul 2020 08:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMSR (ORCPT
+        with ESMTP id S1726586AbgGMMU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:18:17 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB007C061755;
-        Mon, 13 Jul 2020 05:18:16 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B8C72BC0CB;
-        Mon, 13 Jul 2020 12:18:11 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org, rogerq@ti.com,
-        wen.yang99@zte.com.cn, sboyd@kernel.org, grygorii.strashko@ti.com,
-        jsarha@ti.com, weiyongjun1@huawei.com, nsekhar@ti.com,
-        hslester96@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] drivers: phy: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 14:18:05 +0200
-Message-Id: <20200713121805.34047-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 08:20:29 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295ACC061755;
+        Mon, 13 Jul 2020 05:20:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so5936321pfm.4;
+        Mon, 13 Jul 2020 05:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GaetccreuBpWFF0zDdzZxG6ysdRbk3bGWayedX9In8s=;
+        b=Wyr/GR209trsyuYPiQCNonIiDawDYpUODlV1tnDs4jV/qWPyeGOc6z/gJPV7+CDklE
+         55O+fhZHffhBkHqUx0tVLWaqp3vKPN9e5UIF6LKryy/lYKCLgIVVfK/8iQe/LQJVLW0j
+         e/UGFA3AGs255AFXaFcBDPKYFnkTnDMki0PmrzNplSZhuHWdiqU9GAc59gzgqhnmd9/T
+         wxcJYYSKHnt6gCSboDGPCuhghbd5xBX+IiFsJnOrNk+ojyGZfGd/yzNR6yYWL2GrGRMx
+         GdJojIBnC8jbyEh/YPy4BOOSuvwX0UhJC3P3W/B940hVncYvtSgT6TKdNPDWy83M3H/H
+         5d4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GaetccreuBpWFF0zDdzZxG6ysdRbk3bGWayedX9In8s=;
+        b=qxXxonVJkU+99wtFkGkLjHyzqD1SXezGISgkxdh8Ku63P/8B4egB6dpaJuaRaGCy2n
+         5TkM9VkKl4PCbeqxzovNKyIpzWEcV54r9uCU4vjXOXu2nacvIsvpuoRzCsNr4LAl1rtW
+         of7BcNbKexOh+zam4w/aqsNWz6IP/qAb3PbaNlbw5X8SnlhErN/J8umCskinEJ2IXvPx
+         ecpPyCxMK0eYSSNKtGSBSMxD4VeqolreJyEZffoUyCqELoj5CKqX2C1JbnxdV/J53Q/w
+         0Ick8GDYGy1TSV+Gkrei2S6iDp9umI/FbiOfDgQGsguukhEcAvtzerSZ54CyufUs/Dpj
+         SuaQ==
+X-Gm-Message-State: AOAM530uGylizJTi79Q5zKNgtNGAmlegZGj/pYMTzSTIUIk/lGI/mP/6
+        jmx59B08tl6N3zfezzCLlY2knrQEPnlEHg==
+X-Google-Smtp-Source: ABdhPJzg4rJOWneXnoL1gFYfeWYkfBwlQ0Iu6+qq4paslDIPZYSgG2gIxYnrYrO5y/SSYaimG9RdrA==
+X-Received: by 2002:a65:4349:: with SMTP id k9mr43161952pgq.404.1594642828537;
+        Mon, 13 Jul 2020 05:20:28 -0700 (PDT)
+Received: from blackclown ([103.88.82.220])
+        by smtp.gmail.com with ESMTPSA id o12sm14902193pfu.188.2020.07.13.05.20.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Jul 2020 05:20:27 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:50:14 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6] staging: qlge: qlge_main: Simplify while statements.
+Message-ID: <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
+References: <cover.1594642213.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+In-Reply-To: <cover.1594642213.git.usuraj35@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Simplify while loops into more readable and simple for loops.
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ drivers/staging/qlge/qlge_main.c | 49 ++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_m=
+ain.c
+index f7e26defb844..98710d3d4429 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -138,13 +138,11 @@ static int ql_sem_trylock(struct ql_adapter *qdev, u3=
+2 sem_mask)
+=20
+ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+ {
+-	unsigned int wait_count =3D 30;
++	unsigned int wait_count;
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+-	do {
++	for (wait_count =3D 30; wait_count; wait_count--) {
+ 		if (!ql_sem_trylock(qdev, sem_mask))
+ 			return 0;
+ 		udelay(100);
+-	} while (--wait_count);
++	}
+ 	return -ETIMEDOUT;
+ }
+=20
+@@ -1101,7 +1099,7 @@ static int qlge_refill_bq(struct qlge_bq *bq, gfp_t g=
+fp)
+ 	i =3D bq->next_to_use;
+ 	bq_desc =3D &bq->queue[i];
+ 	i -=3D QLGE_BQ_LEN;
+-	do {
++	for (; refill_count; refill_count--) {
+ 		netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 			     "ring %u %s: try cleaning idx %d\n",
+ 			     rx_ring->cq_id, bq_type_name[bq->type], i);
+@@ -1123,8 +1121,7 @@ static int qlge_refill_bq(struct qlge_bq *bq, gfp_t g=
+fp)
+ 			bq_desc =3D &bq->queue[0];
+ 			i -=3D QLGE_BQ_LEN;
+ 		}
+-		refill_count--;
+-	} while (refill_count);
++	}
+ 	i +=3D QLGE_BQ_LEN;
+=20
+ 	if (bq->next_to_use !=3D i) {
+@@ -1824,7 +1821,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_adap=
+ter *qdev,
+ 			sbq_desc->p.skb =3D NULL;
+ 			skb_reserve(skb, NET_IP_ALIGN);
+ 		}
+-		do {
++		for (; length > 0; length -=3D size, i++) {
+ 			lbq_desc =3D ql_get_curr_lchunk(qdev, rx_ring);
+ 			size =3D min(length, qdev->lbq_buf_size);
+=20
+@@ -1839,7 +1836,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_adap=
+ter *qdev,
+ 			skb->truesize +=3D size;
+ 			length -=3D size;
+ 			i++;
+-		} while (length > 0);
++		}
+ 		ql_update_mac_hdr_len(qdev, ib_mac_rsp, lbq_desc->p.pg_chunk.va,
+ 				      &hlen);
+ 		__pskb_pull_tail(skb, hlen);
+@@ -2098,11 +2095,11 @@ static int ql_clean_outbound_rx_ring(struct rx_ring=
+ *rx_ring)
+ 	struct ql_adapter *qdev =3D rx_ring->qdev;
+ 	u32 prod =3D ql_read_sh_reg(rx_ring->prod_idx_sh_reg);
+ 	struct ob_mac_iocb_rsp *net_rsp =3D NULL;
+-	int count =3D 0;
++	int count;
+=20
+ 	struct tx_ring *tx_ring;
+ 	/* While there are entries in the completion queue. */
+-	while (prod !=3D rx_ring->cnsmr_idx) {
++	for (count =3D 0; prod !=3D rx_ring->cnsmr_idx; count++) {
+=20
+ 		netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 			     "cq_id =3D %d, prod =3D %d, cnsmr =3D %d\n",
+@@ -2121,7 +2118,6 @@ static int ql_clean_outbound_rx_ring(struct rx_ring *=
+rx_ring)
+ 				     "Hit default case, not handled! dropping the packet, opcode =3D %=
+x.\n",
+ 				     net_rsp->opcode);
+ 		}
+-		count++;
+ 		ql_update_cq(rx_ring);
+ 		prod =3D ql_read_sh_reg(rx_ring->prod_idx_sh_reg);
+ 	}
+@@ -2146,10 +2142,10 @@ static int ql_clean_inbound_rx_ring(struct rx_ring =
+*rx_ring, int budget)
+ 	struct ql_adapter *qdev =3D rx_ring->qdev;
+ 	u32 prod =3D ql_read_sh_reg(rx_ring->prod_idx_sh_reg);
+ 	struct ql_net_rsp_iocb *net_rsp;
+-	int count =3D 0;
++	int count;
+=20
+ 	/* While there are entries in the completion queue. */
+-	while (prod !=3D rx_ring->cnsmr_idx) {
++	for (count =3D 0; prod !=3D rx_ring->cnsmr_idx; count++) {
+=20
+ 		netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 			     "cq_id =3D %d, prod =3D %d, cnsmr =3D %d\n",
+@@ -2174,7 +2170,6 @@ static int ql_clean_inbound_rx_ring(struct rx_ring *r=
+x_ring, int budget)
+ 				     net_rsp->opcode);
+ 			break;
+ 		}
+-		count++;
+ 		ql_update_cq(rx_ring);
+ 		prod =3D ql_read_sh_reg(rx_ring->prod_idx_sh_reg);
+ 		if (count =3D=3D budget)
+@@ -3026,13 +3021,12 @@ static int ql_start_rx_ring(struct ql_adapter *qdev=
+, struct rx_ring *rx_ring)
+ 		cqicb->flags |=3D FLAGS_LL;	/* Load lbq values */
+ 		tmp =3D (u64)rx_ring->lbq.base_dma;
+ 		base_indirect_ptr =3D rx_ring->lbq.base_indirect;
+-		page_entries =3D 0;
+-		do {
++
++		for (page_entries =3D 0; page_entries < MAX_DB_PAGES_PER_BQ(QLGE_BQ_LEN);
++		     page_entries++, base_indirect_ptr++) {
+ 			*base_indirect_ptr =3D cpu_to_le64(tmp);
+ 			tmp +=3D DB_PAGE_SIZE;
+-			base_indirect_ptr++;
+-			page_entries++;
+-		} while (page_entries < MAX_DB_PAGES_PER_BQ(QLGE_BQ_LEN));
++		}
+ 		cqicb->lbq_addr =3D cpu_to_le64(rx_ring->lbq.base_indirect_dma);
+ 		cqicb->lbq_buf_size =3D
+ 			cpu_to_le16(QLGE_FIT16(qdev->lbq_buf_size));
+@@ -3043,13 +3037,12 @@ static int ql_start_rx_ring(struct ql_adapter *qdev=
+, struct rx_ring *rx_ring)
+ 		cqicb->flags |=3D FLAGS_LS;	/* Load sbq values */
+ 		tmp =3D (u64)rx_ring->sbq.base_dma;
+ 		base_indirect_ptr =3D rx_ring->sbq.base_indirect;
+-		page_entries =3D 0;
+-		do {
++
++		for (page_entries =3D 0; page_entries < MAX_DB_PAGES_PER_BQ(QLGE_BQ_LEN);
++		     page_entries++, base_indirect_ptr++) {
+ 			*base_indirect_ptr =3D cpu_to_le64(tmp);
+ 			tmp +=3D DB_PAGE_SIZE;
+-			base_indirect_ptr++;
+-			page_entries++;
+-		} while (page_entries < MAX_DB_PAGES_PER_BQ(QLGE_BQ_LEN));
++		}
+ 		cqicb->sbq_addr =3D
+ 		    cpu_to_le64(rx_ring->sbq.base_indirect_dma);
+ 		cqicb->sbq_buf_size =3D cpu_to_le16(SMALL_BUFFER_SIZE);
+@@ -4036,9 +4029,11 @@ static int ql_change_rx_buffers(struct ql_adapter *q=
+dev)
+=20
+ 	/* Wait for an outstanding reset to complete. */
+ 	if (!test_bit(QL_ADAPTER_UP, &qdev->flags)) {
+-		int i =3D 4;
++		int i;
+=20
+-		while (--i && !test_bit(QL_ADAPTER_UP, &qdev->flags)) {
++		for (i =3D 3; i; i--) {
++			if test_bit(QL_ADAPTER_UP, &qdev->flags)
++				break;
+ 			netif_err(qdev, ifup, qdev->ndev,
+ 				  "Waiting for adapter UP...\n");
+ 			ssleep(1);
+--=20
+2.17.1
 
- If you apply the patch, please let me know.
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
- Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
- drivers/phy/phy-core.c                                      | 2 +-
- drivers/phy/ti/phy-am654-serdes.c                           | 2 +-
- drivers/phy/ti/phy-gmii-sel.c                               | 2 +-
- drivers/phy/ti/phy-j721e-wiz.c                              | 2 +-
- drivers/phy/ti/phy-omap-control.c                           | 2 +-
- drivers/phy/ti/phy-omap-usb2.c                              | 2 +-
- drivers/phy/ti/phy-ti-pipe3.c                               | 2 +-
- include/linux/phy/omap_control_phy.h                        | 2 +-
- include/linux/phy/omap_usb.h                                | 2 +-
- include/linux/phy/phy.h                                     | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8MUX4ACgkQ+gRsbIfe
+747F3xAAmyrP1GwDZmqAd51u4CcyuNThih8phCL/D6By3QmFiKai+JclUhobitxk
+sOiPTq2HrhbpKyQcb+FOkdWc0Y9VXl0FmAaYkK77swoBYbh1P2ISxF0t/ibnRvFd
+KWvjYeVZx0RR0/QIUkbkrxTx+PAgE/1LaZ/z0EcFTGg5dL6nzOzmf4rY4twi2I0l
+Pa4jIGuYmnuJk9tc3fXpkoLJA7pLbuWkNKoOiUCbSVVOMLKjtDkDU4DKlA3Ed/tA
+cGzNWa4phly5qDLWYYgjy9hZHK1KQpWNv1ZW6MJWfsr9mAm6CU19HhtgJWe4qkOo
+Nam2YAdTV0cqCpi7/iWeeekElO+kumATkock7+yUNiToIghyL/NGxxxBDux92wet
+I9KSoVeVPCcPJnavSRnqOwjdUGFmrQy+aHj1+60optgTYdHgHVgxfPercdl+cIsv
+eedfIHdcnB30wevSQIzxZoRxXF9ls5bL3UD1vf4EeohOTyljC84BwNugn57q1pQT
++Yt9peNh4WaMfHX9h24rETmilin5QFzA+in94v/IcKO9srHSQo+giouDrNseHOFK
+eaTmTrBwoExZBoySMn53TBBr57Wj+egtcWaPOwqwbpsAVa4mNPVKbf3i2TnU0nt/
+BS5EqzGfChiNJ+4J2QYEWlRRRkZPa9YkoLhcN1RuNcojc0jx0Ek=
+=TKHH
+-----END PGP SIGNATURE-----
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-index 3f913d6d1c3d..ebb5ffe1b821 100644
---- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-+++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+# Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
- %YAML 1.2
- ---
- $id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a27b8d578d7f..41182dd3b705 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -2,7 +2,7 @@
- /*
-  * phy-core.c  --  Generic Phy framework.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
-diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-index 0a166d5a6414..89d5b5a5d83a 100644
---- a/drivers/phy/ti/phy-am654-serdes.c
-+++ b/drivers/phy/ti/phy-am654-serdes.c
-@@ -2,7 +2,7 @@
- /**
-  * PCIe SERDES driver for AM654x SoC
-  *
-- * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index 7edd5c3bc536..84a3434375ab 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments CPSW Port's PHY Interface Mode selection Driver
-  *
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Based on cpsw-phy-sel.c driver created by Mugunthan V N <mugunthanvnm@ti.com>
-  */
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 30ea5b207285..f8cfdc8f56b9 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -2,7 +2,7 @@
- /**
-  * Wrapper driver for SERDES used in J721E
-  *
-- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-omap-control.c b/drivers/phy/ti/phy-omap-control.c
-index ccd0e4e00451..8257972fac25 100644
---- a/drivers/phy/ti/phy-omap-control.c
-+++ b/drivers/phy/ti/phy-omap-control.c
-@@ -2,7 +2,7 @@
- /*
-  * omap-control-phy.c - The PHY part of control module.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
-index cb2dd3230fa7..9bc96db3315f 100644
---- a/drivers/phy/ti/phy-omap-usb2.c
-+++ b/drivers/phy/ti/phy-omap-usb2.c
-@@ -2,7 +2,7 @@
- /*
-  * omap-usb2.c - USB PHY, talking to USB controller on TI SoCs.
-  *
-- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
-index a87946589eb7..b6d5e1e94f92 100644
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -2,7 +2,7 @@
- /*
-  * phy-ti-pipe3 - PIPE3 PHY driver.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/omap_control_phy.h b/include/linux/phy/omap_control_phy.h
-index aec57dd784f7..2fd00c05acbf 100644
---- a/include/linux/phy/omap_control_phy.h
-+++ b/include/linux/phy/omap_control_phy.h
-@@ -2,7 +2,7 @@
- /*
-  * omap_control_phy.h - Header file for the PHY part of control module.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/omap_usb.h b/include/linux/phy/omap_usb.h
-index e23b52df93ec..783effd61185 100644
---- a/include/linux/phy/omap_usb.h
-+++ b/include/linux/phy/omap_usb.h
-@@ -2,7 +2,7 @@
- /*
-  * omap_usb.h -- omap usb2 phy header file
-  *
-- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index bcee8eba62b3..baa3b1c7a0fb 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -2,7 +2,7 @@
- /*
-  * phy.h -- generic phy header file
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
--- 
-2.27.0
-
+--opJtzjQTFsWo+cga--
