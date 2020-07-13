@@ -2,90 +2,131 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A658BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995B92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BfpHJimG"
+	by mail.kernel.org (Postfix) with ESMTP id 87E792075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594666994;
+	bh=+VLRc7Y9AXVnLAUpIImIA24MM8YQKoOuv2uu8mDmwGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t/WMjbHK9cpYfrJ+50ZaLwoOcvKKhoRqYp4PM/Yc8clKnPTQQLb9sRv1ArRdSIVNn
+	 xV/rlWc5V4kgx6G6DG0AjaQh0ZnGxtnYUvX88ADVnWbJRyeYjufLudO+kfsuXxLMOp
+	 RfpSK93NOVyeEb2XSbxJ+8TrjGIJWHMrUpCTUckQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGMTDr (ORCPT
+        id S1726793AbgGMTDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMTDh (ORCPT
+        Mon, 13 Jul 2020 15:03:13 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37736 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMTDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:03:37 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F00FC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:37 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 1so6409632pfn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cxvIt7oMcO1BT79Wsiw8Q1qnT5txfws4FlG9t77T9c0=;
-        b=BfpHJimGE7qUmYJVs1EA7aE9Rx33XRBpTkMJ2V1aEgTbAV/h16a2cmRV2CGoHP657N
-         qg9OgSyj1sAZVCOFFYipNALOiydy1xPOHjA28ab91/JUvnndU/jNzVXVCtNY4YAyQ8VT
-         3ayLxkiHayuJMGBdy6I14+SHaTPyH0bWp/mY7We0iwdqeD5W2BEAJJLCI7YgFJO/QoDO
-         EZjlxwQISbYqHHdHzi4kB0MPiEm2cpADsW6j3yAmCMkYZtg2vTy5rsYmLf6GxPfOV3sg
-         d7VzCigAdIQ2Upitrm0qFKinv5oiPKUmzHCJi2JrR9ZfFmCGWe3tjbnz9lAsMNqqSEsm
-         lUJw==
+        Mon, 13 Jul 2020 15:03:12 -0400
+Received: by mail-il1-f196.google.com with SMTP id r12so12151790ilh.4;
+        Mon, 13 Jul 2020 12:03:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cxvIt7oMcO1BT79Wsiw8Q1qnT5txfws4FlG9t77T9c0=;
-        b=YCUrgUeU+AfKZ4MyAmsEhrZKljnjjnKaWaSriw5QHAymjPtLeMRs5w89klkFFDwvbS
-         u4lX9s9NepnvqT0Iigg06g8TafXl1Al0QY5c+o8+13mZjsJmLZb/Jl75n4/W/FBeN6vR
-         /Ka1/LK13DZWq2fcc1nEIjW4LTL2KbM8Kb9GL8bY4FLmuvOX2dcrQeyPOKOMUoVj+SBE
-         Z5HSC7WKPSTdbc3FTd+jSFDtQ+YDeRqPvJSyRs2Hp4S+IlvittHJXn+Q/RqvSiKgGd6/
-         f9r1mcf3a3rhhNZKXwpghgb1vdMNoptIjd3sRKJEx9jlD3FujSrW+uoLAIF8/M3Ear8y
-         AOdQ==
-X-Gm-Message-State: AOAM533p4+OaTfN65yAYbh+5EiXn6hteEGz86/fRIGYvi20Oqi0SUCvV
-        g/K0mkd/NuLQPgW/bJgIpEElUgCprGVOXg==
-X-Google-Smtp-Source: ABdhPJzkZfffeazfxUUKT/KX5KVZg/NU11I6xsUM7dCUL1k/5c+oHCs7ac26AzXT3No02tfuMMAdOg==
-X-Received: by 2002:a65:6448:: with SMTP id s8mr416300pgv.405.1594667017044;
-        Mon, 13 Jul 2020 12:03:37 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id w1sm14553021pfq.53.2020.07.13.12.03.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l5rWVgnnCloHt41CFPCxRV5qmnmySbxOsQcq4blbDZU=;
+        b=ZMUT17gJPmBGA6zePd0uFpkmKqt59ITqHZGlUtkyL4JtM1vo28ypmBUssz7LhSrHDr
+         ohGPxkcUcDziTjb5llGP7U/UP0uBNHjmXJSMeloKbkVCj8OdNDa9x7jxhUugJqi+xMh3
+         qE+kJdGuJjyfYQk10LdLf0yYXhrx2Vl5R38CzshG611ol0Q2CNffl9ftDeuIRj1txGpl
+         Od1niqW1icvujCGxGFkGk2R2Az9dBzHAsfIgOrmcWwThPnpV0nUJqzGeoVU2jIJHhru3
+         wWa2oCVZqlrKqWA3OsOInzDHN0tr/yOU2Qj+51Q1OrP2x96GVmHF5vq6r59SAftj6cya
+         4XDw==
+X-Gm-Message-State: AOAM530zoQHoTgCEp0NyYrBMdHYz0QLTMkRaSidrFuAr/SvD54Uv5zQJ
+        7brQJpTG5VXorvW0cOUES6LuBJ1ueg==
+X-Google-Smtp-Source: ABdhPJyFU3OO/ANkI1WfClMonQPuMZQFkzhvvt9yHjYL0J26xn464hZPF3poCvPXO+hMPxbus5uE0g==
+X-Received: by 2002:a92:6a02:: with SMTP id f2mr1110656ilc.68.1594666991695;
+        Mon, 13 Jul 2020 12:03:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id x12sm1175218iov.43.2020.07.13.12.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:03:36 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     linux-amlogic@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch
-Subject: Re: [PATCH v2] arm64: dts: amlogic: Add the Ethernet "timing-adjustment" clock
-Date:   Mon, 13 Jul 2020 12:03:32 -0700
-Message-Id: <159466696386.22745.2608870599482313734.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200620162347.26159-1-martin.blumenstingl@googlemail.com>
-References: <20200620162347.26159-1-martin.blumenstingl@googlemail.com>
+        Mon, 13 Jul 2020 12:03:10 -0700 (PDT)
+Received: (nullmailer pid 547640 invoked by uid 1000);
+        Mon, 13 Jul 2020 19:03:10 -0000
+Date:   Mon, 13 Jul 2020 13:03:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: power: supply: Extend max17040
+ compatibility
+Message-ID: <20200713190310.GA546410@bogus>
+References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+ <20200624155633.3557401-3-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624155633.3557401-3-iskren.chernev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jun 2020 18:23:47 +0200, Martin Blumenstingl wrote:
-> Add the "timing-adjustment" clock now that we know how it is connected
-> to the PRG_ETHERNET registers. It is used internally to generate the
-> RGMII RX delay on the MAC side (if needed).
+On Wed, Jun 24, 2020 at 06:56:29PM +0300, Iskren Chernev wrote:
+> Maxim max17040 is a fuel gauge from a larger family utilising the Model
+> Gauge technology. Document all different compatible strings that the
+> max17040 driver recognizes.
+> 
+> Some devices in the wild report double the capacity. The
+> maxim,double-soc (from State-Of-Charge) property fixes that.
+> 
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+> ---
+>  .../bindings/power/supply/max17040_battery.txt    | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> index 4e0186b8380fa..554bce82a08e6 100644
+> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -2,7 +2,9 @@ max17040_battery
+>  ~~~~~~~~~~~~~~~~
+>  
+>  Required properties :
+> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
+> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
+> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+>   - reg: i2c slave address
+>  
+>  Optional properties :
+> @@ -11,6 +13,10 @@ Optional properties :
+>  				generated. Can be configured from 1 up to 32
+>  				(%). If skipped the power up default value of
+>  				4 (%) will be used.
+> +- maxim,double-soc : 		Certain devices return double the capacity.
+> +				Specify this boolean property to divide the
+> +				reported value in 2 and thus normalize it.
+> +				SOC == State of Charge == Capacity.
 
-Applied, thanks!
+This can't be implied by the compatible string?
 
-[1/1] arm64: dts: amlogic: Add the Ethernet "timing-adjustment" clock
-      (no commit info)
-
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+>  - interrupts : 			Interrupt line see Documentation/devicetree/
+>  				bindings/interrupt-controller/interrupts.txt
+>  - wakeup-source :		This device has wakeup capabilities. Use this
+> @@ -31,3 +37,10 @@ Example:
+>  		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>  		wakeup-source;
+>  	};
+> +
+> +	battery-fuel-gauge@36 {
+> +		compatible = "maxim,max17048";
+> +		reg = <0x36>;
+> +		maxim,alert-low-soc-level = <10>;
+> +		maxim,double-soc;
+> +	};
+> -- 
+> 2.27.0
+> 
