@@ -2,143 +2,196 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA9CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B69207BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6938F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="k+yaceJB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iba9h+bf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgGMPzP (ORCPT
+        id S1729946AbgGMPy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729864AbgGMPzO (ORCPT
+        Mon, 13 Jul 2020 11:54:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56304 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729644AbgGMPy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:55:14 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 663AEC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:55:14 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id n2so14101674edr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mvFP8C9ElhA+9J4NHbp88icoVdD/LwjeDZ0MuCFKeSs=;
-        b=k+yaceJBmAwAdUCCyLHeNdv0mZPyEZbdhlT8pDEeDX6/g/ec0BIgzMl9fL3Lw/BqhS
-         U71Pzd9vUppH1ups2mJxxE/r6i/5zwspEzYxTDFn6EsIOjvHm51oI1doIU++tVmZgI27
-         BdPB8DMiSWkDIO32gxyEcTiv24z2GypgsanuioeCYCCddPWp3l+gSVV7tETNrNWs0Hk3
-         OslOKsF3Nyzu9BRxm6XVDq8yO19LQSOTt+v1oiSw5RP5SbZ55kbkc9drcEVBDv/ly7re
-         RJIvU2CS5xZD9bSLFj8kZgqtl8/akOZNwNo8J0GWdIdnCo0JHoUECwa9tFEhidKHsRLp
-         YbXA==
+        Mon, 13 Jul 2020 11:54:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594655697;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c4HkFhEtHUd4HflwBh60DMnTvo0/5vgOKgf0NAOSu2Q=;
+        b=iba9h+bfhStZOx1rlFOSfi8tp+8Yzp5dIv/jPje8GhFUcbgk61/xupx5XAUrYBao7zpIWH
+        f4RHp//8dTf461aHnMc7L+dNFIgy4Olw9BlmZTISBnixdTxB/PtLlAyCS/5RxiGFSJgiZa
+        OSCmWUc7JV5/kfHy7WSU06AtfXXUl0c=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-Hj59kba0OJyXJ-E7ulODWQ-1; Mon, 13 Jul 2020 11:54:55 -0400
+X-MC-Unique: Hj59kba0OJyXJ-E7ulODWQ-1
+Received: by mail-ed1-f69.google.com with SMTP id x20so21485965edr.20
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:54:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mvFP8C9ElhA+9J4NHbp88icoVdD/LwjeDZ0MuCFKeSs=;
-        b=aI/y2Bp/UUWgW0e3EQ+LUDBrhOYltIAuL7ITKlbziTwm2MMgyuu/l2xH9TQxulVmwu
-         /d+zqtzNYm/8qT04VjxVJWUZKu+/Hx1sRh2mXAjhMjTyYQUaiKh5Pm72wdjL/cs3i1ng
-         IUyA+m8ugYsv/Mg/XuuqVJW5c9fajRsV3X69CVUIjo4OtqnMa9KU/JWh4OzD8m85xX/w
-         CWWSlsx4pwHqUKAWfAmkRdT/kKJpIoFjaC+k5xuoShcieQaqCLAE/MLJRDrRaLamSx2z
-         WuEmsX5i+jfG+UU8VPScL+x8FTYQAcVyy5NoulwiTG2NuYuy1JZYiFkcHojSPx1OCCLX
-         CA5Q==
-X-Gm-Message-State: AOAM530HBDxaLIQTsTwGbwMzX422M6SwaPrY2Sk22J5Mgi/BbcwhayTD
-        Fv2oNPqmKDIKESLWLUbOwbH90HDWmwetfso3f5VlGA==
-X-Google-Smtp-Source: ABdhPJxM5zWHCQaAimbCxxaf2ae+gWBz1Jqgn91MrvD+o+/On1BzJQ/4ijhdDBCqPvzUO6bFSmg/E+5V1W51fg7nUZU=
-X-Received: by 2002:a50:d9cb:: with SMTP id x11mr50150edj.93.1594655713140;
- Mon, 13 Jul 2020 08:55:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=c4HkFhEtHUd4HflwBh60DMnTvo0/5vgOKgf0NAOSu2Q=;
+        b=d0pG+jQ/ZTDJ+7Scg6qV4LBE0u5EBOlRQhapqlApkP4mdNa+RwliYDdUaOrwCKyDAo
+         cP8HtkOarySSXV+bIQ/Eqb0zrBiM5tblcsLzsf3QwCpm/QkqEkCFWzN6A7FLp+H9fw6F
+         IGhb2r1QE007yLJyNpDHldNSChusJGjGrr6FQNuLrHFZx6p67l6R82O0oDrieyI0Deyx
+         aPdlZyvLP10vbWCZZuxUjxXiqgk4Lbq/2ANP18McBcX0s4O1Y4PHELCqxQQURqM1/ZBD
+         m2J98mXIys4rMVG70vmkzbARvSrvf1Svw+ic5zk/RdB70wB0xgZpRtEqnkOfYS2LKM4E
+         XUdA==
+X-Gm-Message-State: AOAM533IKEjKkZ3YkORFz3Ung+5CpwU4Kqln8sKoI6iitTTZbyDN98UB
+        SEbn2ojE0ZdGprL/1ny9HBWNZrzEvE2IHf5W7P1RoSMxODvBduzq/mH6Z2t55Fhi+wqiuAUu7i0
+        7LyXZ30XdvhlYuazXboHUr/QV
+X-Received: by 2002:a05:6402:706:: with SMTP id w6mr65696edx.326.1594655694268;
+        Mon, 13 Jul 2020 08:54:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJznVVkXb8tZQBC8cUiPuWf5rzFbZC7jNTHiR2OBCPWlvuAADZEY+tKdQhcJDKWq866mlZGEww==
+X-Received: by 2002:a05:6402:706:: with SMTP id w6mr65681edx.326.1594655694076;
+        Mon, 13 Jul 2020 08:54:54 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id l22sm10021336ejr.98.2020.07.13.08.54.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:54:53 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
+In-Reply-To: <20200713151750.GA29901@linux.intel.com>
+References: <20200713082824.1728868-1-vkuznets@redhat.com> <20200713151750.GA29901@linux.intel.com>
+Date:   Mon, 13 Jul 2020 17:54:52 +0200
+Message-ID: <878sfntnoz.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAFhKne_ZVWVhZX5hNEbeGBfU6BMRN9JKQeTsVYOcMmEH1cd3xg@mail.gmail.com>
- <87h7ul15le.fsf@notabene.neil.brown.name> <20200706072221.GA1947246@kroah.com>
- <CAMuHMdWj2d5GF1ZkuhzQxg9teA51zjF0oQQPWcphzK=kJ6-x9Q@mail.gmail.com>
- <CAFhKne9vswg3Q4mTOz4WP6QWJ8tDH+SNx1Pu7LotLagoNURKgw@mail.gmail.com>
- <d6f56f5f5e0790ee9c7579eb05c7d92e071ee15a.camel@perches.com>
- <CAFhKne_p_rKN4adhsuyUyBfrS0YwCtoNFNn-x4aFajPmnkR6iQ@mail.gmail.com>
- <10eeae911ab653036554f5599ba34406572acaa9.camel@perches.com>
- <20200709131133.1bbb9c63@coco.lan> <20200713042547.GO34333@vkoul-mobl>
-In-Reply-To: <20200713042547.GO34333@vkoul-mobl>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 13 Jul 2020 08:55:02 -0700
-Message-ID: <CAPcyv4iPWXRQxGQOXO-eCmRn7HeDp0NvSUq-o3eQjFPRkA1eoQ@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 9:26 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Hi Mauro,
->
-> On 09-07-20, 13:11, Mauro Carvalho Chehab wrote:
-> > Em Mon, 06 Jul 2020 06:30:01 -0700
-> > Joe Perches <joe@perches.com> escreveu:
-> > >
-> > > $ git grep -i -w -P '\w*slave\w*' drivers | \
-> > >   cut -f1,2 -d/ | uniq -c | sort -rn | head -20 | cat -n
-> > >      1         5683 drivers/net
-> > >      2         2118 drivers/gpu
-> > >      3         1807 drivers/dma
-> > >      4         1389 drivers/i2c
-> > >      5          866 drivers/interconnect
-> > >      6          835 drivers/soundwire
-> > >      7          821 drivers/spi
-> > >      8          698 drivers/w1
-> > >      9          508 drivers/media
-> > >     10          481 drivers/infiniband
-> > >     11          440 drivers/ata
-> > >     12          317 drivers/scsi
-> > >     13          267 drivers/fsi
-> > >     14          240 drivers/tty
-> > >     15          225 drivers/vme
-> > >     16          223 drivers/staging
-> > >     17          157 drivers/mmc
-> > >     18          155 drivers/usb
-> > >     19          141 drivers/video
-> > >     20          140 drivers/char
-> >
-> > It sounds that, as soon after this patch gets merged, the mailing lists
-> > will be flooded by lots of patches replacing such terms with something
-> > else :-(
-> >
-> > Doing a quick look at the media subsystem, it sounds that most terms
-> > come from I2C master/slave and DiSEqC terminology, as defined by their
-> > specs (and the others seem to be derived from some hardware vendor
-> > specific terminology).
-> >
-> > As they're all supported by the current specs, if one would want
-> > to replace them, it should first ensure that the supporting specs
-> > should be using a different terminology, as otherwise replacing
-> > them would just make harder for anyone trying to understand the
-> > code.
->
-> I think waiting for specs may result in long delays, we all know how
-> 'fast' spec bodies work!
->
-> Putting my soundwire maintainer hat, I see more than 1K uses of 'slave'
-> in the subsystem due to MIPI defined terms of SoundWire Master/Slave, so
-> I am planning to replace that and not wait for MIPI to update the spec.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Sounds good.
+> On Mon, Jul 13, 2020 at 10:28:24AM +0200, Vitaly Kuznetsov wrote:
+>> Holes in structs which are userspace ABI are undesireable.
+>> 
+>> Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  Documentation/virt/kvm/api.rst  | 2 +-
+>>  arch/x86/include/uapi/asm/kvm.h | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 320788f81a05..7beccda11978 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -4345,7 +4345,7 @@ Errors:
+>>  	struct {
+>>  		__u16 flags;
+>>  	} smm;
+>> -
+>> +	__u16 pad;
+>
+> I don't think this is sufficient.  Before 83d31e5271ac, the struct was:
+>
 
-> A similar approach where we discuss with relevant stakeholder and arrive
-> at replacement terms and swap them would be great
+Before 850448f35aaf. Thanks, I was too lazy to check that.
 
-Right, just like any other coding-style cleanup, stage it the way that
-makes the most sense for the subsystem you maintain.
+> 	struct kvm_vmx_nested_state_hdr {
+> 		__u64 vmxon_pa;
+> 		__u64 vmcs12_pa;
+>
+> 		struct {
+> 			__u16 flags;
+> 		} smm;
+> 	};
+>
+> which most/all compilers will pad out to 24 bytes on a 64-bit system.  And
+> although smm.flags is padded to 8 bytes, it's initialized as a 2 byte value.
+>
+> 714             struct kvm_vmx_nested_state_hdr boo;
+> 715             u64 val;
+> 716
+> 717             BUILD_BUG_ON(sizeof(boo) != 3*8);
+> 718             boo.smm.flags = 0;
+>    0xffffffff810148a9 <+41>:    xor    %eax,%eax
+>    0xffffffff810148ab <+43>:    mov    %ax,0x18(%rsp)
+>
+> 719
+> 720             val = *((volatile u64 *)(&boo.smm.flags));
+>    0xffffffff810148b0 <+48>:    mov    0x18(%rsp),%rax
+>
+>
+> Which means that userspace built for the old kernel will potentially send in
+> garbage for the new 'flags' field due to it being uninitialized stack data,
+> even with the layout after this patch.
+>
+> 	struct kvm_vmx_nested_state_hdr {
+> 		__u64 vmxon_pa;
+> 		__u64 vmcs12_pa;
+>
+> 		struct {
+> 			__u16 flags;
+> 		} smm;
+> 		__u16 pad;
+> 		__u32 flags;
+> 		__u64 preemption_timer_deadline;
+> 	};
+>
+> So to be backwards compatible I believe we need to add a __u32 pad as well,
+> and to not cause internal padding issues, either make the new 'flags' a
+> __u64 or pad that as well (or add and check a reserved __32).  Making flags
+> a __64 seems like the least wasteful approach, e.g.
+>
+> 	struct kvm_vmx_nested_state_hdr {
+> 		__u64 vmxon_pa;
+> 		__u64 vmcs12_pa;
+>
+> 		struct {
+> 			__u16 flags;
+> 		} smm;
+> 		__u16 pad16;
+> 		__u32 pad32;
+> 		__u64 flags;
+> 		__u64 preemption_timer_deadline;
+> 	};
+
+I see and I agree but the fix like that needs to get into 5.8 or an ABI
+breakage is guaranteed. I'll send v2 immediately, hope Paolo will take a
+look.
+
+>
+>
+>>  	__u32 flags;
+>>  	__u64 preemption_timer_deadline;
+>>    };
+>> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+>> index 0780f97c1850..aae3df1cbd01 100644
+>> --- a/arch/x86/include/uapi/asm/kvm.h
+>> +++ b/arch/x86/include/uapi/asm/kvm.h
+>> @@ -414,7 +414,7 @@ struct kvm_vmx_nested_state_hdr {
+>>  	struct {
+>>  		__u16 flags;
+>>  	} smm;
+>> -
+>> +	__u16 pad;
+>>  	__u32 flags;
+>>  	__u64 preemption_timer_deadline;
+>>  };
+>> -- 
+>> 2.25.4
+>> 
+>
+
+-- 
+Vitaly
+
