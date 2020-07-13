@@ -2,131 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A658BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F42C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E792075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4BB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666994;
-	bh=+VLRc7Y9AXVnLAUpIImIA24MM8YQKoOuv2uu8mDmwGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t/WMjbHK9cpYfrJ+50ZaLwoOcvKKhoRqYp4PM/Yc8clKnPTQQLb9sRv1ArRdSIVNn
-	 xV/rlWc5V4kgx6G6DG0AjaQh0ZnGxtnYUvX88ADVnWbJRyeYjufLudO+kfsuXxLMOp
-	 RfpSK93NOVyeEb2XSbxJ+8TrjGIJWHMrUpCTUckQ=
+	s=default; t=1594667020;
+	bh=ERBn/pr30RWxSObAL8l85+l8FNMMvON1Mype8up0/AU=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=CNXnbm+9w2dImV1Mlk9dhBJ8y2p4TYbD/3AEWRystAEycmKl+IR5VbV6PwGojjzUb
+	 jZwuVGzCrT7B4wZVK8gQa9fkk4efkC8hCFO4HHhz7HRkW4uxy4Rq4V4m9KaORhMGWJ
+	 fPi3BKzNfU7c8oFWlovMrB6lJ2uxEIBX3WScIiiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgGMTDN (ORCPT
+        id S1726947AbgGMTDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:03:13 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37736 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMTDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:03:12 -0400
-Received: by mail-il1-f196.google.com with SMTP id r12so12151790ilh.4;
-        Mon, 13 Jul 2020 12:03:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l5rWVgnnCloHt41CFPCxRV5qmnmySbxOsQcq4blbDZU=;
-        b=ZMUT17gJPmBGA6zePd0uFpkmKqt59ITqHZGlUtkyL4JtM1vo28ypmBUssz7LhSrHDr
-         ohGPxkcUcDziTjb5llGP7U/UP0uBNHjmXJSMeloKbkVCj8OdNDa9x7jxhUugJqi+xMh3
-         qE+kJdGuJjyfYQk10LdLf0yYXhrx2Vl5R38CzshG611ol0Q2CNffl9ftDeuIRj1txGpl
-         Od1niqW1icvujCGxGFkGk2R2Az9dBzHAsfIgOrmcWwThPnpV0nUJqzGeoVU2jIJHhru3
-         wWa2oCVZqlrKqWA3OsOInzDHN0tr/yOU2Qj+51Q1OrP2x96GVmHF5vq6r59SAftj6cya
-         4XDw==
-X-Gm-Message-State: AOAM530zoQHoTgCEp0NyYrBMdHYz0QLTMkRaSidrFuAr/SvD54Uv5zQJ
-        7brQJpTG5VXorvW0cOUES6LuBJ1ueg==
-X-Google-Smtp-Source: ABdhPJyFU3OO/ANkI1WfClMonQPuMZQFkzhvvt9yHjYL0J26xn464hZPF3poCvPXO+hMPxbus5uE0g==
-X-Received: by 2002:a92:6a02:: with SMTP id f2mr1110656ilc.68.1594666991695;
-        Mon, 13 Jul 2020 12:03:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x12sm1175218iov.43.2020.07.13.12.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:03:10 -0700 (PDT)
-Received: (nullmailer pid 547640 invoked by uid 1000);
-        Mon, 13 Jul 2020 19:03:10 -0000
-Date:   Mon, 13 Jul 2020 13:03:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH v3 2/6] dt-bindings: power: supply: Extend max17040
- compatibility
-Message-ID: <20200713190310.GA546410@bogus>
-References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
- <20200624155633.3557401-3-iskren.chernev@gmail.com>
+        Mon, 13 Jul 2020 15:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgGMTDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 15:03:38 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546AB2076D;
+        Mon, 13 Jul 2020 19:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594667017;
+        bh=ERBn/pr30RWxSObAL8l85+l8FNMMvON1Mype8up0/AU=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=ZRkkfyHleaBZp0Vfs5JuTH7gBkWzJb7TMWx0WfrKq+JjCqOf1Cx7Ql0CUe4pWmfLI
+         1kkyv0RegppAo0t0BoBRlbfvvgEAp01WhxSclT1eANlzJBCgTY/hSn6fOeJh7PLkN5
+         PGkqMoZ8H4S5VF0WBd+pUcrT6irlu//cQU3Ak/MI=
+Date:   Mon, 13 Jul 2020 20:03:32 +0100
+From:   Will Deacon <will@kernel.org>
+To:     linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/arm-smmu: Add a init_context_bank implementation
+ hook
+Message-ID: <20200713190331.GA3444@willie-the-truck>
+References: <20200611223656.4724-1-jcrouse@codeaurora.org>
+ <20200713151123.GB3072@willie-the-truck>
+ <20200713170032.GH21059@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624155633.3557401-3-iskren.chernev@gmail.com>
+In-Reply-To: <20200713170032.GH21059@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 06:56:29PM +0300, Iskren Chernev wrote:
-> Maxim max17040 is a fuel gauge from a larger family utilising the Model
-> Gauge technology. Document all different compatible strings that the
-> max17040 driver recognizes.
+On Mon, Jul 13, 2020 at 11:00:32AM -0600, Jordan Crouse wrote:
+> On Mon, Jul 13, 2020 at 04:11:23PM +0100, Will Deacon wrote:
+> > On Thu, Jun 11, 2020 at 04:36:56PM -0600, Jordan Crouse wrote:
+> > > Add a new implementation hook to allow the implementation specific code
+> > > to tweek the context bank configuration just before it gets written.
+> > > The first user will be the Adreno GPU implementation to turn on
+> > > SCTLR.HUPCF to ensure that a page fault doesn't terminating pending
+> > > transactions. Doing so could hang the GPU if one of the terminated
+> > > transactions is a CP read.
+> > > 
+> > > This depends on the arm-smmu adreno SMMU implementation [1].
+> > > 
+> > > [1] https://patchwork.kernel.org/patch/11600943/
+> > > 
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> > > 
+> > >  drivers/iommu/arm-smmu-qcom.c | 13 +++++++++++++
+> > >  drivers/iommu/arm-smmu.c      | 28 +++++++++++++---------------
+> > >  drivers/iommu/arm-smmu.h      | 11 +++++++++++
+> > >  3 files changed, 37 insertions(+), 15 deletions(-)
+> > 
+> > This looks straightforward enough, but I don't want to merge this without
+> > a user and Sai's series has open questions afaict.
 > 
-> Some devices in the wild report double the capacity. The
-> maxim,double-soc (from State-Of-Charge) property fixes that.
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
-> ---
->  .../bindings/power/supply/max17040_battery.txt    | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> index 4e0186b8380fa..554bce82a08e6 100644
-> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> @@ -2,7 +2,9 @@ max17040_battery
->  ~~~~~~~~~~~~~~~~
->  
->  Required properties :
-> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
-> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
-> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
-> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
->   - reg: i2c slave address
->  
->  Optional properties :
-> @@ -11,6 +13,10 @@ Optional properties :
->  				generated. Can be configured from 1 up to 32
->  				(%). If skipped the power up default value of
->  				4 (%) will be used.
-> +- maxim,double-soc : 		Certain devices return double the capacity.
-> +				Specify this boolean property to divide the
-> +				reported value in 2 and thus normalize it.
-> +				SOC == State of Charge == Capacity.
+> Not sure what you mean by a user in this context?
+> Are you referring to https://patchwork.kernel.org/patch/11628541/?
 
-This can't be implied by the compatible string?
+Right, this post was just a single patch in isolation, whereas it was
+reposted over at:
 
->  - interrupts : 			Interrupt line see Documentation/devicetree/
->  				bindings/interrupt-controller/interrupts.txt
->  - wakeup-source :		This device has wakeup capabilities. Use this
-> @@ -31,3 +37,10 @@ Example:
->  		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
->  		wakeup-source;
->  	};
-> +
-> +	battery-fuel-gauge@36 {
-> +		compatible = "maxim,max17048";
-> +		reg = <0x36>;
-> +		maxim,alert-low-soc-level = <10>;
-> +		maxim,double-soc;
-> +	};
-> -- 
-> 2.27.0
-> 
+https://lore.kernel.org/r/cdcc6a1c95a84e774790389dc8b3b7feeee490dc.1593344119.git.saiprakash.ranjan@codeaurora.org
+
+so I'll ignore this one. Sorry, I'm just really struggling to keep track
+of what is targetting 5.9, and I don't have tonnes of time to sift through
+the backlog of duplicate postings :(
+
+Will
