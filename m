@@ -7,66 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5BCC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAD1C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A780C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD8D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vrMUz80P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oX40QjZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgGMOug (ORCPT
+        id S1730303AbgGMOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
+        Mon, 13 Jul 2020 10:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730188AbgGMOty (ORCPT
+        with ESMTP id S1730195AbgGMOtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EEEC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so16858128wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
+        Mon, 13 Jul 2020 10:49:55 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB8BC08C5DD
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:55 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 17so13432391wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uvpgFvNf+4M0KT7vkEQvPhnEsrG9RGiG3boyv4KDsto=;
-        b=vrMUz80PGSbZwbmV+F7PV6yfcb4vbzA1BBwlGt7IOvaW2FLCyErAgUbgh3NA5AFTZT
-         rg3rxyp5lxg+M2A/pXuyCzTDM3TWNfmw0x+5eph50aQQIqiP44NLYEPZwhNtkqrXaN+n
-         EBxjJwdd3KlXlVgXOULY8K+XRuA45z14kJsz2+GoJaD2bwX6l1UPH0l0FesqMXKQO5qy
-         gRs5C5COfiGZqTR7lsqJHfO8L0wnv0kfJw65ZLZ5Rro4d6AhtvU+udBUrlxwgynjyKH0
-         cVH1XUiAqpYNFua+pzHpcO5Dl/yZC8SC7cpvPSId9A4hOyJnKWA/htNJMI3HFuLIH4C9
-         DqLw==
+        bh=817wc3B0tEQkksY1V8NZK3Mi1te+eDyPgZM0j9ShTnE=;
+        b=oX40QjZLvI5SFCfkxOzc9ZqFxjAYZWST2zk70YDAqN7UJzQ5f4YwKrapiOHYw9qldU
+         M0tdXlSw6HnNt4GXNxvWYAMkZj5Vgf5yVUXFVEAAnxjNdD48KRqr7ZVdsWCKIFE2Rzrn
+         YxYD6esQQcry5gxO3VDGlXG6WK+/8Ek0L44pmDEyqxGrRKtDAF7VVF3z0GvlgUVVCgGY
+         uKWGymRx3+YWrYfTwIo1jJMjUi4uPWTQ1T6Xo0zUWv6yq4xkb35vgVIvOosb32An7miO
+         5f4QCgP/L7iHd41LZL+9E74sbZfWcilKQsl407gClR5yeFcTDm64jf/921eJ2q3EpHf4
+         2SEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uvpgFvNf+4M0KT7vkEQvPhnEsrG9RGiG3boyv4KDsto=;
-        b=KQ+n0774c8/QCdXLNfmBIYTEyL0WpcUMOzRq9z4jKSu5CIh4jQPfFu/gFqAdaFE/E1
-         73bLwKjoftceHT8tHiyQB3j3Tv3TR1BAjB2uM/MW4g7QEZZTzpmPRKOLynVgC/8iTTO9
-         tna3NU8Vm4s72hOODubgEHn/LyJdjduy+nBeurKToTMmrHHD0d9FuVx5Me9BL2VnwIqQ
-         /nOOSnYSLLyMfkH36rAp88B5xT0XZJwwiFX8bfI+adlvslXUO2x82FDBjNvW145S9anF
-         scPsQ6rFJIakyPmQkN7jXIHoHQAXa+XDHJmMADXzpztPIXaOgA0Jsplcj2Zx3VI/9s70
-         aoAg==
-X-Gm-Message-State: AOAM531cnpaaNrW623cKRWivgpPgEHisCA7ZxjfovF6s67kdNo/sdab0
-        6ZrUuYCFzeRAHM1JDk5rQ9E3bQ==
-X-Google-Smtp-Source: ABdhPJxU7YOLp/XuHhUGNd2gC1eVG/AmN1zoITJziRxn5KRKhhZfe4M9AxA1e308qH/mPnzjiVsCOA==
-X-Received: by 2002:adf:9524:: with SMTP id 33mr79455557wrs.156.1594651792520;
-        Mon, 13 Jul 2020 07:49:52 -0700 (PDT)
+        bh=817wc3B0tEQkksY1V8NZK3Mi1te+eDyPgZM0j9ShTnE=;
+        b=ovny6tDbBgTg6L4eQrQW6eRED+/z8pC3PHDGg8I6JQVBibBkkQV/SZ8yVEaAe1MO4E
+         ekWHm+2NGr4vtgA4zKh6xQRRQR9EyZP8G3kpu5kuLyDt6U16SDtXJI8S0gDjeCpM4oye
+         87XSWNLdy9KiEt6VjMHayVMhVFQ2hBA7HSRI/z+ThonUHvZ76Xs7hW/rHFb6pCS9r/xX
+         BhT3MqhipivdDk+iYDvN/qc7FhvHz+MOyHbBjXsK70f1mkqwbrm/w/97/f9bHrNsUFiE
+         N10zNSX19OXpjK055g1AdENmUN1E5Z8In9a+yn0RgflrhM1YBMZTlABPyPNsm6oe+RCp
+         qJ0A==
+X-Gm-Message-State: AOAM530wv4ZrdgblfzL8cpTIvVFqVcy2LvQ2tMuWp+xGRcLXA03Fdc40
+        +zBEzKWbwRV/YkVlWe4/KHMmxw==
+X-Google-Smtp-Source: ABdhPJwp2zFf5tPmLBLPvGbiRZ72PJzfEQKUiUEhit/GogfCqeT4Nsl9fIj4qN5zry/cdy7zSOT92g==
+X-Received: by 2002:a1c:7402:: with SMTP id p2mr280589wmc.117.1594651793611;
+        Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.51
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:52 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:53 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 18/25] pinctrl: pinctrl-bm1880: Rename ill documented struct attribute entries
-Date:   Mon, 13 Jul 2020 15:49:23 +0100
-Message-Id: <20200713144930.1034632-19-lee.jones@linaro.org>
+        Heiko Stuebner <heiko@sntech.de>,
+        Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH 19/25] pinctrl: pinctrl-rockchip: Fix a bunch of kerneldoc misdemeanours
+Date:   Mon, 13 Jul 2020 15:49:24 +0100
+Message-Id: <20200713144930.1034632-20-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -77,36 +79,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Demote headers which are clearly not kerneldoc, provide titles for
+struct definition blocks, fix API slip (bitrot) misspellings and
+provide some missing entries.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pctrldev' not described in 'bm1880_pinctrl'
- drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pinconf' not described in 'bm1880_pinctrl'
+ drivers/pinctrl/pinctrl-rockchip.c:82: warning: cannot understand function prototype: 'struct rockchip_iomux '
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_DEFAULT' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_OR_3V0' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_ONLY' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_3V0_AUTO' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_3V3_ONLY' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_MAX' not described in enum 'rockchip_pin_drv_type'
+ drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_IO_DEFAULT' not described in enum 'rockchip_pin_pull_type'
+ drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_IO_1V8_ONLY' not described in enum 'rockchip_pin_pull_type'
+ drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_MAX' not described in enum 'rockchip_pin_pull_type'
+ drivers/pinctrl/pinctrl-rockchip.c:109: warning: Cannot understand  * @drv_type: drive strength variant using rockchip_perpin_drv_type
+ on line 109 - I thought it was a doc line
+ drivers/pinctrl/pinctrl-rockchip.c:122: warning: Cannot understand  * @reg_base: register base of the gpio bank
+ on line 109 - I thought it was a doc line
+ drivers/pinctrl/pinctrl-rockchip.c:325: warning: Function parameter or member 'route_location' not described in 'rockchip_mux_route_data'
+ drivers/pinctrl/pinctrl-rockchip.c:328: warning: Cannot understand  */
+ on line 109 - I thought it was a doc line
+ drivers/pinctrl/pinctrl-rockchip.c:375: warning: Function parameter or member 'data' not described in 'rockchip_pin_group'
+ drivers/pinctrl/pinctrl-rockchip.c:387: warning: Function parameter or member 'ngroups' not described in 'rockchip_pmx_func'
 
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: linux-rockchip@lists.infradead.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/pinctrl-bm1880.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
-index d1a7d98367870..a8e267237435f 100644
---- a/drivers/pinctrl/pinctrl-bm1880.c
-+++ b/drivers/pinctrl/pinctrl-bm1880.c
-@@ -22,12 +22,12 @@
- /**
-  * struct bm1880_pinctrl - driver data
-  * @base:	Pinctrl base address
-- * @pctrl:	Pinctrl device
-+ * @pctrldev:	Pinctrl device
-  * @groups:	Pingroups
-  * @ngroups:	Number of @groups
-  * @funcs:	Pinmux functions
-  * @nfuncs:	Number of @funcs
-- * @pconf:	Pinconf data
-+ * @pinconf:	Pinconf data
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index c07324d1f2657..c96d810635ad6 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -63,7 +63,7 @@ enum rockchip_pinctrl_type {
+ 	RK3399,
+ };
+ 
+-/**
++/*
+  * Encode variants of iomux registers into a type variable
   */
- struct bm1880_pinctrl {
- 	void __iomem *base;
+ #define IOMUX_GPIO_ONLY		BIT(0)
+@@ -74,6 +74,7 @@ enum rockchip_pinctrl_type {
+ #define IOMUX_WIDTH_2BIT	BIT(5)
+ 
+ /**
++ * struct rockchip_iomux
+  * @type: iomux variant using IOMUX_* constants
+  * @offset: if initialized to -1 it will be autocalculated, by specifying
+  *	    an initial offset value the relevant source offset can be reset
+@@ -84,7 +85,7 @@ struct rockchip_iomux {
+ 	int				offset;
+ };
+ 
+-/**
++/*
+  * enum type index corresponding to rockchip_perpin_drv_list arrays index.
+  */
+ enum rockchip_pin_drv_type {
+@@ -96,7 +97,7 @@ enum rockchip_pin_drv_type {
+ 	DRV_TYPE_MAX
+ };
+ 
+-/**
++/*
+  * enum type index corresponding to rockchip_pull_list arrays index.
+  */
+ enum rockchip_pin_pull_type {
+@@ -106,6 +107,7 @@ enum rockchip_pin_pull_type {
+ };
+ 
+ /**
++ * struct rockchip_drv
+  * @drv_type: drive strength variant using rockchip_perpin_drv_type
+  * @offset: if initialized to -1 it will be autocalculated, by specifying
+  *	    an initial offset value the relevant source offset can be reset
+@@ -119,8 +121,9 @@ struct rockchip_drv {
+ };
+ 
+ /**
++ * struct rockchip_pin_bank
+  * @reg_base: register base of the gpio bank
+- * @reg_pull: optional separate register for additional pull settings
++ * @regmap_pull: optional separate register for additional pull settings
+  * @clk: clock of the gpio bank
+  * @irq: interrupt of the gpio bank
+  * @saved_masks: Saved content of GPIO_INTEN at suspend time.
+@@ -138,6 +141,8 @@ struct rockchip_drv {
+  * @gpio_chip: gpiolib chip
+  * @grange: gpio range
+  * @slock: spinlock for the gpio bank
++ * @toggle_edge_mode: bit mask to toggle (falling/rising) edge mode
++ * @recalced_mask: bit mask to indicate a need to recalulate the mask
+  * @route_mask: bits describing the routing pins of per bank
+  */
+ struct rockchip_pin_bank {
+@@ -312,6 +317,7 @@ enum rockchip_mux_route_location {
+  * @bank_num: bank number.
+  * @pin: index at register or used to calc index.
+  * @func: the min pin.
++ * @route_location: the mux route location (same, pmu, grf).
+  * @route_offset: the max pin.
+  * @route_val: the register offset.
+  */
+@@ -324,8 +330,6 @@ struct rockchip_mux_route_data {
+ 	u32 route_val;
+ };
+ 
+-/**
+- */
+ struct rockchip_pin_ctrl {
+ 	struct rockchip_pin_bank	*pin_banks;
+ 	u32				nr_banks;
+@@ -363,9 +367,7 @@ struct rockchip_pin_config {
+  * @name: name of the pin group, used to lookup the group.
+  * @pins: the pins included in this group.
+  * @npins: number of pins included in this group.
+- * @func: the mux function number to be programmed when selected.
+- * @configs: the config values to be set for each pin
+- * @nconfigs: number of configs for each pin
++ * @data: local pin configuration
+  */
+ struct rockchip_pin_group {
+ 	const char			*name;
+@@ -378,7 +380,7 @@ struct rockchip_pin_group {
+  * struct rockchip_pmx_func: represent a pin function.
+  * @name: name of the pin function, used to lookup the function.
+  * @groups: one or more names of pin groups that provide this function.
+- * @num_groups: number of groups included in @groups.
++ * @ngroups: number of groups included in @groups.
+  */
+ struct rockchip_pmx_func {
+ 	const char		*name;
 -- 
 2.25.1
 
