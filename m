@@ -2,104 +2,94 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C462C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D9BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5666D206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:36:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9nkb3sv"
+	by mail.kernel.org (Postfix) with ESMTP id 1F25720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgGMOgc (ORCPT
+        id S1729845AbgGMOjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:36:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44567 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729695AbgGMOgc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:36:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594650991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=utDsxiJbHEkm2Fob90PfdlUV1I68F8zwYkv/4x3NbvE=;
-        b=Z9nkb3sv/6SfKD1iioN/w6ugrRbxyP8xTZurh4Iyc53k2OJaBqkZC3SvSITvzspq7vOOMb
-        1AbL7lq7n1QhPjJCD6kDfG6JJZElKQWynUTNPg4jThXiKXOvkvobM6ltrE5OkO/MJCX13d
-        KmsoA0ZR3ncOm+HYRH+WzVO/JKMoV2A=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-hqfeB6laNreoEjaa1iWBoQ-1; Mon, 13 Jul 2020 10:36:29 -0400
-X-MC-Unique: hqfeB6laNreoEjaa1iWBoQ-1
-Received: by mail-qt1-f197.google.com with SMTP id l53so10241869qtl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:36:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=utDsxiJbHEkm2Fob90PfdlUV1I68F8zwYkv/4x3NbvE=;
-        b=hi0DU2MusO+K9sLYALbin3EI96eB0K6ct9jTU1Hiuu+PFHRxyOBgp2WYQrAUO1bbAw
-         YoS+pxYHcDGu1yyTS7Tv1eVMnGKOVPrSgjzCOXyu6hW0zMQl595Xr4H1juNgQAQNU97U
-         IFl8JA+2awm1AijvvuVkuACl3aOIqCMTE7hgYoR50kii6jLTk7xL4SHM7vmoawCGluNv
-         AsKO5VdnrhDIFo4o9euH1QlhKRGh1vWJR2pxBaf4oL/NVgG6kt8afIkBlQT2KYWQt6ZC
-         qQ7Jh+OMjm8xkF9m5T1YTKdhKMsPOsyWfoBTts5CGptZSbPjO3Iejv4K9Hcgcmsr9fTs
-         1SKQ==
-X-Gm-Message-State: AOAM532QNzeARgrlvFQMXMmnL9SQycboUZtbXTqJJ3tXxTz49SMiD6kt
-        JtQFpeoOPSpOl85wbairszRtEH97Z2JAeVz3i47w/ap/+ms0oOeSG9sugmvfX8w61fR6BBm80xL
-        p97QI5nfRK3bqOuEUgpogvrWS
-X-Received: by 2002:a37:6503:: with SMTP id z3mr78457624qkb.439.1594650989243;
-        Mon, 13 Jul 2020 07:36:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyntha6qH4OqLYs+Aw/+Ul63oVHCE5s/a6MbC4bAbOEfy0jDN0mdDBf5bhWChHo+7pbRt1Y/Q==
-X-Received: by 2002:a37:6503:: with SMTP id z3mr78457606qkb.439.1594650989040;
-        Mon, 13 Jul 2020 07:36:29 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k6sm17845686qki.123.2020.07.13.07.36.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 07:36:28 -0700 (PDT)
-Subject: Re: [PATCH v2] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-References: <1594604866-30877-1-git-send-email-yilun.xu@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <4efe6ee9-4e88-5b31-01a2-414f752a3d2e@redhat.com>
-Date:   Mon, 13 Jul 2020 07:36:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 13 Jul 2020 10:39:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56962 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729644AbgGMOjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:39:12 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B186E45549ECF17A744D;
+        Mon, 13 Jul 2020 22:39:09 +0800 (CST)
+Received: from [127.0.0.1] (10.174.186.75) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 22:39:01 +0800
+Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+To:     Jon Hunter <jonathanh@nvidia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
+        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <20200710094420.517-3-yezhenyu2@huawei.com>
+ <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <cee60718-ced2-069f-8dad-48941c6fc09b@huawei.com>
+Date:   Mon, 13 Jul 2020 22:39:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1594604866-30877-1-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jon,
 
-> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
->  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
->  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
->  #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
-> +#define PCIE_DEVICE_ID_INTEL_PAC_N3000	0x0B30
+On 2020/7/13 22:27, Jon Hunter wrote:
+> After this change I am seeing the following build errors ...
+> 
+> /tmp/cckzq3FT.s: Assembler messages:
+> /tmp/cckzq3FT.s:854: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:870: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:1095: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:1111: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:1964: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:1980: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:2286: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:2302: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+> /tmp/cckzq3FT.s:4833: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+> /tmp/cckzq3FT.s:4849: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+> /tmp/cckzq3FT.s:5090: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+> /tmp/cckzq3FT.s:5106: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+> /tmp/cckzq3FT.s:874: Error: attempt to move .org backwards
+> /tmp/cckzq3FT.s:1115: Error: attempt to move .org backwards
+> /tmp/cckzq3FT.s:1984: Error: attempt to move .org backwards
+> /tmp/cckzq3FT.s:2306: Error: attempt to move .org backwards
+> /tmp/cckzq3FT.s:4853: Error: attempt to move .org backwards
+> /tmp/cckzq3FT.s:5110: Error: attempt to move .org backwards
+> scripts/Makefile.build:280: recipe for target 'arch/arm64/mm/hugetlbpage.o' failed
+> make[3]: *** [arch/arm64/mm/hugetlbpage.o] Error 1
+> scripts/Makefile.build:497: recipe for target 'arch/arm64/mm' failed
+> make[2]: *** [arch/arm64/mm] Error 2
+> 
+> Cheers
+> Jon
+> 
 
-My point about consistency.  These are all intel  and all should have their pf parts removed.
+The code must be built with binutils >= 2.30.
+Maybe I should add  a check on whether binutils supports ARMv8.4-a instructions...
 
- #define PCIE_DEVICE_ID_INTEL_INT_5_X	0xBCBD
- #define PCIE_DEVICE_ID_INTEL_INT_6_X	0xBCC0
- #define PCIE_DEVICE_ID_INTEL_DSC_1_X	0x09C4
-
-Let's revisit this for the d5005.
-
-trix
-
+Thanks,
+Zhenyu
 
