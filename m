@@ -2,107 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD78C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E5F20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCF2206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="D7xh6eu+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="si4Be0xI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgGMH3U (ORCPT
+        id S1728968AbgGMHbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        Mon, 13 Jul 2020 03:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729034AbgGMH3R (ORCPT
+        with ESMTP id S1725830AbgGMHbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:29:17 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD83C08C5DD
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:29:17 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so14516441wrw.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:29:17 -0700 (PDT)
+        Mon, 13 Jul 2020 03:31:48 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD37C061794;
+        Mon, 13 Jul 2020 00:31:48 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id br7so1391690ejb.5;
+        Mon, 13 Jul 2020 00:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4kU8N5DeedpzZY27vYaHJmaCubANM+yECKFDBgJweY4=;
-        b=D7xh6eu++gbVif5cEAGGKdiDsW9xxIY4MmHaAwDepJv1tFzVb7Zi9vbwXIkAq6OSMC
-         ao2hKH3BT4xs6mO1GFJTVEZ+p1It4SRAP0g9VFFPbOgQBlsZOy0TX3yRmAuQxnyUrrNK
-         mtOZKb8/Zj1Qnf2li7fwOFjgLdjMbc1nTKtBc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cBGepcoKhFbXDRKew9pLyH1Mee+5SLNwBkC3/ifCZ0I=;
+        b=si4Be0xIDbX668zLGIX0oFnTUeK+GpxJu0+xCUecosDIG1/eo1at875powKezrq1O2
+         2cS36aj3iYelc4cW0RHgRlmFtRRpx7yrYA6fCQpD/xJxTrlpKj7qwq0McMuN6eWVKG9K
+         dyvpGfCyr/I8P3NyX9ezZIecxNFiPOkEMqO+kjzqkj07iCmqwIw4Tgc9SB2ekHUWjccI
+         NF5UqWqJkZFgoskbFRxBcMIfDPfdQeCccaSQMjEjFqumHzYneN3CNTlwO175QjAnfwRV
+         sgqFzIe7V+CT4SpcB0GxP9PH3lSXjDmv3bjxnHo/AmVEiPgkv67YpY1PLAGQG/BwpGiH
+         w0qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4kU8N5DeedpzZY27vYaHJmaCubANM+yECKFDBgJweY4=;
-        b=pUrtrw3eQDGMhK2eQiaOzIzB5yPq6MJ3uLHR13Sb2okVw3fisY+OkHif8bpN0G0z7E
-         BVZ4NuAPatlAm7fu5Rj5oWyjGJbeH7S8Qx25zLK/Mi8bgx88XgLKb2XVX4Gp4k7YY9vE
-         HXnPjPxK5Mrxn18co7pzw/bXG7GO6XPieKSOUjUh+P/s6Lb3QI+ua6r2BpgytSljrqBy
-         unHHQKoifhPZo9KiSQ2kL3P3r35pN/ELdIsIlEjgcmeFO/LRPM+06nQbK7m1GxOubWoc
-         ywUmHZraVRSC5uJn4yBsM/11fR6kC8W23Hkwz/vKLls4VVDoW6UV9hEXVjiXK47eRmsH
-         QfhA==
-X-Gm-Message-State: AOAM530F6uUbrfJHmmsJXzxHjsHReYveerRAxz3RiSEw2nZJktSTbUpC
-        7DMwAoTLgcoRCAZvZh8BnbRVG+MNWCJJeQ==
-X-Google-Smtp-Source: ABdhPJyhZaYuvI1VIdHE2m9jwzvJxy3uMEncr3I2/2Fzsq4u4hxVDd97IeUGkvgBxSbMFMvVXofGqA==
-X-Received: by 2002:a5d:43d0:: with SMTP id v16mr82553551wrr.296.1594625355477;
-        Mon, 13 Jul 2020 00:29:15 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id d13sm21582030wrq.89.2020.07.13.00.29.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 00:29:14 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the net-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200713115412.28aac287@canb.auug.org.au>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <e1d2b00a-52d4-e36e-317f-314ac3aecca6@cumulusnetworks.com>
-Date:   Mon, 13 Jul 2020 10:29:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cBGepcoKhFbXDRKew9pLyH1Mee+5SLNwBkC3/ifCZ0I=;
+        b=dict6rysSiAU1PdwHp/hbZ9/BFEHLWaicCnmARHeHB+dWaAv9iSB6pFrTOVgmeYsoi
+         QD8Rdo74BlSwNJbJJEzT3sq9Zp6+0QfRfQe04ehuU18+KugWoEQkww1Sk2Pzyy31WIy5
+         1sSc0BbrcyBNFrj66s97Qwv50HWZd6ruWv3xyWIeFbmztbPcGA2GbWl/XYQj2paegNlU
+         ooHmSu3gYLQrAd4uD5+tVBbMDXAHI9VJt2QBE1AzHRQGfOu4KQA+158bLzg9WUUZyUQa
+         nu2t10sEkB6ghEdAk6OUcHKvMiAOeGxNAP21AKf5FdOy3aTcZ9rCEMt1gidH7oZemeHe
+         1bSw==
+X-Gm-Message-State: AOAM532GOiS4stKu2vS4LKMtyJOjse284Tkwd+EYhcyN/0a0Q/K8NjMS
+        sFGWqyMreqAlMtoWG+dF1RrbwLi4ObcXgKq6leg=
+X-Google-Smtp-Source: ABdhPJzN7TuXIpctaa3HLvrc2CzyCMEVfu1H3O0lORN6qEghCZZEm8HDYb5hMhFFwx8hJflSUdAKl1AWux/0FtAs6ko=
+X-Received: by 2002:a17:906:dbe5:: with SMTP id yd5mr73142204ejb.328.1594625507103;
+ Mon, 13 Jul 2020 00:31:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713115412.28aac287@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+ <20200629114927.17379-3-bruno.thomsen@gmail.com> <20200713025559.GZ21277@dragon>
+ <da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com>
+ <20200713071342.GK12113@dragon> <855b5a01416dfe42d89018450a1c791ccb48e500.camel@perches.com>
+In-Reply-To: <855b5a01416dfe42d89018450a1c791ccb48e500.camel@perches.com>
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+Date:   Mon, 13 Jul 2020 09:31:31 +0200
+Message-ID: <CAH+2xPBF7g18XTO_2jUqB2WLkLRWk1gOKHnkWCcz4xZ8636ASw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of
+ Kamstrup DTS
+To:     Joe Perches <joe@perches.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Bruno Thomsen <bth@kamstrup.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 04:54, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the net-next tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> net/bridge/br_netlink_tunnel.c: In function '__vlan_tunnel_handle_range':
-> net/bridge/br_netlink_tunnel.c:271:26: error: implicit declaration of function 'br_vlan_can_enter_range'; did you mean 'br_vlan_valid_range'? [-Werror=implicit-function-declaration]
->   271 |  if (v && curr_change && br_vlan_can_enter_range(v, *v_end)) {
->       |                          ^~~~~~~~~~~~~~~~~~~~~~~
->       |                          br_vlan_valid_range
-> 
-> Caused by commit
-> 
->   94339443686b ("net: bridge: notify on vlan tunnel changes done via the old api")
-> 
-> CONFIG_BRIDGE_VLAN_FILTERING is not set for this build.
-> 
-> I have reverted that commit for today.
-> 
+Den man. 13. jul. 2020 kl. 09.26 skrev Joe Perches <joe@perches.com>:
+>
+> On Mon, 2020-07-13 at 15:13 +0800, Shawn Guo wrote:
+> > On Sun, Jul 12, 2020 at 10:22:50PM -0700, Joe Perches wrote:
+> []
+> > > diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> []
+> > > @@ -436,7 +436,7 @@ sub maintainers_in_file {
+> > >
+> > >      return if ($file =~ m@\bMAINTAINERS$@);
+> > >
+> > > -    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
+> > > +    if (-f $file && ($email_file_emails || $file =~ /\.(?:yaml|dtsi?)$/)) {
+> >
+> > It should cover .dts file too?
+>
+> It does as dtsi? means the i is optional.
 
-Oops, sorry that's my bad. I mixed br_netlink_tunnel with br_vlan_tunnel, the latter is compiled only
-when bridge vlan filtering is defined.
+It sounds like a good idea for handling dts reviewers.
 
-Anyway, I'll post a fix ASAP.
+Maybe we could also update script/checkpatch.pl to ignore
+new dts/dtsi files and not suggest updating MAINTAINERS
+file.
 
-Thanks.
+/Bruno
