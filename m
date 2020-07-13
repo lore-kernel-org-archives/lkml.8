@@ -2,139 +2,160 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD253C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 846072072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AL08sAvz"
+	by mail.kernel.org (Postfix) with ESMTP id 7578F20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgGMKsV (ORCPT
+        id S1729059AbgGMKpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgGMKsU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:48:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3A6C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 03:48:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so15773283wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 03:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5bHtRaUlLsvF5kQSlI5SGY+rxlkl09WZX0Y9N5VT6eY=;
-        b=AL08sAvz5D7mQ0jO2w9ZYfbGWktviB95wSp9dceUKhEiOhZPwmB3Wm1KinN4RzvUcl
-         +SSr0cuJLYYFC1AlMNiO+zu+jWHEORACYoo9z6PbKsHgc8XcEjzpdQBieU2RnAyMyeeA
-         SRkFEj1wnrJDZHWRVllm7Y3UMhxeTDIjGyRpaJX943uib6YOSf+/ihOnoFul7xJuGwI8
-         ZJ5f7U0cCv38lsHdK0337tc1pXUy5d6Wy/79xoHFdrTA8tr4DXchBo6XkYppQe9aTp2F
-         8+/lWDY2jwo/6qHN3Ss3voHvKBq8Fl5qYGKaSOpu9K7l9y+e3BNO/Oi1S+Lpde2e/JRf
-         dDAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5bHtRaUlLsvF5kQSlI5SGY+rxlkl09WZX0Y9N5VT6eY=;
-        b=IoeaMVyKS4HAzbKlZhShznMTkq159cvB7fzBiRF6JYPZ0Iaic1FDY4gsI1dZnA7S0d
-         DwriaB08f2wnRMrqIINxsf7SbT0i+JfLOZvlAUWANzagvokWnmo4h7YVWjXb/R1s/es4
-         oz6jCd9WTDDTZ0b5pahUhHmbwbi8cP+cwfqhtFSw2SvTTrxjVW4jMu63k6u6+elm1x1y
-         YFoOUtZgK0v0EVd4+zL1/xXbrTyKJSZjNJa5nCOJnIWgldsoZKRTbB3RsaoJjQHJYeK9
-         CKE4FIe/YRNMB1n4pvVQTbUHCIfJtHbUkziAm9JyPutjFXc9+MkFfmwgpdeIMbXRpaRv
-         ZOXA==
-X-Gm-Message-State: AOAM532FQchoeghyQYzUSJx0gQswTqYpMiY2Miqx4q941wYYgFszOpi+
-        t5DEVLfzVHJioVU+cWSTuGNEbg==
-X-Google-Smtp-Source: ABdhPJx7pyReXo1pStdRlzwAyeGpLPJW8L0Gp4kWOkffUi9qRF+WHeffZ0olYz7X7slJzdrvAfkakg==
-X-Received: by 2002:a5d:56c7:: with SMTP id m7mr78292690wrw.223.1594637298900;
-        Mon, 13 Jul 2020 03:48:18 -0700 (PDT)
-Received: from dell ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id l1sm23647155wrb.12.2020.07.13.03.48.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 03:48:18 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 11:48:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Subject: Re: [PATCH 1/4] mfd: mt6360: Refactor and fix code style
-Message-ID: <20200713104816.GD3500@dell>
-References: <1594117856-14343-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594117856-14343-2-git-send-email-gene.chen.richtek@gmail.com>
- <b9540dc6-4d43-45e4-8878-15d2df24a268@gmail.com>
- <20200713065110.GB3500@dell>
- <CAE+NS36uRRqHetQE5QVJ94WX4g7CdQzvD-0VOnLfKAbqdHs3Sg@mail.gmail.com>
+        Mon, 13 Jul 2020 06:45:03 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:52386 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgGMKpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 06:45:03 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2FC10BC07E;
+        Mon, 13 Jul 2020 10:44:59 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] char: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 12:44:53 +0200
+Message-Id: <20200713104453.33414-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS36uRRqHetQE5QVJ94WX4g7CdQzvD-0VOnLfKAbqdHs3Sg@mail.gmail.com>
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020, Gene Chen wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> Lee Jones <lee.jones@linaro.org> 於 2020年7月13日 週一 下午2:51寫道：
-> >
-> > On Fri, 10 Jul 2020, Matthias Brugger wrote:
-> >
-> > >
-> > >
-> > > On 07/07/2020 12:30, Gene Chen wrote:
-> > > > From: Gene Chen <gene_chen@richtek.com>
-> > > >
-> > > > Rearrange include file.
-> > > > Remove brackets around raw numbers.
-> > > > Indicate sub-dev compatible name by using "-"
-> > > > Combine mt6360 pmic/ldo resouces into mt6360 regulator resources.
-> > > > Rename mt6360_pmu_data by mt6360_data.
-> > > > Rename mt6360_pmu by mt6360.
-> > >
-> > > That seems like a lot of cosmetics. Why is this needed?
-> > > If you think that's needed it should be split up in different commits, each
-> > > explaining in the commit message why you do that.
-> >
-> > Agreed.  This set is still not broken up enough.
-> >
-> > Please place each logical change into its own patch for review.
-> >
-> 
-> 1. Rearrange include file.
-> After check serveral file about coding style, include file seems sort
-> by architecture, not by alphabet
-> 2. Remove brackets around raw numbers.
-> Due to redundant brackets, another reviewer recommended to delete them.
-> 3. Indicate sub-dev compatible name by using "-"
-> Suggestion by Lees when review mfd binding document.
-> 4. Combine mt6360 pmic/ldo resouces into mt6360 regulator resources.
-> Simplify the similar resources object.
-> 5. Rename mt6360_pmu_data by mt6360_data.
-> Not only include pmu part, but also entire MT6360 IC.
-> 6. Rename mt6360_pmu by mt6360.
-> Same reason as above.
-> 
-> We try to make code more simpler and easier to understand
-> We can also discard changes if patch 1,2,4,5,6 doesn't make any difference.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-I'm not sure what you're trying to say.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Please place each on of these changes into their own patch.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/char/Kconfig     | 6 +++---
+ drivers/misc/echo/echo.c | 6 +++---
+ drivers/misc/sram-exec.c | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 98c3a5d8003e..b1bd336761b1 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -38,7 +38,7 @@ config PRINTER
+ 	  box (as opposed to using a serial printer; if the connector at the
+ 	  printer has 9 or 25 holes ["female"], then it's serial), say Y.
+ 	  Also read the Printing-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.
++	  <https://www.tldp.org/docs.html#howto>.
+ 
+ 	  It is possible to share one parallel port among several devices
+ 	  (e.g. printer and ZIP drive) and it is safe to compile the
+@@ -201,7 +201,7 @@ config DTLK
+ 	depends on ISA
+ 	help
+ 	  This driver is for the DoubleTalk PC, a speech synthesizer
+-	  manufactured by RC Systems (<http://www.rcsys.com/>).  It is also
++	  manufactured by RC Systems (<https://www.rcsys.com/>).  It is also
+ 	  called the `internal DoubleTalk'.
+ 
+ 	  To compile this driver as a module, choose M here: the
+@@ -237,7 +237,7 @@ config APPLICOM
+ 	  This driver provides the kernel-side support for the intelligent
+ 	  fieldbus cards made by Applicom International. More information
+ 	  about these cards can be found on the WWW at the address
+-	  <http://www.applicom-int.com/>, or by email from David Woodhouse
++	  <https://www.applicom-int.com/>, or by email from David Woodhouse
+ 	  <dwmw2@infradead.org>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+diff --git a/drivers/misc/echo/echo.c b/drivers/misc/echo/echo.c
+index 713e92ee27ac..3c4eaba86576 100644
+--- a/drivers/misc/echo/echo.c
++++ b/drivers/misc/echo/echo.c
+@@ -66,13 +66,13 @@
+        Path Models", IEEE Transactions on communications, COM-25,
+        No. 6, June
+        1977.
+-       http://www.rowetel.com/images/echo/dual_path_paper.pdf
++       https://www.rowetel.com/images/echo/dual_path_paper.pdf
+ 
+    [2] The classic, very useful paper that tells you how to
+        actually build a real world echo canceller:
+ 	 Messerschmitt, Hedberg, Cole, Haoui, Winship, "Digital Voice
+ 	 Echo Canceller with a TMS320020,
+-	 http://www.rowetel.com/images/echo/spra129.pdf
++	 https://www.rowetel.com/images/echo/spra129.pdf
+ 
+    [3] I have written a series of blog posts on this work, here is
+        Part 1: http://www.rowetel.com/blog/?p=18
+@@ -80,7 +80,7 @@
+    [4] The source code http://svn.rowetel.com/software/oslec/
+ 
+    [5] A nice reference on LMS filters:
+-	 http://en.wikipedia.org/wiki/Least_mean_squares_filter
++	 https://en.wikipedia.org/wiki/Least_mean_squares_filter
+ 
+    Credits:
+ 
+diff --git a/drivers/misc/sram-exec.c b/drivers/misc/sram-exec.c
+index cb57ac6ab4c3..6cc31789b38d 100644
+--- a/drivers/misc/sram-exec.c
++++ b/drivers/misc/sram-exec.c
+@@ -1,7 +1,7 @@
+ /*
+  * SRAM protect-exec region helper functions
+  *
+- * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com/
+  *	Dave Gerlach
+  *
+  * This program is free software; you can redistribute it and/or modify
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.27.0
+
