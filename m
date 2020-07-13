@@ -2,123 +2,136 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22677C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B27FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D9F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJH7yZNs"
+	by mail.kernel.org (Postfix) with ESMTP id EEA5620791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgGMQ7C (ORCPT
+        id S1730377AbgGMQ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMQ67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:58:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBB5C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:58:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w17so5759092ply.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=ORIM/ZNEBl74OqQM8L2yYxI+Et9/wiuEeRnDUO3EsAQ=;
-        b=VJH7yZNscwaYbqE/omlmt9Ksyur+12V/TuE/UzLDXZk/SEEj0A641Rrw9RCiT75aVt
-         c/cWhEOhvn7WEAaw428XyuGfpY8+riam1LEjec4bzRUGLaXawH/7y7eVgkty0X8/OFOD
-         5Bs6J+bA6AWv9xdq7GQtl2DfW8yf4wP3HlRvlnGpvHLd+gL2Ps+l1HfFk27Qza1vmgqI
-         +oAKrctQtMbvS27Hts2r7k6nfJjisE/B8j3gfbNY7Ktm04fS+UpEsQCeGqNZfow5hWf5
-         Hi3yVTrCbJWqlfa4SumRjH/GNjpEMx7RW9wmECansF4SxxF84A/18y0h5buEW5r5f4EP
-         dWmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=ORIM/ZNEBl74OqQM8L2yYxI+Et9/wiuEeRnDUO3EsAQ=;
-        b=VrCVji43+tD1cvmAzhtRnlAnmtakmvqQPyMjx3K4SRvg0OjrFTFgMTRoZVkAIzXWzi
-         peobppMDiQ6faZbNVpaeMNlLoIBr8bUpAhy57yB53mSI59Ktim5wvQktwsrRmShhKnHk
-         YFzl0rsqyPFdBUrcy3ph1qp9wl2BkS5EA2MGsuWCVlpqdnNIjRLHuLNv3SN6Xvp5pfJd
-         djzZguV7VvsmiAZ5ZNQN7L2BrVK4XGzJ9E3CVVkT/rvSNjBiICRZUEK7tp7MmZ8U5XOI
-         jNQNxzH/vPT7vbDuKeeBtVqX2431ejCunIYCA7XelmakyDyjT9w+LlT/NtbMI3WXAGzO
-         2dXw==
-X-Gm-Message-State: AOAM531ZIRxqHgARG5nogNVzC0aujnGk3lxT9amb4ln4DS3haWf2jO4e
-        /ZTJZio5FACzVRzxye3wwBc=
-X-Google-Smtp-Source: ABdhPJxL5V5S/nPc/nFeHkLhW85eHEO6Lep2VyhUBbnbRUMZvQGVbz0NRkKtExc0kLvNvW7ItibMHg==
-X-Received: by 2002:a17:902:bd97:: with SMTP id q23mr479116pls.167.1594659539086;
-        Mon, 13 Jul 2020 09:58:59 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id 207sm15368027pfa.100.2020.07.13.09.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:58:58 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 02:58:53 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 0/3] Power10 basic energy management
-To:     ego@linux.vnet.ibm.com
-Cc:     benh@kernel.crashing.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
-        mpe@ellerman.id.au, paulus@samba.org, pratik.r.sampat@gmail.com,
-        Pratik Rajesh Sampat <psampat@linux.ibm.com>,
-        ravi.bangoria@linux.ibm.com, svaidy@linux.ibm.com
-References: <20200710052207.12003-1-psampat@linux.ibm.com>
-        <1594617564.57k8bsyfd0.astroid@bobo.none>
-        <20200713104837.GG24866@in.ibm.com>
-In-Reply-To: <20200713104837.GG24866@in.ibm.com>
+        Mon, 13 Jul 2020 12:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730185AbgGMQ7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:59:10 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA4B20738;
+        Mon, 13 Jul 2020 16:59:06 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 17:59:04 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     maz@kernel.org, steven.price@arm.com, guohanjun@huawei.com,
+        will@kernel.org, olof@lixom.net, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zhangshaokun@hisilicon.com, prime.zeng@hisilicon.com,
+        linux-arch@vger.kernel.org, kuhn.chenqun@huawei.com,
+        xiexiangyou@huawei.com, linux-mm@kvack.org, arm@kernel.org
+Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
+ instructions
+Message-ID: <20200713165903.GD15829@gaia>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <159440712962.27784.4664678472466095995.b4-ty@arm.com>
+ <20200713122123.GC15829@gaia>
+ <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
 MIME-Version: 1.0
-Message-Id: <1594659004.tvqngaepru.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Gautham R Shenoy's message of July 13, 2020 8:48 pm:
-> On Mon, Jul 13, 2020 at 03:23:21PM +1000, Nicholas Piggin wrote:
->> Excerpts from Pratik Rajesh Sampat's message of July 10, 2020 3:22 pm:
->> > Changelog v1 --> v2:
->> > 1. Save-restore DAWR and DAWRX unconditionally as they are lost in
->> > shallow idle states too
->> > 2. Rename pnv_first_spr_loss_level to pnv_first_fullstate_loss_level t=
-o
->> > correct naming terminology
->> >=20
->> > Pratik Rajesh Sampat (3):
->> >   powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on P9 and above
->> >   powerpc/powernv/idle: save-restore DAWR0,DAWRX0 for P10
->> >   powerpc/powernv/idle: Rename pnv_first_spr_loss_level variable
->> >=20
->> >  arch/powerpc/platforms/powernv/idle.c | 34 +++++++++++++++++---------=
--
->> >  1 file changed, 22 insertions(+), 12 deletions(-)
->>=20
->> These look okay to me, but the CPU_FTR_ARCH_300 test for=20
->> pnv_power9_idle_init() is actually wrong, it should be a PVR test=20
->> because idle is not completely architected (not even shallow stop=20
->> states, unfortunately).
->>=20
->> It doesn't look like we support POWER10 idle correctly yet, and on older
->> kernels it wouldn't work even if we fixed newer, so ideally the PVR=20
->> check would be backported as a fix in the front of the series.
->>=20
->> Sadly, we have no OPAL idle driver yet. Hopefully we will before the
->> next processor shows up :P
->=20
-> Abhishek posted a version recently :
-> https://patchwork.ozlabs.org/project/skiboot/patch/20200706043533.76539-1=
--huntbag@linux.vnet.ibm.com/
+On Mon, Jul 13, 2020 at 08:41:31PM +0800, Zhenyu Ye wrote:
+> On 2020/7/13 20:21, Catalin Marinas wrote:
+> > On Fri, Jul 10, 2020 at 08:11:19PM +0100, Catalin Marinas wrote:
+> >> On Fri, 10 Jul 2020 17:44:18 +0800, Zhenyu Ye wrote:
+> >>> NOTICE: this series are based on the arm64 for-next/tlbi branch:
+> >>> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
+> >>>
+> >>> --
+> >>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+> >>> range of input addresses. This series add support for this feature.
+> >>>
+> >>> [...]
+> >>
+> >> Applied to arm64 (for-next/tlbi), thanks!
+> >>
+> >> [1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
+> >>       https://git.kernel.org/arm64/c/a2fd755f77ff
+> >> [2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+> >>       https://git.kernel.org/arm64/c/db34a081d273
+> > 
+> > I'm dropping these two patches from for-next/tlbi and for-next/core.
+> > They need a check on whether binutils supports the new "tlbi rva*"
+> > instructions, otherwise the build mail fail.
+> > 
+> > I kept the latest incarnation of these patches on devel/tlbi-range for
+> > reference.
+> 
+> Should we add a check for the binutils version? Just like:
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index fad573883e89..d5fb6567e0d2 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1300,6 +1300,20 @@ config ARM64_AMU_EXTN
+>  	  correctly reflect reality. Most commonly, the value read will be 0,
+>  	  indicating that the counter is not enabled.
+> 
+> +config ARM64_TLBI_RANGE
+> +	bool "Enable support for tlbi range feature"
+> +	default y
+> +	depends on AS_HAS_TLBI_RANGE
+> +	help
+> +	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+> +	  range of input addresses.
+> +
+> +	  The feature introduces new assembly instructions, and they were
+> +	  support when binutils >= 2.30.
 
-Yep, I saw that. Still keen to get it working, just had other priorities=20
-in the short term. We'll need to do this OPAL v4 thing for it.
+It looks like 2.30. I tracked it down to this commit:
 
-Thanks,
-Nick
+https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=793a194839bc8add71fdc7429c58b10f0667a6f6;hp=1a7ed57c840dcb0401f1a67c6763a89f7d2686d2
 
+> +config AS_HAS_TLBI_RANGE
+> +	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
+> +
+>  endmenu
+
+The problem is that we don't pass -Wa,-march=armv8.4-a to gas. AFAICT,
+we only set an 8.3 for PAC but I'm not sure how passing two such options
+goes.
+
+I'm slightly surprised that my toolchains (and yours) did not complain
+about these instructions. Looking at the binutils code, I think it
+should have complained if -march=armv8.4-a wasn't passed but works fine.
+I thought gas doesn't enable the maximum arch feature by default.
+
+An alternative would be to check for a specific instruction (untested):
+
+	def_bool $(as-instr,tlbi rvae1is, x0)
+
+but we need to figure out whether gas not requiring -march=armv8.4-a is
+a bug (which may be fixed) or that gas accepts all TLBI instructions.
+
+A safer bet may be to simply encode the instructions by hand:
+
+#define SYS_TLBI_RVAE1IS(Rt) \
+	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 1) | ((Rt) & 0x1f))
+#define SYS_TLBI_RVALE1IS(Rt) \
+	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 5) | ((Rt) & 0x1f))
+
+(please check that they are correct)
+
+-- 
+Catalin
