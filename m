@@ -2,185 +2,214 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7ABC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 029942075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U9hrP4mr"
+	by mail.kernel.org (Postfix) with ESMTP id 9591520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgGMM4r (ORCPT
+        id S1729644AbgGMNF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:56:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51140 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729683AbgGMM4q (ORCPT
+        Mon, 13 Jul 2020 09:05:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50711 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbgGMNF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:56:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DCt7Tw084177;
-        Mon, 13 Jul 2020 07:55:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594644907;
-        bh=gquUXcLiNeoXPFXE6SRFUPAtfnoWAv417aPFshr32s4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=U9hrP4mrbp4UVRZnO5yN8lwt0JUVdJitXtKfJEKGJTVa1msPeAbSWbJo7Z5vpZ8ar
-         Ph3johXHrRGYz0hxk3xA5TKXp8nnDhlU/Pp/gOadRK4QtGFXaXZeO6+GZoIVHtTH26
-         AjqsYZLKFQJY2qnIeVNbOQcfHQ6w6LW0InUmfMww=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DCt659054119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 07:55:07 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 07:55:06 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 07:55:06 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DCt4hj098291;
-        Mon, 13 Jul 2020 07:55:05 -0500
-Subject: Re: [PATCHv2 4/5] watchdog: rti-wdt: attach to running watchdog
- during probe
-To:     Guenter Roeck <linux@roeck-us.net>, <wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
-References: <20200703120406.7092-1-t-kristo@ti.com>
- <20200703120406.7092-5-t-kristo@ti.com>
- <8eecaa6a-2e0e-14b3-473a-0674f9b2be26@roeck-us.net>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <9b3f383f-b3fe-3995-7fe6-b34121e79a71@ti.com>
-Date:   Mon, 13 Jul 2020 15:55:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 13 Jul 2020 09:05:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l17so13257975wmj.0;
+        Mon, 13 Jul 2020 06:05:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mYPVA3/IWlt5/iqZ14/INuvJMoGowNHfOcbfoeDX1w4=;
+        b=Z8+SOk+ddRMOxuGvqY//U2agvdda/z2FjAQsjbM7y8jpNdzw3pWsvFkBMdtXmJ3bU0
+         nRNLnnI0yqw/5V3OEaQhtI9fkp4P3f9FvPM2v/WneUA7T//pUg6+497e6OJfZJzcqYrd
+         yRI5A5P6QNTUIeWtKCNT8xM91/ejFHdD/2DVWhja3mrnNUlWKBiP92qY6uuS4BGWX/qx
+         AVgKRVdFGvPaJIg9SV3yjnEjJpK7c9cv7nNUMelw8tADlBliFV351UTOAMFQ8suF0gRN
+         PHOmwrF7YfY+YmtQsO3zHeA0xcVx2V0/2zwg83IdS4rnxfEq7s0U7Af9NXrTfYDBi4Ag
+         Tobg==
+X-Gm-Message-State: AOAM5304nFRzTRmv/rwnkS3zqaZlQcidBQqaLPy+DQXADeAEzyWkCbeV
+        B2/SxJXQ2lSwkZLYK3Zw9quW3Z9RJic=
+X-Google-Smtp-Source: ABdhPJz85xPwE/oBrRjnLqeI3v2s5MzJRWpQlOsdY+4ARsW45oGFKS9vsKmoCJp8fjwB/7owbWTW6g==
+X-Received: by 2002:a7b:c952:: with SMTP id i18mr20098254wml.65.1594645522770;
+        Mon, 13 Jul 2020 06:05:22 -0700 (PDT)
+Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
+        by smtp.gmail.com with ESMTPSA id g14sm24237208wrm.93.2020.07.13.06.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 06:05:21 -0700 (PDT)
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+To:     bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH bpf-next] bpf: allow loading instructions from a fd
+Date:   Mon, 13 Jul 2020 15:05:11 +0200
+Message-Id: <20200713130511.6942-1-mcroce@linux.microsoft.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <8eecaa6a-2e0e-14b3-473a-0674f9b2be26@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2020 18:07, Guenter Roeck wrote:
-> On 7/3/20 5:04 AM, Tero Kristo wrote:
->> If the RTI watchdog is running already during probe, the driver must
->> configure itself to match the HW. Window size and timeout is probed from
->> hardware, and the last keepalive ping is adjusted to match it also.
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   drivers/watchdog/rti_wdt.c | 26 +++++++++++++++++++++++---
->>   1 file changed, 23 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->> index 110bfc8d0bb3..987e5a798cb4 100644
->> --- a/drivers/watchdog/rti_wdt.c
->> +++ b/drivers/watchdog/rti_wdt.c
->> @@ -213,6 +213,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   	struct watchdog_device *wdd;
->>   	struct rti_wdt_device *wdt;
->>   	struct clk *clk;
->> +	u32 last_ping = 0;
->>   
->>   	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
->>   	if (!wdt)
->> @@ -258,11 +259,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   	wdd->min_timeout = 1;
->>   	wdd->max_hw_heartbeat_ms = (WDT_PRELOAD_MAX << WDT_PRELOAD_SHIFT) /
->>   		wdt->freq * 1000;
->> -	wdd->timeout = DEFAULT_HEARTBEAT;
-> 
-> What if the watchdog is not running ?
+From: Matteo Croce <mcroce@microsoft.com>
 
-Configuring wdd->timeout seems redundant, it gets set by the 
-watchdog_init_timeout call done later. I just moved that post the check 
-for a running watchdog so that the same call is used for both cases.
+Allow to load the BPF instructons from a file descriptor,
+other than a pointer.
 
-> 
->>   	wdd->parent = dev;
->>   
->> -	watchdog_init_timeout(wdd, heartbeat, dev);
->> -
->>   	watchdog_set_drvdata(wdd, wdt);
->>   	watchdog_set_nowayout(wdd, 1);
->>   	watchdog_set_restart_priority(wdd, 128);
->> @@ -274,12 +272,34 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   		goto err_iomap;
->>   	}
->>   
->> +	if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
->> +		u32 time_left;
->> +
->> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
->> +		time_left = rti_wdt_get_timeleft(wdd);
->> +		heartbeat = readl(wdt->base + RTIDWDPRLD);
->> +		heartbeat <<= WDT_PRELOAD_SHIFT;
->> +		heartbeat /= wdt->freq;
->> +
-> 
-> This ignores any heartbeat configured as module parameter, which most
-> people will consider unexpected. It might be worthwhile documenting that.
+This is required by the Integrity Subsystem to validate the source of
+the instructions.
 
-I'll add a dev_warn for this case.
+In bpf_attr replace 'insns', which is an u64, to a union containing also
+the file descriptor as int.
+A new BPF_F_LOAD_BY_FD flag tells bpf_prog_load() to load
+the instructions from file descriptor and ignore the pointer.
 
-> 
->> +		wsize = readl(wdt->base + RTIWWDSIZECTRL);
->> +		ret = rti_wdt_setup_hw_hb(wdd);
->> +		if (ret)
->> +			goto err_iomap;
->> +
->> +		last_ping = -(time_left - heartbeat) * 1000;
-> 
-> Why the double negation ?
-> 
-> 		last_ping = (heartbeat - time_left) * 1000;
-> 
-> seems simpler. Also, what if heartbeat - time_left is negative for whatever
-> reason ?
+As BPF files usually are regular ELF files, start reading from the
+current file position, so the userspace can skip the ELF header and jump
+to the right section.
 
-Will fix. I'll add a dev_warn for that case and assume last ping to be zero.
+Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+---
+ include/uapi/linux/bpf.h | 10 +++++-
+ kernel/bpf/syscall.c     | 69 +++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 73 insertions(+), 6 deletions(-)
 
-> 
-> I am not sure if it is a good idea to call rti_wdt_get_timeleft()
-> here. It might be better to add a helper function such as
-> rti_wdt_get_timeleft_ms() to return the time left in milli-seconds
-> for improved accuracy.
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 8bd33050b7bb..4ef75198db21 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -332,6 +332,11 @@ enum bpf_link_type {
+ /* The verifier internal test flag. Behavior is undefined */
+ #define BPF_F_TEST_STATE_FREQ	(1U << 3)
+ 
++/* The BPF is loaded by the file descriptor in `prog_bpf_fd`
++ * instead of the buffer pointed by `insns`.
++ */
++#define BPF_F_LOAD_BY_FD	(1U << 4)
++
+ /* When BPF ldimm64's insn[0].src_reg != 0 then this can have
+  * two extensions:
+  *
+@@ -482,7 +487,10 @@ union bpf_attr {
+ 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
+ 		__u32		prog_type;	/* one of enum bpf_prog_type */
+ 		__u32		insn_cnt;
+-		__aligned_u64	insns;
++		union {
++			__aligned_u64	insns;		/* BPF instructions */
++			__u32		prog_bpf_fd;	/* fd pointing to BPF program */
++		};
+ 		__aligned_u64	license;
+ 		__u32		log_level;	/* verbosity level of verifier */
+ 		__u32		log_size;	/* size of user buffer */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 0fd80ac81f70..b6b1ce34a72b 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -24,6 +24,7 @@
+ #include <linux/ctype.h>
+ #include <linux/nospec.h>
+ #include <linux/audit.h>
++#include <linux/stat.h>
+ #include <uapi/linux/btf.h>
+ #include <linux/pgtable.h>
+ #include <linux/bpf_lsm.h>
+@@ -2082,6 +2083,55 @@ static bool is_perfmon_prog_type(enum bpf_prog_type prog_type)
+ /* last field in 'union bpf_attr' used by this command */
+ #define	BPF_PROG_LOAD_LAST_FIELD attach_prog_fd
+ 
++static int bpf_load_from_fd(u32 fd, void *buf, loff_t insn_cnt)
++{
++	ssize_t bytes, total = 0;
++	struct fd f = fdget(fd);
++	int ret = 0;
++	loff_t pos;
++
++	if (!f.file)
++		return -EBADF;
++
++	if (!S_ISREG(file_inode(f.file)->i_mode)) {
++		ret = -EINVAL;
++		goto out_fd;
++	}
++
++	ret = deny_write_access(f.file);
++	if (ret)
++		goto out_fd;
++
++	ret = security_kernel_read_file(f.file, READING_UNKNOWN);
++	if (ret)
++		goto out;
++
++	pos = f.file->f_pos;
++
++	while (total < insn_cnt) {
++		bytes = kernel_read(f.file, buf + total, insn_cnt - total, &pos);
++		if (bytes < 0) {
++			ret = bytes;
++			goto out;
++		}
++
++		if (bytes == 0)
++			break;
++
++		total += bytes;
++		pos += bytes;
++	}
++
++	if (total != insn_cnt)
++		ret = -EIO;
++
++out:
++	allow_write_access(f.file);
++out_fd:
++	fdput(f);
++	return ret;
++}
++
+ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ {
+ 	enum bpf_prog_type type = attr->prog_type;
+@@ -2096,7 +2146,8 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ 	if (attr->prog_flags & ~(BPF_F_STRICT_ALIGNMENT |
+ 				 BPF_F_ANY_ALIGNMENT |
+ 				 BPF_F_TEST_STATE_FREQ |
+-				 BPF_F_TEST_RND_HI32))
++				 BPF_F_TEST_RND_HI32 |
++				 BPF_F_LOAD_BY_FD))
+ 		return -EINVAL;
+ 
+ 	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS) &&
+@@ -2162,10 +2213,18 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ 
+ 	prog->len = attr->insn_cnt;
+ 
+-	err = -EFAULT;
+-	if (copy_from_user(prog->insns, u64_to_user_ptr(attr->insns),
+-			   bpf_prog_insn_size(prog)) != 0)
+-		goto free_prog;
++	if (attr->prog_flags & BPF_F_LOAD_BY_FD) {
++		err = bpf_load_from_fd(attr->prog_bpf_fd, (void *)prog->insns,
++				       bpf_prog_insn_size(prog));
++		if (err)
++			goto free_prog;
++	} else {
++		if (copy_from_user(prog->insns, u64_to_user_ptr(attr->insns),
++				   bpf_prog_insn_size(prog)) != 0) {
++			err = -EFAULT;
++			goto free_prog;
++		}
++	}
+ 
+ 	prog->orig_prog = NULL;
+ 	prog->jited = 0;
+-- 
+2.26.2
 
-Will add that.
-
--Tero
-
-> 
->> +	}
->> +
->> +	watchdog_init_timeout(wdd, heartbeat, dev);
->> +
->>   	ret = watchdog_register_device(wdd);
->>   	if (ret) {
->>   		dev_err(dev, "cannot register watchdog device\n");
->>   		goto err_iomap;
->>   	}
->>   
->> +	if (last_ping)
->> +		watchdog_set_last_hw_keepalive(wdd, last_ping);
->> +
->>   	return 0;
->>   
->>   err_iomap:
->>
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
