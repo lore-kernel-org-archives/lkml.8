@@ -2,163 +2,153 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D99C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B616EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD1C2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D83A2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoY/vrzI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="W58pYWda";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Fk4SYno5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgGMDxI (ORCPT
+        id S1728762AbgGMDzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgGMDxH (ORCPT
+        Sun, 12 Jul 2020 23:55:08 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:30064 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgGMDzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:53:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB212C061794;
-        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so5436952pfu.1;
-        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
+        Sun, 12 Jul 2020 23:55:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594612507; x=1626148507;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=I4SZ+z3h4qfcj/wEJIngM+7FiLiHmEESaJejUQbWufw=;
+  b=W58pYWdabzocu0OzXgV9VJw3ecZqDFJE6zitHYCsHucTx6FT5BFTnVic
+   hXWd0Z5VGrGq36S4aSRIXwgFY6x2+wIO6tq5ddu+jt4E/3pDj9bsfdXie
+   vnaFp1Y4+9RpVLy5C8OX7kqepGTiOzSGOEY2Iely4oFNCy/bYjr+38PbV
+   bIfQTl+FY77cEfFZgx4IYlDKA/Sv0NowG5ATZvJF58MswAut45CpnllKB
+   /WqhMho90IjNPjsyj7fW9cj1+fzfw3PBtPRTXAjVUhZ8YFQA333tcEXzK
+   jQC1ZIP8ULQ2hKXN0wKneR3m6xjiV8PgSZLJJgaOLwRiUUm5+6Y0gho6n
+   Q==;
+IronPort-SDR: IloN3Vm9h8mMoxs/nuwKmWWLvFi/ulYJYmKddaE5DUtQ3O2xHiX7EwBIH2bnN2LUsl9P06u19Y
+ /z6NK5+WxXAJMyt3O92gYZTnQ0X3Dyw3ZYory2XZl2Tuu7Cg0GB4/0/N1wyFs80kqglOElFuB1
+ QwMXGwN0GXeN2NXStunSi54sYw/nVGZOdllayJ1fuLo4zyxyNU8oVq4pueFG05/InSXSjznbNC
+ o5XegNfB11/KTKea7er1LtYu/vKBypf47fzTxBbqLZhwuJOyo5A8UvnBWkBLqIV7F2lw7zqgl1
+ GyQ=
+X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
+   d="scan'208";a="18914602"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2020 20:55:06 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 12 Jul 2020 20:54:36 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Sun, 12 Jul 2020 20:54:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A8zLBwIupCyRWmzqx8Nttrw8aWgQ5YnQV91O4cNn6GqLRSZ1wN+0kLEbAka+PhzxJW27kzr5vy06MRfR19BxIeHmLt530Wf0+VztJzbGRoejl5h9HGM5JFroNO5W0WAZJuOcsGEBSMricYEnORXRzK3oGTq6jOZ1VIMIpcwPpUTda71v6cmankHJnz6Lfg+1gKynDbCLmyMRLIZWhw6W9SUcOx0C74Ke2J2TqcA0vsg6T3lMQA+Q8oEZoJz22+viO8ZB83AtcMM4VuYJKwj3y8kQd4y0TbDjNHEnjAppejTXAu19k1udWpZLs0uuez+0DOzHRJXbh67BUdMvaGKo3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I4SZ+z3h4qfcj/wEJIngM+7FiLiHmEESaJejUQbWufw=;
+ b=WZbAJmzLqyoOcF3gLSt77x3t5DpG1jd9TGabvO0Olefk2i4V9baMyVhuBkJ88+Hx/57AsIrdZKcMvh8d1Hu6Gzlz8D5hgjrGtPfKyYIf+rQi8gOenZzIUHju9uIMjYXRgulga6hOwoq7HHsifWefLbr8Lh7dSaJCkTZWhhvDjHF+3d/qXzwHbtinTO8CQZHy5M5UGt8lWJ6ew8ThJYuEgFz3Ss2okGDwPG/OedHb64lW/Mi9jDuwAKtzEAENBeajLtzthfankuQ2vUuW8o5dtQrk4cu45skW8pXNZtldKJpmsLZ7r58tjt7E4ceBENtmIDhMKSCwNILSizQNrleADg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P/uMBAFsJSFsMe0s271yKJa7p3nRkmMFxcASFVx3X9s=;
-        b=VoY/vrzIzoUvpLLOWgA04fLa3of+ub+owBKbOFPm4LdVdlbMRJRIXMVMWrrc9BNOKF
-         r1GKF4a3rcQ658wT6pYylfRqzRAtJ0LnTHrzrbJj/RDqE/thsXDNuW6RBEHCF42iA3fG
-         xxO+aGacyGOZsWbLTZosotOjPPtD7nZhnnRp2HdoV1MNWNt3v5+07vL98jQ7SEDH37sY
-         MbzM0SBQhhYgZpuY/z2NCAsBS4v+BJ/xEnbSN7Axq0kCWAa79y7aPFHi/kmMj0PizaT1
-         a9XKlAFkkDACZCXA04uEUl2HNmTg9eaIZMBmmIGD4Qez8apholVrmNLQL7Ak2DfrBBkp
-         8Odg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P/uMBAFsJSFsMe0s271yKJa7p3nRkmMFxcASFVx3X9s=;
-        b=DRfLaprybVqQ+egJ80tX4kPXJe2tldBy57Ky41KnSfNMz65qZoJcCyn1M+neDhV8+F
-         GAdDZezi5+Qh2RnivFTMzffXpOIdC68mH+o9n1zhgIrB20B4btvlLki39ijVElvN8nKY
-         pfTaQ7UE58j2ZDuwr1G0BB6PofrWxc5OKNMifZLJ2zb/dpRlzDbIN2wPNQHc2pS2tEdN
-         3RBi2iW/R2tRjjwcF8khCYPf1YsRdDY8zwjryRutwC5BGRNGZ2XMYgoY9UrWB0ng8N8/
-         ZHRYpCJZmUpnUKWE+uVJ9XmfjcZtJh/sNk1s77YOpOuxI7iz5MTaFmOQVrcYTPWMTWnG
-         kh6g==
-X-Gm-Message-State: AOAM530o9K5/MfzcaFeiFuuiiOAxW+aZo4f5UtmUNElz2lQka9aZnxTf
-        5bEb4WVCNVPZyrmK4jhTDV4=
-X-Google-Smtp-Source: ABdhPJwyduixaPXyl9nsR8wsh7T30kYdCLoB5U/CwQARqKP0/h/EygceJsHfNzJNv902tkQp43X7rA==
-X-Received: by 2002:a63:f50b:: with SMTP id w11mr66510839pgh.157.1594612387120;
-        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
-Received: from ?IPv6:2001:470:67:5b9:5dec:e971:4cde:a128? ([2001:470:67:5b9:5dec:e971:4cde:a128])
-        by smtp.gmail.com with ESMTPSA id 207sm13052897pfa.100.2020.07.12.20.53.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 20:53:06 -0700 (PDT)
-Subject: Re: [v2 PATCH] usb: gadget: bdc: use readl_poll_timeout() to simplify
- code
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
-Date:   Sun, 12 Jul 2020 20:53:04 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I4SZ+z3h4qfcj/wEJIngM+7FiLiHmEESaJejUQbWufw=;
+ b=Fk4SYno5XKUhN2pJAxrK2S5hApxqShRbvv68QfOpvEsIp5Aupb5Wo5AfsbdmzssZDnx2chAANei/MQkRL0pTBP80viYjJ+pLA5LkfDUd/RQCU0O2O8fNyntYD8OcStDSMnHFNmu/ssJYzEGPEFdmhtus7CRNxCF0ChISAIFqWEM=
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
+ by BYAPR11MB2968.namprd11.prod.outlook.com (2603:10b6:a03:90::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Mon, 13 Jul
+ 2020 03:55:02 +0000
+Received: from BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
+ ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
+ 03:55:02 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <p.yadav@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <vigneshr@ti.com>, <broonie@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
+        <michal.simek@xilinx.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     <nsekhar@ti.com>, <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v10 01/17] spi: spi-mem: allow specifying whether an op is
+ DTR or not
+Thread-Topic: [PATCH v10 01/17] spi: spi-mem: allow specifying whether an op
+ is DTR or not
+Thread-Index: AQHWWMliL5FGGK8980aliLC/F11sVA==
+Date:   Mon, 13 Jul 2020 03:55:02 +0000
+Message-ID: <2702a5cb-b7a0-ce00-f943-08f359c35396@microchip.com>
+References: <20200623183030.26591-1-p.yadav@ti.com>
+ <20200623183030.26591-2-p.yadav@ti.com>
+In-Reply-To: <20200623183030.26591-2-p.yadav@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [86.120.242.181]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 046ac775-211f-48d5-bce9-08d826e08558
+x-ms-traffictypediagnostic: BYAPR11MB2968:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB2968739D2626D37F9ADD8223F0600@BYAPR11MB2968.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nC3z0EEbT3CN+7U98q/SBPLt7Yx2LC5xIG3Xe8XeXodD4c2C1DInZIG9LWdWlS/lPVlwQMbFfx+Z1ErtwIBTGOvkc4CzJQWTYhvEP26MuzptcydYeUYLMSex6K0Iqz7teXtPEEUyFQX1Wik7QgVDrTL85MmJ2+WQpHQ+dhmT88mHogFy5tuw9PBvSZkXvZFrfh2Xodw0cRg/OFmb85KNa7uGNeZJnDnnGhOoKA+Dl/uIatYAJNSARe6oG0vsPkRF8Q3qV/BbutrcIxYMXAyI3DX+rW1El8hLJK2O7ISJgqfZY0+utaYx12CrMnXkK2WDFL0dmSFp7Akg5IQ95N9ZH0RSE4dJ/APtOUbd1e5a52pnWS1628TcU48S5iYnoAJ2Z6MywNufU0xstrzOA4M1Sg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(136003)(366004)(396003)(8676002)(2616005)(54906003)(316002)(6486002)(36756003)(6512007)(31686004)(478600001)(8936002)(26005)(186003)(6506007)(7416002)(31696002)(5660300002)(110136005)(53546011)(71200400001)(91956017)(2906002)(4326008)(86362001)(66446008)(66946007)(76116006)(64756008)(66556008)(66476007)(4744005)(921003)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: slg8wc9JaFhj9GAH/SCkPUOYo7ut6GAKrPnrUwEt+DOJe1F9CpqzQjQbebMNPGIeulnlXTDOWaY5E7drFtIyuWdgX03eMj9hMW8J6aO3uNFcp88XOwGbeYr7MrkCkbTlkyoz7F9Htp/lMRqIAYQ7p/pmqpdfF7JDAVMTnXxhHpXRhNUctsQ2HA0hYBZbV5FNQhTMxycH3ww/WtSNBQ8Y/VbPaj1JQIcWFSuI/P1nbQ8YvBQyi6af80yeEXt9lBaK9fPPuKS8n0sb+tsH5BqENetrKnoiouGH2fKw8e1Ajdm+GPLmeo3ilc2bbNb5kvfMGe7c/mGq+xyGsvGYXv+59AeM2wIS/EipqsJUsS9pYW74n2VZqiS3jgCMye/0I/VNwspVc1t8LHABC4RK3R1iga9saHqMO8dZ+0Yp29PLpUtTQ3c1UO3Fy8bQayGmVDFhFrjZLLH6CZKFRaHKUtdsT5tuL8wwFaE4sULwyNMxgTxmoup2Wh6DOwusJf2asEsZ
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6A062EF7E3CBBE4386549E856BAE6DC3@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 046ac775-211f-48d5-bce9-08d826e08558
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 03:55:02.3231
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AkYXWlysxB7LoV8Y0N6uJUA0JTVvVVpq6j69zB2SEEB7VgMTOYr81JMnpTnuMKd6VIeDaMpILGnR1yKcNoDmb479jguof3E7NqaAnYaIe18=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2968
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/12/2020 8:30 PM, Chunfeng Yun wrote:
-> Use readl_poll_timeout() to poll register status
-> 
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2 changes, suggested by Stephen:
->   1. use unsigned int instead of int for @usec parameter
->   2. add dev_log() back
->   3. drop "Err" in error log
-> ---
->  drivers/usb/gadget/udc/bdc/bdc_core.c | 26 +++++++++++---------------
->  1 file changed, 11 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-> index 02a3a77..53dccb1 100644
-> --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-> +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-> @@ -12,6 +12,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/platform_device.h>
->  #include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
->  #include <linux/ioport.h>
->  #include <linux/io.h>
->  #include <linux/list.h>
-> @@ -29,24 +30,19 @@
->  #include "bdc_dbg.h"
->  
->  /* Poll till controller status is not OIP */
-> -static int poll_oip(struct bdc *bdc, int usec)
-> +static int poll_oip(struct bdc *bdc, u32 usec)
->  {
->  	u32 status;
-> -	/* Poll till STS!= OIP */
-> -	while (usec) {
-> -		status = bdc_readl(bdc->regs, BDC_BDCSC);
-> -		if (BDC_CSTS(status) != BDC_OIP) {
-> -			dev_dbg(bdc->dev,
-> -				"poll_oip complete status=%d",
-> -				BDC_CSTS(status));
-> -			return 0;
-> -		}
-> -		udelay(10);
-> -		usec -= 10;
-> -	}
-> -	dev_err(bdc->dev, "Err: operation timedout BDCSC: 0x%08x\n", status);
-> +	int ret;
->  
-> -	return -ETIMEDOUT;
-> +	ret = readl_poll_timeout(bdc->regs + BDC_BDCSC, status,
-> +		(BDC_CSTS(status) != BDC_OIP), 10, usec);
-
-You could probably indent this to the opening parenthesis, but with or
-without it:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-and thanks for picking up the MAINTAINERS file update ;)
-
-> +	if (ret)
-> +		dev_err(bdc->dev, "operation timedout BDCSC: 0x%08x\n", status);
-> +	else
-> +		dev_dbg(bdc->dev, "%s complete status=%d", __func__, BDC_CSTS(status));
-> +
-> +	return ret;
->  }
->  
->  /* Stop the BDC controller */
-> 
-
--- 
-Florian
+T24gNi8yMy8yMCA5OjMwIFBNLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToNCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvc3BpL3NwaS1tZW0uYyBiL2RyaXZlcnMvc3BpL3NwaS1tZW0uYw0KPiBpbmRleCA5
+YTg2Y2MyN2ZjYzAuLjkzZTI1NTI4N2FiOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zcGkvc3Bp
+LW1lbS5jDQo+ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1tZW0uYw0KPiBAQCAtMTU2LDYgKzE1Niw5
+IEBAIGJvb2wgc3BpX21lbV9kZWZhdWx0X3N1cHBvcnRzX29wKHN0cnVjdCBzcGlfbWVtICptZW0s
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb3AtPmRhdGEuZGlyID09IFNQ
+SV9NRU1fREFUQV9PVVQpKQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiANCj4g
+KyAgICAgICBpZiAob3AtPmNtZC5kdHIgfHwgb3AtPmFkZHIuZHRyIHx8IG9wLT5kdW1teS5kdHIg
+fHwgb3AtPmRhdGEuZHRyKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KDQoNCkkg
+d291bGQgcHV0IHRoaXMgY2hlY2sgdGhlIGZpcnN0IHRoaW5nIGluIHRoZSBmdW5jdGlvbiB0byBl
+eGl0IHNvb25lcg0KYW5kIGF2b2lkIHRoZSByZXN0IG9mIHRoZSBjaGVja3MsIHRoYXQgd291bGQg
+YmVjb21lIHN1cGVyZmx1b3VzLg0KDQpBbnl3YXkgdGhpcyBpcyBqdXN0IGEgbml0Lg0K
