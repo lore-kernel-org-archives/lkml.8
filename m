@@ -2,200 +2,93 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDFEC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D541C20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="df6ntnJk"
+	by mail.kernel.org (Postfix) with ESMTP id 960F520758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgGMJbX (ORCPT
+        id S1729430AbgGMJbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:31:23 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:36666 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbgGMJbX (ORCPT
+        Mon, 13 Jul 2020 05:31:35 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:49033 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728803AbgGMJbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:31:23 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200713093121euoutp0118dfbbc3cbbae19b384d98d85778eeee~hRfmObOsX2836028360euoutp01u
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 09:31:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200713093121euoutp0118dfbbc3cbbae19b384d98d85778eeee~hRfmObOsX2836028360euoutp01u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594632681;
-        bh=lhTH4DSK/6+Ag7ZxkZXN1caokc45eKCzYCQCPnhjUYc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=df6ntnJkpbO3sut7G89kvPLWwSukwjZ0GPWv+evjH7PJp3T2aUycrBclmuVviKC8i
-         bw6JcuwpZhVz6eA447R9XXfWhjkbl/vYOVMFvKWOrO89t2KSwbn326M306SMFZZDMx
-         INffcKkpcNiCmds95GPwB7VHKXCWm5cndRn8oB1M=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200713093120eucas1p2f772b7e0ab36759a364db1d3483ec3a0~hRfluNjMu0753407534eucas1p2G;
-        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5A.89.06318.8E92C0F5; Mon, 13
-        Jul 2020 10:31:20 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200713093120eucas1p20559a77ab67ac05958a4ba76c4bb20e0~hRflUVwHo0754007540eucas1p23;
-        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200713093120eusmtrp28bc43157b17eb75a48604795c6414ac3~hRflTmibD1167711677eusmtrp28;
-        Mon, 13 Jul 2020 09:31:20 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-74-5f0c29e8d687
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 78.CC.06017.8E92C0F5; Mon, 13
-        Jul 2020 10:31:20 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200713093119eusmtip1c8791d44252feb62943156bcdec1a1d2~hRfkzpE6c1408514085eusmtip1O;
-        Mon, 13 Jul 2020 09:31:19 +0000 (GMT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-Date:   Mon, 13 Jul 2020 11:31:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Mon, 13 Jul 2020 05:31:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U2ZiJH._1594632693;
+Received: from localhost.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U2ZiJH._1594632693)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Jul 2020 17:31:33 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     corbet@lwn.net
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Harry Wei <harryxiyou@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] doc/zh_CN: add Chinese translation prefer section
+Date:   Mon, 13 Jul 2020 17:31:23 +0800
+Message-Id: <20200713093123.45269-1-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.18.4
 MIME-Version: 1.0
-In-Reply-To: <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7djPc7ovNHniDX4sVrdobljMZLFxxnpW
-        i3mfZS0u75rDZvG59wijxedts9gtnjzsY7OYsHgjuwOHx+W+XiaPxXteMnncubaHzWPeyUCP
-        vi2rGD0+b5ILYIvisklJzcksSy3St0vgynh7ir/gjlTFkrl1DYzHxLoYOTkkBEwkrn46zd7F
-        yMUhJLCCUaL922xGCOcLo8SUxZuZIJzPjBKX33xlhGn5/OAsE4gtJLCcUaLjvyFE0XtGif+9
-        y8ESwgIhEr9+fARrYBMwlOh628UGYosIOEtcPXkXbB+zwDlGiUen14MV8QrYSZx60gHWzCKg
-        KnF13g52EFtUIE5i/cvtTBA1ghInZz5hAbE5BewlHk28BjaUWUBeonnrbGYIW1zi1pP5YGdL
-        CGxjl3j0YikLxNkuEscWtzJB2MISr45vYYewZST+74RpaGaUeHhuLTuE0wP0dNMMqKetJe6c
-        +wW0jgNohabE+l36EGFHiadvd4CFJQT4JG68FYQ4gk9i0rbpzBBhXomONiGIajWJWcfXwa09
-        eOES8wRGpVlIXpuF5J1ZSN6ZhbB3ASPLKkbx1NLi3PTUYuO81HK94sTc4tK8dL3k/NxNjMCU
-        dPrf8a87GPf9STrEKMDBqMTDe0GPO16INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWl
-        OanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTBGtW26PXNp+Kf50mm3r8wzZ5ut
-        fu/vayEp9n0yXd5O3vnsM3y2bD6xXOuhEkvPh0cTXz6Kf3a2/aCyvayMTaun5CbvNE029hVz
-        Dd2n6Xv9fK3WtCHOa3daMR9DtfV8SxeBgO2NdTYrlTQ/PXI68D/VOuk5X/nLjv5LJ82CWNnq
-        thSUh3uFhCqxFGckGmoxFxUnAgCkzq3yRQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7ovNHniDZoWclg0Nyxmstg4Yz2r
-        xbzPshaXd81hs/jce4TR4vO2WewWTx72sVlMWLyR3YHD43JfL5PH4j0vmTzuXNvD5jHvZKBH
-        35ZVjB6fN8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSW
-        pRbp2yXoZbw9xV9wR6piydy6BsZjYl2MnBwSAiYSnx+cZQKxhQSWMkpsahKAiMtInJzWwAph
-        C0v8udbF1sXIBVTzllHiyfLd7CAJYYEQiV8/PjKC2GwChhJdb0GKODlEBJwlrp68C1bDLHCO
-        UWL9/QqI5sdMEs+OnQBL8ArYSZx60gG2mUVAVeLqvB1gcVGBOInlW+ZD1QhKnJz5hAXE5hSw
-        l3g08RobxFAziXmbHzJD2PISzVtnQ9niEreezGeawCg0C0n7LCQts5C0zELSsoCRZRWjSGpp
-        cW56brGRXnFibnFpXrpecn7uJkZgBG479nPLDsaud8GHGAU4GJV4eC/occcLsSaWFVfmHmKU
-        4GBWEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgckhryTe0NTQ3MLS0NzY3NjM
-        Qkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo/ufO3c+9Hi9jz6hyMrbHNV9qfia/433DL/0
-        OL/qPM6xf3zJPeb55lI7raX7V7l9NrKx+x5zwpTrwhRNnT070mYvXG5V5OZVx7ig7d1m1qSn
-        rL949q2MqohOvMU/U8c+LfFaUpjp83tl4lt+8tYFTLNZXZE/92ds9sQL7J2FzQbMV7kjInlT
-        lFiKMxINtZiLihMBZayc89YCAAA=
-X-CMS-MailID: 20200713093120eucas1p20559a77ab67ac05958a4ba76c4bb20e0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200706131708eucas1p1487955a7632584c17df724399f48825a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200706131708eucas1p1487955a7632584c17df724399f48825a
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
-        <20200706105538.2159-4-daniel.lezcano@linaro.org>
-        <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
-        <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
-        <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
-        <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+The add words is:
 
-On 07.07.2020 11:15, Marek Szyprowski wrote:
-> On 06.07.2020 15:46, Daniel Lezcano wrote:
->> On 06/07/2020 15:17, Marek Szyprowski wrote:
->>> On 06.07.2020 12:55, Daniel Lezcano wrote:
->>>> The generic netlink protocol is implemented but the different
->>>> notification functions are not yet connected to the core code.
->>>>
->>>> These changes add the notification calls in the different
->>>> corresponding places.
->>>>
->>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
->>> ("thermal: core: Add notifications call in the framework"). Sadly it
->>> breaks booting various Samsung Exynos based boards. Here is an example
->>> log from Odroid U3 board:
->>>
->>> Unable to handle kernel NULL pointer dereference at virtual address 
->>> 00000010
->>> pgd = (ptrval)
->>> [00000010] *pgd=00000000
->>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->>> Modules linked in:
->>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
->>> #1146
->>> Hardware name: Samsung Exynos (Flattened Device Tree)
->>> PC is at kmem_cache_alloc+0x13c/0x418
->>> LR is at kmem_cache_alloc+0x48/0x418
->>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
->>> ...
->>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
->>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
->>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->>> Stack: (0xee8f1cf8 to 0xee8f2000)
->>> ...
->>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] 
->>> (__alloc_skb+0x5c/0x170)
->>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
->>> (thermal_genl_send_event+0x24/0x174)
->>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
->>> (thermal_notify_tz_create+0x58/0x74)
->>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
->>> (thermal_zone_device_register+0x358/0x650)
->>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
->>> (of_parse_thermal_zones+0x304/0x7a4)
->>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
->>> (thermal_init+0xdc/0x154)
->>> [<c1028964>] (thermal_init) from [<c0102378>] 
->>> (do_one_initcall+0x8c/0x424)
->>> [<c0102378>] (do_one_initcall) from [<c1001158>]
->>> (kernel_init_freeable+0x190/0x204)
->>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
->>> (kernel_init+0x8/0x118)
->>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
->>>
->>> Reverting it on top of linux-next fixes the boot issue. I will
->>> investigate it further soon.
->> Thanks for reporting this.
->>
->> Can you send the addr2line result and code it points to ?
->
-> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to 
-> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks 
-> like some trashed memory somewhere, but I don't have time right now to 
-> analyze it further now...
+Translation Plan
+================
 
-Just one more thing I've noticed. The crash happens only if the kernel 
-is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC 
-4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like 
-arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works 
-fine...
+Welcome for any part of kernel doc Chinese translation, expecially for
+admin-guide part.
 
-This happens also with Linux next-20200710, which again got this commit.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Jonathan Corbet <corbet@lwn.net> 
+Cc: Harry Wei <harryxiyou@gmail.com> 
+Cc: linux-doc@vger.kernel.org 
+Cc: linux-kernel@vger.kernel.org 
+---
+ Documentation/conf.py                      | 2 +-
+ Documentation/translations/zh_CN/index.rst | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Best regards
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index c503188880d9..b5b2be8eec22 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -36,7 +36,7 @@ needs_sphinx = '1.3'
+ # Add any Sphinx extension module names here, as strings. They can be
+ # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+ # ones.
+-extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
++extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
+               'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
+               'maintainers_include', 'sphinx.ext.autosectionlabel' ]
+ 
+diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
+index 76850a5dd982..f2e06546ca3f 100644
+--- a/Documentation/translations/zh_CN/index.rst
++++ b/Documentation/translations/zh_CN/index.rst
+@@ -10,6 +10,11 @@
+ 人员做出贡献。 与任何大型社区一样，知道如何完成任务将使得更改合并的过程变得更
+ 加容易。
+ 
++翻译计划
++========
++
++内核中文文档欢迎任何翻译投稿，特别是关于管理员指南部分。
++
+ .. toctree::
+    :maxdepth: 2
+ 
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.18.2
 
