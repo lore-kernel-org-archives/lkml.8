@@ -2,583 +2,137 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87140C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6A820724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88C12068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594612389;
+	bh=rVIyOmY3b4i5COKSEKAYvDTRs4rWV/cl9uZGxqevers=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Zbj0kJiOqVnGlEKxdFg1WuG2n45rM02z/NNf1ISzm579XO4s0QQuT+h4G+2tynThZ
+	 VJcqriCC6TPpzTCXb5jB4DiH2s6o+KMruH3LwQSsiBiFEr5h33L7RZREuL39yONp8h
+	 wcHGNEY8uvBVwXJ1DgcrRj8QvsAZOWdGdgoVZ3RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgGMDo4 (ORCPT
+        id S1728463AbgGMDvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:44:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22305 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgGMDo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:44:56 -0400
-IronPort-SDR: OeSeFDL02v9zCbXYRxgEmyCDbM3b9UHudgkYCQG7MBl8DnfjvtRfeR0NFrSnny5FgjPHtShSgK
- Fb6wOpeBxV3Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146034766"
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="146034766"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 20:39:53 -0700
-IronPort-SDR: 22FnmkCI3qeuzgbMvpdR4yE1R8RY4NAztfMBCJl/sczBjICypRSL8U21QZlV/KB4hqfo0mh6hy
- Beay8H5s7YYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="429229225"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jul 2020 20:39:53 -0700
-Received: from [10.215.249.14] (mreddy3x-MOBL.gar.corp.intel.com [10.215.249.14])
-        by linux.intel.com (Postfix) with ESMTP id 4AB5B58048F;
-        Sun, 12 Jul 2020 20:39:50 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-To:     "Langer, Thomas" <thomas.langer@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "malliamireddy009@gmail.com" <malliamireddy009@gmail.com>,
-        mallikarjunax.reddy@intel.com
-References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <ad6c511dc027b7989acebbce77ca739e22e2123e.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <DM6PR11MB3227DE41730A08B57B9C14DCFE640@DM6PR11MB3227.namprd11.prod.outlook.com>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <1f90d37c-d029-ae80-40f5-7d99b486dbd3@linux.intel.com>
-Date:   Mon, 13 Jul 2020 11:39:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Jul 2020 23:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgGMDvr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:51:47 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC4FC061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:46 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so14760728lji.9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PXZYm8YjUP841mdR1yGtgQbyBqro7EalxNIZG50LFuM=;
+        b=JZ6Y3SBEjypR0Q/yrJj53ldh8gpnRfjQF/RT1b64yjpHydiLr0yIS3u64B/OW5XJ4/
+         tBqykrHxUwjAHq0UxLcdms0xudmr7CC4BSdN8v+rXw8M+XyIrWJaQmCLkL9Q4eyPIlNw
+         tfry+uqmdsBjisvh7Qv+FSefQ995KqX6/6xdY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PXZYm8YjUP841mdR1yGtgQbyBqro7EalxNIZG50LFuM=;
+        b=Kry82EGJ/tMdo/G2nnL4TOr+ihTisRXhGZfuE1In0gRQsfSnzGNHntc/FfX/1HV2Db
+         wZ38jRSwx8KqT85S1tXeffLmLonIHh8yvuOA8yuR/H4FG2KG/UNxQTjvEbbXLYadJHV5
+         oFH5CCzjicFG6SAECOtp6b6KKFMDYT6W17n/ZUlbzVkZ6q4aMbb5mtEcGaHFSSAfPvfC
+         03VqmTCDsLln4qVLRh7BP63s+YSFpEiyxakalO0moPPc8QL3+dYzaRofPzHB3RaAAbSB
+         6+DDDlx6VYELrHvvYJ4qm1PU8YYDhH4NOAjwwxpaQTAwbo5GQ3QOuBzBt/3OBYxb6RBI
+         6aeA==
+X-Gm-Message-State: AOAM531Myk2bn7KWEr63TRxPdrFiHufK2Ewp21PEiMVoTdB2c16+sCfh
+        DebOYVXflbyih64PpgimULuq+hPIJxU=
+X-Google-Smtp-Source: ABdhPJwD0aYR1g+lKjG+HuQt1UZADQBDXT6AUGYYSEPF5zU9NIr3h918I3/silfUx7FpkpcC2I9YHg==
+X-Received: by 2002:a05:651c:1034:: with SMTP id w20mr19399253ljm.382.1594612304739;
+        Sun, 12 Jul 2020 20:51:44 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id a20sm4368828lfl.20.2020.07.12.20.51.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jul 2020 20:51:43 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id k15so7439858lfc.4
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:43 -0700 (PDT)
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr51926816lfn.30.1594612302784;
+ Sun, 12 Jul 2020 20:51:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB3227DE41730A08B57B9C14DCFE640@DM6PR11MB3227.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <20200712215041.GA3644504@google.com> <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
+ <20200713025354.GB3644504@google.com>
+In-Reply-To: <20200713025354.GB3644504@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 12 Jul 2020 20:51:26 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
+Message-ID: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-Thanks for the review. My comments inline.
-
-On 7/9/2020 3:54 PM, Langer, Thomas wrote:
+On Sun, Jul 12, 2020 at 7:53 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
->> -----Original Message-----
->> From: devicetree-owner@vger.kernel.org <devicetree-
->> owner@vger.kernel.org> On Behalf Of Amireddy Mallikarjuna reddy
->> Sent: Donnerstag, 9. Juli 2020 08:01
->> To: dmaengine@vger.kernel.org; vkoul@kernel.org;
->> devicetree@vger.kernel.org; robh+dt@kernel.org
->> Cc: linux-kernel@vger.kernel.org; Shevchenko, Andriy
->> <andriy.shevchenko@intel.com>; chuanhua.lei@linux.intel.com; Kim, Cheol
->> Yong <cheol.yong.kim@intel.com>; Wu, Qiming <qi-ming.wu@intel.com>;
->> malliamireddy009@gmail.com; Amireddy Mallikarjuna reddy
->> <mallikarjunax.reddy@linux.intel.com>
->> Subject: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
->>
->> Add DT bindings YAML schema for DMA controller driver
->> of Lightning Mountain(LGM) SoC.
->>
->> Signed-off-by: Amireddy Mallikarjuna reddy
->> <mallikarjunax.reddy@linux.intel.com>
->> ---
->> v1:
->> - Initial version.
->>
->> v2:
->> - Fix bot errors.
->>
->> v3:
->> - No change.
->>
->> v4:
->> - Address Thomas langer comments
-> Please read my comments again and then respond about the topics you ignored.
-> I added some hints below again.
+> > But I do feel like you figured out why the bug happened, now we're
+> > just discussing whether the patch is the right thing to do.
 >
-> Thanks.
+> Yes.
 >
->> ---
->>   .../devicetree/bindings/dma/intel,ldma.yaml        | 416
->> +++++++++++++++++++++
->>   1 file changed, 416 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->> b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->> new file mode 100644
->> index 000000000000..7f666b9812e4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->> @@ -0,0 +1,416 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Lightning Mountain centralized low speed DMA and high speed DMA
->> controllers.
->> +
->> +maintainers:
->> +  - chuanhua.lei@intel.com
->> +  - mallikarjunax.reddy@intel.com
->> +
->> +properties:
->> + $nodename:
->> +   pattern: "^dma(@.*)?$"
-> Please explain the difference to the common dma binding.
-No difference. we can use "^dma-controller(@.*)?$" as in the common binding.
-Its My bad. I missed the changes to include in this patch. Surely update 
-in the upcoming patch.
+> > Maybe saying "doing the pmd copies for the initial stack isn't
+> > important, so let's just note this as a special case and get rid of
+> > the WARN_ON()" might be an alternative solution.
 >
->> +
->> + "#dma-cells":
->> +   const: 1
->> +
->> + compatible:
->> +  anyOf:
->> +   - const: intel,lgm-cdma
->> +   - const: intel,lgm-dma2tx
->> +   - const: intel,lgm-dma1rx
->> +   - const: intel,lgm-dma1tx
->> +   - const: intel,lgm-dma0tx
->> +   - const: intel,lgm-dma3
->> +   - const: intel,lgm-toe-dma30
->> +   - const: intel,lgm-toe-dma31
-> Please explain why you need so many different compatible strings.
-This hw dma has 7 DMA instances.
-Some for datapath, some for memcpy  and some for TOE.
-Some for TX only, some for RX only, and some for TX/RX(memcpy and ToE).
+> Personally, I feel it is better to keep the warning just so in the future we
+> can detect any bugs.
 
-dma TX/RX type we considered as driver specific data of each instance 
-and used different compatible strings for each instance.
-And also idea is in future if any driver specific data of any particular 
-instance we can handle.
+I don't disagree, the warning didn't happen to find a bug now, but it
+did fine a case we might be able to do better.
 
-Here if dma name and type(tx or rx) will be accepted as devicetree 
-attributes then we can move .name = "toe_dma31", & .type = DMA_TYPE_MCPY
-to devicetree. So that the compatible strings can be limited to two. 
-intel,lgm-cdma & intel,lgm-hdma .
+So now that I feel we understand the issue, and it's not a horrible
+problem, just a (very hard to trigger) warning, I don't think there's
+any huge hurry.
 
-please suggest us the better proposal.
->
->> +
->> + reg:
->> +  maxItems: 1
->> +
->> + clocks:
->> +  maxItems: 1
->> +
->> + resets:
->> +  maxItems: 1
->> +
->> + interrupts:
->> +  maxItems: 1
->> +
->> + intel,dma-poll-cnt:
->> +   $ref: /schemas/types.yaml#definitions/uint32
->> +   description:
->> +     DMA descriptor polling counter. It may need fine tune according
->> +     to the system application scenario.
->> +
->> + intel,dma-byte-en:
->> +   type: boolean
->> +   description:
->> +     DMA byte enable is only valid for DMA write(RX).
->> +     Byte enable(1) means DMA write will be based on the number of
->> dwords
->> +     instead of the whole burst.
->> +
->> + intel,dma-drb:
->> +    type: boolean
->> +    description:
->> +      DMA descriptor read back to make sure data and desc
->> synchronization.
->> +
->> + intel,dma-burst:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       Specifiy the DMA burst size(in dwords), the valid value will be
->> 8, 16, 32.
->> +       Default is 16 for data path dma, 32 is for memcopy DMA.
->> +
->> + intel,dma-polling-cnt:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       DMA descriptor polling counter. It may need fine tune according
->> to
->> +       the system application scenario.
->> +
->> + intel,dma-desc-in-sram:
->> +    type: boolean
->> +    description:
->> +       DMA descritpors in SRAM or not. Some old controllers descriptors
->> +       can be in DRAM or SRAM. The new ones are all in SRAM.
->> +
->> + intel,dma-orrc:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       DMA outstanding read counter. The maximum value is 16, and it
->> may
->> +       need fine tune according to the system application scenarios.
->> +
->> + intel,dma-dburst-wr:
->> +    type: boolean
->> +    description:
->> +       Enable RX dynamic burst write. It only applies to RX DMA and
->> memcopy DMA.
->> +
->> +
->> + dma-ports:
->> +    type: object
->> +    description:
->> +       This sub-node must contain a sub-node for each DMA port.
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      "^dma-ports@[0-9]+$":
->> +          type: object
->> +
->> +          properties:
->> +            reg:
->> +              items:
->> +                - enum: [0, 1, 2, 3, 4, 5]
->> +              description:
->> +                 Which port this node refers to.
->> +
->> +            intel,name:
->> +              $ref: /schemas/types.yaml#definitions/string-array
->> +              description:
->> +                 Port name of each DMA port.
->> +
->> +            intel,chans:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 The channels included on this port. Format is channel
->> start
->> +                 number and how many channels on this port.
->> +
->> +            intel,burst:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Specify the DMA port burst size, the valid value will
->> be
->> +                 2, 4, 8. Default is 2 for data path dma.
->> +
->> +            intel,txwgt:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Specify the port transmit weight for QoS purpose. The
->> valid
->> +                 value is 1~7. Default value is 1.
->> +
->> +            intel,endian:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Specify the DMA port endiannes conversion due to SoC
->> endianness difference.
->> +
->> +          required:
->> +            - reg
->> +            - intel,name
->> +            - intel,chans
->> +
->> +
->> + dma-channels:
->> +    type: object
->> +    description:
->> +       This sub-node must contain a sub-node for each DMA channel.
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      "^dma-channels@[0-9]+$":
->> +          type: object
->> +
->> +          properties:
->> +            reg:
->> +              items:
->> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
->> 14, 15]
->> +              description:
->> +                 Which channel this node refers to.
->> +
->> +            intel,desc_num:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel maximum descriptor number. The max value
->> is 255.
->> +
->> +            intel,pkt_sz:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Channel buffer packet size. It must be power of 2.
->> +                 The maximum size is 4096.
->> +
->> +            intel,desc-rx-nonpost:
->> +              type: boolean
->> +              description:
->> +                 Write non-posted type for DMA RX last data beat of
->> every descriptor.
->> +
->> +            intel,data-endian:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel data endianness configuration according to
->> SoC requirement.
->> +
->> +            intel,desc-endian:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel descriptor endianness configuration
->> according to SoC requirement.
->> +
->> +            intel,data-endian-en:
->> +              type: boolean
->> +              description:
->> +                 Per channel data endianness enabled.
->> +
->> +            intel,desc-endian-en:
->> +              type: boolean
->> +              description:
->> +                 Per channel descriptor endianness enabled.
->> +
->> +            intel,byte-offset:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel byte offset(0~128).
->> +
->> +            intel,hdr-mode:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 The first parameter is header mode size, the second
->> +                 parameter is checksum enable or disable. If enabled,
->> +                 header mode size is ignored. If disabled, header mode
->> +                 size must be provided.
->> +
->> +            intel,non-arb-cnt:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel non arbitration counter while polling
->> +
->> +            intel,arb-cnt:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel arbitration counter while polling.
->> +                 arb_cnt must be greater than non_arb_cnt
->> +
->> +            intel,pkt-drop:
->> +              type: boolean
->> +              description:
->> +                 Channel packet drop enabled or disabled.
->> +
->> +            intel,hw-desc:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 Per channel dma hardware descriptor configuration.
->> +                 The first parameter is descriptor physical address and
->> the
->> +                 second parameter hardware descriptor number.
->> +
->> +          required:
->> +            - reg
->> +
->> +required:
->> + - compatible
->> + - reg
->> + - '#dma-cells'
->> +
->> +examples:
->> + - |
->> +   dma0: dma@e0e00000 {
->> +     compatible = "intel,lgm-cdma";
->> +     reg = <0xe0e00000 0x1000>;
->> +     #dma-cells = <1>;
->> +     interrupt-parent = <&ioapic1>;
->> +     interrupts = <82 1>;
->> +     resets = <&rcu0 0x30 0>;
->> +     reset-names = "ctrl";
->> +     clocks = <&cgu0 80>;
->> +     intel,dma-poll-cnt = <4>;
->> +     intel,dma-byte-en;
->> +     intel,dma-drb;
->> +     dma-ports {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       dma-ports@0 {
->> +           reg = <0>;
->> +           intel,name = "SPI0";
->> +           intel,chans = <0 2>;
->> +           intel,burst = <2>;
->> +           intel,txwgt = <1>;
->> +       };
->> +       dma-ports@1 {
->> +           reg = <1>;
->> +           intel,name = "SPI1";
->> +           intel,chans = <2 2>;
->> +           intel,burst = <2>;
->> +           intel,txwgt = <1>;
->> +       };
->> +       dma-ports@2 {
->> +           reg = <2>;
->> +           intel,name = "SPI2";
->> +           intel,chans = <4 2>;
->> +           intel,burst = <2>;
->> +           intel,txwgt = <1>;
->> +       };
->> +       dma-ports@3 {
->> +           reg = <3>;
->> +           intel,name = "SPI3";
->> +           intel,chans = <6 2>;
->> +           intel,burst = <2>;
->> +           intel,endian = <0>;
->> +           intel,txwgt = <1>;
->> +       };
->> +       dma-ports@4 {
->> +           reg = <4>;
->> +           intel,name = "HSNAND";
->> +           intel,chans = <8 2>;
->> +           intel,burst = <8>;
->> +           intel,txwgt = <1>;
->> +       };
->> +       dma-ports@5 {
->> +           reg = <5>;
->> +           intel,name = "PCM";
->> +           intel,chans = <10 6>;
->> +           intel,burst = <8>;
->> +           intel,txwgt = <1>;
->> +       };
->> +     };
->> +     dma-channels {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       dma-channels@0 {
->> +           reg = <0>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@1 {
->> +           reg = <1>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@2 {
->> +           reg = <2>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@3 {
->> +           reg = <3>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@4 {
->> +           reg = <4>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@5 {
->> +           reg = <5>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@6 {
->> +           reg = <6>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@7 {
->> +           reg = <7>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       dma-channels@8 {
->> +           reg = <8>;
->> +       };
->> +       dma-channels@9 {
->> +           reg = <9>;
->> +       };
->> +       dma-channels@10 {
->> +           reg = <10>;
->> +       };
->> +       dma-channels@11 {
->> +           reg = <11>;
->> +       };
->> +       dma-channels@12 {
->> +           reg = <12>;
->> +       };
->> +       dma-channels@13 {
->> +           reg = <13>;
->> +       };
->> +       dma-channels@14 {
->> +           reg = <14>;
->> +       };
->> +       dma-channels@15 {
->> +           reg = <15>;
->> +       };
->> +     };
->> +   };
->> + - |
->> +   dma3: dma@ec800000 {
->> +     compatible = "intel,lgm-dma3";
->> +     reg = <0xec800000 0x1000>;
->> +     clocks = <&cgu0 71>;
->> +     resets = <&rcu0 0x10 9>;
->> +     #dma-cells = <1>;
->> +     intel,dma-burst = <32>;
->> +     intel,dma-polling-cnt = <16>;
->> +     intel,dma-desc-in-sram;
->> +     intel,dma-orrc = <16>;
->> +     intel,dma-byte-en;
->> +     intel,dma-dburst-wr;
->> +     dma-channels {
->> +         #address-cells = <1>;
->> +         #size-cells = <0>;
->> +
->> +         dma-channels@12 {
->> +             reg = <12>;
->> +             intel,pkt_sz = <4096>;
->> +             intel,desc-rx-nonpost;
->> +             intel,data-endian = <0>;
->> +             intel,desc-endian = <0>;
->> +             intel,data-endian-en;
->> +             intel,desc-endian-en;
->> +             intel,byte-offset = <0>;
->> +             intel,hdr-mode = <128 0>;
->> +             intel,non-arb-cnt = <0>;
->> +             intel,arb-cnt = <0>;
->> +             intel,hw-desc = <0x20000000 8>;
->> +         };
->> +         dma-channels@13 {
->> +             reg = <13>;
->> +             intel,pkt-drop;
->> +             intel,pkt_sz = <4096>;
->> +             intel,data-endian = <0>;
->> +             intel,desc-endian = <0>;
->> +             intel,data-endian-en;
->> +             intel,desc-endian-en;
->> +             intel,byte-offset = <0>;
->> +             intel,hdr-mode = <128 0>;
->> +             intel,non-arb-cnt = <0>;
->> +             intel,arb-cnt = <0>;
->> +         };
->> +     };
->> +   };
->> --
->> 2.11.0
+I think think I will - for now - change the WARN_ON() to
+WARN_ON_ONCE() (so that it doesn't floow the logs if somebody triggers
+this odd special case  this malisiously), and add a note about how
+this happens to the code for posterito.
+
+And if/when you figure out a better way to fix it, we can update the note.
+
+Ok?
+
+             Linus
