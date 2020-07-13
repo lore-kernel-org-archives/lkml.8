@@ -2,189 +2,149 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92802C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 775DE20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF0C206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nh6bhDXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgGMK0R (ORCPT
+        id S1729390AbgGMK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:26:17 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:53630 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729390AbgGMK0Q (ORCPT
+        Mon, 13 Jul 2020 06:28:07 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:26156 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgGMK2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:26:16 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id BCE20CA52C;
-        Mon, 13 Jul 2020 18:26:09 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P8591T140098829747968S1594635967092824_;
-        Mon, 13 Jul 2020 18:26:08 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <dfe795403dc7e7e9647a2a61f1a0f504>
-X-RL-SENDER: sugar.zhang@rock-chips.com
-X-SENDER: zxg@rock-chips.com
-X-LOGIN-NAME: sugar.zhang@rock-chips.com
-X-FST-TO: broonie@kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Sugar Zhang <sugar.zhang@rock-chips.com>
-To:     broonie@kernel.org
-Cc:     linux-rockchip@lists.infradead.org,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Heiko Stuebner <heiko@sntech.de>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: rockchip: spdif: Handle clk by pm runtime
-Date:   Mon, 13 Jul 2020 18:26:00 +0800
-Message-Id: <1594635960-67855-1-git-send-email-sugar.zhang@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Jul 2020 06:28:05 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200713102801epoutp04a297a82181827a5b28e9e381e750cec7~hSRFagcBz2407524075epoutp04V
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:28:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200713102801epoutp04a297a82181827a5b28e9e381e750cec7~hSRFagcBz2407524075epoutp04V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594636081;
+        bh=wr0TSnSOYDrnW0OXmJJItmyosy7uPnji9OSa71BR9MQ=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=Nh6bhDXlPywZVIXnBTnzFcxuxU7cGtUmpMYSTWXpGa5eFEUpxA7U0YDv7VixOhZEP
+         KibD8Y8HNDexrl2p3fXKkfBS9jXXsNWd5HBfLUYR+QAuO+0dKzGYrB60dUkPVbZ5mA
+         yzp+dgAqq62cZzuk/Qqp/uN+dk/0exm9TKxkzmO4=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200713102801epcas1p1c32b511ae839b91532ad5e29c8eb2277~hSRFChy_V1773917739epcas1p1I;
+        Mon, 13 Jul 2020 10:28:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bean Huo <huobean@gmail.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <65b3b5bb56d2be8e365aae2163227aac7a71e600.camel@gmail.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01594636081523.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 13 Jul 2020 19:25:20 +0900
+X-CMS-MailID: 20200713102520epcms2p5834b14ea70637529588802a11cabe94c
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
+References: <65b3b5bb56d2be8e365aae2163227aac7a71e600.camel@gmail.com>
+        <91dcecde-dd0d-c930-7c45-56ba144e748c@acm.org>
+        <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
+        <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
+        <336371513.41594280882718.JavaMail.epsvc@epcpadp2>
+        <SN6PR04MB464021F98E8EDF7C79D6CB4FFC640@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <963815509.21594603681971.JavaMail.epsvc@epcpadp2>
+        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p5>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch handle the clk by pm runtime mechanism to simplify
-the clk management.
+Hi Bean
+> > Hi Bart,
+> > 
+> > > > Bart - how do you want to proceed?
+> > > 
+> > > Hi Avri and Daejun,
+> > > 
+> > > As far as I can see none of the five patches have Reviewed-by tags
+> > > yet. I
+> > > think that Martin expects formal reviews for this patch series from
+> > > one or
+> > > more reviewers who are not colleagues of the author of this patch
+> > > series.
+> > > 
+> > > Note: recently I have been more busy than usual, hence the delayed
+> > > reply.
+> > 
+> > Thank you for replying to the email even though you are busy.
+> > 
+> > Arvi, Bean - if patches looks ok, can this series have your reviewed-
+> > by tag?
+> > 
+> > Thanks,
+> > Daejun
+> 
+> Hi Daejun
+> 
+> 
+> I only can give my tested-by tag since I preliminary tested it and it
+> works. However, as I said in the previous email, there is performance
+> downgrade comparing to the direct submission approach, also, we should
+> think about HPB 2.0.
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
----
+I plan to add your direct submission approach with HPB 2.0.
 
- sound/soc/rockchip/rockchip_spdif.c | 59 +++++++++++--------------------------
- 1 file changed, 17 insertions(+), 42 deletions(-)
+> Anyway, if Avri wants firstly make this series patch mainlined,
+> performance fixup later, this is fine to me. I can add and fix it
+> later.
+> 
+> BTW, you should rebase your this series set patch since there are
+> conflicts with latest Martin' git repo, after that, you can add my
+> tested-by tag.
+> 
+OK, I will. Thanks!
 
-diff --git a/sound/soc/rockchip/rockchip_spdif.c b/sound/soc/rockchip/rockchip_spdif.c
-index 6635145..6748108 100644
---- a/sound/soc/rockchip/rockchip_spdif.c
-+++ b/sound/soc/rockchip/rockchip_spdif.c
-@@ -306,44 +306,22 @@ static int rk_spdif_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	spdif->hclk = devm_clk_get(&pdev->dev, "hclk");
--	if (IS_ERR(spdif->hclk)) {
--		dev_err(&pdev->dev, "Can't retrieve rk_spdif bus clock\n");
-+	if (IS_ERR(spdif->hclk))
- 		return PTR_ERR(spdif->hclk);
--	}
--	ret = clk_prepare_enable(spdif->hclk);
--	if (ret) {
--		dev_err(spdif->dev, "hclock enable failed %d\n", ret);
--		return ret;
--	}
- 
- 	spdif->mclk = devm_clk_get(&pdev->dev, "mclk");
--	if (IS_ERR(spdif->mclk)) {
--		dev_err(&pdev->dev, "Can't retrieve rk_spdif master clock\n");
--		ret = PTR_ERR(spdif->mclk);
--		goto err_disable_hclk;
--	}
--
--	ret = clk_prepare_enable(spdif->mclk);
--	if (ret) {
--		dev_err(spdif->dev, "clock enable failed %d\n", ret);
--		goto err_disable_clocks;
--	}
-+	if (IS_ERR(spdif->mclk))
-+		return PTR_ERR(spdif->mclk);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	regs = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(regs)) {
--		ret = PTR_ERR(regs);
--		goto err_disable_clocks;
--	}
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
- 
- 	spdif->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "hclk", regs,
- 						  &rk_spdif_regmap_config);
--	if (IS_ERR(spdif->regmap)) {
--		dev_err(&pdev->dev,
--			"Failed to initialise managed register map\n");
--		ret = PTR_ERR(spdif->regmap);
--		goto err_disable_clocks;
--	}
-+	if (IS_ERR(spdif->regmap))
-+		return PTR_ERR(spdif->regmap);
- 
- 	spdif->playback_dma_data.addr = res->start + SPDIF_SMPDR;
- 	spdif->playback_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-@@ -352,47 +330,44 @@ static int rk_spdif_probe(struct platform_device *pdev)
- 	spdif->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, spdif);
- 
--	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
--	pm_request_idle(&pdev->dev);
-+	if (!pm_runtime_enabled(&pdev->dev)) {
-+		ret = rk_spdif_runtime_resume(&pdev->dev);
-+		if (ret)
-+			goto err_pm_runtime;
-+	}
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev,
- 					      &rk_spdif_component,
- 					      &rk_spdif_dai, 1);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register DAI\n");
--		goto err_pm_runtime;
-+		goto err_pm_suspend;
- 	}
- 
- 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
--		goto err_pm_runtime;
-+		goto err_pm_suspend;
- 	}
- 
- 	return 0;
- 
-+err_pm_suspend:
-+	if (!pm_runtime_status_suspended(&pdev->dev))
-+		rk_spdif_runtime_suspend(&pdev->dev);
- err_pm_runtime:
- 	pm_runtime_disable(&pdev->dev);
--err_disable_clocks:
--	clk_disable_unprepare(spdif->mclk);
--err_disable_hclk:
--	clk_disable_unprepare(spdif->hclk);
- 
- 	return ret;
- }
- 
- static int rk_spdif_remove(struct platform_device *pdev)
- {
--	struct rk_spdif_dev *spdif = dev_get_drvdata(&pdev->dev);
--
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		rk_spdif_runtime_suspend(&pdev->dev);
- 
--	clk_disable_unprepare(spdif->mclk);
--	clk_disable_unprepare(spdif->hclk);
--
- 	return 0;
- }
- 
--- 
-2.7.4
+> Tested-by: Bean Huo <beanhuo@micron.com>
+> 
+> 
+> Thanks,
+> Bean
+> 
 
-
-
+Thanks,
+Daejun
