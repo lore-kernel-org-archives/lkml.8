@@ -2,193 +2,245 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05578C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E40CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA59205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692FE205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pa6pNCMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbgGMOcy (ORCPT
+        id S1730061AbgGMOcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:32:54 -0400
-Received: from out28-122.mail.aliyun.com ([115.124.28.122]:43371 "EHLO
-        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOcu (ORCPT
+        Mon, 13 Jul 2020 10:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbgGMOcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:32:50 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07439106|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.118669-0.0191296-0.862201;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.I19VHhZ_1594650754;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I19VHhZ_1594650754)
-          by smtp.aliyun-inc.com(10.147.41.158);
-          Mon, 13 Jul 2020 22:32:44 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v2 3/3] USB: PHY: JZ4770: Reformat the code to align it.
-Date:   Mon, 13 Jul 2020 22:32:11 +0800
-Message-Id: <20200713143212.126399-4-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200713143212.126399-1-zhouyanjie@wanyeetech.com>
-References: <20200713143212.126399-1-zhouyanjie@wanyeetech.com>
+        Mon, 13 Jul 2020 10:32:46 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188C9C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:32:46 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x62so10078253qtd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JV7XujCjT0WQ4wkjALKmlW731iVG+iPdV0Rii6HipsE=;
+        b=pa6pNCMCjQQsJcn6JRnuQVsJuBE0YMkf8XHeoTrN40w24whIS3UehEHKsvoDinmJTt
+         DBQ3YUhvghGYV60Xpb5xSXl2lDujV2jF6VxwOr/aDF76DRVCvd/1dCr8LbhoyVzYBV3L
+         NAFlykQunvALJ8h2nY2Kd+5ozXlNYyFr2YhUax8lCIosdi8C5gdumEjELCyqJFXo6xTQ
+         ciCmX5gM3wA8fGEja7vJdp+0XTSMxXi4wzsZPZmxax9hbegn+OdYOhrpF7BF9qG8WKCE
+         Wj/eNmqlpb8hks0b+FK0gz8HdgFmhkEOnW4f1OjEqVAwuBj04gj3DQTwT/EswUOGex76
+         jTHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JV7XujCjT0WQ4wkjALKmlW731iVG+iPdV0Rii6HipsE=;
+        b=nE84cMbZG0SjNJLNQ6s6YM54LTt2y2Nh15mAZwhqPw2jesnkB2OjYZKzIjmdsIwtTi
+         wk3VHmrV1mM2RYvPQDiHLZgvAnFcGgHIW2bfHgs36GT3IIElsvgpzK+ZeLdghEFpk6c4
+         lcZJc5iz4gl6oGzkzOTwaOrfznQJaz+9I7Fuw3Hi8rKCHI8+xp4Rq9kBMWzzVkh0rZ61
+         s1xGDWN2/jN7w9FiXFIQO+ECP60afjgwC0TQvau/SRzDVBvg3CHSS2jLMs9WqFyIGjDq
+         chbtVNKQot/IvcBxge5SDFLhN09B2pQ3DVGAurnQZGASgWlvYbq3DTLQ2R0ck42njwR5
+         IlEw==
+X-Gm-Message-State: AOAM532nC+75Dv6XpxKzZfRljJS+SsErQA9Sn5i2b69dykgez8X4oXtr
+        zbF7otFzrECZg7HpEz7H3tCfpQ==
+X-Google-Smtp-Source: ABdhPJwCpXBnQ3gVjbL3KO0uYLMvWJ4HBXi/rSe0OTG4oUjXgHWdxblMk7Zj6jjIKa89WBuHHrMrMQ==
+X-Received: by 2002:ac8:c4e:: with SMTP id l14mr70226000qti.106.1594650765164;
+        Mon, 13 Jul 2020 07:32:45 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id w18sm18516302qtn.3.2020.07.13.07.32.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 07:32:43 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] arch_topology, sched/core: Cleanup thermal
+ pressure definition
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+References: <20200712165917.9168-1-valentin.schneider@arm.com>
+ <20200712165917.9168-2-valentin.schneider@arm.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <88488b17-fd01-76e6-ae53-027c1016340b@linaro.org>
+Date:   Mon, 13 Jul 2020 10:32:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200712165917.9168-2-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reformat the code (add one level of indentation before the values),
-to align the code in the macro definition section.
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
 
-Notes:
-    v2:
-    New patch.
+On 7/12/20 12:59 PM, Valentin Schneider wrote:
+> The following commit:
+> 
+>    14533a16c46d ("thermal/cpu-cooling, sched/core: Move the arch_set_thermal_pressure() API to generic scheduler code")
+> 
+> moved the definition of arch_set_thermal_pressure() to sched/core.c, but
+> kept its declaration in linux/arch_topology.h. When building e.g. an x86
+> kernel with CONFIG_SCHED_THERMAL_PRESSURE=y, cpufreq_cooling.c ends up
+> getting the declaration of arch_set_thermal_pressure() from
+> include/linux/arch_topology.h, which is somewhat awkward.
+> 
+> On top of this, sched/core.c unconditionally defines
+> o The thermal_pressure percpu variable
+> o arch_set_thermal_pressure()
+> 
+> while arch_scale_thermal_pressure() does nothing unless redefined by the
+> architecture.
+> 
+> arch_*() functions are meant to be defined by architectures, so revert the
+> aforementioned commit and re-implement it in a way that keeps
+> arch_set_thermal_pressure() architecture-definable, and doesn't define the
+> thermal pressure percpu variable for kernels that don't need
+> it (CONFIG_SCHED_THERMAL_PRESSURE=n).
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
 
- drivers/usb/phy/phy-jz4770.c | 100 +++++++++++++++++++++----------------------
- 1 file changed, 50 insertions(+), 50 deletions(-)
+Reviewed-by: Thara Gopinath <thara.gopinath@linaro.org>
 
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-index d1055c908943..65e517290912 100644
---- a/drivers/usb/phy/phy-jz4770.c
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -15,71 +15,71 @@
- #include <linux/usb/otg.h>
- #include <linux/usb/phy.h>
- 
--#define REG_USBPCR_OFFSET	0x00
--#define REG_USBRDT_OFFSET	0x04
--#define REG_USBVBFIL_OFFSET	0x08
--#define REG_USBPCR1_OFFSET	0x0c
-+#define REG_USBPCR_OFFSET			0x00
-+#define REG_USBRDT_OFFSET			0x04
-+#define REG_USBVBFIL_OFFSET			0x08
-+#define REG_USBPCR1_OFFSET			0x0c
- 
- /*USB Parameter Control Register*/
--#define USBPCR_USB_MODE		BIT(31)
--#define USBPCR_AVLD_REG		BIT(30)
--#define USBPCR_INCR_MASK	BIT(27)
--#define USBPCR_COMMONONN	BIT(25)
--#define USBPCR_VBUSVLDEXT	BIT(24)
--#define USBPCR_VBUSVLDEXTSEL	BIT(23)
--#define USBPCR_POR		BIT(22)
--#define USBPCR_SIDDQ		BIT(21)
--#define USBPCR_OTG_DISABLE	BIT(20)
--#define USBPCR_TXPREEMPHTUNE	BIT(6)
--
--#define USBPCR_IDPULLUP_LSB	28
--#define USBPCR_IDPULLUP_MASK	GENMASK(29, USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_ALWAYS	(0x2 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_SUSPEND	(0x1 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_OTG	(0x0 << USBPCR_IDPULLUP_LSB)
--
--#define USBPCR_COMPDISTUNE_LSB	17
--#define USBPCR_COMPDISTUNE_MASK	GENMASK(19, USBPCR_COMPDISTUNE_LSB)
--#define USBPCR_COMPDISTUNE_DFT	(0x4 << USBPCR_COMPDISTUNE_LSB)
--
--#define USBPCR_OTGTUNE_LSB	14
--#define USBPCR_OTGTUNE_MASK	GENMASK(16, USBPCR_OTGTUNE_LSB)
--#define USBPCR_OTGTUNE_DFT	(0x4 << USBPCR_OTGTUNE_LSB)
--
--#define USBPCR_SQRXTUNE_LSB	11
--#define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_USB_MODE				BIT(31)
-+#define USBPCR_AVLD_REG				BIT(30)
-+#define USBPCR_INCR_MASK			BIT(27)
-+#define USBPCR_COMMONONN			BIT(25)
-+#define USBPCR_VBUSVLDEXT			BIT(24)
-+#define USBPCR_VBUSVLDEXTSEL		BIT(23)
-+#define USBPCR_POR					BIT(22)
-+#define USBPCR_SIDDQ				BIT(21)
-+#define USBPCR_OTG_DISABLE			BIT(20)
-+#define USBPCR_TXPREEMPHTUNE		BIT(6)
-+
-+#define USBPCR_IDPULLUP_LSB			28
-+#define USBPCR_IDPULLUP_MASK		GENMASK(29, USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_ALWAYS		(0x2 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_SUSPEND		(0x1 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_OTG			(0x0 << USBPCR_IDPULLUP_LSB)
-+
-+#define USBPCR_COMPDISTUNE_LSB		17
-+#define USBPCR_COMPDISTUNE_MASK		GENMASK(19, USBPCR_COMPDISTUNE_LSB)
-+#define USBPCR_COMPDISTUNE_DFT		(0x4 << USBPCR_COMPDISTUNE_LSB)
-+
-+#define USBPCR_OTGTUNE_LSB			14
-+#define USBPCR_OTGTUNE_MASK			GENMASK(16, USBPCR_OTGTUNE_LSB)
-+#define USBPCR_OTGTUNE_DFT			(0x4 << USBPCR_OTGTUNE_LSB)
-+
-+#define USBPCR_SQRXTUNE_LSB			11
-+#define USBPCR_SQRXTUNE_MASK		GENMASK(13, USBPCR_SQRXTUNE_LSB)
- #define USBPCR_SQRXTUNE_DCR_20PCT	(0x7 << USBPCR_SQRXTUNE_LSB)
--#define USBPCR_SQRXTUNE_DFT	(0x3 << USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DFT			(0x3 << USBPCR_SQRXTUNE_LSB)
- 
--#define USBPCR_TXFSLSTUNE_LSB	7
--#define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_LSB		7
-+#define USBPCR_TXFSLSTUNE_MASK		GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
- #define USBPCR_TXFSLSTUNE_DCR_50PPT	(0xf << USBPCR_TXFSLSTUNE_LSB)
- #define USBPCR_TXFSLSTUNE_DCR_25PPT	(0x7 << USBPCR_TXFSLSTUNE_LSB)
--#define USBPCR_TXFSLSTUNE_DFT	(0x3 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DFT		(0x3 << USBPCR_TXFSLSTUNE_LSB)
- #define USBPCR_TXFSLSTUNE_INC_25PPT	(0x1 << USBPCR_TXFSLSTUNE_LSB)
- #define USBPCR_TXFSLSTUNE_INC_50PPT	(0x0 << USBPCR_TXFSLSTUNE_LSB)
- 
--#define USBPCR_TXHSXVTUNE_LSB	4
--#define USBPCR_TXHSXVTUNE_MASK	GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
--#define USBPCR_TXHSXVTUNE_DFT	(0x3 << USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_LSB		4
-+#define USBPCR_TXHSXVTUNE_MASK		GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DFT		(0x3 << USBPCR_TXHSXVTUNE_LSB)
- #define USBPCR_TXHSXVTUNE_DCR_15MV	(0x1 << USBPCR_TXHSXVTUNE_LSB)
- 
--#define USBPCR_TXRISETUNE_LSB	4
--#define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
--#define USBPCR_TXRISETUNE_DFT	(0x3 << USBPCR_TXRISETUNE_LSB)
-+#define USBPCR_TXRISETUNE_LSB		4
-+#define USBPCR_TXRISETUNE_MASK		GENMASK(5, USBPCR_TXRISETUNE_LSB)
-+#define USBPCR_TXRISETUNE_DFT		(0x3 << USBPCR_TXRISETUNE_LSB)
- 
--#define USBPCR_TXVREFTUNE_LSB	0
--#define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_LSB		0
-+#define USBPCR_TXVREFTUNE_MASK		GENMASK(3, USBPCR_TXVREFTUNE_LSB)
- #define USBPCR_TXVREFTUNE_INC_25PPT	(0x7 << USBPCR_TXVREFTUNE_LSB)
--#define USBPCR_TXVREFTUNE_DFT	(0x5 << USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_DFT		(0x5 << USBPCR_TXVREFTUNE_LSB)
- 
- /*USB Reset Detect Timer Register*/
--#define USBRDT_UTMI_RST		BIT(27)
--#define USBRDT_HB_MASK		BIT(26)
--#define USBRDT_VBFIL_LD_EN	BIT(25)
--#define USBRDT_IDDIG_EN		BIT(24)
--#define USBRDT_IDDIG_REG	BIT(23)
--#define USBRDT_VBFIL_EN		BIT(2)
-+#define USBRDT_UTMI_RST				BIT(27)
-+#define USBRDT_HB_MASK				BIT(26)
-+#define USBRDT_VBFIL_LD_EN			BIT(25)
-+#define USBRDT_IDDIG_EN				BIT(24)
-+#define USBRDT_IDDIG_REG			BIT(23)
-+#define USBRDT_VBFIL_EN				BIT(2)
- 
- /*USB Parameter Control Register 1*/
- #define USBPCR1_BVLD_REG			BIT(31)
+>   arch/arm/include/asm/topology.h   |  3 ++-
+>   arch/arm64/include/asm/topology.h |  3 ++-
+>   drivers/base/arch_topology.c      | 11 +++++++++++
+>   include/linux/arch_topology.h     |  4 ++--
+>   include/linux/sched/topology.h    |  7 +++++++
+>   kernel/sched/core.c               | 11 -----------
+>   6 files changed, 24 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
+> index 435aba289fc5..e0593cf095d0 100644
+> --- a/arch/arm/include/asm/topology.h
+> +++ b/arch/arm/include/asm/topology.h
+> @@ -16,8 +16,9 @@
+>   /* Enable topology flag updates */
+>   #define arch_update_cpu_topology topology_update_cpu_topology
+>   
+> -/* Replace task scheduler's default thermal pressure retrieve API */
+> +/* Replace task scheduler's default thermal pressure API */
+>   #define arch_scale_thermal_pressure topology_get_thermal_pressure
+> +#define arch_set_thermal_pressure   topology_set_thermal_pressure
+>   
+>   #else
+>   
+> diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+> index 0cc835ddfcd1..e042f6527981 100644
+> --- a/arch/arm64/include/asm/topology.h
+> +++ b/arch/arm64/include/asm/topology.h
+> @@ -34,8 +34,9 @@ void topology_scale_freq_tick(void);
+>   /* Enable topology flag updates */
+>   #define arch_update_cpu_topology topology_update_cpu_topology
+>   
+> -/* Replace task scheduler's default thermal pressure retrieve API */
+> +/* Replace task scheduler's default thermal pressure API */
+>   #define arch_scale_thermal_pressure topology_get_thermal_pressure
+> +#define arch_set_thermal_pressure   topology_set_thermal_pressure
+>   
+>   #include <asm-generic/topology.h>
+>   
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 4d0a0038b476..d14cab7dfa3c 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -54,6 +54,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+>   	per_cpu(cpu_scale, cpu) = capacity;
+>   }
+>   
+> +DEFINE_PER_CPU(unsigned long, thermal_pressure);
+> +
+> +void arch_set_thermal_pressure(const struct cpumask *cpus,
+> +			       unsigned long th_pressure)
+> +{
+> +	int cpu;
+> +
+> +	for_each_cpu(cpu, cpus)
+> +		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+> +}
+> +
+>   static ssize_t cpu_capacity_show(struct device *dev,
+>   				 struct device_attribute *attr,
+>   				 char *buf)
+> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+> index 0566cb3314ef..69b1dabe39dc 100644
+> --- a/include/linux/arch_topology.h
+> +++ b/include/linux/arch_topology.h
+> @@ -39,8 +39,8 @@ static inline unsigned long topology_get_thermal_pressure(int cpu)
+>   	return per_cpu(thermal_pressure, cpu);
+>   }
+>   
+> -void arch_set_thermal_pressure(struct cpumask *cpus,
+> -			       unsigned long th_pressure);
+> +void topology_set_thermal_pressure(const struct cpumask *cpus,
+> +				   unsigned long th_pressure);
+>   
+>   struct cpu_topology {
+>   	int thread_id;
+> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+> index fb11091129b3..764222d637b7 100644
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -232,6 +232,13 @@ unsigned long arch_scale_thermal_pressure(int cpu)
+>   }
+>   #endif
+>   
+> +#ifndef arch_set_thermal_pressure
+> +static __always_inline
+> +void arch_set_thermal_pressure(const struct cpumask *cpus,
+> +			       unsigned long th_pressure)
+> +{ }
+> +#endif
+> +
+>   static inline int task_node(const struct task_struct *p)
+>   {
+>   	return cpu_to_node(task_cpu(p));
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index ff0519551188..90b44f3840e4 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3731,17 +3731,6 @@ unsigned long long task_sched_runtime(struct task_struct *p)
+>   	return ns;
+>   }
+>   
+> -DEFINE_PER_CPU(unsigned long, thermal_pressure);
+> -
+> -void arch_set_thermal_pressure(struct cpumask *cpus,
+> -			       unsigned long th_pressure)
+> -{
+> -	int cpu;
+> -
+> -	for_each_cpu(cpu, cpus)
+> -		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+> -}
+> -
+>   /*
+>    * This function gets called by the timer code, with HZ frequency.
+>    * We call it with interrupts disabled.
+> 
+
 -- 
-2.11.0
-
+Warm Regards
+Thara
