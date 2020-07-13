@@ -2,106 +2,117 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA93C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFBBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6F42077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF1D207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR22FJr5"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="FdED5WFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgGMKDW (ORCPT
+        id S1729597AbgGMKD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729570AbgGMKDW (ORCPT
+        Mon, 13 Jul 2020 06:03:28 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:44787 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbgGMKD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:03:22 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378B8C061755;
-        Mon, 13 Jul 2020 03:03:22 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id u8so5489390qvj.12;
-        Mon, 13 Jul 2020 03:03:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1Bp6ooBnl29LgQwgRasRlGwvso/97p63GtfZ5PiBQTw=;
-        b=fR22FJr528HTbVr5yiXlhTnjGckWEGpRvUrfyASmhnDxv6mvCczdyorbQCxUHO6G3T
-         4q9ZBdkP1yjgEj59VZVCDj3VFcZoXzLjOoDn1Sg23HMGi7cxs1/9ml3IHiBW9nmjM1zc
-         pNrmqAneD7xhJynGDsNTRlI1VUgbs41JNz+qsasrr9rHx87rYwUsMWmfGGfXHcfVomWh
-         bwB6J+Za2xh4yLI4L8YNvnNJ7IMLIIcK1+qjgA6EW5lnnUWakEqyRj5uAbPQt2XyOULt
-         Jb3sjcmmLgcspQ1IAkGNLXyykglmsY4ZKOAPw56zJmk3NggmDBfeFJFjIa5vGF4KA7hL
-         cOxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1Bp6ooBnl29LgQwgRasRlGwvso/97p63GtfZ5PiBQTw=;
-        b=aULHB2++DmBR5+W4m1UAM/vXZl2+bnf7qm2y9mGNcpnkOlhhHtddOgqQxPuhMrMAII
-         JjcdKdPPsPXDl6SR30p9D6IQnGEPskthUL28STEhUEwr6Wi7KOTSCPS0lZh3AqYJZq7m
-         QeaeetN/uYaCLohVOEbZ3ddZkjFz82tpYC/0/aYaD2RW7RblQr4tLmYB2O5tYcz/DEOQ
-         jDXedpImcTMIcZTVjsBFysmMb2JGvFoo5o1XzC0gUwNhNn4ubfG8KBuko3nis9SD6o/C
-         Yxn/uvRVcV0hbQeWzWggs4N+5es6VVpN4V9x4/M8XZTxIlC7OfqMIBw1/gHLhMu6j9iY
-         LA3g==
-X-Gm-Message-State: AOAM533vttyxJFXb2mU8LkAreWNx7zKonKU6bXSPbLvBuJoJ1sgbS+Rq
-        q/yDp2AsnThYfr47q2oEVwgWSIl3bFzBSBeFaDw=
-X-Google-Smtp-Source: ABdhPJyG9JgXRd06w9jCyfF/WDMYIp+vUYSvmAwfGAEme8KlkS+YHZBhN5qetyJzGOkuVRlY4lr0HRKihqYP5EOwdVo=
-X-Received: by 2002:a0c:fe01:: with SMTP id x1mr77159663qvr.246.1594634601328;
- Mon, 13 Jul 2020 03:03:21 -0700 (PDT)
+        Mon, 13 Jul 2020 06:03:27 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id uvIwj6dSlGLmCuvIzjAv4p; Mon, 13 Jul 2020 12:03:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1594634605; bh=JZ0u6IVYJ3t6A5I0FiTBQH+7zjb770/fle7atpAVCzs=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=FdED5WFnNNxHgJOQ5hMxpOAdDav4DkMFqmX2rh8kqXVBRvBg6xZmoTXN3A+fPcH8f
+         hZ2lZ5oQ+rIBr6fSK1NWaTL3tEm3ciEeo2XsxVTg7jqosxzroC+i2TFxKeLdk8CE0E
+         HiSZOHl9i4jgrOppQbtxy2WXs9nXq98I8augJvQR0Bwm8GPXsIIc7HbiZJHuKR9r6d
+         +5stJHF8lm0r1SgL3DO+mLWXU5kvoy2L+AYaWogtEx+Z69MDyk5xyPp/O/oM0I8V5N
+         Yl+Hfk/eMpbHj3YMT03+pd+4rAyIhIuTvy7BNti4xzusBgXdwMtA7DJdsrACA4KBKs
+         GIBALBr20T7BA==
+Subject: Re: [PATCH v1 3/6] [media] cx25821: use generic power management
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+References: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
+ <20200629073604.205478-4-vaibhavgupta40@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <126d8fe6-1480-137c-ac64-d828a32b99f9@xs4all.nl>
+Date:   Mon, 13 Jul 2020 12:03:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710135706.537715-1-hch@lst.de> <20200710135706.537715-3-hch@lst.de>
-In-Reply-To: <20200710135706.537715-3-hch@lst.de>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Mon, 13 Jul 2020 18:02:44 +0800
-Message-ID: <CAEbi=3dKwDQ5-wdxQagX2n5Z3tYeYwTcmDNqxPH=83Dy-VKA1w@mail.gmail.com>
-Subject: Re: [PATCH 2/6] nds32: use uaccess_kernel in show_regs
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nick Hu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200629073604.205478-4-vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFiuY3g36s+/lIFf8CRg5WvA6XQU+S7/+hihune9u/ukz+XXtQn0TrUcq5itDVbjWDM+5qoFf1B+Uz8z8GJsH6bfd8Mic/MwYp9w1q/yvaKUQmRBOfxh
+ hkQI37AksyhAQFB2A315MaOXpkzTzKmcqGQy5DwsPAVp6kwFYYSjFnvMSdkGuLZ55KdCj5W4YkQGiny8ejEdv3Dsg72Go6kGjVgTheWacfPMBtSRSfmVDPOS
+ AO12fd2Ogjry+oCJpHNTDOiBJTVhWOUbXpHHGz07HgzUMlAlpmpk3jI0cWXRZFy/O65GHnS5Q1bOgKlYO7tSywQttExU0vbn71cPstiaxjhPKiNjB78U8c0G
+ Pf/Yk4hEYGHkHHm/5qugLvNw8Lxcy17KLO8w0DXVN9ib6gmgnk8522/6SpRuKHeGiobxcnMfDri+cUhYKnszwIc7iVZFWDyWoA6HFjkDYRLluXmjg71c93Ql
+ m80gBTFhNn6JbA/3iKKpGnKZ3VuViHqIWuPjcIxC3lRJ9SQ5m61E4l/0how=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> =E6=96=BC 2020=E5=B9=B47=E6=9C=8810=E6=97=A5=
- =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:57=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Use the uaccess_kernel helper instead of duplicating it.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On 29/06/2020 09:36, Vaibhav Gupta wrote:
+> The .suspend() and .resume() callbacks are not defined for this driver.
+> Still, their power managemgement stucture can be easily upgraded to
+> gemeric, without affecting its normal behaviour.
+> 
+> Hence, define them NULL and use struct dev_pm_ops type to bind them.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 > ---
->  arch/nds32/kernel/process.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/nds32/kernel/process.c b/arch/nds32/kernel/process.c
-> index 9712fd474f2ca3..f06265949ec28b 100644
-> --- a/arch/nds32/kernel/process.c
-> +++ b/arch/nds32/kernel/process.c
-> @@ -121,7 +121,7 @@ void show_regs(struct pt_regs *regs)
->                 regs->uregs[3], regs->uregs[2], regs->uregs[1], regs->ure=
-gs[0]);
->         pr_info("  IRQs o%s  Segment %s\n",
->                 interrupts_enabled(regs) ? "n" : "ff",
-> -               segment_eq(get_fs(), KERNEL_DS)? "kernel" : "user");
-> +               uaccess_kernel() ? "kernel" : "user");
->  }
->
->  EXPORT_SYMBOL(show_regs);
+>  drivers/media/pci/cx25821/cx25821-core.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/pci/cx25821/cx25821-core.c b/drivers/media/pci/cx25821/cx25821-core.c
+> index 41be22ce66f3..59501939d741 100644
+> --- a/drivers/media/pci/cx25821/cx25821-core.c
+> +++ b/drivers/media/pci/cx25821/cx25821-core.c
+> @@ -1369,14 +1369,18 @@ static const struct pci_device_id cx25821_pci_tbl[] = {
+>  
+>  MODULE_DEVICE_TABLE(pci, cx25821_pci_tbl);
+>  
+> +#define cx25821_suspend NULL
+> +#define cx25821_resume NULL
+> +
+> +static SIMPLE_DEV_PM_OPS(cx25821_pm_ops, cx25821_suspend, cx25821_resume);
+> +
+>  static struct pci_driver cx25821_pci_driver = {
+>  	.name = "cx25821",
+>  	.id_table = cx25821_pci_tbl,
+>  	.probe = cx25821_initdev,
+>  	.remove = cx25821_finidev,
+>  	/* TODO */
+> -	.suspend = NULL,
+> -	.resume = NULL,
+> +	.driver.pm = &cx25821_pm_ops,
+>  };
 
-Hi Christoph, Thank you.
-Acked-by: Greentime Hu <green.hu@gmail.com>
+Same question as for 2/6.
+
+Regards,
+
+	Hans
+
+>  
+>  static int __init cx25821_init(void)
+> 
+
