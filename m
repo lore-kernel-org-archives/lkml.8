@@ -2,113 +2,112 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23D0C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C513C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC16E20791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BDD207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594622011;
+	bh=bVP0kqOjBb7yc4VbMsPyXj/p1GIRDdmOqU2CJ/tpabE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2mGsdFYYDS0uJ9csgDP0v9ynXTKzX5YypIjZoHhFbDVuMDH6KmH2Adq6JPawot6jj
+	 XgfSgGSiL8kcw/+v4lNmqQD+9HDFF1jTFHmI4ztnayrYwjJlcsggDofq7fthDPbXxl
+	 7NexNHxSE2QPdtMxw2YVBP/b5purwfMcF0EkJ6M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgGMG2j (ORCPT
+        id S1729216AbgGMGd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:28:39 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:10354 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgGMG2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:28:38 -0400
-Received: from TWHMLLG4.macronix.com (localhost [127.0.0.2] (may be forged))
-        by TWHMLLG4.macronix.com with ESMTP id 06D5qcgD016783
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:52:38 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from twhfm1p2.macronix.com (twhfmlp2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id 06D5qVq1016645;
-        Mon, 13 Jul 2020 13:52:31 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id 567B261D7B2D739B9D9B;
-        Mon, 13 Jul 2020 13:52:32 +0800 (CST)
-In-Reply-To: <1590737775-4798-3-git-send-email-masonccyang@mxic.com.tw>
-References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw> <1590737775-4798-3-git-send-email-masonccyang@mxic.com.tw>
-To:     ycllin@mxic.com.tw
-Cc:     boris.brezillon@collabora.com, broonie@kernel.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        matthias.bgg@gmail.com, miquel.raynal@bootlin.com, p.yadav@ti.com,
-        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v4 2/7] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+        Mon, 13 Jul 2020 02:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgGMGd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:33:29 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999DC2067D;
+        Mon, 13 Jul 2020 06:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594622009;
+        bh=bVP0kqOjBb7yc4VbMsPyXj/p1GIRDdmOqU2CJ/tpabE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jpDnQNzEdC4zS0nU0V00HdU63VxbfTUhY38uQZjq/Gg9OUB/rGFiBxTS9c6O55xC9
+         1ZAPUBZiWZ0fePHDs/hu0TgAoJAtKarYDvz84nmqe7VXAg/HG6m4aCeBuA81xhroFo
+         jU3GyusbQBKcvTgQfVlxPUiWgDxkRZYgxElxEVf4=
+Date:   Mon, 13 Jul 2020 14:33:24 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH] ARM: dts: vfxxx: Add node for CAAM
+Message-ID: <20200713063323.GE12113@dragon>
+References: <CAFXsbZoeTyRp7bwjBUcXT5H2GhrTmNeeoQSFcgiS9aNRFw6V_g@mail.gmail.com>
 MIME-Version: 1.0
-X-KeepSent: 5D2955E6:5ACFFC6F-482585A4:00200EDE;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF5D2955E6.5ACFFC6F-ON482585A4.00200EDE-482585A4.00204686@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 13 Jul 2020 13:52:32 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/07/13 PM 01:52:32,
-        Serialize complete at 2020/07/13 PM 01:52:32
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com 06D5qVq1016645
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFXsbZoeTyRp7bwjBUcXT5H2GhrTmNeeoQSFcgiS9aNRFw6V_g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-+ YC Lin in loop,
-
---
+On Sat, Jul 04, 2020 at 06:40:43PM -0700, Chris Healy wrote:
+> Add node for CAAM device in NXP Vybrid SoC.
 > 
-> Subject
-> 
-> [PATCH v4 2/7] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
-> 
-> JESD251, xSPI profile 1.0 table supports octal DTR mode.
-> Extract information like the fast read opcode, dummy cycles for various
-> frequencies, the number of dummy cycles needed for a Read Status
-> Register command, the number of address bytes needed for a Read
-> Status Register command, read volatile register command and write
-> volatile register command.
-> 
-> According to BFPT 20th DWORD of octal maximum speed, driver get it's
-> specific dummy cycles from profile 1.0 table and then could update
-> it to device by their fixup hooks.
-> 
-> Since driver get octal DTR read opcode and then set read settings,
-> expose spi_nor_set_read_settings() in core.h.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 > ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 2d547e7b21ad..0fe03aa0367f 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -729,6 +729,28 @@
+>                  dma-names = "rx","tx";
+>                  status = "disabled";
+>              };
+> +
+> +            crypto: crypto@400f0000 {
+> +                compatible = "fsl,sec-v4.0";
 
+Please use tab for indentation.
 
-CONFIDENTIALITY NOTE:
+Shawn
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+> +                #address-cells = <1>;
+> +                #size-cells = <1>;
+> +                reg = <0x400f0000 0x9000>;
+> +                ranges = <0 0x400f0000 0x9000>;
+> +                clocks = <&clks VF610_CLK_CAAM>;
+> +                clock-names = "ipg";
+> +
+> +                sec_jr0: jr0@1000 {
+> +                    compatible = "fsl,sec-v4.0-job-ring";
+> +                    reg = <0x1000 0x1000>;
+> +                    interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
+> +                };
+> +
+> +                sec_jr1: jr1@2000 {
+> +                    compatible = "fsl,sec-v4.0-job-ring";
+> +                    reg = <0x2000 0x1000>;
+> +                    interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
+> +                };
+> +            };
+>          };
+>      };
+>  };
+> --
+> 2.21.3
