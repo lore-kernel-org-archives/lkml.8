@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB5AC4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C265DC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9975A2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957262072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7D/FMa6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNK+596w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgGMIBL (ORCPT
+        id S1729294AbgGMIAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52544 "EHLO
+        Mon, 13 Jul 2020 04:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgGMIAZ (ORCPT
+        with ESMTP id S1729204AbgGMIAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:00:25 -0400
+        Mon, 13 Jul 2020 04:00:20 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709B3C08C5DB
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l2so12211662wmf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4141C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so12214520wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SJ5riagb5ylGMgLFLpVaPq4YYsW+h0AJ68wtr1RKdm4=;
-        b=I7D/FMa6LFLgK70CbtOGV38nxcM7oGYUXV8zIYRuOU7EGDK5/LDS29iHNrhXTITdmk
-         8R2W7+2d5Cq4geX3W52cAO9WBjauR7t2POg/t7DzPKpuLXoTI0Uqy5syGeOd0ShQDR8L
-         h0R9fycIJe+lJG014nzzzlD7E9SFI1/fYpYUSfrc9L34A3JrugmyyDMNXaaJDSo6QfEz
-         7FnDKEFkDiVB4ulKJBsTfEa8YL2Nd3jbHoFuIUjqJnyHFdQCzy81ljMAMYrNu43+qfW8
-         JLRtNfkDRSdS0N2ETb2iApzGv/lOkpS+kEdwOIWSr/WAITkKstnZbhGbUS0kLZAP5er6
-         hZJQ==
+        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
+        b=LNK+596wiFxLBRZYC3F2WCxd3yBrWVB60mNv0MBtlthCFvHl0k3mrpfstElNzfoJJz
+         WHmLi2aM5SMki9Si9JNY65ttis2g8EM8znHbPSPJ5yM8u6y9/Ehtg6OqIXm2Puw5JPc4
+         M3YN4hqJjkoY3Xy/mtzIHEyk4IRp2q/5Mh5FHsIELviGogWzORBJqrE0CExTGyuEHGyL
+         Ej7hRxaHaDC/H+g+ZT9r0nJ0fErfDg2ZxziSwaV1I5lA5JG5n2T7rxpIlrY8RWizO7GX
+         ruDPRdudAGM8NFNyNw4MzP/3bNPMAqmeC6G1U6kEAC+VUPOMBMcMI8hyRIahDF8fADIU
+         vyzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SJ5riagb5ylGMgLFLpVaPq4YYsW+h0AJ68wtr1RKdm4=;
-        b=JwjqoZNDtZCmUeBhrfzTD2VqdjxodbEBSH7EMqNQ1GBF0DHnCdcQys544nRxKhLM2i
-         7tAgF0MTeQEHjZWl076UzzuvQngOgRXrTFV6unZCS3TMNwNdBuKoIYK3uNIz2e8woQmD
-         Y+qQ5L8pYccpEiIT9Yo4NQc6bG53w5ECRkwy+BDDxLXQOWbk1v6XMajUneBBW24feaSK
-         lB5Op49c5wcCpSpEvea/1Tx8IErkgAjgxt8ElVzUNNw1jdEG7GooGW3nQieln/9atYzM
-         FKkYOL0E2i5JO/d11eo9fBULT+uVMIXllyKRjbMXI8wAzqKazsKX8pMIdg+q9X4PmkVI
-         cO0w==
-X-Gm-Message-State: AOAM531IbiEztlRGMSzBlRqYE/OPogqhDZAVwCuOa9KYnqkO1MMkE6yk
-        rzuCzJCdAqvlB3QxdsMmJIgJMA==
-X-Google-Smtp-Source: ABdhPJxARuNXSMJsyjWyd39e8lh2N3H2K2RJqoy63HYCBTCKIMMHAOZ3AEd41aJOw/5fYhuISbWhiA==
-X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr17571223wmg.88.1594627224155;
-        Mon, 13 Jul 2020 01:00:24 -0700 (PDT)
+        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
+        b=oJ7aAuG9jQnPFuqnEGNO5FlhR14DS7rwwVM64bpMAkyJ1g1UtlL2lMgvMTvZg7C65g
+         h7l0Oho5Qq1rGCrjusdSdxQI3z0FCvNsA5KNVljYbeaVWiiAQEr9otdKeZKGX1XEcJqb
+         VWiz5BxdjqQJB0zC+7oJQ9161C1CJyeASJY+CyzkkHcGpIjEpedIEVH+oG40LKuBtOl0
+         8TnmXZ9QG2VhgUMtXqSwuNdeR7y6ie2MLSxa0S5Go3hLAavbO2i2uYsq4FOya61UAiN7
+         4bOX4vZEzLqsssscq2RvIuSYRrzkkVRa0Qdqb35uxI9b/KwgGCUmznoNAiwDNj1bDa2u
+         26cA==
+X-Gm-Message-State: AOAM531ESugzrxTgvI2ll6Nn2dVF6/NSGQ5BtBDDW++hIfsMRoBY1/au
+        EavZccmcZDkDEbK1q7G19nCJAw==
+X-Google-Smtp-Source: ABdhPJzDHlyidV66NHvVR7cEPl19EaNz4Kj79SGPtVrahB4FzdznpE+LAFQjlB6OCqCABxOcAqL4eQ==
+X-Received: by 2002:a1c:bc8a:: with SMTP id m132mr16923482wmf.1.1594627218510;
+        Mon, 13 Jul 2020 01:00:18 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id 33sm24383549wri.16.2020.07.13.01.00.23
+        by smtp.gmail.com with ESMTPSA id 33sm24383549wri.16.2020.07.13.01.00.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 01:00:23 -0700 (PDT)
+        Mon, 13 Jul 2020 01:00:17 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Hannes Reinecke <hare@kernel.org>, Linux GmbH <hare@suse.com>,
-        "Leonard N. Zubkoff" <lnz@dandelion.com>
-Subject: [PATCH v2 15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Mon, 13 Jul 2020 08:59:52 +0100
-Message-Id: <20200713080001.128044-16-lee.jones@linaro.org>
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Subject: [PATCH v2 10/24] scsi: pm8001: pm8001_ctl: Provide descriptions for the many undocumented 'attr's
+Date:   Mon, 13 Jul 2020 08:59:47 +0100
+Message-Id: <20200713080001.128044-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713080001.128044-1-lee.jones@linaro.org>
 References: <20200713080001.128044-1-lee.jones@linaro.org>
@@ -78,199 +77,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document any of the demoted functions here.
+... even if they are completely unused.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/myrs.c:94: warning: Function parameter or member 'cmd_blk' not described in 'myrs_reset_cmd'
- drivers/scsi/myrs.c:105: warning: Function parameter or member 'cs' not described in 'myrs_qcmd'
- drivers/scsi/myrs.c:105: warning: Function parameter or member 'cmd_blk' not described in 'myrs_qcmd'
- drivers/scsi/myrs.c:130: warning: Function parameter or member 'cs' not described in 'myrs_exec_cmd'
- drivers/scsi/myrs.c:130: warning: Function parameter or member 'cmd_blk' not described in 'myrs_exec_cmd'
- drivers/scsi/myrs.c:149: warning: Function parameter or member 'cs' not described in 'myrs_report_progress'
- drivers/scsi/myrs.c:149: warning: Function parameter or member 'ldev_num' not described in 'myrs_report_progress'
- drivers/scsi/myrs.c:149: warning: Function parameter or member 'msg' not described in 'myrs_report_progress'
- drivers/scsi/myrs.c:149: warning: Function parameter or member 'blocks' not described in 'myrs_report_progress'
- drivers/scsi/myrs.c:149: warning: Function parameter or member 'size' not described in 'myrs_report_progress'
- drivers/scsi/myrs.c:160: warning: Function parameter or member 'cs' not described in 'myrs_get_ctlr_info'
- drivers/scsi/myrs.c:222: warning: Function parameter or member 'cs' not described in 'myrs_get_ldev_info'
- drivers/scsi/myrs.c:222: warning: Function parameter or member 'ldev_num' not described in 'myrs_get_ldev_info'
- drivers/scsi/myrs.c:222: warning: Function parameter or member 'ldev_info' not described in 'myrs_get_ldev_info'
- drivers/scsi/myrs.c:310: warning: Function parameter or member 'cs' not described in 'myrs_get_pdev_info'
- drivers/scsi/myrs.c:310: warning: Function parameter or member 'channel' not described in 'myrs_get_pdev_info'
- drivers/scsi/myrs.c:310: warning: Function parameter or member 'target' not described in 'myrs_get_pdev_info'
- drivers/scsi/myrs.c:310: warning: Function parameter or member 'lun' not described in 'myrs_get_pdev_info'
- drivers/scsi/myrs.c:310: warning: Function parameter or member 'pdev_info' not described in 'myrs_get_pdev_info'
- drivers/scsi/myrs.c:353: warning: Function parameter or member 'cs' not described in 'myrs_dev_op'
- drivers/scsi/myrs.c:353: warning: Function parameter or member 'opcode' not described in 'myrs_dev_op'
- drivers/scsi/myrs.c:353: warning: Function parameter or member 'opdev' not described in 'myrs_dev_op'
- drivers/scsi/myrs.c:379: warning: Function parameter or member 'cs' not described in 'myrs_translate_pdev'
- drivers/scsi/myrs.c:379: warning: Function parameter or member 'channel' not described in 'myrs_translate_pdev'
- drivers/scsi/myrs.c:379: warning: Function parameter or member 'target' not described in 'myrs_translate_pdev'
- drivers/scsi/myrs.c:379: warning: Function parameter or member 'lun' not described in 'myrs_translate_pdev'
- drivers/scsi/myrs.c:379: warning: Function parameter or member 'devmap' not described in 'myrs_translate_pdev'
- drivers/scsi/myrs.c:422: warning: Function parameter or member 'cs' not described in 'myrs_get_event'
- drivers/scsi/myrs.c:422: warning: Function parameter or member 'event_num' not described in 'myrs_get_event'
- drivers/scsi/myrs.c:422: warning: Function parameter or member 'event_buf' not described in 'myrs_get_event'
- drivers/scsi/myrs.c:484: warning: Function parameter or member 'cs' not described in 'myrs_enable_mmio_mbox'
- drivers/scsi/myrs.c:484: warning: Function parameter or member 'enable_mbox_fn' not described in 'myrs_enable_mmio_mbox'
- drivers/scsi/myrs.c:584: warning: Function parameter or member 'cs' not described in 'myrs_get_config'
- drivers/scsi/myrs.c:688: warning: cannot understand function prototype: 'struct '
- drivers/scsi/myrs.c:1967: warning: Function parameter or member 'dev' not described in 'myrs_is_raid'
- drivers/scsi/myrs.c:1980: warning: Function parameter or member 'dev' not described in 'myrs_get_resync'
- drivers/scsi/myrs.c:2005: warning: Function parameter or member 'dev' not described in 'myrs_get_state'
- drivers/scsi/myrs.c:2343: warning: bad line:   the Error Status Register when the driver performs the BIOS handshaking.
- drivers/scsi/myrs.c:2344: warning: bad line:   It returns true for fatal errors and false otherwise.
- drivers/scsi/myrs.c:2349: warning: Function parameter or member 'cs' not described in 'myrs_err_status'
- drivers/scsi/myrs.c:2349: warning: Function parameter or member 'status' not described in 'myrs_err_status'
- drivers/scsi/myrs.c:2349: warning: Function parameter or member 'parm0' not described in 'myrs_err_status'
- drivers/scsi/myrs.c:2349: warning: Function parameter or member 'parm1' not described in 'myrs_err_status'
+ drivers/scsi/pm8001/pm8001_ctl.c:56: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_mpi_interface_rev_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:81: warning: Function parameter or member 'attr' not described in 'controller_fatal_error_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:100: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fw_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:130: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ila_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:155: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_inactive_fw_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:181: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_out_io_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:204: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_devices_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:230: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_sg_list_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:274: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_sas_spec_support_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:303: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_host_sas_address_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:322: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_logging_level_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:355: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_aap_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:390: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ib_queue_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:423: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ob_queue_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:454: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_bios_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:492: warning: Function parameter or member 'attr' not described in 'event_log_size_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:510: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_iop_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:548: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fatal_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:566: warning: Function parameter or member 'attr' not described in 'non_fatal_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:609: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_gsm_log_show'
 
-Cc: Hannes Reinecke <hare@kernel.org>
-Cc: Linux GmbH <hare@suse.com>
-Cc: "Leonard N. Zubkoff" <lnz@dandelion.com>
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/myrs.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/scsi/pm8001/pm8001_ctl.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
-index 5c5666491c2ee..103803e779f2d 100644
---- a/drivers/scsi/myrs.c
-+++ b/drivers/scsi/myrs.c
-@@ -87,7 +87,7 @@ static char *myrs_raid_level_name(enum myrs_raid_level level)
- 	return NULL;
- }
- 
--/**
-+/*
-  * myrs_reset_cmd - clears critical fields in struct myrs_cmdblk
-  */
- static inline void myrs_reset_cmd(struct myrs_cmdblk *cmd_blk)
-@@ -98,7 +98,7 @@ static inline void myrs_reset_cmd(struct myrs_cmdblk *cmd_blk)
- 	cmd_blk->status = 0;
- }
- 
--/**
-+/*
-  * myrs_qcmd - queues Command for DAC960 V2 Series Controllers.
-  */
- static void myrs_qcmd(struct myrs_hba *cs, struct myrs_cmdblk *cmd_blk)
-@@ -122,7 +122,7 @@ static void myrs_qcmd(struct myrs_hba *cs, struct myrs_cmdblk *cmd_blk)
- 	cs->next_cmd_mbox = next_mbox;
- }
- 
--/**
-+/*
-  * myrs_exec_cmd - executes V2 Command and waits for completion.
-  */
- static void myrs_exec_cmd(struct myrs_hba *cs,
-@@ -140,7 +140,7 @@ static void myrs_exec_cmd(struct myrs_hba *cs,
- 	wait_for_completion(&complete);
- }
- 
--/**
-+/*
-  * myrs_report_progress - prints progress message
-  */
- static void myrs_report_progress(struct myrs_hba *cs, unsigned short ldev_num,
-@@ -153,7 +153,7 @@ static void myrs_report_progress(struct myrs_hba *cs, unsigned short ldev_num,
- 		     (100 * (int)(blocks >> 7)) / (int)(size >> 7));
- }
- 
--/**
-+/*
-  * myrs_get_ctlr_info - executes a Controller Information IOCTL Command
-  */
- static unsigned char myrs_get_ctlr_info(struct myrs_hba *cs)
-@@ -214,7 +214,7 @@ static unsigned char myrs_get_ctlr_info(struct myrs_hba *cs)
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_get_ldev_info - executes a Logical Device Information IOCTL Command
-  */
- static unsigned char myrs_get_ldev_info(struct myrs_hba *cs,
-@@ -301,7 +301,7 @@ static unsigned char myrs_get_ldev_info(struct myrs_hba *cs,
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_get_pdev_info - executes a "Read Physical Device Information" Command
-  */
- static unsigned char myrs_get_pdev_info(struct myrs_hba *cs,
-@@ -345,7 +345,7 @@ static unsigned char myrs_get_pdev_info(struct myrs_hba *cs,
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_dev_op - executes a "Device Operation" Command
-  */
- static unsigned char myrs_dev_op(struct myrs_hba *cs,
-@@ -369,7 +369,7 @@ static unsigned char myrs_dev_op(struct myrs_hba *cs,
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_translate_pdev - translates a Physical Device Channel and
-  * TargetID into a Logical Device.
-  */
-@@ -414,7 +414,7 @@ static unsigned char myrs_translate_pdev(struct myrs_hba *cs,
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_get_event - executes a Get Event Command
-  */
- static unsigned char myrs_get_event(struct myrs_hba *cs,
-@@ -476,7 +476,7 @@ static unsigned char myrs_get_fwstatus(struct myrs_hba *cs)
- 	return status;
- }
- 
--/**
-+/*
-  * myrs_enable_mmio_mbox - enables the Memory Mailbox Interface
-  */
- static bool myrs_enable_mmio_mbox(struct myrs_hba *cs,
-@@ -577,7 +577,7 @@ static bool myrs_enable_mmio_mbox(struct myrs_hba *cs,
- 	return (status == MYRS_STATUS_SUCCESS);
- }
- 
--/**
-+/*
-  * myrs_get_config - reads the Configuration Information
-  */
- static int myrs_get_config(struct myrs_hba *cs)
-@@ -682,7 +682,7 @@ static int myrs_get_config(struct myrs_hba *cs)
- 	return 0;
- }
- 
--/**
-+/*
-  * myrs_log_event - prints a Controller Event message
-  */
- static struct {
-@@ -2338,11 +2338,11 @@ static struct myrs_hba *myrs_detect(struct pci_dev *pdev,
- 	return NULL;
- }
- 
--/**
-+/*
-  * myrs_err_status reports Controller BIOS Messages passed through
--  the Error Status Register when the driver performs the BIOS handshaking.
--  It returns true for fatal errors and false otherwise.
--*/
-+ * the Error Status Register when the driver performs the BIOS handshaking.
-+ * It returns true for fatal errors and false otherwise.
-+ */
- 
- static bool myrs_err_status(struct myrs_hba *cs, unsigned char status,
- 		unsigned char parm0, unsigned char parm1)
+diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
+index 3c9f42779dd02..a5f3c702ada9f 100644
+--- a/drivers/scsi/pm8001/pm8001_ctl.c
++++ b/drivers/scsi/pm8001/pm8001_ctl.c
+@@ -47,6 +47,7 @@
+ /**
+  * pm8001_ctl_mpi_interface_rev_show - MPI interface revision number
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -72,6 +73,7 @@ DEVICE_ATTR(interface_rev, S_IRUGO, pm8001_ctl_mpi_interface_rev_show, NULL);
+ /**
+  * controller_fatal_error_show - check controller is under fatal err
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read only' shost attribute.
+@@ -121,6 +123,7 @@ static DEVICE_ATTR(fw_version, S_IRUGO, pm8001_ctl_fw_version_show, NULL);
+ /**
+  * pm8001_ctl_ila_version_show - ila version
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -146,6 +149,7 @@ static DEVICE_ATTR(ila_version, 0444, pm8001_ctl_ila_version_show, NULL);
+ /**
+  * pm8001_ctl_inactive_fw_version_show - Inacative firmware version number
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -172,6 +176,7 @@ DEVICE_ATTR(inc_fw_ver, 0444, pm8001_ctl_inactive_fw_version_show, NULL);
+ /**
+  * pm8001_ctl_max_out_io_show - max outstanding io supported
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -195,6 +200,7 @@ static DEVICE_ATTR(max_out_io, S_IRUGO, pm8001_ctl_max_out_io_show, NULL);
+ /**
+  * pm8001_ctl_max_devices_show - max devices support
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -221,6 +227,7 @@ static DEVICE_ATTR(max_devices, S_IRUGO, pm8001_ctl_max_devices_show, NULL);
+  * pm8001_ctl_max_sg_list_show - max sg list supported iff not 0.0 for no
+  * hardware limitation
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -265,6 +272,7 @@ show_sas_spec_support_status(unsigned int mode, char *buf)
+ /**
+  * pm8001_ctl_sas_spec_support_show - sas spec supported
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -292,6 +300,7 @@ static DEVICE_ATTR(sas_spec_support, S_IRUGO,
+ /**
+  * pm8001_ctl_sas_address_show - sas address
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * This is the controller sas address
+@@ -346,6 +355,7 @@ static DEVICE_ATTR(logging_level, S_IRUGO | S_IWUSR,
+ /**
+  * pm8001_ctl_aap_log_show - aap1 event log
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -483,6 +493,7 @@ static DEVICE_ATTR(bios_version, S_IRUGO, pm8001_ctl_bios_version_show, NULL);
+ /**
+  * event_log_size_show - event log size
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs read  shost attribute.
+@@ -501,6 +512,7 @@ static DEVICE_ATTR_RO(event_log_size);
+ /**
+  * pm8001_ctl_aap_log_show - IOP event log
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -538,6 +550,7 @@ static DEVICE_ATTR(iop_log, S_IRUGO, pm8001_ctl_iop_log_show, NULL);
+ /**
+  ** pm8001_ctl_fatal_log_show - fatal error logging
+  ** @cdev:pointer to embedded class device
++ ** @attr: device attribute
+  ** @buf: the buffer returned
+  **
+  ** A sysfs 'read-only' shost attribute.
+@@ -557,6 +570,7 @@ static DEVICE_ATTR(fatal_log, S_IRUGO, pm8001_ctl_fatal_log_show, NULL);
+ /**
+  ** non_fatal_log_show - non fatal error logging
+  ** @cdev:pointer to embedded class device
++ ** @attr: device attribute
+  ** @buf: the buffer returned
+  **
+  ** A sysfs 'read-only' shost attribute.
 -- 
 2.25.1
 
