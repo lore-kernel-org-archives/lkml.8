@@ -2,136 +2,127 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B27FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA5620791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7A120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CJ8JSST7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgGMQ7L (ORCPT
+        id S1730098AbgGMRBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730185AbgGMQ7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:59:10 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA4B20738;
-        Mon, 13 Jul 2020 16:59:06 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 17:59:04 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     maz@kernel.org, steven.price@arm.com, guohanjun@huawei.com,
-        will@kernel.org, olof@lixom.net, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhangshaokun@hisilicon.com, prime.zeng@hisilicon.com,
-        linux-arch@vger.kernel.org, kuhn.chenqun@huawei.com,
-        xiexiangyou@huawei.com, linux-mm@kvack.org, arm@kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
- instructions
-Message-ID: <20200713165903.GD15829@gaia>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <159440712962.27784.4664678472466095995.b4-ty@arm.com>
- <20200713122123.GC15829@gaia>
- <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
+        Mon, 13 Jul 2020 13:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729751AbgGMRBE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 13:01:04 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B943C08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:01:04 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so10487862qtg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=P0iBC/WN/QpVqecFxZ7dZUdqk1Yv3dfke4IJQgmo7vw=;
+        b=CJ8JSST77FVzlY08ahfSo7BV8d1SMIbx5VuVK6KmkCScq6LqOIjMa8dRRTN4zZoB1S
+         RX+njTlua5cC2H4AevbdIVNkPHbAs9CuUEunmPpq+hxDiznnIMmwfX9L654Y+y9RVHyQ
+         0swjRb04Db0kVLVzf28MFtF/rhv5R8d2CsVVh6xy/8H3D8z1kr74BgaTFJ/1ByryBi5u
+         3EfuxQhHopgEIbrC8ZXONRvvNty0Sjhad4ww5IS38vCOJoN9wIB719EkukFf52ZHwBSH
+         h9SFmWdT/Fg7614YUtwmkK3crRhW3sYx83BfG71otxqKzYSxRt4LrOWj6aJcXltmgO7E
+         t8hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P0iBC/WN/QpVqecFxZ7dZUdqk1Yv3dfke4IJQgmo7vw=;
+        b=swmj+CCkHDVsBsVIacTFIpk8b/6YOSIq2OU/tziUUMocYLfyhcVTTwuLhtdVFQGefG
+         BvEbQMF2IHtyVg8vDOP4Lp7v5cZGl9fkf8NnblSrozCfXgEQ9sNDlweF8AvBgPKCeAjo
+         Q2QqpL6YW39dkQgE2DtPYc78jZsvrVd/ePhhcYAZ7k8Pkng0s4dBEvllcCkPwENjNc+E
+         i7l/OinmA3QjUuZCVE5VRsPdB3nvSr4jGuLOQ8Ft+w4EwtwLflc3DsmbULs+/eVKgzv7
+         F/sIE30I9CD0KMyNCIoZAMKYQ/puXFMg6DtiXtzquQsfHkYF2W7Ams/D97TdWxl2h7GH
+         Y8Og==
+X-Gm-Message-State: AOAM530t3H2yXnfplTNUSjhWUaYnO3Ogean1U8cvwbqYyMF9GH/uxHX1
+        1IPiK2/9QC1Srx6cqLAq1LXDJndwNFw=
+X-Google-Smtp-Source: ABdhPJyhlffBbLpO9vlLtuMxcv6sdBRtlI41L28L7FXDX7Y87Wn4OqCeI/zqveRdQJdN2muBVmbeEw==
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr304912qte.196.1594659663213;
+        Mon, 13 Jul 2020 10:01:03 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id z18sm20097156qta.51.2020.07.13.10.01.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 10:01:02 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/4] dt-bindings:thermal:Add cold trip point type
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com,
+        robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <20200710135154.181454-2-thara.gopinath@linaro.org>
+ <08503e0c-c8db-6d03-9692-5339dadf6c4f@linaro.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
+Date:   Mon, 13 Jul 2020 13:01:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <08503e0c-c8db-6d03-9692-5339dadf6c4f@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 08:41:31PM +0800, Zhenyu Ye wrote:
-> On 2020/7/13 20:21, Catalin Marinas wrote:
-> > On Fri, Jul 10, 2020 at 08:11:19PM +0100, Catalin Marinas wrote:
-> >> On Fri, 10 Jul 2020 17:44:18 +0800, Zhenyu Ye wrote:
-> >>> NOTICE: this series are based on the arm64 for-next/tlbi branch:
-> >>> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
-> >>>
-> >>> --
-> >>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-> >>> range of input addresses. This series add support for this feature.
-> >>>
-> >>> [...]
-> >>
-> >> Applied to arm64 (for-next/tlbi), thanks!
-> >>
-> >> [1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
-> >>       https://git.kernel.org/arm64/c/a2fd755f77ff
-> >> [2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-> >>       https://git.kernel.org/arm64/c/db34a081d273
-> > 
-> > I'm dropping these two patches from for-next/tlbi and for-next/core.
-> > They need a check on whether binutils supports the new "tlbi rva*"
-> > instructions, otherwise the build mail fail.
-> > 
-> > I kept the latest incarnation of these patches on devel/tlbi-range for
-> > reference.
+
+
+On 7/13/20 11:05 AM, Daniel Lezcano wrote:
+> On 10/07/2020 15:51, Thara Gopinath wrote:
+>> Extend thermal trip point type property to include "cold" trip type
+>> indicating point in the temperature domain below which a warming action
+>> must be intiated.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>   Documentation/devicetree/bindings/thermal/thermal.txt | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index f78bec19ca35..1689d9ba1471 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -87,6 +87,7 @@ Required properties:
+>>   	"active":	A trip point to enable active cooling
+>>   	"passive":	A trip point to enable passive cooling
+>>   	"hot":		A trip point to notify emergency
+>> +	"cold":		A trip point to enable warming
+>>   	"critical":	Hardware not reliable.
+>>     Type: string
 > 
-> Should we add a check for the binutils version? Just like:
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index fad573883e89..d5fb6567e0d2 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1300,6 +1300,20 @@ config ARM64_AMU_EXTN
->  	  correctly reflect reality. Most commonly, the value read will be 0,
->  	  indicating that the counter is not enabled.
+> thermal.txt should have been removed. Perhaps, a patch is missing. The
+> thermal.txt has been converted into 3 yaml schema.
 > 
-> +config ARM64_TLBI_RANGE
-> +	bool "Enable support for tlbi range feature"
-> +	default y
-> +	depends on AS_HAS_TLBI_RANGE
-> +	help
-> +	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-> +	  range of input addresses.
-> +
-> +	  The feature introduces new assembly instructions, and they were
-> +	  support when binutils >= 2.30.
+> The change should be in thermal-zones.yaml.
 
-It looks like 2.30. I tracked it down to this commit:
+Hi Daniel..
 
-https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=793a194839bc8add71fdc7429c58b10f0667a6f6;hp=1a7ed57c840dcb0401f1a67c6763a89f7d2686d2
+Thanks for the review. My bad.. I will fix this in the next version.
+I can send a patch removing thermal.txt as well
 
-> +config AS_HAS_TLBI_RANGE
-> +	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
-> +
->  endmenu
 
-The problem is that we don't pass -Wa,-march=armv8.4-a to gas. AFAICT,
-we only set an 8.3 for PAC but I'm not sure how passing two such options
-goes.
-
-I'm slightly surprised that my toolchains (and yours) did not complain
-about these instructions. Looking at the binutils code, I think it
-should have complained if -march=armv8.4-a wasn't passed but works fine.
-I thought gas doesn't enable the maximum arch feature by default.
-
-An alternative would be to check for a specific instruction (untested):
-
-	def_bool $(as-instr,tlbi rvae1is, x0)
-
-but we need to figure out whether gas not requiring -march=armv8.4-a is
-a bug (which may be fixed) or that gas accepts all TLBI instructions.
-
-A safer bet may be to simply encode the instructions by hand:
-
-#define SYS_TLBI_RVAE1IS(Rt) \
-	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 1) | ((Rt) & 0x1f))
-#define SYS_TLBI_RVALE1IS(Rt) \
-	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 5) | ((Rt) & 0x1f))
-
-(please check that they are correct)
+> 
+> 
 
 -- 
-Catalin
+Warm Regards
+Thara
