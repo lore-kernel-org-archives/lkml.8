@@ -2,151 +2,129 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ACBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D988720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594654366;
-	bh=BA45Q6AEXkFERQL4GWwTgvIF0IN9KuWDZxv/KQt11c8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HvxumdU8neq5XG0ItehsgDRpg+uTNYtGcN4Nw1BKPl0iMZJQ0BXmqSYFpcRDQRAG0
-	 HqA9YTNokmARFhJJB+QgST8rYXruFCmk/NzV5XltwDSM5GQy+OBDGvB9xgOi3oeK3Q
-	 AGm73pSEeXc1T5xQJy2hi+7v78I3JB10PdjDEpCQ=
+	by mail.kernel.org (Postfix) with ESMTP id 39D7020771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="p5NtX2gb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgGMPcp (ORCPT
+        id S1729875AbgGMPj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgGMPcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:32:45 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF7206F0;
-        Mon, 13 Jul 2020 15:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594654364;
-        bh=BA45Q6AEXkFERQL4GWwTgvIF0IN9KuWDZxv/KQt11c8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gVM/ydYDODojWV7K+3vNvNLN+EKvGQkS3Wv873nQ3Y8rb7pos3CJPwsM5S5AzA+Ly
-         +r5f0oRFGnA6lPVLS7c0V5NxoIKpRC5qad/DicL/4kl2Rwmze9mgeFjr6B8bwEbwJ2
-         kzS1ewxoSnmTO/0xk1ne6SJpwagrdfTaxmlkA1rA=
-Date:   Mon, 13 Jul 2020 18:32:34 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Idan Yaniv <idan.yaniv@ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 4/5] mm: secretmem: use PMD-size pages to amortize
- direct map fragmentation
-Message-ID: <20200713153234.GC707159@kernel.org>
-References: <20200706172051.19465-1-rppt@kernel.org>
- <20200706172051.19465-5-rppt@kernel.org>
- <20200713110505.mesvinqjbj7imsdz@box>
+        Mon, 13 Jul 2020 11:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMPj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:39:56 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5823C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:39:55 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g20so14102104edm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=du57OarKMFj2//aqQNh8usAhJGOEHYQoIDCsSqzfRrA=;
+        b=p5NtX2gb+X8NBTzJ3q4wi1YSieEG+HNt+0otz/H/s/4MmLGrJII8dW/W0UVEpeW0Hg
+         qC3dEPnVuhhvBwHhOLmT0GIL1CYUYMo9ubUoSer6T64yW74mkvzKKDKlZDVr19K+cYri
+         LtlbMnBKoOcwmDXe/2csa9LQ7/dQV+rttec6lQsYqYKQLaZDSoi1NaLa2MvaowwAoBYv
+         FeI+RRFcbGjItkCjE4SunsxqoBYnRp76pca1wVuHw/7y67Q/sHjhAzl/ezQtIiTEEG4j
+         yQVjwihttrowt+w804UNoet1fmlmsFKNkFYmUigdIXnkpiItEwYkP2N/ahsYzcyDUeNq
+         Dsyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=du57OarKMFj2//aqQNh8usAhJGOEHYQoIDCsSqzfRrA=;
+        b=pvR+FEi+VVtnzao+ZIP9oxpQ2fGS/Lo7/iqqahRniCbAYUsjQNAIj6OG5a8u5Hm2qo
+         LW60SV8f1GVOZPW670PGPFx1nSMtVCZL22D/vFolxcWaiTCuLW8dDmzcV5WYy0xmh9B4
+         PTauu3Eukdf6SDXzdVmNSaqDOJ48plV2+Fr4avZA+NFx/LN9o2YvXUn+oIrLYrDb4+1B
+         /RVgItyV7MxRzkU6Z5XJpQxL29GVx3r/ukSs/bySX8hcpIDP/5GuFq/4R8JdkCzDIyKY
+         oXE1Wz+LCzPt7QsGZ1Vulniryc/JubTeVq3nuqm4h9I41+Ly5JwQG47J88jvld8+1Rug
+         Qp+Q==
+X-Gm-Message-State: AOAM530s270uDq62c3X7NR+zit4H5pkwTGQmYgiSw1/cvWFgOS6oukNI
+        5FpAKFixVmTKUJgmVCirDlhleepYUy5lKG50SHgFPg==
+X-Google-Smtp-Source: ABdhPJwvCxFFHwbU4mztcnMn5QN22D7JN5cZqYOUrLmDBOAdReDdsMY67wCR/9JL04AtkGrUTxK3CfgbBEbrs6JuO2k=
+X-Received: by 2002:aa7:c24d:: with SMTP id y13mr95634335edo.123.1594654794604;
+ Mon, 13 Jul 2020 08:39:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713110505.mesvinqjbj7imsdz@box>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457125753.754248.6000936585361264069.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200712170945.GA194499@kroah.com>
+In-Reply-To: <20200712170945.GA194499@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 13 Jul 2020 08:39:43 -0700
+Message-ID: <CAPcyv4h=7oB+PHEUa6otkoXYx+r_8GFbmuF-j_kOmHjpGB-=eg@mail.gmail.com>
+Subject: Re: [PATCH v2 17/22] drivers/base: Make device_find_child_by_name()
+ compatible with sysfs inputs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Joao Martins <joao.m.martins@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 02:05:05PM +0300, Kirill A. Shutemov wrote:
-> On Mon, Jul 06, 2020 at 08:20:50PM +0300, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Removing a PAGE_SIZE page from the direct map every time such page is
-> > allocated for a secret memory mapping will cause severe fragmentation of
-> > the direct map. This fragmentation can be reduced by using PMD-size pages
-> > as a pool for small pages for secret memory mappings.
-> > 
-> > Add a gen_pool per secretmem inode and lazily populate this pool with
-> > PMD-size pages.
-> > 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On Sun, Jul 12, 2020 at 10:09 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Jul 12, 2020 at 09:27:37AM -0700, Dan Williams wrote:
+> > Use sysfs_streq() in device_find_child_by_name() to allow it to use a
+> > sysfs input string that might contain a trailing newline.
+> >
+> > The other "device by name" interfaces,
+> > {bus,driver,class}_find_device_by_name(), already account for sysfs
+> > strings.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > > ---
-> >  mm/secretmem.c | 107 ++++++++++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 88 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/mm/secretmem.c b/mm/secretmem.c
-> > index df8f8c958cc2..c6fcf6d76951 100644
-> > --- a/mm/secretmem.c
-> > +++ b/mm/secretmem.c
-> > @@ -5,6 +5,7 @@
-> >  #include <linux/memfd.h>
-> >  #include <linux/printk.h>
-> >  #include <linux/pagemap.h>
-> > +#include <linux/genalloc.h>
-> >  #include <linux/pseudo_fs.h>
-> >  #include <linux/set_memory.h>
-> >  #include <linux/sched/signal.h>
-> > @@ -23,24 +24,66 @@
-> >  #define SECRETMEM_UNCACHED	0x2
-> >  
-> >  struct secretmem_ctx {
-> > +	struct gen_pool *pool;
-> >  	unsigned int mode;
-> >  };
-> >  
-> > -static struct page *secretmem_alloc_page(gfp_t gfp)
-> > +static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
-> >  {
-> > -	/*
-> > -	 * FIXME: use a cache of large pages to reduce the direct map
-> > -	 * fragmentation
-> > -	 */
-> > -	return alloc_page(gfp);
-> > +	unsigned long nr_pages = (1 << HPAGE_PMD_ORDER);
-> > +	struct gen_pool *pool = ctx->pool;
-> > +	unsigned long addr;
-> > +	struct page *page;
-> > +	int err;
-> > +
-> > +	page = alloc_pages(gfp, HPAGE_PMD_ORDER);
-> > +	if (!page)
-> > +		return -ENOMEM;
-> > +
-> > +	addr = (unsigned long)page_address(page);
-> > +	split_page(page, HPAGE_PMD_ORDER);
-> > +
-> > +	err = gen_pool_add(pool, addr, HPAGE_PMD_SIZE, NUMA_NO_NODE);
-> > +	if (err) {
-> > +		__free_pages(page, HPAGE_PMD_ORDER);
-> > +		return err;
-> > +	}
-> > +
-> > +	__kernel_map_pages(page, nr_pages, 0);
-> 
-> It's worth nothing that unlike flush_tlb_kernel_range(),
-> __kernel_map_pages() only flushed local TLB, so other CPU may still have
-> access to the page. It's shouldn't be a blocker, but deserve a comment.
+> >  drivers/base/core.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 67d39a90b45c..5d31b962c898 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -3078,7 +3078,7 @@ struct device *device_find_child_by_name(struct device *parent,
+> >
+> >       klist_iter_init(&parent->p->klist_children, &i);
+> >       while ((child = next_device(&i)))
+> > -             if (!strcmp(dev_name(child), name) && get_device(child))
+> > +             if (sysfs_streq(dev_name(child), name) && get_device(child))
+>
+> Who wants to call this function with a name passed from userspace?
+>
+> Not objecting to it, just curious...
+>
 
-Sure.
- 
-> > +
-> > +	return 0;
-> > +}
-> > +
+The series that incorporates this patch adds a partitioning mechanism
+to "device-dax region" devices with an:
+    "echo 1 > regionX/create" to create a new partition / sub-instance
+of a region, and...
+    "echo $devname > regionX/delete" to delete. Where $devname is
+searched in the child devices of regionX to trigger device_del().
 
--- 
-Sincerely yours,
-Mike.
+This arrangement avoids one of the design mistakes of libnvdimm which
+uses a sysfs attribute of the device to delete itself. Parent-device
+triggered deletion rather than self-deletion avoids those locking
+entanglements.
