@@ -5,159 +5,123 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E864EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A44EC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6505206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC1A2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdxBOQVf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aEqjLXBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgGMOGs (ORCPT
+        id S1729969AbgGMOHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:06:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36448 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729659AbgGMOGr (ORCPT
+        Mon, 13 Jul 2020 10:07:04 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10134 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbgGMOHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:06:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594649206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=cVAnTWhIdLYJKO73w7wojsiljd9+XyaexVrW7ZP7+wg=;
-        b=OdxBOQVf5G2D2UVYUWKL8fOso0/qFcpnRDd3WHu0/pFpyYIjMijKP86h6AVCEV5rKwzTLn
-        xbe9wu+tGdfFphT0T/cqwn1QZ4nAHHTiZYGE4IwyQniIxYao/vrKuC/GnprHKWoKNBbOGr
-        Lb0/rUauAXokEUgsxjm7zJs7w35GtfQ=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-ftzxv9sxOB66tPAch-Wggw-1; Mon, 13 Jul 2020 10:06:44 -0400
-X-MC-Unique: ftzxv9sxOB66tPAch-Wggw-1
-Received: by mail-qt1-f199.google.com with SMTP id e6so10202229qtb.19
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:06:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cVAnTWhIdLYJKO73w7wojsiljd9+XyaexVrW7ZP7+wg=;
-        b=CmjR7Fyxj+MDPE+YV7tCDQAKGsmN9fCPvewkf0E1edwwV4k63/3M8MT3b588B+wdxb
-         jzlWbD5M2ZpqSjxLxPvTad2b46ojqVm9mEvXM4J1HeUZJqOlhGM9WVc7I2K58HdKazup
-         t2LTK9s3OTjorqUOmw9JBJN2evOAg1cJMlKknzoBeXbV4GVt5hK074xqW0IfOTTfxz1X
-         uSg7X/oLYziHhgpkb4B0PMvk6PSF4252i+yLyNKAvO4w77hq579hUMszIFR9tHC9/RoQ
-         tX9uXNMw/HKBzLsHSgmJiJC5LM+UWYgV8pplc0UNXs3yWRtuxIq27YeGzuQq5/+ybK2Y
-         YbgA==
-X-Gm-Message-State: AOAM5331sPhFQRw2ma6nF663bHq0U1Cg39niU2ohPmGArrk2TQWyBlcK
-        wdGkRFI3ehsXt/5twzuFCdJKZEQbEZZOuvxz5I5rRG8hZbDf/2wK/RcMFLLYzTC8fSyUVcvFM/Z
-        I8WSdytMNI7NCKUfre2TAumcx
-X-Received: by 2002:ad4:57c3:: with SMTP id y3mr61518413qvx.38.1594649203769;
-        Mon, 13 Jul 2020 07:06:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzc2v24kRRcIx9iU41389LXjIqZiB59Sm2o0YB8K6V71/qbHAgcbnd4J0M72wpearx39vRRHA==
-X-Received: by 2002:ad4:57c3:: with SMTP id y3mr61518386qvx.38.1594649203525;
-        Mon, 13 Jul 2020 07:06:43 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id m4sm20218627qtf.43.2020.07.13.07.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:06:42 -0700 (PDT)
-From:   trix@redhat.com
-To:     giovanni.cabiddu@intel.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, wojciech.ziemba@intel.com,
-        karen.xiang@intel.com, bruce.w.allan@intel.com, bo.cui@intel.com,
-        pingchaox.yang@intel.com
-Cc:     qat-linux@intel.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] crypto: qat: fix double free in qat_uclo_create_batch_init_list
-Date:   Mon, 13 Jul 2020 07:06:34 -0700
-Message-Id: <20200713140634.14730-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 13 Jul 2020 10:07:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c6a7b0001>; Mon, 13 Jul 2020 07:06:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 07:07:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:07:03 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 14:07:02 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 13 Jul 2020 14:07:02 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0c6a820001>; Mon, 13 Jul 2020 07:07:02 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
+        <jonathanh@nvidia.com>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex compatible and bpmp property
+Date:   Mon, 13 Jul 2020 19:36:46 +0530
+Message-ID: <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594649211; bh=4OTHJwUV+Bl9p50zsqtzV49JPGwrtnTk2fPNfo/7QAc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=aEqjLXBKq2oJcUprnXuxl/KBkP/nSm6Aezj1xmk+AUUF1MrWMPXHgbhOZp0GLwX0R
+         HtCTrxuuagnLxS7Hm1Pa2dxujpnj74T4zwzDuz1T/S10pbST38mnlmm1ciOHNMYDEv
+         r9eUS+Nn3qZeRaF+Oh88ExDdS5+5FEF/zbtsijLyNekaPDpn3jXhJ40UmyRLgRFH21
+         7LzITs/Oc6P3V1TEmKuRJpmiTfcLUm32vBD0m4t3sBl89OuUp4YD+6LsZlolR6QLI9
+         gvKLatp9JS42jqIw3T64Yr7aKCxH7s9R7Ii9q27wh7cS3F/tKVe1ybG4v7vXuXTxxx
+         imrtknPX/8fjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+To do frequency scaling on all CPUs within T194 CPU Complex, we need
+to query BPMP for data on valid operating points. Document a compatible
+string under 'cpus' node to represent the CPU Complex for binding drivers
+like cpufreq which don't have their node or CPU Complex node to bind to.
+Also, document a property to point to the BPMP device that can be queried
+for all CPUs.
 
-clang static analysis flags this error
-
-qat_uclo.c:297:3: warning: Attempt to free released memory
-  [unix.Malloc]
-                kfree(*init_tab_base);
-                ^~~~~~~~~~~~~~~~~~~~~
-
-When input *init_tab_base is null, the function allocates memory for
-the head of the list.  When there is problem allocating other list
-elements the list is unwound and freed.  Then a check is made if the
-list head was allocated and is also freed.
-
-Keeping track of the what may need to be freed is the variable 'tail_old'.
-The unwinding/freeing block is
-
-	while (tail_old) {
-		mem_init = tail_old->next;
-		kfree(tail_old);
-		tail_old = mem_init;
-	}
-
-The problem is that the first element of tail_old is also what was
-allocated for the list head
-
-		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
-		...
-		*init_tab_base = init_header;
-		flag = 1;
-	}
-	tail_old = init_header;
-
-So *init_tab_base/init_header are freed twice.
-
-There is another problem.
-When the input *init_tab_base is non null the tail_old is calculated by
-traveling down the list to first non null entry.
-
-	tail_old = init_header;
-	while (tail_old->next)
-		tail_old = tail_old->next;
-
-When the unwinding free happens, the last entry of the input list will
-be freed.
-
-So the freeing needs a general changed.
-If locally allocated the first element of tail_old is freed, else it
-is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
-as null.
-
-Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 ---
- drivers/crypto/qat/qat_common/qat_uclo.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/crypto/qat/qat_common/qat_uclo.c b/drivers/crypto/qat/qat_common/qat_uclo.c
-index 4cc1f436b075..bff759e2f811 100644
---- a/drivers/crypto/qat/qat_common/qat_uclo.c
-+++ b/drivers/crypto/qat/qat_common/qat_uclo.c
-@@ -288,13 +288,18 @@ static int qat_uclo_create_batch_init_list(struct icp_qat_fw_loader_handle
- 	}
- 	return 0;
- out_err:
-+	/* Do not free the list head unless we allocated it. */
-+	tail_old = tail_old->next;
-+	if (flag) {
-+		kfree(*init_tab_base);
-+		*init_tab_base = NULL;
-+	}
-+
- 	while (tail_old) {
- 		mem_init = tail_old->next;
- 		kfree(tail_old);
- 		tail_old = mem_init;
- 	}
--	if (flag)
--		kfree(*init_tab_base);
- 	return -ENOMEM;
- }
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index a018147..9b328e3 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -162,6 +162,7 @@ properties:
+       - nvidia,tegra132-denver
+       - nvidia,tegra186-denver
+       - nvidia,tegra194-carmel
++      - nvidia,tegra194-ccplex
+       - qcom,krait
+       - qcom,kryo
+       - qcom,kryo260
+@@ -255,6 +256,15 @@ properties:
  
+       where voltage is in V, frequency is in MHz.
+ 
++  nvidia,bpmp:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies the bpmp node that needs to be queried to get
++      operating point data for all CPUs.
++
++      Optional for systems that have a "compatible"
++      property value of "nvidia,tegra194-ccplex".
++
+   power-domains:
+     $ref: '/schemas/types.yaml#/definitions/phandle-array'
+     description:
+@@ -340,6 +350,7 @@ required:
+ 
+ dependencies:
+   rockchip,pmu: [enable-method]
++  nvidia,bpmp: [compatible]
+ 
+ examples:
+   - |
 -- 
-2.18.1
+2.7.4
 
