@@ -2,118 +2,75 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9028C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526732072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:13:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Qd1+Lkij"
+	by mail.kernel.org (Postfix) with ESMTP id CDBD020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgGMONX (ORCPT
+        id S1730046AbgGMOOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:13:23 -0400
-Received: from mail.efficios.com ([167.114.26.124]:37366 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMONW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:13:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 0BA312A2098;
-        Mon, 13 Jul 2020 10:13:22 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id S1h_oqHPAlK4; Mon, 13 Jul 2020 10:13:21 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A10902A2097;
-        Mon, 13 Jul 2020 10:13:21 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A10902A2097
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594649601;
-        bh=XqbvFKyVtrLGiel3RNeXGdRx+Uy0i/kVfU8B2yF1Vps=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Qd1+LkijOFRpXZ/hXeFVcIG1XDUyqXzMXheUxr4ymNDATWBtzeRngQgvcgj1UN/wQ
-         a9IWntemPvANBJkCv+ERziZWUMAWLW9cP3K2yHa0C4iZse4IBq+mcswHdB4yV1Cg8K
-         6D/h9sOILkANM3IpHWbJhPJIf2sPpUglCT5mgqXufzzgoLEtwLI2fVzhds7D2JYmJ2
-         kozUnFllcUdECvQnMyCBRLCcx80bHdl0oKGXL1s1m8v++a/xNb2jFnua9X23Kw4kta
-         KoKqnpbNCDTT6DbG6m+7xwuBBzaT9X3McZ5iKcLDXTeNqD4ZRR/bwS+QaU/QuK5WWE
-         H81CVMOQJRUDw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id gnjQutJ2gIVJ; Mon, 13 Jul 2020 10:13:21 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 91AC42A2095;
-        Mon, 13 Jul 2020 10:13:21 -0400 (EDT)
-Date:   Mon, 13 Jul 2020 10:13:21 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
-Message-ID: <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1594647408.wmrazhwjzb.astroid@bobo.none>
-References: <20200710015646.2020871-1-npiggin@gmail.com> <20200710015646.2020871-5-npiggin@gmail.com> <CALCETrVqHDLo09HcaoeOoAVK8w+cNWkSNTLkDDU=evUhaXkyhQ@mail.gmail.com> <1594613902.1wzayj0p15.astroid@bobo.none> <1594647408.wmrazhwjzb.astroid@bobo.none>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
+        Mon, 13 Jul 2020 10:14:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729649AbgGMOOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:14:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7FA5BE96C51B5F35A2B5;
+        Mon, 13 Jul 2020 22:14:21 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 13 Jul 2020 22:14:12 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Ingo Molnar" <mingo@redhat.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] ftrace: Make ftrace_profile_pages_init() static
+Date:   Mon, 13 Jul 2020 22:24:16 +0800
+Message-ID: <20200713142416.50180-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-Thread-Index: T7nLE24o9VdoF/eNvu+hhgTHKlctBA==
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrote:
+The sparse tool complains as follows:
 
-> Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
->> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
->>> Also, as it stands, I can easily see in_irq() ceasing to promise to
->>> serialize.  There are older kernels for which it does not promise to
->>> serialize.  And I have plans to make it stop serializing in the
->>> nearish future.
->> 
->> You mean x86's return from interrupt? Sounds fun... you'll konw where to
->> update the membarrier sync code, at least :)
-> 
-> Oh, I should actually say Mathieu recently clarified a return from
-> interrupt doesn't fundamentally need to serialize in order to support
-> membarrier sync core.
+kernel/trace/ftrace.c:587:5: warning:
+ symbol 'ftrace_profile_pages_init' was not declared. Should it be static?
 
-Clarification to your statement:
+ftrace_profile_pages_init() is not used out of ftrace.c, so
+marks it static.
 
-Return from interrupt to kernel code does not need to be context serializing
-as long as kernel serializes before returning to user-space.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ kernel/trace/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-However, return from interrupt to user-space needs to be context serializing.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a3093a84bae3..3e9369935cb3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -584,7 +584,7 @@ static void ftrace_profile_reset(struct ftrace_profile_stat *stat)
+ 	       FTRACE_PROFILE_HASH_SIZE * sizeof(struct hlist_head));
+ }
+ 
+-int ftrace_profile_pages_init(struct ftrace_profile_stat *stat)
++static int ftrace_profile_pages_init(struct ftrace_profile_stat *stat)
+ {
+ 	struct ftrace_profile_page *pg;
+ 	int functions;
 
-Thanks,
-
-Mathieu
-
-> 
-> https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-July/214171.html
-> 
-> So you may not need to do anything more if you relaxed it.
-> 
-> Thanks,
-> Nick
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
