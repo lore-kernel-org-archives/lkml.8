@@ -2,113 +2,147 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC63C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF35E20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:03:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fEj5lMjQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3FA7D20C56
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGMWD3 (ORCPT
+        id S1726788AbgGMWES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:03:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGMWD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:03:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5Hhs655Kz9sRK;
-        Tue, 14 Jul 2020 08:03:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594677806;
-        bh=khC3Ulq4B/pdeWOT3QSuaNdHiKYcUdRAfiJlivA0Srk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fEj5lMjQXaBBPs03l0knH9bVSZPuGD3OFS4sVlpyVr1ifunwSR0U7hGE2kAmAnPmY
-         0vMCLPbf0Y/xJMm0mb+cXiItKaeyj8UHfAThe7Xa9LPEjps/JLgDLZCf3excQgbEyh
-         R8/Ys19dRXKXafcg8xbjwCpuk32TJL3LGS+7dw32LXqX/NxuwqIZ6/k1U4HowfwmNN
-         mHfTN/p32Dj5FHk+pOZ4fkbbL+ZaH2fJg+VrfKtvQPGIkaFChBVtgD06UE9uzLMvhL
-         sqhlc6Xo9zUmB7OzSchFJ0A9KqCKmAhpj2nc6HU32B6cp5BIEGIO7yZX+fcW+T7kIM
-         iGm/HR36loMZg==
-Date:   Tue, 14 Jul 2020 08:03:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chen Tao <chentao107@huawei.com>,
-        dillon min <dillon.minfei@gmail.com>
-Subject: linux-next: Fixes tags need some work in the omap-fixes tree
-Message-ID: <20200714080324.48bf88d0@canb.auug.org.au>
+        Mon, 13 Jul 2020 18:04:18 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48862 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgGMWER (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 18:04:17 -0400
+Received: by mail-io1-f70.google.com with SMTP id r9so9065445ioa.15
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:04:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VYaQhK1OFicJIaHCcryGtlpC5pWiSqEfCjBdVZPlxUE=;
+        b=j0/blgJrQDYEn3nyGe02w+x4I7Qs3aESUFLUHnwdmEH0DH3p2BLk7AW7bPaBM3TKQw
+         We0epqL3QkQ3EMCPrCtiBUcF+HzgRk6bElS5L5rNoaYQIGFExRwFLXMv2hRZ13s+2ids
+         x+cUjKkwjcYfR2XgAZBALsxhEgNZW2tBbGRuuAdtl4T5inUaPcJkhnOzeGTomz5pib55
+         MkWMSleqweR1fcVV+loLfFSPU1yBSK2zY/RXllso7z+BX+2uK+biAeEq/9+RG2WKDovE
+         OwDprIkJ1qRv6WnlElE/+QeeBQsuxg0Ib6XnOS8mg1s2g1lL5axZn5mVPbzIGVlF99WO
+         0SPA==
+X-Gm-Message-State: AOAM531waMR02dBtadLzQV1QgGDT8N/U3IEebyPmKuq+FHHzFkDoSkhM
+        eC2Vtsv3Nk+EAt83yjJ33DYKcqpOyZb6wRcZCRNE/gwMJLl0
+X-Google-Smtp-Source: ABdhPJxJFAZDCVUZad9+x2ZMmZk4ywzT3ColQhP/sirBtj7OSntgsxOzALdOnTzjbm03aeNfL336nCDFPMArKlwIe0oDgwcgwb7S
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tge6YxF1z7mYn_Hp+p6ged2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a05:6638:14b:: with SMTP id y11mr2497565jao.49.1594677857039;
+ Mon, 13 Jul 2020 15:04:17 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 15:04:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000333b4e05aa59df5e@google.com>
+Subject: general protection fault in __xfrm6_tunnel_spi_lookup
+From:   syzbot <syzbot+27016009dfe6ab82bff1@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, steffen.klassert@secunet.com,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tge6YxF1z7mYn_Hp+p6ged2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+syzbot found the following crash on:
 
-In commit
+HEAD commit:    be978f8f Add linux-next specific files for 20200713
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=156005af100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3fe4fccb94cbc1a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=27016009dfe6ab82bff1
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150269c0900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164e1d77100000
 
-  35094c15d41e ("ARM: OMAP2+: Fix possible memory leak in omap_hwmod_alloca=
-te_module")
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+27016009dfe6ab82bff1@syzkaller.appspotmail.com
 
-Fixes tag
+general protection fault, probably for non-canonical address 0xdffffc0000000104: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000820-0x0000000000000827]
+CPU: 0 PID: 6792 Comm: syz-executor232 Not tainted 5.8.0-rc4-next-20200713-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:ipv6_addr_equal include/net/ipv6.h:579 [inline]
+RIP: 0010:xfrm6_addr_equal include/net/xfrm.h:1699 [inline]
+RIP: 0010:__xfrm6_tunnel_spi_lookup+0x22b/0x3b0 net/ipv6/xfrm6_tunnel.c:82
+Code: 89 e0 48 c1 e8 03 80 3c 28 00 0f 85 5b 01 00 00 4d 8b 24 24 4d 85 e4 74 53 e8 31 fa 7b fa 49 8d 7c 24 20 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 2d 01 00 00 4d 8b 7c 24 20 49 8d 7c 24 28 48 89
+RSP: 0018:ffffc90001277580 EFLAGS: 00010202
+RAX: 0000000000000104 RBX: ffffffffffffffff RCX: ffffffff86f83788
+RDX: ffff8880947443c0 RSI: ffffffff86f8373f RDI: 0000000000000820
+RBP: dffffc0000000000 R08: 0000000000000001 R09: ffff888094744c90
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000800
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  000000000162d880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000180 CR3: 0000000098519000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
+ ipcomp6_tunnel_attach net/ipv6/ipcomp6.c:119 [inline]
+ ipcomp6_init_state net/ipv6/ipcomp6.c:159 [inline]
+ ipcomp6_init_state+0x1de/0x700 net/ipv6/ipcomp6.c:139
+ __xfrm_init_state+0x9a6/0x14b0 net/xfrm/xfrm_state.c:2498
+ xfrm_init_state+0x1a/0x70 net/xfrm/xfrm_state.c:2525
+ pfkey_msg2xfrm_state net/key/af_key.c:1291 [inline]
+ pfkey_add+0x1a10/0x2b70 net/key/af_key.c:1508
+ pfkey_process+0x66d/0x7a0 net/key/af_key.c:2834
+ pfkey_sendmsg+0x42d/0x800 net/key/af_key.c:3673
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x331/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmmsg+0x195/0x480 net/socket.c:2507
+ __do_sys_sendmmsg net/socket.c:2536 [inline]
+ __se_sys_sendmmsg net/socket.c:2533 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2533
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4403d9
+Code: Bad RIP value.
+RSP: 002b:00007ffeb96d2058 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004403d9
+RDX: 0000000000000393 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401be0
+R13: 0000000000401c70 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 224ae9c97b2f647b ]---
+RIP: 0010:ipv6_addr_equal include/net/ipv6.h:579 [inline]
+RIP: 0010:xfrm6_addr_equal include/net/xfrm.h:1699 [inline]
+RIP: 0010:__xfrm6_tunnel_spi_lookup+0x22b/0x3b0 net/ipv6/xfrm6_tunnel.c:82
+Code: 89 e0 48 c1 e8 03 80 3c 28 00 0f 85 5b 01 00 00 4d 8b 24 24 4d 85 e4 74 53 e8 31 fa 7b fa 49 8d 7c 24 20 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 2d 01 00 00 4d 8b 7c 24 20 49 8d 7c 24 28 48 89
+RSP: 0018:ffffc90001277580 EFLAGS: 00010202
+RAX: 0000000000000104 RBX: ffffffffffffffff RCX: ffffffff86f83788
+RDX: ffff8880947443c0 RSI: ffffffff86f8373f RDI: 0000000000000820
+RBP: dffffc0000000000 R08: 0000000000000001 R09: ffff888094744c90
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000800
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  000000000162d880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000180 CR3: 0000000098519000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-  Fixes: 8c87970543b17("ARM: OMAP2+: Add functions to allocate module data =
-from device tree")
 
-has these problem(s):
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-  - missing space between the SHA1 and the subject
-
-In commit
-
-  4b2f657f6178 ("ARM: dts: Configure osc clock for d_can on am437x")
-
-Fixes tag
-
-  Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during ini=
-t to
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more than one line.  Also keep all
-the commit message tags together at the end of the commit message.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/tge6YxF1z7mYn_Hp+p6ged2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8M2iwACgkQAVBC80lX
-0Gxf7Af/ZBEfVvBcVTZOJaen9RkfeWhQwA/ZEX10C5pRv5zD+qo0Mhe1HnPvkTJn
-GtqlB7q9tThYCN3VmFuchWZfiyCt1B7n0CW90But/RJOIIetK1daeepZ1wZEl3DE
-NNjfrW6kIRJOPzVz/dtpQzweWdOQLbX66Siy2t8Qj3EfD3ptbI9QzhUFlUG3z4rE
-FpLUBj/bhnccveg9tJhBPv/CVI5yhFuXcfeL7q6AObcSZ1ouaaPm+hoVM7njk5Dk
-6oSHexTLT+Ok1bSyV56YIyb712mwZPb5C5CJ0Sc17cKBHBL7FNO0xWnymDnRrceE
-eo++Ow47plAo4npcPDpTCFPv5TI0Xg==
-=poNd
------END PGP SIGNATURE-----
-
---Sig_/tge6YxF1z7mYn_Hp+p6ged2--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
