@@ -2,103 +2,69 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A26CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ABC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41A52067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098122067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594628589;
+	bh=Cc6XpKtFID0FHQDQzIyY1YoIHwf0PusCyNXYaHGbvkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GWzpoRviEdlLFA3rXz3bUt9CUSVnMEivIZixuP6Xj7Ah/q8nn2Aon3Yg/04tF+ikK
+	 YzHCD9WZmnp/ucrjEY84xVmg0z0tStX4mBF6R09NDFEfSQjEvFidG/FPuUws7t5BvO
+	 P2V5UbEEGlEv/NuIrVBtHeXmnVt/noh1sWr0YoAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGMIVq (ORCPT
+        id S1729115AbgGMIXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMIVp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:21:45 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772BCC061755;
-        Mon, 13 Jul 2020 01:21:45 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2C9B7BC0C2;
-        Mon, 13 Jul 2020 08:21:42 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     gupt21@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        Mon, 13 Jul 2020 04:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgGMIXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:23:07 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 810482065D;
+        Mon, 13 Jul 2020 08:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594628587;
+        bh=Cc6XpKtFID0FHQDQzIyY1YoIHwf0PusCyNXYaHGbvkc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MkAMBzJ8hZD7trw7NLlfrXDIuyoHiUhDKNZRBO/SJw+7HnXjBE98dBtiH5DhA5MNn
+         vx0bLMKwMJl1ZMA7u81j7Sas5gREJGEuWhRgOjjUDQsHYmeWJNj9wzyKIHrTV5L0Vx
+         SgGrKQo85tsHT9bRP2zxc+Kn3F3BtlYibu86cHYE=
+Date:   Mon, 13 Jul 2020 16:23:01 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     festevam@gmail.com, andrew@lunn.ch, s.hauer@pengutronix.de,
+        stefan@agner.ch, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] HID: mcp2221: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 10:21:35 +0200
-Message-Id: <20200713082135.32350-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH v2] ARM: dts: vf610-zii-dev-rev-c: Configure fiber port
+ to 1000BaseX
+Message-ID: <20200713082300.GO12113@dragon>
+References: <20200708232501.6200-1-cphealy@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708232501.6200-1-cphealy@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 08, 2020 at 04:25:01PM -0700, Chris Healy wrote:
+> The SFF soldered onto the board expects the port to use 1000BaseX.  It
+> makes no sense to have the port set to SGMII, since it doesn't even
+> support that mode.
+> 
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/hid/hid-mcp2221.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-index e1b93ce32e01..0d27ccb55dd9 100644
---- a/drivers/hid/hid-mcp2221.c
-+++ b/drivers/hid/hid-mcp2221.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (c) 2020, Rishi Gupta <gupt21@gmail.com>
-  *
-- * Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
-+ * Datasheet: https://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
-  */
- 
- #include <linux/module.h>
--- 
-2.27.0
-
+Applied, thanks.
