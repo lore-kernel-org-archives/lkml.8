@@ -2,160 +2,189 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F8CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21001C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F042082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B9C2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THgzZSec"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6Qz9He4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGMVPr (ORCPT
+        id S1726660AbgGMVVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
+        Mon, 13 Jul 2020 17:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgGMVPp (ORCPT
+        with ESMTP id S1726416AbgGMVVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:15:45 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCC6C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:15:45 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id p26so2705428oos.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:15:45 -0700 (PDT)
+        Mon, 13 Jul 2020 17:21:22 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542E1C061755;
+        Mon, 13 Jul 2020 14:21:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j19so6592707pgm.11;
+        Mon, 13 Jul 2020 14:21:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qjuZJNT2nmHWODfcbipNILNPsrHac01Xb1NkyxlZsYo=;
-        b=THgzZSecpJNXVHihMziM8zXe9G4OVd57nNd/IYrlmkoCMEKtq1phQFDbY3R8Pghqow
-         idlzkoH+hU59tOaGmgdJ2tfduM1cTqHe2305ymOrU5HDxps3GsDXjg1ynxyRGlkjTJM/
-         rwM/9Y2LmB5HAOwMbf/sanxUEz3sa8O7ae7B5JTNKMqfbZ6+38RSBv3uK7YKpKmzdgjM
-         iZeDhR9EraH8ZR7R60VSb0tVBRX7ExPS1gJWwVf8WFVHj5PaqLQ5KbHzCv3IZ3Nkz3Wi
-         9I3XX3z1xNeXfUGNK2I3XtAgG6K28dgXiJLvTK2xHg81kCFnFJRQHL/r59iqZD5tEKBK
-         WgEg==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ABF/kSJ7GZyTbibG8EMm3ujzxwiwSYQQuEfE9U6jw1s=;
+        b=A6Qz9He4HdllJ76p8Kxuf4DBMs2r3GvMpumwrMS+pZrhuZ6g8wVMoM69tEhPKoW3V7
+         hy9eQvvd41eylP67IxVGu3V5VvRzmGUx+87y+F9PoaMWCjUh7UEOTU4RxBbeXSoDEgYQ
+         fTbzLQ/4rHvU9sgjghxvXUBeu32kcRSmPFWkx1VrDSPlG9jS8T1xkDal0sn90ERqcblm
+         8gXQMA0f6gpQADh+9AXZNd3YQ4oapp6tB/Gal1K7cw6+fduWn2f6lW3sdAcAkcwo1nQt
+         CncVIAkv9WSH4E/xWXyqdhJf3BABXCFYHd8lyoOr4Q5CSGVXioGxZs9NaFi0AkZjk9UD
+         ZU/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qjuZJNT2nmHWODfcbipNILNPsrHac01Xb1NkyxlZsYo=;
-        b=AWaV955HBuohckJR75Vffh+c73sl3XOpcrfU6e4ocIyGUdsHnvrzLlO5SJnAQkqxGd
-         +SqPvhJ6Hb8zL5sRRlu/+KsRVnAo4tDBSY80+HlifmwGLiln544l6Q0fElLGgOYuwjz7
-         UdkmZTHLuhkgWjufA4ES1vHTFc/IUI2+LzpaJj/tStAHRoRJzwNYuhAF7tGvAQfzDzvv
-         n2R4JEwne2UOMwlwKimP9d4fvp22aKDhkVoO0+PEE3EvWNEQPL/PCS6cqlvzopTZ1nge
-         XZGTPs33c7KwoXxDhcN2jOz3AUupJ+MY3cLzKdFdIVumPLcPK4Bt8XI2hAuMcLPbNrrf
-         gh4Q==
-X-Gm-Message-State: AOAM530wTFTfwq7SxE6y34fegnO/ni72tX5M38PwMEhSjwkpTBr2HW4c
-        ToNQsNoTBOnRhIpCnEkNyIg=
-X-Google-Smtp-Source: ABdhPJzIfN1AboVENY11PTwSGMDeDkiICqolIWkLTLNFk3ZVzw9gpWcs4af337SaL2dnxAyoWl24cg==
-X-Received: by 2002:a4a:7459:: with SMTP id t25mr1731283ooe.25.1594674944498;
-        Mon, 13 Jul 2020 14:15:44 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id c206sm3321930oob.22.2020.07.13.14.15.43
+        bh=ABF/kSJ7GZyTbibG8EMm3ujzxwiwSYQQuEfE9U6jw1s=;
+        b=PxYqrieRb3OJPEYeNUlhte5O91QwueYwHQhyEyYKLi+qhI5YAZpBNMAQPEHNi4UBxW
+         lRRoJL7AjfiW1dSUD9eG6xEFJjtPQ6TdJJkDVdPu+nEwpGItecVXjkdwyNsrgpsA9VGg
+         NiWaXntkySCmdIj5T2WeGFTYlPwybHfsYKQF8o/lBo+UoGLFUZRT+elQjnfO/SVFNgfr
+         VxhzqrNFhXVhKV/RjJcZ7fulA7P4iXLimjRZlWjpQgjwJjPf3xz4VUnpPRDyBwELz0FR
+         t64VJPhzBwfkAUaJszuE9tWNUVTcsMFYce9iBT3mTqDP4Cl62gJtIMpux2vXKYBpVmgQ
+         QbNA==
+X-Gm-Message-State: AOAM533FMvNvZbkhGaEg0UwnQ1I7MTbYtUQpBMo7isuOeajEnhxJIPZW
+        Xy7uSuAqeTsIwpkOuNxZ5K1tcQdZ
+X-Google-Smtp-Source: ABdhPJwNAx6zk/9vxInegSvSaW/luicXQSuqpwuYJGgMYuomcZ6hjq9GhwPrDxBRXRzOPXmOG5qTZg==
+X-Received: by 2002:aa7:9155:: with SMTP id 21mr1466155pfi.306.1594675281319;
+        Mon, 13 Jul 2020 14:21:21 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id bx18sm436031pjb.49.2020.07.13.14.21.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 14:15:43 -0700 (PDT)
-Subject: Re: [PATCH] staging: r8188eu: remove unused members of struct
- xmit_buf
-To:     Ivan Safonov <insafonov@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Soumyajit Deb <debsoumyajit100@gmail.com>
-References: <20200712123821.553420-1-insafonov@gmail.com>
- <20200713131607.GR2549@kadam> <20200713142305.GV2549@kadam>
- <5fdeb963-2729-dbc5-3fba-85998e28d8d5@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <1fa0b2fe-4320-f1e0-c3ca-6a3b4b5fea18@lwfinger.net>
-Date:   Mon, 13 Jul 2020 16:15:42 -0500
+        Mon, 13 Jul 2020 14:21:20 -0700 (PDT)
+Subject: Re: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
+To:     Xie He <xie.he.0141@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+References: <20200708043754.46554-1-xie.he.0141@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <4b46b0f6-8424-5a6e-a4ae-3729f54c5d4b@gmail.com>
+Date:   Mon, 13 Jul 2020 14:21:18 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <5fdeb963-2729-dbc5-3fba-85998e28d8d5@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200708043754.46554-1-xie.he.0141@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 1:28 PM, Ivan Safonov wrote:
-> On 7/13/20 5:23 PM, Dan Carpenter wrote:
->> On Mon, Jul 13, 2020 at 04:16:07PM +0300, Dan Carpenter wrote:
->>> On Sun, Jul 12, 2020 at 03:38:21PM +0300, Ivan Safonov wrote:
->>>> Remove unused members of struct xmit_buf: alloc_sz, ff_hwaddr,
->>>> dma_transfer_addr, bpending and last.
->>>>
->>>> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
->>>> ---
->>>>   drivers/staging/rtl8188eu/include/rtw_xmit.h  | 5 -----
->>>>   drivers/staging/rtl8188eu/os_dep/xmit_linux.c | 1 -
->>>>   2 files changed, 6 deletions(-)
->>>>
->>>> diff --git a/drivers/staging/rtl8188eu/include/rtw_xmit.h 
->>>> b/drivers/staging/rtl8188eu/include/rtw_xmit.h
->>>> index 12d16e98176a..3c03987c81a1 100644
->>>> --- a/drivers/staging/rtl8188eu/include/rtw_xmit.h
->>>> +++ b/drivers/staging/rtl8188eu/include/rtw_xmit.h
->>>> @@ -193,14 +193,9 @@ struct xmit_buf {
->>>>       void *priv_data;
->>>>       u16 ext_tag; /*  0: Normal xmitbuf, 1: extension xmitbuf. */
->>>>       u16 flags;
->>>> -    u32 alloc_sz;
->>>>       u32  len;
->>>>       struct submit_ctx *sctx;
->>>> -    u32    ff_hwaddr;
->>>>       struct urb *pxmit_urb[8];
->>>> -    dma_addr_t dma_transfer_addr;    /* (in) dma addr for transfer_buffer */
->>>> -    u8 bpending[8];
->>>> -    int last[8];
->>>>   };
->>>>   struct xmit_frame {
->>>> diff --git a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c 
->>>> b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
->>>> index 017e1d628461..61ced1160951 100644
->>>> --- a/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
->>>> +++ b/drivers/staging/rtl8188eu/os_dep/xmit_linux.c
->>>> @@ -24,7 +24,6 @@ int rtw_os_xmit_resource_alloc(struct adapter *padapter,
->>>>           return _FAIL;
->>>>       pxmitbuf->pbuf = PTR_ALIGN(pxmitbuf->pallocated_buf, XMITBUF_ALIGN_SZ);
->>>
->>> Not related to this patch but kmalloc always returns data which is at
->>> least ARCH_KMALLOC_MINALIGN aligned which is never less than
->>> XMITBUF_ALIGN_SZ (4) so this is a no-op.
+
+
+On 7/7/20 9:37 PM, Xie He wrote:
+> This driver is not working because of problems of its receiving code.
+> This patch fixes it to make it work.
 > 
-> 4-byte alignment for 8-byte pointer (for example void *priv_data) on 64-bit arch 
-> is an _error_. It’s good that kmalloc (and vmalloc) is already aligned to 8 bytes.
+> When the driver receives an LAPB frame, it should first pass the frame
+> to the LAPB module to process. After processing, the LAPB module passes
+> the data (the packet) back to the driver, the driver should then add a
+> one-byte pseudo header and pass the data to upper layers.
 > 
->>
->> The alignment in the driver is pretty crazy because it's all unnecessary
->> and so complicated.  Every allocation is 4 bytes extra so we can align
->> it later.
->>
->> Also every buffer is called "pbuf" which stands for pointer to buffer.
->> "pallocated_buf" is not really useful either.
->>
->> I tried to look at this to see if we could change the alignment, and
->> it's complicated because of the naming and the alignment.
->>
->> regards,
->> dan carpenter
->>
+> The changes to the "x25_asy_bump" function and the
+> "x25_asy_data_indication" function are to correctly implement this
+> procedure.
 > 
-> I have already fixed 4 places with unnecessary alignment, but, alas, there is no 
-> great desire to test them on real hardware.
+> Also, the "x25_asy_unesc" function ignores any frame that is shorter
+> than 3 bytes. However the shortest frames are 2-byte long. So we need
+> to change it to allow 2-byte frames to pass.
+> 
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
+> ---
+>  drivers/net/wan/x25_asy.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+> index 69773d228ec1..3fd8938e591b 100644
+> --- a/drivers/net/wan/x25_asy.c
+> +++ b/drivers/net/wan/x25_asy.c
+> @@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
+>  	netif_wake_queue(sl->dev);
+>  }
+>  
+> -/* Send one completely decapsulated IP datagram to the IP layer. */
+> +/* Send an LAPB frame to the LAPB module to process. */
+>  
+>  static void x25_asy_bump(struct x25_asy *sl)
+>  {
+> @@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
+>  	count = sl->rcount;
+>  	dev->stats.rx_bytes += count;
+>  
+> -	skb = dev_alloc_skb(count+1);
+> +	skb = dev_alloc_skb(count);
+>  	if (skb == NULL) {
+>  		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+>  		dev->stats.rx_dropped++;
+>  		return;
+>  	}
+> -	skb_push(skb, 1);	/* LAPB internal control */
+>  	skb_put_data(skb, sl->rbuff, count);
+>  	skb->protocol = x25_type_trans(skb, sl->dev);
+>  	err = lapb_data_received(skb->dev, skb);
+> @@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
+>  		kfree_skb(skb);
+>  		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
+>  	} else {
+> -		netif_rx(skb);
+>  		dev->stats.rx_packets++;
+>  	}
+>  }
+> @@ -356,12 +354,16 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+>   */
+>  
+>  /*
+> - *	Called when I frame data arrives. We did the work above - throw it
+> - *	at the net layer.
+> + *	Called when I frame data arrives. We add a pseudo header for upper
+> + *	layers and pass it to upper layers.
+>   */
+>  
+>  static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+>  {
 
-I have now tested on real hardware and it works fine.
+It is not clear to me what guarantee we have to have one byte of headroom in the skb
+at this point.
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+You might add to be safe : (as done in lapbeth_data_indication(), but after the skb_push() which seems wrong)
 
-Larry
+      if (skb_cow(skb, 1)) {
+            kfree_skb(skb); /* This line I am not sure, but looking at
+                             * lapb_data_indication() this might be needed.
+                             */
+	    return NET_RX_DROP;
+      }
 
+> +	skb_push(skb, 1);
+> +	skb->data[0] = X25_IFACE_DATA;
+> +	skb->protocol = x25_type_trans(skb, dev);
+> +
+>  	return netif_rx(skb);
+>  }
+>  
+> @@ -657,7 +659,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
+>  	switch (s) {
+>  	case X25_END:
+>  		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+> -		    sl->rcount > 2)
+> +		    sl->rcount >= 2)
+>  			x25_asy_bump(sl);
+>  		clear_bit(SLF_ESCAPE, &sl->flags);
+>  		sl->rcount = 0;
+> 
