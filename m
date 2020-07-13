@@ -2,86 +2,83 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC97C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84A720773
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594654583;
-	bh=2xkPAPPBPk9EOzSeeT8J0U1aMHgDpoLeraGLUT14cF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WSXiAvgV5q5qZepHBF8I8w00nYLIAL0FWFaIIFfkfesyQBWuFvW+oJlRK/tgB0NgA
-	 hEDilH7Fwp6qp6u2bsr48m7jIkWjZcztv7asVJB6lF86q0vpAuTXRYHe1MGReU/vIT
-	 /Mz4Zv5T3X+Xjl4Hsw7U4rFb6eZN/cHSx0QoTItI=
+	by mail.kernel.org (Postfix) with ESMTP id CE8BB20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="d/oZ3wu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgGMPgW (ORCPT
+        id S1730192AbgGMPg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:36:22 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46730 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729976AbgGMPgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:36:22 -0400
-Received: by mail-il1-f195.google.com with SMTP id p15so3911268ilh.13;
-        Mon, 13 Jul 2020 08:36:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jbp8Qd0VM4i5o2+ZvQtYmlD17b1myrPfM1phWvGO84c=;
-        b=f7ET/NFltsDuAI7I+EA8kqQI1AdAOwO84+nlRvKWUMNPOfzxSV3X+a3rUWZmIYXcS9
-         eN001FVD60GPZ757JcqwqCCyqQHyCNwufNifYXAxVrWqs7b2IEH0hFNYiodFlepqdHWk
-         LjC1A3RGAdIO8qRg0bVnUzxDODedU+Pz7Js0QUaralWG8t1kRxsQ4CeZRKmdYdsB26/z
-         vJUiNDBeWt/wEc5dtAvgMnAyeDqycZwN+q1qCHVBvPspZM8LifhndIj5EIdG4dsDXb0U
-         9pzznOg+iLPMqFxJH37OgLNoWpBqX3+F+D20i9N5U0kWZ5KolCq8NcDLYMokz/GQ/5Ne
-         ejmw==
-X-Gm-Message-State: AOAM531KWp7R09zoinC1UEnu/tD0KI7ARZn6UhPrT4ZiqGpkv0evhIDF
-        4PwL8Rs0a0ltbdOXrl7zmg==
-X-Google-Smtp-Source: ABdhPJx/SwvihlwlXRQkZRbFgjXB3HUvCfuB2zXCyjfPOsn46CnyYzMH4CLgs3SyYCvPxFIMNn0rGQ==
-X-Received: by 2002:a92:7309:: with SMTP id o9mr236880ilc.5.1594654581414;
-        Mon, 13 Jul 2020 08:36:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a13sm8406011ilk.19.2020.07.13.08.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:36:20 -0700 (PDT)
-Received: (nullmailer pid 247908 invoked by uid 1000);
-        Mon, 13 Jul 2020 15:36:19 -0000
-Date:   Mon, 13 Jul 2020 09:36:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     devicetree@vger.kernel.org, hkallweit1@gmail.com,
-        f.fainelli@gmail.com, andrew@lunn.ch, davem@davemloft.net,
-        netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mon, 13 Jul 2020 11:36:59 -0400
+Received: from crapouillou.net ([89.234.176.41]:48090 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729840AbgGMPg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:36:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1594654615; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LdQqHm6kiUKALUnP/0MNOMd3kQYrs4cg4UjvzyzDtFg=;
+        b=d/oZ3wu0ru+qzQPHhvrBWinlsFSiLxgNwcFwHFGHVAKryXjjM5TadVyotwAoAjWtKXtVmz
+        p9NUhGnNvISXm15jx4CkhkKPzcShmWsGzP+vbHcLR8aV+qbElRS2wwXOZ8kTz9JNj1ZdSP
+        ZB98OmKsVN0TF1gukfK3FZhpCJ1mxNE=
+Date:   Mon, 13 Jul 2020 17:36:46 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
+ ingenic,pinctrl.txt to YAML
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/2] dt-bindings: net: dp83822: Add TI
- dp83822 phy
-Message-ID: <20200713153619.GA247395@bogus>
-References: <20200710143733.30751-1-dmurphy@ti.com>
- <20200710143733.30751-2-dmurphy@ti.com>
+Message-Id: <ADZEDQ.ZXJ99TAYD15S2@crapouillou.net>
+In-Reply-To: <20200713153252.GA234029@bogus>
+References: <20200622113740.46450-1-paul@crapouillou.net>
+        <20200713153252.GA234029@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710143733.30751-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 09:37:32 -0500, Dan Murphy wrote:
-> Add a dt binding for the TI dp83822 ethernet phy device.
-> 
-> CC: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/net/ti,dp83822.yaml   | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
-> 
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Le lun. 13 juil. 2020 =E0 9:32, Rob Herring <robh@kernel.org> a =E9crit :
+> On Mon, Jun 22, 2020 at 01:37:40PM +0200, Paul Cercueil wrote:
+>>  Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
+>>=20
+>>  In the process, some compatible strings now require a fallback, as=20
+>> the
+>>  corresponding SoCs are pin-compatible with their fallback variant.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+>>          - remove 'additionalProperties: false' since we will have=20
+>> pin conf nodes
+>=20
+> What do those look like? They need to be described, but that can be a
+> follow-up.
+
+These are generic conf nodes that are handled by the pinctrl core.=20
+Nothing specific to the hardware described here. The subnodes don't=20
+have any specific pattern so it is not possible to represent them in=20
+devicetree (we'd need a 'catch them all' wildcard pattern property).
+
+Cheers,
+-Paul
+
+
