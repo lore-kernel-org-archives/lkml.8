@@ -2,127 +2,293 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E771C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7B4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76942072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rBNMv/m7"
+	by mail.kernel.org (Postfix) with ESMTP id AA3A220773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgGMMMs (ORCPT
+        id S1729662AbgGMMMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:12:48 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E483AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:12:47 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i3so9646504qtq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RpYSNQC2exuWKUTSRfbzznKwmjgAwfUEWqW8RzotbS4=;
-        b=rBNMv/m7LaTM5arw6QzFTxkwPH7OghzX2+1T4d0DECfS6DFMcAv1644Lu5aG+V9mCd
-         PMKwN8m//5IvkMkE7befYGE5dNlHQGJ1XgOmVUFV5n1VP1FlkC+JoX7DQVbBuwjIflg0
-         Xiha5OPk6LbG69HWASAzNTROcVKp7AAUVGBPk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RpYSNQC2exuWKUTSRfbzznKwmjgAwfUEWqW8RzotbS4=;
-        b=OGp+xJWJFiX+SYosr8B0nmmFk5XwOR6a4fAt6ksdlU5/w4gpzW38HdemImIeqWczQb
-         UfrTG8hFmmA097rTtaW6E/2o3UhD/eW5R0fnkj8RQR6X8DDB3e6B4pwSxTbn7LPZUYQr
-         IqpBVr2MJgQydp1BuB+zzb28f4WTeX19aAFQ55/ierT+DjjxTd57gv8rhX4Se6DGZ0HO
-         DyUlMaF5X2+C4Cgv6GkefprctNYiI4CvoK879pfQqKoFwoWyc8gv8U8cwYYUhEDxVLTW
-         TwSRRG8z4DL6vEXDAX0TawVYpymR18qXPim+6gdU2mi8t8cE8EmeeeZC/vnJUD6gF4AQ
-         Oxgw==
-X-Gm-Message-State: AOAM533oDggZNSes+wNatHHCxRR8n2EEVtpNUpgHXs0TNMHdhZk6lSGW
-        lsDAcs6vA6Z3C4tORv6nNn8b+8KxYms=
-X-Google-Smtp-Source: ABdhPJwx4Win/yPZB7k/hma4rHDpqXlvpi9H6cFu4C0fIA3YbzEIBjZE/+zuFQEGlEfG1eUL1EaC+w==
-X-Received: by 2002:ac8:1a12:: with SMTP id v18mr85096949qtj.347.1594642366926;
-        Mon, 13 Jul 2020 05:12:46 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id b8sm19823302qtg.45.2020.07.13.05.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 05:12:46 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 08:12:45 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-Message-ID: <20200713121245.GA3926869@google.com>
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
- <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
- <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
- <20200712215041.GA3644504@google.com>
- <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
- <20200713025354.GB3644504@google.com>
- <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
+        Mon, 13 Jul 2020 08:12:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:58790 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgGMMMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:12:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5428630E;
+        Mon, 13 Jul 2020 05:12:51 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFC2C3F887;
+        Mon, 13 Jul 2020 05:12:48 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 13:12:46 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT
+ default boost value
+Message-ID: <20200713121246.xjif3g4zpja25o5r@e107158-lin.cambridge.arm.com>
+References: <20200706142839.26629-1-qais.yousef@arm.com>
+ <20200706142839.26629-2-qais.yousef@arm.com>
+ <20200713112125.GG10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
+In-Reply-To: <20200713112125.GG10769@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 08:51:26PM -0700, Linus Torvalds wrote:
-> > > Maybe saying "doing the pmd copies for the initial stack isn't
-> > > important, so let's just note this as a special case and get rid of
-> > > the WARN_ON()" might be an alternative solution.
-> >
-> > Personally, I feel it is better to keep the warning just so in the future we
-> > can detect any bugs.
+On 07/13/20 13:21, Peter Zijlstra wrote:
+> > +	 * 2. fork()->sched_post_fork()
+> > +	 *    __setscheduler_uclamp()
+> > +	 *
+> > +	 *	Both of these functions could read the old value but then get
+> > +	 *	preempted, during which a user might write new value to
+> > +	 *	sysctl_sched_uclamp_util_min_rt_default.
+> > +	 *
+> > +	 *	// read sysctl_sched_uclamp_util_min_rt_default;
+> > +	 *	// PREEMPT-OUT
+> > +	 *	.
+> > +	 *	.                  <-- sync happens here
+> > +	 *	.
+> > +	 *	// PREEMPT-IN
+> > +	 *	// write p->uclamp_req[UCLAMP_MIN]
+> > +	 *
+> > +	 *	That section is protected with rcu_read_lock(), so
+> > +	 *	synchronize_rcu() will guarantee it has finished before we
+> > +	 *	perform the update. Hence ensure that this sync happens after
+> > +	 *	any concurrent sync which should guarantee correctness.
+> > +	 */
+> > +	synchronize_rcu();
+> > +
+> > +	rcu_read_lock();
+> > +	for_each_process_thread(g, p)
+> > +		__uclamp_sync_util_min_rt_default(p);
+> > +	rcu_read_unlock();
+> > +}
 > 
-> I don't disagree, the warning didn't happen to find a bug now, but it
-> did fine a case we might be able to do better.
-> 
-> So now that I feel we understand the issue, and it's not a horrible
-> problem, just a (very hard to trigger) warning, I don't think there's
-> any huge hurry.
-> 
-> I think think I will - for now - change the WARN_ON() to
-> WARN_ON_ONCE() (so that it doesn't floow the logs if somebody triggers
-> this odd special case  this malisiously), and add a note about how
-> this happens to the code for posterito.
-> 
-> And if/when you figure out a better way to fix it, we can update the note.
-> 
-> Ok?
+> It's monday, and I cannot get my brain working.. I cannot decipher the
+> comments you have with the smp_[rw]mb(), what actual ordering do they
+> enforce?
 
-Yes, that sounds great to me.
+It was a  bit of a paranoia to ensure that readers on other cpus see the new
+value after this point.
 
-thanks,
+> 
+> Also, your synchronize_rcu() relies on write_lock() beeing
+> non-preemptible, which isn't true on PREEMPT_RT.
+> 
+> The below seems simpler...
 
- - Joel
+Hmm maybe I am missing something obvious, but beside the race with fork; I was
+worried about another race and that's what the synchronize_rcu() is trying to
+handle.
 
+It's the classic preemption in the middle of RMW operation race.
+
+		copy_process()			sysctl_uclamp
+
+		  sched_post_fork()
+		    __uclamp_sync_rt()
+		      // read sysctl
+		      // PREEMPT
+						  for_each_process_thread()
+		      // RESUME
+		      // write syctl to p
+
+So to summarize we have 3 scenarios:
+
+
+	1. sysctl_uclamp happens *before* sched_post_fork()
+
+for_each_process_thread() could miss the forked task, but that's okay because
+sched_post_fork() will apply the correct value.
+
+
+	2. sysctl_uclamp happens *during* sched_post_fork()
+
+There's the risk of the classic preemption in the middle of RMW where another
+CPU could have changed the shared variable after the current CPU has already
+read it, but before writing it back.
+
+I protect this with rcu_read_lock() which as far as I know synchronize_rcu()
+will ensure if we do the update during this section; we'll wait for it to
+finish. New forkees entering the rcu_read_lock() section will be okay because
+they should see the new value.
+
+spinlocks() and mutexes seemed inferior to this approach.
+
+Any other potential future user that needs to do __uclamp_sync_rt() could
+suffer from this race.
+
+
+	3. sysctl_uclamp happens *after* sched_post_fork()
+
+Here if for_each_process_thread() still can't see the forked task; then we have
+a problem. For this case I wasn't sure if we needed the
+smp_mp__after_spinlock() dance. It seemed a stretch to me not to see the forked
+task after this point.
+
+Would a simple smp_mp() in for_each_process_thread() be sufficient instead?
+
+Though maybe better to provide a generic macro to do this dance for the benefit
+of potential other future users and just call it here and not think too much.
+
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 0ee5e696c5d8..a124e3a1cb6d 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -586,7 +586,7 @@ extern void flush_itimer_signals(void);
+        list_entry_rcu((p)->tasks.next, struct task_struct, tasks)
+
+ #define for_each_process(p) \
+-       for (p = &init_task ; (p = next_task(p)) != &init_task ; )
++       for (smp_mp(); p = &init_task ; (p = next_task(p)) != &init_task ; )
+
+ extern bool current_is_single_threaded(void);
+
+Thanks
+
+--
+Qais Yousef
+
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1013,8 +1013,6 @@ static void __uclamp_sync_util_min_rt_de
+>  	unsigned int default_util_min;
+>  	struct uclamp_se *uc_se;
+>  
+> -	WARN_ON_ONCE(!rcu_read_lock_held());
+> -
+>  	if (!rt_task(p))
+>  		return;
+>  
+> @@ -1024,8 +1022,6 @@ static void __uclamp_sync_util_min_rt_de
+>  	if (uc_se->user_defined)
+>  		return;
+>  
+> -	/* Sync with smp_wmb() in uclamp_sync_util_min_rt_default() */
+> -	smp_rmb();
+>  	default_util_min = sysctl_sched_uclamp_util_min_rt_default;
+>  	uclamp_se_set(uc_se, default_util_min, false);
+>  }
+> @@ -1035,47 +1031,21 @@ static void uclamp_sync_util_min_rt_defa
+>  	struct task_struct *g, *p;
+>  
+>  	/*
+> -	 * Make sure the updated sysctl_sched_uclamp_util_min_rt_default which
+> -	 * was just written is synchronized against any future read on another
+> -	 * cpu.
+> -	 */
+> -	smp_wmb();
+> -
+> -	/*
+> -	 * Wait for all updaters to observe the new change.
+> -	 *
+> -	 * There are 2 races to deal with here:
+> -	 *
+> -	 * 1. fork()->copy_process()
+> -	 *
+> -	 *	If a task was concurrently forking, for_each_process_thread()
+> -	 *	will not see it, hence it could have copied the old value and
+> -	 *	we missed the opportunity to update it.
+> -	 *
+> -	 *	This should be handled by sched_post_fork() where it'll ensure
+> -	 *	it performs the sync after the fork.
+> -	 *
+> -	 * 2. fork()->sched_post_fork()
+> -	 *    __setscheduler_uclamp()
+> -	 *
+> -	 *	Both of these functions could read the old value but then get
+> -	 *	preempted, during which a user might write new value to
+> -	 *	sysctl_sched_uclamp_util_min_rt_default.
+> -	 *
+> -	 *	// read sysctl_sched_uclamp_util_min_rt_default;
+> -	 *	// PREEMPT-OUT
+> -	 *	.
+> -	 *	.                  <-- sync happens here
+> -	 *	.
+> -	 *	// PREEMPT-IN
+> -	 *	// write p->uclamp_req[UCLAMP_MIN]
+> -	 *
+> -	 *	That section is protected with rcu_read_lock(), so
+> -	 *	synchronize_rcu() will guarantee it has finished before we
+> -	 *	perform the update. Hence ensure that this sync happens after
+> -	 *	any concurrent sync which should guarantee correctness.
+> -	 */
+> -	synchronize_rcu();
+> +	 * copy_process()			sysctl_uclamp
+> +	 *					  uclamp_min_rt = X;
+> +	 *   write_lock(&tasklist_lock)		  read_lock(&tasklist_lock)
+> +	 *   // link thread			  smp_mb__after_spinlock()
+> +	 *   write_unlock(&tasklist_lock)	  read_unlock(&tasklist_lock);
+> +	 *   sched_post_fork()			  for_each_process_thread()
+> +	 *     __uclamp_sync_rt()		    __uclamp_sync_rt()
+> +	 *
+> +	 * Ensures that either sched_post_fork() will observe the new
+> +	 * uclamp_min_rt or for_each_process_thread() will observe the new
+> +	 * task.
+> +	 */
+> +	read_lock(&tasklist_lock);
+> +	smp_mb__after_spinlock();
+> +	read_unlock(&tasklist_lock);
+>  
+>  	rcu_read_lock();
+>  	for_each_process_thread(g, p)
+> @@ -1408,6 +1378,9 @@ int sysctl_sched_uclamp_handler(struct c
+>  		uclamp_update_root_tg();
+>  	}
+>  
+> +	if (old_min_rt != sysctl_sched_uclamp_util_min_rt_default)
+> +		uclamp_sync_util_min_rt_default();
+> +
+>  	/*
+>  	 * We update all RUNNABLE tasks only when task groups are in use.
+>  	 * Otherwise, keep it simple and do just a lazy update at each next
+> @@ -1466,9 +1439,7 @@ static void __setscheduler_uclamp(struct
+>  		 * at runtime.
+>  		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN)) {
+> -			rcu_read_lock();
+>  			__uclamp_sync_util_min_rt_default(p);
+> -			rcu_read_unlock();
+>  		} else {
+>  			uclamp_se_set(uc_se, uclamp_none(clamp_id), false);
+>  		}
+> @@ -1521,6 +1492,11 @@ static void __init init_uclamp_rq(struct
+>  	rq->uclamp_flags = 0;
+>  }
+>  
+> +static void uclamp_post_fork(struct task_struct *p)
+> +{
+> +	__uclamp_sync_util_min_rt_default(p);
+> +}
+> +
+>  static void __init init_uclamp(void)
+>  {
+>  	struct uclamp_se uc_max = {};
