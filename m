@@ -2,139 +2,88 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57EAC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66A3C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F532076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594655971;
-	bh=66d0qzIC4OkMRR9bFddFvDEjnKVWYsSDK7OZJIix65Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KHZVX4yDGB+fFIrv8jDirZ5QbL7n3Zewb1tAD27q4e3zWsYc8K70qRUVl09vCtuv6
-	 OwU3UYRBczxgG2LAnoEMm8MdwhHA2nreutgmfeRms+G5zXlbVdk7y6E/cWlZ6jzESG
-	 VkpWz7mLR/Im/80WPKhE6csqOvFNvPLGaZMfaSzo=
+	by mail.kernel.org (Postfix) with ESMTP id BE2FC2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgGMP7a (ORCPT
+        id S1730319AbgGMP7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:59:30 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36111 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730221AbgGMP70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:59:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 72so9895141otc.3;
-        Mon, 13 Jul 2020 08:59:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z0UW5vWMAZAwDcJY+/m5O81tARF1bbt8Cu9sjbCPdQc=;
-        b=pvwWVYcFE52Sjjv8nPH1lWMtq57W6PeUWm9LyQG8WJq0qmZ1HMNt7qSibFubPffqWS
-         VXGNy0QRYrw2OCr7tzz9GXoTY9lHWHmzPC/drSdwiHoW8MrqQpb7828GgDcrdAGN3URg
-         YIBto62Jv7DghRdWKHlknINZP+RuPqijWkuZAebWsnr0xKrMt8/KGnASH5dMmEOyUbsK
-         d039qo9b7Y18X5vU05k3vNV51TDblLSW5G8L9Ma4NFjFZOqUtEbULGFiyhLHGJT/8slS
-         o/S29pl4xcVSM7wO1v3X8LLvXpUXiQP2YIWOq1Xo9Nhg6uWTg/cEW2OHrltzELzd2199
-         FVVA==
-X-Gm-Message-State: AOAM530sIqTOT13kXJFwxsy5D0NpqK73tlsK5qbmQk15g8+oXUhmh6uC
-        4X6JIX9gIhaAYZ4cWirP0hxLtxfdcBfxVAAO3JQ=
-X-Google-Smtp-Source: ABdhPJwbZZyJgt7RrFgdoqfSrsynterBjG99QZZE8gdkk39une0PoOFFF8ROkZLv8bQUVWjnQ/sYIMccGdvLV4nyTRg=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr196730ota.167.1594655965552;
- Mon, 13 Jul 2020 08:59:25 -0700 (PDT)
+        Mon, 13 Jul 2020 11:59:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2467 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730221AbgGMP7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:59:34 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id ABC87638E661CC79765E;
+        Mon, 13 Jul 2020 16:59:33 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 16:59:33 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 4/6] ACPI: HMAT: Fix handling of changes from ACPI 6.2 to ACPI 6.3
+Date:   Mon, 13 Jul 2020 23:55:58 +0800
+Message-ID: <20200713155600.2272743-5-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
+References: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-References: <20200713105502.33482-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200713105502.33482-1-grandmaster@al2klimov.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Jul 2020 17:59:14 +0200
-Message-ID: <CAJZ5v0iMGtaYcvOkG+1pZ1TFivAU-M2EDcKs-PfLF2KwRTaPUg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 12:55 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
->
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
->
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
->
->  If you apply the patch, please let me know.
->
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
->
->
->  drivers/cpufreq/acpi-cpufreq.c    | 2 +-
->  drivers/cpufreq/davinci-cpufreq.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index 429e5a36c08a..29e8ff422b91 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -612,7 +612,7 @@ static const struct dmi_system_id sw_any_bug_dmi_table[] = {
->  static int acpi_cpufreq_blacklist(struct cpuinfo_x86 *c)
->  {
->         /* Intel Xeon Processor 7100 Series Specification Update
-> -        * http://www.intel.com/Assets/PDF/specupdate/314554.pdf
-> +        * https://www.intel.com/Assets/PDF/specupdate/314554.pdf
->          * AL30: A Machine Check Exception (MCE) Occurring during an
->          * Enhanced Intel SpeedStep Technology Ratio Change May Cause
->          * Both Processor Cores to Lock Up. */
-> diff --git a/drivers/cpufreq/davinci-cpufreq.c b/drivers/cpufreq/davinci-cpufreq.c
-> index 297d23cad8b5..91f477a6cbc4 100644
-> --- a/drivers/cpufreq/davinci-cpufreq.c
-> +++ b/drivers/cpufreq/davinci-cpufreq.c
-> @@ -2,7 +2,7 @@
->  /*
->   * CPU frequency scaling for DaVinci
->   *
-> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
->   *
->   * Based on linux/arch/arm/plat-omap/cpu-omap.c. Original Copyright follows:
->   *
-> --
+In ACPI 6.3, the Memory Proximity Domain Attributes Structure
+changed substantially.  One of those changes was that the flag
+for "Memory Proximity Domain field is valid" was deprecated.
 
-Applied as 5.9 material, thanks!
+This was because the field "Proximity Domain for the Memory"
+became a required field and hence having a validity flag makes
+no sense.
+
+So the correct logic is to always assume the field is there.
+Current code assumes it never is.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/acpi/numa/hmat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 3c0414816772..7ad2d5882a7d 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -424,7 +424,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+ 		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
+ 			p->flags, p->processor_PD, p->memory_PD);
+ 
+-	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
++	if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) || hmat_revision == 2) {
+ 		target = find_mem_target(p->memory_PD);
+ 		if (!target) {
+ 			pr_debug("HMAT: Memory Domain missing from SRAT\n");
+-- 
+2.19.1
+
