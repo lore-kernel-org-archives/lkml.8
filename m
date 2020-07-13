@@ -2,139 +2,133 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67353C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D14C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4105620724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594616926;
-	bh=l9woS6qlWWRbrNRtwz0odix51LNFvdItegOJQMN4QOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UZV/rI1bdsWHFkO1Y2RN8KhWaf6sahnCVq0v7U33Jj4r+HuzzAet1SDYqWlCUmHaf
-	 r3kgHY1pa/qRF4IBLCbxaNEmWS0riIZ1vx/AS4sdPKTywfNSV1FNpDWSMU7keEB+fu
-	 clCS+z3un5h9XzPlgHJ0VY4Obou6kadeE6L/eyCo=
+	by mail.kernel.org (Postfix) with ESMTP id E1E9820724
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 05:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Agzoe9FS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgGMFIp (ORCPT
+        id S1728901AbgGMFJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgGMFIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:08:44 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E4420724;
-        Mon, 13 Jul 2020 05:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594616923;
-        bh=l9woS6qlWWRbrNRtwz0odix51LNFvdItegOJQMN4QOg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GYiltRdQJZKiHRMk4Fr6TeJWi9EeeW1TfU3hOq0LI+1tD7pe/w6hlEfUE8I7aLrL7
-         ETUVNB57QxqlVMatJrqRM6R/BKEk7vf0IyOH7xpS4j/7lr73Hsa7gd054VyIVkzTRt
-         o77PmUklaw7BbAcaxgwTjWpL4vSTeqS6ZW5G2ZvY=
-Date:   Mon, 13 Jul 2020 10:38:39 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Liam Beguin <liambeguin@gmail.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] phy: tusb1210: use bitmasks to set
- VENDOR_SPECIFIC2
-Message-ID: <20200713050839.GS34333@vkoul-mobl>
-References: <20200702010649.16323-1-liambeguin@gmail.com>
+        Mon, 13 Jul 2020 01:09:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgGMFJY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:09:24 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F28FC061794;
+        Sun, 12 Jul 2020 22:09:24 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o38so9085956qtf.6;
+        Sun, 12 Jul 2020 22:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mgj/wvd79X6Tg0otEw1MjyAhvhEJqLE80+gVPS33EpM=;
+        b=Agzoe9FSrpGTKPO+ZjPAOqoT76Xl/XX1v0yMlXP5nbGof6W1/JAmCMjBdIopUjwhw3
+         FvslyZbteEaNueMND2tqEw7qxjofYqRQ0e0+kgBwpWN656vEtasQf665kounoqet6iGw
+         ui3e9LtGa0wCYk3zVc/2Px7MKpzWlbQjfkvxkO8o2oTDSLoFLW8f0I3N20xDX1llYivr
+         s42qm/WZB7hP0OqjAt+u6tVOn3fb1wBcM9/8EWCrd/c1Mdx2YlLiFkKKeQzpvslWBzLr
+         PXMcAi8wg6/jmwSp+psa2Yw1mLGSyn4DaoJ8J+2FIeX+vyj9SbFURP3TQ6g09gh0/ylh
+         /WPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mgj/wvd79X6Tg0otEw1MjyAhvhEJqLE80+gVPS33EpM=;
+        b=eYmt97XTYeYGEx/CL1x137GLCcTW2aVrUWhbDWuhrJSHfn5lTz45ZeQJVu971YjoqT
+         fvIP60DVbPWJAD/43IJyx+9TycIOV6L4loRX95wE+10WbcGEdPVPNWEV8UTVCi2EI8ur
+         QUf+JluhuT+0Pk4IAsTh2XJILh3BArQYZaXQoH4pGa3kV38yZYZ1d3vdHP2RR7tbX1Kg
+         vwa7wIXysyvvojI7FgLF+TfmlFybqLvmBYRSnEZS567RzxaMRDdNSfQtDXXuaxtxB5tb
+         PgE72RMtNgSyRz5F5/j4Fn+0VX4xv1gmEUu9BgRfS3mAxSAJLC4EMVNSHJtTu/E42WWy
+         V8qw==
+X-Gm-Message-State: AOAM530msnpKJdt00qb4IXvw/L0X77yPSR+4nvzo5xe5iNlIMppayjTL
+        RH37e/gVl5J3B/SHepdnw8Mv5CbGYaFnwbY3iNUXhTUR
+X-Google-Smtp-Source: ABdhPJzD7BsbNZXIjdhXtbehLOCjRVk4RfzGsSOpsgLAbeS7Uko6VPVwDPPI9M+P5gIgNFSmYPVC02V9b45NXmkMSiY=
+X-Received: by 2002:ac8:40cd:: with SMTP id f13mr79930028qtm.373.1594616963390;
+ Sun, 12 Jul 2020 22:09:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702010649.16323-1-liambeguin@gmail.com>
+References: <20200705195110.405139-1-anarsoul@gmail.com> <20200705195110.405139-2-anarsoul@gmail.com>
+ <DF6CC01A-0282-45E2-A437-2E3E58CC2883@holtmann.org>
+In-Reply-To: <DF6CC01A-0282-45E2-A437-2E3E58CC2883@holtmann.org>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 12 Jul 2020 22:08:57 -0700
+Message-ID: <CA+E=qVeYT41Wpp4wHgoVFMa9ty-FPsxxvUB-DJDnj07SpWhpjQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] Bluetooth: Add new quirk for broken local ext
+ features max_page
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-07-20, 21:06, Liam Beguin wrote:
-> From: Liam Beguin <lvb@xiphos.com>
-> 
-> Start by reading the content of the VENDOR_SPECIFIC2 register and update
-> each bit field based on device properties when defined.
-> 
-> The use of bit masks prevents fields from overriding each other and
-> enables users to clear bits which are set by default, like datapolarity
-> in this instance.
-> 
-> Signed-off-by: Liam Beguin <lvb@xiphos.com>
-> ---
->  drivers/phy/ti/phy-tusb1210.c | 29 ++++++++++++++++-------------
->  1 file changed, 16 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
-> index d8d0cc11d187..a957655ebd36 100644
-> --- a/drivers/phy/ti/phy-tusb1210.c
-> +++ b/drivers/phy/ti/phy-tusb1210.c
-> @@ -13,9 +13,9 @@
->  #include <linux/phy/ulpi_phy.h>
->  
->  #define TUSB1210_VENDOR_SPECIFIC2		0x80
-> -#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT	0
-> -#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT	4
-> -#define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT	6
-> +#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK	0x0f
-> +#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK	0x30
+On Tue, Jul 7, 2020 at 9:03 AM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Vasily,
+>
+> > Some adapters (e.g. RTL8723CS) advertise that they have more than
+> > 2 pages for local ext features, but they don't support any features
+> > declared in these pages. RTL8723CS reports max_page = 2 and declares
+> > support for sync train and secure connection, but it responds with
+> > either garbage or with error in status on corresponding commands.
+>
+> please send the btmon for this so I can see what the controller is responding.
 
-Why not be better and use GENMASK(3, 0) and GENMASK(5, 4) for these
+Here is relevant part:
 
-> +#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK	BIT(6)
->  
->  struct tusb1210 {
->  	struct ulpi *ulpi;
-> @@ -118,22 +118,25 @@ static int tusb1210_probe(struct ulpi *ulpi)
->  	 * diagram optimization and DP/DM swap.
->  	 */
->  
-> +	reg = ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
-> +
->  	/* High speed output drive strength configuration */
-> -	device_property_read_u8(&ulpi->dev, "ihstx", &val);
-> -	reg = val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
-> +		reg = (reg & ~TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK) |
-> +			(val & TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK);
+< HCI Command: Read Local Extend.. (0x04|0x0004) plen 1  #228 [hci0] 6.889869
+        Page: 2
+> HCI Event: Command Complete (0x0e) plen 14             #229 [hci0] 6.890487
+      Read Local Extended Features (0x04|0x0004) ncmd 2
+        Status: Success (0x00)
+        Page: 2/2
+        Features: 0x5f 0x03 0x00 0x00 0x00 0x00 0x00 0x00
+          Connectionless Slave Broadcast - Master
+          Connectionless Slave Broadcast - Slave
+          Synchronization Train
+          Synchronization Scan
+          Inquiry Response Notification Event
+          Coarse Clock Adjustment
+          Secure Connections (Controller Support)
+          Ping
+< HCI Command: Delete Stored Lin.. (0x03|0x0012) plen 7  #230 [hci0] 6.890559
+        Address: 00:00:00:00:00:00 (OUI 00-00-00)
+        Delete all: 0x01
+> HCI Event: Command Complete (0x0e) plen 6              #231 [hci0] 6.891170
+      Delete Stored Link Key (0x03|0x0012) ncmd 2
+        Status: Success (0x00)
+        Num keys: 0
+< HCI Command: Read Synchronizat.. (0x03|0x0077) plen 0  #232 [hci0] 6.891199
+> HCI Event: Command Complete (0x0e) plen 9              #233 [hci0] 6.891788
+      Read Synchronization Train Parameters (0x03|0x0077) ncmd 2
+        invalid packet size
+        01 ac bd 11 80 80                                ......
+= Close Index: 00:E0:4C:23:99:87                              [hci0] 6.891832
 
-It would be better to use a helper to do this
+hci0 registration stops here and bluetoothctl doesn't even see the controller.
 
->  
->  	/* High speed output impedance configuration */
-> -	device_property_read_u8(&ulpi->dev, "zhsdrv", &val);
-> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "zhsdrv", &val))
-> +		reg = (reg & ~TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK) |
-> +			(val & TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK);
->  
->  	/* DP/DM swap control */
-> -	device_property_read_u8(&ulpi->dev, "datapolarity", &val);
-> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "datapolarity", &val))
-> +		reg = (reg & ~TUSB1210_VENDOR_SPECIFIC2_DP_MASK) |
-> +			(val & TUSB1210_VENDOR_SPECIFIC2_DP_MASK);
->  
-> -	if (reg) {
-> -		ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
-> -		tusb->vendor_specific2 = reg;
-> -	}
-> +	ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
-> +	tusb->vendor_specific2 = reg;
->  
->  	tusb->phy = ulpi_phy_create(ulpi, &phy_ops);
->  	if (IS_ERR(tusb->phy))
-> 
-> base-commit: cd77006e01b3198c75fb7819b3d0ff89709539bb
-
-fatal: bad object cd77006e01b3198c75fb7819b3d0ff89709539bb in
-linux-phy.git
-
--- 
-~Vinod
+> Regards
+>
+> Marcel
+>
