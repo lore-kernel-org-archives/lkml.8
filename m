@@ -2,103 +2,142 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3734C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78EC2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594656977;
-	bh=viaWXYM+Hs+AEgp6HyUr4ayigk0ciBjuIkl+U4M6f14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U4F3cJCBGgTVTK6inXH7zm9FGbq3c2zNgWy+sdc5jOooUNZQWOu6V/02CBtAT5xR5
-	 gsgH8Z+wBMEikVBbUZkKxCs6JZ3XcwTCBbl6U4zz3S44pdCWVGLiGQN6fYHs2t9IJS
-	 bjpY4rzKNdJdMtlSfl/q/icWpUqUHyuZI17YMLWs=
+	by mail.kernel.org (Postfix) with ESMTP id B5E4920771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYqjtefW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgGMQQR (ORCPT
+        id S1729927AbgGMQWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbgGMQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:16:16 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 13 Jul 2020 12:22:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48294 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729826AbgGMQWN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:22:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594657332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nIrIhkWx/fstyu+UDLNFnGFufkVWvbrIsXpWnjTB3C8=;
+        b=gYqjtefWOpavVbsvDHbnk4jsfHIIlM8Ae9DAQMlfYKrPVwmyborprJk4JRbkDmPjhufhsl
+        vo/nafL+tDwqwrDp+PzIWzz2aiAuCGC23ZEiLKUy0yyaJjpQMZrt8LSkB25okyFbEvh3LG
+        kgMbVIn++lF8XGuzwriWmpMP5xzu0lM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-ah7gXTzCPP63Gib3iujv3g-1; Mon, 13 Jul 2020 12:22:11 -0400
+X-MC-Unique: ah7gXTzCPP63Gib3iujv3g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B304620773;
-        Mon, 13 Jul 2020 16:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594656976;
-        bh=viaWXYM+Hs+AEgp6HyUr4ayigk0ciBjuIkl+U4M6f14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s3bpwgfdoyqBtvh7sbQq/zZG4qK0G98JmqWEADCQBOiodMVRITO0V7ERDvTR7fZad
-         MMG7/bMEeQAQlhST0UqZrhqtF4uFHtq1NEgNHQIb21qIkICpYBBW3evZWakmoWa3sS
-         vjCLjBeh31uGK/Y6COna+guDJQT7ANGqoEJ3Zh8c=
-Date:   Mon, 13 Jul 2020 09:16:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     syzbot <syzbot+4c50ac32e5b10e4133e1@syzkaller.appspotmail.com>,
-        andriin@fb.com, ast@kernel.org, axboe@kernel.dk,
-        bpf@vger.kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING in submit_bio_checks
-Message-ID: <20200713161614.GC1696@sol.localdomain>
-References: <00000000000029663005aa23cff4@google.com>
- <20200713101836.GA536@infradead.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC843800FED;
+        Mon, 13 Jul 2020 16:22:09 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.194.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C706D74F47;
+        Mon, 13 Jul 2020 16:22:07 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] KVM: nVMX: fix the layout of struct kvm_vmx_nested_state_hdr
+Date:   Mon, 13 Jul 2020 18:22:06 +0200
+Message-Id: <20200713162206.1930767-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713101836.GA536@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:18:36AM +0100, Christoph Hellwig wrote:
-> On Fri, Jul 10, 2020 at 10:34:19PM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> 
-> This is not a crash, but a WARN_ONCE.  A pre-existing one that just
-> slightly changed the printed message recently.
-> 
+Before commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer
+migration") struct kvm_vmx_nested_state_hdr looked like:
 
-It doesn't really matter.  WARN is for indicating kernel bugs only.
-A user-triggable WARN is a bug.  Either the bug that makes the WARN
-reachable needs to be fixed, or if the WARN is legitimately user-reachable
-it needs to be removed or replaced with a proper ratelimited log message.
+struct kvm_vmx_nested_state_hdr {
+        __u64 vmxon_pa;
+        __u64 vmcs12_pa;
+        struct {
+                __u16 flags;
+        } smm;
+}
 
-This one looks legitimately user-reachable, so we could do:
+The ABI got broken by the above mentioned commit and an attempt
+to fix that was made in commit 83d31e5271ac ("KVM: nVMX: fixes for
+preemption timer migration") which made the structure look like:
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d9d632639bd1..354c51ad5c81 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -854,8 +854,8 @@ static inline bool bio_check_ro(struct bio *bio, struct hd_struct *part)
- 		if (op_is_flush(bio->bi_opf) && !bio_sectors(bio))
- 			return false;
+struct kvm_vmx_nested_state_hdr {
+        __u64 vmxon_pa;
+        __u64 vmcs12_pa;
+        struct {
+                __u16 flags;
+        } smm;
+        __u32 flags;
+        __u64 preemption_timer_deadline;
+};
+
+The problem with this layout is that before both changes compilers were
+allocating 24 bytes for this and although smm.flags is padded to 8 bytes,
+it is initialized as a 2 byte value. Chances are that legacy userspaces
+using old layout will be passing uninitialized bytes which will slip into
+what is now known as 'flags'.
+
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
+Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+- The patch breaks ABI so it needs to go into 5.8.
+
+- This is a successor of "[PATCH] KVM: nVMX: properly pad struct
+ kvm_vmx_nested_state_hdr"
+---
+ Documentation/virt/kvm/api.rst  | 5 +++--
+ arch/x86/include/uapi/asm/kvm.h | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 320788f81a05..e75992ad856a 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -4345,8 +4345,9 @@ Errors:
+ 	struct {
+ 		__u16 flags;
+ 	} smm;
+-
+-	__u32 flags;
++	__u16 pad16;
++	__u32 pad32;
++	__u64 flags;
+ 	__u64 preemption_timer_deadline;
+   };
  
--		WARN_ONCE(1,
--		       "Trying to write to read-only block-device %s (partno %d)\n",
-+		pr_warn_ratelimited(
-+		       "block: trying to write to read-only block-device %s (partno %d)\n",
- 			bio_devname(bio, b), part->partno);
- 		/* Older lvm-tools actually trigger this */
- 		return false;
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 0780f97c1850..4ecc6bd49818 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -414,8 +414,9 @@ struct kvm_vmx_nested_state_hdr {
+ 	struct {
+ 		__u16 flags;
+ 	} smm;
+-
+-	__u32 flags;
++	__u16 pad16;
++	__u32 pad32;
++	__u64 flags;
+ 	__u64 preemption_timer_deadline;
+ };
+ 
+-- 
+2.25.4
 
-
-We could also show current->comm and current->pid if they would be useful here.
-
-And yes, this is preexisting which is why syzbot has reported this before
-(https://syzkaller.appspot.com/bug?id=79eda145ab047a0dc7d03ca5fcb1cf12206eb481).
-Just no one has bothered to fix it yet.
-
-- Eric
