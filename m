@@ -2,123 +2,101 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306DFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62C620773
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020EC20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0D1DS8Q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gRf3asfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgGMOo2 (ORCPT
+        id S1729967AbgGMOmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:44:28 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9541 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMOo2 (ORCPT
+        Mon, 13 Jul 2020 10:42:00 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:59598 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729689AbgGMOmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:44:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c72dc0000>; Mon, 13 Jul 2020 07:42:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 07:44:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:44:28 -0700
-Received: from [10.26.72.101] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 14:44:18 +0000
-Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-To:     Zhenyu Ye <yezhenyu2@huawei.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <20200710094420.517-3-yezhenyu2@huawei.com>
- <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
- <cee60718-ced2-069f-8dad-48941c6fc09b@huawei.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <7237888d-2168-cd8b-c83d-c8e54871793d@nvidia.com>
-Date:   Mon, 13 Jul 2020 15:44:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 13 Jul 2020 10:42:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594651319; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=njq6ToEc9s/UCKrW6LoyB1yXjuQt4PugDt/wNabnWog=; b=gRf3asfSf2u09CNPEHTt37McXPlxONpVi6hrvmT9b1p+ZqXXAhIOFe+DFEWl+6gtQ/0wSt1I
+ M5y93HHSxexMMAWdd7gPanZO5m0mgLYRltcloVB4UIsq6JpOLb2JwWwysCCgIB6OMgGRnkjc
+ 6IY8n+NulRBHlwgifZNUSSX8C34=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f0c72ad512812c070389aac (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 14:41:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 62636C43395; Mon, 13 Jul 2020 14:41:49 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D14A4C433C8;
+        Mon, 13 Jul 2020 14:41:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D14A4C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] ipw2x00: use generic power management
+References: <20200629072525.156154-1-vaibhavgupta40@gmail.com>
+Date:   Mon, 13 Jul 2020 17:41:44 +0300
+In-Reply-To: <20200629072525.156154-1-vaibhavgupta40@gmail.com> (Vaibhav
+        Gupta's message of "Mon, 29 Jun 2020 12:55:23 +0530")
+Message-ID: <87a703xys7.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <cee60718-ced2-069f-8dad-48941c6fc09b@huawei.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594651356; bh=GMqdGNMQAH4AHg5hTa7waqJrHwyKyA4TXJmzHNKG13w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=X0D1DS8Q43SgE5F9IDdU432zVIipKfOXH09pQUdZ9nwA/5YJw5NgTcaeOTeDp1MbU
-         ZtFrObX3/F6AItK2Kaz/Jdj5ln5HbEbuqjOpJwaB97qoVpRmi4eRHG0RAgY/w+qBO6
-         O83/VWEQOAHYks9bxeUkSDB0FMoXhXsn4MX9rmJ2TcqXT1xdefUZgAVlGNDLe2vAMI
-         LHblN/7vNqKTDmUaPDmThJlWenrobGwK1npattjHleKBjjVrwIU8LIRTbCPFjgveeQ
-         ljgVMQFJWxJBsbLsK8mvDDjQE2jrZ6uET1MeXoy3Vy2Y3ZM78D81s9qTAwEGsOEGbC
-         E7AzNNZBDWqDw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Vaibhav Gupta <vaibhavgupta40@gmail.com> writes:
 
-On 13/07/2020 15:39, Zhenyu Ye wrote:
-> Hi Jon,
-> 
-> On 2020/7/13 22:27, Jon Hunter wrote:
->> After this change I am seeing the following build errors ...
->>
->> /tmp/cckzq3FT.s: Assembler messages:
->> /tmp/cckzq3FT.s:854: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:870: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:1095: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:1111: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:1964: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:1980: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:2286: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:2302: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
->> /tmp/cckzq3FT.s:4833: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
->> /tmp/cckzq3FT.s:4849: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
->> /tmp/cckzq3FT.s:5090: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
->> /tmp/cckzq3FT.s:5106: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
->> /tmp/cckzq3FT.s:874: Error: attempt to move .org backwards
->> /tmp/cckzq3FT.s:1115: Error: attempt to move .org backwards
->> /tmp/cckzq3FT.s:1984: Error: attempt to move .org backwards
->> /tmp/cckzq3FT.s:2306: Error: attempt to move .org backwards
->> /tmp/cckzq3FT.s:4853: Error: attempt to move .org backwards
->> /tmp/cckzq3FT.s:5110: Error: attempt to move .org backwards
->> scripts/Makefile.build:280: recipe for target 'arch/arm64/mm/hugetlbpage.o' failed
->> make[3]: *** [arch/arm64/mm/hugetlbpage.o] Error 1
->> scripts/Makefile.build:497: recipe for target 'arch/arm64/mm' failed
->> make[2]: *** [arch/arm64/mm] Error 2
->>
->> Cheers
->> Jon
->>
-> 
-> The code must be built with binutils >= 2.30.
-> Maybe I should add  a check on whether binutils supports ARMv8.4-a instructions...
+> Linux Kernel Mentee: Remove Legacy Power Management.
+>
+> The purpose of this patch series is to remove legacy power management callbacks
+> from amd ethernet drivers.
+>
+> The callbacks performing suspend() and resume() operations are still calling
+> pci_save_state(), pci_set_power_state(), etc. and handling the power management
+> themselves, which is not recommended.
+>
+> The conversion requires the removal of the those function calls and change the
+> callback definition accordingly and make use of dev_pm_ops structure.
+>
+> All patches are compile-tested only.
+>
+> Vaibhav Gupta (2):
+>   ipw2100: use generic power management
+>   ipw2200: use generic power management
+>
+>  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 31 +++++---------------
+>  drivers/net/wireless/intel/ipw2x00/ipw2200.c | 30 +++++--------------
 
-Yes I believe so.
-
-Cheers
-Jon
+amd ethernet drivers? That must be a copy paste error. But no need to
+resend because of this.
 
 -- 
-nvpublic
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
