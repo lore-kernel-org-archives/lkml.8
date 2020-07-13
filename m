@@ -2,172 +2,634 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A5C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ED6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12CB2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KN+bbxqE"
+	by mail.kernel.org (Postfix) with ESMTP id 1F7912068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgGMP40 (ORCPT
+        id S1730072AbgGMP5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:56:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:29511 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730228AbgGMP4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:56:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594655783; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rd/xfI+Nq4CyTn27v6B3l10xe4oK+zEV7lzP/JRIMWE=; b=KN+bbxqE8RmjiHYZ55TKciCdQEAYIYX/+XK0iUi5ufoXt06GZjZ6Y3KWD/pQBjyfa+SQVswe
- 14pZbiUMUHVpspW/b1x7wnEmD+ulhOmPEQJjW5NsuhE42qetY8tpqFEBA/Pul6An4uXUt/6k
- a8+ZBkFiOgkz5LRQ7w7SaMIlgGo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f0c8425ee86618575207962 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 15:56:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 27DE3C43387; Mon, 13 Jul 2020 15:56:21 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [183.83.69.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA012C433C6;
-        Mon, 13 Jul 2020 15:56:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA012C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Set IO pins in low power state during
- suspend
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
- <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
- <20200710005233.GN3191083@google.com>
- <63323fe2-e3a3-030f-5275-01fa6b04e23b@codeaurora.org>
- <20200711001948.GO3191083@google.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <2c322fe1-6a86-43c9-11f3-387b917836ed@codeaurora.org>
-Date:   Mon, 13 Jul 2020 21:26:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 11:57:34 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2463 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729027AbgGMP5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:57:33 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 10C84A676136A5A0C376;
+        Mon, 13 Jul 2020 16:57:32 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 16:57:31 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 0/6] ACPI: Support Generic Initiator proximity domains
+Date:   Mon, 13 Jul 2020 23:55:54 +0800
+Message-ID: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200711001948.GO3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Depends on
+[PATCH] ACPI: Only create numa nodes from entries in SRAT or SRAT emulation.
+or remove the extra parameter in acpi_map_pxm_to_node.
 
-On 7/11/2020 5:49 AM, Matthias Kaehlcke wrote:
-> Hi,
->
-> On Fri, Jul 10, 2020 at 04:28:36PM +0530, Veerabhadrarao Badiganti wrote:
->> Hi Mathias,
->>
->> On 7/10/2020 6:22 AM, Matthias Kaehlcke wrote:
->>> Hi,
->>>
->>> On Wed, Jul 08, 2020 at 06:41:20PM +0530, Veerabhadrarao Badiganti wrote:
->>>> Configure SDHC IO pins with low power configuration when the driver
->>>> is in suspend state.
->>>>
->>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> ---
->>>>    drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++++
->>>>    1 file changed, 17 insertions(+)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>>> index 392d41d57a6e..efd2bae1430c 100644
->>>> --- a/drivers/mmc/host/sdhci-msm.c
->>>> +++ b/drivers/mmc/host/sdhci-msm.c
->>>> @@ -15,6 +15,7 @@
->>>>    #include <linux/iopoll.h>
->>>>    #include <linux/regulator/consumer.h>
->>>>    #include <linux/interconnect.h>
->>>> +#include <linux/pinctrl/consumer.h>
->>>>    #include "sdhci-pltfm.h"
->>>>    #include "cqhci.h"
->>>> @@ -1352,6 +1353,19 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>>>    		sdhci_msm_hs400(host, &mmc->ios);
->>>>    }
->>>> +static int sdhci_msm_set_pincfg(struct sdhci_msm_host *msm_host, bool level)
->>>> +{
->>>> +	struct platform_device *pdev = msm_host->pdev;
->>>> +	int ret;
->>>> +
->>>> +	if (level)
->>>> +		ret = pinctrl_pm_select_default_state(&pdev->dev);
->>>> +	else
->>>> +		ret = pinctrl_pm_select_sleep_state(&pdev->dev);
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>>    static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->>>>    {
->>>>    	if (IS_ERR(mmc->supply.vmmc))
->>>> @@ -1596,6 +1610,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->>>>    			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
->>>>    					pwr_state & REQ_BUS_ON);
->>>>    		if (!ret)
->>>> +			ret = sdhci_msm_set_pincfg(msm_host,
->>>> +					pwr_state & REQ_BUS_ON);
->>>> +		if (!ret)
->>>>    			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->>>>    		else
->>>>    			irq_ack |= CORE_PWRCTL_BUS_FAIL;
->>> I happened to have a debug patch in my tree which logs when regulators
->>> are enabled/disabled, with this patch I see the SD card regulator
->>> toggling constantly after returning from the first system suspend.
->>>
->>> I added more logs:
->>>
->>> [ 1156.085819] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>> [ 1156.248936] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>> [ 1156.301989] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>> [ 1156.462383] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>> [ 1156.525988] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>> [ 1156.670372] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>> [ 1156.717935] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>> [ 1156.878122] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>> [ 1156.928134] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>
->>> This is on an SC7180 platform. It doesn't run an upstream kernel though,
->>> but v5.4 with plenty of upstream patches.
->> I have verified this on couple of sc7180 targets (on Chrome platform with
->> Chrome kernel).
->> But didn't see any issue. Its working as expected.
-> Did you test system suspend too? At least in the Chrome OS kernel tree system
-> suspend is not supported yet in the main branch, you'd need a pile of 30+
-> extra patches to get it to work. This is expected to change soon though :)
-Yes. I have verified with system  suspend-resume scenario.
-Sorry forgot to mention this point explicitly in last response.
+Introduces a new type of NUMA node for cases where we want to represent
+the access characteristics of a non CPU initiator of memory requests,
+as these differ from all those for existing nodes containing CPUs and/or
+memory.
 
-I believe all the needed patches were present on qcom internal tree.
-Suspend-resume is working fine on sc7180 qcom chrome tree.
+These Generic Initiators are presented by the node access0 class in
+sysfs in the same way as a CPU.   It seems likely that there will be
+usecases in which the best 'CPU' is desired and Generic Initiators
+should be ignored.  The final few patches in this series introduced
+access1 which is a new performance class in the sysfs node description
+which presents only CPU to memory relationships.  Test cases for this
+are described below.
 
->> Let me know if you are observing this issue constantly on multiple boards, I
->> will share you
->> a debug patch to check it further.
-> I currently have only one board with the SD card slot populated, I might
-> get another one next week.
->
-> The toggling occurs only when no SD card is inserted.
+Thanks to Dan for suggestions on V5.  Most of the changes are
+an attempt to implement what was discussed in that thread.
+
+The new patch makes it clear that some of the existing naming is perhaps
+more specific than it should be. It may be worth a follow up patch
+to rename from *cpu* to *initiator* in a few places where this might
+cause confusion.
+
+One outstanding question to highlight in this series is whether
+we should assume all ACPI supporting architectures support Generic
+Initiator domains, or whether to introduce an
+ARCH_HAS_GENERIC_INITIATOR_DOMAINS entry in Kconfig.
+
+Note that GI nodes suffer from the same issue around hugetlb_cma
+as memoryless nodes.  A CMA area is defined that falls back into
+a nearby node with memory, but can then not actually be used.
+Proposed fix under review in.
+https://patchwork.kernel.org/patch/11629939/
+
+Changes since V6:
+
+* Rebase on 5.8-rc4 + Dependency as above.
+* Drop the ARM64 specific code. No specific calls are needed on ARM64
+  as the generic node init is done for all nodes, whether or not they
+  have memory.  X86 does memoryless nodes separately from those with
+  memory and hence needs to specifically intialize GI only nodes.
+* Fix up an error in the docs reported by Brice Goglin who also did
+  quite a bit of testing of v5. Thanks!
+  
+Changes since V5:
+
+3 new patches:
+* A fix for a subtlety in how ACPI 6.3 changed part of the HMAT table.
+* Introduction of access1 class to represent characteristics between CPU
+  and memory, ingnoring GIs unlike access0 which includes them.
+* Docs to describe the new access0 class.
+
+Note that I ran a number of test cases for the new class which are
+described at the end of this email.
+
+Changes since V4:
+
+At Rafael's suggestion:
+
+Rebase on top of Dan William's Specific Purpose Memory series as that
+moves srat.c Original patches cherry-picked fine onto mmotm with Dan's
+patches applied.
+
+Applies to mmotm-2019-09-25 +
+https://lore.kernel.org/linux-acpi/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
+[PATCH v4 00/10] EFI Specific Purpose Memory Support
+(note there are some trivial conflicts to deal with when applying
+the SPM series).
+
+Change since V3.
+* Rebase.
+
+Changes since RFC V2.
+* RFC dropped as now we have x86 support, so the lack of guards in in the
+  ACPI code etc should now be fine.
+  * Added x86 support.  Note this has only been tested on QEMU as I don't have
+    a convenient x86 NUMA machine to play with.  Note that this fitted together
+      rather differently from arm64 so I'm particularly interested in feedback
+        on the two solutions.
+
+Since RFC V1.
+* Fix incorrect interpretation of the ACPI entry noted by Keith Busch
+* Use the acpica headers definitions that are now in mmotm.
+
+It's worth noting that, to safely put a given device in a GI node, may
+require changes to the existing drivers as it's not unusual to assume
+you have local memory or processor core. There may be further constraints
+not yet covered by this patch.
+
+Original cover letter...
+
+ACPI 6.3 introduced a new entity that can be part of a NUMA proximity domain.
+It may share such a domain with the existing options (memory, CPU etc) but it
+may also exist on it's own.
+
+The intent is to allow the description of the NUMA properties (particularly
+via HMAT) of accelerators and other initiators of memory activity that are not
+the host processor running the operating system.
+
+This patch set introduces 'just enough' to make them work for arm64 and x86.
+It should be trivial to support other architectures, I just don't suitable
+NUMA systems readily available to test.
+
+There are a few quirks that need to be considered.
+
+1. Fall back nodes
+******************
+
+As pre ACPI 6.3 supporting operating systems do not have Generic Initiator
+Proximity Domains it is possible to specify, via _PXM in DSDT that another
+device is part of such a GI only node.  This currently blows up spectacularly.
+
+Whilst we can obviously 'now' protect against such a situation (see the related
+thread on PCI _PXM support and the  threadripper board identified there as
+also falling into the  problem of using non existent nodes
+https://patchwork.kernel.org/patch/10723311/ ), there is no way to  be sure
+we will never have legacy OSes that are not protected  against this.  It would
+also be 'non ideal' to fallback to  a default node as there may be a better
+(non GI) node to pick  if GI nodes aren't available.
+
+The work around is that we also have a new system wide OSC bit that allows
+an operating system to 'announce' that it supports Generic Initiators.  This
+allows, the firmware to us DSDT magic to 'move' devices between the nodes
+dependent on whether our new nodes are there or not.
+
+2. New ways of assigning a proximity domain for devices
+*******************************************************
+
+Until now, the only way firmware could indicate that a particular device
+(outside the 'special' set of cpus etc) was to be found in a particular
+Proximity Domain by the use of _PXM in DSDT.
+
+That is equally valid with GI domains, but we have new options. The SRAT
+affinity structure includes a handle (ACPI or PCI) to identify devices
+with the system and specify their proximity domain that way.  If both _PXM
+and this are provided, they should give the same answer.
+
+For now this patch set completely ignores that feature as we don't need
+it to start the discussion.  It will form a follow up set at some point
+(if no one else fancies doing it).
+
+Test cases for the access1 class
+********************************
+
+Test cases for Generic Initiator additions to HMAT.
+
+Setup
+
+PXM0 (node 0) - CPU0 CPU1, 2G memory
+PXM1 (node 1) - CPU2 CPU3, 2G memory
+PXM2 (node 2) - CPU4 CPU5, 2G memory
+PXM3 (node 4) - 2G memory (GI in one case below)
+PXM4 (node 3) - GI only.
+
+Config 1:  GI in PXM4 nearer to memory in PXM 3 than CPUs, not direct attached
+
+[    2.384064] acpi/hmat: HMAT: Locality: Flags:00 Type:Access Latency Initiator Domains:4 Target Domains:4 Base:256
+[    2.384913] acpi/hmat:   Initiator-Target[0-0]:1 nsec
+[    2.385190] acpi/hmat:   Initiator-Target[0-1]:9 nsec
+[    2.385736] acpi/hmat:   Initiator-Target[0-2]:9 nsec
+[    2.385984] acpi/hmat:   Initiator-Target[0-3]:9 nsec
+[    2.386447] acpi/hmat:   Initiator-Target[1-0]:9 nsec
+[    2.386740] acpi/hmat:   Initiator-Target[1-1]:1 nsec
+[    2.386964] acpi/hmat:   Initiator-Target[1-2]:9 nsec
+[    2.387174] acpi/hmat:   Initiator-Target[1-3]:9 nsec
+[    2.387624] acpi/hmat:   Initiator-Target[2-0]:9 nsec
+[    2.387953] acpi/hmat:   Initiator-Target[2-1]:9 nsec
+[    2.388155] acpi/hmat:   Initiator-Target[2-2]:1 nsec
+[    2.388607] acpi/hmat:   Initiator-Target[2-3]:9 nsec
+[    2.388861] acpi/hmat:   Initiator-Target[4-0]:13 nsec
+[    2.389126] acpi/hmat:   Initiator-Target[4-1]:13 nsec
+[    2.389574] acpi/hmat:   Initiator-Target[4-2]:13 nsec
+[    2.389805] acpi/hmat:   Initiator-Target[4-3]:5 nsec
+
+# Sysfs reads the same for nodes 0-2 for access0 and access1 as no GI involved.
+
+/sys/bus/node/devices/...
+    node0 #1 and 2 similar.
+        access0
+            initiators
+                node0
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node0
+            uevent
+        access1
+            initiators
+                node0
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node 0
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+    node3 # Note PXM 4, contains GI only
+        access0
+            initiators
+                *empty*
+            power
+            targets
+                node4
+            uevent
+        compact
+        ...
+    node4
+        access0
+            initiators
+                node3
+                read_bandwidth  0
+                read_latency    5
+                write_bandwidth 0
+                write_latency   5
+            power
+            targets
+                *empty*
+            uevent
+        access1
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty*
+            uevent
+        compact
+        ...
+
+Config 2:  GI in PXM4 further to memory in PXM 3 than CPUs, not direct attached
+
+[    4.073493] acpi/hmat: HMAT: Locality: Flags:00 Type:Access Latency Initiator Domains:4 Target Domains:4 Base:256
+[    4.074785] acpi/hmat:   Initiator-Target[0-0]:1 nsec
+[    4.075150] acpi/hmat:   Initiator-Target[0-1]:9 nsec
+[    4.075423] acpi/hmat:   Initiator-Target[0-2]:9 nsec
+[    4.076184] acpi/hmat:   Initiator-Target[0-3]:9 nsec
+[    4.077116] acpi/hmat:   Initiator-Target[1-0]:9 nsec
+[    4.077366] acpi/hmat:   Initiator-Target[1-1]:1 nsec
+[    4.077640] acpi/hmat:   Initiator-Target[1-2]:9 nsec
+[    4.078156] acpi/hmat:   Initiator-Target[1-3]:9 nsec
+[    4.078471] acpi/hmat:   Initiator-Target[2-0]:9 nsec
+[    4.078994] acpi/hmat:   Initiator-Target[2-1]:9 nsec
+[    4.079277] acpi/hmat:   Initiator-Target[2-2]:1 nsec
+[    4.079505] acpi/hmat:   Initiator-Target[2-3]:9 nsec
+[    4.080126] acpi/hmat:   Initiator-Target[4-0]:13 nsec
+[    4.080995] acpi/hmat:   Initiator-Target[4-1]:13 nsec
+[    4.081351] acpi/hmat:   Initiator-Target[4-2]:13 nsec
+[    4.082125] acpi/hmat:   Initiator-Target[4-3]:13 nsec
+
+/sys/bus/node/devices/...
+    node0 #1 and 2 similar.
+        access0
+            initiators
+                node0
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node0
+                node4
+            uevent
+        access1
+            initiators
+                node0
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node0
+                node4
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+    node3 # Note PXM 4, contains GI only
+        #No accessX directories.
+        compact
+        ...
+    node4
+        access0
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty*
+            uevent
+        access1
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty*
+            uevent
+        compact
+        ...
+
+
+case 3 - as per case 2 but now the memory in node 3 is direct attached to the
+GI but nearer the main nodes (not physically sensible :))
+
+/sys/bus/node/devices/...
+    node0 #1 and 2 similar.
+        access0
+            initiators
+                node0
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node0
+                node4
+            uevent
+        access1
+            initiators
+                node0
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node0
+                node4
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+    node3 # Note PXM 4, contains GI only
+        access0
+            initiators
+                *empty*
+            power
+            targets
+                node4
+            uevent
+        compact
+        ...
+    node4
+        access0
+            initiators
+                node3
+                read_bandwidth  0
+                read_latency    13
+                write_bandwidth 0
+                write_latency   13
+            power
+            targets
+                *empty*
+            uevent
+        access1
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty*
+            uevent
+        compact
+        ...
+
+Case 4 - nearer the GI, but direct attached to one of the CPUS.
+# Another bonkers one.
+
+/sys/bus/node/devices/...
+    node0 #1 similar.
+        access0
+            initiators
+                node0
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node0
+                node4
+            uevent
+        access1
+            initiators
+                node0
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node0
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+    node2 # Direct attached to memory in node 3
+        access0
+            initiators
+                node2
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node2
+                node4 #direct attached
+            uevent
+        access1
+            initiators
+                node2
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node2
+                node4 #direct attached
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+
+    node3 # Note PXM 4, contains GI only
+        #No accessX directories.
+        compact
+        ...
+    node4
+        access0
+            initiators
+                node3
+                read_bandwidth  0
+                read_latency    13
+                write_bandwidth 0
+                write_latency   13
+            power
+            targets
+                *empty*
+            uevent
+        access1
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty*
+            uevent
+        compact
+        ...
+
+case 5 memory and GI together in node 3 (added an extra GI to node 3)
+Note hmat should also reflect this extra initiator domain.
+
+/sys/bus/node/devices/...
+    node0 #1 and 2 similar.
+        access0
+            initiators
+                node0
+                read_bandwidth  0 #not specificed in hmat
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node0
+                node4
+            uevent
+        access1
+            initiators
+                node0
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                read_bandwidth  1   
+            power
+            targets
+                node0
+            uevent
+        compact
+        cpu0
+        cpu1
+        ...
+    node3 # Note PXM 3, contains GI only
+        #No accessX directories.
+        compact
+        ...
+    node4 # Now memory and GI.
+        access0
+            initiators
+                node4
+                read_bandwidth  0
+                read_latency    1
+                write_bandwidth 0
+                write_latency   1
+            power
+            targets
+                node4
+            uevent
+        access1
+            initiators
+                node0
+                node1
+                node2
+                read_bandwidth  0
+                read_latency    9
+                write_bandwidth 0
+                write_latency   9
+            power
+            targets
+                *empty* # as expected GI doesn't paticipate in access 1.
+            uevent
+        compact
+        ...
+
+Jonathan Cameron (6):
+  ACPI: Support Generic Initiator only domains
+  x86: Support Generic Initiator only proximity domains
+  ACPI: Let ACPI know we support Generic Initiator Affinity Structures
+  ACPI: HMAT: Fix handling of changes from ACPI 6.2 to ACPI 6.3
+  node: Add access1 class to represent CPU to memory characteristics
+  docs: mm: numaperf.rst Add brief description for access class 1.
+
+ Documentation/admin-guide/mm/numaperf.rst |  8 ++
+ arch/x86/include/asm/numa.h               |  2 +
+ arch/x86/kernel/setup.c                   |  1 +
+ arch/x86/mm/numa.c                        | 14 ++++
+ drivers/acpi/bus.c                        |  1 +
+ drivers/acpi/numa/hmat.c                  | 89 ++++++++++++++++++-----
+ drivers/acpi/numa/srat.c                  | 60 ++++++++++++++-
+ drivers/base/node.c                       |  3 +
+ include/linux/acpi.h                      |  1 +
+ include/linux/nodemask.h                  |  1 +
+ 10 files changed, 159 insertions(+), 21 deletions(-)
+
+-- 
+2.19.1
+
