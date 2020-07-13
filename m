@@ -2,109 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9972EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F19C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2AB2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E7F206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IRrHmCR2"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f/TDqbf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgGMC0V (ORCPT
+        id S1728378AbgGMC1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGMC0V (ORCPT
+        Sun, 12 Jul 2020 22:27:31 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:23530 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726261AbgGMC1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:26:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EFDC061794;
-        Sun, 12 Jul 2020 19:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=1YPJ7BPo3bLI1LJBMxd8JhrL056FNIrP/ad+GWM9uL4=; b=IRrHmCR2zAJ5D6uTPftxgvDEvV
-        KpQSd8Lm4A03GT2xoKuxOpZNMDWXU3fBEIoayxYtsvWTNO3AmTopvDmBBRFRDpOp+8USueHu4HoeD
-        gnPv8FQNbG9zzKgiQWSmVWN9PLAGtNaDmMOgc9tDHpBEYeJTVXtYvOSk6yPrsXUi+B5IOQfUxOZ4E
-        T81fZ0yoMp+rkMCOl8613m1FBUBzdX2mDSQhyj69AmpIXXVXJiQUKTJ+XT+kz2MHNKNYTOgdZqpt+
-        gnYqOvAY24BTtelSNhnAsXuQ8wRA8nvpv3mdENJO99wAjwYTufQwrdgZjGIkap2Fx7Pov23f3YjE7
-        BpdI5hmQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juoAc-0005T4-QT; Mon, 13 Jul 2020 02:26:19 +0000
-Subject: Re: linux-next: Tree for Jul 10
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200710183318.7b808092@canb.auug.org.au>
- <20200712155604.GA342822@smile.fi.intel.com>
- <20200713080152.63ee1246@canb.auug.org.au>
- <e519f1c2-9761-4866-4878-09cc3da23d1f@infradead.org>
-Message-ID: <31e99bdc-1243-3be7-74aa-59c01820ed8e@infradead.org>
-Date:   Sun, 12 Jul 2020 19:26:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 12 Jul 2020 22:27:30 -0400
+X-UUID: f16f9da247e942a38793d931c065fd51-20200713
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vdpX6QOZNKEgVnpAN4JmKDJp7I0M4aDpvfzDjmiNtpI=;
+        b=f/TDqbf7PfrTMQRadRomIUVqOt1l3uynOLQsPGuTdTmvEiR+7CJP8yl5VeroAMqR28i8GqNUfLSEsO/3MjDu9aS3HzH+ms9Ktl72wHReX1eFkn6k8x0YdyMqvJ4WMY+sbDh8hhKBeVr2l5f+bbbAH63a4qgVz1HR+xR4fOBgpLg=;
+X-UUID: f16f9da247e942a38793d931c065fd51-20200713
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 239464284; Mon, 13 Jul 2020 10:27:28 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 13 Jul 2020 10:27:24 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 13 Jul 2020 10:27:24 +0800
+Message-ID: <1594607245.22878.8.camel@mtkswgap22>
+Subject: Re: [PATCH v3] scsi: ufs: Cleanup completed request without
+ interrupt notification
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>
+Date:   Mon, 13 Jul 2020 10:27:25 +0800
+In-Reply-To: <3d509c4b-d66d-2a4a-5fbd-a50a0610ad31@acm.org>
+References: <20200706132113.21096-1-stanley.chu@mediatek.com>
+         <3d509c4b-d66d-2a4a-5fbd-a50a0610ad31@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <e519f1c2-9761-4866-4878-09cc3da23d1f@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 69731E3067A72BEFA2FBAE86A43C91635FEE4B1E3E5A14E4DECC1E66CD00A30D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/20 7:19 PM, Randy Dunlap wrote:
-> On 7/12/20 3:01 PM, Stephen Rothwell wrote:
->> Hi Andy,
->>
->> On Sun, 12 Jul 2020 18:56:04 +0300 Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
->>>
->>> On Fri, Jul 10, 2020 at 06:33:18PM +1000, Stephen Rothwell wrote:
->>>>
->>>> Changes since 20200709:
->>>
->>> I can't build it on Debian with Sparse enabled
->>>
->>> CC      init/main.o
->>> init/main.c:760:20: warning: no previous prototype for ‘mem_encrypt_init’ [-Wmissing-prototypes]
->>> 760 | void __init __weak mem_encrypt_init(void) { }
->>> |                    ^~~~~~~~~~~~~~~~
->>> CHECK   /home/andy/prj/linux-topic-uart/init/main.c
->>> include/linux/compiler.h:309:16: error: typename in expression
->>> include/linux/compiler.h:309:16: error: Expected ) in function call
->>> include/linux/compiler.h:309:16: error: got :
->>> ...
->>> (All READ_ONCE() entries fail)
->>>
->>> Is it known issue?
->>
->> Not that I am aware of at the moment.  Does next-20200709 work?  Does
->> Linus' tree work?  The only obvious thing I can think of is commit
-> 
-> I'm hitting this same thing on 5.8-rc5. (x86_64)
-> 
-> 
->> 6ec4476ac825 ("Raise gcc version requirement to 4.9")
->>
->> The commmit message says:
->>
->>     Using _Generic also means that you will need to have a very recent
->>     version of 'sparse', but thats easy to build yourself, and much less of
->>     a hassle than some old gcc version can be.
-
-OK, no problems, newer sparse fixes it.
-
--- 
-~Randy
+SGkgQmFydCBhbmQgQXZyaSwNCg0KT24gU3VuLCAyMDIwLTA3LTEyIGF0IDE4OjM5IC0wNzAwLCBC
+YXJ0IFZhbiBBc3NjaGUgd3JvdGU6DQo+IE9uIDIwMjAtMDctMDYgMDY6MjEsIFN0YW5sZXkgQ2h1
+IHdyb3RlOg0KPiA+IElmIHNvbWVob3cgbm8gaW50ZXJydXB0IG5vdGlmaWNhdGlvbiBpcyByYWlz
+ZWQgZm9yIGEgY29tcGxldGVkIHJlcXVlc3QNCj4gPiBhbmQgaXRzIGRvb3JiZWxsIGJpdCBpcyBj
+bGVhcmVkIGJ5IGhvc3QsIFVGUyBkcml2ZXIgbmVlZHMgdG8gY2xlYW51cA0KPiA+IGl0cyBvdXRz
+dGFuZGluZyBiaXQgaW4gdWZzaGNkX2Fib3J0KCkuDQo+IA0KPiBIb3cgaXMgaXQgcG9zc2libGUg
+dGhhdCBubyBpbnRlcnJ1cHQgbm90aWZpY2F0aW9uIGlzIHJhaXNlZCBmb3IgYSBjb21wbGV0ZWQN
+Cj4gcmVxdWVzdD8gSXMgdGhpcyB0aGUgcmVzdWx0IG9mIGEgaGFyZHdhcmUgc2hvcnRjb21pbmcg
+b3IgcmF0aGVyIHRoZSByZXN1bHQNCj4gb2YgaG93IHRoZSBVRlMgZHJpdmVyIHdvcmtzPyBJbiB0
+aGUgbGF0dGVyIGNhc2UsIGlzIHRoaXMgcGF0Y2ggcGVyaGFwcyBhDQo+IHdvcmthcm91bmQ/IElm
+IHNvLCBoYXMgaXQgYmVlbiBjb25zaWRlcmVkIHRvIGZpeCB0aGUgcm9vdCBjYXVzZSBpbnN0ZWFk
+IG9mDQo+IGltcGxlbWVudGluZyBhIHdvcmthcm91bmQ/DQoNCkFjdHVhbGx5IHRoaXMgZmFpbCBp
+cyB0cmlnZ2VyZWQgYnkgImVycm9yIGluamVjdGlvbiIgdG8gcHJvZHVjZSBhDQpjb21tYW5kIHRp
+bWVvdXQgZXZlbnQgZm9yIGNoZWNraW5nIGlmIGFueXRoaW5nIGNhbiBiZSBpbXByb3ZlZCBvciBm
+aXhlZC4NCg0KSSBhZ3JlZSB0aGF0ICJubyBpbnRlcnJ1cHQgbm90aWZpY2F0aW9uIiBtYXkgYmUg
+c29tZXRoaW5nIHdyb25nIGluDQpoYXJkd2FyZSBhbmQgdGhlIHJvb3QgY2F1c2Ugc2hhbGwgYmUg
+Zml4ZWQgaW4gdGhlIGhpZ2hlc3QgcHJpb3JpdHkuDQpIb3dldmVyIGZyb20gdGhpcyBpbmplY3Rp
+b24sIHdlIGZvdW5kIHVmc2hjZF9hYm9ydCgpIGluZGVlZCBoYXMgYSBkZWZlY3QNCmZsb3cgZm9y
+IGEgY29ybmVyIGNhc2UsIHNvIHdlIGFyZSBsb29raW5nIGZvciB0aGUgc29sdXRpb24gdG8gZml4
+IHRoZQ0KImhvbGUiLg0KDQpXaGF0IHdvdWxkIHlvdSB0aGluayBpZiBMaW51eCBkcml2ZXIgc2hh
+bGwgY29uc2lkZXIgdGhpcyBjYXNlPyBJZiB0aGlzDQppcyBub3QgbmVjZXNzYXJ5LCBJIHdvdWxk
+IGRyb3AgdGhpcyBwYXRjaCA6ICkNCg0KVGhhbmtzIGEgbG90LA0KU3RhbmxleSBDaHUNCg0KPiAN
+Cj4gSW4gc2VjdGlvbiA3LjIuMyBvZiB0aGUgVUZTIHNwZWNpZmljYXRpb24gSSBmb3VuZCB0aGUg
+Zm9sbG93aW5nIGFib3V0IGhvdw0KPiB0byBwcm9jZXNzIHJlcXVlc3QgY29tcGxldGlvbnM6ICJT
+b2Z0d2FyZSBkZXRlcm1pbmVzIGlmIG5ldyBUUnMgaGF2ZQ0KPiBjb21wbGV0ZWQgc2luY2Ugc3Rl
+cCAjMiwgYnkgcmVwZWF0aW5nIG9uZSBvZiB0aGUgdHdvIG1ldGhvZHMgZGVzY3JpYmVkIGluDQo+
+IHN0ZXAgIzIuIElmIG5ldyBUUnMgaGF2ZSBjb21wbGV0ZWQsIHNvZnR3YXJlIHJlcGVhdHMgdGhl
+IHNlcXVlbmNlIGZyb20gc3RlcA0KPiAjMy4iIElzIHN1Y2ggYSBsb29wIHBlcmhhcHMgbWlzc2lu
+ZyBmcm9tIHRoZSBMaW51eCBVRlMgZHJpdmVyPw0KPiANCj4gVGhhbmtzLA0KPiANCj4gQmFydC4N
+Cg0K
 
