@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FECAC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBD7C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB1B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBE02072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CDizKSdk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sxVaMuAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgGMMm0 (ORCPT
+        id S1729823AbgGMMma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:42:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35377 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729802AbgGMMmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:42:17 -0400
+        Mon, 13 Jul 2020 08:42:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:23111 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729805AbgGMMmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:42:21 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594644136; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1594644141; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=tpgQ7B5Zbt4hN4/eKtYhJl7sr6zLMdxXioEU62OLUCo=; b=CDizKSdkvkHAHNwt4YMmp6nr2KCXwh77rALfip3J2vHb+m997p5HnIFywBH9Af252GpvDB9j
- WrQBQ1lkb4Aardp+E+5/DTYqgjX4FBdJj72jRx8SAWaoW+EVvw0Ds85WNwJQ0PxOWvR/iMI6
- lrZPffk43GG9MqiTajEPyQsO948=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ bh=8iidDXtODABGvQpH1ZOjB+bZqANOW83DMaIoVI6ViP4=; b=sxVaMuABwB5094okMto4Ph5x+yorH1nAe5eE+a848Rpw0e2j1Q7npmL4ApzqbDyq3exi2t5m
+ KrqR5vrb2YZViq0AZ9q5TOUBfGQjbxEMO4UIfrdTBIiVI/IkZaRtnxmZ8OX2KbLOOO+1ETl4
+ W01IeaWtzQn4884YZZkDwVKCYCs=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f0c56a82991e765cd11df7f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 12:42:16
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f0c56ac10127684904709e5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 12:42:20
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 373A1C433AD; Mon, 13 Jul 2020 12:42:15 +0000 (UTC)
+        id 0D848C4344A; Mon, 13 Jul 2020 12:42:20 +0000 (UTC)
 Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A87F4C43391;
-        Mon, 13 Jul 2020 12:42:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A87F4C43391
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BE17C433AF;
+        Mon, 13 Jul 2020 12:42:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4BE17C433AF
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
 From:   Akhil P Oommen <akhilpo@codeaurora.org>
@@ -55,9 +54,9 @@ Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
         smasetty@codeaurora.org, devicetree@vger.kernel.org,
         mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
         viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com
-Subject: [PATCH v5 4/6] arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
-Date:   Mon, 13 Jul 2020 18:11:44 +0530
-Message-Id: <1594644106-22449-5-git-send-email-akhilpo@codeaurora.org>
+Subject: [PATCH v5 5/6] arm64: dts: qcom: sc7180: Add interconnects property for GPU
+Date:   Mon, 13 Jul 2020 18:11:45 +0530
+Message-Id: <1594644106-22449-6-git-send-email-akhilpo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
 References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
@@ -68,73 +67,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sharat Masetty <smasetty@codeaurora.org>
 
-This patch adds the interconnects property for the gpu node and the
-opp-peak-kBps property to the opps of the gpu opp table. This should
-help enable DDR bandwidth scaling dynamically and proportionally to the
-GPU frequency.
+This patch adds the interconnects property to the GPU node. This enables
+the GPU->DDR path bandwidth voting.
 
 Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31..5e9561a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3515,42 +3515,51 @@
- 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217..a567297 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1470,6 +1470,8 @@
+ 			operating-points-v2 = <&gpu_opp_table>;
  			qcom,gmu = <&gmu>;
  
-+			interconnects = <&mem_noc MASTER_GFX3D &mem_noc SLAVE_EBI1>;
++			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
 +
  			gpu_opp_table: opp-table {
  				compatible = "operating-points-v2";
  
- 				opp-710000000 {
- 					opp-hz = /bits/ 64 <710000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+					opp-peak-kBps = <7216000>;
- 				};
- 
- 				opp-675000000 {
- 					opp-hz = /bits/ 64 <675000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					opp-peak-kBps = <7216000>;
- 				};
- 
- 				opp-596000000 {
- 					opp-hz = /bits/ 64 <596000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					opp-peak-kBps = <6220000>;
- 				};
- 
- 				opp-520000000 {
- 					opp-hz = /bits/ 64 <520000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					opp-peak-kBps = <6220000>;
- 				};
- 
- 				opp-414000000 {
- 					opp-hz = /bits/ 64 <414000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					opp-peak-kBps = <4068000>;
- 				};
- 
- 				opp-342000000 {
- 					opp-hz = /bits/ 64 <342000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					opp-peak-kBps = <2724000>;
- 				};
- 
- 				opp-257000000 {
- 					opp-hz = /bits/ 64 <257000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					opp-peak-kBps = <1648000>;
- 				};
- 			};
- 		};
 -- 
 2.7.4
 
