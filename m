@@ -2,119 +2,62 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16190C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1529BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC992065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2jn9oc2"
+	by mail.kernel.org (Postfix) with ESMTP id DD10820578
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbgGMPDI (ORCPT
+        id S1729869AbgGMPDX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:03:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgGMPDI (ORCPT
+        Mon, 13 Jul 2020 11:03:23 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:62706 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729593AbgGMPDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:03:08 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FB2C08C5DB
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:03:08 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f139so13493357wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hj7ei/4/U37aYVFzIdiyRob1Gsg4Hui2K44614n1iwI=;
-        b=i2jn9oc2zspqjTVmpnmwS8848CCRuvu5xsFu2vw3OlfkIRw7Fr77HxcgYjRAE3Mcyt
-         XR7yS0fAqYT11ZspWkctOR1T6sUV0edIcASIZGPkgG5KiUkwqfj4mxdtR24+h1qNsXxN
-         mSKEpGM4GcfiIjZwQvj1SesY0iKuwzcXeoZhrGx0oOfDhVnYzgdcyPwn93Esm1bxPHPR
-         +Rjuax6h6eB+6Z/9CbF4kMjHffa8MbtXlMJrTqUNHOwHy15TFfWSSaHhqTzuRgLYLDSF
-         oUm93NAXxBB6D2mhQntN0BOXU96MYVIZlw0MrXH2jTFNgO34gR1B/1beSyJUIS6ml78h
-         iN5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hj7ei/4/U37aYVFzIdiyRob1Gsg4Hui2K44614n1iwI=;
-        b=nGYGogoquweoFLdqFHZLNtoYRZ6CE04y+wpmWjk8WFREmJKz97aI6hj+QNHyn7Nx9n
-         Wa7DWWqB60wLPA5TDvea88evFWSH2u1RtuwV946tKJ8i7OP1waFC1DyO2eBpeUcFOTUA
-         nA4a3ys7C0OnPzKlv+f2ccdur7T2+roVdx254d6qwpPl/mn9woHUV8on4Nq1Y6h11++6
-         AUOWoonMMOmmt9yp2VfHQ4WuKjs1lXpb8Xym7hfduWu/1Bv6+gSiFcAGJEv/gjLLztgx
-         imQv80TOavmCkGmcGee+0jFykdkMOS5K/gO//c5k3jNoHO6Cu7JbglDyyVoyr+B8kReb
-         9rBQ==
-X-Gm-Message-State: AOAM5332+tt586IunC9Djjp+fDuhZmTP/+NsnC2VfOvMHbNBSJaymjFW
-        rWckdQajZVQcOtKAO7OgNSaKAZd46Bs=
-X-Google-Smtp-Source: ABdhPJw65cTT/euYaJOY4JshtT6+GDtwu+71TCGdRUmekWqgIVNWBBETTu76zAOQEbJHhJLgbIME6w==
-X-Received: by 2002:a1c:e285:: with SMTP id z127mr353808wmg.162.1594652586275;
-        Mon, 13 Jul 2020 08:03:06 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
-        by smtp.googlemail.com with ESMTPSA id v6sm24316475wrr.85.2020.07.13.08.03.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 08:03:05 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring falling
- temperature
-To:     Thara Gopinath <thara.gopinath@linaro.org>, rui.zhang@intel.com,
-        robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
-Date:   Mon, 13 Jul 2020 17:03:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 13 Jul 2020 11:03:23 -0400
+X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jul 2020 11:03:22 EDT
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21804978-1500050 
+        for multiple; Mon, 13 Jul 2020 15:46:35 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200710135154.181454-1-thara.gopinath@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200713142551.423649-1-colin.king@canonical.com>
+References: <20200713142551.423649-1-colin.king@canonical.com>
+Subject: Re: [PATCH][next] drm/i915/selftest: fix an error return path where err is not being set
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Colin King <colin.king@canonical.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Date:   Mon, 13 Jul 2020 15:46:35 +0100
+Message-ID: <159465159599.23097.17150763550392763778@build.alporthouse.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2020 15:51, Thara Gopinath wrote:
-> Thermal framework today supports monitoring for rising temperatures and
-> subsequently initiating cooling action in case of a thermal trip point
-> being crossed. There are scenarios where a SoC need some warming action to
-> be activated if the temperature falls below a cetain permissible limit.
-> Since warming action can be considered mirror opposite of cooling action,
-> most of the thermal framework can be re-used to achieve this.
+Quoting Colin King (2020-07-13 15:25:51)
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This patch series is yet another attempt to add support for monitoring
-> falling temperature in thermal framework. Unlike the first attempt[1]
-> (where a new property was added to thermal trip point binding to indicate
-> direction of temperature monitoring), this series introduces a new trip
-> point type (THERMAL_TRIP_COLD) to indicate a trip point at which falling
-> temperature monitoring must be triggered. This patch series uses Daniel
-> Lezcano's recently added thermal genetlink interface[2] to notify userspace
-> of falling temperature and rising temperature at the cold trip point. This
-> will enable a user space engine to trigger the relevant mitigation for
-> falling temperature. At present, no support is added to any of the thermal
-> governors to monitor and mitigate falling temperature at the cold trip
-> point;rather all governors return doing nothing if triggered for a cold
-> trip point. As future extension, monitoring of falling temperature can be
-> added to the relevant thermal governor. 
+> There is an error condition where err is not being set and an uninitialized
+> garbage value in err is being returned.  Fix this by assigning err to an
+> appropriate error return value before taking the error exit path.
+> 
+> Addresses-Coverity: ("Uninitialized scalar value")
+> Fixes: ed2690a9ca89 ("drm/i915/selftest: Check that GPR are restored across noa_wait")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-I agree we need a cold trip point in order to introduce the functioning
-temperature range in the thermal framework.
-
-Rui, what is your opinion ?
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks, pushed.
+-Chris
