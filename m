@@ -2,172 +2,207 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB33C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 260C420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594668550;
-	bh=uNdCv+lhQhhcGFmWOeLPFSe0Uca4R0NceqtWpFn8tYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JFUGh0Yml/2QjAsiuRR+bMbeGTFwbcegqLtJ3TfoMxLYFZ9y4qKkcakpJH3yXcjso
-	 83z1ORJdym3/LM5RLVQJziVAYABlA/9qpf/oBWHlNlZok3tWuqSH7yTPcnK92GuKpY
-	 SWu6JWhJLs9ctzwOVl+NJz0hF4QIKEcA53eJPR2Y=
+	by mail.kernel.org (Postfix) with ESMTP id CEFE120771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGMT3I (ORCPT
+        id S1726617AbgGMT3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:29:08 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33375 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGMT3F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:29:05 -0400
-Received: by mail-il1-f195.google.com with SMTP id a11so12243471ilk.0;
-        Mon, 13 Jul 2020 12:29:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0xhnbPe/d0IoJEyGabZetRlZ0skbc4H/mFckdi1EPy0=;
-        b=b6tPECtrqPSfx1D0THC+NnMyvxpQ/S5qNJbNKsuFM9y5YVzcUlQCQbQf7Fl05HiGeC
-         v8wUGrdWRwsq6XyfhwUdK4CBv/P4EpbTavQCiTfn35wPlZua2L7TRM0qD8l0rk4sM+AN
-         oamR/+GV1gCVXo94aV21fWLhP6Btz6l4EPzg35XtPM4Vx+zCPleEvRKU6Ao3+dvwEXiJ
-         eicK8XRbqhUI01fg9VW+8ClzxiXuPHcSk4HpHbYZS3HtlpjNwPp/pH5i5BJTDYy5a8A7
-         b17a6HLOWYNJsHJZ6KgXyjVPfgkzrKLNo7zU4JFCjqNNCehbwLYXKtfnWKtnwQEhoR0/
-         XmxA==
-X-Gm-Message-State: AOAM531ZjqbURmlgl5QGrTr7PTKDPc8F7x9khbZkm7roBSlqged1z3ZL
-        ISmBcLiLuVzGAWYp+wZWrg==
-X-Google-Smtp-Source: ABdhPJwcnmo4dFijfK2zsP8oqdDChinnbZfr1/3zp9e1DRKY9KOL8Cee8Awl5jrCTQGoYDftFXQVTg==
-X-Received: by 2002:a92:1bdb:: with SMTP id f88mr1343200ill.233.1594668543927;
-        Mon, 13 Jul 2020 12:29:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l13sm8012974iob.28.2020.07.13.12.29.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:29:03 -0700 (PDT)
-Received: (nullmailer pid 598129 invoked by uid 1000);
-        Mon, 13 Jul 2020 19:29:02 -0000
-Date:   Mon, 13 Jul 2020 13:29:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v3 6/8] dt-bindings: microchip,sparx5-spi-mux: Add Sparx5
- SPI mux driver bindings
-Message-ID: <20200713192902.GA587038@bogus>
-References: <20200702101331.26375-1-lars.povlsen@microchip.com>
- <20200702101331.26375-7-lars.povlsen@microchip.com>
+        Mon, 13 Jul 2020 15:29:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33435 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGMT3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 15:29:04 -0400
+IronPort-SDR: mrhf7rNUC2PxeAUSiRbHkUa6TJXARkYUVczThuZRGn4ISqvksSUu8os3hD30XRXalc7CPEpdZx
+ MSUwJGITUQ5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128278626"
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="128278626"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 12:29:04 -0700
+IronPort-SDR: 7nnU7K24gRkjFEh2UkU1jeypUQx/rdcI1r7cJKYuqWXmY/BpvD9uFLeYYhdapQ2GcjQoBslpu0
+ A9E/PUCiX57A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
+   d="scan'208";a="485605105"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Jul 2020 12:29:01 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jv48L-001eBY-Aq; Mon, 13 Jul 2020 22:29:01 +0300
+Date:   Mon, 13 Jul 2020 22:29:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 1/3] devres: provide devm_krealloc()
+Message-ID: <20200713192901.GD3703480@smile.fi.intel.com>
+References: <20200713145934.18243-1-brgl@bgdev.pl>
+ <20200713145934.18243-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702101331.26375-7-lars.povlsen@microchip.com>
+In-Reply-To: <20200713145934.18243-2-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:13:29PM +0200, Lars Povlsen wrote:
-> The Microchip Sparx5 SPI controller has two bus segments, and use this
-> mux to control the bus interface mapping for any chip selects. This
-> decribes the bindings used to configure the mux driver.
+On Mon, Jul 13, 2020 at 04:59:32PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Implement the managed variant of krealloc(). This function works with
+> all memory allocated by devm_kmalloc() (or devres functions using it
+> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> 
+> Managed realloc'ed chunks can be manually released with devm_kfree().
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../mux/microchip,sparx5-spi-mux.yaml         | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
+>  .../driver-api/driver-model/devres.rst        |  1 +
+>  drivers/base/devres.c                         | 67 +++++++++++++++++++
+>  include/linux/device.h                        |  2 +
+>  3 files changed, 70 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
-> new file mode 100644
-> index 0000000000000..b0ce3b15a69e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mux/microchip,sparx5-spi-mux.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip Sparx5 SPI mux
-> +
-> +maintainers:
-> +  - Lars Povlsen <lars.povlsen@microchip.com>
-> +
-> +description: |
-> +  The Microchip Sparx5 SPI controller has two bus segments. In order
-> +  to switch between the appropriate bus for any given SPI slave
-> +  (defined by a chip select), this mux driver is used. The device tree
-> +  node for the mux will define the bus mapping for any chip
-> +  selects. The default bus mapping for any chip select is "0", such
-> +  that only non-default mappings need to be explicitly defined.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,sparx5-spi-mux
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  '#mux-control-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  "^mux@[0-9a-f]$":
-> +    type: object
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Chip select to define bus mapping for.
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      microchip,bus-interface:
-> +        description:
-> +          The bus interface to use for this chip select.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1]
-> +
-> +    required:
-> +      - reg
-> +      - microchip,bus-interface
-> +
-> +examples:
-> +  - |
-> +    mux: mux-controller {
-> +      compatible = "microchip,sparx5-spi-mux";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      #mux-control-cells = <0>;
+> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> index eaaaafc21134f..f318a5c0033c1 100644
+> --- a/Documentation/driver-api/driver-model/devres.rst
+> +++ b/Documentation/driver-api/driver-model/devres.rst
+> @@ -354,6 +354,7 @@ MEM
+>    devm_kmalloc()
+>    devm_kmalloc_array()
+>    devm_kmemdup()
+> +  devm_krealloc()
+>    devm_kstrdup()
+>    devm_kvasprintf()
+>    devm_kzalloc()
+> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+> index ed615d3b9cf15..1775d35462300 100644
+> --- a/drivers/base/devres.c
+> +++ b/drivers/base/devres.c
+> @@ -837,6 +837,73 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+>  }
+>  EXPORT_SYMBOL_GPL(devm_kmalloc);
+>  
+> +/**
+> + * devm_krealloc - Resource-managed krealloc()
+> + * @dev: Device to re-allocate memory for
+> + * @ptr: Pointer to the memory chunk to re-allocate
+> + * @new_size: New allocation size
+> + * @gfp: Allocation gfp flags
+> + *
+> + * Managed krealloc(). Resizes the memory chunk allocated with devm_kmalloc().
+> + * Behaves similarly to regular krealloc(): if @ptr is NULL or ZERO_SIZE_PTR,
+> + * it's the equivalent of devm_kmalloc(). If new_size is zero, it returns
 
-How is this mux accessed? You have no control interface defined.
+'it frees the previously allocated memory and returns'
 
-> +      mux@e {
-> +        reg = <14>;
-> +        microchip,bus-interface = <1>;
+> + * ZERO_SIZE_PTR. This function doesn't change the order in which the release
+> + * callback for the re-alloc'ed devres will be called (except when falling back
+> + * to devm_kmalloc()
 
-This looks odd. I take it that there's 2 muxes for this h/w? If so then 
-#mux-control-cells should be 1 and the cell value can be whatever you 
-want that is meaningful for the mux controller. Could be 0,1 or perhaps 
-0xe if that's more useful.
+'or when freeing resources when new_size is zero'
 
-Rob
+> ). The contents of the memory are preserved up to the
+> + * lesser of new and old sizes.
+> + */
+> +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
+> +{
+> +	struct devres *old_dr, *new_dr;
+> +	struct list_head old_head;
+> +	unsigned long flags;
+> +	size_t total_size;
+> +	void *ret = NULL;
+> +
+> +	if (unlikely(!new_size)) {
+> +		devm_kfree(dev, ptr);
+> +		return ZERO_SIZE_PTR;
+> +	}
+> +
+> +	if (unlikely(ZERO_OR_NULL_PTR(ptr)))
+> +		return devm_kmalloc(dev, new_size, gfp);
+> +
+> +	if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
+> +		/*
+> +		 * We cannot reliably realloc a const string returned by
+> +		 * devm_kstrdup_const().
+> +		 */
+> +		return NULL;
+> +
+> +	if (!check_dr_size(new_size, &total_size))
+> +		return NULL;
+> +
+> +	spin_lock_irqsave(&dev->devres_lock, flags);
+> +
+> +	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+> +	if (!old_dr) {
+> +		spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +		WARN(1, "Memory chunk not managed or managed by a different device.");
+> +		return NULL;
+> +	}
+> +
+> +	old_head = old_dr->node.entry;
+> +
+> +	new_dr = krealloc(old_dr, total_size, gfp);
+> +	if (!new_dr) {
+> +		spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +		return NULL;
+> +	}
+> +
+> +	if (new_dr != old_dr)
+> +		list_replace(&old_head, &new_dr->node.entry);
+> +
+> +	ret = new_dr->data;
+> +	spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_krealloc);
+> +
+>  /**
+>   * devm_kstrdup - Allocate resource managed space and
+>   *                copy an existing string into that.
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 7322c51e9c0c7..f64f408431593 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -206,6 +206,8 @@ int devres_release_group(struct device *dev, void *id);
+>  
+>  /* managed devm_k.alloc/kfree for device drivers */
+>  void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
+
+> +void *devm_krealloc(struct device *dev, void *ptr, size_t size,
+> +		    gfp_t gfp) __must_check;
+
+Strange indentation, also you can move __must_check to the beginning of the
+declaration.
+
+
+>  __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+>  				     const char *fmt, va_list ap) __malloc;
+>  __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
+> -- 
+> 2.26.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
