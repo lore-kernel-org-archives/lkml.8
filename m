@@ -2,124 +2,300 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F928C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A38C2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oBSA29ZR"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE8620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgGMHEJ (ORCPT
+        id S1728665AbgGMHEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMHEJ (ORCPT
+        Mon, 13 Jul 2020 03:04:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725818AbgGMHEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:04:09 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA505C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:04:08 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a1so15042746ejg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9He2Y/cj2b1yofJp3r0tciWRU0GFm0a2fXfgV5d2ZsM=;
-        b=oBSA29ZRXnyX5uNrdKdKimE/m7zWdZXNnhrXmKWKgnyN/SH230LhrcwzyL4D5IYCjQ
-         q+j9awO4n+F2erswVyiQg/WMcIkxFh/IgNX4JZT8Q8aB3qp0IaeT4wjmr6f/xn1O58TX
-         4LtOfoBBudGY9551aEhRNWgZVLL5lJSfEBVd8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9He2Y/cj2b1yofJp3r0tciWRU0GFm0a2fXfgV5d2ZsM=;
-        b=FMlJV2vfAdC+zopzUy4qHcXT9pTUs9/HmbLovFEUhCfArfBmSd27cliuJv5UYqsVoU
-         4Y1MszZV4+J531JKCxEnVneJz7Y6Gim+CaGwpdFLnlgrHzxUF1XR3xuPVj36pZorMsvr
-         AfrgYhOB5DqgvG5DXE4jrLwXILR5tme2PV+M6zQq1aRQPXn+OPrhp70bjodxmcKfgzP1
-         OBb9mAJT/3oPYF1v4KZvK25MvnzAIag+i6bjxK3lP2Qu817kvAjLutth/wjBmpE2ojQh
-         0MoO2OimubHp2w4JoXDt6rx63OmtB+JncgUi+d/PeBgHx8qPeyG7P/0DUiiOYDOq8SUn
-         A7Ww==
-X-Gm-Message-State: AOAM532ZFxqIwyaAZqnRDH3fo2GbZ6ZteHIdbwhWoC2l1zkS01O301ev
-        a3aMVpdjUFYYO2WLfmCjCXsfBpxCOmVdNYiIlhsLcBPYZMs2bQ==
-X-Google-Smtp-Source: ABdhPJxgek6wFGTNWYGWXYoVuA91A7Bl2JN7v5ipfo4T7zContyupAUFj7BG3ePmDatYcqA77vTV3vhHfoLVelT2s64=
-X-Received: by 2002:a17:906:f117:: with SMTP id gv23mr43961935ejb.528.1594623847288;
- Mon, 13 Jul 2020 00:04:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200711064846.16007-1-yong.wu@mediatek.com> <20200711064846.16007-12-yong.wu@mediatek.com>
-In-Reply-To: <20200711064846.16007-12-yong.wu@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Mon, 13 Jul 2020 15:03:31 +0800
-Message-ID: <CANdKZ0e3=AeCxpSHVk7daUE01L7AgJYmZ7jeOQDT169SaowL-g@mail.gmail.com>
-Subject: Re: [PATCH 11/21] iommu/mediatek: Add power-domain operation
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Mon, 13 Jul 2020 03:04:49 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06D72kwV192803;
+        Mon, 13 Jul 2020 03:04:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3277k8b6je-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 03:04:32 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06D73Eo4195049;
+        Mon, 13 Jul 2020 03:04:31 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3277k8b6hm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 03:04:31 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06D71ptl000335;
+        Mon, 13 Jul 2020 07:04:29 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 327527swte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 07:04:29 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06D73CKd63242314
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 07:03:12 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53897AE057;
+        Mon, 13 Jul 2020 07:03:12 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D68F3AE053;
+        Mon, 13 Jul 2020 07:03:07 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.203.145])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 13 Jul 2020 07:03:07 +0000 (GMT)
+Date:   Mon, 13 Jul 2020 10:03:04 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Jia He <justin.he@arm.com>,
         Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        iommu@lists.linux-foundation.org,
-        =?UTF-8?B?WW91bGluIFBlaSAo6KO05Y+L5p6XKQ==?= 
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, cui.zhang@mediatek.com,
-        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        peterz@infradead.org, vishal.l.verma@intel.com,
+        dave.hansen@linux.intel.com, ard.biesheuvel@linaro.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, hch@lst.de, joao.m.martins@oracle.com
+Subject: Re: [PATCH v2 08/22] memblock: Introduce a generic
+ phys_addr_to_target_node()
+Message-ID: <20200713070304.GC11000@linux.ibm.com>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457120893.754248.7783260004248722175.stgit@dwillia2-desk3.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159457120893.754248.7783260004248722175.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_04:2020-07-10,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 phishscore=0
+ spamscore=0 adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 2:51 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> In the previous SoC, the M4U HW is in the EMI power domain which is
-> always on. the latest M4U is in the display power domain which may be
-> turned on/off, thus we have to add pm_runtime interface for it.
->
-> we should enable its power before M4U hw initial. and disable it after HW
-> initialize.
->
-> When the engine work, the engine always enable the power and clocks for
-> smi-larb/smi-common, then the M4U's power will always be powered on
-> automatically via the device link with smi-common.
->
-> Note: we don't enable the M4U power in iommu_map/unmap for tlb flush.
-> If its power already is on, of course it is ok. if the power is off,
-> the main tlb will be reset while M4U power on, thus the tlb flush while
-> m4u power off is unnecessary, just skip it.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Hi Dan,
+
+On Sun, Jul 12, 2020 at 09:26:48AM -0700, Dan Williams wrote:
+> Similar to how generic memory_add_physaddr_to_nid() interrogates
+> memblock data for numa information, introduce
+> get_reserved_pfn_range_from_nid() to enable the same operation for
+> reserved memory ranges. Example memory ranges that are reserved, but
+> still have associated numa-info are persistent memory or Soft Reserved
+> (EFI_MEMORY_SP) memory.
+
+Here again, I would prefer to add a weak default for
+phys_to_target_node() because the "generic" implementation is not really
+generic.
+
+The fallback to reserved ranges is x86 specfic because on x86 most of the
+reserved areas is not in memblock.memory. AFAIK, no other architecture
+does this.
+
+And x86 anyway has implementation of phys_to_target_node().
+
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Jia He <justin.he@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/iommu/mtk_iommu.c | 54 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 47 insertions(+), 7 deletions(-)
-> ...
->         for_each_m4u(data) {
-> +               /* skip tlb flush when pm is not active */
-> +               if (pm_runtime_enabled(data->dev) &&
-> +                   !pm_runtime_active(data->dev))
-> +                       continue;
+>  include/linux/memblock.h |    4 +++
+>  include/linux/mm.h       |    2 +
+>  include/linux/numa.h     |    2 +
+>  mm/memblock.c            |   22 ++++++++++++++--
+>  mm/page_alloc.c          |   63 +++++++++++++++++++++++++++++++++++++++++++++-
+>  5 files changed, 87 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 017fae833d4a..0655e8376c72 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -234,6 +234,10 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
+>  	for (i = -1, __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid); \
+>  	     i >= 0; __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid))
+>  
+> +#define for_each_reserved_pfn_range(i, nid, p_start, p_end, p_nid)		\
+> +	for (i = -1, __next_reserved_pfn_range(&i, nid, p_start, p_end, p_nid); \
+> +	     i >= 0; __next_reserved_pfn_range(&i, nid, p_start, p_end, p_nid))
 > +
+>  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+>  void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+>  				  unsigned long *out_spfn,
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 1e76ee5da20b..82dac9f42c46 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2438,6 +2438,8 @@ extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>  
+>  extern void get_pfn_range_for_nid(unsigned int nid,
+>  			unsigned long *start_pfn, unsigned long *end_pfn);
+> +extern void get_reserved_pfn_range_for_nid(unsigned int nid,
+> +			unsigned long *start_pfn, unsigned long *end_pfn);
+>  extern unsigned long find_min_pfn_with_active_regions(void);
+>  extern void sparse_memory_present_with_active_regions(int nid);
+>  
+> diff --git a/include/linux/numa.h b/include/linux/numa.h
+> index 5d25c5de1322..52b2430bc759 100644
+> --- a/include/linux/numa.h
+> +++ b/include/linux/numa.h
+> @@ -19,7 +19,7 @@ int numa_map_to_online_node(int node);
+>  
+>  /*
+>   * Optional architecture specific implementation, users need a "depends
+> - * on $ARCH"
+> + * on $ARCH" or depends on CONFIG_MEMBLOCK_NUMA_INFO
+>   */
+>  int phys_to_target_node(phys_addr_t addr);
+>  #else
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 39aceafc57f6..43c3abab705e 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1200,11 +1200,11 @@ void __init_memblock __next_mem_range_rev(u64 *idx, int nid,
+>  /*
+>   * Common iterator interface used to define for_each_mem_pfn_range().
+>   */
+> -void __init_memblock __next_mem_pfn_range(int *idx, int nid,
+> +static void __init_memblock __next_memblock_pfn_range(int *idx, int nid,
+>  				unsigned long *out_start_pfn,
+> -				unsigned long *out_end_pfn, int *out_nid)
+> +				unsigned long *out_end_pfn, int *out_nid,
+> +				struct memblock_type *type)
+>  {
+> -	struct memblock_type *type = &memblock.memory;
+>  	struct memblock_region *r;
+>  	int r_nid;
+>  
+> @@ -1230,6 +1230,22 @@ void __init_memblock __next_mem_pfn_range(int *idx, int nid,
+>  		*out_nid = r_nid;
+>  }
+>  
+> +void __init_memblock __next_mem_pfn_range(int *idx, int nid,
+> +				unsigned long *out_start_pfn,
+> +				unsigned long *out_end_pfn, int *out_nid)
+> +{
+> +	__next_memblock_pfn_range(idx, nid, out_start_pfn, out_end_pfn, out_nid,
+> +				  &memblock.memory);
+> +}
+> +
+> +void __init_memblock __next_reserved_pfn_range(int *idx, int nid,
+> +				unsigned long *out_start_pfn,
+> +				unsigned long *out_end_pfn, int *out_nid)
+> +{
+> +	__next_memblock_pfn_range(idx, nid, out_start_pfn, out_end_pfn, out_nid,
+> +				  &memblock.reserved);
+> +}
+> +
+>  /**
+>   * memblock_set_node - set node ID on memblock regions
+>   * @base: base of area to set node ID for
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index df8bd169dbb4..94ad77c0c338 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6369,12 +6369,39 @@ void __init_or_memblock get_pfn_range_for_nid(unsigned int nid,
+>  		*start_pfn = 0;
+>  }
+>  
+> +/**
+> + * get_reserved_pfn_range_for_nid - Return the start and end page frames for a node
+> + * @nid: The nid to return the range for. If MAX_NUMNODES, the min and max PFN are returned.
+> + * @start_pfn: Passed by reference. On return, it will have the node start_pfn.
+> + * @end_pfn: Passed by reference. On return, it will have the node end_pfn.
+> + *
+> + * Mostly identical to get_pfn_range_for_nid() except it operates on
+> + * reserved ranges rather than online memory.
+> + */
+> +void __init_or_memblock get_reserved_pfn_range_for_nid(unsigned int nid,
+> +			unsigned long *start_pfn, unsigned long *end_pfn)
+> +{
+> +	unsigned long this_start_pfn, this_end_pfn;
+> +	int i;
+> +
+> +	*start_pfn = -1UL;
+> +	*end_pfn = 0;
+> +
+> +	for_each_mem_pfn_range(i, nid, &this_start_pfn, &this_end_pfn, NULL) {
+> +		*start_pfn = min(*start_pfn, this_start_pfn);
+> +		*end_pfn = max(*end_pfn, this_end_pfn);
+> +	}
+> +
+> +	if (*start_pfn == -1UL)
+> +		*start_pfn = 0;
+> +}
+> +
+>  /*
+>   * Generic implementation of memory_add_physaddr_to_nid() depends on
+>   * architecture using memblock data for numa information.
+>   */
+>  #ifdef CONFIG_MEMBLOCK_NUMA_INFO
+> -int __init_or_memblock memory_add_physaddr_to_nid(u64 addr)
+> +static int __init_or_memblock __memory_add_physaddr_to_nid(u64 addr)
+>  {
+>  	unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
+>  	int nid;
+> @@ -6384,10 +6411,42 @@ int __init_or_memblock memory_add_physaddr_to_nid(u64 addr)
+>  		if (pfn >= start_pfn && pfn <= end_pfn)
+>  			return nid;
+>  	}
+> +	return NUMA_NO_NODE;
+> +}
+> +
+> +int __init_or_memblock memory_add_physaddr_to_nid(u64 addr)
+> +{
+> +	int nid = __memory_add_physaddr_to_nid(addr);
+> +
+>  	/* Default to node0 as not all callers are prepared for this to fail */
+> -	return 0;
+> +	if (nid == NUMA_NO_NODE)
+> +		return 0;
+> +	return nid;
+>  }
+>  EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> +
+> +int __init_or_memblock phys_to_target_node(u64 addr)
+> +{
+> +	unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
+> +	int nid = __memory_add_physaddr_to_nid(addr);
+> +
+> +	if (nid != NUMA_NO_NODE)
+> +		return nid;
+> +
+> +	/*
+> +	 * Search reserved memory ranges since the memory address does
+> +	 * not appear to be online
+> +	 */
+> +	for_each_possible_node(nid) {
+> +		if (node_online(nid))
+> +			continue;
+> +		get_reserved_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
+> +		if (pfn >= start_pfn && pfn <= end_pfn)
+> +			return nid;
+> +	}
+> +	return NUMA_NO_NODE;
+> +}
+> +EXPORT_SYMBOL_GPL(phys_to_target_node);
+>  #endif /* CONFIG_MEMBLOCK_NUMA_INFO */
+>  
+>  /*
+> 
 
-pm_runtime_active(dev) == false implies dev->power.disable_depth == 0,
-which implies pm_runtime_enabled(dev) == true, so the
-pm_runtime_enabled(data->dev) can be omitted here.
-
->                 spin_lock_irqsave(&data->tlb_lock, flags);
->                 writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0,
->                                data->base + data->plat_data->inv_sel_reg);
-> ...
+-- 
+Sincerely yours,
+Mike.
