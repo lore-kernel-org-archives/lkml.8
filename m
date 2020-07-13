@@ -2,116 +2,73 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44846C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAACEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6942068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6C8206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594630579;
+	bh=Bj5vZ3+CTnRBIkKiuUpgL9L/ChDAOAHz3wVUXrfL5p4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O5dD3ft3C3WmKG8lFJyOrS9KmRRJTXzPYSVhpunmYqOGBI5oWutlqJ47rMGNmFGNK
+	 HDM+4Q/n7dx7woi6Lj9F23wA2fKan4q7eVNl8+oa5qm5TiDcnm8vweerbZ2BLA9tEh
+	 xuKy8D/A6t3kuNTouzzWgW4lucwFjBgYoKDv5ue8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgGMIzb (ORCPT
+        id S1728950AbgGMI4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:55:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:48364 "EHLO foss.arm.com"
+        Mon, 13 Jul 2020 04:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgGMIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:55:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0267E30E;
-        Mon, 13 Jul 2020 01:55:30 -0700 (PDT)
-Received: from [10.37.12.45] (unknown [10.37.12.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95A343F7D8;
-        Mon, 13 Jul 2020 01:55:26 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, k.konieczny@samsung.com,
-        krzk@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com,
-        b.zolnierkie@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
- <20200703062622.11773-1-cw00.choi@samsung.com>
- <20200703123346.6fy6i33ks6nox46a@macmini.local>
- <a3339c58-6350-9298-6053-9dc021170048@arm.com>
- <20200710151233.ci5c4rgwb64eswy7@macmini.local>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <fd482a4b-305b-5332-2f3e-f204018cc7b1@arm.com>
-Date:   Mon, 13 Jul 2020 09:55:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726077AbgGMI4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:56:18 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304F02068F;
+        Mon, 13 Jul 2020 08:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594630577;
+        bh=Bj5vZ3+CTnRBIkKiuUpgL9L/ChDAOAHz3wVUXrfL5p4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZWxkQPasQCfurIkSzXVuGME7W2SgViBtta63DRt1v/8fyz1f21eXVKH5KXkSuraeq
+         vpn84Pq914TxRtejYxJFCS1n2hdIqe5aJZD0EDPA4fq23BgbZ4LIl55LSFTHEB6n0X
+         XO1XE9g1qjZqRyblXuhZTlYKi0iuGbeedHg2wzZE=
+Date:   Mon, 13 Jul 2020 16:56:13 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Wasim Khan <wasim.khan@oss.nxp.com>
+Cc:     robh+dt@kernel.org, zhiqiang.hou@nxp.com, V.sethi@nxp.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wasim Khan <wasim.khan@nxp.com>
+Subject: Re: [PATCH] arm64: dts: lx2160a: Increase configuration space size
+Message-ID: <20200713085612.GH15718@dragon>
+References: <1594374704-11323-1-git-send-email-wasim.khan@oss.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710151233.ci5c4rgwb64eswy7@macmini.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594374704-11323-1-git-send-email-wasim.khan@oss.nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Willy
-
-On 7/10/20 4:12 PM, Willy Wolff wrote:
-> Hi Lukasz,
+On Fri, Jul 10, 2020 at 03:21:44PM +0530, Wasim Khan wrote:
+> From: Wasim Khan <wasim.khan@nxp.com>
 > 
-> On 2020-07-08-15-25-03, Lukasz Luba wrote:
->> Hi Willy,
->>
->> On 7/3/20 1:33 PM, Willy Wolff wrote:
->>> Hi Chanwoo,
->>>
->>> I think it doesn't help on the benchmark I suggested that is doing only memory
->>> accesses. With both timer, I have the same timing.
->>>
->>> To test the benchmark with these new patches about timer:
->>>
->>> git clone https://github.com/wwilly/benchmark.git \
->>>     && cd benchmark \
->>>     && source env.sh \
->>>     && ./bench_build.sh \
->>>     && bash source/scripts/test_dvfs_mem_patched.sh
->>>
->>> The benchmark is set by default to run for 1s, but you can increase this by
->>> tweaking the script as:
->>>
->>> taskset 8 ./bench_install/bin/microbe_cache 33554431 0 9722222 <TIME in sec> ${little_freq}
->>>
->>>
->>> Also, as I reported the issue, would it be possible to add a
->>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com> ?
->>> Many thanks in advance.
->>
->> Thank you for your good work and the benchmark. I hope you will continue
->> to use it and report some issues. I am going to send a follow up patches
->> for the DMC and I will add your 'Reported-by'. In the tests I can see
->> the improvements, but it's worth to consult with you if I understand
->> the new results correctly.
->>
+> lx2160a rev2 requires 4KB space for type0 and 4KB
+> space for type1 iATU window. Increase configuration
+> space size to 8KB to have sufficient space for type0
+> and type1 window.
 > 
-> Thanks for that. I will follow on the other patch thread discussion.
-> 
->> I think there is still some area for improvements in the devfreq and you
->> could find the interesting bits to contribute.
-> 
-> In fact, this benchmark is motivated about part of my PhD research that has just
-> been accepted at LCTES2020: "Performance Optimization on big.LITTLE Architectures:
-> A Memory-latency Aware Approach" at https://dl.acm.org/doi/10.1145/3372799.3394370
-> 
+> Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
+> Reviewed-by: Li Yang <leoyang.li@nxp.com>
+> Acked-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Congrats and thank you for the link (I will read it).
-
-> Basically, it's about snooping latency with "bad" CPU DVFS choice on big.LITTLE
-> systems or more generally SMP/AMP architecture. I'm cleaning up my code and will
-> propose patches as an RFC later. It introduces a new CPU DVFS governor to limit
-> snooping latency.
-
-This is interesting, please add me on CC in the patch set.
-
-Regards,
-Lukasz
+Applied, thanks.
