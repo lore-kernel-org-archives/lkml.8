@@ -2,109 +2,179 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF44C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED12C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2B3520857
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="he9usAea"
+	by mail.kernel.org (Postfix) with ESMTP id 9F9AD214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGMWzW (ORCPT
+        id S1726898AbgGMWz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGMWzQ (ORCPT
+        Mon, 13 Jul 2020 18:55:28 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:53152 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgGMWzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:55:16 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606F3C08C5DD
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:55:16 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e12so11387174qtr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GsatskZeu6cROzCdokNou7WazNDARulkKT+Df6GvP/E=;
-        b=he9usAeaaAWYBNYbwqBs57KtvsMI8J2WQf55xuXlU8oSJyWCF2IdPgt/yKkmTsfzjO
-         yTCyDKME1sqmwOx7tmm+X629+8z+0VkZlU06Ltb1qrh+15GJcr+5EoBEpoW/9Qei6E/8
-         I04ExgRm46UjR3xyYnaBur78tmPWJi+3sdNJx4jUWKfOiwsAP/+ffAxGR7VgD/GfhKlv
-         OAaZ0Iz57cKe8j1NvKOfV6YF57tPi+UKa/wgrI391aASyfypLXF3TaPgXyny7k71dPcr
-         LEHOC97z4rbnZCu67PQmeC5vLTIqgdWyBlAi0wsa9EN283JNABDYmimPPaQVRcZmqxlK
-         XMXQ==
+        Mon, 13 Jul 2020 18:55:23 -0400
+Received: by mail-il1-f199.google.com with SMTP id o17so10724785ilt.19
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:55:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GsatskZeu6cROzCdokNou7WazNDARulkKT+Df6GvP/E=;
-        b=Sa7aXHi3ToJdfbYDEQeFMV7aRRr4dNBsQT9loUK62mS3pJwP8mAf6aXRWcDPb6P8Ab
-         BZ1FMlAARi/aCt343NJK8UyHOXBT4SNn2lTlRK75oavu6zXKFIYTxREELV9wjpfk8hcQ
-         2GJtH7R3Mc+D6SUoo3QWU5dfZYj/N6CyTGXKVzAwfigDdQAf/D6mNEtoV+/mnIOQBPrW
-         7Gk0iKY6ihZ0AMOtKp8cDfU4kjNSuVc92r24OothEFGQ4Ub5fJ53WSdAgFhO5Be/CIxf
-         UWYPkrJmz9HQhQ92ETkMPRgIq/pzIOYXpgLE8KlB1q0b5pKRRnLERLj3U977LGmOyfET
-         Ln6A==
-X-Gm-Message-State: AOAM530ruxnnMDSctjTTKVrxorGq6Khg9/CP6BtWxjlgLPydkW769Gy8
-        pLaqf+wt5fwcUVr9ti/p+TY2yA==
-X-Google-Smtp-Source: ABdhPJwEhNUhM0Sdref5tidyi4ZWkR4rO2FHbelarbgx64sfy4MEmxKm6XdqIsIIguOYsf0aC+fozQ==
-X-Received: by 2002:ac8:311d:: with SMTP id g29mr1789673qtb.54.1594680915659;
-        Mon, 13 Jul 2020 15:55:15 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id f54sm22405752qte.76.2020.07.13.15.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 15:55:15 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 2/3] drm/msm: reset devfreq freq_table/max_state before devfreq_add_device
-Date:   Mon, 13 Jul 2020 18:53:41 -0400
-Message-Id: <20200713225345.20556-3-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200713225345.20556-1-jonathan@marek.ca>
-References: <20200713225345.20556-1-jonathan@marek.ca>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jj1P8fWj+QmBL3oVWARuXgxqUpoC+v1KVkS2xZgmtoo=;
+        b=V/DHnWyMq2qMS29g0l4zOWQPmVBJSGcUJCd4S/RMde5fU37vGkeYawPwU5HIvyZrKR
+         EXEQbbGXm8ULk8LlzClqM2xYYkJoIjDaq2mthsK5g19uiduQieKbCzQjlY3OKIH7k8La
+         XCERtgkaKD00EwDAQrPaz6gdNaBoxD7u6qwWAfoMhDRGCFZeOLXGAgfezdjxeWJQ+1nR
+         erR/HMu00Ske8rQh5BGMsgnAVvfNfTeB3iGL8e2elTCP68Os9SyVbqxnx8xesJFyWdEd
+         7+fBn/dJjK5Eye1OiHETZDkfH6uS0EVS8gSpP/ZcDCG5HzoX9K3/j4icT2rozu1CqLkk
+         DJdA==
+X-Gm-Message-State: AOAM533C/6/+obAW8twh4xArbKUUDCvB8VB6CR/rY+crY1WGipvZJYS2
+        K7NF954Zdl+8ke/n/x3OcYUz/HFGwAWcORkA0sGFcSx2u9SI
+X-Google-Smtp-Source: ABdhPJyLihBN/zrOc2+4DcQ75Lu3lXRHgDuni0saKo5qorRgL58EKUMvVYYpOi/K9c0EoAZ7agMwKX7nIyOyB7ALfV3d216GOxZM
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:640e:: with SMTP id t14mr2067545iog.39.1594680921636;
+ Mon, 13 Jul 2020 15:55:21 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 15:55:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dd436905aa5a9533@google.com>
+Subject: KASAN: use-after-free Read in devlink_health_reporter_destroy
+From:   syzbot <syzbot+dd0040db0d77d52f98a5@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jiri@mellanox.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These never get set back to 0 when probing fails, so an attempt to probe
-again results in broken behavior. Fix the problem by setting thse to zero
-before they are used.
+Hello,
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+syzbot found the following crash on:
+
+HEAD commit:    71930d61 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c8d157100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c5bc87125719cf4
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd0040db0d77d52f98a5
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1421cd3f100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ccfe4f100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dd0040db0d77d52f98a5@syzkaller.appspotmail.com
+
+netdevsim netdevsim3 netdevsim0 (unregistering): unset [1, 0] type 2 family 0 port 6081 - 0
+==================================================================
+BUG: KASAN: use-after-free in devlink_health_reporter_destroy+0x184/0x1d0 net/core/devlink.c:5476
+Read of size 8 at addr ffff88808ca11c20 by task kworker/u4:1/21
+
+CPU: 1 PID: 21 Comm: kworker/u4:1 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ devlink_health_reporter_destroy+0x184/0x1d0 net/core/devlink.c:5476
+ nsim_dev_health_exit+0x8b/0xe0 drivers/net/netdevsim/health.c:317
+ nsim_dev_reload_destroy+0x132/0x1e0 drivers/net/netdevsim/dev.c:1134
+ nsim_dev_reload_down+0x6e/0xd0 drivers/net/netdevsim/dev.c:712
+ devlink_reload+0xc1/0x3a0 net/core/devlink.c:2952
+ devlink_pernet_pre_exit+0xfb/0x190 net/core/devlink.c:9622
+ ops_pre_exit_list net/core/net_namespace.c:176 [inline]
+ cleanup_net+0x451/0xa00 net/core/net_namespace.c:591
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+Allocated by task 6819:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ __devlink_health_reporter_create+0x91/0x2f0 net/core/devlink.c:5359
+ devlink_health_reporter_create+0xa1/0x1d0 net/core/devlink.c:5431
+ nsim_dev_health_init+0x95/0x3a0 drivers/net/netdevsim/health.c:279
+ nsim_dev_probe+0xada/0xf80 drivers/net/netdevsim/dev.c:1086
+ really_probe+0x282/0x8a0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x28d/0x3f0 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xacf/0x1b00 drivers/base/core.c:2680
+ nsim_bus_dev_new drivers/net/netdevsim/bus.c:336 [inline]
+ new_device_store+0x374/0x5c0 drivers/net/netdevsim/bus.c:215
+ bus_attr_store+0x72/0xa0 drivers/base/bus.c:122
+ sysfs_kf_write+0x110/0x160 fs/sysfs/file.c:138
+ kernfs_fop_write+0x268/0x490 fs/kernfs/file.c:315
+ vfs_write+0x2b0/0x6b0 fs/read_write.c:576
+ ksys_write+0x12d/0x250 fs/read_write.c:631
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 21:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ devlink_health_reporter_free net/core/devlink.c:5449 [inline]
+ devlink_health_reporter_put+0xb7/0xf0 net/core/devlink.c:5456
+ __devlink_health_reporter_destroy net/core/devlink.c:5463 [inline]
+ devlink_health_reporter_destroy+0x143/0x1d0 net/core/devlink.c:5475
+ nsim_dev_health_exit+0x8b/0xe0 drivers/net/netdevsim/health.c:317
+ nsim_dev_reload_destroy+0x132/0x1e0 drivers/net/netdevsim/dev.c:1134
+ nsim_dev_reload_down+0x6e/0xd0 drivers/net/netdevsim/dev.c:712
+ devlink_reload+0xc1/0x3a0 net/core/devlink.c:2952
+ devlink_pernet_pre_exit+0xfb/0x190 net/core/devlink.c:9622
+ ops_pre_exit_list net/core/net_namespace.c:176 [inline]
+ cleanup_net+0x451/0xa00 net/core/net_namespace.c:591
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+The buggy address belongs to the object at ffff88808ca11c00
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 32 bytes inside of
+ 512-byte region [ffff88808ca11c00, ffff88808ca11e00)
+The buggy address belongs to the page:
+page:ffffea0002328440 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88808ca11000
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00024ba648 ffffea0002a32788 ffff8880aa000a80
+raw: ffff88808ca11000 ffff88808ca11000 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808ca11b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88808ca11b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88808ca11c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                               ^
+ ffff88808ca11c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88808ca11d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/gpu/drm/msm/msm_gpu.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index a22d30622306..aa9775ab52f0 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -93,7 +93,11 @@ static void msm_devfreq_init(struct msm_gpu *gpu)
- 	/*
- 	 * Don't set the freq_table or max_state and let devfreq build the table
- 	 * from OPP
-+	 * After a deferred probe, these may have be left to non-zero values,
-+	 * so set them back to zero before creating the devfreq device
- 	 */
-+	msm_devfreq_profile.freq_table = NULL;
-+	msm_devfreq_profile.max_state = 0;
- 
- 	gpu->devfreq.devfreq = devm_devfreq_add_device(&gpu->pdev->dev,
- 			&msm_devfreq_profile, DEVFREQ_GOV_SIMPLE_ONDEMAND,
--- 
-2.26.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
