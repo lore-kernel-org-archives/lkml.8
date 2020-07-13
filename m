@@ -2,179 +2,81 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C3DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09377C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4EA20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC2220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AP9wM0pi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L3GiHo57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbgGMNa0 (ORCPT
+        id S1730012AbgGMNaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729852AbgGMNaZ (ORCPT
+        Mon, 13 Jul 2020 09:30:17 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37096 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729872AbgGMNaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:30:25 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD46C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:30:24 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 22so13327606wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gbYmFCX/Ar69E0IhWMGtfk9Pb1qAWqNwvIoVlNOYA2A=;
-        b=AP9wM0piyA/Z0ONPdL/Cr2K6XME27CaBJLTfgYFHac/Exv5jv+xjM4QvDDxvLuKwqN
-         zbFaqJU0fQr0RAX8ebtCPhKE3mrD7F0958tJfYqxhO0FpL7porzzwkfhyz50DrXfqz1N
-         5rR+8eLA7zHtEQNqTY6WC33QVR+RFhZCYvDDbTlnFscWbxqw+dVsH9C4IyGuuI6KBw6T
-         LY+t/qe17lfyFeQLFvJHud9MSVg7p0DSY86PfOnj2sPm9TspmQxmTJy1IzkejP/6n3tt
-         Q2Y61lIVydNzmYqu12fKTxtf/XN+sbFKLqwt68WHfwgmDvf+4rCIh8ofcjSltcDqvbym
-         lMJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gbYmFCX/Ar69E0IhWMGtfk9Pb1qAWqNwvIoVlNOYA2A=;
-        b=mARcLLc7SVtkW0g8Z3pRUJQIKtBMba+kw04N3ECU/i4zoceP9B5S+XZ0fzLeML/du3
-         EHXIWxEuz2iZagrDjHoxrtVHd3RVlOZhkvGhVcVuG7/GX91iO6ZW98OZU4SpJbXXf0un
-         P76PYTvrxY9C5VdLC2yabxjBlh5SI6AHF9+77+3mRffhBXgyFLV5VjRLPVGl94sXzyT0
-         4aOy5m5qzMUb4LzEAH3e9TXqtuD959xaww+iR99pRgpTBsbmq8NZQPeDzZ699ZU+lek8
-         ElobHkrSPWIPVE0uJ1yCqZ/hDRIE8dTyHGIV3y1g0XcSFDNxKrGzA1Cv/eFrt2Ewfb+9
-         Ftbg==
-X-Gm-Message-State: AOAM530zzHhE2A6y/pjZQC5IiC4VTi8tEmTkhUNrdvR+vP8i3iUbdj/S
-        Zj1mv9YGwq4TYXlbt/psd/A+zg==
-X-Google-Smtp-Source: ABdhPJyaZSEh5KhM1jhyc45sWKfw/RFe5p0tMtiIA4bhFyomRIulSGzqbOgyFOA6yYTfQ6wqvIyQmQ==
-X-Received: by 2002:a05:600c:2108:: with SMTP id u8mr20431603wml.189.1594647023604;
-        Mon, 13 Jul 2020 06:30:23 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id m4sm22022713wmi.48.2020.07.13.06.30.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 06:30:22 -0700 (PDT)
-Subject: Re: [PATCH 4/6] interconnect: qcom: Add SM8250 interconnect provider
- driver
-To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200701134259.8055-1-jonathan@marek.ca>
- <20200701134259.8055-5-jonathan@marek.ca>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <5a0eca0e-d496-d8af-ca41-0f07e9a3e01d@linaro.org>
-Date:   Mon, 13 Jul 2020 16:30:21 +0300
+        Mon, 13 Jul 2020 09:30:16 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DDIRcn107904;
+        Mon, 13 Jul 2020 08:18:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594646307;
+        bh=vDYTJdlQIGkfcb4NmcR3M+BY6s+3zPSvoTcXWTkRYO8=;
+        h=From:To:CC:Subject:Date;
+        b=L3GiHo57doi3Xrobldmnjn2eVXiZXbP72dH1vecfGeUz8V4V/nyzxU/kLuRKar/O0
+         AwMn86us8OWTDeicTmriBdXnFpMumgNmH/mdMfhUQRTlsPFrEhe/dXNoLrLJ8HJMqG
+         11aHeFO/e16QRV5hZR5QuX4nobhbgHKonjWquQ2Y=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DDIQBZ092021
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 08:18:26 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 08:18:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 08:18:26 -0500
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DDIOXo015417;
+        Mon, 13 Jul 2020 08:18:25 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
+Subject: [PATCHv3 0/4] watchdog: rti: support attach to running timer
+Date:   Mon, 13 Jul 2020 16:18:14 +0300
+Message-ID: <20200713131818.825-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200701134259.8055-5-jonathan@marek.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Hi,
 
-Thanks for posting these patches!
+Changes from previous version:
 
-On 7/1/20 16:42, Jonathan Marek wrote:
-> Add driver for the Qualcomm interconnect buses found in SM8250 based
-> platforms. The topology consists of several NoCs that are controlled by
-> a remote processor that collects the aggregated bandwidth for each
-> master-slave pairs.
-> 
-> Based on SC7180 driver and generated from downstream dts.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
-[..]
-> +
-> +static const struct of_device_id qnoc_of_match[] = {
-> +	{ .compatible = "qcom,sm8250-aggre1-noc",
-> +	  .data = &sm8250_aggre1_noc},
-> +	{ .compatible = "qcom,sm8250-aggre2-noc",
-> +	  .data = &sm8250_aggre2_noc},
-> +	{ .compatible = "qcom,sm8250-compute-noc",
-> +	  .data = &sm8250_compute_noc},
-> +	{ .compatible = "qcom,sm8250-config-noc",
-> +	  .data = &sm8250_config_noc},
-> +	{ .compatible = "qcom,sm8250-dc-noc",
-> +	  .data = &sm8250_dc_noc},
-> +	{ .compatible = "qcom,sm8250-gem-noc",
-> +	  .data = &sm8250_gem_noc},
-> +	{ .compatible = "qcom,sm8250-ipa-virt",
-> +	  .data = &sm8250_ipa_virt},
-> +	{ .compatible = "qcom,sm8250-mc-virt",
-> +	  .data = &sm8250_mc_virt},
-> +	{ .compatible = "qcom,sm8250-mmss-noc",
-> +	  .data = &sm8250_mmss_noc},
-> +	{ .compatible = "qcom,sm8250-npu-noc",
-> +	  .data = &sm8250_npu_noc},
-> +	{ .compatible = "qcom,sm8250-system-noc",
-> +	  .data = &sm8250_system_noc},
-> +	{ .compatible = "qcom,sm8250-gem-noc-display",
-> +	  .data = &sm8250_gem_noc_display},
-> +	{ .compatible = "qcom,sm8250-mc-virt-display",
-> +	  .data = &sm8250_mc_virt_display},
-> +	{ .compatible = "qcom,sm8250-mmss-noc-display",
-> +	  .data = &sm8250_mmss_noc_display},
-> +	{ }
+- Documentation changes for patch #2
+- Dropped the configurable module parameter for window size
+- Merged any needed functionality from old patches #3 and #4 to patch #3
+  now
+- Added new rti driver internal API for getting remaining milliseconds
+  left on the timer
 
-My main concern here are the display RSC nodes. We should not add the nodes
-for voting on the display RSC, but use the "qcom,bcm-voters" property in DT
-to list both "hlos" and "disp" as bcm voters for gem-noc, mc-virt and
-mmss-noc.
+-Tero
 
-Thanks,
-Georgi
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
