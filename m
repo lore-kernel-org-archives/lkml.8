@@ -2,111 +2,92 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D798DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9EC520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iz1kpOyX"
+	by mail.kernel.org (Postfix) with ESMTP id C53B820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594623098;
+	bh=eICm5z1aVZzbICki22PDS3qQwA4tGgtSA08FRFspzSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nWlU0qAYzMmN3a5uLXcSOSVkYw7cP/S7g/iYliHPqS51QDIubXBV8/Y7fP4nf3Eh9
+	 QOSZ94c74lqVutBeRbG75YWuZMKjvu218krvE3T7Fsqqrx++/F5fAqCO5a5vs82avF
+	 EQjbKHcyFWwk0RA56h96Z0tWUpcZfmwsg7BD+Hb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgGMGvP (ORCPT
+        id S1729252AbgGMGvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728628AbgGMGvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:51:14 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB71C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:51:14 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so12031904wml.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XtqBoIrlR/rKjGKe/kJfJA9m7jssET7vVTff1SRKfT4=;
-        b=Iz1kpOyXeERVc160JxW7TBcIMts9gBt6OzZQ42NyzP7L65h8SiePRFEfs707PyxatA
-         r42kEqzFhLAsoY2mu7wmHpSOaN6PeM0w3rYTnO9V1vKq09ZHG6LgmUJwBjYXfjFegJsf
-         hJEKYFPJGRs7aJdfkFT5wJSXgqo9OSRDJ3KVhIE+6Cf0GkriovHjFIKBzPsD0SEPPMqg
-         49C5LIMpFYW8THARpmq21W+xRCQmrvf5/bJ+Q8xn/fbn/U40oHFzxPbh17EVRuFF+PAJ
-         X51qp7Bkkz4cbe9aQLLZ9o/UvF3K3x64HOLbASb/HzW64cIMgKHsrCGLvC6Mr3xehxgk
-         ve6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XtqBoIrlR/rKjGKe/kJfJA9m7jssET7vVTff1SRKfT4=;
-        b=M2Wfzy54pLAWLxNBT9tS9g6XeRHF3czFxkyyU8f6Z5s1hfzKo+cInAtnwirWfrD9y4
-         DvnNgV0wevSKq1e+eGDxmAab2kkMpZViW1Q0oy9yQ8hvpfL+9VjQpp0COetCoa3ZYkQZ
-         lyittIY75N1Tpb3fKnkjp4hruQgapji0qqpPjHq06S+FaxleKcZTkuPmfpIMJ9Hd7MrQ
-         rXI/2T4iKhEnWf4rdLtSvqX4Mo9nDwIlEPE3cGk/BE9xDurquILfITiP39htyDlrEwwS
-         snZ4lNGM4mQC5HrSesS35j56yAvT7gTDBrLwvG6Phl89DBkRhH6pwS9ea8GnnaYndwzq
-         isYw==
-X-Gm-Message-State: AOAM5338RQBbfp0It2wT7hhfjKHhCy3EOVk3uw9eRpr/r7vkrKVWxRMI
-        KogMk5XZirSjxexYf1kVrF2KPQ==
-X-Google-Smtp-Source: ABdhPJy8OEkwK2hosu91yGd1UjKt6vgKwMfNBMFBiiqF6YAhQ7DiMfBX6YGkHs1p4KY5vObROeab5Q==
-X-Received: by 2002:a1c:a7c4:: with SMTP id q187mr17053090wme.0.1594623073259;
-        Sun, 12 Jul 2020 23:51:13 -0700 (PDT)
-Received: from dell ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id z16sm22066765wrr.35.2020.07.12.23.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:51:12 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 07:51:10 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Subject: Re: [PATCH 1/4] mfd: mt6360: Refactor and fix code style
-Message-ID: <20200713065110.GB3500@dell>
-References: <1594117856-14343-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594117856-14343-2-git-send-email-gene.chen.richtek@gmail.com>
- <b9540dc6-4d43-45e4-8878-15d2df24a268@gmail.com>
+        Mon, 13 Jul 2020 02:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgGMGvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:51:36 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE78920663;
+        Mon, 13 Jul 2020 06:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594623095;
+        bh=eICm5z1aVZzbICki22PDS3qQwA4tGgtSA08FRFspzSk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0u/PPKPVHJrtXQ1BQ9UECn/8iSxQKll6GDhkWKShES2uESX6/+sOpgtEBloL5Oo1O
+         H7Qe0n1nCHNokb7cv+f3Gv4yg6+lVdhaQwZ4TtKlV5LyCrtRdy0OnP0k5kGvd3eA4y
+         ZbAMNdnelKHkzhPwyE/PCcwOXoCqldskaj7Y/veQ=
+Date:   Mon, 13 Jul 2020 12:21:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200713065131.GG34333@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9540dc6-4d43-45e4-8878-15d2df24a268@gmail.com>
+In-Reply-To: <20200710093834.su3nsjesnhntpd6d@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020, Matthias Brugger wrote:
-
-> 
-> 
-> On 07/07/2020 12:30, Gene Chen wrote:
-> > From: Gene Chen <gene_chen@richtek.com>
+On 10-07-20, 12:38, Serge Semin wrote:
+> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > > DMA capabilities non-uniformly redistributed between the device channels.
+> > > In order to provide a way of exposing the channel-specific parameters to
+> > > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > > if provided it gets called from the dma_get_slave_caps() method and is
+> > > able to override the generic DMA-device capabilities.
 > > 
-> > Rearrange include file.
-> > Remove brackets around raw numbers.
-> > Indicate sub-dev compatible name by using "-"
-> > Combine mt6360 pmic/ldo resouces into mt6360 regulator resources.
-> > Rename mt6360_pmu_data by mt6360_data.
-> > Rename mt6360_pmu by mt6360.
 > 
-> That seems like a lot of cosmetics. Why is this needed?
-> If you think that's needed it should be split up in different commits, each
-> explaining in the commit message why you do that.
+> > In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> 
+> As long as the 'slave' word is used in the name of the dma_slave_caps
+> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> to use some else terminology. If renaming needs to be done, then it should be
+> done synchronously for the whole subsystem.
 
-Agreed.  This set is still not broken up enough.
-
-Please place each logical change into its own patch for review.
+Right, I have plans to tackle that during next merge window and have
+started changes. Thankfully slave_dma can be replaced by peripheral dma
+easily. But getting that in would be tricky as we need to change users
+too.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+~Vinod
