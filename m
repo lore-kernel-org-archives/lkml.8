@@ -4,146 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C37C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A58C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B2B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B05420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGMUCs (ORCPT
+        id S1726767AbgGMUHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:02:48 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33109 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgGMUCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:02:47 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7E044240006;
-        Mon, 13 Jul 2020 20:02:44 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 22:02:44 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 16/25] arch: arm: mach-at91: pm: Move prototypes to
- mutually included header
-Message-ID: <20200713200244.GA23553@piout.net>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-17-lee.jones@linaro.org>
+        Mon, 13 Jul 2020 16:07:48 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:44718 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgGMUHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:07:48 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id EF43CBC09D;
+        Mon, 13 Jul 2020 20:07:44 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jack@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] udf: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:07:38 +0200
+Message-Id: <20200713200738.37800-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713144930.1034632-17-lee.jones@linaro.org>
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-On 13/07/2020 15:49:21+0100, Lee Jones wrote:
-> Both the caller and the supplier's source file should have access to
-> the include file containing the prototypes.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
->  1637 | void at91_pinctrl_gpio_suspend(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
->  1661 | void at91_pinctrl_gpio_resume(void)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  arch/arm/mach-at91/pm.c             | 17 ++++++-----------
->  drivers/pinctrl/pinctrl-at91.c      |  1 +
->  include/linux/platform_data/atmel.h |  5 +++++
->  3 files changed, 12 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-> index 074bde64064e4..59f2a2d6fbbb8 100644
-> --- a/arch/arm/mach-at91/pm.c
-> +++ b/arch/arm/mach-at91/pm.c
-> @@ -25,17 +25,6 @@
->  #include "generic.h"
->  #include "pm.h"
->  
-> -/*
-> - * FIXME: this is needed to communicate between the pinctrl driver and
-> - * the PM implementation in the machine. Possibly part of the PM
-> - * implementation should be moved down into the pinctrl driver and get
-> - * called as part of the generic suspend/resume path.
-> - */
-> -#ifdef CONFIG_PINCTRL_AT91
-> -extern void at91_pinctrl_gpio_suspend(void);
-> -extern void at91_pinctrl_gpio_resume(void);
-> -#endif
-> -
->  struct at91_soc_pm {
->  	int (*config_shdwc_ws)(void __iomem *shdwc, u32 *mode, u32 *polarity);
->  	int (*config_pmc_ws)(void __iomem *pmc, u32 mode, u32 polarity);
-> @@ -325,6 +314,12 @@ static void at91_pm_suspend(suspend_state_t state)
->  static int at91_pm_enter(suspend_state_t state)
->  {
->  #ifdef CONFIG_PINCTRL_AT91
-> +	/*
-> +	 * FIXME: this is needed to communicate between the pinctrl driver and
-> +	 * the PM implementation in the machine. Possibly part of the PM
-> +	 * implementation should be moved down into the pinctrl driver and get
-> +	 * called as part of the generic suspend/resume path.
-> +	 */
->  	at91_pinctrl_gpio_suspend();
->  #endif
->  
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 9c52130876597..37997e5ab0538 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -22,6 +22,7 @@
->  #include <linux/pinctrl/pinmux.h>
->  /* Since we request GPIOs from ourself */
->  #include <linux/pinctrl/consumer.h>
-> +#include <linux/platform_data/atmel.h>
->  
->  #include "pinctrl-at91.h"
->  #include "core.h"
-> diff --git a/include/linux/platform_data/atmel.h b/include/linux/platform_data/atmel.h
-> index 99e6069c5fd89..666ef482ea8c0 100644
-> --- a/include/linux/platform_data/atmel.h
-> +++ b/include/linux/platform_data/atmel.h
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-The plan is to get rid of that file so you should probably find a better
-location.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-> @@ -28,4 +28,9 @@ static inline int at91_suspend_entering_slow_clock(void)
->  }
->  #endif
->  
-> +#ifdef CONFIG_PINCTRL_AT91
-> +void at91_pinctrl_gpio_suspend(void);
-> +void at91_pinctrl_gpio_resume(void);
-> +#endif
-> +
->  #endif /* __ATMEL_H__ */
-> -- 
-> 2.25.1
-> 
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/filesystems/udf.rst | 2 +-
+ fs/udf/ecma_167.h                 | 2 +-
+ fs/udf/super.c                    | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/filesystems/udf.rst b/Documentation/filesystems/udf.rst
+index d9badbf285b2..f9489ddbb767 100644
+--- a/Documentation/filesystems/udf.rst
++++ b/Documentation/filesystems/udf.rst
+@@ -72,4 +72,4 @@ For the latest version and toolset see:
+ 
+ Documentation on UDF and ECMA 167 is available FREE from:
+ 	- http://www.osta.org/
+-	- http://www.ecma-international.org/
++	- https://www.ecma-international.org/
+diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
+index 736ebc5dc441..185c3e247648 100644
+--- a/fs/udf/ecma_167.h
++++ b/fs/udf/ecma_167.h
+@@ -2,7 +2,7 @@
+  * ecma_167.h
+  *
+  * This file is based on ECMA-167 3rd edition (June 1997)
+- * http://www.ecma.ch
++ * https://www.ecma.ch
+  *
+  * Copyright (c) 2001-2002  Ben Fennema
+  * Copyright (c) 2017-2019  Pali Rohár <pali@kernel.org>
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index f747bf72edbe..1c42f544096d 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -11,8 +11,8 @@
+  *  This code is based on version 2.00 of the UDF specification,
+  *  and revision 3 of the ECMA 167 standard [equivalent to ISO 13346].
+  *    http://www.osta.org/
+- *    http://www.ecma.ch/
+- *    http://www.iso.org/
++ *    https://www.ecma.ch/
++ *    https://www.iso.org/
+  *
+  * COPYRIGHT
+  *  This file is distributed under the terms of the GNU General Public
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.27.0
+
