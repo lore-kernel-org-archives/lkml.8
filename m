@@ -2,118 +2,137 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FA3C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFEEC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B984A2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAB92067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/tDzBSf"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VWDGXW/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGMTDQ (ORCPT
+        id S1727024AbgGMTEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
+        Mon, 13 Jul 2020 15:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMTDP (ORCPT
+        with ESMTP id S1726338AbgGMTEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:03:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7140BC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:15 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k71so330188pje.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:15 -0700 (PDT)
+        Mon, 13 Jul 2020 15:04:00 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B7BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:04:00 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id i18so12149274ilk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/OwblBkyUz9U0R8zbXyE33PVpwL2KrxM/SNh//IN4cg=;
-        b=T/tDzBSf1dlGGChdUJkNUHI8vqRPvUL5q6Gsr04CuMxTatssWeCfyiVk9U5RecA/qy
-         FWg9w814lsFZXlVZIuLenpZK/xioGTsnrBY/Vfi3oJbcnJRhLvdxbze/cRoaWaPS5Up9
-         OdyRIhkj7eQ6fsmn7Q8CBKB1yz1FpvKH3iBKSHgtMOdd5E3e2Vv+Zoi/MY8vnJ9+QVW7
-         jh904BgGE+HcgaIGVgTztKqaVdK9GQ+mbbtarb7xkMENf2bttvBfEL43YOd/r0f6ArxW
-         Ff6OT9fTmnP8rugEf9/5OZg0/oLF3paxKJkMqS3bN2WhcdNP6PrJ6bCcnJ3TOvpOb5M9
-         8b0g==
+         :content-disposition:in-reply-to;
+        bh=XA1EpHrdmYjsC6ofF2H7iz3RZthRfSSjC9rfBgRGN6M=;
+        b=VWDGXW/NXw25gdZJAvtRUIvPTZDkBqrgY3CT2vzlzhRjMcRQIxRLBAnCJ3lpKSJpFE
+         xT0tyMQ0kws9PblSt76PpMPaVVDnfI0c8WDxS8ltFpz/oNNfxz9BkUOdx2EQgjyR+YY/
+         YlkbxjOna4FFyv5rCJXy94vXpvS1KnQJY4K0lKyVZm9AlDkywFjXCRoGsnMlp1XaLDK4
+         +2wyPVNbDhyGrwQlxKnFaRcbj6BKXFsVhmyjq1XvZOE4nnuFLOfi0oyhx/ODt8ces/LL
+         ati5yeNujl4IhJvCI6cN+Dbau+wRoRKvlWhK3sOJ2J4f5tkaCxtF/q/LXuZjOapBQPD3
+         zrfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/OwblBkyUz9U0R8zbXyE33PVpwL2KrxM/SNh//IN4cg=;
-        b=fMwpp8pIOyxQwXjpBM3REvocGgHGpdIBc7YDUW9Skc+pbks0XBMaJrxbVnLoh0nYS5
-         Py13ZjP1rb5PyNVRYJ4mwInSXmjRkPGP8ykOCMI8kFheBhPvnp0lZ+jHbq4F4yXdVtWo
-         +hHdOCkBc6pgB9pAIC5DWgJDGvSsowa/ptGMS5MUiTyt//Nbf7m4Rk1o6mDb5tg0BPb8
-         NtcA7eL4NM3pvBXzRA5eh1N6Kp/d+Qd6SwNgp5IO0hElnvGL1qmTGVOEz15NSQmxtDay
-         dBIfjpTxaTb+UcmVTmvZhSMwfvooWHQ5jUDluvnvfHK1BKj/syCcGfyh+p6BiaalEh1P
-         +Jfw==
-X-Gm-Message-State: AOAM5320zizRYaEdb9AjTb3EdLl43AzwSdQ7+VASkqsyp17OXPs3RlPB
-        Om9cvIBkCr3NmYwyaH9RGnp/+A==
-X-Google-Smtp-Source: ABdhPJzFfsedhaLX8n8bpSfxSbNRN3zzyxCHlaOIOS6tyKoZxnAuPBXgwGAGxjCR5kPFKzVVcR4THw==
-X-Received: by 2002:a17:902:a504:: with SMTP id s4mr847143plq.177.1594666994828;
-        Mon, 13 Jul 2020 12:03:14 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y198sm15123103pfg.116.2020.07.13.12.03.13
+         :mime-version:content-disposition:in-reply-to;
+        bh=XA1EpHrdmYjsC6ofF2H7iz3RZthRfSSjC9rfBgRGN6M=;
+        b=eS2aimE7U/LYLkSiQN6kG4co2sQ6f/iMAjPF7PmYMTRjDFC9WAMYixa2D+Nn62jO1Z
+         rg7rk0zWv2BTOaiMn5lWssQoTzfEhdBSIgZlTaI+x0C8yr9XuXM9oNVkLO2BkQtMu9rw
+         5OIFB3qQzYR3XehFdMV/fW6KqVHT0IJyCKhvhXRGoKEHIeBC2wxy3Rgt/8WFMwlC8VXk
+         uwnzn1mkAVK5A7H/n+iY96dTmZiw+53aKrw0VLHj7Jkx8SpZp9V2zxzM7UQooXhfZVC4
+         u3DxeF9fYoFdoHzDTA63kSRYDJWJOTYrqTOlJm4vC2OzO85DY1MnOHE8x9/jHrlOaHRg
+         5N0A==
+X-Gm-Message-State: AOAM530Vgb/xdWgseSpGmJkgqF9PprvmAL/XK2aQ1v3GTFyBad820Xpz
+        yXjG0W6wmKxthN6FF5UcAG0Xtg==
+X-Google-Smtp-Source: ABdhPJyRHfvJDQGCnEFTKbipmxwJmFZaEpNpmIxk+hQ+Xky9CJ5Yi9Ms8cMrdsBETw747p3cb8+W7w==
+X-Received: by 2002:a92:c7c3:: with SMTP id g3mr1271721ilk.164.1594667039054;
+        Mon, 13 Jul 2020 12:03:59 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id y6sm8676368ila.74.2020.07.13.12.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:03:14 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 12:01:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] remoteproc: qcom: Add missing slab.h
-Message-ID: <20200713190106.GA2161373@builder.lan>
-References: <20200713020003.134039-1-wangkefeng.wang@huawei.com>
+        Mon, 13 Jul 2020 12:03:58 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jv3k5-009wVE-3L; Mon, 13 Jul 2020 16:03:57 -0300
+Date:   Mon, 13 Jul 2020 16:03:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SW_Drivers@habana.ai, Ofir Bitton <obitton@habana.ai>
+Subject: Re: [PATCH 1/3] habanalabs: implement dma-fence mechanism
+Message-ID: <20200713190357.GC25301@ziepe.ca>
+References: <20200713155424.24721-1-oded.gabbay@gmail.com>
+ <20200713155752.GC267581@kroah.com>
+ <CAKMK7uH=Ch4ce-9D5e-RvVwq_oK6Doqtq5QbvpmQ8uPWkMCi2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713020003.134039-1-wangkefeng.wang@huawei.com>
+In-Reply-To: <CAKMK7uH=Ch4ce-9D5e-RvVwq_oK6Doqtq5QbvpmQ8uPWkMCi2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 12 Jul 19:00 PDT 2020, Kefeng Wang wrote:
-
-> drivers/remoteproc/qcom_common.c: In function ‘qcom_ssr_get_subsys’:
-> drivers/remoteproc/qcom_common.c:210:9: error: implicit declaration of function ‘kzalloc’; did you mean ‘vzalloc’?
-> [-Werror=implicit-function-declaration]
->   info = kzalloc(sizeof(*info), GFP_KERNEL);
->          ^~~~~~~
->          vzalloc
+On Mon, Jul 13, 2020 at 08:34:12PM +0200, Daniel Vetter wrote:
+> On Mon, Jul 13, 2020 at 5:57 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Jul 13, 2020 at 06:54:22PM +0300, Oded Gabbay wrote:
+> > > From: Ofir Bitton <obitton@habana.ai>
+> > >
+> > > Instead of using standard dma-fence mechanism designed for GPU's, we
+> > > introduce our own implementation based on the former one. This
+> > > implementation is much more sparse than the original, contains only
+> > > mandatory functionality required by the driver.
+> >
+> > Sad you can't use the in-kernel code for this, I really don't understand
+> > what's wrong with using it as-is.
+> >
+> > Daniel, why do we need/want duplicate code floating around in the tree
+> > like this?
 > 
-> kzalloc() is declared in linux/slab.h, add include to fix build issue.
+> The rules around dma-fence are ridiculously strict, and it only makes
+> sense to inflict that upon you if you actually want to participate in
+> the cross driver uapi built up around dma-buf and dma-fence.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-
-Thank Kefeng, patch applied.
-
-Regards,
-Bjorn
-
-> ---
->  drivers/remoteproc/qcom_common.c | 1 +
->  1 file changed, 1 insertion(+)
+> I've recently started some lockdep annotations to better enforce these
+> rules (and document them), and it's finding tons of subtle bugs even
+> in drivers/gpu (and I only just started with annotating drivers:
 > 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 2f45f0c79914e..085fd73fa23ae 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -15,6 +15,7 @@
->  #include <linux/remoteproc/qcom_rproc.h>
->  #include <linux/rpmsg/qcom_glink.h>
->  #include <linux/rpmsg/qcom_smd.h>
-> +#include <linux/slab.h>
->  #include <linux/soc/qcom/mdt_loader.h>
->  
->  #include "remoteproc_internal.h"
-> -- 
-> 2.26.2
+> https://lore.kernel.org/dri-devel/20200707201229.472834-1-daniel.vetter@ffwll.ch/
 > 
+> You really don't want to deal with this if you don't have to. If
+> drivers/gpu folks (who created this) aren't good enough to understand
+> it, maybe it's not a good idea to sprinkle this all over the tree. And
+> fundamentally all this is is a slightly fancier struct completion. Use
+> that one instead, or a wait_queue.
+> 
+> I discussed this a bit with Oded, and he thinks it's easier to
+> copypaste and simplify, but given that all other drivers seem to get
+> by perfectly well with completion or wait_queue, I'm not sure that's a
+> solid case.
+> 
+> Also adding Jason Gunthorpe, who very much suggested this should be
+> limited to dma-buf/gpu related usage only.
+
+Without all the cross-driver stuff dma_fence is just a
+completion. Using dma_fence to get a completion is big abuse of what
+it is intended for.
+
+I think the only problem with this patch is that it keeps too much of
+the dma_fence stuff around. From what I could tell it really just
+wants to add a kref and completion to struct hl_cs_compl and delete
+everything to do with dma_fence.
+
+Not even sure the kref is needed ;)
+
+Jason
