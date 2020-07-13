@@ -2,169 +2,87 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E68DC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA918C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9EF2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:56:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZUl5wrov"
+	by mail.kernel.org (Postfix) with ESMTP id C58AB20791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594623422;
+	bh=yqdbFyvH04q+9XbGl3VoyxvVtRWjNuHkrGK32q5ZFg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jQ1NQAYvQ2FyVNOmZxvysIHVPuRYU/JgLeembSZRd59DzT4MtYXvYwX7xB2p0a5kK
+	 oAiO7KxgDaoz6cETNkayipeTzA48q2APJo21gfPGt/X8ci7FpRptYPHieUjcRWXRzX
+	 DWgapm3UXLg1EWFytrawShtsz3chXoRm5THtx48I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgGMG4C (ORCPT
+        id S1728725AbgGMG5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:56:02 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:3148 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725804AbgGMG4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:56:02 -0400
-X-UUID: 01f36fb1f18047b4bc30c942acc95743-20200713
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3fTv0ya9+6e1JsaEzRkR7OFnJZ1h0+BVwHRIgcNxfp8=;
-        b=ZUl5wrov0eQwif2lntsupXa+ZHmNIi0oaiz62ks6llG27X5NlH50QLIKBDrRSw7Lm+zOUJRvZp7GUB2nx8XSuwD1cTC84Xc1CVI1b2darBNBtLLikV5HG7MmxifcLOb8slI1tWli759VdoVETn4flVOU5v2Ur/1WoqaTv4uGm28=;
-X-UUID: 01f36fb1f18047b4bc30c942acc95743-20200713
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 602200238; Mon, 13 Jul 2020 14:55:47 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 13 Jul
- 2020 14:55:46 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 13 Jul 2020 14:55:44 +0800
-Message-ID: <1594623299.16172.29.camel@mhfsdcap03>
-Subject: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192
- IOMMU and SMI
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mon, 13 Jul 2020 02:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgGMG5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:57:01 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDFA20663;
+        Mon, 13 Jul 2020 06:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594623420;
+        bh=yqdbFyvH04q+9XbGl3VoyxvVtRWjNuHkrGK32q5ZFg8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fE93goWMWHUROumruAYzbgfqPyWPM2NPrLXUBgtUU8YAtIqRT3oGe3q34xF6Fox9k
+         3qYLSywlPYg8txAj4K1E7mdCpNqsnpLNN/0I4A/+gDv8NQYlO80Yh6TAY31xtYIZvo
+         pQd+A1mH49s61PmTSmbfM9NgXTtHiHe5r0mc4Kv8=
+Date:   Mon, 13 Jul 2020 14:56:55 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>,
-        Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= 
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
-        <chao.hao@mediatek.com>, <ming-fan.chen@mediatek.com>
-Date:   Mon, 13 Jul 2020 14:54:59 +0800
-In-Reply-To: <CANdKZ0cGNy7ckzD_NAOV613o62WHdYazRRM-J8jY2-4mx_sNDA@mail.gmail.com>
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
-         <20200711064846.16007-5-yong.wu@mediatek.com>
-         <CANdKZ0cGNy7ckzD_NAOV613o62WHdYazRRM-J8jY2-4mx_sNDA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add node for CAAM
+Message-ID: <20200713065654.GI12113@dragon>
+References: <20200707211359.29906-1-cphealy@gmail.com>
+ <CAOMZO5CWv7S4iWLWMxQwRs_8qfVRGVgMX3YTkr8H01=6L_V25g@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 533535A6522B7AB06F6A5C489515BEA97381B42424A0490A05D20470D84F27B32000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5CWv7S4iWLWMxQwRs_8qfVRGVgMX3YTkr8H01=6L_V25g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTEzIGF0IDEzOjM2ICswODAwLCBQaS1Ic3VuIFNoaWggd3JvdGU6DQo+
-IE9uIFNhdCwgSnVsIDExLCAyMDIwIGF0IDI6NTAgUE0gWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRl
-ay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGRlY3JpcHRpb25zIGZvciBt
-dDgxOTIgSU9NTVUgYW5kIFNNSS4NCj4gPg0KPiA+IG10ODE5MiBhbHNvIGlzIE1USyBJT01NVSBn
-ZW4yIHdoaWNoIHVzZXMgQVJNIFNob3J0LURlc2NyaXB0b3IgdHJhbnNsYXRpb24NCj4gPiB0YWJs
-ZSBmb3JtYXQuIFRoZSBNNFUtU01JIEhXIGRpYWdyYW0gaXMgYXMgYmVsb3c6DQo+ID4NCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIEVNSQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgIE00VQ0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0t
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICBTTUkgQ29tbW9uDQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgIC0tLS0tLS0tLS0tLQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwN
-Cj4gPiAgICstLS0tLS0tKy0tLS0tLSstLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0t
-LS0tKw0KPiA+ICAgfCAgICAgICB8ICAgICAgfCAgICAgIHwgICAgICAgLi4uLi4uICAgICAgICAg
-fCAgICAgICB8DQo+ID4gICB8ICAgICAgIHwgICAgICB8ICAgICAgfCAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgICAgIHwNCj4gPiBsYXJiMCAgIGxhcmIxICBsYXJiMiAgbGFyYjQgICAgIC4uLi4u
-LiAgICAgIGxhcmIxOSAgIGxhcmIyMA0KPiA+IGRpc3AwICAgZGlzcDEgICBtZHAgICAgdmRlYyAg
-ICAgICAgICAgICAgICAgICBJUEUgICAgICBJUEUNCj4gPg0KPiA+IEFsbCB0aGUgY29ubmVjdGlv
-bnMgYXJlIEhXIGZpeGVkLCBTVyBjYW4gTk9UIGFkanVzdCBpdC4NCj4gPg0KPiA+IG10ODE5MiBN
-NFUgc3VwcG9ydCAwfjE2R0IgaW92YSByYW5nZS4gd2UgcHJlYXNzaWduIGRpZmZlcmVudCBlbmdp
-bmVzDQo+ID4gaW50byBkaWZmZXJlbnQgaW92YSByYW5nZXM6DQo+ID4NCj4gPiBkb21haW4taWQg
-IG1vZHVsZSAgICAgaW92YS1yYW5nZSAgICAgICAgICAgICAgICAgIGxhcmJzDQo+ID4gICAgMCAg
-ICAgICBkaXNwICAgICAgICAwIH4gNEcgICAgICAgICAgICAgICAgICAgICAgbGFyYjAvMQ0KPiA+
-ICAgIDEgICAgICAgdmNvZGVjICAgICAgNEcgfiA4RyAgICAgICAgICAgICAgICAgICAgIGxhcmI0
-LzUvNw0KPiA+ICAgIDIgICAgICAgY2FtL21kcCAgICAgOEcgfiAxMkcgICAgICAgICAgICAgbGFy
-YjIvOS8xMS8xMy8xNC8xNi8xNy8xOC8xOS8yMA0KPiA+ICAgIDMgICAgICAgQ0NVMCAgICAweDQw
-MDBfMDAwMCB+IDB4NDNmZl9mZmZmICAgICBsYXJiMTM6IHBvcnQgOS8xMA0KPiA+ICAgIDQgICAg
-ICAgQ0NVMSAgICAweDQ0MDBfMDAwMCB+IDB4NDdmZl9mZmZmICAgICBsYXJiMTQ6IHBvcnQgNC81
-DQo+ID4NCj4gPiBUaGUgaW92YSByYW5nZSBmb3IgQ0NVMC8xKGNhbWVyYSBjb250cm9sIHVuaXQp
-IGlzIEhXIHJlcXVpcmVtZW50Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZyBXdSA8eW9u
-Zy53dUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9pb21tdS9tZWRp
-YXRlayxpb21tdS50eHQgICAgICAgICB8ICAgOCArLQ0KPiA+ICAuLi4vbWVkaWF0ZWssc21pLWNv
-bW1vbi50eHQgICAgICAgICAgICAgICAgICAgfCAgIDUgKy0NCj4gPiAgLi4uL21lbW9yeS1jb250
-cm9sbGVycy9tZWRpYXRlayxzbWktbGFyYi50eHQgIHwgICAzICstDQo+ID4gIGluY2x1ZGUvZHQt
-YmluZGluZ3MvbWVtb3J5L210ODE5Mi1sYXJiLXBvcnQuaCB8IDIzNyArKysrKysrKysrKysrKysr
-KysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAyNDcgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
-LSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvbWVtb3J5L210
-ODE5Mi1sYXJiLXBvcnQuaA0KPiA+IC4uLg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJp
-bmRpbmdzL21lbW9yeS9tdDgxOTItbGFyYi1wb3J0LmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL21l
-bW9yeS9tdDgxOTItbGFyYi1wb3J0LmgNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGlu
-ZGV4IDAwMDAwMDAwMDAwMC4uZmJlMGQ1ZDUwZjFjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsr
-KyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvbWVtb3J5L210ODE5Mi1sYXJiLXBvcnQuaA0KPiA+IC4u
-Lg0KPiA+ICsvKiBsYXJiNyAqLw0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w3X1ZFTkNfUkNQVSAg
-ICAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDEsIDcsIDApDQo+ID4gKyNkZWZpbmUgTTRV
-X1BPUlRfTDdfVkVOQ19SRUMgICAgICAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMSwgNywg
-MSkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MN19WRU5DX0JTRE1BICAgICAgICAgICAgICAgICBN
-VEtfTTRVX0RPTV9JRCgxLCA3LCAyKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w3X1ZFTkNfU1Zf
-Q09NViAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDEsIDcsIDMpDQo+ID4gKyNkZWZpbmUg
-TTRVX1BPUlRfTDdfVkVOQ19SRF9DT01WICAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMSwg
-NywgNCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MN19WRU5DX0NVUl9MVU1BICAgICAgICAgICAg
-ICBNVEtfTTRVX0RPTV9JRCgxLCA3LCA1KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w3X1ZFTkNf
-Q1VSX0NIUk9NQSAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDEsIDcsIDYpDQo+ID4gKyNkZWZp
-bmUgTTRVX1BPUlRfTDdfVkVOQ19SRUZfTFVNQSAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQo
-MSwgNywgNykNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MN19WRU5DX1JFRl9DSFJPTUEgICAgICAg
-ICAgICBNVEtfTTRVX0RPTV9JRCgxLCA3LCA4KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w3X0pQ
-R0VOQ19ZX1JETUEgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDEsIDcsIDkpDQo+ID4gKyNk
-ZWZpbmUgTTRVX1BPUlRfTDdfSlBHRU5DX1FfUkRNQSAgICAgICAgICAgICAgTVRLX000VV9ET01f
-SUQoMSwgNywgMTApDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfTDdfSlBHRU5DX0NfVEFCTEUgICAg
-ICAgICAgICAgTVRLX000VV9ET01fSUQoMSwgNywgMTEpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRf
-TDdfSlBHRU5DX0JTRE1BICAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMSwgNywgMTIpDQo+
-ID4gKyNkZWZpbmUgTTRVX1BPUlRfTDdfVkVOQ19TVUJfUl9MVU1BICAgICAgICAgICAgTVRLX000
-VV9ET01fSUQoMSwgNywgMTMpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfTDdfVkVOQ19TVUJfV19M
-VU1BICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMSwgNywgMTQpDQo+ID4gKw0KPiANCj4gU21h
-bGwgbml0LCAvKiBsYXJiODogbnVsbCAqLyBpcyBtaXNzaW5nIGhlcmUuDQoNCm9oLiBZZXMuIFRo
-YW5rcy4NCkkgd2lsbCBhZGQgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+IA0KPiA+ICsvKiBsYXJi
-OSAqLw0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w5X0lNR19JTUdJX0QxICAgICAgICAgICAgICAg
-ICAgICAgICAgTVRLX000VV9ET01fSUQoMiwgOSwgMCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9M
-OV9JTUdfSU1HQklfRDEgICAgICAgICAgICAgICBNVEtfTTRVX0RPTV9JRCgyLCA5LCAxKQ0KPiA+
-ICsjZGVmaW5lIE00VV9QT1JUX0w5X0lNR19ETUdJX0QxICAgICAgICAgICAgICAgICAgICAgICAg
-TVRLX000VV9ET01fSUQoMiwgOSwgMikNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MOV9JTUdfREVQ
-SV9EMSAgICAgICAgICAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDIsIDksIDMpDQo+ID4g
-KyNkZWZpbmUgTTRVX1BPUlRfTDlfSU1HX0lDRV9EMSAgICAgICAgICAgICAgICAgTVRLX000VV9E
-T01fSUQoMiwgOSwgNCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MOV9JTUdfU01USV9EMSAgICAg
-ICAgICAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDIsIDksIDUpDQo+ID4gKyNkZWZpbmUg
-TTRVX1BPUlRfTDlfSU1HX1NNVE9fRDIgICAgICAgICAgICAgICAgICAgICAgICBNVEtfTTRVX0RP
-TV9JRCgyLCA5LCA2KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w5X0lNR19TTVRPX0QxICAgICAg
-ICAgICAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMiwgOSwgNykNCj4gPiArI2RlZmluZSBN
-NFVfUE9SVF9MOV9JTUdfQ1JaT19EMSAgICAgICAgICAgICAgICAgICAgICAgIE1US19NNFVfRE9N
-X0lEKDIsIDksIDgpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfTDlfSU1HX0lNRzNPX0QxICAgICAg
-ICAgICAgICAgTVRLX000VV9ET01fSUQoMiwgOSwgOSkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9M
-OV9JTUdfVklQSV9EMSAgICAgICAgICAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDIsIDks
-IDEwKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0w5X0lNR19TTVRJX0Q1ICAgICAgICAgICAgICAg
-ICAgICAgICAgTVRLX000VV9ET01fSUQoMiwgOSwgMTEpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRf
-TDlfSU1HX1RJTUdPX0QxICAgICAgICAgICAgICAgTVRLX000VV9ET01fSUQoMiwgOSwgMTIpDQo+
-ID4gKyNkZWZpbmUgTTRVX1BPUlRfTDlfSU1HX1VGQkNfVzAgICAgICAgICAgICAgICAgICAgICAg
-ICBNVEtfTTRVX0RPTV9JRCgyLCA5LCAxMykNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9MOV9JTUdf
-VUZCQ19SMCAgICAgICAgICAgICAgICAgICAgICAgIE1US19NNFVfRE9NX0lEKDIsIDksIDE0KQ0K
-PiA+ICsNCj4gPiAuLi4NCg0K
+On Tue, Jul 07, 2020 at 06:51:00PM -0300, Fabio Estevam wrote:
+> Hi Chris,
+> 
+> On Tue, Jul 7, 2020 at 6:15 PM Chris Healy <cphealy@gmail.com> wrote:
+> >
+> > From: Andrey Smirnov <andrew.smirnov@gmail.com>
+> >
+> > Add node for CAAM device in NXP Vybrid SoC.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Signed-off-by: Chris Healy <cphealy@gmail.com>
+> >
+> > v2:
+> > - fixup commit to show that this patch is from Andrey Smirnov.
+> 
+> We usually put this information below the --- line.
+> 
+> Maybe Shawn could fix it while applying it.
 
+Fixed and applied.
