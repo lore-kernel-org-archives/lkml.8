@@ -2,151 +2,116 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57321C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A12C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3481F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5461C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDLkKHUG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B64PHnnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgGMQhT (ORCPT
+        id S1730507AbgGMQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:37:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730410AbgGMQhS (ORCPT
+        Mon, 13 Jul 2020 12:37:41 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6947 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729969AbgGMQhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:37:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594658237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nkl9/v1z2n5oTxi5AR2lnE/ZboSNKokLUsnZ/l22yc8=;
-        b=TDLkKHUGCbu7KAUYHqgMmrGmA/RAEhYLNpQ9w9ksuB/2i5aXR9QuCIJiuNrhLJpvaXUgvM
-        UiS1DZ9uEuPX8h4eGZLxPTs4aKei+q9p0QKpnnzQV3ag1KdRtwWXvi3DLpoVdT7r6mgKXc
-        bUVmtqHhQV+qJmFNPcHOJRKYtvmPaYk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-T9ZeSXHxM2Grd9KFjb2RhA-1; Mon, 13 Jul 2020 12:37:15 -0400
-X-MC-Unique: T9ZeSXHxM2Grd9KFjb2RhA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4BCE1080;
-        Mon, 13 Jul 2020 16:37:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B20760C87;
-        Mon, 13 Jul 2020 16:37:08 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 01/13] afs: Fix interruption of operations
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:37:07 +0100
-Message-ID: <159465822787.1377938.10874079234418111929.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
-References: <159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Mon, 13 Jul 2020 12:37:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c8dc60001>; Mon, 13 Jul 2020 09:37:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 09:37:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 09:37:39 -0700
+Received: from [10.26.72.101] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 16:37:38 +0000
+Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200712100645.13927-1-jonathanh@nvidia.com>
+ <20200713032554.cykywnygxln6ukrl@vireshk-i7>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
+Date:   Mon, 13 Jul 2020 17:37:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200713032554.cykywnygxln6ukrl@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594658246; bh=j07fRsUya2Rkr0o3lWYTAHPyUTT7NzlNKWFyMy2w+FU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=B64PHnnmjFFJzm6tcGsqHpZuxv/g2nvXhUgeOJl2Vbd+GAiwAIHLWiM3cdlBb1DDp
+         s6e9UVM3Vv3e+J2Otc1z73T2hyJcDOxxRhwdenoQqYuzGfXvvmKxiqhtmbgi60tmqp
+         +Yjn6B1jZP2WdTmE2JczxR5P+243Ls+0ZE9lpJG0l+txfFhRFOupM3mpAq0CNmOYSW
+         QR4kLrJPx9Z1LUQW3yiK7Vc9/+lWxMQnLpS5U3tgTIliil8Fx6Gdz3bGQFJddTjzex
+         3epeuegOs+m0eIdtMY3rrT5j6h54uubqQ+cOX7Qs4Q+dXs0HsTXpLaX5c2QR4QDnlc
+         o/w3C6XcmPlkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The afs filesystem driver allows unstarted operations to be cancelled by
-signal, but most of these can easily be restarted (mkdir for example).  The
-primary culprits for reproducing this are those applications that use
-SIGALRM to display a progress counter.
 
-File lock-extension operation is marked uninterruptible as we have a
-limited time in which to do it, and the release op is marked
-uninterruptible also as if we fail to unlock a file, we'll have to wait 20
-mins before anyone can lock it again.
+On 13/07/2020 04:25, Viresh Kumar wrote:
+> On 12-07-20, 11:06, Jon Hunter wrote:
+>> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
+>> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
+>> Tegra186 but as a consequence the following warnings are now seen on
+>> boot ...
+>>
+>>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
+>>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
+>>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
+>>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
+>>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
+>>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
+>>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
+>>
+>> Although we could fix this by adding a 'get' operator for the Tegra186
+>> CPUFREQ driver, there is really little point because the CPUFREQ on
+>> Tegra186 is set by writing a value stored in the frequency table to a
+>> register and we just need to set the initial frequency.
+> 
+> The hardware still runs at the frequency requested by cpufreq core here, right ?
 
-The store operation logs a warning if it gets interruption, e.g.:
+Yes.
 
-	kAFS: Unexpected error from FS.StoreData -4
+> It is better to provide the get() callback as it is also used to show the
+> current frequency in userspace.
 
-because it's run from the background - but it can also be run from
-fdatasync()-type things.  However, store options aren't marked
-interruptible at the moment.
+I looked at that and I saw that if the get() callback is not provided,
+the current frequency showed by userspace is policy->cur. For this
+device, policy->cur is accurate and so if we added the get() callback we
+essentially just going to return policy->cur. Therefore, given that we
+already know policy->cur, I did not see the point in adding a device
+specific handler to do the same thing.
 
-Fix this in the following ways:
+Cheers
+Jon
 
- (1) Mark store operations as uninterruptible.  It might make sense to
-     relax this for certain situations, but I'm not sure how to make sure
-     that background store ops aren't affected by signals to foreground
-     processes that happen to trigger them.
-
- (2) In afs_get_io_locks(), where we're getting the serialisation lock for
-     talking to the fileserver, return ERESTARTSYS rather than EINTR
-     because a lot of the operations (e.g. mkdir) are restartable if we
-     haven't yet started sending the op to the server.
-
-Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" concept")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/fs_operation.c |    4 ++--
- fs/afs/write.c        |    1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
-index c264839b2fd0..24fd163c6323 100644
---- a/fs/afs/fs_operation.c
-+++ b/fs/afs/fs_operation.c
-@@ -71,7 +71,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 		swap(vnode, vnode2);
- 
- 	if (mutex_lock_interruptible(&vnode->io_lock) < 0) {
--		op->error = -EINTR;
-+		op->error = -ERESTARTSYS;
- 		op->flags |= AFS_OPERATION_STOP;
- 		_leave(" = f [I 0]");
- 		return false;
-@@ -80,7 +80,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 
- 	if (vnode2) {
- 		if (mutex_lock_interruptible_nested(&vnode2->io_lock, 1) < 0) {
--			op->error = -EINTR;
-+			op->error = -ERESTARTSYS;
- 			op->flags |= AFS_OPERATION_STOP;
- 			mutex_unlock(&vnode->io_lock);
- 			op->flags &= ~AFS_OPERATION_LOCK_0;
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index abfc8d3dc20c..60918b80b729 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -449,6 +449,7 @@ static int afs_store_data(struct address_space *mapping,
- 	op->store.first_offset = offset;
- 	op->store.last_to = to;
- 	op->mtime = vnode->vfs_inode.i_mtime;
-+	op->flags |= AFS_OPERATION_UNINTR;
- 	op->ops = &afs_store_data_operation;
- 
- try_next_key:
-
-
+-- 
+nvpublic
