@@ -2,111 +2,128 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 561B920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hcTBR1V0"
+	by mail.kernel.org (Postfix) with ESMTP id 5343A207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgGMGzy (ORCPT
+        id S1727035AbgGMHDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:55:54 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:35030 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725830AbgGMGzy (ORCPT
+        Mon, 13 Jul 2020 03:03:19 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:33882 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgGMHDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:55:54 -0400
-X-UUID: 474391b0ea3341caa0a2e701608106dd-20200713
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+Ge9G9rSePdPEHWfzy1cfUe7vMpgioTYIlHODRFrwkk=;
-        b=hcTBR1V01BvFVOcL44C3w3YSZLGRuq/FvLGwAt6XomEoV1yYRvZFBkRHNVTx1M6WesSiSY+7aPclKNgqNZreRNhgIQQH1hrtVBa890fnkMCBgKoDvX3mQ0TuwNdKE4VmlkYnEZiKMDMG3wGuxdINFJ4nq/X6ys/epgshYJ/Jt1s=;
-X-UUID: 474391b0ea3341caa0a2e701608106dd-20200713
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1177699355; Mon, 13 Jul 2020 14:55:48 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 13 Jul
- 2020 14:55:47 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 13 Jul 2020 14:55:45 +0800
-Message-ID: <1594623300.23885.36.camel@mhfsdcap03>
-Subject: Re: [v2 PATCH] usb: gadget: bdc: use readl_poll_timeout() to
- simplify code
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 13 Jul 2020 14:55:00 +0800
-In-Reply-To: <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
-References: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
-         <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 13 Jul 2020 03:03:18 -0400
+Received: by mail-il1-f197.google.com with SMTP id y3so8980037ily.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:03:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=KD15X37m756ZChXtUhrOQbYYuakKjDsUF1XkjQP+5KM=;
+        b=X43TX/1oCt+NXCdPjUKcTEwfvg5ILEkvF0qxBE/qszB1OBV1OnvJnK4iF2HAK6ZAWn
+         lhrye6nbSjIP5jt+oMKH0ItD5/1lGKN4yelu70vXWpZUvxZhozyPhAv+Gg2zmfszhNFa
+         chBy3Mg++RPSCoWIaTIHnyDl8a2+RIhju65ABD28c31axpmFL3anWc8NGsEOiEcNtIr7
+         7f8ePZvcXR4OWKF/2L493p2vMapJ6GkcLQky/wfTs/6vIVxTLRWa/EbQWyI4QxhbNOQI
+         9sn9j3B4ry+I5fGXfkRPx3QRxgbCFPCkGlUkALFuCZ+23tGRfa+qOApdhphHf1tgI98P
+         s8VA==
+X-Gm-Message-State: AOAM531oTQlewqMLhTt1RZj00mnkJxYcGxHnjmhNKxIju0M/cCbNUkaF
+        +FG95H3Fvo1tc8c+bXYe/8NiRMAq5Dx1cu4XGNgl1JLZfqBH
+X-Google-Smtp-Source: ABdhPJzop0Dy3ZGGkSXYIfaSOmUyzQVlKE4OVcZsK749AG3YpsJSMEsEvcagNK/OogHlBTRBce2bBll2UnZrLFBvmJm3hPMl6pnG
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 5DE5EC88EF47CDA1AC3C74117593930ACC115D18580B92FF06D31A130EB8FCEE2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a05:6e02:c21:: with SMTP id q1mr13551490ilg.28.1594623797742;
+ Mon, 13 Jul 2020 00:03:17 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 00:03:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000003d32b05aa4d493c@google.com>
+Subject: WARNING in __kernel_read
+From:   syzbot <syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com>
+To:     hch@lst.de, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTA3LTEyIGF0IDIwOjUzIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiANCj4gT24gNy8xMi8yMDIwIDg6MzAgUE0sIENodW5mZW5nIFl1biB3cm90ZToNCj4gPiBV
-c2UgcmVhZGxfcG9sbF90aW1lb3V0KCkgdG8gcG9sbCByZWdpc3RlciBzdGF0dXMNCj4gPiANCj4g
-PiBDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+ID4gU2lnbmVk
-LW9mZi1ieTogQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KPiA+IC0t
-LQ0KPiA+IHYyIGNoYW5nZXMsIHN1Z2dlc3RlZCBieSBTdGVwaGVuOg0KPiA+ICAgMS4gdXNlIHVu
-c2lnbmVkIGludCBpbnN0ZWFkIG9mIGludCBmb3IgQHVzZWMgcGFyYW1ldGVyDQo+ID4gICAyLiBh
-ZGQgZGV2X2xvZygpIGJhY2sNCj4gPiAgIDMuIGRyb3AgIkVyciIgaW4gZXJyb3IgbG9nDQo+ID4g
-LS0tDQo+ID4gIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19jb3JlLmMgfCAyNiArKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9u
-cygrKSwgMTUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
-L2dhZGdldC91ZGMvYmRjL2JkY19jb3JlLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9i
-ZGNfY29yZS5jDQo+ID4gaW5kZXggMDJhM2E3Ny4uNTNkY2NiMSAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy91
-c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NvcmUuYw0KPiA+IEBAIC0xMiw2ICsxMiw3IEBADQo+ID4g
-ICNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZv
-cm1fZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW9wb3J0Lmg+DQo+
-ID4gICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0K
-PiA+IEBAIC0yOSwyNCArMzAsMTkgQEANCj4gPiAgI2luY2x1ZGUgImJkY19kYmcuaCINCj4gPiAg
-DQo+ID4gIC8qIFBvbGwgdGlsbCBjb250cm9sbGVyIHN0YXR1cyBpcyBub3QgT0lQICovDQo+ID4g
-LXN0YXRpYyBpbnQgcG9sbF9vaXAoc3RydWN0IGJkYyAqYmRjLCBpbnQgdXNlYykNCj4gPiArc3Rh
-dGljIGludCBwb2xsX29pcChzdHJ1Y3QgYmRjICpiZGMsIHUzMiB1c2VjKQ0KPiA+ICB7DQo+ID4g
-IAl1MzIgc3RhdHVzOw0KPiA+IC0JLyogUG9sbCB0aWxsIFNUUyE9IE9JUCAqLw0KPiA+IC0Jd2hp
-bGUgKHVzZWMpIHsNCj4gPiAtCQlzdGF0dXMgPSBiZGNfcmVhZGwoYmRjLT5yZWdzLCBCRENfQkRD
-U0MpOw0KPiA+IC0JCWlmIChCRENfQ1NUUyhzdGF0dXMpICE9IEJEQ19PSVApIHsNCj4gPiAtCQkJ
-ZGV2X2RiZyhiZGMtPmRldiwNCj4gPiAtCQkJCSJwb2xsX29pcCBjb21wbGV0ZSBzdGF0dXM9JWQi
-LA0KPiA+IC0JCQkJQkRDX0NTVFMoc3RhdHVzKSk7DQo+ID4gLQkJCXJldHVybiAwOw0KPiA+IC0J
-CX0NCj4gPiAtCQl1ZGVsYXkoMTApOw0KPiA+IC0JCXVzZWMgLT0gMTA7DQo+ID4gLQl9DQo+ID4g
-LQlkZXZfZXJyKGJkYy0+ZGV2LCAiRXJyOiBvcGVyYXRpb24gdGltZWRvdXQgQkRDU0M6IDB4JTA4
-eFxuIiwgc3RhdHVzKTsNCj4gPiArCWludCByZXQ7DQo+ID4gIA0KPiA+IC0JcmV0dXJuIC1FVElN
-RURPVVQ7DQo+ID4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoYmRjLT5yZWdzICsgQkRDX0JE
-Q1NDLCBzdGF0dXMsDQo+ID4gKwkJKEJEQ19DU1RTKHN0YXR1cykgIT0gQkRDX09JUCksIDEwLCB1
-c2VjKTsNCj4gDQo+IFlvdSBjb3VsZCBwcm9iYWJseSBpbmRlbnQgdGhpcyB0byB0aGUgb3Blbmlu
-ZyBwYXJlbnRoZXNpcywgDQpEb25lLCB2MyBpcyBzZW50IG91dCwgdGhhbmtzDQoNCj4gYnV0IHdp
-dGggb3INCj4gd2l0aG91dCBpdDoNCj4gDQo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxp
-IDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCj4gDQo+IGFuZCB0aGFua3MgZm9yIHBpY2tpbmcgdXAg
-dGhlIE1BSU5UQUlORVJTIGZpbGUgdXBkYXRlIDspDQo+IA0KPiA+ICsJaWYgKHJldCkNCj4gPiAr
-CQlkZXZfZXJyKGJkYy0+ZGV2LCAib3BlcmF0aW9uIHRpbWVkb3V0IEJEQ1NDOiAweCUwOHhcbiIs
-IHN0YXR1cyk7DQo+ID4gKwllbHNlDQo+ID4gKwkJZGV2X2RiZyhiZGMtPmRldiwgIiVzIGNvbXBs
-ZXRlIHN0YXR1cz0lZCIsIF9fZnVuY19fLCBCRENfQ1NUUyhzdGF0dXMpKTsNCj4gPiArDQo+ID4g
-KwlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4gIA0KPiA+ICAvKiBTdG9wIHRoZSBCREMgY29udHJv
-bGxlciAqLw0KPiA+IA0KPiANCg0K
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    a581387e Merge tag 'io_uring-5.8-2020-07-10' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e730eb100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
+dashboard link: https://syzkaller.appspot.com/bug?extid=d012ca3f813739c37c25
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e0222b100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162a004f100000
+
+The bug was bisected to:
+
+commit 6209dd9132e8ea5545cffc84483841e88ea8cc5b
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Fri May 8 07:00:28 2020 +0000
+
+    fs: implement kernel_read using __kernel_read
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152d91fb100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=172d91fb100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=132d91fb100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com
+Fixes: 6209dd9132e8 ("fs: implement kernel_read using __kernel_read")
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5 at fs/read_write.c:427 __kernel_read+0x41d/0x4d0 fs/read_write.c:427
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events p9_read_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:__kernel_read+0x41d/0x4d0 fs/read_write.c:427
+Code: fd ff ff e8 75 19 b6 ff 45 31 c9 45 31 c0 b9 01 00 00 00 4c 89 f2 89 ee 4c 89 ef e8 5d 22 12 00 e9 46 ff ff ff e8 53 19 b6 ff <0f> 0b 49 c7 c4 ea ff ff ff e9 11 fe ff ff 4c 89 f7 e8 2d 76 f5 ff
+RSP: 0018:ffffc90000cbfbc8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8880a9786ac0 RCX: ffffffff81bd9ac4
+RDX: ffff8880a95a2140 RSI: ffffffff81bd9e3d RDI: 0000000000000005
+RBP: ffff888096bc8060 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 1ffffffff1829bdd R12: 00000000081d801e
+R13: ffffc90000cbfc98 R14: ffff8880a9786b44 R15: 0000000000000007
+ kernel_read+0x52/0x70 fs/read_write.c:457
+ p9_fd_read net/9p/trans_fd.c:263 [inline]
+ p9_read_work+0x2ac/0xff0 net/9p/trans_fd.c:298
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
