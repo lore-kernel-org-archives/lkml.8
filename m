@@ -2,121 +2,73 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F535C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA91C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5DDD20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594646103;
-	bh=vsfrQkQHuwH4Y1vXh/4DmCZ6tKypfE6qSWFzh+Q1CxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cX7JBmycXf/2E1SyMN+XB2K3g/5EbLrWckhFoSS4hZwVmokTFAgfIkOy1fw/AZkMM
-	 0e4hhzTpBtI7VY8c3Ce5Jzawz/vKFpCfha0yY+XxMGsich4SxwUZ9gOieWQFkO3GId
-	 TBRChMHLrhC5U3i7FRVvlP5wS8vFfZeh5XyRO1gA=
+	by mail.kernel.org (Postfix) with ESMTP id 9C31520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgGMNPB (ORCPT
+        id S1729792AbgGMNPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 09:15:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53270 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMNPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:15:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF34D206F0;
-        Mon, 13 Jul 2020 13:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594646100;
-        bh=vsfrQkQHuwH4Y1vXh/4DmCZ6tKypfE6qSWFzh+Q1CxI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TwkkICUs4b3I5XsQCZ7NO0M3cnFT6s/5dWcTpCmKe+uCGj+BCDhAyzY9QAqbHuGFb
-         CKYDfi+beNX2Cxevmjuhay0f5WcEEfX0KSrJFnDh06AEKGNQOd1Ncu48GrSps1DD5Y
-         8px6YzdOOCHDGSYWOPvvAFmzP/UfGbRI/OhrpNNc=
-Date:   Mon, 13 Jul 2020 14:14:54 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
-        peterx@redhat.com, hao.wu@intel.com, stefanha@gmail.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-Message-ID: <20200713131454.GA2739@willie-the-truck>
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
+        id S1729523AbgGMNPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:15:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F3B45B58E;
+        Mon, 13 Jul 2020 13:15:11 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 15:15:09 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Bruno Meneguele <bmeneg@redhat.com>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, Jason@zx2c4.com
+Subject: Re: [PATCH v2] doc:kmsg: explictly state the return value in case of
+ SEEK_CUR
+Message-ID: <20200713131509.GC20226@alley>
+References: <20200710174423.10480-1-bmeneg@redhat.com>
+ <20200713022558.GC491026@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
+In-Reply-To: <20200713022558.GC491026@jagdpanzerIV.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 04:20:58AM -0700, Liu Yi L wrote:
-> This patch is added as instead of returning a boolean for DOMAIN_ATTR_NESTING,
-> iommu_domain_get_attr() should return an iommu_nesting_info handle.
+On Mon 2020-07-13 11:25:58, Sergey Senozhatsky wrote:
+> On (20/07/10 14:44), Bruno Meneguele wrote:
+> > The commit 625d3449788f ("Revert "kernel/printk: add kmsg SEEK_CUR
+> > handling"") reverted a change done to the return value in case a SEEK_CUR
+> > operation was performed for kmsg buffer based on the fact that different
+> > userspace apps were handling the new return value (-ESPIPE) in different
+> > ways, breaking them.
+> > 
+> > At the same time -ESPIPE was the wrong decision because kmsg /does support/
+> > seek() but doesn't follow the "normal" behavior userspace is used to.
+> > Because of that and also considering the time -EINVAL has been used, it was
+> > decided to keep this way to avoid more userspace breakage.
+> > 
+> > This patch adds an official statement to the kmsg documentation pointing to
+> > the current return value for SEEK_CUR, -EINVAL, thus userspace libraries
+> > and apps can refer to it for a definitive guide on what to expect.
+> > 
+> > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 > 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Suggested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> v4 -> v5:
-> *) address comments from Eric Auger.
-> ---
->  drivers/iommu/arm-smmu-v3.c | 29 +++++++++++++++++++++++++++--
->  drivers/iommu/arm-smmu.c    | 29 +++++++++++++++++++++++++++--
->  2 files changed, 54 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index f578677..ec815d7 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -3019,6 +3019,32 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
->  	return group;
->  }
->  
-> +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain *smmu_domain,
-> +					void *data)
-> +{
-> +	struct iommu_nesting_info *info = (struct iommu_nesting_info *)data;
-> +	unsigned int size;
-> +
-> +	if (!info || smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
-> +		return -ENODEV;
-> +
-> +	size = sizeof(struct iommu_nesting_info);
-> +
-> +	/*
-> +	 * if provided buffer size is smaller than expected, should
-> +	 * return 0 and also the expected buffer size to caller.
-> +	 */
-> +	if (info->size < size) {
-> +		info->size = size;
-> +		return 0;
-> +	}
-> +
-> +	/* report an empty iommu_nesting_info for now */
-> +	memset(info, 0x0, size);
-> +	info->size = size;
-> +	return 0;
-> +}
+> Looks good to me,
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Have you verified that this doesn't break the existing usage of
-DOMAIN_ATTR_NESTING in drivers/vfio/vfio_iommu_type1.c?
+The patch is committed in printk/linux.git, branch for-5.9.
 
-Will
+Thanks for v2.
+
+Best Regards,
+Petr
