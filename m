@@ -2,103 +2,79 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B51C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88536C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B62D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B3B20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594631266;
+	bh=7RDrk6FG1G62GPqsHxzurTUGskSxu5+1OFflYhbzKfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ONicwA0ss36i9MQnrR/gI+FHT8UHyZfGypzCwYfIzQ4c8/sZcBxA2cELh5UyEugmP
+	 xS5SczTHI9YXadTwHT+i/2AAMfK6DLO1Usij2rBczpDX30KHayflzC1ypBJ8NAD8Ao
+	 MXhOg/vi6IMS1qOuugYKe9UDaP6hoDNTHtTOhOKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgGMJG5 (ORCPT
+        id S1729127AbgGMJHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:06:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:65288 "EHLO mga05.intel.com"
+        Mon, 13 Jul 2020 05:07:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbgGMJG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:06:57 -0400
-IronPort-SDR: rdVohcU+3Q4J8OdjmcMcv+WtIWMDq/z+VRX1/DGDiEyD5OQLL28VgMb8zXYQYWSMHzy/0CfB3Y
- lOza0Ld0/8LA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="233437816"
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="233437816"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 02:06:56 -0700
-IronPort-SDR: KngRHk5ve9Vleg4jLe3Lwqo7pjZZCYApD84txpQLS2Jy5hTjkz8pq0XWZz58RlwQEqB80dCovP
- +52ySHD/mByQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
-   d="scan'208";a="316001867"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2020 02:06:53 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1juuQH-001ZDR-KF; Mon, 13 Jul 2020 12:06:53 +0300
-Date:   Mon, 13 Jul 2020 12:06:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wei Shuai <cpuwolf@gmail.com>
-Cc:     "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Borislav Petkov <bp@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
-        Mark Gross <mgross@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Erwan Velu <e.velu@criteo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: break joystick limitation of maximum 80 buttons
-Message-ID: <20200713090653.GB3703480@smile.fi.intel.com>
-References: <cpuwolf@gmail.com>
- <20200710065112.18286-1-cpuwolf@gmail.com>
- <CACa7zykn0q9XJAUvrqnNATr4DUv3Kc7XujF3vm6sfRB5pE6YNQ@mail.gmail.com>
+        id S1726360AbgGMJHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:07:44 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 885012067D;
+        Mon, 13 Jul 2020 09:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594631264;
+        bh=7RDrk6FG1G62GPqsHxzurTUGskSxu5+1OFflYhbzKfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wOT8AHtzzgyRADfUKlrv52LaBGhO1mBFbzszcivm6jdBYuJ7EbOvOP2ZDplnA4l7x
+         zw2leXdjl+XbajHinafbdMEH459thNFRjtODBci3fa6u/6+JhSHMJNN+U8dEDGBQcp
+         5BJ1s290BEjlogTfLpqWYgBY9BoYOx82tSUYI3zM=
+Date:   Mon, 13 Jul 2020 17:07:38 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, horia.geanta@nxp.com,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v4] ARM: dts: vfxxx: Add node for CAAM
+Message-ID: <20200713090738.GJ15718@dragon>
+References: <20200711020245.6056-1-cphealy@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACa7zykn0q9XJAUvrqnNATr4DUv3Kc7XujF3vm6sfRB5pE6YNQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200711020245.6056-1-cphealy@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 07:54:54AM +0800, Wei Shuai wrote:
-> The joystick max buttons 80 limitation comes from
+On Fri, Jul 10, 2020 at 07:02:45PM -0700, Chris Healy wrote:
+> From: Andrey Smirnov <andrew.smirnov@gmail.com> 
 > 
-> #define BTN_JOYSTICK 0x120
-> #define BTN_DEAD 0x12f
-> #define BTN_TRIGGER_HAPPY 0x2c0
-> #define KEY_MAX 0x2ff
+> Add node for CAAM device in NXP Vybrid SoC.
 > 
-> include/uapi/linux/input-event-codes.h
-> 
-> according to function hidinput_configure_usage() in file drivers/hid/hid-input.c
-> 
-> the joystick button mapping is not a continues space
-> generally speaking, the mapping space is from
-> 
-> 1. BTN_JOYSTICK~BTN_DEAD
-> 2. BTN_TRIGGER_HAPPY~KEY_MAX
-> 
-> Finally, I got the max limitation is 80.
-> The patch is expanding KEY_MAX from 0x2ff to 4ff
-> and the change has been verified on 104 button USB HID device on Ubuntu
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> ---
+> v4:
+> - really add reviewed by from Fabio Estevam
+> v3:
+> - put version information in the correct place
+> - add reviewed by from Fabio Estevam
 
+I have picked up v2 with all these fixed up.
 
-If you send and resend this patch too often, nobody will take you seriously.
-Also, you have to provide versioning and changelog in each submission.
-Besides that, above doesn't answer to question "why?". Why are you doing this
-at all? What the problem?
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Shawn
