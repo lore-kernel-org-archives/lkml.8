@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07902C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA75207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4362068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e9eJSJSi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCaQYJow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgGMGJj (ORCPT
+        id S1727829AbgGMGJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
+        Mon, 13 Jul 2020 02:09:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbgGMGJf (ORCPT
+        with ESMTP id S1729216AbgGMGJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:09:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA77AC08C5DB
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k4so5040021pld.12
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:35 -0700 (PDT)
+        Mon, 13 Jul 2020 02:09:29 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6716FC08C5DB
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:29 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so5564211pgm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B5SJRhGUMLnGQMUFDntsl5BWZJUWM/0k6ncUijg6biA=;
-        b=e9eJSJSiGF6WMtv/BO8xgn4y9lS+3engHpcoQj4ttFSeWSlM7pKNQxEcW/PeneO269
-         PHRBri/i+spv6QDrGPYwZgYqJXg9yVXafWGAv+QOUxZzmB3iw39KZ4wiGdPewdO+wSte
-         z/gW5kkn0iQxcQGOIGluwcOdvFOcANOep/3TU=
+        bh=TMz+TFk15UWK//DhjPPAaUR+8tluYpYaBAxgr8yuuTI=;
+        b=GCaQYJowMgdDFdP50tGtRMz1K9X4UO6ZWbfx0pr17+JwN6FTKDU/QFIUN0a2CVRg6f
+         egszfIJOcOkNzZOV/bQHLvBE0Jf6tAD3d3OufOdlmG8eIyddehYYd68qTDDA0aU/xDtM
+         uIllW0vM4KZvwsT9f85e21iCbp001pqKJMJ9I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B5SJRhGUMLnGQMUFDntsl5BWZJUWM/0k6ncUijg6biA=;
-        b=WDMgP3RENeq8GW975u+pCmAVmji8k6l2dq4cs48LAANUENcspoFVoNVz+WN61m/+Tb
-         Izribm/sf9v2yUzdhuemJVzp2ujQ8Of/pYpaazgOnlZ2velw1tGU5EoRpqtAPgledCZz
-         rfjOCSZ7ePo3o+nOTdhhj7//QKEY0OGtp0IU1KLA6zdwsTuFfRtIZIYNiSgZwSKWaFwp
-         q6qPdI9TxVmC8sKRE1dlKNlRYVa5T8PZaBZeqi0plHtY8vgM1tV829MDP0X4mx0GmkTa
-         AVg79qxHm0nsOEovoWtiAADcKKuur10Nb2firU4UOvXm+/qJg6rGHYMj4S5SihK7yjIB
-         wySA==
-X-Gm-Message-State: AOAM533S7+fP0kvNHhqlOBANORxb7To1yGPMlWsP2eGyKdw4pVPnQDWW
-        SNf9nkNjkux99Vap3aWSHOucXw==
-X-Google-Smtp-Source: ABdhPJyfrsgnEB025G3HB/bdasCZtlOPEKmabswNGrrw3Z/BVQ8GGnY3KH9KNkNIzG22M+kR6d/lyg==
-X-Received: by 2002:a17:90a:e60b:: with SMTP id j11mr18907748pjy.189.1594620575272;
-        Sun, 12 Jul 2020 23:09:35 -0700 (PDT)
+        bh=TMz+TFk15UWK//DhjPPAaUR+8tluYpYaBAxgr8yuuTI=;
+        b=ly1FLELQdZpEb6iOGMI4OvbVsxAiCM3lSTVUlhnJ7wvdkFrgEF1wJw99zSyHdjMKbD
+         EzRjz1kh0+/93HKyBajgIDLCwIyEYZ8G4QRVML7CBP+mCxEIYVnEdyP4ky/EPw0vzMPA
+         ImcGUFE8AksLe2m6aYuHDnpk6QYeEtCglShPK9Lp9pFn6OPPnf4yTXxMIH66EH+uiSZ1
+         ScYnsW4cvPPYJbBjVyD1Xawc6uao/vo+CYwYQsbm7ZrwD6mFvku7ivBYMCw7o9bkHDQ0
+         CLvRtt92b9w/cTaoOs6AxDycgTn55dtpibDzdi7lqHl1FhU6WBpJpN/UZaWJO3SU6WPY
+         Rx9A==
+X-Gm-Message-State: AOAM533cFc4B52Ybp5wIzDln7uLKQQskhLc+2lu+NYPrkMtIXarPPRaH
+        lMtL+rnQ0P6ljFC19v0jhQl11w==
+X-Google-Smtp-Source: ABdhPJxrNIGB05kcYPHF9ApFG+AOfuNljPtFw9x09XJtK25pFQocyjrMO6a+/3BWqJffm9tI2GF71A==
+X-Received: by 2002:a65:60d4:: with SMTP id r20mr63448777pgv.436.1594620569005;
+        Sun, 12 Jul 2020 23:09:29 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.32
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:34 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:28 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -66,9 +66,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 08/16] dt-bindings: media: document mediatek,mt8183-vcodec-enc
-Date:   Mon, 13 Jul 2020 15:08:34 +0900
-Message-Id: <20200713060842.471356-9-acourbot@chromium.org>
+Subject: [PATCH v3 06/16] media: mtk-vcodec: venc: specify bitrate range per-chip
+Date:   Mon, 13 Jul 2020 15:08:32 +0900
+Message-Id: <20200713060842.471356-7-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -79,29 +79,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MT8183's encoder is similar to MT8173's.
+Different chips have different supported bitrate ranges. Move the min
+and max supported bitrates to the platform data.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h     | 4 ++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c     | 3 ++-
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 2 ++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-index 7aef0a4fe207..8093335afecb 100644
---- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-+++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-@@ -4,8 +4,9 @@ Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
- supports high resolution encoding and decoding functionalities.
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index e7b155e7432e..b8f913de8d80 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -311,12 +311,16 @@ enum mtk_chip {
+  *
+  * @uses_ext: whether the encoder uses the extended firmware messaging format
+  * @has_lt_irq: whether the encoder uses the LT irq
++ * @min_birate: minimum supported encoding bitrate
++ * @max_bitrate: maximum supported encoding bitrate
+  */
+ struct mtk_vcodec_enc_pdata {
+ 	enum mtk_chip chip;
  
- Required properties:
--- compatible : "mediatek,mt8173-vcodec-enc" for encoder
--  "mediatek,mt8173-vcodec-dec" for decoder.
-+- compatible : "mediatek,mt8173-vcodec-enc" for MT8173 encoder
-+  "mediatek,mt8183-vcodec-enc" for MT8183 encoder.
-+  "mediatek,mt8173-vcodec-dec" for MT8173 decoder.
- - reg : Physical base address of the video codec registers and length of
-   memory mapped region.
- - interrupts : interrupt number to the cpu.
+ 	bool uses_ext;
+ 	bool has_lt_irq;
++	unsigned long min_bitrate;
++	unsigned long max_bitrate;
+ };
+ 
+ /**
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index d469ff6464b2..50ba9da59153 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -1232,7 +1232,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
+ 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
+ 
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
+-			1, 4000000, 1, 4000000);
++			  ctx->dev->venc_pdata->min_bitrate,
++			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_B_FRAMES,
+ 			0, 2, 1, 0);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+index c1365209263e..221fa0303075 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+@@ -380,6 +380,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+ static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
+ 	.chip = MTK_MT8173,
+ 	.has_lt_irq = true,
++	.min_bitrate = 1,
++	.max_bitrate = 4000000,
+ };
+ 
+ static const struct of_device_id mtk_vcodec_enc_match[] = {
 -- 
 2.27.0.383.g050319c2ae-goog
 
