@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5320BC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEA2C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD4420720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647FD20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOrvNZyG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvAw4mHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgGMHrK (ORCPT
+        id S1729252AbgGMHrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
+        Mon, 13 Jul 2020 03:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgGMHrA (ORCPT
+        with ESMTP id S1729034AbgGMHqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:47:00 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A688FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:59 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so14647726wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:59 -0700 (PDT)
+        Mon, 13 Jul 2020 03:46:55 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0D1C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:54 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f139so12170822wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Uxo2DH0sWgHFikhlDzsPIQecz45jNH2LIUT7ZFPJRdc=;
-        b=GOrvNZyGD/PoyYcKlVxeUmDl6NKujK+VozGRKnT3zzrkL/K+gDrsH3ctdT5eT7xjON
-         CI8WLL8IO54NfYHE3fA1PKqWCzxHUOPO0kEoBGt8xKczCtNVVVQWmakkIWJoHWG/RI81
-         AzEj8CAToo56PyuMUBzcNY4aBlYAOHp8uetE7mrx0DR4P1ITJB0buL05HPW9DzzNCXeR
-         M4icB1yrctRI8HC+zYv+RejU7jRJOCWso8hGU7uORogO5uHkiqcV8JwXa9ZJWYvzIZtC
-         ZxgXj5QEtmpzu94HC2QYmQzKef5UbIVr9AIRZfNorDYl7Vb0AcO+sfwYwZdrBaUmUXzT
-         BxDQ==
+        bh=NOdYD3KnvBuwlGzK8Lnx8We5QJ0C1TZDV+3j7uFLFto=;
+        b=CvAw4mHHnyN5jjBhp6RQGxrb+maMJ6ZDQ1eJ3mgsEN2vBPxmivpVl38bnnNVF3gUxh
+         aq7hpGf11YFf6yrT9j0Js373rTmIVI0APKLJTcTojkwKQgOto9q5b6MAMGW/3t5OqpfU
+         mzyMKyA3Ftn4CTh5G+cONiLeNkZJKawrPB745hJtkrWPBiW5KQ6RdJjIi0EkQIEChoRk
+         Bm0aR19MwH/6/Kvp3zFDFsaBCJ/WNffWNDn0KXm2KdXH9tSp9mCNvG+QOP/M91cUO3TY
+         SlA95eudbVN1h0ErLiJbG3MWY1HlJ+uK7itidzpAr+xugFT0mA6gMYSxPmN2B3p3ridv
+         ZB5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Uxo2DH0sWgHFikhlDzsPIQecz45jNH2LIUT7ZFPJRdc=;
-        b=qap9HOwmROOmChxBZ4qtL/GAVyXYSydQWc6IH5Wa35K5Cv52G/qblZuK+9FT6F3owy
-         vFV+vtohh0x2pSqNnwfHlIVgHPT3051NKhVE9mBFhG6q2vaKjtqGuecKC3TrdI7SKbkX
-         dK+zP/OEymSIspSoNvQ5xQMLXJ/aaWDWvFp+vu/L2fMu6L2oTWTO6rGBlmYymYzhhQL/
-         fZ+YqXG6ueG3Zn5kwuiZhARXgn2pzkDbP432EdNLSkJ8mcIaIBOIm2P3kdQg8qfpAvP7
-         YyeZaKMirdJrpdl2wTAqjm/Lm/ZfQsw9GKWPCUDbYDYKfv87XfjqJFSXVezfo9PucnNe
-         XNdw==
-X-Gm-Message-State: AOAM533Tq2lh80vNjkTXEWu7xJvUnFoRhrW5AjLIM29oDIK0+SK415nx
-        YCp0pBslQQ3y+83o1qxuE/R11/WmeEc=
-X-Google-Smtp-Source: ABdhPJyLQGOD11n3K0Dn7RXnp5axnbqb5mW/JmFabQxC/B3pAqylPcRRFM9rhr2eMJG2NFlgSsbaQQ==
-X-Received: by 2002:adf:f20a:: with SMTP id p10mr83082724wro.41.1594626418436;
-        Mon, 13 Jul 2020 00:46:58 -0700 (PDT)
+        bh=NOdYD3KnvBuwlGzK8Lnx8We5QJ0C1TZDV+3j7uFLFto=;
+        b=nsa+wJNZUUSWQvCmzdO4gNOM8NXqD1GSyntUVYljR1eqQD7OcFf2iEKkvlWfHNKORS
+         wwXYX2luJDSX2TzqLwMYx2eU2uzUuIe2fZZLLS7acJTfyWjNs69SlIe2Cv3R31bT8mPZ
+         nd/qNl8dxawemj/TfEZ0h++9NmRFLUFM4yHhxxjXRZV8o/cmWwfU6k1Rr35sHLizcSdX
+         n/1CjAOhzclQ82gA0z0ApdNdlCmLUJoRLGHpGbaFUzA2lh/iuDXPk4sxP0YjXOMXBNky
+         VVV3a2mE1zudN29efMr5Z29WDgnL5wIlzX0zFfZtjj5oszicbQv4e/H1L3lmW+A309Pb
+         PPaw==
+X-Gm-Message-State: AOAM5326RoXgLrrCvCz+OuGHnL1bY0IyEIs69bh2FdMQKxXPlpZZzwwK
+        7tc6pubFm/kg0Qi5ngs/MhVgFg==
+X-Google-Smtp-Source: ABdhPJzEBTT5tgmh5wv6qUmVafx/By6p8FMFhAgeRm6C79E8IhosmAhv3jhPdWnQdUdyhlWfpMI0bg==
+X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr18917076wml.185.1594626413124;
+        Mon, 13 Jul 2020 00:46:53 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.46.57
+        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.46.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 00:46:57 -0700 (PDT)
+        Mon, 13 Jul 2020 00:46:52 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v2 10/29] scsi: libfc: fc_lport: Repair function parameter documentation
-Date:   Mon, 13 Jul 2020 08:46:26 +0100
-Message-Id: <20200713074645.126138-11-lee.jones@linaro.org>
+Subject: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of documentation issues
+Date:   Mon, 13 Jul 2020 08:46:21 +0100
+Message-Id: <20200713074645.126138-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713074645.126138-1-lee.jones@linaro.org>
 References: <20200713074645.126138-1-lee.jones@linaro.org>
@@ -77,70 +77,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Either misdocumentation and/or bitrot.
+Mostly missing or incorrect (bitrotted) function parameters.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/libfc/fc_lport.c:412: warning: Function parameter or member 'in_fp' not described in 'fc_lport_recv_echo_req'
- drivers/scsi/libfc/fc_lport.c:412: warning: Excess function parameter 'fp' description in 'fc_lport_recv_echo_req'
- drivers/scsi/libfc/fc_lport.c:447: warning: Function parameter or member 'in_fp' not described in 'fc_lport_recv_rnid_req'
- drivers/scsi/libfc/fc_lport.c:447: warning: Excess function parameter 'fp' description in 'fc_lport_recv_rnid_req'
- drivers/scsi/libfc/fc_lport.c:1330: warning: Function parameter or member 'state' not described in 'fc_lport_enter_ns'
- drivers/scsi/libfc/fc_lport.c:1428: warning: Function parameter or member 'state' not described in 'fc_lport_enter_ms'
- drivers/scsi/libfc/fc_lport.c:1939: warning: Function parameter or member 'tov' not described in 'fc_lport_els_request'
+ drivers/scsi/fcoe/fcoe_ctlr.c:139: warning: Function parameter or member 'mode' not described in 'fcoe_ctlr_init'
+ drivers/scsi/fcoe/fcoe_ctlr.c:604: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_encaps'
+ drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_recv_clr_vlink'
+ drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Excess function parameter 'fh' description in 'fcoe_ctlr_recv_clr_vlink'
+ drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Function parameter or member 't' not described in 'fcoe_ctlr_timeout'
+ drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Excess function parameter 'arg' description in 'fcoe_ctlr_timeout'
+ drivers/scsi/fcoe/fcoe_ctlr.c:1904: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_recv_flogi'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_locked'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_locked'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_final'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_final'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vn_parse'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vn_parse'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vlan_parse'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vlan_parse'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2900: warning: Excess function parameter 'min_len' description in 'fcoe_ctlr_vlan_send'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'fip' not described in 'fcoe_ctlr_vlan_recv'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_vlan_recv'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'lport' description in 'fcoe_ctlr_vlan_recv'
+ drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'fp' description in 'fcoe_ctlr_vlan_recv'
+ drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'callback' not described in 'fcoe_ctlr_disc_start'
+ drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_start'
+ drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_start'
 
 Cc: Hannes Reinecke <hare@suse.de>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/libfc/fc_lport.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/scsi/fcoe/fcoe_ctlr.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_lport.c b/drivers/scsi/libfc/fc_lport.c
-index 684c5e361a286..b84dbc316df15 100644
---- a/drivers/scsi/libfc/fc_lport.c
-+++ b/drivers/scsi/libfc/fc_lport.c
-@@ -405,7 +405,7 @@ static void fc_lport_recv_rlir_req(struct fc_lport *lport, struct fc_frame *fp)
+diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+index 1791a393795da..99242f9856708 100644
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -134,6 +134,7 @@ static void fcoe_ctlr_map_dest(struct fcoe_ctlr *fip)
  /**
-  * fc_lport_recv_echo_req() - Handle received ECHO request
-  * @lport: The local port receiving the ECHO
-- * @fp:	   ECHO request frame
-+ * @in_fp: ECHO request frame
+  * fcoe_ctlr_init() - Initialize the FCoE Controller instance
+  * @fip: The FCoE controller to initialize
++ * @mode: FIP mode to set
   */
- static void fc_lport_recv_echo_req(struct fc_lport *lport,
- 				   struct fc_frame *in_fp)
-@@ -440,7 +440,7 @@ static void fc_lport_recv_echo_req(struct fc_lport *lport,
- /**
-  * fc_lport_recv_rnid_req() - Handle received Request Node ID data request
-  * @lport: The local port receiving the RNID
-- * @fp:	   The RNID request frame
-+ * @in_fp: The RNID request frame
-  */
- static void fc_lport_recv_rnid_req(struct fc_lport *lport,
- 				   struct fc_frame *in_fp)
-@@ -1325,6 +1325,7 @@ static void fc_lport_enter_scr(struct fc_lport *lport)
- /**
-  * fc_lport_enter_ns() - register some object with the name server
-  * @lport: Fibre Channel local port to register
-+ * @state: Local port state
-  */
- static void fc_lport_enter_ns(struct fc_lport *lport, enum fc_lport_state state)
+ void fcoe_ctlr_init(struct fcoe_ctlr *fip, enum fip_mode mode)
  {
-@@ -1423,6 +1424,7 @@ static void fc_lport_enter_dns(struct fc_lport *lport)
+@@ -587,6 +588,7 @@ static void fcoe_ctlr_send_keep_alive(struct fcoe_ctlr *fip,
  /**
-  * fc_lport_enter_ms() - management server commands
-  * @lport: Fibre Channel local port to register
-+ * @state: Local port state
+  * fcoe_ctlr_encaps() - Encapsulate an ELS frame for FIP, without sending it
+  * @fip:   The FCoE controller for the ELS frame
++ * @lport: The local port
+  * @dtype: The FIP descriptor type for the frame
+  * @skb:   The FCoE ELS frame including FC header but no FCoE headers
+  * @d_id:  The destination port ID.
+@@ -1302,7 +1304,7 @@ static void fcoe_ctlr_recv_els(struct fcoe_ctlr *fip, struct sk_buff *skb)
+ /**
+  * fcoe_ctlr_recv_els() - Handle an incoming link reset frame
+  * @fip: The FCoE controller that received the frame
+- * @fh:	 The received FIP header
++ * @skb: The received FIP packet
+  *
+  * There may be multiple VN_Port descriptors.
+  * The overall length has already been checked.
+@@ -1775,7 +1777,7 @@ static void fcoe_ctlr_flogi_send(struct fcoe_ctlr *fip)
+ 
+ /**
+  * fcoe_ctlr_timeout() - FIP timeout handler
+- * @arg: The FCoE controller that timed out
++ * @t: Timer context use to obtain the controller reference
   */
- static void fc_lport_enter_ms(struct fc_lport *lport, enum fc_lport_state state)
+ static void fcoe_ctlr_timeout(struct timer_list *t)
  {
-@@ -1932,6 +1934,7 @@ static void fc_lport_bsg_resp(struct fc_seq *sp, struct fc_frame *fp,
-  * @job:   The BSG Passthrough job
-  * @lport: The local port sending the request
-  * @did:   The destination port id
-+ * @tov:   The timeout period (in ms)
+@@ -1887,6 +1889,7 @@ static void fcoe_ctlr_recv_work(struct work_struct *recv_work)
+ /**
+  * fcoe_ctlr_recv_flogi() - Snoop pre-FIP receipt of FLOGI response
+  * @fip: The FCoE controller
++ * @lport: The local port
+  * @fp:	 The FC frame to snoop
+  *
+  * Snoop potential response to FLOGI or even incoming FLOGI.
+@@ -2158,7 +2161,7 @@ static struct fc_rport_operations fcoe_ctlr_vn_rport_ops = {
+ 
+ /**
+  * fcoe_ctlr_disc_stop_locked() - stop discovery in VN2VN mode
+- * @fip: The FCoE controller
++ * @lport: The local port
+  *
+  * Called with ctlr_mutex held.
   */
- static int fc_lport_els_request(struct bsg_job *job,
- 				struct fc_lport *lport,
+@@ -2179,7 +2182,7 @@ static void fcoe_ctlr_disc_stop_locked(struct fc_lport *lport)
+ 
+ /**
+  * fcoe_ctlr_disc_stop() - stop discovery in VN2VN mode
+- * @fip: The FCoE controller
++ * @lport: The local port
+  *
+  * Called through the local port template for discovery.
+  * Called without the ctlr_mutex held.
+@@ -2195,7 +2198,7 @@ static void fcoe_ctlr_disc_stop(struct fc_lport *lport)
+ 
+ /**
+  * fcoe_ctlr_disc_stop_final() - stop discovery for shutdown in VN2VN mode
+- * @fip: The FCoE controller
++ * @lport: The local port
+  *
+  * Called through the local port template for discovery.
+  * Called without the ctlr_mutex held.
+@@ -2262,7 +2265,7 @@ static void fcoe_ctlr_vn_start(struct fcoe_ctlr *fip)
+  * fcoe_ctlr_vn_parse - parse probe request or response
+  * @fip: The FCoE controller
+  * @skb: incoming packet
+- * @rdata: buffer for resulting parsed VN entry plus fcoe_rport
++ * @frport: parsed FCoE rport from the probe request
+  *
+  * Returns non-zero error number on error.
+  * Does not consume the packet.
+@@ -2793,7 +2796,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
+  * fcoe_ctlr_vlan_parse - parse vlan discovery request or response
+  * @fip: The FCoE controller
+  * @skb: incoming packet
+- * @rdata: buffer for resulting parsed VLAN entry plus fcoe_rport
++ * @frport: parsed FCoE rport from the probe request
+  *
+  * Returns non-zero error number on error.
+  * Does not consume the packet.
+@@ -2892,7 +2895,6 @@ static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
+  * @fip: The FCoE controller
+  * @sub: sub-opcode for vlan notification or vn2vn vlan notification
+  * @dest: The destination Ethernet MAC address
+- * @min_len: minimum size of the Ethernet payload to be sent
+  */
+ static void fcoe_ctlr_vlan_send(struct fcoe_ctlr *fip,
+ 			      enum fip_vlan_subcode sub,
+@@ -2969,9 +2971,8 @@ static void fcoe_ctlr_vlan_disc_reply(struct fcoe_ctlr *fip,
+ 
+ /**
+  * fcoe_ctlr_vlan_recv - vlan request receive handler for VN2VN mode.
+- * @lport: The local port
+- * @fp: The received frame
+- *
++ * @fip: The FCoE controller
++ * @skb: The received FIP packet
+  */
+ static int fcoe_ctlr_vlan_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
+ {
+@@ -3015,9 +3016,8 @@ static void fcoe_ctlr_disc_recv(struct fc_lport *lport, struct fc_frame *fp)
+ 	fc_frame_free(fp);
+ }
+ 
+-/**
++/*
+  * fcoe_ctlr_disc_recv - start discovery for VN2VN mode.
+- * @fip: The FCoE controller
+  *
+  * This sets a flag indicating that remote ports should be created
+  * and started for the peers we discover.  We use the disc_callback
 -- 
 2.25.1
 
