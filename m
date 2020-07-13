@@ -2,165 +2,138 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976ABC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00632205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761792065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZrupG7ls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgGMO2B (ORCPT
+        id S1730098AbgGMO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:28:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:38166 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729881AbgGMO2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:28:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E2E30E;
-        Mon, 13 Jul 2020 07:27:59 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CA813F7BB;
-        Mon, 13 Jul 2020 07:27:57 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 15:27:55 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200713142754.tri5jljnrzjst2oe@e107158-lin.cambridge.arm.com>
-References: <20200706142839.26629-1-qais.yousef@arm.com>
- <20200706142839.26629-2-qais.yousef@arm.com>
- <20200713112125.GG10769@hirez.programming.kicks-ass.net>
- <20200713121246.xjif3g4zpja25o5r@e107158-lin.cambridge.arm.com>
- <20200713133558.GK10769@hirez.programming.kicks-ass.net>
+        Mon, 13 Jul 2020 10:28:05 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18609 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730072AbgGMO2D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:28:03 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c6f390000>; Mon, 13 Jul 2020 07:27:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 07:28:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 13 Jul 2020 07:28:02 -0700
+Received: from [10.26.72.101] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 14:27:52 +0000
+Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+To:     Zhenyu Ye <yezhenyu2@huawei.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
+        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <20200710094420.517-3-yezhenyu2@huawei.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4040f429-21c8-0825-2ad4-97786c3fe7c1@nvidia.com>
+Date:   Mon, 13 Jul 2020 15:27:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200713133558.GK10769@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200710094420.517-3-yezhenyu2@huawei.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594650425; bh=HKOHpLE5QAbthKg1avx0uHfseiNDsGrp0ztSIZ7XjfM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZrupG7lsamJd5qBWDiVu5tanfnOkChiY7EMX9otXKowsejZA/Qj+d97asaCg7R8Vt
+         5RjhO/9DQmvleGFJj9NOcFhX48dyvrryPU9Vte5BqWjLb5aSQxoTmLR1GtIqmlkLDm
+         LKDhzoQU9vFrK6tfVqURsr+W5JueRjnxzJUCvuOhBbXWWGcLyhywRmPFH/8eXPYcyK
+         8mVtpmTLCm+0YlDVaTNLb2ECKb4G26OSRplUFEnTlN5XQOgf+QGkB4Efid+rFXg9L4
+         Ym9ZsQjaMzwAQ0l5XtI8BVo9dnZm024Ihb4H3cb/M7Q7RpABZEjWI+Qk0W6reqK3ys
+         TY6PyGYX+IRAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/13/20 15:35, Peter Zijlstra wrote:
-> On Mon, Jul 13, 2020 at 01:12:46PM +0100, Qais Yousef wrote:
-> > On 07/13/20 13:21, Peter Zijlstra wrote:
-> 
-> > > It's monday, and I cannot get my brain working.. I cannot decipher the
-> > > comments you have with the smp_[rw]mb(), what actual ordering do they
-> > > enforce?
-> > 
-> > It was a  bit of a paranoia to ensure that readers on other cpus see the new
-> > value after this point.
-> 
-> IIUC that's not something any barrier can provide.
-> 
-> Barriers can only order between (at least) two memory operations:
-> 
-> 	X = 1;		y = Y;
-> 	smp_wmb();	smp_rmb();
-> 	Y = 1;		x = X;
-> 
-> guarantees that if y == 1, then x must also be 1. Because the left hand
-> side orders the store of Y after the store of X, while the right hand
-> side order the load of X after the load of Y. Therefore, if the first
-> load observes the last store, the second load must observe the first
-> store.
-> 
-> Without a second variable, barriers can't guarantee _anything_. Which is
-> why any barrier comment should refer to at least two variables.
 
-Hmmm okay. I thought this will order the write with the read. In my head if,
-for example, the write was stuck in the write buffer of CPU0, then a read on
-CPU1 would wait for this to be committed before carrying on and issue a read.
-
-So I was reading this as don't issue new reads before current writes are done.
-
-I need to go back and read memory-barriers.rst. It's been 10 years since I last
-read it..
-
+On 10/07/2020 10:44, Zhenyu Ye wrote:
+> Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
 > 
-> > > Also, your synchronize_rcu() relies on write_lock() beeing
-> > > non-preemptible, which isn't true on PREEMPT_RT.
-> > > 
-> > > The below seems simpler...
+> When cpu supports TLBI feature, the minimum range granularity is
+> decided by 'scale', so we can not flush all pages by one instruction
+> in some cases.
 > 
-> > Hmm maybe I am missing something obvious, but beside the race with fork; I was
-> > worried about another race and that's what the synchronize_rcu() is trying to
-> > handle.
-> > 
-> > It's the classic preemption in the middle of RMW operation race.
-> > 
-> > 		copy_process()			sysctl_uclamp
-> > 
-> > 		  sched_post_fork()
-> > 		    __uclamp_sync_rt()
-> > 		      // read sysctl
-> > 		      // PREEMPT
-> > 						  for_each_process_thread()
-> > 		      // RESUME
-> > 		      // write syctl to p
-> > 
+> For example, when the pages = 0xe81a, let's start 'scale' from
+> maximum, and find right 'num' for each 'scale':
 > 
-> > 	2. sysctl_uclamp happens *during* sched_post_fork()
-> > 
-> > There's the risk of the classic preemption in the middle of RMW where another
-> > CPU could have changed the shared variable after the current CPU has already
-> > read it, but before writing it back.
+> 1. scale = 3, we can flush no pages because the minimum range is
+>    2^(5*3 + 1) = 0x10000.
+> 2. scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
+>    flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
+>    Remaining pages is 0x1a;
+> 3. scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
+>    can be flushed.
+> 4. scale = 0, we flush the remaining 0x1a pages, the num =
+>    0x1a/0x2 - 1 = 0xd.
 > 
-> Aah.. I see.
+> However, in most scenarios, the pages = 1 when flush_tlb_range() is
+> called. Start from scale = 3 or other proper value (such as scale =
+> ilog2(pages)), will incur extra overhead.
+> So increase 'scale' from 0 to maximum, the flush order is exactly
+> opposite to the example.
 > 
-> > I protect this with rcu_read_lock() which as far as I know synchronize_rcu()
-> > will ensure if we do the update during this section; we'll wait for it to
-> > finish. New forkees entering the rcu_read_lock() section will be okay because
-> > they should see the new value.
-> > 
-> > spinlocks() and mutexes seemed inferior to this approach.
-> 
-> Well, didn't we just write in another patch that p->uclamp_* was
-> protected by both rq->lock and p->pi_lock?
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
 
-__setscheduler_uclamp() path is holding these locks, not sure by design or it
-just happened this path holds the lock. I can't see the lock in the
-uclamp_fork() path. But it's hard sometimes to unfold the layers of callers,
-especially not all call sites are annotated for which lock is assumed to be
-held.
 
-Is it safe to hold the locks in uclamp_fork() while the task is still being
-created? My new code doesn't hold it of course.
+After this change I am seeing the following build errors ...
 
-We can enforce this rule if you like. Though rcu critical section seems lighter
-weight to me.
+/tmp/cckzq3FT.s: Assembler messages:
+/tmp/cckzq3FT.s:854: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:870: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:1095: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:1111: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:1964: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:1980: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:2286: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:2302: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x7'
+/tmp/cckzq3FT.s:4833: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+/tmp/cckzq3FT.s:4849: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+/tmp/cckzq3FT.s:5090: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+/tmp/cckzq3FT.s:5106: Error: unknown or missing operation name at operand 1 -- `tlbi rvae1is,x6'
+/tmp/cckzq3FT.s:874: Error: attempt to move .org backwards
+/tmp/cckzq3FT.s:1115: Error: attempt to move .org backwards
+/tmp/cckzq3FT.s:1984: Error: attempt to move .org backwards
+/tmp/cckzq3FT.s:2306: Error: attempt to move .org backwards
+/tmp/cckzq3FT.s:4853: Error: attempt to move .org backwards
+/tmp/cckzq3FT.s:5110: Error: attempt to move .org backwards
+scripts/Makefile.build:280: recipe for target 'arch/arm64/mm/hugetlbpage.o' failed
+make[3]: *** [arch/arm64/mm/hugetlbpage.o] Error 1
+scripts/Makefile.build:497: recipe for target 'arch/arm64/mm' failed
+make[2]: *** [arch/arm64/mm] Error 2
 
-If all of this does indeed start looking messy we can put the update in
-a delayed worker and schedule that instead of doing synchronous setup.
+Cheers
+Jon
 
-Or go back to task_woken_rt() with a cached per-rq variable of
-sysctl_util_min_rt that is more likely to be cache hot compared to the global
-sysctl_util_min_rt variable.
-
-Thanks
-
---
-Qais Yousef
+-- 
+nvpublic
