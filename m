@@ -2,71 +2,148 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B6DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE54CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C9D20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594610745;
-	bh=42sLvH16N/p1HskAxb6+19GTRr4RU7NszcgWHIbzNNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NtDOoLnviySVrK0nsJpzkiJHxq48D9VJ5GMTQRXw0nOZMqFBcUg3D9qYqAJvjvJeH
-	 eCvWE1PP30RJjrGn8ygSxMB0yE7ZV1Nl5Yf2aeGAJJamp7auykXpCpiP+RrfCGPIu2
-	 LyP+3cm1O1snjotz0v0RZ2bw4dUD0EjRgHEQtCMc=
+	by mail.kernel.org (Postfix) with ESMTP id C4AEE2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PwbtGioZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgGMDZo (ORCPT
+        id S1728691AbgGMDZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgGMDZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:25:44 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 333182075F;
-        Mon, 13 Jul 2020 03:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594610743;
-        bh=42sLvH16N/p1HskAxb6+19GTRr4RU7NszcgWHIbzNNE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B+vq889PbBP/HPLp1htvu05JLh1JfilE/FtoRY/RMTjoe86+AEDmvnuuaopV74V+B
-         0yUS9c+lOyAyV8CSXChGYykC4hxFa/qrPA0CnZkOkSzr+W2x2T+N7Px8QiNPYiDrtV
-         UJTiDSqsIhO0P75OYsxXcUhG0Fr+234mD4/hR+O4=
-Date:   Mon, 13 Jul 2020 11:25:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v9 0/5] mainline Protonic boards
-Message-ID: <20200713032532.GD21277@dragon>
-References: <20200701130330.9089-1-o.rempel@pengutronix.de>
+        Sun, 12 Jul 2020 23:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgGMDZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:25:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6C2C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:25:58 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t6so1744284plo.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ku+KGKSdyTcTfELJ7NXu99BEXkWOgdvhpbREnxQezjk=;
+        b=PwbtGioZTVXRYoSt77N+XzTdEwuoZiBLj+bfaLApUKvczh5g9hHa87VxxrHt0Mminf
+         O7AlUgNMG2e8+tHuFNOks51A+gSyaadtiJf8OcQWCwxImwSMWxoRSWilzClMVeyojw1k
+         QCJXMI+2IUIOVwGIq6xxm0t0TlSpGx7OxJiGbparipah532xIvILDYF+6MsIETdP7Vrb
+         //Zn594OrcpROP22NLZBAi2arfJ5s57HhdEZTjhmAv+zAgB7rrpfD4/AdtgT76gUHMJU
+         HpgPZR7/rRS5Sb7IIFkGRAz6lXAFLmNDlsEBL/0Cb4yRiTbokyehZYqnI59dkZFOU+Rm
+         CQ6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ku+KGKSdyTcTfELJ7NXu99BEXkWOgdvhpbREnxQezjk=;
+        b=A47GNzsG6KgX0hEQWMqRerSVlpHEGNE8DDeZIrrdp4LqrlarTRzy0VKxTe2/chHw55
+         gFhcbDLuETCLt7MRE8SageLCZiXVrCLL8EqYApiTIzDFkEwHG5esoevvHpT++7MniMXb
+         1iF90pDOimTciQamOcgPQB8g0cB6GSsR8KBmGE3eemvE5jSgEpysEzegKLxyMJOcx00D
+         y7NCbTravGfa+L4Vv2lJIGm6KY6eoLn1KwDAz+wSo4ZkVDzFak/aAAHlMkHNQNepjHCU
+         qAXO90MBBw2AfPIPXLACAc7HCU6GjnNv/X1yiK7EdV6v67UR9GwGlH9a5XpIpPTui6v3
+         qT0Q==
+X-Gm-Message-State: AOAM530DcmxLU6ZJF8cphlmXJwogKXMsUmfXpkRtzI1A9EYDDIlPTKKK
+        hAfl1SFuCEHcDQvREb7cRTniTQ==
+X-Google-Smtp-Source: ABdhPJwPcX49Y2B2rKnxJlUWTPPH4EguURLC5kuMDOJMFwA/y1Fu/K22zimSQ+O4r9Y7ZHufPr8ihA==
+X-Received: by 2002:a17:90a:eaca:: with SMTP id ev10mr17196919pjb.151.1594610757535;
+        Sun, 12 Jul 2020 20:25:57 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id nh14sm12239188pjb.4.2020.07.12.20.25.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Jul 2020 20:25:56 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 08:55:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
+Message-ID: <20200713032554.cykywnygxln6ukrl@vireshk-i7>
+References: <20200712100645.13927-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701130330.9089-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200712100645.13927-1-jonathanh@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:03:25PM +0200, Oleksij Rempel wrote:
-> Oleksij Rempel (5):
->   dt-bindings: arm: fsl: add different Protonic boards
->   ARM: dts: add Protonic PRTI6Q board
->   ARM: dts: add Protonic WD2 board
->   ARM: dts: add Protonic VT7 board
->   ARM: dts: add Protonic RVT board
+On 12-07-20, 11:06, Jon Hunter wrote:
+> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
+> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
+> Tegra186 but as a consequence the following warnings are now seen on
+> boot ...
+> 
+>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
+> 
+> Although we could fix this by adding a 'get' operator for the Tegra186
+> CPUFREQ driver, there is really little point because the CPUFREQ on
+> Tegra186 is set by writing a value stored in the frequency table to a
+> register and we just need to set the initial frequency.
 
-Applied all, thanks.
+The hardware still runs at the frequency requested by cpufreq core here, right ?
+It is better to provide the get() callback as it is also used to show the
+current frequency in userspace.
+
+> So for Tegra186
+> the simplest way to fix this is read the register that sets the
+> frequency for each CPU and set the initial frequency when initialising
+> the CPUFREQ driver.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/cpufreq/tegra186-cpufreq.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
+> index 3d2f143748ef..c44190ce3f03 100644
+> --- a/drivers/cpufreq/tegra186-cpufreq.c
+> +++ b/drivers/cpufreq/tegra186-cpufreq.c
+> @@ -59,6 +59,7 @@ static int tegra186_cpufreq_init(struct cpufreq_policy *policy)
+>  		struct tegra186_cpufreq_cluster *cluster = &data->clusters[i];
+>  		const struct tegra186_cpufreq_cluster_info *info =
+>  			cluster->info;
+> +		u32 edvd_val;
+>  		int core;
+>  
+>  		for (core = 0; core < ARRAY_SIZE(info->cpus); core++) {
+> @@ -71,6 +72,13 @@ static int tegra186_cpufreq_init(struct cpufreq_policy *policy)
+>  		policy->driver_data =
+>  			data->regs + info->offset + EDVD_CORE_VOLT_FREQ(core);
+>  		policy->freq_table = cluster->table;
+> +
+> +		edvd_val = readl(policy->driver_data);
+> +
+> +		for (i = 0; cluster->table[i].frequency != CPUFREQ_TABLE_END; i++) {
+> +			if (cluster->table[i].driver_data == edvd_val)
+> +				policy->cur = cluster->table[i].frequency;
+> +		}
+>  		break;
+>  	}
+>  
+> -- 
+> 2.17.1
+
+-- 
+viresh
