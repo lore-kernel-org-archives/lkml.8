@@ -2,158 +2,194 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF499C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB57E2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kv0of1Ah"
+	by mail.kernel.org (Postfix) with ESMTP id 43C0F206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 02:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594605611;
+	bh=n+aQUWiSb6h2BXxXQYkcx0Eplz2u6ntQNT8GPsHaOqY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=evdL0dC5tTwz+cUAWpZ48+nJ+5caxriWM4GGhcklDY8KL5uiQySGRBgUJ4AvLGq8h
+	 eQVM5GZBjo1fmnrhgMMhAqVdbBJnUx3od+m//S28h+ifYwjAIk+riCooMBktmQe3Mc
+	 2C5gepTRVhAgt+G7soAybmwzinSJtE9pDKx2TSrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGMCEY (ORCPT
+        id S1726867AbgGMCAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGMCEY (ORCPT
+        Sun, 12 Jul 2020 22:00:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45525 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgGMCAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:04:24 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46119C061794;
-        Sun, 12 Jul 2020 19:04:24 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4n5L2lrmz9sDX;
-        Mon, 13 Jul 2020 12:04:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594605862;
-        bh=SLsNip8MzIuuBWxGNo3Aw7lVkmNmzXoSEeKWKbVijbc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kv0of1AhZpRE8Ddt03kqMyMEuV2G/jXj+/xAg75j0tsaoT3eR24zlNSuGZ/zcoMwJ
-         jm4/bJa3AONTdanFr2ORQOP5uWscWbq0uSMamv0Q+0ffF4vRe0MsIiLZw4RKA2YtzV
-         Kv6pDrHnRr1RV9Lt6smkH+p5D+DHkIe8aq/oVqmgiIHYGpJkkzqRXDXU6pmVvZPbah
-         HOIHbtgjBlfoBQzQoEkNSDwEBQ4rvYxHdjqV9rFL0pGVePy7XxSRU0I7Nz48r2zAZ7
-         klG5Zy0TJsxXXEIfrcXQPjVJiII4FvQCXMXRHPSpkS+ddReBxg53ZZmeCOGcA10yNu
-         nhndeRue8Dr4w==
-Date:   Mon, 13 Jul 2020 12:04:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: linux-next: build failure after merge of the security tree
-Message-ID: <20200713120419.33cf7a87@canb.auug.org.au>
-In-Reply-To: <20200708140034.546298ff@canb.auug.org.au>
-References: <20200708140034.546298ff@canb.auug.org.au>
+        Sun, 12 Jul 2020 22:00:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s10so12972104wrw.12
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 19:00:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pOgl4SH27K+97UgMx/iVFLrnmEiMUn5Mog1smCrys0g=;
+        b=YivLVJU1vVYavts6sNdChWdEFi0iw6FHfIbGkqFwxtjRSIf5saDk14MsHRbdAWNqhR
+         v7ucFaDSpRc0i0ECCqGvoQHvS4SF8AB5e11FBtxizRpNXq/Nni4RxamvReK1+0mL/Yjg
+         kNRYzCDe4dIgyom/AoYiZsb2k0CgWxEWGv4f4iGsIzRFMKAznpc9Jgt5nuzrbX6MnLQY
+         UlE0Gq9kjPMH8aenJw1TtH3P01sG8L7F91Dg+TZWMlK0A3kshtTknfmgfeP5YY/No/wc
+         JY1UnjQg+wAhhyyaIr2wb8Lz6l9CIDGFiNVTnsvqpD7neBTd44QF1CIIxLah0yj7B95V
+         wlvQ==
+X-Gm-Message-State: AOAM532ims/OT/zHvf+BHa3W4W8lT3LZ2V2m2eRPzjQKQi9oMdciIeCm
+        Ala5b3CKY6fDSqGUsOvXJK77ng7NfzQg0FZbRCo=
+X-Google-Smtp-Source: ABdhPJznmPa+xG/aLTXTMC8Z/lIamQwbwwtg+rep3pvOAMR+B6wZApYux6VsBeyDvIiM0PYXP81FyC7lQ+OfpXAtsZs=
+X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr74050306wrx.332.1594605607353;
+ Sun, 12 Jul 2020 19:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qz11.Q6hau/JLJMNRKX.pN+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200711124035.6513-1-changbin.du@gmail.com> <20200711124035.6513-8-changbin.du@gmail.com>
+In-Reply-To: <20200711124035.6513-8-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 13 Jul 2020 10:59:56 +0900
+Message-ID: <CAM9d7cgBeHW_Ot2nfBAzbV73gNKiOzp7K5KoTO=V4k=MGrZS6Q@mail.gmail.com>
+Subject: Re: [PATCH v5 07/17] perf ftrace: add option '--inherit' to trace
+ children processes
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qz11.Q6hau/JLJMNRKX.pN+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 8 Jul 2020 14:00:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On Sat, Jul 11, 2020 at 9:42 PM Changbin Du <changbin.du@gmail.com> wrote:
 >
-> After merging the security tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
->=20
-> fs/anon_inodes.c: In function 'anon_inode_make_secure_inode':
-> fs/anon_inodes.c:70:10: error: implicit declaration of function 'security=
-_inode_init_security_anon'; did you mean 'security_inode_init_security'? [-=
-Werror=3Dimplicit-function-declaration]
->    70 |  error =3D security_inode_init_security_anon(
->       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |          security_inode_init_security
->=20
-> Caused by commit
->=20
->   2749d3f84a70 ("Add a new LSM-supporting anonymous inode interface")
->=20
-> # CONFIG_SECURITY is not set
->=20
-> Also, the explicit include of linux/security.h is missing ...
->=20
-> I have added the following patch for today.
->=20
-> From b2bae25c9b715e06f7e802ec7b51cfbfec046e6c Mon Sep 17 00:00:00 2001
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 8 Jul 2020 13:43:01 +1000
-> Subject: [PATCH] fix up for "Add a new LSM-supporting anonymous inode int=
-erface"
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> This adds an option '--inherit' to allow us trace children
+> processes spawned by our target.
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+>
 > ---
->  fs/anon_inodes.c         | 1 +
->  include/linux/security.h | 7 +++++++
->  2 files changed, 8 insertions(+)
->=20
-> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> index f87f221167cf..25d92c64411e 100644
-> --- a/fs/anon_inodes.c
-> +++ b/fs/anon_inodes.c
-> @@ -21,6 +21,7 @@
->  #include <linux/magic.h>
->  #include <linux/anon_inodes.h>
->  #include <linux/pseudo_fs.h>
-> +#include <linux/security.h>
-> =20
->  #include <linux/uaccess.h>
-> =20
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 95c133a8f8bb..7c6b3dcf4721 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -735,6 +735,13 @@ static inline int security_inode_init_security(struc=
-t inode *inode,
->  	return 0;
+> v2: option name '--trace-children' -> '--inherit'.
+> ---
+>  tools/perf/Documentation/perf-ftrace.txt |  3 ++
+>  tools/perf/builtin-ftrace.c              | 38 ++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+)
+>
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index 98fe01d354d1..fd632bd9b2c1 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -61,6 +61,9 @@ OPTIONS
+>         Set the size of per-cpu tracing buffer, <size> is expected to
+>         be a number with appended unit character - B/K/M/G.
+>
+> +--inherit::
+> +       Trace children processes spawned by our target.
+> +
+>  -T::
+>  --trace-funcs=::
+>         Only trace functions given by the argument.  Multiple functions
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 887e78b23a82..4efaa7b6a906 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -39,6 +39,7 @@ struct perf_ftrace {
+>         struct list_head        nograph_funcs;
+>         int                     graph_depth;
+>         unsigned long           percpu_buffer_size;
+> +       bool                    inherit;
+>  };
+>
+>  struct filter_entry {
+> @@ -177,9 +178,27 @@ static int write_tracing_file_int(const char *name, int value)
+>         return 0;
 >  }
-> =20
-> +static inline int security_inode_init_security_anon(struct inode *inode,
-> +						    const struct qstr *name,
-> +						    const struct inode *context_inode)
+>
+> +static int write_tracing_option_file(const char *name, const char *val)
 > +{
-> +	return 0;
+> +       char *file;
+> +       int ret;
+> +
+> +       if (asprintf(&file, "options/%s", name) < 0)
+> +               return -1;
+> +
+> +       ret = __write_tracing_file(file, val, false);
+> +       free(file);
+> +       return ret;
 > +}
 > +
->  static inline int security_old_inode_init_security(struct inode *inode,
->  						   struct inode *dir,
->  						   const struct qstr *qstr,
+>  static int reset_tracing_cpu(void);
+>  static void reset_tracing_filters(void);
+>
+> +static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+> +{
+> +       write_tracing_option_file("function-fork", "0");
+> +}
+> +
+>  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+>  {
+>         if (write_tracing_file("tracing_on", "0") < 0)
+> @@ -198,6 +217,7 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+>                 return -1;
+>
+>         reset_tracing_filters();
+> +       reset_tracing_options(ftrace);
+>         return 0;
+>  }
+>
+> @@ -336,6 +356,17 @@ static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
+>         return 0;
+>  }
+>
+> +static int set_tracing_trace_inherit(struct perf_ftrace *ftrace)
+> +{
+> +       if (!ftrace->inherit)
+> +               return 0;
+> +
+> +       if (write_tracing_option_file("function-fork", "1") < 0)
+> +               return -1;
+> +
+> +       return 0;
+> +}
+> +
+>  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  {
+>         char *trace_file;
+> @@ -405,6 +436,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>                 goto out_reset;
+>         }
+>
+> +       if (set_tracing_trace_inherit(ftrace) < 0) {
+> +               pr_err("failed to set tracing option function-fork\n");
+> +               goto out_reset;
+> +       }
 
-I am still applying the above patch ...
+Can we have set_tracing_options() here instead to make
+the __cmd_ftrace() shorter?  It'd set other options added later.
+It's also symmetric to reset_tracing_options().
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks
+Namhyung
 
---Sig_/qz11.Q6hau/JLJMNRKX.pN+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8LwSMACgkQAVBC80lX
-0GwOgwf/TADeRBMQ/21gx6jwnuTQSZAK2MgEwm/2/Pl0Vk2okh21ptnJ/ICbbGZY
-wlfzxLYUx2NM6+oH4ucbJ5CZ/qoEw3Zgww6p+b9KY3X6lDsnovmIwOowC8+4xKIx
-mxqjN7XgpSJBj1Dswx43AvSkfvhktdXyyUutgxbHGc2/v3HhoeCy+vXIyk8FKdDm
-L6fTuc4gzVlF0WE7yrA9rHiW/Dt3/o47mT6aHgho1rt+fJqaFwq57jbu3tUd081k
-41Bmql5XBO8RBECZOcS1NiSzJB/7OHdaT8H60vifvn4z9fXeg3NuDKJFPvFTzIt4
-/xu+5+AjqXlIMqHftu2I22T3PU5IxA==
-=ysEe
------END PGP SIGNATURE-----
-
---Sig_/qz11.Q6hau/JLJMNRKX.pN+--
+> +
+>         if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+>                 pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+>                 goto out_reset;
+> @@ -599,6 +635,8 @@ int cmd_ftrace(int argc, const char **argv)
+>                     "Max depth for function graph tracer"),
+>         OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+>                      "size of per cpu buffer", parse_buffer_size),
+> +       OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
+> +                   "trace children processes"),
+>         OPT_END()
+>         };
+>
+> --
+> 2.25.1
+>
