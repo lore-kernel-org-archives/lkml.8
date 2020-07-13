@@ -2,64 +2,151 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B302BC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF10207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D988720773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594654366;
+	bh=BA45Q6AEXkFERQL4GWwTgvIF0IN9KuWDZxv/KQt11c8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HvxumdU8neq5XG0ItehsgDRpg+uTNYtGcN4Nw1BKPl0iMZJQ0BXmqSYFpcRDQRAG0
+	 HqA9YTNokmARFhJJB+QgST8rYXruFCmk/NzV5XltwDSM5GQy+OBDGvB9xgOi3oeK3Q
+	 AGm73pSEeXc1T5xQJy2hi+7v78I3JB10PdjDEpCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgGMPhV (ORCPT
+        id S1730039AbgGMPcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMPhV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:37:21 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D9A6C061755;
-        Mon, 13 Jul 2020 08:37:21 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
+        Mon, 13 Jul 2020 11:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgGMPcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:32:45 -0400
+Received: from kernel.org (unknown [87.71.40.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id A543F60C;
-        Mon, 13 Jul 2020 15:37:20 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 09:37:19 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/security-bugs: Explain why plain text is
- preferred
-Message-ID: <20200713093719.37ad0fb8@lwn.net>
-In-Reply-To: <202007091110.205DC6A9@keescook>
-References: <202007091110.205DC6A9@keescook>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF7206F0;
+        Mon, 13 Jul 2020 15:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594654364;
+        bh=BA45Q6AEXkFERQL4GWwTgvIF0IN9KuWDZxv/KQt11c8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gVM/ydYDODojWV7K+3vNvNLN+EKvGQkS3Wv873nQ3Y8rb7pos3CJPwsM5S5AzA+Ly
+         +r5f0oRFGnA6lPVLS7c0V5NxoIKpRC5qad/DicL/4kl2Rwmze9mgeFjr6B8bwEbwJ2
+         kzS1ewxoSnmTO/0xk1ne6SJpwagrdfTaxmlkA1rA=
+Date:   Mon, 13 Jul 2020 18:32:34 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 4/5] mm: secretmem: use PMD-size pages to amortize
+ direct map fragmentation
+Message-ID: <20200713153234.GC707159@kernel.org>
+References: <20200706172051.19465-1-rppt@kernel.org>
+ <20200706172051.19465-5-rppt@kernel.org>
+ <20200713110505.mesvinqjbj7imsdz@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713110505.mesvinqjbj7imsdz@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 11:11:30 -0700
-Kees Cook <keescook@chromium.org> wrote:
-
-> The security contact list gets regular reports contained in archive
-> attachments. This tends to add some back-and-forth delay in dealing with
-> security reports since we have to ask for plain text, etc.
+On Mon, Jul 13, 2020 at 02:05:05PM +0300, Kirill A. Shutemov wrote:
+> On Mon, Jul 06, 2020 at 08:20:50PM +0300, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > Removing a PAGE_SIZE page from the direct map every time such page is
+> > allocated for a secret memory mapping will cause severe fragmentation of
+> > the direct map. This fragmentation can be reduced by using PMD-size pages
+> > as a pool for small pages for secret memory mappings.
+> > 
+> > Add a gen_pool per secretmem inode and lazily populate this pool with
+> > PMD-size pages.
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  mm/secretmem.c | 107 ++++++++++++++++++++++++++++++++++++++++---------
+> >  1 file changed, 88 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/mm/secretmem.c b/mm/secretmem.c
+> > index df8f8c958cc2..c6fcf6d76951 100644
+> > --- a/mm/secretmem.c
+> > +++ b/mm/secretmem.c
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/memfd.h>
+> >  #include <linux/printk.h>
+> >  #include <linux/pagemap.h>
+> > +#include <linux/genalloc.h>
+> >  #include <linux/pseudo_fs.h>
+> >  #include <linux/set_memory.h>
+> >  #include <linux/sched/signal.h>
+> > @@ -23,24 +24,66 @@
+> >  #define SECRETMEM_UNCACHED	0x2
+> >  
+> >  struct secretmem_ctx {
+> > +	struct gen_pool *pool;
+> >  	unsigned int mode;
+> >  };
+> >  
+> > -static struct page *secretmem_alloc_page(gfp_t gfp)
+> > +static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
+> >  {
+> > -	/*
+> > -	 * FIXME: use a cache of large pages to reduce the direct map
+> > -	 * fragmentation
+> > -	 */
+> > -	return alloc_page(gfp);
+> > +	unsigned long nr_pages = (1 << HPAGE_PMD_ORDER);
+> > +	struct gen_pool *pool = ctx->pool;
+> > +	unsigned long addr;
+> > +	struct page *page;
+> > +	int err;
+> > +
+> > +	page = alloc_pages(gfp, HPAGE_PMD_ORDER);
+> > +	if (!page)
+> > +		return -ENOMEM;
+> > +
+> > +	addr = (unsigned long)page_address(page);
+> > +	split_page(page, HPAGE_PMD_ORDER);
+> > +
+> > +	err = gen_pool_add(pool, addr, HPAGE_PMD_SIZE, NUMA_NO_NODE);
+> > +	if (err) {
+> > +		__free_pages(page, HPAGE_PMD_ORDER);
+> > +		return err;
+> > +	}
+> > +
+> > +	__kernel_map_pages(page, nr_pages, 0);
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Documentation/admin-guide/security-bugs.rst | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> It's worth nothing that unlike flush_tlb_kernel_range(),
+> __kernel_map_pages() only flushed local TLB, so other CPU may still have
+> access to the page. It's shouldn't be a blocker, but deserve a comment.
 
-Applied, thanks.
+Sure.
+ 
+> > +
+> > +	return 0;
+> > +}
+> > +
 
-jon
+-- 
+Sincerely yours,
+Mike.
