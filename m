@@ -2,476 +2,341 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9212EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1454E206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629C72065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgGMIsC (ORCPT
+        id S1728571AbgGMItm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgGMIsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:48:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650F0C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:48:01 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1juu7w-00049g-AP; Mon, 13 Jul 2020 10:47:56 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1juu7q-0002yC-Fw; Mon, 13 Jul 2020 10:47:50 +0200
-Date:   Mon, 13 Jul 2020 10:47:50 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+        Mon, 13 Jul 2020 04:49:42 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7844 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbgGMItl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:49:41 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0755AD09E27BF9228CF5;
+        Mon, 13 Jul 2020 16:49:35 +0800 (CST)
+Received: from [127.0.0.1] (10.67.76.251) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 16:49:27 +0800
+Subject: Re: [fs] 936e92b615: unixbench.score 32.3% improvement
+To:     kernel test robot <rong.a.chen@intel.com>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Will Deacon" <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Yuqi Jin <jinyuqi@huawei.com>, <lkp@lists.01.org>
+References: <20200708072346.GL3874@shao2-debian>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <2b5fc62e-0248-e8f5-2aac-7355a2933dcd@hisilicon.com>
+Date:   Mon, 13 Jul 2020 16:49:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kbnayqgol27lp4uu"
-Content-Disposition: inline
-In-Reply-To: <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200708072346.GL3874@shao2-debian>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.76.251]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi maintainers,
 
---kbnayqgol27lp4uu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This issue is debugged on Huawei Kunpeng 920 which is an ARM64 platform and we also do more tests
+on x86 platform.
+Since Rong has also reported the improvement on x86，it seems necessary for us to do it.
+Any comments on it?
 
-Hello Michael,
+Thanks,
+Shaokun
 
-On Sat, Jul 11, 2020 at 07:28:05PM +0200, Michael Walle wrote:
-> Am 2020-07-09 10:50, schrieb Uwe Kleine-K=F6nig:
-> > On Mon, Jul 06, 2020 at 07:53:47PM +0200, Michael Walle wrote:
-> > > diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-> > > new file mode 100644
-> > > index 000000000000..8ee286b605bf
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-sl28cpld.c
-> > > @@ -0,0 +1,187 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * sl28cpld PWM driver
-> > > + *
-> > > + * Copyright 2020 Kontron Europe GmbH
-> > > + */
-> >=20
-> > Is there publically available documenation available? If so please add a
-> > link here.
->=20
-> Unfortunately not. But it should be easy enough and I'll describe it
-> briefly in the header.
+在 2020/7/8 15:23, kernel test robot 写道:
+> Greeting,
+> 
+> FYI, we noticed a 32.3% improvement of unixbench.score due to commit:
+> 
+> 
+> commit: 936e92b615e212d08eb74951324bef25ba564c34 ("[PATCH RESEND] fs: Move @f_count to different cacheline with @f_mode")
+> url: https://github.com/0day-ci/linux/commits/Shaokun-Zhang/fs-Move-f_count-to-different-cacheline-with-f_mode/20200624-163511
+> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 5e857ce6eae7ca21b2055cca4885545e29228fe2
+> 
+> in testcase: unixbench
+> on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
+> with following parameters:
+> 
+> 	runtime: 300s
+> 	nr_task: 30%
+> 	test: syscall
+> 	cpufreq_governor: performance
+> 	ucode: 0x5002f01
+> 
+> test-description: UnixBench is the original BYTE UNIX benchmark suite aims to test performance of Unix-like system.
+> test-url: https://github.com/kdlucas/byte-unixbench
+> 
+> 
+> 
+> 
+> 
+> Details are as below:
+> -------------------------------------------------------------------------------------------------->
+> 
+> 
+> To reproduce:
+> 
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp install job.yaml  # job file is attached in this email
+>         bin/lkp run     job.yaml
+> 
+> =========================================================================================
+> compiler/cpufreq_governor/kconfig/nr_task/rootfs/runtime/tbox_group/test/testcase/ucode:
+>   gcc-9/performance/x86_64-rhel-7.6/30%/debian-x86_64-20191114.cgz/300s/lkp-csl-2ap3/syscall/unixbench/0x5002f01
+> 
+> commit: 
+>   5e857ce6ea ("Merge branch 'hch' (maccess patches from Christoph Hellwig)")
+>   936e92b615 ("fs: Move @f_count to different cacheline with @f_mode")
+> 
+> 5e857ce6eae7ca21 936e92b615e212d08eb74951324 
+> ---------------- --------------------------- 
+>          %stddev     %change         %stddev
+>              \          |                \  
+>       2297 ±  2%     +32.3%       3038        unixbench.score
+>     171.74           +34.8%     231.55        unixbench.time.user_time
+>  1.366e+09           +32.6%  1.812e+09        unixbench.workload
+>      26472 ±  6%   +1270.0%     362665 ±158%  cpuidle.C1.usage
+>       0.25 ±  2%      +0.1        0.33        mpstat.cpu.all.usr%
+>       8.32 ± 43%    +129.7%      19.12 ± 63%  sched_debug.cpu.clock.stddev
+>       8.32 ± 43%    +129.7%      19.12 ± 63%  sched_debug.cpu.clock_task.stddev
+>       2100 ±  2%     -15.6%       1772 ±  9%  sched_debug.cpu.nr_switches.min
+>     373.34 ±  3%     +12.4%     419.48 ±  6%  sched_debug.cpu.ttwu_local.stddev
+>       2740 ± 12%     -72.3%     757.75 ±105%  numa-vmstat.node0.nr_inactive_anon
+>       3139 ±  8%     -69.9%     946.25 ± 97%  numa-vmstat.node0.nr_shmem
+>       2740 ± 12%     -72.3%     757.75 ±105%  numa-vmstat.node0.nr_zone_inactive_anon
+>     373.75 ± 51%    +443.3%       2030 ± 26%  numa-vmstat.node2.nr_inactive_anon
+>     496.00 ± 19%    +366.1%       2311 ± 29%  numa-vmstat.node2.nr_shmem
+>     373.75 ± 51%    +443.3%       2030 ± 26%  numa-vmstat.node2.nr_zone_inactive_anon
+>      13728 ± 13%    +148.1%      34056 ± 46%  numa-vmstat.node3.nr_active_anon
+>      78558           +11.3%      87431 ±  6%  numa-vmstat.node3.nr_file_pages
+>       9939 ±  8%     +19.7%      11902 ± 13%  numa-vmstat.node3.nr_shmem
+>      13728 ± 13%    +148.1%      34056 ± 46%  numa-vmstat.node3.nr_zone_active_anon
+>      11103 ± 13%     -71.2%       3201 ± 99%  numa-meminfo.node0.Inactive
+>      10962 ± 12%     -72.3%       3032 ±105%  numa-meminfo.node0.Inactive(anon)
+>       8551 ± 31%     -29.4%       6034 ± 18%  numa-meminfo.node0.Mapped
+>      12560 ±  8%     -69.9%       3786 ± 97%  numa-meminfo.node0.Shmem
+>       1596 ± 51%    +415.6%       8230 ± 24%  numa-meminfo.node2.Inactive
+>       1496 ± 51%    +442.8%       8122 ± 26%  numa-meminfo.node2.Inactive(anon)
+>       1984 ± 19%    +366.1%       9248 ± 29%  numa-meminfo.node2.Shmem
+>      54929 ± 13%    +148.0%     136212 ± 46%  numa-meminfo.node3.Active
+>      54929 ± 13%    +148.0%     136206 ± 46%  numa-meminfo.node3.Active(anon)
+>     314216           +11.3%     349697 ±  6%  numa-meminfo.node3.FilePages
+>     747907 ±  2%     +15.2%     861672 ±  9%  numa-meminfo.node3.MemUsed
+>      39744 ±  8%     +19.7%      47580 ± 13%  numa-meminfo.node3.Shmem
+>      13.94 ±  6%     -13.9        0.00        perf-profile.calltrace.cycles-pp.dnotify_flush.filp_close.__x64_sys_close.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>       0.00            +0.7        0.66 ±  8%  perf-profile.calltrace.cycles-pp.__x64_sys_umask.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>      31.64 ±  8%      +3.4       35.08 ±  5%  perf-profile.calltrace.cycles-pp.__fget_files.ksys_dup.__x64_sys_dup.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>       6.82 ±  8%      +5.6       12.41 ± 12%  perf-profile.calltrace.cycles-pp.fput_many.filp_close.__x64_sys_close.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>      23.54 ± 58%     +12.7       36.27 ±  5%  perf-profile.calltrace.cycles-pp.ksys_dup.__x64_sys_dup.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>      23.54 ± 58%     +12.7       36.29 ±  5%  perf-profile.calltrace.cycles-pp.__x64_sys_dup.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>      13.98 ±  6%     -14.0        0.00        perf-profile.children.cycles-pp.dnotify_flush
+>      39.81 ±  6%     -10.8       28.96 ±  9%  perf-profile.children.cycles-pp.filp_close
+>      40.13 ±  6%     -10.7       29.44 ±  9%  perf-profile.children.cycles-pp.__x64_sys_close
+>       0.15 ± 10%      -0.0        0.13 ±  8%  perf-profile.children.cycles-pp.scheduler_tick
+>       0.05 ±  8%      +0.0        0.07 ±  6%  perf-profile.children.cycles-pp.__x64_sys_getuid
+>       0.10 ±  7%      +0.0        0.12 ±  8%  perf-profile.children.cycles-pp.__prepare_exit_to_usermode
+>       0.44 ±  7%      +0.1        0.56 ±  6%  perf-profile.children.cycles-pp.syscall_return_via_sysret
+>      31.78 ±  8%      +3.4       35.22 ±  5%  perf-profile.children.cycles-pp.__fget_files
+>      32.52 ±  8%      +3.7       36.27 ±  5%  perf-profile.children.cycles-pp.ksys_dup
+>      32.54 ±  8%      +3.8       36.30 ±  5%  perf-profile.children.cycles-pp.__x64_sys_dup
+>       6.86 ±  7%      +5.6       12.45 ± 12%  perf-profile.children.cycles-pp.fput_many
+>      13.91 ±  6%     -13.9        0.00        perf-profile.self.cycles-pp.dnotify_flush
+>      18.05 ±  5%      -1.6       16.41 ±  7%  perf-profile.self.cycles-pp.filp_close
+>       0.06 ±  6%      +0.0        0.08 ±  8%  perf-profile.self.cycles-pp.__prepare_exit_to_usermode
+>       0.09 ±  9%      +0.0        0.11 ±  7%  perf-profile.self.cycles-pp.do_syscall_64
+>       0.16 ±  9%      +0.0        0.20 ±  4%  perf-profile.self.cycles-pp.entry_SYSCALL_64_after_hwframe
+>       0.30 ±  8%      +0.1        0.36 ±  7%  perf-profile.self.cycles-pp.entry_SYSCALL_64
+>       0.44 ±  7%      +0.1        0.56 ±  6%  perf-profile.self.cycles-pp.syscall_return_via_sysret
+>      31.61 ±  8%      +3.4       35.00 ±  5%  perf-profile.self.cycles-pp.__fget_files
+>       6.81 ±  7%      +5.6       12.38 ± 12%  perf-profile.self.cycles-pp.fput_many
+>      36623 ±  3%     +11.5%      40822 ±  7%  softirqs.CPU100.SCHED
+>      16499 ± 40%     +27.8%      21088 ± 35%  softirqs.CPU122.RCU
+>      16758 ± 41%     +30.0%      21781 ± 35%  softirqs.CPU126.RCU
+>     178.25 ± 11%   +7718.2%      13936 ±168%  softirqs.CPU13.NET_RX
+>      40883 ±  4%      -6.9%      38055 ±  2%  softirqs.CPU132.SCHED
+>      16029 ± 41%     +35.9%      21789 ± 33%  softirqs.CPU144.RCU
+>      16220 ± 43%     +32.4%      21484 ± 35%  softirqs.CPU145.RCU
+>      16393 ± 39%     +29.9%      21301 ± 32%  softirqs.CPU146.RCU
+>      16217 ± 39%     +29.8%      21055 ± 35%  softirqs.CPU147.RCU
+>      37011 ± 12%     +12.4%      41589 ±  5%  softirqs.CPU149.SCHED
+>      16127 ± 41%     +34.5%      21685 ± 34%  softirqs.CPU150.RCU
+>      16131 ± 41%     +32.3%      21333 ± 35%  softirqs.CPU151.RCU
+>      16558 ± 37%     +28.2%      21230 ± 34%  softirqs.CPU152.RCU
+>      15863 ± 40%     +34.1%      21266 ± 32%  softirqs.CPU153.RCU
+>      16044 ± 41%     +32.7%      21286 ± 34%  softirqs.CPU154.RCU
+>      16057 ± 40%     +34.9%      21658 ± 33%  softirqs.CPU155.RCU
+>      16352 ± 39%     +31.0%      21423 ± 33%  softirqs.CPU156.RCU
+>      16006 ± 39%     +33.4%      21348 ± 32%  softirqs.CPU158.RCU
+>      16300 ± 41%     +32.0%      21521 ± 34%  softirqs.CPU161.RCU
+>      37546 ±  4%     +13.5%      42605 ±  3%  softirqs.CPU161.SCHED
+>      16411 ± 41%     +33.4%      21894 ± 33%  softirqs.CPU162.RCU
+>      16329 ± 41%     +32.9%      21704 ± 35%  softirqs.CPU163.RCU
+>      16517 ± 39%     +29.8%      21441 ± 34%  softirqs.CPU164.RCU
+>      16227 ± 41%     +32.3%      21471 ± 34%  softirqs.CPU165.RCU
+>      16347 ± 40%     +31.4%      21481 ± 35%  softirqs.CPU166.RCU
+>      16360 ± 43%     +32.2%      21631 ± 35%  softirqs.CPU167.RCU
+>      36986           +11.3%      41148 ±  6%  softirqs.CPU167.SCHED
+>      16218 ± 44%     +34.7%      21843 ± 33%  softirqs.CPU189.RCU
+>      16501 ± 39%     +32.0%      21783 ± 33%  softirqs.CPU52.RCU
+>      17101 ± 41%     +29.4%      22121 ± 35%  softirqs.CPU68.RCU
+>  1.087e+09           +20.9%  1.314e+09        perf-stat.i.branch-instructions
+>   19778787           +22.1%   24144895 ± 16%  perf-stat.i.branch-misses
+>      22.88           -17.7%      18.84 ±  2%  perf-stat.i.cpi
+>  1.635e+09           +23.6%  2.021e+09        perf-stat.i.dTLB-loads
+>      20648 ±  2%    +218.4%      65736 ±110%  perf-stat.i.dTLB-store-misses
+>  1.023e+09           +24.8%  1.276e+09        perf-stat.i.dTLB-stores
+>      78.10            +1.4       79.54        perf-stat.i.iTLB-load-miss-rate%
+>   16169669            +8.2%   17493234        perf-stat.i.iTLB-load-misses
+>  5.364e+09           +21.3%  6.507e+09        perf-stat.i.instructions
+>     369.33           +11.8%     413.03 ±  5%  perf-stat.i.instructions-per-iTLB-miss
+>       0.41 ±  2%     +83.3%       0.76 ± 16%  perf-stat.i.metric.K/sec
+>      19.79           +23.2%      24.39        perf-stat.i.metric.M/sec
+>    4460149 ±  2%     -45.1%    2447884 ± 14%  perf-stat.i.node-load-misses
+>     241219 ±  2%     -58.8%      99443 ± 47%  perf-stat.i.node-loads
+>    1679821 ±  2%      -4.4%    1605611 ±  3%  perf-stat.i.node-store-misses
+>      25.91           -17.6%      21.36        perf-stat.overall.cpi
+>      82.51            +1.7       84.17        perf-stat.overall.iTLB-load-miss-rate%
+>     331.21           +12.2%     371.62        perf-stat.overall.instructions-per-iTLB-miss
+>       0.04           +21.3%       0.05        perf-stat.overall.ipc
+>       1566            -8.4%       1435        perf-stat.overall.path-length
+>  1.089e+09           +21.0%  1.318e+09        perf-stat.ps.branch-instructions
+>   19801099           +21.7%   24102537 ± 15%  perf-stat.ps.branch-misses
+>  1.641e+09           +23.6%  2.028e+09        perf-stat.ps.dTLB-loads
+>      20512 ±  2%    +212.7%      64142 ±109%  perf-stat.ps.dTLB-store-misses
+>  1.027e+09           +24.8%  1.282e+09        perf-stat.ps.dTLB-stores
+>   16239916            +8.2%   17567773        perf-stat.ps.iTLB-load-misses
+>  5.378e+09           +21.4%  6.527e+09        perf-stat.ps.instructions
+>    4485062 ±  2%     -45.2%    2458026 ± 14%  perf-stat.ps.node-load-misses
+>     242388 ±  2%     -59.0%      99493 ± 47%  perf-stat.ps.node-loads
+>    1689890 ±  2%      -4.5%    1614182 ±  3%  perf-stat.ps.node-store-misses
+>  2.139e+12           +21.5%    2.6e+12        perf-stat.total.instructions
+>     288.00 ± 13%   +8910.9%      25951 ±168%  interrupts.34:PCI-MSI.524292-edge.eth0-TxRx-3
+>       2042 ± 57%    +190.2%       5927 ± 26%  interrupts.CPU1.NMI:Non-maskable_interrupts
+>       2042 ± 57%    +190.2%       5927 ± 26%  interrupts.CPU1.PMI:Performance_monitoring_interrupts
+>       3.75 ± 34%   +2373.3%      92.75 ±130%  interrupts.CPU100.TLB:TLB_shootdowns
+>       3510 ± 88%     -85.1%     522.00 ±124%  interrupts.CPU107.NMI:Non-maskable_interrupts
+>       3510 ± 88%     -85.1%     522.00 ±124%  interrupts.CPU107.PMI:Performance_monitoring_interrupts
+>       3813 ± 74%     -73.3%       1018 ±150%  interrupts.CPU110.NMI:Non-maskable_interrupts
+>       3813 ± 74%     -73.3%       1018 ±150%  interrupts.CPU110.PMI:Performance_monitoring_interrupts
+>       4536 ± 51%     -97.1%     131.50 ±  8%  interrupts.CPU111.NMI:Non-maskable_interrupts
+>       4536 ± 51%     -97.1%     131.50 ±  8%  interrupts.CPU111.PMI:Performance_monitoring_interrupts
+>       4476 ± 47%     -97.5%     113.00 ± 19%  interrupts.CPU112.NMI:Non-maskable_interrupts
+>       4476 ± 47%     -97.5%     113.00 ± 19%  interrupts.CPU112.PMI:Performance_monitoring_interrupts
+>       3522 ± 36%     +92.7%       6787 ± 16%  interrupts.CPU120.NMI:Non-maskable_interrupts
+>       3522 ± 36%     +92.7%       6787 ± 16%  interrupts.CPU120.PMI:Performance_monitoring_interrupts
+>       2888 ± 66%    +117.5%       6283 ± 21%  interrupts.CPU123.NMI:Non-maskable_interrupts
+>       2888 ± 66%    +117.5%       6283 ± 21%  interrupts.CPU123.PMI:Performance_monitoring_interrupts
+>       3109 ± 61%    +132.5%       7230 ±  7%  interrupts.CPU124.NMI:Non-maskable_interrupts
+>       3109 ± 61%    +132.5%       7230 ±  7%  interrupts.CPU124.PMI:Performance_monitoring_interrupts
+>       1067 ± 19%     -21.6%     836.50        interrupts.CPU125.CAL:Function_call_interrupts
+>     288.00 ± 13%   +8910.9%      25951 ±168%  interrupts.CPU13.34:PCI-MSI.524292-edge.eth0-TxRx-3
+>     244.25 ± 96%     -95.3%      11.50 ± 95%  interrupts.CPU13.TLB:TLB_shootdowns
+>       2056 ±117%    +206.3%       6298 ± 20%  interrupts.CPU130.NMI:Non-maskable_interrupts
+>       2056 ±117%    +206.3%       6298 ± 20%  interrupts.CPU130.PMI:Performance_monitoring_interrupts
+>     831.50           +21.4%       1009 ± 13%  interrupts.CPU133.CAL:Function_call_interrupts
+>       8.00 ± 29%    +634.4%      58.75 ±119%  interrupts.CPU133.RES:Rescheduling_interrupts
+>       1629 ±159%    +265.3%       5952 ± 29%  interrupts.CPU139.NMI:Non-maskable_interrupts
+>       1629 ±159%    +265.3%       5952 ± 29%  interrupts.CPU139.PMI:Performance_monitoring_interrupts
+>       1660 ±159%    +161.0%       4332 ± 61%  interrupts.CPU141.NMI:Non-maskable_interrupts
+>       1660 ±159%    +161.0%       4332 ± 61%  interrupts.CPU141.PMI:Performance_monitoring_interrupts
+>     882.75 ±147%    +542.5%       5671 ± 38%  interrupts.CPU143.NMI:Non-maskable_interrupts
+>     882.75 ±147%    +542.5%       5671 ± 38%  interrupts.CPU143.PMI:Performance_monitoring_interrupts
+>       2600 ± 29%     +68.8%       4389 ± 47%  interrupts.CPU144.NMI:Non-maskable_interrupts
+>       2600 ± 29%     +68.8%       4389 ± 47%  interrupts.CPU144.PMI:Performance_monitoring_interrupts
+>       1494 ± 20%     +91.3%       2859 ± 29%  interrupts.CPU147.NMI:Non-maskable_interrupts
+>       1494 ± 20%     +91.3%       2859 ± 29%  interrupts.CPU147.PMI:Performance_monitoring_interrupts
+>       3657 ± 54%     -96.3%     133.75 ±  8%  interrupts.CPU15.NMI:Non-maskable_interrupts
+>       3657 ± 54%     -96.3%     133.75 ±  8%  interrupts.CPU15.PMI:Performance_monitoring_interrupts
+>       5165 ± 40%     -97.8%     115.00 ± 26%  interrupts.CPU16.NMI:Non-maskable_interrupts
+>       5165 ± 40%     -97.8%     115.00 ± 26%  interrupts.CPU16.PMI:Performance_monitoring_interrupts
+>      34.00 ±125%     -84.6%       5.25 ± 49%  interrupts.CPU186.RES:Rescheduling_interrupts
+>       1033 ± 24%     -19.0%     836.75        interrupts.CPU190.CAL:Function_call_interrupts
+>      68.00 ± 28%     +55.5%     105.75 ±  9%  interrupts.CPU26.RES:Rescheduling_interrupts
+>     882.25 ±  4%      +6.3%     937.75 ±  7%  interrupts.CPU32.CAL:Function_call_interrupts
+>     139.25 ± 96%     -74.0%      36.25 ± 72%  interrupts.CPU32.TLB:TLB_shootdowns
+>     848.25 ±130%    +368.9%       3977 ± 56%  interrupts.CPU35.NMI:Non-maskable_interrupts
+>     848.25 ±130%    +368.9%       3977 ± 56%  interrupts.CPU35.PMI:Performance_monitoring_interrupts
+>     958.25 ± 11%     -10.6%     856.75        interrupts.CPU36.CAL:Function_call_interrupts
+>       1903 ± 72%    +127.9%       4337 ± 23%  interrupts.CPU41.NMI:Non-maskable_interrupts
+>       1903 ± 72%    +127.9%       4337 ± 23%  interrupts.CPU41.PMI:Performance_monitoring_interrupts
+>       1320 ±158%    +245.4%       4560 ± 32%  interrupts.CPU47.NMI:Non-maskable_interrupts
+>       1320 ±158%    +245.4%       4560 ± 32%  interrupts.CPU47.PMI:Performance_monitoring_interrupts
+>     837.50            +5.2%     881.25 ±  4%  interrupts.CPU61.CAL:Function_call_interrupts
+>       1074 ± 28%     -22.1%     836.50        interrupts.CPU69.CAL:Function_call_interrupts
+>       1042 ± 12%     -18.7%     847.50 ±  2%  interrupts.CPU86.CAL:Function_call_interrupts
+> 
+> 
+>                                                                                 
+>                                   unixbench.score                               
+>                                                                                 
+>   3200 +--------------------------------------------------------------------+   
+>        |                 O             O        O                           |   
+>   3000 |-+    O O           O   O  O O    O O O                             |   
+>        | O  O      O   O                                                    |   
+>        |                      O                                             |   
+>   2800 |-+                                                                  |   
+>        |                                                                    |   
+>   2600 |-+                                                                  |   
+>        |                                                                    |   
+>   2400 |-+                                                                  |   
+>        |      +.+..   .+.+..+.         +..+. .+.  .+. .+..+.+.+..+.+.+.  .+.|   
+>        |.+.. +      .+        +.+..+. +     +   +.   +                 +.   |   
+>   2200 |-+  +      +                 +                                      |   
+>        |                                                                    |   
+>   2000 +--------------------------------------------------------------------+   
+>                                                                                 
+>                                                                                                                                                                 
+>                                   unixbench.workload                            
+>                                                                                 
+>   1.9e+09 +-----------------------------------------------------------------+   
+>           |                 O O          O        O                         |   
+>   1.8e+09 |-+    O O              O O  O   O O O                            |   
+>           | O O      O   O      O                                           |   
+>   1.7e+09 |-+                                                               |   
+>           |                                                                 |   
+>   1.6e+09 |-+                                                               |   
+>           |                                                                 |   
+>   1.5e+09 |-+                                                               |   
+>           |                                                                 |   
+>   1.4e+09 |-+    +.+    .+..+.+          +.+. .+.. .+.   .+..+. .+. .+..   .|   
+>           |.+. ..   :  +       + .+.+.. +    +    +   +.+      +   +    +.+ |   
+>   1.3e+09 |-+ +     : +         +      +                                    |   
+>           |          +                                                      |   
+>   1.2e+09 +-----------------------------------------------------------------+   
+>                                                                                 
+>                                                                                 
+> [*] bisect-good sample
+> [O] bisect-bad  sample
+> 
+> 
+> 
+> Disclaimer:
+> Results have been estimated based on internal Intel analysis and are provided
+> for informational purposes only. Any difference in system hardware or software
+> design or configuration may affect actual performance.
+> 
+> 
+> Thanks,
+> Rong Chen
+> 
 
-That's fine.
-
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/mod_devicetable.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pwm.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +/*
-> > > + * PWM timer block registers.
-> > > + */
-> > > +#define PWM_CTRL		0x00
-> > > +#define   PWM_ENABLE		BIT(7)
-> > > +#define   PWM_MODE_250HZ	0
-> > > +#define   PWM_MODE_500HZ	1
-> > > +#define   PWM_MODE_1KHZ		2
-> > > +#define   PWM_MODE_2KHZ		3
-> > > +#define   PWM_MODE_MASK		GENMASK(1, 0)
-> > > +#define PWM_CYCLE		0x01
-> > > +#define   PWM_CYCLE_MAX		0x7f
-> >=20
-> > Please use a less generic prefix for your defines. Also I like having
-> > the defines for field names include register name. Something like:
-> >=20
-> > 	#define PWM_SL28CPLD_CTRL		0x00
-> > 	#define PWM_SL28CPLD_CTRL_ENABLE		BIT(7)
-> > 	#define PWM_SL28CPLD_CTRL_MODE_MASK		GENMASK(1, 0)
->=20
-> Ok.
->=20
-> > 	#define
-> > PWM_SL28CPLD_CTRL_MODE_250HZ		FIELD_PREP(PWM_SL28CPLD_CTRL_MODE_MASK,
-> > 0)
->=20
-> Shouldn't we just "#define ..MODE_250HZ 1" use FIELD_PREP inside the code,
-> so you can actually use the normalized enumeration values, too?
-
-yeah, looks sane.
-
-> Actually, I'll rename the PWM_MODE to PWM_PRESCALER, because that is
-> more accurate.
-
-Whatever suits you and is consistent is fine for me.
-
-> > > +struct sl28cpld_pwm {
-> > > +	struct pwm_chip pwm_chip;
-> > > +	struct regmap *regmap;
-> > > +	u32 offset;
-> > > +};
-> > > +
-> > > +struct sl28cpld_pwm_periods {
-> > > +	u8 ctrl;
-> > > +	unsigned long duty_cycle;
-> > > +};
-> > > +
-> > > +struct sl28cpld_pwm_config {
-> > > +	unsigned long period_ns;
-> > > +	u8 max_duty_cycle;
-> > > +};
-> > > +
-> > > +static struct sl28cpld_pwm_config sl28cpld_pwm_config[] =3D {
-> >=20
-> > const ? (Or drop as the values can be easily computed, see below.)
-> >=20
-> > > +	[PWM_MODE_250HZ] =3D { .period_ns =3D 4000000, .max_duty_cycle =3D =
-0x80 },
-> > > +	[PWM_MODE_500HZ] =3D { .period_ns =3D 2000000, .max_duty_cycle =3D =
-0x40 },
-> > > +	[PWM_MODE_1KHZ]  =3D { .period_ns =3D 1000000, .max_duty_cycle =3D =
-0x20 },
-> > > +	[PWM_MODE_2KHZ]  =3D { .period_ns =3D  500000, .max_duty_cycle =3D =
-0x10 },
-> > > +};
-> > > +
-> > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> > > +				   struct pwm_device *pwm,
-> > > +				   struct pwm_state *state)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > +	static struct sl28cpld_pwm_config *config;
-> > > +	unsigned int reg;
-> > > +	unsigned int mode;
-> > > +
-> > > +	regmap_read(priv->regmap, priv->offset + PWM_CTRL, &reg);
-> > > +
-> > > +	state->enabled =3D reg & PWM_ENABLE;
-> >=20
-> > Would it be more consisted to use FIELD_GET here, too?
->=20
-> I had used FIELD_GET only for bit-fields with more than one bit,
-> i.e. no flags. But that is just a matter of taste, I guess. I'd
-> prefer to keep the simple "reg & PWM_ENABLE". If you insist on
-> the FIELD_GET() I'll change it ;)
-
-I think using FIELD_GET is more consistent, but I won't insist.
-
-> > > +	mode =3D FIELD_GET(PWM_MODE_MASK, reg);
-> > > +	config =3D &sl28cpld_pwm_config[mode];
-> > > +	state->period =3D config->period_ns;
-> >=20
-> > I wonder if this could be done more effectively without the above table.
-> > Something like:
-> >=20
-> > 	state->period =3D 4000000 >> mode.
->=20
-> The reason I introduced a lookup table here was that I need a
-> list of the supported modes; I wasn't aware of the rounding.
-
-List of supported modes =3D [0, 1, 2, 3], isn't it?
-
-> See also below.
->=20
-> > (with a #define for 4000000 of course).
-> >=20
-> > > +	regmap_read(priv->regmap, priv->offset + PWM_CYCLE, &reg);
-> > > +	pwm_set_relative_duty_cycle(state, reg, config->max_duty_cycle);
-> >=20
-> > Oh, what a creative idea to use pwm_set_relative_duty_cycle here.
->=20
-> What is that helper for then? The former versions did the same
-> calculations (i.e. DIV_ROUND_CLOSEST_ULL()) just open coded. But
-> I guess then it was also rounding the wrong way.
-
-Yes. In my book pwm_set_relative_duty_cycle is for consumers. And if
-DIV_ROUND_CLOSEST_ULL is the right thing for them depends on their use
-case.
-
-> > Unfortunately it's using the wrong rounding strategy. Please enable
-> > PWM_DEBUG which should diagnose these problems (given enough testing).
->=20
-> Is there any written documentation on how to round, i.e. up or down?
-
-There are the checks implemented for PWM_DEBUG. I started to work on the
-documentation
-(https://patchwork.ozlabs.org/project/linux-pwm/patch/20191209213233.29574-=
-2-u.kleine-koenig@pengutronix.de/)
-but didn't get feedback yet. (And the rounding rules are not included
-there.)
-
-> I had a look Documentation/driver-api/pwm.rst again. But couldn't find
-> anything. A grep DIV_ROUND_CLOSEST_ULL() turns out that quite a few
-> drivers use it, so I did the same ;)
-
-Yes, the rounding requirement is new and many driver's are not
-conforming (yet).
-
-> > (Hmm, on second thought I'm not sure that rounding is relevant with the
-> > numbers of this hardware. Still it's wrong in general and I don't want
-> > to have others copy this.)
-> >=20
-> > > +}
-> > > +
-> > > +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct
-> > > pwm_device *pwm,
-> > > +			      const struct pwm_state *state)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > +	struct sl28cpld_pwm_config *config;
-> > > +	unsigned int cycle;
-> > > +	int ret;
-> > > +	int mode;
-> > > +	u8 ctrl;
-> > > +
-> > > +	/* Get the configuration by comparing the period */
-> > > +	for (mode =3D 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
-> > > +		config =3D &sl28cpld_pwm_config[mode];
-> > > +		if (state->period =3D=3D config->period_ns)
-> > > +			break;
-> > > +	}
-> > > +
-> > > +	if (mode =3D=3D ARRAY_SIZE(sl28cpld_pwm_config))
-> > > +		return -EINVAL;
-> >=20
-> > You're supposed to pick the biggest period that isn't bigger than the
-> > requested period. So something like:
-> >=20
-> > 	switch(period) {
-> > 	case 4000000 ... UINT_MAX:
-> > 		mode =3D 0;
-> > 		break;
-> > 	case 2000000 ... 3999999:
-> > 		mode =3D 1;
-> > 		break;
-> > 	...
-> > 	}
-> >=20
-> > (or:
-> >=20
-> > 	if period >=3D 4000000:
-> > 		mode =3D 0
-> > 	else:
-> > 		// I think ... please double-check
-> > 		mode =3D ilog2(4000000 / (period + 1)) + 1
-> >=20
-> > 	if mode > 3:
-> > 		return -ERANGE;
-> > )
->=20
-> I see. In this case I can of course drop the table. But the rounding
-> will be then very coarse for this driver. And there is no way to get
-> the value which is actually set, right? You can just read the cached
-> value. So that value might be far off the actual one set in the
-> hardware.
-
-Yes, we once changed pwm_get_rate to return the actually implemented
-setting, but this broke some stuff; see commit
-40a6b9a00930fd6b59aa2eb6135abc2efe5440c3.
-
-I already thought about proposing pwm_get_rate_hw(), but for now there
-is (AFAICT) no user who would need it. And it's hard to know which
-variant is actually preferred by consumers. My expectation is that most
-don't even care.
-
-I also have a pwm_round_rate() function in mind that will give you the
-actual rate without applying it. This can then be used by consumers who
-care. But also there is no user who would need it today.
-
-> During testing I've also found the following problem: Assume we set
-> a period of 5000000ns; this will be rounded to 4000000ns and written
-> to the hardware. But the usable duty cycle is still 0..5000000ns. The
-> driver will translate this input in the following manner:
->  - 0..4000000 -> 0%..100%
->  - >4000000 -> 100%
-> Is this behavior intended?
-
-It's expected.
-
-> Even for PWM hardware which supports finer
-> grained frequencies there will be some upper and lower limits. Is
-> the user of the PWM supposed to know these?
-
-There is nothing we can do on hardware imposed limits. In practise it
-doesn't seem to matter. Also note that most consumers get a proposed
-period length.
-
-> > 	real_period =3D 4000000 >> mode;
-> >=20
-> > > +	ctrl =3D FIELD_PREP(PWM_MODE_MASK, mode);
-> > > +	if (state->enabled)
-> > > +		ctrl |=3D PWM_ENABLE;
-> > > +
-> > > +	cycle =3D pwm_get_relative_duty_cycle(state, config->max_duty_cycle=
-);
-> >=20
-> > Again the rounding is wrong. You need need to round down the requested
-> > duty_cycle to the next possible value. So something like:
-> >=20
-> > 	duty_cycle =3D min(real_period, state->duty_cycle);
-> >=20
-> > 	cycle =3D duty_cycle * (0x80 >> mode) / (4000000 >> mode);
-> >=20
-> > which can be further simplified to
-> >=20
-> > 	cycle =3D duty_cycle / 31250
->=20
-> Mh, this made me think where that "magic" number is coming from. Turns
-> out this is the NSECS_PE_SEC / base clock of the PWM.
-
-It's a simplification of the line above, so it is 4000000 / 0x80. (But
-it's not by chance this matches NSECS_PER_SEC / base clock of course.)
-
-> I guess I'll rework the get_state() and apply() to just use this
-> base frequency, dropping the table etc.
->=20
-> Btw what about the polarity. Do I have to support it or can I
-> return an error code if its !=3D PWM_POLARITY_NORMAL? If so, which
-> error code? EINVAL?
-
-=2E.ooOO(Did I really miss that during review? Bummer)
-
-If your hardware only support normal polarity, only implement this and
-return -EINVAL for inverted polarity requests.
-
-> I know I could just invert the duty cycle in
-> software, but shouldn't this be done in the core for any controller
-> which doesn't support changing the polarity in hardware?
-
-Please don't. This should indeed be done at the framework level. (But
-I'm not convinced doing this unconditionally is a good idea.)
-
-> > > +	/*
-> > > +	 * The hardware doesn't allow to set max_duty_cycle if the
-> > > +	 * 250Hz mode is enabled, thus we have to trap that here.
-> > > +	 * But because a 100% duty cycle is equal on all modes, i.e.
-> >=20
-> > It depends on how picky you are if you can agree here.
->=20
-> why is that? The only drawback is that the mode is changed without
-> the user seeing it.
-
-Ideally periods are completed before they change. So if a user requests
-=2Eperiod =3D .duty_cycle =3D 100ms with having the PWM disabled before and
-afterwards, the expectation is that it is active for (an integer
-multiple of) 100 ms. But honestly there are not many hardware
-implementation + driver combos that get this right.
-
-> But the PWM subsystem returns the cached state,
-> right? get_state() is called only on device request (and during
-> debug it seems). Actually, enabling PWM_DEBUG might choke on this
-> workaround (".apply didn't pick the best available period"). Is
-> this ok?
-
-hmm, I didn't consider this when writing the checks for PWM_DEBUG.
-According to the currently checked rules the expected configuration is
-to pick the 250Hz mode and use cycle =3D 0x7f. Hmm, I have to think about
-this. Maybe we should weaken the check to the cases with
-0 < duty_cycle < period. Thierry, what do you think?
-
-Special casing 0% and 100% is annoying, but insisting 250Hz + 0x7f seems
-to be far from reality. (Is it?)=20
-
-> > > +	ret =3D regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctrl);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE,
-> > > (u8)cycle);
-> >=20
-> > I assume this can result in broken output? Consider the hardware runs
-> > with mode =3D 1 & cycle =3D 0x23 and you want to go to mode =3D 0 & cyc=
-le =3D
-> > 0x42: Can this result in a period that has mode =3D 0 & cycle =3D 0x23?
->=20
-> Isn't that always the case if a write may fail and there are more than
-> one register to configure?
-
-Depending on hardware capabilities you might not be able to prevent
-this yes. Unfortunately this is quite common.
-
-But there are hardware implementations that are not prone to such
-failures. (E.g. the registers written can be only shadow values that are
-latched into hardware only when the last value is written.)
-
-> For example, have a look at pwm-iqs620a.c.
-> Btw. the get_state might also fail, but there is no return value to
-> return the error.
-
-Yes, changing this is on my todo list.
-
-> > If this cannot be avoided, please document this in the Limitations
-> > paragraph.
->=20
-> Sure. There might be (or most likely are) gliches when you change the
-> mode.
-
-If you change only cycle but not mode, does the hardware complete the
-currently running period? What about disable()?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kbnayqgol27lp4uu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8MH7MACgkQwfwUeK3K
-7AmS/wgAgHtz0usxb1L3V3EzTvq2Es3IDi4siQeD/8CLuqVRsqsIERfdSp8yrehG
-nvdw5AWxPCQbnMPqdw3l/jIpTYJBMXGkkq6ISgoP5l3oJgcTUXV2A88J8jLbxYpQ
-v7NrAqFHXELiZDD3fy4INiUmItloGTnpYWlZ0Bdjjvom9ZBUlUF+KDV0n+HWdyJ6
-+GZIHtcifIDydf2Bd5lpUMVdyw6y1gm/WC3sXbRjIetzRKe7QNLUVffWH9uXtWI1
-/gU0+/i77tZrrr/xNUFnhA86kJtRzdg64ek+x/DL90QNhI3/AvEeVhmcj3/ZFl9K
-OP7/l4770EssKbeTeU7MojZVu8YqRQ==
-=UAV3
------END PGP SIGNATURE-----
-
---kbnayqgol27lp4uu--
