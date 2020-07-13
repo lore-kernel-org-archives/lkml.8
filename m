@@ -8,67 +8,83 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F06FC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6619DC4361A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497DA20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4271C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uC7eUgOb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLYogsEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgGMNZY (ORCPT
+        id S1730245AbgGMNZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        Mon, 13 Jul 2020 09:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729910AbgGMNWu (ORCPT
+        with ESMTP id S1729897AbgGMNWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:22:50 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6BCC061755;
-        Mon, 13 Jul 2020 06:22:49 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id rk21so17148285ejb.2;
-        Mon, 13 Jul 2020 06:22:49 -0700 (PDT)
+        Mon, 13 Jul 2020 09:22:47 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FFCC061755;
+        Mon, 13 Jul 2020 06:22:46 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id y10so17167550eje.1;
+        Mon, 13 Jul 2020 06:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JxkhZKsVa3z0BZ63RYkimychYt6uFQAMZoAlbu2p1Uc=;
-        b=uC7eUgOb2feCtchst56uIJDoHC7Zp0WbIbUpDeyGVdCSd48ogNAOs+i/m80OEKDeCs
-         ADgZl3lhhpSNHIWQnegJlNV99b/4+TGh/P7sM64Y/Ecfz6rqENwBHiqMykLoTfMaRpr+
-         SHEuVinXAErkPrzitCk/MmluTDwDhO+LJSKvrg1WNDYN9CwIWl8FGkSBBLIEM8fX3aFM
-         D/s10PtX/fX7fack2CoJXPcHsIk7veCSbpQBCVkoJv2/L8SK2+hdR0j2/BT0FtlqFF/U
-         KqkW/Um6gUJU5OT5KTc6/r6IEe4MYQeg4BlQ2Zy1Cytx/D5/oTvzdvWNHEk0hAqLZtvn
-         oZvg==
+        bh=9eSzPhspiWvGf9aT6n+u7h1JAatvbzNtxDm7qgPwQa4=;
+        b=hLYogsErj4MxDifEjs2yaWms0NpgUVako6c8lR/I2R4HV9RllrJIdGqkMDp5APeeDE
+         oWeJOdnNhg7Ug/j0KkKHuaUJSEqiFCugiXFDKBKD08Rf4UCqkHYGXXTk09tPPdekReMl
+         f/Z3N9TMpWpw2xAQtgdR8/N+9F0vAhXDYUe0EU/xGTl4W5zeIioGJduOy6lClM+Y6oFA
+         xnjejrZ8kSmDHyZVOhAaPrgokXgExqfS+EI7cvM+Df1dhlImeqOdm4/lVR+HRcx5xHku
+         Igf8N+NUygg5XttWH+kIcV9FL4bX+s92wGGITkFUVhBz34HIbR1LCVyWtNYcj0CfHCge
+         ox9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JxkhZKsVa3z0BZ63RYkimychYt6uFQAMZoAlbu2p1Uc=;
-        b=IFUT5W/XlBsMD70rGBGhhF+O4QeOuIcHjBlwmQt9XB0zFWvhjBjYPNaAUV2Ot9U7/C
-         t8bbGYC1TV40QramJQZViLArWYMbo5/+jlADyJV8PkoGaLsU6Vlsf37RK0wsIH/EHLNe
-         DsT8PpjKt8CaIxCXScEgtLjMBx/CO9/oqJYZ28AGKFHVT4fzi5ucds2hpMUuK4jPQDBl
-         8lkUjYe3stQTx0m6JltLnQSecp+xy3hC1M1gvv8ovw7t5RioKnJLxQ6Sxlts1bplpGZs
-         rDXw/OdyOc3cfUanjQGoJS1wKe0jCWoyP7RVqhpzLMWZjJ0HoEBqThd1txvnvm1AuDoj
-         AtHg==
-X-Gm-Message-State: AOAM5332ZC5/McJk5yw5CIj09EEliIPmQss9QRUK0ANfNBE7WsDB0LFs
-        uNQXzEHjF/npZLSHqIq7F//PYr5LRJ8Fvg==
-X-Google-Smtp-Source: ABdhPJyvEFGOBAm5twEHyZqvV5SIe2iQDHFq46CgDrJch/0w7R2T3iioA0rmv9hum6shYaVHNjLYpw==
-X-Received: by 2002:a17:906:fa9a:: with SMTP id lt26mr63653165ejb.502.1594646568296;
-        Mon, 13 Jul 2020 06:22:48 -0700 (PDT)
+        bh=9eSzPhspiWvGf9aT6n+u7h1JAatvbzNtxDm7qgPwQa4=;
+        b=d0Opt1Ze4zzLv7lJoBvqB0JH2e3ch+zf4WPcdYkMnv1dbg2UUESeF1IvZ8yumYkOWW
+         kIkPu5wBB3EhRgwN6803JbOQq7ZyeV1Xx59p9R2bxiObObFm/xRWEEerbW12Xk9ReoyS
+         +PrcncfcCpaX0FVYu7ye2oiU0c2steyMreeZgOPrrDd8+EDvHSZRVAvYf98usRPGo2+e
+         aVwfaPlx9NzMd4J+Qx4uNei3hrDFlI6q50a2kGdGLkKM2dxPWvH2Sam8JsStXZiVI64K
+         54DoHQCLCOVq7gNZnYgsBxLGM5ckfb/jYLNXqLWqtsbQebXxcfKqQ+7uCvthial2s2Vc
+         0q7A==
+X-Gm-Message-State: AOAM530nGAsI1MZvFhCevbWLKzMij+jJxA5o+AVAgYNuw/xTDyOSEWx0
+        YCgmL4TAmUIvwbFwiS3wU/I=
+X-Google-Smtp-Source: ABdhPJyNhtJJphGqXF4QW+aGFKHkMsFvQ0ZrswEHN2+kh5oK7be5K3ZFffA96ErJ6GVjCF52Di2gmA==
+X-Received: by 2002:a17:906:d143:: with SMTP id br3mr71266443ejb.268.1594646565435;
+        Mon, 13 Jul 2020 06:22:45 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.22.47
+        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.22.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:22:47 -0700 (PDT)
+        Mon, 13 Jul 2020 06:22:44 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org
+To:     helgaas@kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Toan Le <toan@os.amperecomputing.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 08/35] PCI: Tidy Success/Failure checks
-Date:   Mon, 13 Jul 2020 14:22:20 +0200
-Message-Id: <20200713122247.10985-9-refactormyself@gmail.com>
+        linux-kernel@vger.kernel.org, rfi@lists.rocketboards.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [RFC PATCH 06/35] PCI: Tidy Success/Failure checks
+Date:   Mon, 13 Jul 2020 14:22:18 +0200
+Message-Id: <20200713122247.10985-7-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200713122247.10985-1-refactormyself@gmail.com>
 References: <20200713122247.10985-1-refactormyself@gmail.com>
@@ -81,168 +97,113 @@ Remove unnecessary check for 0.
 
 Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 ---
-This patch depends on PATCH 07/35
+This patch depends on PATCH 05/35
 
- drivers/pci/pci-bridge-emul.c      | 2 +-
- drivers/pci/pci.c                  | 8 ++++----
- drivers/pci/pcie/bw_notification.c | 4 ++--
- drivers/pci/probe.c                | 4 ++--
- drivers/pci/quirks.c               | 4 ++--
- drivers/pci/syscall.c              | 8 ++++----
- 6 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/pci/controller/dwc/pci-meson.c            | 2 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+ drivers/pci/controller/pci-xgene.c                | 3 +--
+ drivers/pci/controller/pcie-altera.c              | 4 ++--
+ drivers/pci/controller/pcie-iproc.c               | 2 +-
+ drivers/pci/controller/pcie-rcar-host.c           | 4 ++--
+ 6 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 9695c453e197..c270c18d5cf5 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -400,7 +400,7 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
- 		return PCIBIOS_BAD_REGISTER_NUMBER;
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 58142f03d300..8203d5f95d28 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -390,7 +390,7 @@ static int meson_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+ 	int ret;
  
- 	ret = pci_bridge_emul_conf_read(bridge, reg, 4, &old);
+ 	ret = dw_pcie_read(pci->dbi_base + where, size, val);
 -	if (ret != 0)
 +	if (ret)
  		return ret;
  
- 	if (bridge->has_pcie && reg >= PCI_CAP_PCIE_START) {
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a74547861d5e..4b2a348576cb 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -185,7 +185,7 @@ int pci_status_get_and_clear_errors(struct pci_dev *pdev)
- 	int ret;
+ 	/*
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 7c97c54f787c..2dd3965365f6 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -459,7 +459,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	}
  
- 	ret = pci_read_config_word(pdev, PCI_STATUS, &status);
--	if (ret != 0)
-+	if (ret)
- 		return -EIO;
+ 	ret = dw_pcie_rd_own_conf(pp, PCI_HEADER_TYPE, 1, &hdr_type);
+-	if (ret != 0) {
++	if (ret) {
+ 		dev_err(pci->dev, "Failed reading PCI_HEADER_TYPE cfg space reg (ret: 0x%x)\n",
+ 			ret);
+ 		ret = pcibios_err_to_errno(ret);
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index bf74f0a8b451..8d55cfc4ff8a 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -167,8 +167,7 @@ static int xgene_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
+ {
+ 	struct xgene_pcie_port *port = pcie_bus_to_port(bus);
  
- 	status &= PCI_STATUS_ERROR_BITS;
-@@ -534,7 +534,7 @@ int pci_find_next_ext_capability(struct pci_dev *dev, int start, int cap)
- 	if (start)
- 		pos = start;
- 
--	if (pci_read_config_dword(dev, pos, &header) != 0)
-+	if (pci_read_config_dword(dev, pos, &header))
- 		return 0;
+-	if (pci_generic_config_read32(bus, devfn, where & ~0x3, 4, val) !=
+-	    0)
++	if (pci_generic_config_read32(bus, devfn, where & ~0x3, 4, val))
+ 		return PCIBIOS_DEVICE_NOT_FOUND;
  
  	/*
-@@ -552,7 +552,7 @@ int pci_find_next_ext_capability(struct pci_dev *dev, int start, int cap)
- 		if (pos < PCI_CFG_SPACE_SIZE)
- 			break;
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 96f5bda32b58..9f7b12ad0c04 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -367,7 +367,7 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+ 						    value, false);
  
--		if (pci_read_config_dword(dev, pos, &header) != 0)
-+		if (pci_read_config_dword(dev, pos, &header))
- 			break;
+ 	ret = pcie->pcie_data->ops->tlp_read_pkt(pcie, NULL);
+-	if (ret != 0)
++	if (ret)
+ 		return ret;
+ 
+ 	/*
+@@ -453,7 +453,7 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+ 
+ 	ret = tlp_cfg_dword_read(pcie, busno, devfn,
+ 				 (where & ~DWORD_MASK), byte_en, &data);
+-	if (ret != 0)
++	if (ret)
+ 		return ret;
+ 
+ 	switch (size) {
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index dac9352c0cb2..d34c9457fbe4 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -584,7 +584,7 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+ 	/* root complex access */
+ 	if (busno == 0) {
+ 		ret = pci_generic_config_read32(bus, devfn, where, size, val);
+-		if (ret == 0)
++		if (!ret)
+ 			iproc_pcie_fix_cap(pcie, where, val);
+ 
+ 		return ret;
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 363a8630de28..2bb250c6f767 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -157,7 +157,7 @@ static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	ret = rcar_pcie_config_access(host, RCAR_PCI_ACCESS_READ,
+ 				      bus, devfn, where, val);
+-	if (ret != 0) {
++	if (ret) {
+ 		*val = 0xffffffff;
+ 		return ret;
  	}
+@@ -184,7 +184,7 @@ static int rcar_pcie_write_conf(struct pci_bus *bus, unsigned int devfn,
  
-@@ -628,7 +628,7 @@ static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
- 				      PCI_CAP_ID_HT, &ttl);
- 	while (pos) {
- 		rc = pci_read_config_byte(dev, pos + 3, &cap);
--		if (rc != 0)
-+		if (rc)
- 			return 0;
+ 	ret = rcar_pcie_config_access(host, RCAR_PCI_ACCESS_READ,
+ 				      bus, devfn, where, &data);
+-	if (ret != 0)
++	if (ret)
+ 		return ret;
  
- 		if ((cap & mask) == ht_cap)
-diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-index c7201d886026..f62c19ffedfc 100644
---- a/drivers/pci/pcie/bw_notification.c
-+++ b/drivers/pci/pcie/bw_notification.c
-@@ -23,7 +23,7 @@ static bool pcie_link_bandwidth_notification_supported(struct pci_dev *dev)
- 	u32 lnk_cap;
- 
- 	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnk_cap);
--	return (ret == 0) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
-+	return (!ret) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
- }
- 
- static void pcie_enable_link_bandwidth_notification(struct pci_dev *dev)
-@@ -56,7 +56,7 @@ static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
- 	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
- 	events = link_status & PCI_EXP_LNKSTA_LBMS;
- 
--	if (ret != 0 || !events)
-+	if (ret || !events)
- 		return IRQ_NONE;
- 
- 	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index ab7e19882b30..60ecebbc7dcf 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1582,7 +1582,7 @@ static bool pci_ext_cfg_is_aliased(struct pci_dev *dev)
- 
- 	for (pos = PCI_CFG_SPACE_SIZE;
- 	     pos < PCI_CFG_SPACE_EXP_SIZE; pos += PCI_CFG_SPACE_SIZE) {
--		if (pci_read_config_dword(dev, pos, &tmp) != 0
-+		if (pci_read_config_dword(dev, pos, &tmp)
- 		    || header != tmp)
- 			return false;
- 	}
-@@ -1609,7 +1609,7 @@ static int pci_cfg_space_size_ext(struct pci_dev *dev)
- 	u32 status;
- 	int pos = PCI_CFG_SPACE_SIZE;
- 
--	if (pci_read_config_dword(dev, pos, &status) != 0)
-+	if (pci_read_config_dword(dev, pos, &status))
- 		return PCI_CFG_SPACE_SIZE;
- 	if (status == 0xffffffff || pci_ext_cfg_is_aliased(dev))
- 		return PCI_CFG_SPACE_SIZE;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index e60ef8abd698..8b69d6ebb619 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5116,8 +5116,8 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
- 		pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
- 
- 		pdev->cfg_size = PCI_CFG_SPACE_EXP_SIZE;
--		if (pci_read_config_dword(pdev, PCI_CFG_SPACE_SIZE, &status) !=
--		    0 || (status == 0xffffffff))
-+		if (pci_read_config_dword(pdev, PCI_CFG_SPACE_SIZE, &status)
-+		     || (status == 0xffffffff))
- 			pdev->cfg_size = PCI_CFG_SPACE_SIZE;
- 
- 		if (pci_find_saved_cap(pdev, PCI_CAP_ID_EXP))
-diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
-index 7d45b58beacd..a208700000ea 100644
---- a/drivers/pci/syscall.c
-+++ b/drivers/pci/syscall.c
-@@ -46,7 +46,7 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
- 	}
- 
- 	err = -EIO;
--	if (cfg_ret != 0)
-+	if (cfg_ret)
- 		goto error;
- 
- 	switch (len) {
-@@ -105,7 +105,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
- 		if (err)
- 			break;
- 		err = pci_user_write_config_byte(dev, off, byte);
--		if (err != 0)
-+		if (err)
- 			err = -EIO;
- 		break;
- 
-@@ -114,7 +114,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
- 		if (err)
- 			break;
- 		err = pci_user_write_config_word(dev, off, word);
--		if (err != 0)
-+		if (err)
- 			err = -EIO;
- 		break;
- 
-@@ -123,7 +123,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
- 		if (err)
- 			break;
- 		err = pci_user_write_config_dword(dev, off, dword);
--		if (err != 0)
-+		if (err)
- 			err = -EIO;
- 		break;
- 
+ 	dev_dbg(&bus->dev, "pcie-config-write: bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
 -- 
 2.18.2
 
