@@ -7,71 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F27C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B24C43460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559E5207BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3961F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DbeFOb5v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kzgxGc3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgGMOvD (ORCPT
+        id S1730374AbgGMOvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60958 "EHLO
+        Mon, 13 Jul 2020 10:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730122AbgGMOtm (ORCPT
+        with ESMTP id S1730064AbgGMOti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA035C08C5DE
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so16885366wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
+        Mon, 13 Jul 2020 10:49:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87043C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so16857331wrl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P+J7h3HQX+/joqPOy6WiQHR4eToAn/yJ8zMEtEk80iA=;
-        b=DbeFOb5vGhFBYRRXUN3KuTiXpQyQb3lNhA1qOhQUiHC1bngSe4WmjRro0MewmO5SvA
-         nU2LN9gEPVX+pqlbP3P/6gx85OWfPOTlSSL5eIOSiqO+xx8m+3sk/8jDl1P5ToG6v4iV
-         xzohAIXFSKqEnzj8P8sAjTkMJDk7vXufjDAJNitdG7U7ZqCNMd1cw71tgP5dsF4+neFo
-         4QGFwMEkoZgQreEWsEAO1Apoc2zj4HTbRKtE03gaHTRxV/xqxVbhULD+La1zvby6h47N
-         q6x3zcpwTLs4SEtqV+P488sD/Q7iBq7XP+vpVTEANGL4+8Bk9dQJGqkYc5Ttqy1ae81V
-         zmcA==
+        bh=TMIlOVRDCYaSAty7/afpaXFLg9AMRQm1G5k0VXrMmr0=;
+        b=kzgxGc3N8RHSM05U2cbTEttiKSICBcl2ap2J0SyaJCAFyWNkScXmvzI5l9237ZFd1d
+         tYsXS/CeVODSP5dh4AWxjwEuEkqLu+CgMnsfbDviVEovHt+0LGQZFxUHJruUpQtDWG72
+         qo5ALHeTQEJI9nQQsPE1He4vUb8WBW76u4uqMfiS0ju6c42oM7GTIJz4gufaQDzEsjpH
+         ezTKmNoHvf7lI7S2BZ5C1i5uvizrblnH0UrVvxd/Yn/iBUuFoaCcKGDq40SFwrGKhTOo
+         tKxOdIxWkjDQywgSxP6+Va8svUfh1YnRBM/zfU2PLdIyms1JpFYFkoqfCIE2NUfGNhGp
+         vIHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P+J7h3HQX+/joqPOy6WiQHR4eToAn/yJ8zMEtEk80iA=;
-        b=GnVyPOBKMw4+2hhEJg8b7mX6/yzRveKuMapSbLepH1qgKoZA5UR/XqXq+z8oRP0JZ6
-         Z24K0D34+1/86VnwmB77SBtt+N/YPdeSAm1NBnQb+ZHsLlGutjvpwaGtYOEMSIrUToXj
-         OZ+0t/9Ov8uCrnwUzKtToTcw2tCfCWi3cbYMOVuixAZmM+r33x+D0QyorhV98b+6v9dv
-         7XGcIba0SaOH050jm3Fj6da0ylcDhEr3UCY/N/jGkP7LBj3v1FKbGcuVe5exI38VXUY0
-         app1KFoHA4J4utUSJavjY+msJw/qZhCMRxChHezpt+oBftaPMHOvJ7tnT6N92x2X/oBL
-         GsCA==
-X-Gm-Message-State: AOAM532qzQHdgpit3UfTosJg5q0zHqV1MBT3KznbxzXUKtaB7/zYwkQx
-        f5PQB0nypbnNqRfujMg7ZT+2Ew==
-X-Google-Smtp-Source: ABdhPJynb3r4L6mscx+7FfoIIg3IVDr+bEskwUShaCmWgKsXhKMf81Y2wb/k1/OuQoXOJOxjXBXLpg==
-X-Received: by 2002:adf:e3c5:: with SMTP id k5mr80764064wrm.121.1594651780552;
-        Mon, 13 Jul 2020 07:49:40 -0700 (PDT)
+        bh=TMIlOVRDCYaSAty7/afpaXFLg9AMRQm1G5k0VXrMmr0=;
+        b=SFGkcMdKcXFdEBmq+tH1YzYoZ2KnrHV33Y0rxIL6H7qKSs0x//xfDP8s6vpBioVVQR
+         RXJN0mSwdLCAiXCvOFPefkRcqOO7I4UpJFd5X8zq410ARatyB6Egw0T6/eDz87Jdkkih
+         u0jHYbN1peENkT8wl+WCNYdp+hv0NzMgnBBkhOsfZoZc47UJvfLO8cEMNpHBoigiEsN6
+         Mjyq7sJvXZFlCyb6hkpfQGsGQJPCJGFXnb3nRswJ1QllJzVmXD3F2hgEYfKTz6kVwh7L
+         UWeX5tPwbZnIyV//H7sQoLCL+TFO/FrE5eFP20LyeIZxCdC3Qz2BNtB7NzCh+NXtyDkX
+         J8ww==
+X-Gm-Message-State: AOAM530dSXS2bc5pKpQFhmNAfMxWgy3MBh9BG45lbhMc6as6SW2GO6uY
+        cEya7OHplZ/zCtT7esazAXX73Q==
+X-Google-Smtp-Source: ABdhPJwTKT4GJlQvG77L7gfYBSDpFZ6xtFBDE25t9ON82D4FbSU0ehp1cSeDnYtWZ7DbCKQ93IbN9w==
+X-Received: by 2002:a5d:684f:: with SMTP id o15mr76695440wrw.148.1594651777326;
+        Mon, 13 Jul 2020 07:49:37 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.39
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:40 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:36 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 07/25] pinctrl: samsung: pinctrl-s3c24xx: Fix formatting issues
-Date:   Mon, 13 Jul 2020 15:49:12 +0100
-Message-Id: <20200713144930.1034632-8-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 04/25] pinctrl: bcm: pinctrl-iproc-gpio: Rename incorrectly documented function param
+Date:   Mon, 13 Jul 2020 15:49:09 +0100
+Message-Id: <20200713144930.1034632-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -82,50 +78,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc struct titles must be followed by whitespace.  Also attributes
-need to be in the format '@.*: ' else the checker gets confused.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c:100: warning: cannot understand function prototype: 'struct s3c24xx_eint_domain_data '
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Function parameter or member 'chip' not described in 'iproc_set_bit'
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Excess function parameter 'iproc_gpio' description in 'iproc_set_bit'
 
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-index 9bd0a3de101dd..5e24838a582f5 100644
---- a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-+++ b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
-@@ -80,7 +80,7 @@ static const struct samsung_pin_bank_type bank_type_2bit = {
- 	}
- 
- /**
-- * struct s3c24xx_eint_data: EINT common data
-+ * struct s3c24xx_eint_data - EINT common data
-  * @drvdata: pin controller driver data
-  * @domains: IRQ domains of particular EINT interrupts
-  * @parents: mapped parent irqs in the main interrupt controller
-@@ -92,10 +92,10 @@ struct s3c24xx_eint_data {
- };
- 
- /**
-- * struct s3c24xx_eint_domain_data: per irq-domain data
-+ * struct s3c24xx_eint_domain_data - per irq-domain data
-  * @bank: pin bank related to the domain
-  * @eint_data: common data
-- * eint0_3_parent_only: live eints 0-3 only in the main intc
-+ * @eint0_3_parent_only: live eints 0-3 only in the main intc
-  */
- struct s3c24xx_eint_domain_data {
- 	struct samsung_pin_bank *bank;
+diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+index a38f0d5f47ce9..e2bd2dce6bb41 100644
+--- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+@@ -131,7 +131,7 @@ static inline unsigned iproc_pin_to_gpio(unsigned pin)
+  *  iproc_set_bit - set or clear one bit (corresponding to the GPIO pin) in a
+  *  Iproc GPIO register
+  *
+- *  @iproc_gpio: Iproc GPIO device
++ *  @chip: Iproc GPIO device
+  *  @reg: register offset
+  *  @gpio: GPIO pin
+  *  @set: set or clear
 -- 
 2.25.1
 
