@@ -2,153 +2,135 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23217C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15A120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A87C20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="br9fqrMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgGMNTy (ORCPT
+        id S1729840AbgGMNUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:19:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40381 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbgGMNTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:19:54 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c25so9465262otf.7;
-        Mon, 13 Jul 2020 06:19:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SATb1dq9lhpVtePq4rLhojB0Hr7gHjZG7fllFCUlzZU=;
-        b=f2YEiG3A91itYOB8sMDinMP/Z6LnlM8JlmpGB7lno6H2neYczPpYWa6/0pebzR2IfR
-         waW7XkaIkFFL1viwxchFsKggdq2opuP/I17DqLEwloSKb1DK2EzARUk4ZQ2CsUZgqQ9B
-         uxqVfm2ZYx548h+UfnxVcofAtCAl5PdcOzFxT0IhHaNqHZTgm/vFN9gyuyW45UOB6Kjr
-         N6b0hmWisvbTzn0lmP1/SKTMtpB+jDWk4r+Fl5KvbYQCIxSpdzelI0UKgjSuJv3qMrK5
-         vlPk6swiN5ElZ9S7h8FPB3pHf1u5PjicYT+790J7bz1diEk5q3V116Q29ORjiaWm24Ae
-         HBpQ==
-X-Gm-Message-State: AOAM530ejyjCCkaa4K1eqyi7pL5YG4CWM+QPlKnqQReZkkeAMVvnPlpR
-        0pTnvaVIVT/OWTA3Z8eR3EG0+Z5HauFNcVcjBvzCDd9K
-X-Google-Smtp-Source: ABdhPJxrDHVPb8cSNkcVN2tMRT9a1iKussPsrWGym59W6ecTQuAg4tTKmjvM3pVTLMwzznFcAu0e7d72NIcQofeksAI=
-X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr57441798otp.250.1594646393513;
- Mon, 13 Jul 2020 06:19:53 -0700 (PDT)
+        Mon, 13 Jul 2020 09:20:00 -0400
+Received: from mail-eopbgr140101.outbound.protection.outlook.com ([40.107.14.101]:19173
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729814AbgGMNT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:19:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cB4v5ikKsYXNPDo/VC+RFUiHeC9zezsUyhKFVFolCh47gZj1Ex7ZIYuWiCfHN0z9PyV+AhxmFA1p7Il+1i8J9quFeMa+yBL3nUT1sjwkylI96ZeMkFabwwHVWPIzs92oygJ6JGNixTxm9Waux/iy8v5HT+oCctsLrMD+zACOBYgahC7JgKVBowPh6RR4ncLtk3mgQocsU130vNYP+X2rVOPvMkHRC/la/iPvn/r13sDZTYUAmxsjF8vDJXnWXmO5lJpZcrN0R6zw0Ia6FL516Ns0qmZoa3pJVYzdvsD6vmRhysuUSEjgcOwZ/54i8g/68bAvZgF47DeikYgyeYzFHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eIKTvy+NhqUB5W0dktBjPgA/SdGwJAEA+bkVmS1FTYc=;
+ b=Dga670LqJbhJWb/WTX7rmYoibA9zJ8YEhUvz//kEWOEAV+UtaVtzV5BhhUlaeAJKSefcLQeAUpW77O5kRM+XWplN9b8h1LQxDWH4bkQNj1jaEvOuNXNmnDYY1MkJ+fEGTyD/o7c1249vvTm+kNv5BzgZOdW0o3CuP2OFXjsSH/GCZ+khBwMp1/s3btgZ+ao5TqIW7TcwxOpKhfRl+J2PyKdPUlTzNMrNB+ohQbm1TkHYHbSGSgcT7Ocjrya4TjhpEXre6Xlwg1Ay9Hfc/XQtDcsbWdkhDB1iov6sGLloXPYb9S1NiM7ko3I9OD3bDRp2vka2ylWlN0u9k4pMybYcsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eIKTvy+NhqUB5W0dktBjPgA/SdGwJAEA+bkVmS1FTYc=;
+ b=br9fqrMu/eith2wlPfTpF+OSGovi2MKQLceoWMTvioFSPvO8o+M0G3/O83W7MGyxYUT3OmpYufORaoE/vGCE1szoyo/BrXSmTcy5r0t1eKwtCxf0GIadBu4Gg30Qn97nNLK5tqrtLmt0xfbkHhfB53swVwdqXS4lP9Wf8I3EPAM=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB6PR1001MB0984.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:63::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Mon, 13 Jul
+ 2020 13:19:54 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
+ 13:19:53 +0000
+Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
+ Kontron boards
+From:   Frieder Schrempf <frieder.schrempf@kontron.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
+ <20200702142511.GF4483@sirena.org.uk>
+ <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
+ <20200702150725.GI4483@sirena.org.uk>
+ <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+Message-ID: <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
+Date:   Mon, 13 Jul 2020 15:19:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM4PR0302CA0026.eurprd03.prod.outlook.com
+ (2603:10a6:205:2::39) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:50::12)
 MIME-Version: 1.0
-References: <20200710135706.537715-1-hch@lst.de> <20200710135706.537715-6-hch@lst.de>
- <20200713122148.GA51007@lakrids.cambridge.arm.com>
-In-Reply-To: <20200713122148.GA51007@lakrids.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jul 2020 15:19:42 +0200
-Message-ID: <CAMuHMdUCmEeU0G9wkUxZKm5tC9YoB-KXSSCLKwpSia746Myebw@mail.gmail.com>
-Subject: Re: [PATCH 5/6] uaccess: add force_uaccess_{begin,end} helpers
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.99.63] (80.147.118.32) by AM4PR0302CA0026.eurprd03.prod.outlook.com (2603:10a6:205:2::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Mon, 13 Jul 2020 13:19:53 +0000
+X-Originating-IP: [80.147.118.32]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c98e00ed-b0e0-4f64-3b94-08d8272f6dd5
+X-MS-TrafficTypeDiagnostic: DB6PR1001MB0984:
+X-Microsoft-Antispam-PRVS: <DB6PR1001MB098492ED68046B11BAC50AFDE9600@DB6PR1001MB0984.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: izWDS/FkFPwybbLOskSV8dPne9Ng2zJUw6LL3EwhQr7w+sGi1Os3WbnIVtnyszfpK5hkiTqMd0s/MBUviE4m89G8uOyeftQABP1GQz/o+LgIfj2gYgaqTsw3RQhl8OKMYJroZtriFLPyKnPbq3QUrQpeV5eKwgUXEXPJ8Vk8lKYtC2LLNIC8e75BYgZS1C2Ak1gY5CeYoUitOCNL5c6gUQreJlL1uYO2sOa/E2+COfaKyT375gLQFYrlpaXbcAcrKCgoLAf3G/GxDmE1mNqEKHbxrimzC9ojPGg5yV0+qxS98tM/TuRKqYOHdFxoVazPvsN97U2sD7h1Zm9aI8PbsnuQr8OoI1Vb0PLHUfYabx9DX5EIT8EMYAM/HTJF40fb
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(26005)(6486002)(52116002)(8936002)(16526019)(316002)(44832011)(956004)(2616005)(186003)(53546011)(2906002)(6916009)(478600001)(31696002)(66556008)(66476007)(86362001)(31686004)(8676002)(5660300002)(4326008)(16576012)(66946007)(36756003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 6cBgWiikmYHkHQ8HZW2MDRwr5RGC+fHIeYU21uWIPTgGC6nJu4QJSLlzpd6GZi1qyk5YmBoP2mLP7ylqJ3CubJPMiOATZFq1ujPZWATPqbGUhq7RApNUCDcedZh7Y0AyPgDbabvp9WNwi6KryIrp0MzxdF/1iSfBty5fKTHfqiaFCjv6R9LyRYpLJwy2dUvImUmlsGwHTPepDh9vastkNsfURSsyuJzmVMQPqCGN1En+lUpHvhwcI6ukw/GyIjNJ098y62Z0Kz/oJ7+F6bu8GJAlqpsnVKAb7u3tTZQIdDKoGpBjZdhXSvYQCh/oPl0+zOdhup7Ovf4U6VWGRWgmCHO2/tDr+kODOCKhLQxEZ+IiH7jDhp8UnziddLiKP8xkOHsoqbLuAUxcW/xC1dI6mpVlTqf6dm937oyYbwyF2u61pj3nPnN19Hf1swbpR0u55LdMMVsyvDUOQkRJ/oyWiVrXQPZ8rFFhj/ghS6gsha8=
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: c98e00ed-b0e0-4f64-3b94-08d8272f6dd5
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2020 13:19:53.4481
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7HeLfehjjuj+hwpIPBKT2EHQQuF04LFPTT1vhM8vZnRmfQvtCFSmMqvC8fK/wwR0Fu32lgdHfBwDTvLsAkrvmU7DngcaHrHL9zviT5fyG9w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB0984
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On 02.07.20 18:24, Frieder Schrempf wrote:
+> On 02.07.20 17:07, Mark Brown wrote:
+>> On Thu, Jul 02, 2020 at 04:46:09PM +0200, Frieder Schrempf wrote:
+>>
+>>> My intention is to use the spidev driver in the default board DT for an
+>>> interface that is routed to an extension connector and has no dedicated
+>>> slave device attached onboard. So users can attach sensors, etc. with
+>>> userspace drivers without touching the kernel or DT.
+>>
+>> The expected way of doing this is to describe whatever was attached via
+>> DT when it's attached - the device is what has the compatible, not some
+>> connector in the middle of the connection.  The way you've got things
+>> set up if the device has a driver then they won't be able to instantiate
+>> the driver.
+> 
+> Ok thanks, got it. I will remove the spi device from the board DT and 
+> use an overlay if required. Now I got a reason to learn writing DT 
+> overlays ;)
 
-On Mon, Jul 13, 2020 at 2:21 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Jul 10, 2020 at 03:57:05PM +0200, Christoph Hellwig wrote:
-> > Add helpers to wraper the get_fs/set_fs magic for undoing any damange
-> > done by set_fs(KERNEL_DS).  There is no real functional benefit, but this
-> > documents the intent of these calls better, and will allow stubbing the
-> > functions out easily for kernels builds that do not allow address space
-> > overrides in the future.
->
-> > diff --git a/arch/m68k/include/asm/tlbflush.h b/arch/m68k/include/asm/tlbflush.h
-> > index 191e75a6bb249e..30471549e1e224 100644
-> > --- a/arch/m68k/include/asm/tlbflush.h
-> > +++ b/arch/m68k/include/asm/tlbflush.h
-> > @@ -13,13 +13,13 @@ static inline void flush_tlb_kernel_page(void *addr)
-> >       if (CPU_IS_COLDFIRE) {
-> >               mmu_write(MMUOR, MMUOR_CNL);
-> >       } else if (CPU_IS_040_OR_060) {
-> > -             mm_segment_t old_fs = get_fs();
-> > -             set_fs(KERNEL_DS);
-> > +             mm_segment_t old_fs = force_uaccess_begin();
-> > +
->
-> This used to set KERNEL_DS, and now it sets USER_DS, which looks wrong
-> superficially.
+I need to come back to this for another question. I would very much like 
+to do it the way Mark described it above: Use a DT overlay to describe 
+the device and load this overlay when the device is attached.
 
-Thanks for noticing, and sorry for missing that myself.
+But if I get this correctly it requires me to write a specific driver 
+that handles the loading of the overlay, which is way too much overhead 
+for the simple issue I'm trying to solve.
 
-The same issue is present for SuperH:
+I would have expected that there is some kind of existing userspace API 
+to load an overlay manually, but it seems like there isn't!?
 
-    -               set_fs(KERNEL_DS);
-    +               oldfs = force_uaccess_begin();
-
-So the patch description should be:
-
-    "Add helpers to wraper the get_fs/set_fs magic for undoing any damage
-     done by set_fs(USER_DS)."
-
-and leave alone users setting KERNEL_DS?
-
-> If the new behaviour is fine it suggests that the old behaviour was
-> wrong, or that this is superfluous and could go entirely.
->
-> Geert?
-
-Nope, on m68k, TLB cache operations operate on the current address space.
-Hence to flush a kernel TLB entry, you have to switch to KERNEL_DS first.
-
-If we're guaranteed to be already using KERNEL_DS, I guess the
-address space handling can be removed.  But can we be sure?
-
-
-> >               __asm__ __volatile__(".chip 68040\n\t"
-> >                                    "pflush (%0)\n\t"
-> >                                    ".chip 68k"
-> >                                    : : "a" (addr));
-> > -             set_fs(old_fs);
-> > +             force_uaccess_end(old_fs);
-> >       } else if (CPU_IS_020_OR_030)
-> >               __asm__ __volatile__("pflush #4,#4,(%0)" : : "a" (addr));
->
-> > +/*
-> > + * Force the uaccess routines to be wired up for actual userspace access,
-> > + * overriding any possible set_fs(KERNEL_DS) still lingering around.  Undone
-> > + * using force_uaccess_end below.
-> > + */
-> > +static inline mm_segment_t force_uaccess_begin(void)
-> > +{
-> > +     mm_segment_t fs = get_fs();
-> > +
-> > +     set_fs(USER_DS);
-> > +     return fs;
-> > +}
-> > +
-> > +static inline void force_uaccess_end(mm_segment_t oldfs)
-> > +{
-> > +     set_fs(oldfs);
-> > +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So what's the reasoning behind this? How can I solve this in a 
+mainline-compliant way, meaning without either keeping downstream 
+patches to bind spidev to my device or writing and maintaining code that 
+does the overlay loading?
