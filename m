@@ -2,95 +2,98 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3036C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDFFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8112075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TbiWkTIY"
+	by mail.kernel.org (Postfix) with ESMTP id C221B2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgGMPqk (ORCPT
+        id S1730225AbgGMPwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:46:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55044 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729884AbgGMPqe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:46:34 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFkOPE039101;
-        Mon, 13 Jul 2020 10:46:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594655184;
-        bh=cydmKQhdfnYTmfxeA1V/UTrs4wag2D0hxMQWxeyyt0g=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TbiWkTIY4epDE2+GicRWNVEFNKNhCtPeb6tQBYoxr9uhS4yxjnT/avxwf1DtAmIfm
-         ZhRPOZd9QhftigLOuZoySoQyfR0VQ/n8Q6tsuYjauXIJyYsOPX4Vm0wQq/xasXmihH
-         A0UMa2zEFjVtZo3lmeyczEYNwkYzkfi/zYA01OAs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFkOPS019890;
-        Mon, 13 Jul 2020 10:46:24 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 10:46:23 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 10:46:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFkN9h126246;
-        Mon, 13 Jul 2020 10:46:23 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v30 11/16] ARM: defconfig: u8500: Add LP55XX_COMMON config flag
-Date:   Mon, 13 Jul 2020 10:45:39 -0500
-Message-ID: <20200713154544.1683-12-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200713154544.1683-1-dmurphy@ti.com>
-References: <20200713154544.1683-1-dmurphy@ti.com>
+        Mon, 13 Jul 2020 11:52:22 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:45356 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729593AbgGMPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:52:21 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 13449BC070;
+        Mon, 13 Jul 2020 15:52:17 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     crope@iki.fi, mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] media: rtl2832_sdr: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 17:52:10 +0200
+Message-Id: <20200713155210.35545-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dependencies for the LP55XX LED drivers have been updated so that
-the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
-flag as opposed to the device selecting the LP55XX_COMMON flag.  The
-LP55XX_COMMON needs to be set in the defconfig.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- arch/arm/configs/u8500_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_defconfig
-index 28dd7cf56048..dea599e1c17e 100644
---- a/arch/arm/configs/u8500_defconfig
-+++ b/arch/arm/configs/u8500_defconfig
-@@ -113,6 +113,7 @@ CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_LM3530=y
- CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_LP55XX_COMMON=y
- CONFIG_LEDS_LP5521=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/media/dvb-frontends/rtl2832_sdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.c b/drivers/media/dvb-frontends/rtl2832_sdr.c
+index 60d1e59d2292..720756728f2d 100644
+--- a/drivers/media/dvb-frontends/rtl2832_sdr.c
++++ b/drivers/media/dvb-frontends/rtl2832_sdr.c
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2013 Antti Palosaari <crope@iki.fi>
+  *
+  * GNU Radio plugin "gr-kernel" for device usage will be on:
+- * http://git.linuxtv.org/anttip/gr-kernel.git
++ * https://git.linuxtv.org/anttip/gr-kernel.git
+  */
+ 
+ #include "rtl2832_sdr.h"
 -- 
 2.27.0
 
