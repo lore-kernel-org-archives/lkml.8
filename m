@@ -2,121 +2,163 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9916C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6792C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41A22072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960FC20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hWuEls5h"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eoHLS5q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgGMMmI (ORCPT
+        id S1729722AbgGMMr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:42:08 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35377 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729728AbgGMMmG (ORCPT
+        Mon, 13 Jul 2020 08:47:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50190 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:42:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594644126; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=qvFYV5gSdJN7uGe/5cfb+tk9FUbHSiqsuZE2Uf3f6Vs=; b=hWuEls5h01ZYYd3A0uLmDe3s8uHDcRgVadFlU0/o7BmskinL5n2SsSDsA0UAKvHa07ooQa9l
- 7mJBqM2X1U17RSGzPgVVfifb097YxKVGn6zDWRaXjkZ3xeSo6T0/GRkS6hyHVzrEDQ+V/GUr
- ka+uVL1F2+JYBbUudyG1wUzBlkg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f0c569bc9bd2efa2eaf5d87 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 12:42:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3B36CC433B2; Mon, 13 Jul 2020 12:42:02 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7B2EC433CA;
-        Mon, 13 Jul 2020 12:41:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7B2EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        smasetty@codeaurora.org, devicetree@vger.kernel.org,
-        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
-        viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com
-Subject: [PATCH v5 1/6] dt-bindings: drm/msm/gpu: Document gpu opp table
-Date:   Mon, 13 Jul 2020 18:11:41 +0530
-Message-Id: <1594644106-22449-2-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+        Mon, 13 Jul 2020 08:47:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DCjMF1081857;
+        Mon, 13 Jul 2020 07:45:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594644322;
+        bh=JDddS/CKP2aCXQxfKTiZYR2CGGt0uUybu6BJkOhnB5c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eoHLS5q4DfkBay2eQllhJynAnyjaqY6KLYu+GkV+FlhcYH7SAFvJEJU7XE7GvkaYY
+         p0a48Z7vDuocQAIIWNnLPO5fDCF9nVv6Al2OHkSBmbAGyuymaPavfi0gqFr13KZfSw
+         7tacFAbnzbzfJ2W7IUN/IrQM98FsnZp9uyj+Tobg=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DCjMkf121480
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 07:45:22 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 07:45:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 07:45:22 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DCjJKb020275;
+        Mon, 13 Jul 2020 07:45:21 -0500
+Subject: Re: [PATCHv2 2/5] watchdog: add support for adjusting last known HW
+ keepalive time
+To:     Guenter Roeck <linux@roeck-us.net>, <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
+References: <20200703120406.7092-1-t-kristo@ti.com>
+ <20200703120406.7092-3-t-kristo@ti.com>
+ <faeebfbb-cb8c-e31e-50ef-af42e1b11e0e@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <43dcd981-806a-dda5-39f6-6a0e42081d76@ti.com>
+Date:   Mon, 13 Jul 2020 15:45:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <faeebfbb-cb8c-e31e-50ef-af42e1b11e0e@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+On 05/07/2020 17:58, Guenter Roeck wrote:
+> On 7/3/20 5:04 AM, Tero Kristo wrote:
+>> Certain watchdogs require the watchdog only to be pinged within a
+>> specific time window, pinging too early or too late cause the watchdog
+>> to fire. In cases where this sort of watchdog has been started before
+>> kernel comes up, we must adjust the watchdog keepalive window to match
+>> the actually running timer, so add a new driver API for this purpose.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/watchdog/watchdog_dev.c | 23 +++++++++++++++++++++++
+>>   include/linux/watchdog.h        |  2 ++
+>>   2 files changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+>> index bc1cfa288553..5848551cf29d 100644
+>> --- a/drivers/watchdog/watchdog_dev.c
+>> +++ b/drivers/watchdog/watchdog_dev.c
+>> @@ -1138,6 +1138,29 @@ void watchdog_dev_unregister(struct watchdog_device *wdd)
+>>   	watchdog_cdev_unregister(wdd);
+>>   }
+>>   
+>> +/*
+>> + *	watchdog_set_last_hw_keepalive: set last HW keepalive time for watchdog
+>> + *
+>> + *	Adjusts the last known HW keepalive time for a watchdog timer.
+>> + *	This is needed in case where watchdog has been started before
+>> + *	kernel by someone like bootloader, and it can't be pinged
+> 
+> ... needed if the watchdog is already running when the probe function
+> is called, and ...
+> 
+>> + *	immediately. This adjusts the watchdog ping period to match
+>> + *	the currently running timer.
+> 
+> It doesn't adjust the ping period.
+> 
+>> + */
+> 
+> last_ping_ms needs to be documented (the last heartbeat was last_ping_ms
+> milliseconds ago ?), both here and in Documentation/watchdog/watchdog-kernel-api.rst.
+> It needs to be documented that the function must be called immediately
+> after watchdog registration, and that min_hw_heartbeat_ms must
+> be set for it to be useful.
+> 
+>> +int watchdog_set_last_hw_keepalive(struct watchdog_device *wdd,
+>> +				   unsigned int last_ping_ms)
+>> +{
+>> +	struct watchdog_core_data *wd_data = wdd->wd_data;
+> 
+> This needs a NULL check, in case it is called before watchdog driver
+> registration.
 
-Update documentation to list the gpu opp table bindings including the
-newly added "opp-peak-kBps" needed for GPU-DDR bandwidth scaling.
+Ok will fix all the above in next revision.
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
----
- .../devicetree/bindings/display/msm/gpu.txt        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+-Tero
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-index fd779cd..1af0ff1 100644
---- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-@@ -112,6 +112,34 @@ Example a6xx (with GMU):
- 		interconnects = <&rsc_hlos MASTER_GFX3D &rsc_hlos SLAVE_EBI1>;
- 		interconnect-names = "gfx-mem";
- 
-+		gpu_opp_table: opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-430000000 {
-+				opp-hz = /bits/ 64 <430000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+				opp-peak-kBps = <5412000>;
-+			};
-+
-+			opp-355000000 {
-+				opp-hz = /bits/ 64 <355000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+				opp-peak-kBps = <3072000>;
-+			};
-+
-+			opp-267000000 {
-+				opp-hz = /bits/ 64 <267000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+				opp-peak-kBps = <3072000>;
-+			};
-+
-+			opp-180000000 {
-+				opp-hz = /bits/ 64 <180000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				opp-peak-kBps = <1804000>;
-+			};
-+		};
-+
- 		qcom,gmu = <&gmu>;
- 
- 		zap-shader {
--- 
-2.7.4
+> 
+>> +	ktime_t now;
+>> +
+>> +	now = ktime_get();
+>> +
+>> +	wd_data->last_hw_keepalive = ktime_sub(now, ms_to_ktime(last_ping_ms));
+>> +
+>> +	return __watchdog_ping(wdd);
+>> +}
+>> +EXPORT_SYMBOL_GPL(watchdog_set_last_hw_keepalive);
+>> +
+>>   /*
+>>    *	watchdog_dev_init: init dev part of watchdog core
+>>    *
+>> diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+>> index 1464ce6ffa31..9b19e6bb68b5 100644
+>> --- a/include/linux/watchdog.h
+>> +++ b/include/linux/watchdog.h
+>> @@ -210,6 +210,8 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
+>>   extern int watchdog_register_device(struct watchdog_device *);
+>>   extern void watchdog_unregister_device(struct watchdog_device *);
+>>   
+>> +int watchdog_set_last_hw_keepalive(struct watchdog_device *, unsigned int);
+>> +
+>>   /* devres register variant */
+>>   int devm_watchdog_register_device(struct device *dev, struct watchdog_device *);
+>>   
+>>
+> 
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
