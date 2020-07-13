@@ -2,83 +2,126 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7189E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xB4UytO7"
+	by mail.kernel.org (Postfix) with ESMTP id 50F002072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgGMMkI (ORCPT
+        id S1729613AbgGMMlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMkH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:40:07 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7101AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qz2Jv/ggSypwc0uJUR+d7mBt/eDO9LlrpJONIT78xfg=; b=xB4UytO71//Pna0dWhCyanNjbh
-        aFxl8OHX2P+qf5CbnDBiRkxYkgPDUAt7R8rej9YA8miyY8zOEJYaM69AvxXtW/3pNNLC5MljBPvMq
-        eBe5gclv5669CepzpmcbICsop/nzWCn3loAi1ojzoFCE7D79vdxpNqm0UMafSxknzfuniJW4TWO7T
-        Rf0M1luzNSuTTt7UZXuI1eBZMN2PHHU0bgwceAigCPdHgcLMsszqQeuaVuZpAnA/U9c4xSvUy/FWV
-        EMCZqemGtSgGV0dG1uv4A6EQEveiV/aW7QZtC+Bk06L4Zukb1Rw5+KFJeVHf5TRJCURMl+93vAmaE
-        TwbPXCuw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1juxkY-0000um-Kw; Mon, 13 Jul 2020 12:40:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C5557300DB4;
-        Mon, 13 Jul 2020 14:39:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AD69420D27C7E; Mon, 13 Jul 2020 14:39:59 +0200 (CEST)
-Date:   Mon, 13 Jul 2020 14:39:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        morten.rasmussen@arm.com
-Subject: Re: [PATCH v3 6/7] sched/topology: Introduce SD metaflag for flags
- needing > 1 groups
-Message-ID: <20200713123959.GI10769@hirez.programming.kicks-ass.net>
-References: <20200701190656.10126-1-valentin.schneider@arm.com>
- <20200701190656.10126-7-valentin.schneider@arm.com>
+        Mon, 13 Jul 2020 08:41:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7296 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726586AbgGMMll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:41:41 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C32079BA0D8FA8D4044F;
+        Mon, 13 Jul 2020 20:41:38 +0800 (CST)
+Received: from [127.0.0.1] (10.174.186.75) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 13 Jul 2020
+ 20:41:32 +0800
+Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
+ instructions
+To:     Catalin Marinas <catalin.marinas@arm.com>, <maz@kernel.org>,
+        <steven.price@arm.com>, <guohanjun@huawei.com>, <will@kernel.org>,
+        <olof@lixom.net>, <suzuki.poulose@arm.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <zhangshaokun@hisilicon.com>, <prime.zeng@hisilicon.com>,
+        <linux-arch@vger.kernel.org>, <kuhn.chenqun@huawei.com>,
+        <xiexiangyou@huawei.com>, <linux-mm@kvack.org>, <arm@kernel.org>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <159440712962.27784.4664678472466095995.b4-ty@arm.com>
+ <20200713122123.GC15829@gaia>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
+Date:   Mon, 13 Jul 2020 20:41:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701190656.10126-7-valentin.schneider@arm.com>
+In-Reply-To: <20200713122123.GC15829@gaia>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 08:06:54PM +0100, Valentin Schneider wrote:
-> +/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
-> +#define SD_FLAG(name, idx, mflags) (BIT(idx) * (((mflags) & SDF_NEEDS_GROUPS) / SDF_NEEDS_GROUPS)) |
+Hi Catalin,
 
-#define SD_FLAGS(name, idx, mflags) (!!((mflags) & SDF_NEEDS_GROUPS) * BIT(idx))
-
-> +static const int SD_DEGENERATE_GROUPS_MASK =
-> +#include<linux/sched/sd_flags.h>
-> +0;
-> +#undef SD_FLAG
-> +
->  #ifdef CONFIG_SCHED_DEBUG
->  #define SD_FLAG(_name, idx, mflags) [idx] = {.meta_flags = mflags, .name = #_name},
->  static const struct {
-> -- 
-> 2.27.0
+On 2020/7/13 20:21, Catalin Marinas wrote:
+> On Fri, Jul 10, 2020 at 08:11:19PM +0100, Catalin Marinas wrote:
+>> On Fri, 10 Jul 2020 17:44:18 +0800, Zhenyu Ye wrote:
+>>> NOTICE: this series are based on the arm64 for-next/tlbi branch:
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
+>>>
+>>> --
+>>> ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+>>> range of input addresses. This series add support for this feature.
+>>>
+>>> [...]
+>>
+>> Applied to arm64 (for-next/tlbi), thanks!
+>>
+>> [1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
+>>       https://git.kernel.org/arm64/c/a2fd755f77ff
+>> [2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+>>       https://git.kernel.org/arm64/c/db34a081d273
 > 
+> I'm dropping these two patches from for-next/tlbi and for-next/core.
+> They need a check on whether binutils supports the new "tlbi rva*"
+> instructions, otherwise the build mail fail.
+> 
+> I kept the latest incarnation of these patches on devel/tlbi-range for
+> reference.
+> 
+
+Should we add a check for the binutils version? Just like:
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fad573883e89..d5fb6567e0d2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1300,6 +1300,20 @@ config ARM64_AMU_EXTN
+ 	  correctly reflect reality. Most commonly, the value read will be 0,
+ 	  indicating that the counter is not enabled.
+
++config ARM64_TLBI_RANGE
++	bool "Enable support for tlbi range feature"
++	default y
++	depends on AS_HAS_TLBI_RANGE
++	help
++	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
++	  range of input addresses.
++
++	  The feature introduces new assembly instructions, and they were
++	  support when binutils >= 2.30.
++
++config AS_HAS_TLBI_RANGE
++	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
++
+ endmenu
+
+ menu "ARMv8.5 architectural features"
+
+Then uses the check in the loop:
+
+	while (pages > 0) {
+		if (!IS_ENABLED(CONFIG_ARM64_TLBI_RANGE) ||
+		   !cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) ||
+
+
+If this is ok, I could send a new series soon.
+
+Thanks,
+Zhenyu
+
+
