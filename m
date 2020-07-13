@@ -2,157 +2,108 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE10C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3E8C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6E2206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594636306;
-	bh=3TioMtvSUjYziWp+kyctOpqPB2YQ9XgoXFqsZA1oTaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e104oac3DD6xHUcUTKvvfPxyck85yl2nRtJDMzAStUw2uqSTUJtNLa1jHIaYrFcEv
-	 F4HgWonVtlS0sZv+MsXG8hrx5NOA2Tcqu9ZPmZK0Xld94/p8LUxUAChkrWQqnwO5ky
-	 BmH4pPIkVL2Zh/xEJ5pD4+Rs7jXMrbxfcbWw8wts=
+	by mail.kernel.org (Postfix) with ESMTP id 2BBE1207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SG6VIgfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgGMKbp (ORCPT
+        id S1729494AbgGMKfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:31:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37513 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbgGMKbo (ORCPT
+        Mon, 13 Jul 2020 06:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgGMKfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:31:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a6so15684185wrm.4;
-        Mon, 13 Jul 2020 03:31:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCePzgWtJFKcMgODa5jFeHTDF8NO0ER8pFarnzTDiDQ=;
-        b=q6HCzAjeoeW2a0xyjVmlhkDaPuaycY0oZK63HPm2O2ApwY44YB7v/UXJiTd97/q+t/
-         gDgmTQBBMwAo/KkMeCKF2A6ZJvPEzHoYV1TBAChD5LvR7ulPVhJoPHS12d7m4yJqQxwV
-         3X1erC0yhO7HVZ+n2ESo3fmUnrUS4M0Fw4w13+gvWO75XgGe5eB+uFBwpWzCjpZ7xFve
-         bf5CHbeUoO//roCxNO3zIDvzwZR3TwtNqYjnqj2P7a7bmp66EHD3tv9uzjiGm246JnRZ
-         oAyh2sIMKHD4/RqPifBbNObszUO6JdANjce3twaZBR4zxEN0cTg9mnE1WIv26Y8CKo9+
-         O4Uw==
-X-Gm-Message-State: AOAM531ETy2T1hBb97ClwCaVDh1dinYxI0hfeDvKPknsR55lD4X/TvHd
-        DDmBO9PpiAZ2/8rrJaSxHwc=
-X-Google-Smtp-Source: ABdhPJwpeBitCzz5T9p3w+kPl4FZwVK1EF+ot37OC9F9q6oskqgCGysSapFH32WQblNKBRBPmXUsvg==
-X-Received: by 2002:a5d:4b84:: with SMTP id b4mr82900296wrt.334.1594636302336;
-        Mon, 13 Jul 2020 03:31:42 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b186sm6308931wme.1.2020.07.13.03.31.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 03:31:41 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 10:31:40 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, rdunlap@infradead.org,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, peterz@infradead.org,
-        allison@lohutok.net, alexios.zavras@intel.com,
-        gregkh@linuxfoundation.org, namit@vmware.com,
-        mikelley@microsoft.com, longli@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [RESEND][PATCH v3] x86/apic/flat64: Add back the
- early_param("apic", parse_apic)
-Message-ID: <20200713103140.xesdtvpczlfv6edb@liuwe-devbox-debian-v2>
-References: <20200626182106.57219-1-decui@microsoft.com>
+        Mon, 13 Jul 2020 06:35:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DCBC061755;
+        Mon, 13 Jul 2020 03:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=INXvaMVTxBym4z/fKJuakqyDRZOcv2j8dD0l03DIIOk=; b=SG6VIgfVujIJwV1bkl//5xt+9g
+        GLP/+l5nCGy7FOXXJBltMRU67LYncxDKPW6XsBHqK5/7I+gwAZZAeIi4Fw+AU9EP/1AStl19tAaLC
+        SfbNHamPt4X0L+rDd63gUKANJkUMuOF7Pl9RtdotmVNYk2uice1ic0JG1iXWOkPm+uBxb3DNG+iMu
+        WBQD3crMEPQqSfLG0NJ363PhffAs9/YPu277+hE0NShjZJpTyx12XnfZwkkoHATqijESikkzytS65
+        d4z7k9jTm4g7VM/nUtS3uougp6mu4u9g36XTFN6DBr/Hme/NNU3thCLE+pHtDGeIM5w+F+NxASdO6
+        4MG6AvCA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juvnM-0000vE-10; Mon, 13 Jul 2020 10:34:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5FAA3300DB4;
+        Mon, 13 Jul 2020 12:34:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 449F220D27C88; Mon, 13 Jul 2020 12:34:43 +0200 (CEST)
+Date:   Mon, 13 Jul 2020 12:34:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Joel Fernandes <joelaf@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kernel-team@android.com
+Subject: Re: [PATCH 00/18] Allow architectures to override __READ_ONCE()
+Message-ID: <20200713103443.GE10769@hirez.programming.kicks-ass.net>
+References: <20200710165203.31284-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626182106.57219-1-decui@microsoft.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200710165203.31284-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:21:06AM -0700, Dexuan Cui wrote:
-> parse_apic() allows the user to try a different APIC driver than the
-> default one that's automatically chosen. It works for X86-32, but
-> doesn't work for X86-64 because it was removed in 2009 for X86-64 by
-> commit 7b38725318f4 ("x86: remove subarchitecture support code"),
-> whose changelog doesn't explicitly describe the removal for X86-64.
-> 
-> The patch adds back the functionality for X86-64. The intent is mainly
-> to work around an APIC emulation bug in Hyper-V in the case of kdump:
-> currently Hyper-V does not honor the disabled state of the local APICs,
-> so all the IOAPIC-based interrupts may not be delivered to the correct
-> virtual CPU, if the logical-mode APIC driver is used (the kdump
-> kernel usually uses the logical-mode APIC driver, since typically
-> only 1 CPU is active). Luckily the kdump issue can be worked around by
-> forcing the kdump kernel to use physical mode, before the fix to Hyper-V
-> becomes widely available.
-> 
-> The current algorithm of choosing an APIC driver is:
-> 
-> 1. The global pointer "struct apic *apic" has a default value, i.e
-> "apic_default" on X86-32, and "apic_flat" on X86-64.
-> 
-> 2. If the early_param "apic=" is specified, parse_apic() is called and
-> the pointer "apic" is changed if a matching APIC driver is found.
-> 
-> 3. default_acpi_madt_oem_check() calls the acpi_madt_oem_check() method
-> of all APIC drivers, which may override the "apic" pointer.
-> 
-> 4. default_setup_apic_routing() may override the "apic" pointer, e.g.
-> by calling the probe() method of all APIC drivers. Note: refer to the
-> order of the APIC drivers specified in arch/x86/kernel/apic/Makefile.
-> 
-> The patch is safe because if the apic= early param is not specified,
-> the current algorithm of choosing an APIC driver is unchanged; when the
-> param is specified (e.g. on X86-64, "apic=physical flat"), the kernel
-> still tries to find a "more suitable" APIC driver in the above step 3 and
-> 4: e.g. if the BIOS/firmware requires that apic_x2apic_phys should be used,
-> the above step 4 will override the APIC driver to apic_x2apic_phys, even
-> if an early_param "apic=physical flat" is specified.
-> 
-> On Hyper-V, when a Linux VM has <= 8 virtual CPUs, if we use
-> "apic=physical flat", sending IPIs to multiple vCPUs is still fast because
-> Linux VM uses the para-virtualized IPI hypercalls: see hv_apic_init().
-> 
-> The patch adds the __init tag for flat_acpi_madt_oem_check() and
-> physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1":
-> flat_acpi_madt_oem_check() accesses cmdline_apic, which has a __initdata
-> tag.
-> 
-> Fixes: 7b38725318f4 ("x86: remove subarchitecture support code")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+On Fri, Jul 10, 2020 at 05:51:44PM +0100, Will Deacon wrote:
 
-[...]
+> SeongJae Park (1):
+>   Documentation/barriers/kokr: Remove references to
+>     [smp_]read_barrier_depends()
+> 
+> Will Deacon (18):
+>   tools: bpf: Use local copy of headers including uapi/linux/filter.h
+>   compiler.h: Split {READ,WRITE}_ONCE definitions out into rwonce.h
+>   asm/rwonce: Allow __READ_ONCE to be overridden by the architecture
+>   alpha: Override READ_ONCE() with barriered implementation
+>   asm/rwonce: Remove smp_read_barrier_depends() invocation
+>   asm/rwonce: Don't pull <asm/barrier.h> into 'asm-generic/rwonce.h'
+>   vhost: Remove redundant use of read_barrier_depends() barrier
+>   alpha: Replace smp_read_barrier_depends() usage with smp_[r]mb()
+>   locking/barriers: Remove definitions for [smp_]read_barrier_depends()
+>   Documentation/barriers: Remove references to
+>     [smp_]read_barrier_depends()
+>   tools/memory-model: Remove smp_read_barrier_depends() from informal
+>     doc
+>   include/linux: Remove smp_read_barrier_depends() from comments
+>   checkpatch: Remove checks relating to [smp_]read_barrier_depends()
+>   arm64: Reduce the number of header files pulled into vmlinux.lds.S
+>   arm64: alternatives: Split up alternative.h
+>   arm64: cpufeatures: Add capability for LDAPR instruction
+>   arm64: alternatives: Remove READ_ONCE() usage during patch operation
+>   arm64: lto: Strengthen READ_ONCE() to acquire when CONFIG_LTO=y
 
-> +static int cmdline_apic __initdata;
-> +static int __init parse_apic(char *arg)
->  {
-> -	return 1;
-> +	struct apic **drv;
-> +
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
-> +		if (!strcmp((*drv)->name, arg)) {
-> +			apic = *drv;
-> +			cmdline_apic = 1;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	/* Parsed again by __setup for debug/verbose */
-> +	return 0;
-> +}
-> +early_param("apic", parse_apic);
-
-This is a verbatim copy of the code in probe_32.c. Can you avoid the
-duplication by moving the snippet from probe_32.c to apic.c?
-
-You can declare cmdline_apic in local.h if you do that.
-
-Wei.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
