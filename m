@@ -2,127 +2,108 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F95DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0641EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A15A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB392068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="ATDAO3as"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBPzWph8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgGMJDu (ORCPT
+        id S1729357AbgGMJEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:03:50 -0400
-Received: from mail-eopbgr20119.outbound.protection.outlook.com ([40.107.2.119]:20292
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbgGMJDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:03:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HrxjN2ft9U71wkSwlzLHkFGEI7ypBJzl1KgvaJaBPOC+M7TFLSChfXzhDPTb09UAZ/STIhl4VthI9Dw/w0FiX0mssSDdMtavIf9bSyS22WX2PL0S/tiwuEqH0M+2+i1qB34EzU1slL8rivO17MrYFHMXChwCnUWB458s7uUcd4m2HWH4kiCpgtmgPRkY7SR/GihcBtHvNEpNLMZKrdyqsAPn7aYJNHXwJzRheWZugBZbtNJf2XmJZyAmWnuaLFdAWHyXbe9QyMa1k1thIvCbzGITI0bAEG9oQZozr0JBm6JhWRSB+qJUUxrtH/S6z0oJb1zgP08sglOrTXseSvVjBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=intwFnpnQOajolbVn3hE29bRAEuMrZyiuQE9wYcVe6Q=;
- b=DpReJcNniJ/O/ufaxrPTcdeb/AaXOnkd7oUsEFGnDLLphjVTz6bYSlBqIViVdfptRP7L+pZ06x+qI3WszlwCdQsBQW+5ASBsLm5vE6agOTH8AGfaBwW89U7KZiKKEL6SiJDtKXAnrbd/Nrv9LA/YLgjGKE8uKzdzn32nL4cs6czL8AbVluf2/pWWZknzuEXXDuKaAJOzlp4dkhA1Jxrz+5h6TFqdXVonHndbx8cKpDHRverL1gdXZEd1bXCpxTesDE4vQiIIMkzPefMPYAQJ6G4rblI6T2Vxs8VpQYOlRRFRuliVDP2P2k4iugDpdFf0IO5R1l60hNygWVhtmrRWag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=intwFnpnQOajolbVn3hE29bRAEuMrZyiuQE9wYcVe6Q=;
- b=ATDAO3aswavXvXkEdaXpKNqGcyZ7SEPciyLEdq3JByRtHT95z5H10SXWH3KtR6Fpfpb9UgTUbZYoDExhJ1g3iklA9G1C5qO1JY/Wq+rLbya6odZIgJ8bsNUhGtCZNt6Mnm0o8gq5GyIVELmXeQ7xFDiMY/482vOIKIJ5vk7EyBc=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=virtuozzo.com;
-Received: from AM0PR08MB5140.eurprd08.prod.outlook.com (2603:10a6:208:162::17)
- by AM0PR08MB5026.eurprd08.prod.outlook.com (2603:10a6:208:158::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Mon, 13 Jul
- 2020 09:03:46 +0000
-Received: from AM0PR08MB5140.eurprd08.prod.outlook.com
- ([fe80::189d:9569:dbb8:2783]) by AM0PR08MB5140.eurprd08.prod.outlook.com
- ([fe80::189d:9569:dbb8:2783%6]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
- 09:03:46 +0000
-Subject: Re: [5.8RC4][bugreport]WARNING: CPU: 28 PID: 211236 at
- fs/fuse/file.c:1684 tree_insert+0xaf/0xc0 [fuse]
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        linux-fsdevel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        mszeredi@redhat.com
-References: <CABXGCsPPoeja2WxWQ7yhX+3EF1gtCHfjdFjx1CwuAyJcSVzz1g@mail.gmail.com>
- <CABXGCsP3ytiGTt4bepZp2A=rzZzOKbMv62dXpe26f57OCYPnvQ@mail.gmail.com>
- <CABXGCsO+YH62cjT_pF1RMqKD86Zug4CiWzv6QATe_zhEp3eaeQ@mail.gmail.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <30a611e6-f445-494e-dab9-d7a5c17c9889@virtuozzo.com>
-Date:   Mon, 13 Jul 2020 12:03:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <CABXGCsO+YH62cjT_pF1RMqKD86Zug4CiWzv6QATe_zhEp3eaeQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR05CA0086.eurprd05.prod.outlook.com
- (2603:10a6:208:136::26) To AM0PR08MB5140.eurprd08.prod.outlook.com
- (2603:10a6:208:162::17)
+        Mon, 13 Jul 2020 05:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgGMJEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:04:33 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C04C061755;
+        Mon, 13 Jul 2020 02:04:32 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id dm19so12524681edb.13;
+        Mon, 13 Jul 2020 02:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=500CoOdzf5q9Fcdg+W/g6TzNdn+PpBuDz3AznE+D28c=;
+        b=PBPzWph8pFtudHo5crZ5ekdllU1lkd/26D1a+9EVNOBbZmxnoTyJsQUJIq+14nPBDu
+         5C2TpVpjCvb+CtewWOtjkkPbIl/xDZkViX4SJaTsJ3EMUNhUd+9WRTg0l8bzPZgVF26U
+         pQcnci5wbiZESK8/6kUwuk0mI1mSpi0X99Vxlb1lpcfhozI+lvHIGxUb9egHBJfa0qxw
+         eh+5Mh+XZirsYTlTju6hwNkqUY0j6Ri/WUl7acHIo1QmqgYsnNzOGWG0lJZ/1nhm7mnb
+         sCHPvKRQ4yrPYV8mF/Gv7kiAa4OUoGCeOakALFi+zKPBKfTYvJbk58/anNqWQmNH6OWr
+         KQCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=500CoOdzf5q9Fcdg+W/g6TzNdn+PpBuDz3AznE+D28c=;
+        b=mgG3XfdlGViJyr9lLA1SecMRSHePgPyjksGA4kWrinFJUP6eKa1/UqEqc8iNxUvYKk
+         52wbvjy1RoW/882a152ceFx/DQZzd7MYnE5YmkR++ThGSNrPT7jER9c/O0FBAtH54ySs
+         iIoz5Wm2RFEaBLp+yGL+DM/XhhhNCFypyGn/8VJ2hVDjhFXlfysphcv8XIyHZzapc6+s
+         bZfcZDwNIEbf9ikigXg221X84qbW13aAK9nvOPnV2O550yWP5NS/yhj/4udhDaa1P8v9
+         s83agci+l3UqL2rbJOGSadyfMb+us7xgP78RgzyeVXp/41++UhYhaZ+3je3W0RCVmDxy
+         dR7w==
+X-Gm-Message-State: AOAM530os+7lBh9ef3WIY5YE6KQTAxq+REJ0TYX4KZYXJkTwhB0k59f+
+        Wb2MsFGyDVE40u56iUHvWN896G8UWFZMKiDwt9Q=
+X-Google-Smtp-Source: ABdhPJzDoDhZGs/aa1inXlKCb8r4Ppi37w7DSuUY1EZ1shMvbTh0J0BonrstntjtS2KU3vBszYsyDDC+rJyM8oI81QU=
+X-Received: by 2002:a05:6402:c82:: with SMTP id cm2mr81544390edb.293.1594631071367;
+ Mon, 13 Jul 2020 02:04:31 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.16.24.21] (185.231.240.5) by AM0PR05CA0086.eurprd05.prod.outlook.com (2603:10a6:208:136::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Mon, 13 Jul 2020 09:03:46 +0000
-X-Originating-IP: [185.231.240.5]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cdf73866-ec1f-42c2-d88f-08d8270ba6a1
-X-MS-TrafficTypeDiagnostic: AM0PR08MB5026:
-X-Microsoft-Antispam-PRVS: <AM0PR08MB5026876AAE310FA625C61832AA600@AM0PR08MB5026.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:862;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x3IxsGtYipng3MNUXhvHwuUCnzG3RhupyXsuI9qVpb7+afmi87A5rGttdptk0HaEZb9/Bg/niUEIMYQubosHg6N8VksegmSqUv6BP4NKDOWEa16MxD5PSB5HG4rJZDhNuKh6m+eiREyEmVurBbLRMWvqr9TTB7wsquQzLiRafbFy0t75aBgxpzKh1PBBrd8I6tO1Ek1IhxSsDpx6UVgUc+//1i/sE2hwMUH6fBhzlSFPczV5jQroZNiaNaqZ1Y1lgvterW3zWFPEEKioxHJs7gS8k5CaMWrBQAVCEjFwuT8LKoOR+QwxQH+jGCJl3408e/H1H4lgZKq5HP0qxDGOVrZdDKQyzLZpTR5ZJgJASjwqpVsVLuBnPwN5MPZVS6KAMhFYfyoPfcZvBtifjpj6MMpHycWsKdnIT0lu5Hhk6A1VnyXaaPCaU+nVrTxNsN+Va2rhkmy/XLryGPp3IF1ahw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB5140.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39840400004)(346002)(366004)(376002)(8676002)(66556008)(66476007)(66946007)(8936002)(2906002)(966005)(26005)(52116002)(16526019)(4744005)(31686004)(956004)(53546011)(478600001)(186003)(86362001)(2616005)(83380400001)(316002)(110136005)(31696002)(5660300002)(6486002)(16576012)(36756003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: UqpuW61leJ9WmBNDxemiSYDm7tcEbmnEX7gcHFVNGtI0xLmTgjIDnaGBIHu/n9Wx501FTbJbUE6g2un3T/WBXJDIeL+GzKsXGiBB5B1yStt5HWpIF3KluuqENZ37KpwwIEn4P3huJKoa5f8wcKtWfdR/D9S328XebMG4uuMgpfEdNabPsI21sgt681PrEfnZl8/6N8N/bIdlLE0l5j85JZo0PzeWFUX+BB3cSOduQQqyRyyJH4z+VnEnp/obmKhtnG2bui+HfSt/LacK8KmPP+Y379dp100Wj1OAHCnjtaHPxWQG2sluGnDhLyHjcYgs3+hOa52e23GdJXS6DCe4zK/zAh64HN4KbJ/EbSvjiQeVQMSXph4xa2fl97w9iEMIh+er56wNzIE0iSeBSrpI0O9P0huA7lYHtnsZXQQ1o9yNSqhXffhW+JTLEfGHR+srZIqhi2FQ+ZY4AY0GJj3SJ5N165TfnyT3v3GktTlpdRs=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdf73866-ec1f-42c2-d88f-08d8270ba6a1
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR08MB5140.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2020 09:03:46.8352
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Is1CIzUx5WJ7zHurkCYcAbnH63zTvvGC2CLKLyY6Q3e+ibZGxRosixihIKNdN+hMIh3Pd+1LHx9MDn1fRWaig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5026
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
+ <20200712173044.GL6110@Mani-XPS-13-9360> <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
+ <5e2eb92e-eada-9b14-3f15-38717284bc92@arm.com>
+In-Reply-To: <5e2eb92e-eada-9b14-3f15-38717284bc92@arm.com>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 13 Jul 2020 14:33:54 +0530
+Message-ID: <CABHD4K-4c8DvaW1zt4TsCRHU5YNaWKEgXdT-DK59MT9CgjB87Q@mail.gmail.com>
+Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 11:02 AM, Mikhail Gavrilov wrote:
-> On Mon, 13 Jul 2020 at 12:11, Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
->>
->> On Mon, 13 Jul 2020 at 03:28, Mikhail Gavrilov
->> <mikhail.v.gavrilov@gmail.com> wrote:
->>>
->>> Hi folks.
->>> While testing 5.8 RCs I founded that kernel log flooded by the message
->>> "WARNING: CPU: 28 PID: 211236 at fs/fuse/file.c:1684 tree
->>> insert+0xaf/0xc0 [fuse]" when I start podman container.
->>> In kernel 5.7 not has such a problem.
->>
->> Maxim, I suppose you leave `WARN_ON(!wpa->ia.ap.num_pages);` for debug purpose?
->> Now this line is often called when I start the container.
->>
-> 
-> That odd, but I can't send an email to the author of the commit.
-> mpatlasov wasn't found at virtuozzo.com.
+Hi,
 
-Reported problem is not fixed yet in 5.8-rc kernels
-Please take look at
-https://lkml.org/lkml/2020/7/13/265
+> But this regulator is only used for the eMMC there, which we apparently
+> don't have on the Cubieboard 7?
 
-Thank you,
-	Vasily Averin
+We do have eMMC present on Cubieboard 7 (both the versions of Cubieboard7), and
+the regulator name is similar to what is used in
+"s900-bubblegum-96.dts" .i.e. "vcc_3v1".
+
+But Since this patch doesn't enable eMMC, it does make sense to remove this
+"vcc_3v1" regulator and keep the other one.
+
+> > Also, another day tested it without having these regulators in , and
+> > still it seems to
+> > work.  So should these be removed ?
+>
+> If there are not even referenced in the .dts, then fixed regulators are
+> rather pointless. So yes, please remove this vcc-3v1 one.
+
+Sure, I would do this.
+
+> What is the story with the other regulator? Is there a PMIC or a power
+> switch for the SD card? Or is the power supply actually hardwired?
+
+SD_VCC is connected to SWITCH/LDO which gets input from ATM2603C PMIC.
+This seems to be enabled by default ( in early bootloaders I guess).
+
+Thanks
+-Amit.
