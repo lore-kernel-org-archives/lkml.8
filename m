@@ -2,98 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54512C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5FE20BED
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302F020B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594676390;
-	bh=agAsipOozBPukSLhCM4m4vjLI/D7R1E+uScF3vXv/tc=;
+	s=default; t=1594676491;
+	bh=s21nN0PoT4wYXHHvEcseQ4YAZuyB4muxRpazrtUW9g0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KQoODGmH/VspxZXASmDnt+yzdTfSLfVHMAHKGodB1gSOyru23xvLPmxw7wi0D6aF5
-	 nai6mbJkPJTkROeFdJmwaHPdN0zPwt6qDOcV4vfx52vdPiCKzHjzDPbkUqf/UnZjCe
-	 HvId7/6DefrY4bMXyhiymr3xYLwMT9ZSmo2TbNG4=
+	b=xEW2sJQclWwS7t4FwbquRxSDKaFDGwn2nhWNvpYa9st2LkhJMuYXLy4+dB6DPAwxx
+	 S4Gyc27Xzp9z0AtQdVLof8ysTAGhjAbP+qnuOPLMim1ds+ooe+mSrz4gGlbSgPlgm2
+	 4Fq57KuAJltpbhap4bbYxbq/zNZkiPjZ7RjHyEW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGMVjt (ORCPT
+        id S1726776AbgGMVl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:39:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33412 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgGMVjs (ORCPT
+        Mon, 13 Jul 2020 17:41:29 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43812 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgGMVl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:39:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id d18so15176303ion.0;
-        Mon, 13 Jul 2020 14:39:48 -0700 (PDT)
+        Mon, 13 Jul 2020 17:41:29 -0400
+Received: by mail-il1-f194.google.com with SMTP id i18so12535835ilk.10;
+        Mon, 13 Jul 2020 14:41:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=aEcm7UlnpLxi1nja2AkUVi4pjG1g2ySwAI8pwvIKG8c=;
-        b=ft4cXyPXoYMS9G7q0WHWN0cm4tq8tIHkZdgsYhoZ8+qqMh9x+1CwXztsQNE0oL8dPc
-         XlUZjkfMKKFr9drnrPNmmlh9w/1eTmarfBt+jTzDHAGYv4cypuGDHmfucWxvHyU7qjuK
-         8QMVy8iw+goGm7z+aXyHQj8+t8pN6XshhiC5TmLwaELe/lPcvkjuGrK/14SL3/QcmJjq
-         4bbW1hd2JR7SvVCqnVjy//ern+ftYUdN2OFPjlBQdTXd5D1XEvnNddR2mNe9oUPEYFYl
-         g9tR+yBEKZm8gMvgAauM1y1ImvfljCSkQvp+jpFW1ZYS/oTFStB+lBjqFBM5jpiaZT+L
-         vWZg==
-X-Gm-Message-State: AOAM533q2oDB05litIAOScI1zqtol9Ke7qnpqEe7jy4jALao27nNVNp5
-        bywKqDMQgZIdQJIlhcn2+w==
-X-Google-Smtp-Source: ABdhPJxyncAsqE/oRaGZKws0ZzryaZj/+lu/e8IRy1d+IxsmK90AXDKTJkJUTjqo8Y/Px0bpUP70Vg==
-X-Received: by 2002:a6b:ee15:: with SMTP id i21mr1820321ioh.25.1594676387812;
-        Mon, 13 Jul 2020 14:39:47 -0700 (PDT)
+        bh=MnRt+eOdMAkvcPxA/OIYcge3ggOA8Or7nQ7c1V/nZW4=;
+        b=VmnoK5M6/qhbg36I7nwI2cqHPk0dwrYxKznBK84S6dJCl+2KksWs/ODQ7gnjWjPoAo
+         E1sm+RvnjpfYgO0x8s32nx1U09kCEfqzI+xn9SwoVUjI8YjWdKAjUGu74fH8jhtA6bJ4
+         1Db7GkcRYIVbsiBvrBbLjN9AkGD0AHFcQkJj8aNmfiNTIPYX9TMOk2Yj8dOlr36QVMFy
+         h1cDf4VIuB4uSkI8dYkFI20TjaLPYQGTPDHSjCSxAcLklRfb8K0FCjz33ukjYxT9BLgx
+         GBr732hebDrGuRM82bNYvTei8CqMs6PB/ZP01rZzEpjFD6GjkzSZPdOiclWPtX9ymdQ4
+         x4hQ==
+X-Gm-Message-State: AOAM532gJcxW8e26Y3tArPzHY5tKwkEMiXXyYS4q/bXh2CT6oLW503Hf
+        JOUEyNsZ7mKHZVrGgPv4Nw==
+X-Google-Smtp-Source: ABdhPJzfU6/JPJV1rhOxooZnGqbXB9+2KWa1AwQGdCgoztDDyS/knMygq+4uWLe3oZf4ufr4oMDV0w==
+X-Received: by 2002:a05:6e02:11a6:: with SMTP id 6mr1729560ilj.64.1594676488177;
+        Mon, 13 Jul 2020 14:41:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s190sm9365357ilc.28.2020.07.13.14.39.46
+        by smtp.gmail.com with ESMTPSA id f9sm8790295ilq.9.2020.07.13.14.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 14:39:47 -0700 (PDT)
-Received: (nullmailer pid 774524 invoked by uid 1000);
-        Mon, 13 Jul 2020 21:39:46 -0000
-Date:   Mon, 13 Jul 2020 15:39:46 -0600
+        Mon, 13 Jul 2020 14:41:27 -0700 (PDT)
+Received: (nullmailer pid 776787 invoked by uid 1000);
+        Mon, 13 Jul 2020 21:41:26 -0000
+Date:   Mon, 13 Jul 2020 15:41:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-actions@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 4/6] dt-bindings: reset: Add binding constants for
- Actions S500 RMU
-Message-ID: <20200713213946.GA774478@bogus>
-References: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
- <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] dt-bindings: interrupt-controller: Fix typos in
+ loongson,liointc.yaml
+Message-ID: <20200713214126.GA774746@bogus>
+References: <1594087972-21715-1-git-send-email-yangtiezhu@loongson.cn>
+ <1594087972-21715-9-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <1594087972-21715-9-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020 20:05:10 +0300, Cristian Ciocaltea wrote:
-> Add device tree binding constants for Actions Semi S500 SoC Reset
-> Management Unit (RMU).
+On Tue, Jul 07, 2020 at 10:12:52AM +0800, Tiezhu Yang wrote:
+> Fix the following two typos in loongson,liointc.yaml:
+> fron -> from
+> connected -> connect
+> it's -> its
 > 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
 > ---
-> Changes in v3:
->  - Added Philipp's Acked-by tag
+>  .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes in v2:
->  - None
-> 
->  .../dt-bindings/reset/actions,s500-reset.h    | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
-> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> index b1db21e..732ad9a 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> @@ -51,8 +51,8 @@ properties:
+>      description: |
+>        This property points how the children interrupts will be mapped into CPU
+>        interrupt lines. Each cell refers to a parent interrupt line from 0 to 3
+> -      and each bit in the cell refers to a children interrupt fron 0 to 31.
+> -      If a CPU interrupt line didn't connected with liointc, then keep it's
+> +      and each bit in the cell refers to a children interrupt from 0 to 31.
 
-Acked-by: Rob Herring <robh@kernel.org>
+While at it, s/children/child/
+
+> +      If a CPU interrupt line didn't connect with liointc, then keep its
+>        cell with zero.
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      minItems: 4
+> -- 
+> 2.1.0
+> 
