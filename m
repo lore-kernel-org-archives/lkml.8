@@ -2,307 +2,167 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB49BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67847206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BF62075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtPurEzn"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aGyPAsz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgGMP3C (ORCPT
+        id S1729938AbgGMP3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgGMP3B (ORCPT
+        Mon, 13 Jul 2020 11:29:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:39501 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgGMP3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:29:01 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7F7C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:29:01 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b9so5655245plx.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dUZVIomsgrNeq0tAzWYalnJgUmuE7AfZACOs9ixpxxs=;
-        b=QtPurEzntS9W29xApYYBB4bbSJYX/t33q/uKXL2nehqLF6cYdQmIC13WFG5eDRNMi+
-         Ab8xeqKFuFmpY98Yq+uMEXqaUxtRQ7cAe5Em9tSgPWrUTJaCCHav0LM51CNQiiEfC9O7
-         42C+SD+sRGMWtbO25oViigAUag1KARIKN+ZCOaEn/RWJEUfb6fEQW+EsJ/LPJEDcca3O
-         Ptiz4QzCKQFblv4E3Fq2sqpIMciYt0Qs9eOsA1sX1XYD2uRJZOE0KY6tY5msSiyA1vri
-         W/ZGA+wUs5KsYUTRQ8Ehxu/JHcCFYC0Vslnfv3rgk0JMAJYDjGjotZSLlu93/ZFuCiT6
-         1ERA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dUZVIomsgrNeq0tAzWYalnJgUmuE7AfZACOs9ixpxxs=;
-        b=QkQN/emEur9Rw+cyjto9ep3BMYf+xuCLnAoO867UhxDl/7EjeHhlrC9QRdDI9NgnyC
-         GSjf8wx18XXQwNK02h9t12Eb9LEClOZwvm/lYyElyCS8RTP1RB/P1HB61HD0j/kIWORG
-         rrzfO4AA1kIUEufDZYGvFj0cLSWYBP/FOmMwttKEa48MoYY2oMVJlV+QPaUFYc3s7PUj
-         qHEq2pLMoqoJURQoTEnkoZ9D0ccKt+FS1bIqrBo9QKy2dXDsrYDZQWXNHuq3wbuILWFx
-         dBG0e5eysVbmEU4MAr8xs35WBBdG2D4lWpkx3zjVigRC4BPKm19meF6S+8NYytq3bdlb
-         T0lw==
-X-Gm-Message-State: AOAM530YeY8Y9v04bxSZY7zGvXLvmaMbPXVOkzdOLZMVYEz2HuJE2h+O
-        okvlOEZHOju0P9V/K4dXesg=
-X-Google-Smtp-Source: ABdhPJyXym73DV8eH5fqTDOOWGLVdygiCGpLhTbadvnaOXjG3R1lro2vFggqw/thSwCYawJuEKzZaw==
-X-Received: by 2002:a17:902:bd97:: with SMTP id q23mr154894pls.167.1594654140961;
-        Mon, 13 Jul 2020 08:29:00 -0700 (PDT)
-Received: from anarsoul-xps15.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id b11sm15236250pfr.179.2020.07.13.08.29.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:29:00 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Pavel Machek <pavel@denx.de>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v4] ALSA: line6: add hw monitor volume control for POD HD500
-Date:   Mon, 13 Jul 2020 08:28:52 -0700
-Message-Id: <20200713152852.65832-1-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 13 Jul 2020 11:29:40 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200713152939euoutp022ac4bbd0c9f38c83e1b5e47370375513~hWYbrpmbY2386423864euoutp02-
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:29:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200713152939euoutp022ac4bbd0c9f38c83e1b5e47370375513~hWYbrpmbY2386423864euoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594654179;
+        bh=vO5pnPgqndY7d3Zj0BCVf+Evpl+fDIPB8p1F0ud8Gcc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=aGyPAsz8cAGojcbhcEqCV6V9zFKr9gIHuVuSDpW6JCdFyrYuR4CespiF+AyrZlH+Q
+         iTpomQDPUYjPeDDuMLnr7z05E0m2YFtUaiY0BJqhNMqQPhftAMPc+NhOJ3Q+F9y7/i
+         PNHXZq2q/b5Oa4rYvwchoEyUwCOd1V4q1d+jHO6A=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200713152938eucas1p10be5680c4b788a011358e3d3a6c4e130~hWYbfVFj23160031600eucas1p1i;
+        Mon, 13 Jul 2020 15:29:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id A1.88.05997.2ED7C0F5; Mon, 13
+        Jul 2020 16:29:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200713152938eucas1p2c0e5026e5e8583add0fb589bffdb60d3~hWYbF7Jfz2797427974eucas1p2n;
+        Mon, 13 Jul 2020 15:29:38 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200713152938eusmtrp2b19bbf9d1824b895d771f8306ad68ee3~hWYbDYYgZ0741707417eusmtrp2K;
+        Mon, 13 Jul 2020 15:29:38 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-6c-5f0c7de2e36c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 48.00.06314.2ED7C0F5; Mon, 13
+        Jul 2020 16:29:38 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200713152937eusmtip12910505a87ba790d2a0174c3f7e37316~hWYaS01Fz1297512975eusmtip1X;
+        Mon, 13 Jul 2020 15:29:37 +0000 (GMT)
+Subject: Re: [PATCH] drm/bridge: sil_sii8620: initialize return of
+ sii8620_readb
+To:     trix@redhat.com, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        architt@codeaurora.org
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <c79fd5b6-e999-5bec-e373-7709d07f4446@samsung.com>
+Date:   Mon, 13 Jul 2020 17:29:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200712152453.27510-1-trix@redhat.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXbv7q5zi+tMdrIyGvXBwJcy60JhGSWX+lD0oSArnXVxopuy
+        60v2amW1DGW1NLaiRljaCrXSTaWyRvmCuCTfM1AsyJlisqkparndSX77nXOe//+cPzwkJusW
+        BpMpmkxWq1GmKQgxbm2ccYQNXZAkRH6aiaQLHS0C+opuTEj/td7G6M7JcYLumnZidMtoF07f
+        vF0qojvqHxC0vSieNr8cQnS3uxXf7c+M914TMR1FhQLm7ZQZZ+7rjEKmWf9FwNimBoXMwK0m
+        ATP+rotg3hcacMb1KuSQ+Jh452k2LSWb1UbEJIpV7idOPKNOfGaib0MeekkWID8SqK0w4rKi
+        AiQmZVQ5gtHpQSFfuBEMzX/E+MKFoPpOg2hJYjAWi/hBGQKn3uUrxhHY2ksxz6tA6jCUVXR6
+        vVZStYvyh3NeOUbFw/M3OuRhggqF+dd9hIelVAwUlkx6+zi1ERoGSnEPB1EnodJpE/BvAqDF
+        +MPb96Oiodtg9XmuA9vYA4xnOVxxP/MuBmpCBDO/LRh/914wuQsIngNhpKnal2cN/K17JOD5
+        EgyU52O8WIegpqrOJ94B3xyzi2JycUMoVNZHeBCoWOiqPMLjCugdC+BPWAF3rPcwvi0F3XUZ
+        77EeBtpqfH5yeNI+SeiRwrQsmGlZGNOyMKb/a80ItyA5m8Wpk1lui4bNCeeUai5Lkxx+Kl39
+        Ci3+ttaFJnctqp9LsiOKRAqJFA5KEmRCZTaXq7YjIDHFSumettaTMulpZe5ZVpueoM1KYzk7
+        Wk3iCrk06rHzhIxKVmayqSybwWqXpgLSLzgPRUuj4ob1D2ciDEHnPpzYYHkfyd4I8a9qZsLy
+        c9SfbY2lSb0LxmL2TFV2nEUlP/CiuCHqqNm+3XI1V25dt2rPwtOvjmFbEdlTErsW629sV4T1
+        iy7urcjpTP1zfu47MPu42TLJtsubisQ9+wXhrrvG7btUP48n/hrd/zYz7kWAtkSBcyrl5k2Y
+        llP+A148blJpAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsVy+t/xu7qPanniDU7eEbHoPXeSyaKp4y2r
+        xf9tE5ktrnx9z2Zx9ftLZouTb66yWHROXMJucXnXHDaLQ33RFgs2PmK0uPblNIsDt8f7G63s
+        Hpf7epk89n5bwOIxu2Mmq8eJCZeYPLZ/e8Dqcb/7OJPH+31X2TwO9E5m8fi8SS6AK0rPpii/
+        tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv48vSlywFO7kq
+        Pt5UaWDcyNHFyMkhIWAiMXnmVPYuRi4OIYGljBI3nzxhhUiIS+ye/5YZwhaW+HOtiw3EFhJ4
+        yyjxfIUyiC0sECSxfN0VVpBmEYEdjBKTv00HK2IWiJaY9e8R1NQORolF12aygCTYBDQl/m6+
+        CVbEK2An0TvtKyOIzSKgKrH//hKwGlGBOInlW+azQ9QISpyc+QQszilgKnFt8jZ2iAVmEvM2
+        P2SGsOUltr+dA2WLSzR9Wck6gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLS
+        vHS95PzcTYzAaN527OfmHYyXNgYfYhTgYFTi4ZXw54kXYk0sK67MPcQowcGsJMLrdPZ0nBBv
+        SmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnAxNNXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTE
+        ktTs1NSC1CKYPiYOTqkGxlkhRuqut5qizk3uOWwcVPlppaXyvhkmq8I2Wpe/LN/wvr7AWmO2
+        vjlH3fm04+cOXnoe9GviihzDhLxS99mbJxsqmS8uP8lxe5VOUKPW9ISLYrpLfaZsvLRiZmHI
+        FCF58QCJq5KXaxbfUDbr4fdrW6wS/OVZJFPK7GjV7G8ZH+qenFzsPC87QomlOCPRUIu5qDgR
+        AOypkZ/8AgAA
+X-CMS-MailID: 20200713152938eucas1p2c0e5026e5e8583add0fb589bffdb60d3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200712152516eucas1p2cd883f7ccfcbfa78d452ba7a5641c363
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200712152516eucas1p2cd883f7ccfcbfa78d452ba7a5641c363
+References: <CGME20200712152516eucas1p2cd883f7ccfcbfa78d452ba7a5641c363@eucas1p2.samsung.com>
+        <20200712152453.27510-1-trix@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add hw monitor volume control for POD HD500. The same change may
-work for HD500X but I don't have it to test.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
-v4: add NULL check for kmalloc-ed buffer
-v3: - use EXPORT_SYMBOL_GPL instead of EXPORT_SYMBOL
-    - use GFP_KERNEL instead of GFP_ATOMIC for allocating a message
-    - use lower case for float lookup table
-v2: clamp volume value to [0, ARRAY_SIZE() -1] in
-    podhd_set_monitor_level()
+On 12.07.2020 17:24, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+>
+> clang static analysis flags this error
+>
+> sil-sii8620.c:184:2: warning: Undefined or garbage value
+>    returned to caller [core.uninitialized.UndefReturn]
+>          return ret;
+>          ^~~~~~~~~~
+>
+> sii8620_readb calls sii8620_read_buf.
+> sii8620_read_buf can return without setting its output
+> pararmeter 'ret'.
+>
+> So initialize ret.
+>
+> Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>   drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+> index 3540e4931383..da933d477e5f 100644
+> --- a/drivers/gpu/drm/bridge/sil-sii8620.c
+> +++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+> @@ -178,7 +178,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+>   
+>   static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
+>   {
+> -	u8 ret;
+> +	u8 ret = 0;
 
- sound/usb/line6/driver.c |   3 +-
- sound/usb/line6/driver.h |   4 ++
- sound/usb/line6/podhd.c  | 127 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 132 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index 7629116f570e..3e07251b80e3 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -97,7 +97,7 @@ static void line6_stop_listen(struct usb_line6 *line6)
- /*
- 	Send raw message in pieces of wMaxPacketSize bytes.
- */
--static int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
-+int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
- 				  int size)
- {
- 	int i, done = 0;
-@@ -132,6 +132,7 @@ static int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
- 
- 	return done;
- }
-+EXPORT_SYMBOL_GPL(line6_send_raw_message);
- 
- /*
- 	Notification of completion of asynchronous request transmission.
-diff --git a/sound/usb/line6/driver.h b/sound/usb/line6/driver.h
-index 1a4e3700c80c..62c686bed0ca 100644
---- a/sound/usb/line6/driver.h
-+++ b/sound/usb/line6/driver.h
-@@ -108,6 +108,8 @@ enum {
- 	LINE6_CAP_CONTROL_MIDI = 1 << 4,
- 	/* device provides low-level information */
- 	LINE6_CAP_CONTROL_INFO = 1 << 5,
-+	/* device provides hardware monitoring volume control */
-+	LINE6_CAP_HWMON_CTL =	1 << 6,
- };
- 
- /*
-@@ -185,6 +187,8 @@ extern int line6_read_data(struct usb_line6 *line6, unsigned address,
- 			   void *data, unsigned datalen);
- extern int line6_read_serial_number(struct usb_line6 *line6,
- 				    u32 *serial_number);
-+extern int line6_send_raw_message(struct usb_line6 *line6,
-+					const char *buffer, int size);
- extern int line6_send_raw_message_async(struct usb_line6 *line6,
- 					const char *buffer, int size);
- extern int line6_send_sysex_message(struct usb_line6 *line6,
-diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
-index e39dc85c355a..1557483ec657 100644
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <sound/core.h>
-+#include <sound/control.h>
- #include <sound/pcm.h>
- 
- #include "driver.h"
-@@ -37,6 +38,9 @@ struct usb_line6_podhd {
- 
- 	/* Firmware version */
- 	int firmware_version;
-+
-+	/* Monitor level */
-+	int monitor_level;
- };
- 
- #define line6_to_podhd(x)	container_of(x, struct usb_line6_podhd, line6)
-@@ -250,6 +254,118 @@ static void podhd_disconnect(struct usb_line6 *line6)
- 	}
- }
- 
-+static const unsigned int float_zero_to_one_lookup[] = {
-+0x00000000, 0x3c23d70a, 0x3ca3d70a, 0x3cf5c28f, 0x3d23d70a, 0x3d4ccccd,
-+0x3d75c28f, 0x3d8f5c29, 0x3da3d70a, 0x3db851ec, 0x3dcccccd, 0x3de147ae,
-+0x3df5c28f, 0x3e051eb8, 0x3e0f5c29, 0x3e19999a, 0x3e23d70a, 0x3e2e147b,
-+0x3e3851ec, 0x3e428f5c, 0x3e4ccccd, 0x3e570a3d, 0x3e6147ae, 0x3e6b851f,
-+0x3e75c28f, 0x3e800000, 0x3e851eb8, 0x3e8a3d71, 0x3e8f5c29, 0x3e947ae1,
-+0x3e99999a, 0x3e9eb852, 0x3ea3d70a, 0x3ea8f5c3, 0x3eae147b, 0x3eb33333,
-+0x3eb851ec, 0x3ebd70a4, 0x3ec28f5c, 0x3ec7ae14, 0x3ecccccd, 0x3ed1eb85,
-+0x3ed70a3d, 0x3edc28f6, 0x3ee147ae, 0x3ee66666, 0x3eeb851f, 0x3ef0a3d7,
-+0x3ef5c28f, 0x3efae148, 0x3f000000, 0x3f028f5c, 0x3f051eb8, 0x3f07ae14,
-+0x3f0a3d71, 0x3f0ccccd, 0x3f0f5c29, 0x3f11eb85, 0x3f147ae1, 0x3f170a3d,
-+0x3f19999a, 0x3f1c28f6, 0x3f1eb852, 0x3f2147ae, 0x3f23d70a, 0x3f266666,
-+0x3f28f5c3, 0x3f2b851f, 0x3f2e147b, 0x3f30a3d7, 0x3f333333, 0x3f35c28f,
-+0x3f3851ec, 0x3f3ae148, 0x3f3d70a4, 0x3f400000, 0x3f428f5c, 0x3f451eb8,
-+0x3f47ae14, 0x3f4a3d71, 0x3f4ccccd, 0x3f4f5c29, 0x3f51eb85, 0x3f547ae1,
-+0x3f570a3d, 0x3f59999a, 0x3f5c28f6, 0x3f5eb852, 0x3f6147ae, 0x3f63d70a,
-+0x3f666666, 0x3f68f5c3, 0x3f6b851f, 0x3f6e147b, 0x3f70a3d7, 0x3f733333,
-+0x3f75c28f, 0x3f7851ec, 0x3f7ae148, 0x3f7d70a4, 0x3f800000
-+};
-+
-+static void podhd_set_monitor_level(struct usb_line6_podhd *podhd, int value)
-+{
-+	unsigned int fl;
-+	static const unsigned char msg[16] = {
-+		/* Chunk is 0xc bytes (without first word) */
-+		0x0c, 0x00,
-+		/* First chunk in the message */
-+		0x01, 0x00,
-+		/* Message size is 2 4-byte words */
-+		0x02, 0x00,
-+		/* Unknown */
-+		0x04, 0x41,
-+		/* Unknown */
-+		0x04, 0x00, 0x13, 0x00,
-+		/* Volume, LE float32, 0.0 - 1.0 */
-+		0x00, 0x00, 0x00, 0x00
-+	};
-+	unsigned char *buf;
-+
-+	buf = kmalloc(sizeof(msg), GFP_KERNEL);
-+	if (!buf)
-+		return;
-+
-+	memcpy(buf, msg, sizeof(msg));
-+
-+	if (value < 0)
-+		value = 0;
-+
-+	if (value >= ARRAY_SIZE(float_zero_to_one_lookup))
-+		value = ARRAY_SIZE(float_zero_to_one_lookup) - 1;
-+
-+	fl = float_zero_to_one_lookup[value];
-+
-+	buf[12] = (fl >> 0) & 0xff;
-+	buf[13] = (fl >> 8) & 0xff;
-+	buf[14] = (fl >> 16) & 0xff;
-+	buf[15] = (fl >> 24) & 0xff;
-+
-+	line6_send_raw_message(&podhd->line6, buf, sizeof(msg));
-+	kfree(buf);
-+
-+	podhd->monitor_level = value;
-+}
-+
-+/* control info callback */
-+static int snd_podhd_control_monitor_info(struct snd_kcontrol *kcontrol,
-+					struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = 1;
-+	uinfo->value.integer.min = 0;
-+	uinfo->value.integer.max = 100;
-+	uinfo->value.integer.step = 1;
-+	return 0;
-+}
-+
-+/* control get callback */
-+static int snd_podhd_control_monitor_get(struct snd_kcontrol *kcontrol,
-+				       struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_line6_pcm *line6pcm = snd_kcontrol_chip(kcontrol);
-+	struct usb_line6_podhd *podhd = line6_to_podhd(line6pcm->line6);
-+
-+	ucontrol->value.integer.value[0] = podhd->monitor_level;
-+	return 0;
-+}
-+
-+/* control put callback */
-+static int snd_podhd_control_monitor_put(struct snd_kcontrol *kcontrol,
-+				       struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_line6_pcm *line6pcm = snd_kcontrol_chip(kcontrol);
-+	struct usb_line6_podhd *podhd = line6_to_podhd(line6pcm->line6);
-+
-+	if (ucontrol->value.integer.value[0] == podhd->monitor_level)
-+		return 0;
-+
-+	podhd_set_monitor_level(podhd, ucontrol->value.integer.value[0]);
-+	return 1;
-+}
-+
-+/* control definition */
-+static const struct snd_kcontrol_new podhd_control_monitor = {
-+	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
-+	.name = "Monitor Playback Volume",
-+	.index = 0,
-+	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
-+	.info = snd_podhd_control_monitor_info,
-+	.get = snd_podhd_control_monitor_get,
-+	.put = snd_podhd_control_monitor_put
-+};
-+
- /*
- 	Try to init POD HD device.
- */
-@@ -298,6 +414,15 @@ static int podhd_init(struct usb_line6 *line6,
- 			return err;
- 	}
- 
-+	if (pod->line6.properties->capabilities & LINE6_CAP_HWMON_CTL) {
-+		podhd_set_monitor_level(pod, 100);
-+		err = snd_ctl_add(line6->card,
-+				  snd_ctl_new1(&podhd_control_monitor,
-+					       line6->line6pcm));
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	if (!(pod->line6.properties->capabilities & LINE6_CAP_CONTROL_INFO)) {
- 		/* register USB audio system directly */
- 		return snd_card_register(line6->card);
-@@ -354,7 +479,7 @@ static const struct line6_properties podhd_properties_table[] = {
- 		.id = "PODHD500",
- 		.name = "POD HD500",
- 		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
--				| LINE6_CAP_HWMON,
-+				| LINE6_CAP_HWMON | LINE6_CAP_HWMON_CTL,
- 		.altsetting = 1,
- 		.ctrl_if = 1,
- 		.ep_ctrl_r = 0x81,
--- 
-2.27.0
+In theory it shouldn't cause any harm, but this protections makes things 
+simpler.
 
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+Regards
+Andrzej
+
+
+>   
+>   	sii8620_read_buf(ctx, addr, &ret, 1);
+>   	return ret;
