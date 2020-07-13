@@ -2,77 +2,97 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C77C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE52C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB207206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F8320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgGMN5F (ORCPT
+        id S1729937AbgGMN6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:57:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:36394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbgGMN5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:57:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C42B30E;
-        Mon, 13 Jul 2020 06:57:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A59213F7BB;
-        Mon, 13 Jul 2020 06:57:03 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 14:56:58 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh@kernel.org, maz@kernel.org
-Subject: Re: [PATCH v9 0/2]  Adding support for Versal CPM as Root Port driver
-Message-ID: <20200713135658.GA27845@e121166-lin.cambridge.arm.com>
-References: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+        Mon, 13 Jul 2020 09:58:41 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64980 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbgGMN6l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:58:41 -0400
+Received: from 89-64-85-181.dynamic.chello.pl (89.64.85.181) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 68383a73e20a7f42; Mon, 13 Jul 2020 15:58:39 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] cpufreq: intel_pstate: Fix active mode setting from command line
+Date:   Mon, 13 Jul 2020 15:58:38 +0200
+Message-ID: <2265724.DSYBgs0BIW@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592312214-9347-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 06:26:52PM +0530, Bharat Kumar Gogada wrote:
-> - Adding support for Versal CPM as Root port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
->   vectors and handling MSI/MSI-X interrupts.
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific interrupt line.
-> 
-> Changes for v9:
-> - Removed interrupt enablement outside irqchip flow as suggested
->   by Marc.
-> - Removed using WARN_ON in if statement.
-> 
-> Bharat Kumar Gogada (2):
->   PCI: xilinx-cpm: Add YAML schemas for Versal CPM Root Port
->   PCI: xilinx-cpm: Add Versal CPM Root Port driver
-> 
->  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml |  99 ++++
->  drivers/pci/controller/Kconfig                     |   8 +
->  drivers/pci/controller/Makefile                    |   1 +
->  drivers/pci/controller/pcie-xilinx-cpm.c           | 615 +++++++++++++++++++++
->  4 files changed, 723 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
->  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Applied to pci/xilinx (I removed a function kerneldoc comment
-(xilinx_cpm_pcie_clear_err_interrupts()) since it was not matching
-the function name and honestly it is not really needed) for v5.9.
+If intel_pstate starts in the passive mode by default (that happens
+when the processor in the system doesn't support HWP), passing
+intel_pstate=active in the kernel command line doesn't work, so
+fix that.
 
-Thanks,
-Lorenzo
+Fixes: 33aa46f252c7 ("cpufreq: intel_pstate: Use passive mode by default without HWP")
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/intel_pstate.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -2534,7 +2534,7 @@ static struct cpufreq_driver intel_cpufr
+ 	.name		= "intel_cpufreq",
+ };
+ 
+-static struct cpufreq_driver *default_driver = &intel_pstate;
++static struct cpufreq_driver *default_driver;
+ 
+ static void intel_pstate_driver_cleanup(void)
+ {
+@@ -2828,6 +2828,7 @@ static int __init intel_pstate_init(void
+ 			hwp_active++;
+ 			hwp_mode_bdw = id->driver_data;
+ 			intel_pstate.attr = hwp_cpufreq_attrs;
++			default_driver = &intel_pstate;
+ 			goto hwp_cpu_matched;
+ 		}
+ 	} else {
+@@ -2845,7 +2846,8 @@ static int __init intel_pstate_init(void
+ 		return -ENODEV;
+ 	}
+ 	/* Without HWP start in the passive mode. */
+-	default_driver = &intel_cpufreq;
++	if (!default_driver)
++		default_driver = &intel_cpufreq;
+ 
+ hwp_cpu_matched:
+ 	/*
+@@ -2899,6 +2901,8 @@ static int __init intel_pstate_setup(cha
+ 
+ 	if (!strcmp(str, "disable")) {
+ 		no_load = 1;
++	} else if (!strcmp(str, "active")) {
++		default_driver = &intel_pstate;
+ 	} else if (!strcmp(str, "passive")) {
+ 		default_driver = &intel_cpufreq;
+ 		no_hwp = 1;
+
+
+
