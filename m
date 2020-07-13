@@ -2,146 +2,120 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F628C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2483B206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594663915;
-	bh=EU4XBUKixkiBQkaZjve6Zl3d8EFVm2Xr3DvAAaRr9v8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s9KvTeLueAOtUQqZonu3ztozMpfeqE6/E+U5KZS2Nr13JP02vrGSkD5udyFS/jfOQ
-	 nM4kRDPm4n4IRem9xjSuQXGxOQzxBM+Grp2d0iswOhjeah02WCbzrDNuXxOpzz8hqW
-	 4FJZD4RnfPBcVUfMnB0orlup7MSmQ2SCCCVmZ4ns=
+	by mail.kernel.org (Postfix) with ESMTP id 1457E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ialw/PlE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgGMSLy (ORCPT
+        id S1730324AbgGMSMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729689AbgGMSLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:11:53 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1DC92067D;
-        Mon, 13 Jul 2020 18:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594663912;
-        bh=EU4XBUKixkiBQkaZjve6Zl3d8EFVm2Xr3DvAAaRr9v8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u3FM4191eqbzPrCOk4wonTAFKU839z1y72CQ7CG/VQrqIhDysamckyPYvP2M5CG9x
-         QqUkL6WCl4ZUrs6hVIJkYShQ346si7hwOtESi9PWTx43Q0inHqphIWL2KRkYcKBkUs
-         i79cEVoYHX/hPgGFKVqMSjQgQaC9iV6lqbANXEms=
-Date:   Mon, 13 Jul 2020 11:11:52 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daeho Jeong <daeho43@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [PATCH v2] f2fs: change the way of handling range.len in
- F2FS_IOC_SEC_TRIM_FILE
-Message-ID: <20200713181152.GC2910046@google.com>
-References: <20200713031252.3873546-1-daeho43@gmail.com>
+        Mon, 13 Jul 2020 14:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729687AbgGMSMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:12:45 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32444C061755;
+        Mon, 13 Jul 2020 11:12:45 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id ga4so18339914ejb.11;
+        Mon, 13 Jul 2020 11:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wX50ijN1MvREDIsGS5xeUvOvHwSnksvK2NAsbuf3LdM=;
+        b=ialw/PlEbuLKxjnilT/9gcUOn1JvXuhjogH2KPopW+8zGMTyzC4cccPQ2FhBzMhUA6
+         SNwjeU+EIfxwY/PQbyIFoyIJ9DrYSuGnVOG46YUkzjEVGP10RxniYxGtbY7KAyPLh8np
+         3ks1NrAHC9p2laTyrUpynDLUQ4C4srYgNq4XxjIbJAa+fCZN4Wv1ABG2lIMOdRae6RxN
+         6PynVm1ZogXPdCp2QG3tT+fIpL3Ev/0RATDhAdeszNZ4Qq4Vztyizti8cBNIONgkDW34
+         4l7YLA2wE1qvnxOe6QCLxDJ9gfiLdQa8XUjHs3zkY+qiN6g2AZSgKbJt32PMLYH5bhK0
+         1mDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wX50ijN1MvREDIsGS5xeUvOvHwSnksvK2NAsbuf3LdM=;
+        b=NXy4cISQwoOTFwKR8cbHiyobAW6d65vZLLKz1xVyuvt+gCH1kCiETaKku9XfGSDs8G
+         FAudzL4GqijXxrGlnKeRbcFleuEyrE4Wf5QLMepaWIHcYWjJwI8eBj2X5a/hgFHVlqA6
+         4OhLSXXpiRoBy3O6dLYtRL8fThMsTYQqMFRDu15guyx4Du1lVL81Hj+oed47MkcuQrhC
+         Uyx5ZD3oImq6X1OaUfNt32cNL97tWDcYxhB80CCS79F57cVLYByrzR+4fhzOFCXCBsfG
+         HAS2wc/khfVNJoFrRH7LdEiyJU+tiDkegrjTlj5szSQyb70EumsJonqbB6SBCSDGFv2v
+         iCnw==
+X-Gm-Message-State: AOAM532ya+Y46mquRp2C/uorgCX378Qkehun9qibpPtw8fp54RM9fAvU
+        Lfou9nyX9cczd1/Shn/3TGuEPE9Ic41KqQ==
+X-Google-Smtp-Source: ABdhPJz/75L97OnteHurSRENk3PzKuEuZsidiUh+ImYU1G4fo56ylorIqQZv+42Mr706DdN0J+VEIA==
+X-Received: by 2002:a17:906:57c6:: with SMTP id u6mr945004ejr.194.1594663963454;
+        Mon, 13 Jul 2020 11:12:43 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id z5sm7364786ejw.114.2020.07.13.11.12.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 11:12:42 -0700 (PDT)
+Subject: Re: [RFC PATCH 02/35] ssb: Change PCIBIOS_SUCCESSFUL to 0
+To:     Larry Finger <Larry.Finger@lwfinger.net>, helgaas@kernel.org,
+        Michael Buesch <m@bues.ch>
+Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-3-refactormyself@gmail.com>
+ <70e57af0-6a8c-a893-67c9-0181af16ae2b@lwfinger.net>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <78b52ad5-015f-4452-0cd0-dbb2c8597672@gmail.com>
+Date:   Mon, 13 Jul 2020 21:13:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713031252.3873546-1-daeho43@gmail.com>
+In-Reply-To: <70e57af0-6a8c-a893-67c9-0181af16ae2b@lwfinger.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daeho,
+Hello Larry,
 
-Please take a look at this.
+On 7/13/20 7:16 PM, Larry Finger wrote:
+> On 7/13/20 7:22 AM, Saheed O. Bolarinwa wrote:
+>> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+>> Their scope should be limited within arch/x86.
+>>
+>> Change all PCIBIOS_SUCCESSFUL to 0
+>>
+>> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+>
+> Could you please tell me what difference this makes? It looks like 
+> source churn rather than a substantive change. The symbol is defined 
+> in pci.h and is used in many architures. Certainly, PCIBIOS_SUCCESSFUL 
+> indicates success even more clearly than 0 does.
+>
+It is a trivial first step towards a probably significant task. I 
+explained in the Cover Letter, I can see it didn't get through but I Cc 
+linux-wireless (properly this time). Probably, too many addresses.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev&id=35245180459aebf6d70fde88a538f0400a794aa6
+I have resent it. It is here 
+https://lore.kernel.org/linux-wireless/20200713185559.31967-1-refactormyself@gmail.com/T/#u
 
-Thanks,
+> Why is your name inside quotes in your s-o-b?
+>
+To keep me company before I get to know my way within the kernel.
 
-On 07/13, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
->  1. Added -1 value support for range.len to secure trim the whole blocks
->     starting from range.start regardless of i_size.
->  2. If the end of the range passes over the end of file, it means until
->     the end of file (i_size).
->  3. ignored the case of that range.len is zero to prevent the function
->     from making end_addr zero and triggering different behaviour of
->     the function.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> ---
-> Changes in v2:
->  - Changed -1 range.len option to mean the whole blocks starting from
->    range.start regardless of i_size
-> ---
->  fs/f2fs/file.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 368c80f8e2a1..2485841e3b2d 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3792,7 +3792,7 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->  	pgoff_t index, pg_end;
->  	block_t prev_block = 0, len = 0;
->  	loff_t end_addr;
-> -	bool to_end;
-> +	bool to_end = false;
->  	int ret = 0;
->  
->  	if (!(filp->f_mode & FMODE_WRITE))
-> @@ -3813,23 +3813,23 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->  	file_start_write(filp);
->  	inode_lock(inode);
->  
-> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
-> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
-> +			range.start >= inode->i_size) {
->  		ret = -EINVAL;
->  		goto err;
->  	}
->  
-> -	if (range.start >= inode->i_size) {
-> -		ret = -EINVAL;
-> +	if (range.len == 0)
->  		goto err;
-> -	}
->  
-> -	if (inode->i_size - range.start < range.len) {
-> -		ret = -E2BIG;
-> -		goto err;
-> +	if (inode->i_size - range.start > range.len) {
-> +		end_addr = range.start + range.len;
-> +	} else {
-> +		end_addr = range.len == (u64)-1 ?
-> +			sbi->sb->s_maxbytes : inode->i_size;
-> +		to_end = true;
->  	}
-> -	end_addr = range.start + range.len;
->  
-> -	to_end = (end_addr == inode->i_size);
->  	if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
->  			(!to_end && !IS_ALIGNED(end_addr, F2FS_BLKSIZE))) {
->  		ret = -EINVAL;
-> @@ -3846,7 +3846,8 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->  	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->  	down_write(&F2FS_I(inode)->i_mmap_sem);
->  
-> -	ret = filemap_write_and_wait_range(mapping, range.start, end_addr - 1);
-> +	ret = filemap_write_and_wait_range(mapping, range.start,
-> +			to_end ? LLONG_MAX : end_addr - 1);
->  	if (ret)
->  		goto out;
->  
-> -- 
-> 2.27.0.383.g050319c2ae-goog
+I saw people with >2 names do it, so I did! Please let me know if it is odd.
+
+Thank you.
+
+- Saheed
+
