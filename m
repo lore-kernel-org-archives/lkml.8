@@ -2,150 +2,197 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22187C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D087C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15E620899
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9kfI48Q"
+	by mail.kernel.org (Postfix) with ESMTP id 741D32137B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594680132;
+	bh=JbDCK7D2/GsBT9H83GAKXMujtpxLqJNPChMfE6ajF7E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JmBf2ze+K2dMGsZ/QRE6JRn0M++ywkT/r+JV37t+72yaiysHxAWuI+oNvUkSaOCFM
+	 D24CehLGT6RjwM8GAijFISSHxWYZSmGsWdHEzxCqt/7DgE8xid8nOjTbiMa38x6D+0
+	 WI7tJaqoT9BnPp7N+BvbxNoQmv6+wFTflkH2D+Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGMWkp (ORCPT
+        id S1726793AbgGMWmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGMWko (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:40:44 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDA4C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:40:43 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id e18so12626605ilr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FQ7NMKo03W54NhNsLDg4XkthULZUgCOASFezEvTt0gQ=;
-        b=r9kfI48QueoI2xnPKErUlFJe4TFAsoH/tgaYcs5PDdJNxT8sIIbsvppbdKtlNIlZ53
-         J3ZupCPqsJmvcmW4h3uCEq8he6qaks+5cWuq780V9Fk5TbioU6F8rgWCw4UxpT8Dl6l/
-         U31Fgto5J1dCJa7v6kN8xnTLvY1A8FdjGFJNiPD6eCA7MkHMQB9CY78Qobpr04rkjMCM
-         WJQrjmgK6L3LqQEntQVd/j9Q2CPdLPaTuiY12ENiVERS1c0151T3xV91y0idhQsS840+
-         tkXAHNFF2AvC5/4dp5F7p2tJnCz0GBbY5KbhP1q/0uMmBjnqZjyGX5HSTL/Sskozrnuj
-         w5GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FQ7NMKo03W54NhNsLDg4XkthULZUgCOASFezEvTt0gQ=;
-        b=AXpTL0hNp5Hj0QZZlvKPTn+8lKrZM+56mKw0qroAfFPaRkmmJd623ROfK4irjm1/45
-         YIHdpSezNPZyfPfpOUUKC8NNj82meWFLJPEMGC6bPsnEpVZe/ecyCtA/HCJL+YLxtFZa
-         NNoSAZLvAi18gbH5RZAuAIvoo3hyAHF22PpaGAyl7Kh3wOKLNZPRbbtFlttKW4jnX1q4
-         0WCqAfnly5k1F2LBeMYlB/4KT4FKcB62WQDMNZOpZJv8hXO+LfxvhcRek/2a+DwWi31H
-         1UHzJsHkKXW7fuHGOgCKWte/fAL8FWNMy2FjaPuI2+nggLU3liFeGb31FBUBb4VWC5Vc
-         nh9w==
-X-Gm-Message-State: AOAM5323JXqj9UoxyQPwqnWc5uITUrLvIhSw36kqCJIEIPClLl8e36Kp
-        DluEsRYRISPNF64FuACE1jQ=
-X-Google-Smtp-Source: ABdhPJxlxbx2b5wcxcKQ9JmOKqbhQV9nDIdjv1nR+bkTkzgItTS42Z794b/2/sqsCAtmgwuR3XOKRw==
-X-Received: by 2002:a92:3311:: with SMTP id a17mr2059950ilf.210.1594680043340;
-        Mon, 13 Jul 2020 15:40:43 -0700 (PDT)
-Received: from jiancai.svl.corp.google.com ([2620:15c:2ce:0:f693:9fff:fef4:238b])
-        by smtp.googlemail.com with ESMTPSA id i6sm9123152ilj.61.2020.07.13.15.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 15:40:42 -0700 (PDT)
-From:   Jian Cai <caij2003@gmail.com>
-Cc:     caij2003@gmail.com, jiancai@google.com, ndesaulniers@google.com,
-        manojgupta@google.com, sedat.dilek@gmail.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] x86/entry: add compatibility with IAS
-Date:   Mon, 13 Jul 2020 15:40:18 -0700
-Message-Id: <20200713224020.1297154-1-caij2003@gmail.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-In-Reply-To: <20200713012428.1039487-1-caij2003@gmail.com>
-References: <20200713012428.1039487-1-caij2003@gmail.com>
+        Mon, 13 Jul 2020 18:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgGMWmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 18:42:10 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D762620DD4;
+        Mon, 13 Jul 2020 22:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594680130;
+        bh=JbDCK7D2/GsBT9H83GAKXMujtpxLqJNPChMfE6ajF7E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XMsXBO305T47S20vtjueEv7N4nprQ2ZKXM8/nOJvrIT+gpOjlqxlvae0J9pUxEKvv
+         PGS8DhPhv8PsDLX5bh3RpqUYAhlnAllGzBBXrlpcg0D/fvFsoq45doNQUtKH5J1q3b
+         mw+vL8vouJTWcgPaIQpTpSEptjJWDbbjdNgavvtA=
+Date:   Mon, 13 Jul 2020 15:42:08 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Luo bin <luobin9@huawei.com>
+Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+Subject: Re: [PATCH net-next v1] hinic: add firmware update support
+Message-ID: <20200713154208.7d123d5e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200713140522.14600-1-luobin9@huawei.com>
+References: <20200713140522.14600-1-luobin9@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang's integrated assembler does not allow symbols with non-absolute
-values to be reassigned. This patch allows the affected code to be
-compatible with IAS.
+On Mon, 13 Jul 2020 22:05:22 +0800 Luo bin wrote:
+> add support to update firmware by the devlink flashing API
+> 
+> Signed-off-by: Luo bin <luobin9@huawei.com>
+> ---
+> V0~V1: remove the implementation from ethtool to devlink
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1043
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Brian Gerst <brgerst@gmail.com>
-Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Jian Cai <caij2003@gmail.com>
----
- arch/x86/include/asm/idtentry.h | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Thanks!
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index f3d70830bf2a..5efaaed34eda 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -469,16 +469,15 @@ __visible noinstr void func(struct pt_regs *regs,			\
- 	.align 8
- SYM_CODE_START(irq_entries_start)
-     vector=FIRST_EXTERNAL_VECTOR
--    pos = .
-     .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
- 	UNWIND_HINT_IRET_REGS
-+0 :
- 	.byte	0x6a, vector
- 	jmp	asm_common_interrupt
- 	nop
- 	/* Ensure that the above is 8 bytes max */
--	. = pos + 8
--    pos=pos+8
--    vector=vector+1
-+	. = 0b + 8
-+	vector = vector+1
-     .endr
- SYM_CODE_END(irq_entries_start)
- 
-@@ -486,16 +485,15 @@ SYM_CODE_END(irq_entries_start)
- 	.align 8
- SYM_CODE_START(spurious_entries_start)
-     vector=FIRST_SYSTEM_VECTOR
--    pos = .
-     .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
- 	UNWIND_HINT_IRET_REGS
-+0 :
- 	.byte	0x6a, vector
- 	jmp	asm_spurious_interrupt
- 	nop
- 	/* Ensure that the above is 8 bytes max */
--	. = pos + 8
--    pos=pos+8
--    vector=vector+1
-+	. = 0b + 8
-+	vector = vector+1
-     .endr
- SYM_CODE_END(spurious_entries_start)
- #endif
--- 
-2.27.0.383.g050319c2ae-goog
+> +static int check_image_device_type(struct hinic_dev *nic_dev,
+> +				   u32 image_device_type)
+> +{
+> +	struct hinic_comm_board_info board_info = {0};
+> +
+> +	if (image_device_type) {
+> +		if (!hinic_get_board_info(nic_dev->hwdev, &board_info)) {
+> +			if (image_device_type == board_info.info.board_type)
+> +				return true;
+
+Please simplify this, you shouldn't need more than 1 indentation level
+here.
+
+> +			dev_err(&nic_dev->hwdev->hwif->pdev->dev, "The device type of upgrade file doesn't match the device type of current firmware, please check the upgrade file\n");
+> +			dev_err(&nic_dev->hwdev->hwif->pdev->dev, "The image device type: 0x%x, firmware device type: 0x%x\n",
+> +				image_device_type, board_info.info.board_type);
+> +
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int hinic_flash_fw(struct hinic_dev *nic_dev, const u8 *data,
+> +			  struct host_image_st *host_image, u32 boot_flag)
+
+You seem to always pass boot_flag = 0, AFAICT, please remove the
+parameter and related code.
+
+> +{
+> +	u32 section_remain_send_len, send_fragment_len, send_pos, up_total_len;
+> +	struct hinic_cmd_update_fw *fw_update_msg = NULL;
+> +	u32 section_type, section_crc, section_version;
+> +	u32 i, len, section_len, section_offset;
+> +	u16 out_size = sizeof(*fw_update_msg);
+> +	int total_len_flag = 0;
+> +	int err;
+
+> +int hinic_devlink_register(struct devlink *devlink, struct device *dev)
+> +{
+> +	int err;
+> +
+> +	err = devlink_register(devlink, dev);
+> +
+> +	return err;
+
+No need for temporary variable.
+
+> +}
+> +
+> +void hinic_devlink_unregister(struct devlink *devlink)
+> +{
+> +	devlink_unregister(devlink);
+> +}
+
+> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+> index 834a20a0043c..1dfa09411590 100644
+> --- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
+> +++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/semaphore.h>
+>  #include <linux/workqueue.h>
+>  #include <net/ip.h>
+> +#include <net/devlink.h>
+>  #include <linux/bitops.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/delay.h>
+> @@ -25,6 +26,7 @@
+>  
+>  #include "hinic_hw_qp.h"
+>  #include "hinic_hw_dev.h"
+> +#include "hinic_devlink.h"
+>  #include "hinic_port.h"
+>  #include "hinic_tx.h"
+>  #include "hinic_rx.h"
+> @@ -1075,9 +1077,11 @@ static int nic_dev_init(struct pci_dev *pdev)
+>  	struct hinic_rx_mode_work *rx_mode_work;
+>  	struct hinic_txq_stats *tx_stats;
+>  	struct hinic_rxq_stats *rx_stats;
+> +	struct hinic_dev *devlink_dev;
+>  	struct hinic_dev *nic_dev;
+>  	struct net_device *netdev;
+>  	struct hinic_hwdev *hwdev;
+> +	struct devlink *devlink;
+>  	int err, num_qps;
+>  
+>  	hwdev = hinic_init_hwdev(pdev);
+> @@ -1086,6 +1090,15 @@ static int nic_dev_init(struct pci_dev *pdev)
+>  		return PTR_ERR(hwdev);
+>  	}
+>  
+> +	devlink = hinic_devlink_alloc();
+> +	if (!devlink) {
+> +		dev_err(&pdev->dev, "Hinic devlink alloc failed\n");
+> +		err = -ENOMEM;
+> +		goto err_devlink_alloc;
+> +	}
+> +
+> +	devlink_dev = devlink_priv(devlink);
+> +
+>  	num_qps = hinic_hwdev_num_qps(hwdev);
+>  	if (num_qps <= 0) {
+>  		dev_err(&pdev->dev, "Invalid number of QPS\n");
+> @@ -1121,6 +1134,7 @@ static int nic_dev_init(struct pci_dev *pdev)
+>  	nic_dev->sriov_info.hwdev = hwdev;
+>  	nic_dev->sriov_info.pdev = pdev;
+>  	nic_dev->max_qps = num_qps;
+> +	nic_dev->devlink = devlink;
+>  
+>  	hinic_set_ethtool_ops(netdev);
+>  
+> @@ -1146,6 +1160,11 @@ static int nic_dev_init(struct pci_dev *pdev)
+>  		goto err_workq;
+>  	}
+>  
+> +	memcpy(devlink_dev, nic_dev, sizeof(*nic_dev));
+
+Please create a separate structure for the devlink-level priv.
+This doesn't look right.
+
+> +	err = hinic_devlink_register(devlink, &pdev->dev);
+> +	if (err)
+> +		goto err_devlink_reg;
+> +
+>  	pci_set_drvdata(pdev, netdev);
+>  
+>  	err = hinic_port_get_mac(nic_dev, netdev->dev_addr);
 
