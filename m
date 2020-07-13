@@ -2,135 +2,103 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFDEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86EAB20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqYyZCjl"
+	by mail.kernel.org (Postfix) with ESMTP id CA50F2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgGMRDn (ORCPT
+        id S1730043AbgGMREa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        Mon, 13 Jul 2020 13:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbgGMRDn (ORCPT
+        with ESMTP id S1729747AbgGMREa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:03:43 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA370C08C5DB
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q5so17364879wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
-        b=sqYyZCjlzGtKUdjQ8mhJhTfzzemy2MkNKIWqAUalFwRGpbEYxDschPntoZzktQOiAu
-         K+h53t1qzpSeSlG7jIs+5itZw7L3aoHSXonlpbOcTIk4FcPQgaLjOU+sz74Dr8PCz+So
-         gpMoAdFgVaZUl4nWgwg5rrx+GaRcaIsUVl+KHwGU1xC4+e0FvK4AoW5bfyO6KnJ/MlTg
-         nWomACfGj8IQL7NQCAS8To/F62fE9GAqBkiw32JXvgfE9zvZ5Vp1ZOzPzWLrKZVCWrfq
-         OoFVAiW6pdBdKGXZJK6UQBrqlM7d0egxtWC+Au3kS/B2IUd7UQ0FhsnW7x6JGGHiEwGC
-         hGgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
-        b=EaIlMlYMgV1bJBETNAuwYMlHyHgYXpiVovM2Z7NJrfGbIjpz/DiOw2fuVv9kTG/QTz
-         Nkg69IbtsXvnZ9C0lFZUu6kNJ8ueR2HfoAHtso/3Gx0rL+kkNOK3384zHvVElb8RzZ8a
-         iWpoB1jqMtng/BKIg575Pfz1xNW4ZkpoUEbS3PIe3B1706LrApPZ6KP4uHcZD6uybHDQ
-         9qksBW2zejzYWUi8hSPm5QV72VsfQ2JmM3LvZFeOxtM7IU8MSQzdRaIltSFU27uw2JLL
-         JHDA5ae4YGvH2WdnBMFFWwG2M/5VVFTX3KxZHaG+i7QgoUSoHk82iox3PwR0O6IeNkls
-         4t8g==
-X-Gm-Message-State: AOAM530fr4DrW46kM+8Cr/XayoJjH6LYI2nbIbGGI6XtdkXFr4k+Ga6N
-        6v+TuhqW33bb7QWpFVBhNEVDcB6GDc8=
-X-Google-Smtp-Source: ABdhPJxwQBfsNMkNI4xGLvZYHPzk1Tka3WLrm/vB852YmxjUd1eWVokbCzi7pGH2UsnflDHI2l+6iw==
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr307750wrj.265.1594659821364;
-        Mon, 13 Jul 2020 10:03:41 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
-        by smtp.googlemail.com with ESMTPSA id a22sm304308wmj.9.2020.07.13.10.03.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 10:03:40 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/4] dt-bindings:thermal:Add cold trip point type
-To:     Thara Gopinath <thara.gopinath@linaro.org>, rui.zhang@intel.com,
-        robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <20200710135154.181454-2-thara.gopinath@linaro.org>
- <08503e0c-c8db-6d03-9692-5339dadf6c4f@linaro.org>
- <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <b1ee5a73-863b-c6d2-5d09-1ac231f40fe2@linaro.org>
-Date:   Mon, 13 Jul 2020 19:03:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 13 Jul 2020 13:04:30 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E37C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:04:30 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 03033BC0D3;
+        Mon, 13 Jul 2020 17:04:26 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        tudor.ambarus@microchip.com, dinghao.liu@zju.edu.cn,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] mtd: rawnand: omap_elm: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 19:04:20 +0200
+Message-Id: <20200713170420.36300-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 19:01, Thara Gopinath wrote:
-> 
-> 
-> On 7/13/20 11:05 AM, Daniel Lezcano wrote:
->> On 10/07/2020 15:51, Thara Gopinath wrote:
->>> Extend thermal trip point type property to include "cold" trip type
->>> indicating point in the temperature domain below which a warming action
->>> must be intiated.
->>>
->>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->>> ---
->>>   Documentation/devicetree/bindings/thermal/thermal.txt | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
->>> b/Documentation/devicetree/bindings/thermal/thermal.txt
->>> index f78bec19ca35..1689d9ba1471 100644
->>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
->>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
->>> @@ -87,6 +87,7 @@ Required properties:
->>>       "active":    A trip point to enable active cooling
->>>       "passive":    A trip point to enable passive cooling
->>>       "hot":        A trip point to notify emergency
->>> +    "cold":        A trip point to enable warming
->>>       "critical":    Hardware not reliable.
->>>     Type: string
->>
->>
->> thermal.txt should have been removed. Perhaps, a patch is missing. The
->> thermal.txt has been converted into 3 yaml schema.
->>
->> The change should be in thermal-zones.yaml.
-> 
-> Hi Daniel..
-> 
-> Thanks for the review. My bad.. I will fix this in the next version.
-> I can send a patch removing thermal.txt as well
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Yes, sure.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Thanks
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
+ drivers/mtd/nand/raw/omap_elm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/omap_elm.c b/drivers/mtd/nand/raw/omap_elm.c
+index 078b1022ac2a..4b799521a427 100644
+--- a/drivers/mtd/nand/raw/omap_elm.c
++++ b/drivers/mtd/nand/raw/omap_elm.c
+@@ -2,7 +2,7 @@
+ /*
+  * Error Location Module
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #define DRIVER_NAME	"omap-elm"
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.27.0
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
