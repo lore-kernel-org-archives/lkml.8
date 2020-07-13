@@ -2,98 +2,137 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CAEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E9C2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01F8206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rq8Rk1Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgGMJXY (ORCPT
+        id S1729275AbgGMJYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:23:24 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:51716 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbgGMJXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:23:24 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 3C9F8BC0CA;
-        Mon, 13 Jul 2020 09:23:21 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] USB: ohci: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 11:23:14 +0200
-Message-Id: <20200713092314.32774-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 05:24:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33087 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727035AbgGMJYp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:24:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594632283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8taBpeNWfYvGCIuu+3RcwP8mgr+DtPBfUd45yt6a9tM=;
+        b=Rq8Rk1KvIVnuE9eYYjiOeQ8iU3fgbPSFk90s3TDWA9aFuTBE8OBVmFP+MhQcogqy2KPiIp
+        n4B1bUjXZ/e6csGYxU3jBi/I6JnRvkXBEIq/Ue/FjoC8HwdZhAuO/Mow+MXbqhBQsv6+p+
+        OchEItMGSsA09QWziXFLwaqw098zjqA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-p6tDz3eYNamNtlQUM20UWg-1; Mon, 13 Jul 2020 05:24:39 -0400
+X-MC-Unique: p6tDz3eYNamNtlQUM20UWg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3A3F19200C3;
+        Mon, 13 Jul 2020 09:24:37 +0000 (UTC)
+Received: from localhost (ovpn-114-66.ams2.redhat.com [10.36.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C68C719D61;
+        Mon, 13 Jul 2020 09:24:36 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 10:24:35 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <20200713092435.GC28639@stefanha-x1.localdomain>
+References: <20200710141945.129329-1-sgarzare@redhat.com>
+ <20200710153309.GA4699@char.us.oracle.com>
+ <20200710162017.qdu34ermtxh3rfgl@steredhat>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+In-Reply-To: <20200710162017.qdu34ermtxh3rfgl@steredhat>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+--ZwgA9U+XZDXt4+m+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On Fri, Jul 10, 2020 at 06:20:17PM +0200, Stefano Garzarella wrote:
+> On Fri, Jul 10, 2020 at 11:33:09AM -0400, Konrad Rzeszutek Wilk wrote:
+> > .snip..
+> > > Just to recap the proposal, the idea is to add some restrictions to t=
+he
+> > > operations (sqe, register, fixed file) to safely allow untrusted appl=
+ications
+> > > or guests to use io_uring queues.
+> >=20
+> > Hi!
+> >=20
+> > This is neat and quite cool - but one thing that keeps nagging me is
+> > what how much overhead does this cut from the existing setup when you u=
+se
+> > virtio (with guests obviously)?
+>=20
+> I need to do more tests, but the preliminary results that I reported on
+> the original proposal [1] show an overhead of ~ 4.17 uS (with iodepth=3D1=
+)
+> when I'm using virtio ring processed in a dedicated iothread:
+>=20
+>   - 73 kIOPS using virtio-blk + QEMU iothread + io_uring backend
+>   - 104 kIOPS using io_uring passthrough
+>=20
+> >                                 That is from a high level view the
+> > beaty of io_uring being passed in the guest is you don't have the
+> > virtio ring -> io_uring processing, right?
+>=20
+> Right, and potentially we can share the io_uring queues directly to the
+> guest userspace applications, cutting down the cost of Linux block
+> layer in the guest.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Another factor is that the guest submits requests directly to the host
+kernel sqpoll thread. When a virtqueue is used the sqpoll thread cannot
+poll it directly so another host thread (QEMU) needs to poll the
+virtqueue. The same applies for the completion code path.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Stefan
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+--ZwgA9U+XZDXt4+m+
+Content-Type: application/pgp-signature; name="signature.asc"
 
- If you apply the patch, please let me know.
+-----BEGIN PGP SIGNATURE-----
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl8MKFMACgkQnKSrs4Gr
+c8iWaQgAkvf4Ga+PHPaSTucaASbYCgeYbSgiUPCLRsOB0g2+3HM6buSTHpdfYoUk
+Fy1Y3Yl7cDqGmCCHdTx9rYTQCd6SYSElqylNNnn6yEMiMgvcYcK4xn+wgY8BxVGy
+yIv0Rl52ucmtkQ4Iry5mA/vSNZiiVnDyP5Mq9EahEKDO9RtC0duf4xJeR1Lhyk9G
+QDbDx9I2/TZgsxar1+Tettaf6vbC1d8S5WCSSktvMl7Jn2zP/uyJg9DyuMCRWMVl
+YPX8SPGK/Kr0uKRWkWtBdbK0TuDJtM5i8hdD59ppdQaSwt7JrmowOFDKg9iznl4r
+Z9f95iJ6QD2dHTtGo4Yc5WKyhZ9BmA==
+=KoLY
+-----END PGP SIGNATURE-----
 
-
- drivers/usb/host/ohci-hcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-index 4de91653a2c7..17374c17f331 100644
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -16,7 +16,7 @@
-  * OHCI is the main "non-Intel/VIA" standard for USB 1.1 host controller
-  * interfaces (though some non-x86 Intel chips use it).  It supports
-  * smarter hardware than UHCI.  A download link for the spec available
-- * through the http://www.usb.org website.
-+ * through the https://www.usb.org website.
-  *
-  * This file is licenced under the GPL.
-  */
--- 
-2.27.0
+--ZwgA9U+XZDXt4+m+--
 
