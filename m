@@ -2,597 +2,92 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2BC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E83A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A3C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gm73Hz1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgGMM3O (ORCPT
+        id S1729656AbgGMM1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
+        Mon, 13 Jul 2020 08:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729769AbgGMM3M (ORCPT
+        with ESMTP id S1729259AbgGMM1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:29:12 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F30C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:29:12 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 98A5BBC078;
-        Mon, 13 Jul 2020 12:29:06 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
-        laurent.pinchart@ideasonboard.com, zhengbin13@huawei.com,
-        sebastian.reichel@collabora.com, masahiroy@kernel.org,
-        krzk@kernel.org, sam@ravnborg.org, ajhernandez@ti.com,
-        wen.yang99@zte.com.cn, tony@atomide.com,
-        boris.brezillon@collabora.com, dri-devel@lists.freedesktop.org,
+        Mon, 13 Jul 2020 08:27:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BA6C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:27:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b9so5452511plx.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B5fC/VSpjwy0J2AgPE2pfNPefXcs6+XE85WC452HsHQ=;
+        b=Gm73Hz1KOqgIrGThMs1484OyaDZq9vZzjZurtmpdZ2GhKEo66WRqzFHZGE24Oj4WHQ
+         j8CiJfOZHOxYV+OanBPV1WiEVIznXZQRpDSuoRrfV1Yym0uDoTp3qM5NRo41AoYkEwnL
+         YnWvESyNrksaaODvzUn2YOyZoRB4CRKJVOQX0xpFv/C/D5E156S/JlUCWt4zxLjXCccd
+         zzjck1g6GgNN2/aIVSLDc43v+g7wghMHcSlPgMi6aujWcy0ZmjdBKbvCc3IEoG3664Kx
+         jyg06FBPnFhbanV/GzQ+NPxTkvQylDq+LUo/74JsbY6KRtCDQDplRn4wrexLumJbr6IV
+         sF+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B5fC/VSpjwy0J2AgPE2pfNPefXcs6+XE85WC452HsHQ=;
+        b=JOM/oe2FO91GYex3A9Go+7cptA8Gd/j05EcZOPAJhYzZpzTBBawxwqlHZbcp/cgcRC
+         f4Hi8yRvCd5kNjF/uv3NbjptyeuTL8tUlCW4ydSt7weMyVVgFzQXNe92cd24JBXZkcKB
+         Hw4U8u/ML2YFJlfprlA/MT7GkUeH1DAWaHZmhkGeYhlI5D77/y+Aqn8lX5YSh4FwgcZt
+         u3tvQ9BfQJQ1c9IB0g5zYRpl8Re+08QMl/2etCLi2kNiV3phQmce9guk7xyoe89Ep3Mo
+         JYT/+UaYd9T/X1YBkMpJj17s/sSWjGus8JqogSq/5EBmbocXgM0x5D6HeCWZjQInNZyQ
+         rp4A==
+X-Gm-Message-State: AOAM530pz4HVsvd62Anwhq8uQg0jjlVlngcvFV5R7NIYt815pLDmop5y
+        ghe7hgNjv2zIE7IxUcfpUoU=
+X-Google-Smtp-Source: ABdhPJwRseJb/T0TsF6O5SADNMjjo/qYxg9ui4DclsJjyZSzJVxpa0fuXrgqdCXKvnc9BXuIVxZnug==
+X-Received: by 2002:a17:902:6544:: with SMTP id d4mr27503826pln.138.1594643254872;
+        Mon, 13 Jul 2020 05:27:34 -0700 (PDT)
+Received: from hyd1soter3.caveonetworks.com ([115.113.156.2])
+        by smtp.googlemail.com with ESMTPSA id p1sm31891839pja.2.2020.07.13.05.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 05:27:34 -0700 (PDT)
+From:   rakeshs.lkm@gmail.com
+To:     sbhatta@marvell.com, sgoutham@marvell.com, jerinj@marvell.com,
+        rsaladi2@marvell.com, davem@davemloft.net, kuba@kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] drm: omapdrm: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 14:28:59 +0200
-Message-Id: <20200713122859.34135-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Cc:     Rakesh Babu <rakeshs.lkm@gmail.com>
+Subject: [net-next PATCH 0/2] Interrupt handler support for NPA and NIX in
+Date:   Mon, 13 Jul 2020 17:56:38 +0530
+Message-Id: <20200713122640.4155-1-rakeshs.lkm@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+From: Rakesh Babu <rakeshs.lkm@gmail.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Different types of error interrupts are reported by NPA and NIX blocks like
+unmapped slot errors, RAS interrupts, memory fault errors etc. This patch
+series adds interrupt handler support for NPA and NIX functional blocks in
+RVU AF driver to know the source of error interrupts.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Jerin Jacob (2):
+  octeontx2-af: add npa error af interrupt handlers
+  octeontx2-af: add nix error af interrupt handlers
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+ .../net/ethernet/marvell/octeontx2/af/rvu.c   |  12 +
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |   4 +
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 202 +++++++++++++++
+ .../ethernet/marvell/octeontx2/af/rvu_npa.c   | 230 ++++++++++++++++++
+ .../marvell/octeontx2/af/rvu_struct.h         |  33 +++
+ 5 files changed, 481 insertions(+)
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c | 2 +-
- drivers/gpu/drm/omapdrm/dss/Kconfig             | 4 ++--
- drivers/gpu/drm/omapdrm/dss/base.c              | 2 +-
- drivers/gpu/drm/omapdrm/dss/dispc.h             | 2 +-
- drivers/gpu/drm/omapdrm/dss/dispc_coefs.c       | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi.h              | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi4.c             | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c         | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi4_core.c        | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi4_core.h        | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi5.c             | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi5_core.c        | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi5_core.h        | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi_phy.c          | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi_pll.c          | 2 +-
- drivers/gpu/drm/omapdrm/dss/hdmi_wp.c           | 2 +-
- drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 2 +-
- drivers/gpu/drm/omapdrm/dss/omapdss.h           | 2 +-
- drivers/gpu/drm/omapdrm/dss/output.c            | 2 +-
- drivers/gpu/drm/omapdrm/dss/pll.c               | 2 +-
- drivers/gpu/drm/omapdrm/dss/video-pll.c         | 2 +-
- drivers/gpu/drm/omapdrm/omap_connector.c        | 2 +-
- drivers/gpu/drm/omapdrm/omap_crtc.c             | 2 +-
- drivers/gpu/drm/omapdrm/omap_debugfs.c          | 2 +-
- drivers/gpu/drm/omapdrm/omap_dmm_priv.h         | 2 +-
- drivers/gpu/drm/omapdrm/omap_dmm_tiler.c        | 2 +-
- drivers/gpu/drm/omapdrm/omap_dmm_tiler.h        | 2 +-
- drivers/gpu/drm/omapdrm/omap_drv.c              | 2 +-
- drivers/gpu/drm/omapdrm/omap_drv.h              | 2 +-
- drivers/gpu/drm/omapdrm/omap_encoder.c          | 2 +-
- drivers/gpu/drm/omapdrm/omap_fb.c               | 2 +-
- drivers/gpu/drm/omapdrm/omap_fbdev.c            | 2 +-
- drivers/gpu/drm/omapdrm/omap_gem.c              | 2 +-
- drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c       | 2 +-
- drivers/gpu/drm/omapdrm/omap_irq.c              | 2 +-
- drivers/gpu/drm/omapdrm/omap_plane.c            | 2 +-
- drivers/gpu/drm/omapdrm/tcm-sita.c              | 2 +-
- 37 files changed, 38 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-index 3484b5d4a91c..ec394746cd2d 100644
---- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-+++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-@@ -2,7 +2,7 @@
- /*
-  * Generic DSI Command Mode panel driver
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/Kconfig b/drivers/gpu/drm/omapdrm/dss/Kconfig
-index 2658c521b702..e11b258a2294 100644
---- a/drivers/gpu/drm/omapdrm/dss/Kconfig
-+++ b/drivers/gpu/drm/omapdrm/dss/Kconfig
-@@ -80,7 +80,7 @@ config OMAP5_DSS_HDMI
- 	select OMAP2_DSS_HDMI_COMMON
- 	help
- 	  HDMI Interface for OMAP5 and similar cores. This adds the High
--	  Definition Multimedia Interface. See http://www.hdmi.org/ for HDMI
-+	  Definition Multimedia Interface. See https://www.hdmi.org/ for HDMI
- 	  specification.
- 
- config OMAP2_DSS_SDI
-@@ -101,7 +101,7 @@ config OMAP2_DSS_DSI
- 	  DSI is a high speed half-duplex serial interface between the host
- 	  processor and a peripheral, such as a display or a framebuffer chip.
- 
--	  See http://www.mipi.org/ for DSI specifications.
-+	  See https://www.mipi.org/ for DSI specifications.
- 
- config OMAP2_DSS_MIN_FCK_PER_PCK
- 	int "Minimum FCK/PCK ratio (for scaling)"
-diff --git a/drivers/gpu/drm/omapdrm/dss/base.c b/drivers/gpu/drm/omapdrm/dss/base.c
-index c7650a7c155d..cf50430e6363 100644
---- a/drivers/gpu/drm/omapdrm/dss/base.c
-+++ b/drivers/gpu/drm/omapdrm/dss/base.c
-@@ -2,7 +2,7 @@
- /*
-  * OMAP Display Subsystem Base
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.h b/drivers/gpu/drm/omapdrm/dss/dispc.h
-index 2348faf88768..3f842c1ff81a 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.h
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Archit Taneja <archit@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c b/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
-index bccb28de5a59..d1f3a93b8efd 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc_coefs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Chandrabhanu Mahapatra <cmahapatra@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi.h b/drivers/gpu/drm/omapdrm/dss/hdmi.h
-index 3a40833d3368..c4a4e07f0b99 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi.h
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi.h
-@@ -2,7 +2,7 @@
- /*
-  * HDMI driver definition for TI OMAP4 Processor.
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef _HDMI_H
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-index 2578c95570f6..401168a21e03 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI interface DSS driver for TI's OMAP4 family of SoCs.
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Authors: Yong Zhi
-  *	Mythri pk <mythripk@ti.com>
-  */
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-index ebf9c96d43ee..43592c1cf081 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-@@ -3,7 +3,7 @@
-  *
-  * Based on the CEC code from hdmi_ti_4xxx_ip.c from Android.
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Authors: Yong Zhi
-  *	Mythri pk <mythripk@ti.com>
-  *
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-index 751985a2679a..35faa7f028c4 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI TI81xx, TI38xx, TI OMAP4 etc IP driver Library
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Authors: Yong Zhi
-  *	Mythri pk <mythripk@ti.com>
-  */
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
-index dc64ae2aa300..3c9e1f600fbe 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.h
-@@ -2,7 +2,7 @@
- /*
-  * HDMI header definition for OMAP4 HDMI core IP
-  *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef _HDMI4_CORE_H_
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5.c b/drivers/gpu/drm/omapdrm/dss/hdmi5.c
-index 4d4c1fabd0a1..bdac755288ff 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi5.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi5.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI driver for OMAP5
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Authors:
-  *	Yong Zhi
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-index 7dd587035160..6cc2ad7a420c 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-@@ -2,7 +2,7 @@
- /*
-  * OMAP5 HDMI CORE IP driver library
-  *
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
-  * Authors:
-  *	Yong Zhi
-  *	Mythri pk
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
-index 65eadefdb3f9..070cbf5fb57d 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.h
-@@ -2,7 +2,7 @@
- /*
-  * HDMI driver definition for TI OMAP5 processors.
-  *
-- * Copyright (C) 2011-2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011-2012 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef _HDMI5_CORE_H_
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-index 00bbf24488c1..5dc200f09c3c 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI PHY
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c b/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
-index cf2b000f397f..13bf649aba52 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi_pll.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI PLL
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #define DSS_SUBSYS_NAME "HDMIPLL"
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c b/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
-index 32f45f4f569d..9d830584a762 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi_wp.c
-@@ -2,7 +2,7 @@
- /*
-  * HDMI wrapper
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #define DSS_SUBSYS_NAME "HDMIWP"
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-index 72a7da7bfff1..f21b5df31213 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-index ab19d4af8de7..a48a9a254e33 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/output.c b/drivers/gpu/drm/omapdrm/dss/output.c
-index ce21c798cca6..5affdf078134 100644
---- a/drivers/gpu/drm/omapdrm/dss/output.c
-+++ b/drivers/gpu/drm/omapdrm/dss/output.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Archit Taneja <archit@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/dss/pll.c b/drivers/gpu/drm/omapdrm/dss/pll.c
-index 1212f3cc52d1..241a338ace29 100644
---- a/drivers/gpu/drm/omapdrm/dss/pll.c
-+++ b/drivers/gpu/drm/omapdrm/dss/pll.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #define DSS_SUBSYS_NAME "PLL"
-diff --git a/drivers/gpu/drm/omapdrm/dss/video-pll.c b/drivers/gpu/drm/omapdrm/dss/video-pll.c
-index a612e2696dbc..b72c3ffddc9a 100644
---- a/drivers/gpu/drm/omapdrm/dss/video-pll.c
-+++ b/drivers/gpu/drm/omapdrm/dss/video-pll.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <linux/clk.h>
-diff --git a/drivers/gpu/drm/omapdrm/omap_connector.c b/drivers/gpu/drm/omapdrm/omap_connector.c
-index 528764566b17..797efccfd46d 100644
---- a/drivers/gpu/drm/omapdrm/omap_connector.c
-+++ b/drivers/gpu/drm/omapdrm/omap_connector.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
-index fce7e944a280..26b9a45a116e 100644
---- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-+++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_debugfs.c b/drivers/gpu/drm/omapdrm/omap_debugfs.c
-index b57fbe8a0ac2..2d3909a37f51 100644
---- a/drivers/gpu/drm/omapdrm/omap_debugfs.c
-+++ b/drivers/gpu/drm/omapdrm/omap_debugfs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob.clark@linaro.org>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_priv.h b/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
-index 60bb3f9297bc..58a8239d3e69 100644
---- a/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
-+++ b/drivers/gpu/drm/omapdrm/omap_dmm_priv.h
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  *         Andy Gross <andy.gross@ti.com>
-  *
-diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-index 42ec51bb7b1b..7d5aa21ae1f3 100644
---- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-+++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-@@ -1,7 +1,7 @@
- /*
-  * DMM IOMMU driver support functions for TI OMAP processors.
-  *
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  *         Andy Gross <andy.gross@ti.com>
-  *
-diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
-index 43c1d096b021..2f8918fe06d5 100644
---- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
-+++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.h
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  *         Andy Gross <andy.gross@ti.com>
-  *
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-index cdafd7ef1c32..70846a8bb8a5 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.c
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
-index 8a1fac680138..ae57e7ada876 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.h
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_encoder.c b/drivers/gpu/drm/omapdrm/omap_encoder.c
-index ae4b867a67a3..57e92a4d5937 100644
---- a/drivers/gpu/drm/omapdrm/omap_encoder.c
-+++ b/drivers/gpu/drm/omapdrm/omap_encoder.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_fb.c b/drivers/gpu/drm/omapdrm/omap_fb.c
-index 9aeab81dfb90..4f1079d19388 100644
---- a/drivers/gpu/drm/omapdrm/omap_fb.c
-+++ b/drivers/gpu/drm/omapdrm/omap_fb.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-index 09a84919ef73..43bcb43aca2f 100644
---- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
-+++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_gem.c b/drivers/gpu/drm/omapdrm/omap_gem.c
-index d08ae95ecc0a..c7eefb248a98 100644
---- a/drivers/gpu/drm/omapdrm/omap_gem.c
-+++ b/drivers/gpu/drm/omapdrm/omap_gem.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob.clark@linaro.org>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
-index b319fe7f2371..f4cde3a169d8 100644
---- a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
-+++ b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob.clark@linaro.org>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_irq.c b/drivers/gpu/drm/omapdrm/omap_irq.c
-index 382bcdc72ac0..de80cd3455c8 100644
---- a/drivers/gpu/drm/omapdrm/omap_irq.c
-+++ b/drivers/gpu/drm/omapdrm/omap_irq.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob.clark@linaro.org>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/omap_plane.c b/drivers/gpu/drm/omapdrm/omap_plane.c
-index 73ec99819a3d..21e0b9785599 100644
---- a/drivers/gpu/drm/omapdrm/omap_plane.c
-+++ b/drivers/gpu/drm/omapdrm/omap_plane.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Rob Clark <rob.clark@linaro.org>
-  */
- 
-diff --git a/drivers/gpu/drm/omapdrm/tcm-sita.c b/drivers/gpu/drm/omapdrm/tcm-sita.c
-index 817be3c41863..9e1acbd2c7aa 100644
---- a/drivers/gpu/drm/omapdrm/tcm-sita.c
-+++ b/drivers/gpu/drm/omapdrm/tcm-sita.c
-@@ -5,7 +5,7 @@
-  *          Lajos Molnar <molnar@ti.com>
-  *          Andy Gross <andy.gross@ti.com>
-  *
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * This package is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
--- 
-2.27.0
-
+--
+2.17.1
