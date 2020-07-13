@@ -2,67 +2,201 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB69C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07FA206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E7D206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFjmoNKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgGMN0E (ORCPT
+        id S1730251AbgGMNZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:26:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:34636 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgGMN0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:26:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 973A930E;
-        Mon, 13 Jul 2020 06:26:03 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B07D83F887;
-        Mon, 13 Jul 2020 06:26:02 -0700 (PDT)
-References: <20200701190656.10126-1-valentin.schneider@arm.com> <20200701190656.10126-7-valentin.schneider@arm.com> <20200713123959.GI10769@hirez.programming.kicks-ass.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        morten.rasmussen@arm.com
-Subject: Re: [PATCH v3 6/7] sched/topology: Introduce SD metaflag for flags needing > 1 groups
-In-reply-to: <20200713123959.GI10769@hirez.programming.kicks-ass.net>
-Date:   Mon, 13 Jul 2020 14:25:56 +0100
-Message-ID: <jhjk0z7lf6j.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 13 Jul 2020 09:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbgGMNWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:22:41 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA28C061755;
+        Mon, 13 Jul 2020 06:22:41 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l12so17127960ejn.10;
+        Mon, 13 Jul 2020 06:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kVHWYWvPcZhbbCSVf176+HxbB/imYoYR0qAJmfiByxM=;
+        b=QFjmoNKLVNjf3U2P646R/7d2KQk03W7jh/TBjE8hGf6d/jlTCNbiJYpksALoO1lpbB
+         c6jGZAv25Va9Vv/meTYwQnEFX+I6e4TriXoajmfjzFcQSGKGoE+apHWx+tgRorVGcYQF
+         SFFr7QltezJy570u5Rz+xX65t01O5FRzMr+Q7ApZgfWoQcSBlD5Poi0oizwBwLff2/M9
+         4CSVY6TAhIj17xfVDFNCpNgApblJEBWUYePn62g9j5cmua23mA+L0W3MhA0LBFHCbnfm
+         WpHPPKG6P6zKvD/p4Uftc8vQwXREU0foxzYAoSBJlS60kzuARgryaULGAdN3pGaa4pRD
+         FjDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kVHWYWvPcZhbbCSVf176+HxbB/imYoYR0qAJmfiByxM=;
+        b=lkjKRqzL1psaYgkfP8tmvYDpIvNcWplpv0iEp37Y9L3gHVJPf/r1A/CltEdwi75O83
+         h/ZZ6+4ZgHAH51o8ku41hzTrFMHRszZYSGkckP0VYSkJjRExgNVjnKzF5SsJqyzMUHuL
+         0huUo35erfDYxWZIh6DYZa8arhyQ8et3lEPIcpKK1VdnG/1liX7/IEZL0h/4Gob7tGAq
+         zfA9ZHhvNuFtqEcyCBlhJ7uG87CDkPYy9c9E78k1v7dhUWqIYdUqR0ldN/iDX7gvUboP
+         qMFmUqwla31Fb9mvb7u2P9SwYgcFLwDoxotCG/lmJAVDt5dR+52ggWhMBdEwmcIBulfa
+         hKAQ==
+X-Gm-Message-State: AOAM530nB7AU4hCCRUfr/fkj1hyYC0IbYxu3dWxYJAn3I2gKIwCjQlI/
+        5pms1rZmYDiZlXq8CmXBbr4=
+X-Google-Smtp-Source: ABdhPJzejmxGBjJ0fiS9zehGy/8XQ4P0gWhbmgIO8mnaoPpL56MEc2+mI7hVAr8MrmwimXgYioGUVA==
+X-Received: by 2002:a17:906:7f90:: with SMTP id f16mr72707884ejr.507.1594646560025;
+        Mon, 13 Jul 2020 06:22:40 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id n9sm11806540edr.46.2020.07.13.06.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 06:22:39 -0700 (PDT)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org, Brian King <brking@us.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: [RFC PATCH 03/35] scsi: ipr: Change PCIBIOS_SUCCESSFUL to 0
+Date:   Mon, 13 Jul 2020 14:22:15 +0200
+Message-Id: <20200713122247.10985-4-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200713122247.10985-1-refactormyself@gmail.com>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
+Their scope should be limited within arch/x86.
 
-On 13/07/20 13:39, Peter Zijlstra wrote:
-> On Wed, Jul 01, 2020 at 08:06:54PM +0100, Valentin Schneider wrote:
->> +/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
->> +#define SD_FLAG(name, idx, mflags) (BIT(idx) * (((mflags) & SDF_NEEDS_GROUPS) / SDF_NEEDS_GROUPS)) |
->
-> #define SD_FLAGS(name, idx, mflags) (!!((mflags) & SDF_NEEDS_GROUPS) * BIT(idx))
->
+Change all PCIBIOS_SUCCESSFUL to 0
 
-Was paranoid about really getting a 1 or a 0, but AFAICT the standard
-does agree with you!
+Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+---
+ drivers/scsi/ipr.c     | 16 ++++++++--------
+ drivers/scsi/pmcraid.c |  6 +++---
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
->> +static const int SD_DEGENERATE_GROUPS_MASK =
->> +#include<linux/sched/sd_flags.h>
->> +0;
->> +#undef SD_FLAG
->> +
->>  #ifdef CONFIG_SCHED_DEBUG
->>  #define SD_FLAG(_name, idx, mflags) [idx] = {.meta_flags = mflags, .name = #_name},
->>  static const struct {
->> --
->> 2.27.0
->>
+diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
+index 7d86f4ca266c..b6c52a04cf52 100644
+--- a/drivers/scsi/ipr.c
++++ b/drivers/scsi/ipr.c
+@@ -775,7 +775,7 @@ static int ipr_save_pcix_cmd_reg(struct ipr_ioa_cfg *ioa_cfg)
+ 		return 0;
+ 
+ 	if (pci_read_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
+-				 &ioa_cfg->saved_pcix_cmd_reg) != PCIBIOS_SUCCESSFUL) {
++				 &ioa_cfg->saved_pcix_cmd_reg) != 0) {
+ 		dev_err(&ioa_cfg->pdev->dev, "Failed to save PCI-X command register\n");
+ 		return -EIO;
+ 	}
+@@ -797,7 +797,7 @@ static int ipr_set_pcix_cmd_reg(struct ipr_ioa_cfg *ioa_cfg)
+ 
+ 	if (pcix_cmd_reg) {
+ 		if (pci_write_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
+-					  ioa_cfg->saved_pcix_cmd_reg) != PCIBIOS_SUCCESSFUL) {
++					  ioa_cfg->saved_pcix_cmd_reg) != 0) {
+ 			dev_err(&ioa_cfg->pdev->dev, "Failed to setup PCI-X command register\n");
+ 			return -EIO;
+ 		}
+@@ -8739,7 +8739,7 @@ static int ipr_reset_bist_done(struct ipr_cmnd *ipr_cmd)
+ static int ipr_reset_start_bist(struct ipr_cmnd *ipr_cmd)
+ {
+ 	struct ipr_ioa_cfg *ioa_cfg = ipr_cmd->ioa_cfg;
+-	int rc = PCIBIOS_SUCCESSFUL;
++	int rc = 0;
+ 
+ 	ENTER;
+ 	if (ioa_cfg->ipr_chip->bist_method == IPR_MMIO)
+@@ -8748,7 +8748,7 @@ static int ipr_reset_start_bist(struct ipr_cmnd *ipr_cmd)
+ 	else
+ 		rc = pci_write_config_byte(ioa_cfg->pdev, PCI_BIST, PCI_BIST_START);
+ 
+-	if (rc == PCIBIOS_SUCCESSFUL) {
++	if (rc == 0) {
+ 		ipr_cmd->job_step = ipr_reset_bist_done;
+ 		ipr_reset_start_timer(ipr_cmd, IPR_WAIT_FOR_BIST_TIMEOUT);
+ 		rc = IPR_RC_JOB_RETURN;
+@@ -8946,7 +8946,7 @@ static int ipr_reset_alert(struct ipr_cmnd *ipr_cmd)
+ 	ENTER;
+ 	rc = pci_read_config_word(ioa_cfg->pdev, PCI_COMMAND, &cmd_reg);
+ 
+-	if ((rc == PCIBIOS_SUCCESSFUL) && (cmd_reg & PCI_COMMAND_MEMORY)) {
++	if ((rc == 0) && (cmd_reg & PCI_COMMAND_MEMORY)) {
+ 		ipr_mask_and_clear_interrupts(ioa_cfg, ~0);
+ 		writel(IPR_UPROCI_RESET_ALERT, ioa_cfg->regs.set_uproc_interrupt_reg32);
+ 		ipr_cmd->job_step = ipr_reset_wait_to_start_bist;
+@@ -10154,7 +10154,7 @@ static int ipr_probe_ioa(struct pci_dev *pdev,
+ 	struct Scsi_Host *host;
+ 	unsigned long ipr_regs_pci;
+ 	void __iomem *ipr_regs;
+-	int rc = PCIBIOS_SUCCESSFUL;
++	int rc = 0;
+ 	volatile u32 mask, uproc, interrupts;
+ 	unsigned long lock_flags, driver_lock_flags;
+ 	unsigned int irq_flag;
+@@ -10256,7 +10256,7 @@ static int ipr_probe_ioa(struct pci_dev *pdev,
+ 	rc = pci_write_config_byte(pdev, PCI_CACHE_LINE_SIZE,
+ 				   ioa_cfg->chip_cfg->cache_line_size);
+ 
+-	if (rc != PCIBIOS_SUCCESSFUL) {
++	if (rc != 0) {
+ 		dev_err(&pdev->dev, "Write of cache line size failed\n");
+ 		ipr_wait_for_pci_err_recovery(ioa_cfg);
+ 		rc = -EIO;
+@@ -10337,7 +10337,7 @@ static int ipr_probe_ioa(struct pci_dev *pdev,
+ 	/* Save away PCI config space for use following IOA reset */
+ 	rc = pci_save_state(pdev);
+ 
+-	if (rc != PCIBIOS_SUCCESSFUL) {
++	if (rc != 0) {
+ 		dev_err(&pdev->dev, "Failed to save PCI config space\n");
+ 		rc = -EIO;
+ 		goto cleanup_nolog;
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index aa9ae2ae8579..5f6e440f0dcd 100644
+--- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -553,7 +553,7 @@ static void pmcraid_bist_done(struct timer_list *t)
+ 	rc = pci_read_config_word(pinstance->pdev, PCI_COMMAND, &pci_reg);
+ 
+ 	/* If PCI config space can't be accessed wait for another two secs */
+-	if ((rc != PCIBIOS_SUCCESSFUL || (!(pci_reg & PCI_COMMAND_MEMORY))) &&
++	if ((rc != 0 || (!(pci_reg & PCI_COMMAND_MEMORY))) &&
+ 	    cmd->time_left > 0) {
+ 		pmcraid_info("BIST not complete, waiting another 2 secs\n");
+ 		cmd->timer.expires = jiffies + cmd->time_left;
+@@ -649,7 +649,7 @@ static void pmcraid_reset_alert(struct pmcraid_cmd *cmd)
+ 	 * BIST or slot_reset
+ 	 */
+ 	rc = pci_read_config_word(pinstance->pdev, PCI_COMMAND, &pci_reg);
+-	if ((rc == PCIBIOS_SUCCESSFUL) && (pci_reg & PCI_COMMAND_MEMORY)) {
++	if ((rc == 0) && (pci_reg & PCI_COMMAND_MEMORY)) {
+ 
+ 		/* wait for IOA permission i.e until CRITICAL_OPERATION bit is
+ 		 * reset IOA doesn't generate any interrupts when CRITICAL
+@@ -5651,7 +5651,7 @@ static int pmcraid_probe(struct pci_dev *pdev,
+ 	struct pmcraid_instance *pinstance;
+ 	struct Scsi_Host *host;
+ 	void __iomem *mapped_pci_addr;
+-	int rc = PCIBIOS_SUCCESSFUL;
++	int rc = 0;
+ 
+ 	if (atomic_read(&pmcraid_adapter_count) >= PMCRAID_MAX_ADAPTERS) {
+ 		pmcraid_err
+-- 
+2.18.2
+
