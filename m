@@ -2,178 +2,158 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3E5C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F9EC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC16620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C534B2077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VaS7443K"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cHdBGMUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgGMUc2 (ORCPT
+        id S1727047AbgGMUcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGMUc2 (ORCPT
+        Mon, 13 Jul 2020 16:32:53 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36770 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGMUcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:32:28 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA4EC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:32:27 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j4so18261369wrp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NjuXsku+N7s+/ZkGgNtwqS2FMyOCE2m5xwXnbqoU004=;
-        b=VaS7443KrsutnWzhmjukOyEatB1jcEm5/VfgW2lPX/lwVScwUMEu8gwW8F/cDRqv57
-         dV9k6+gC1exYI7Jnf1f06CNH6FWa2QorqFT5631H98oZZxNYha/DLWsT8jiZ4ox+rXRP
-         jrJGww60DVwOJBcjHEd/UdOaygoXW5fuTw+N1wV9EzJ8dlfPv7C/nhTmUtFlfmR8f7Yg
-         azhfQYqkXwUN8/0+Z/YD5qmKF2grqhRzzDT566wbUMQPSasaP1fB1QMkwEdspeuZgO5U
-         3piw8aaNIkiOM/z7grOJv6lp+iTO8vJ+Aq/dkwdm3JCL7LevtBFejWx+N/l8OckWrFEq
-         MNEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NjuXsku+N7s+/ZkGgNtwqS2FMyOCE2m5xwXnbqoU004=;
-        b=BZF83Feqv4447z32MWt3LlGFM63M9aCtFH5XDburdxZyPpVMfCP6nJq3DuKz6iRDQK
-         hxdEgFJHfmYv1Oh0wq1zbayJdEEggctzg9i7IDOMxCCX2zpGf9j6CcK/ajbhBUlCd5tR
-         hM1A1aBEuP/hnZV3j4V8EG5GcSo7M8+I98pPn+vMWjuzTCV+BrlWG1b3GPd2K7Oq0cxk
-         JJxWaeQgzNq9C34jIEM/KurVneqjoB/ieR3zCS0NzNqX7kWhi8Ngh1CbcN7aSfHoCFnF
-         H+VkW1WNTFwhMtB1bYp/V72dx8kzOEkB6eqzBkhl1otqEEI1brV8/AE2B/Pgl2G54ozD
-         YbAA==
-X-Gm-Message-State: AOAM5318tJmuTgxDBoKq/GLOoM21Ec/cud+zsCbkkAugFRHF6xVxg0AM
-        cExbZQmh6h3/bZlp0UaYV1s5qg==
-X-Google-Smtp-Source: ABdhPJzsvDtuurvLedud1UFOHfSRMnYumi0+nz9RdUX8W20T/R/KErEwOQDZwTF+AWYP66P8j+Z1dQ==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr1277936wrp.412.1594672346487;
-        Mon, 13 Jul 2020 13:32:26 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:ace8:1637:36d9:9311? ([2a01:e34:ed2f:f020:ace8:1637:36d9:9311])
-        by smtp.googlemail.com with ESMTPSA id 51sm27253320wrc.44.2020.07.13.13.32.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 13:32:25 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
- <20200706105538.2159-4-daniel.lezcano@linaro.org>
- <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
- <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
- <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
- <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
- <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <75683b75-6e1b-6e4e-2354-477c487a5f5f@linaro.org>
-Date:   Mon, 13 Jul 2020 22:32:24 +0200
+        Mon, 13 Jul 2020 16:32:52 -0400
+Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CAADF20B4909;
+        Mon, 13 Jul 2020 13:32:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAADF20B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594672371;
+        bh=VeWN4l0WTivLpVxHyd7AaFSTibjlEMzXV0jVP3Zo+E4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cHdBGMUwa6d7vQELISebugbZOJJPgfylgs+Ow4juQxNZlH84Uew4znIMhI1ctPIqj
+         H3I0N3rghH+OPS5b0/jhoIQBL8VUHOjGPpO6T+NSQaCMWJ5VU3jNPyjiJGtaOjHTVC
+         7dGIyN+NRs9Dp/ZrXQdYTJ5ocXPgoEQ4OChP6Zbc=
+Subject: Re: [V2 PATCH 2/3] dt-bindings: chosen: Document ima-kexec-buffer
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200618071045.471131-1-prsriva@linux.microsoft.com>
+ <20200618071045.471131-3-prsriva@linux.microsoft.com>
+ <87mu4yr2k2.fsf@morokweng.localdomain>
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+Message-ID: <80813a16-be43-3fc4-4812-33c60095a423@linux.microsoft.com>
+Date:   Mon, 13 Jul 2020 13:32:50 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <87mu4yr2k2.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 11:31, Marek Szyprowski wrote:
-> Hi
+
+
+On 6/19/20 5:41 PM, Thiago Jung Bauermann wrote:
 > 
-> On 07.07.2020 11:15, Marek Szyprowski wrote:
->> On 06.07.2020 15:46, Daniel Lezcano wrote:
->>> On 06/07/2020 15:17, Marek Szyprowski wrote:
->>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
->>>>> The generic netlink protocol is implemented but the different
->>>>> notification functions are not yet connected to the core code.
->>>>>
->>>>> These changes add the notification calls in the different
->>>>> corresponding places.
->>>>>
->>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
->>>> ("thermal: core: Add notifications call in the framework"). Sadly it
->>>> breaks booting various Samsung Exynos based boards. Here is an example
->>>> log from Odroid U3 board:
->>>>
->>>> Unable to handle kernel NULL pointer dereference at virtual address 
->>>> 00000010
->>>> pgd = (ptrval)
->>>> [00000010] *pgd=00000000
->>>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->>>> Modules linked in:
->>>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
->>>> #1146
->>>> Hardware name: Samsung Exynos (Flattened Device Tree)
->>>> PC is at kmem_cache_alloc+0x13c/0x418
->>>> LR is at kmem_cache_alloc+0x48/0x418
->>>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
->>>> ...
->>>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
->>>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
->>>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->>>> Stack: (0xee8f1cf8 to 0xee8f2000)
->>>> ...
->>>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] 
->>>> (__alloc_skb+0x5c/0x170)
->>>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
->>>> (thermal_genl_send_event+0x24/0x174)
->>>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
->>>> (thermal_notify_tz_create+0x58/0x74)
->>>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
->>>> (thermal_zone_device_register+0x358/0x650)
->>>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
->>>> (of_parse_thermal_zones+0x304/0x7a4)
->>>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
->>>> (thermal_init+0xdc/0x154)
->>>> [<c1028964>] (thermal_init) from [<c0102378>] 
->>>> (do_one_initcall+0x8c/0x424)
->>>> [<c0102378>] (do_one_initcall) from [<c1001158>]
->>>> (kernel_init_freeable+0x190/0x204)
->>>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
->>>> (kernel_init+0x8/0x118)
->>>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
->>>>
->>>> Reverting it on top of linux-next fixes the boot issue. I will
->>>> investigate it further soon.
->>> Thanks for reporting this.
->>>
->>> Can you send the addr2line result and code it points to ?
+> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+> 
+>> Integrity measurement architecture(IMA) validates if files
+>> have been accidentally or maliciously altered, both remotely and
+>> locally, appraise a file's measurement against a "good" value stored
+>> as an extended attribute, and enforce local file integrity.
 >>
->> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to 
->> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks 
->> like some trashed memory somewhere, but I don't have time right now to 
->> analyze it further now...
+>> IMA also measures singatures of kernel and initrd during kexec along with
+>> the command line used for kexec.
+>> These measurements are critical to verify the seccurity posture of the OS.
+>>
+>> Resering memory and adding the memory information to a device tree node
+>> acts as the mechanism to carry over IMA measurement logs.
+>>
+>> Update devicetree documentation to reflect the addition of new property
+>> under the chosen node.
 > 
-> Just one more thing I've noticed. The crash happens only if the kernel 
-> is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC 
-> 4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like 
-> arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works 
-> fine...
+> Thank you for writing this documentation patch. It's something I should
+> have done when I added the powerpc IMA kexec support.
 > 
-> This happens also with Linux next-20200710, which again got this commit.
+> You addressed Rob Herring's comments regarding the commit message, but
+> not the ones regarding the patch contents.
+> 
+> When posting a new version of the patches, make sure to address all
+> comments made so far. Addressing a comment doesn't necessarily mean
+> implementing the requested change. If you don't then you should at least
+> explain why you chose a different path.
+> 
+> I mention it because this has occurred before with this patch series,
+> and it's hard to make forward progress if review comments get ignored.
+> 
+>> ---
+>>   Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> index 45e79172a646..a15f70c007ef 100644
+>> --- a/Documentation/devicetree/bindings/chosen.txt
+>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>> @@ -135,3 +135,20 @@ e.g.
+>>   		linux,initrd-end = <0x82800000>;
+>>   	};
+>>   };
+>> +
+>> +linux,ima-kexec-buffer
+>> +----------------------
+>> +
+>> +This property(currently used by powerpc, arm64) holds the memory range,
+> 
+> space before the parenthesis.
+> 
+>> +the address and the size, of the IMA measurement logs that are being carried
+> 
+> Maybe it's because English isn't my first language, but IMHO it's
+> clearer if "the address and the size" is between parentheses rather than
+> commas.
+> 
+>> +over to the kexec session.
+> 
+> I don't think there's a "kexec session", but I'm not sure what a good
+> term would be. "linux,booted-from-kexec" uses "new kernel" so perhaps
+> that's a good option to use instead of "kexec session".
+> 
+>> +
+>> +/ {
+>> +	chosen {
+>> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
+>> +	};
+>> +};
+>> +
+>> +This porperty does not represent real hardware, but the memory allocated for
+>> +carrying the IMA measurement logs. The address and the suze are expressed in
+>> +#address-cells and #size-cells, respectively of the root node.
+> 
+> 
+I will update the descriptions and ack the comments/changes in the 
+patches as well.
 
-So I finally succeed to reproduce on an ARM64 with a recent compiler,
-earlycon, and the option CONFIG_INIT_ON_ALLOC_DEFAULT_ON.
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thankyou,
+Prakhar Srivastava
+> --
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
