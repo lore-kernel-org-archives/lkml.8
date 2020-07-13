@@ -2,84 +2,188 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7F4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31421C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7559E2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594622938;
-	bh=WWEEuVhlr2nW3XjCI9KWOEj+kLW17f+JdDGC2Rl8byI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=on8LM1AHk1rzXmjQ7S66vwPvjZCIMEDrxposqh2+6YTvFGmDsh24TlBEyQJZRT+J3
-	 X5Q8TTORVsQTfRBbaWZIdv0Hx/akY/G9MQcWXKKY1tMR7KHptH8uwtuW0884qOe0eM
-	 v5/+xUh69RU9hbNS2c4hfIKvyiW0bSmltk4NRhmo=
+	by mail.kernel.org (Postfix) with ESMTP id 1C2BB20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgGMGs5 (ORCPT
+        id S1729380AbgGMGtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgGMGs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:48:56 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE58F20720;
-        Mon, 13 Jul 2020 06:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594622936;
-        bh=WWEEuVhlr2nW3XjCI9KWOEj+kLW17f+JdDGC2Rl8byI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Btl/Tp+izk7mtTssyKlrQDvxZIBkan5DgFkSatsaRXKuQGxSbrbsqfIqtCgfNW20F
-         zZjx3bwL8cB7VNTxMWuQgKnbEkJo7lU/ch2HJji90PU1nDYSnRMc8YT6OUSaLtNzAu
-         kBG1U39LzQonJRP9b1CqWA4eDPNUINYz3SdyaFPM=
-Date:   Mon, 13 Jul 2020 14:48:52 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        Mon, 13 Jul 2020 02:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGMGs7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:48:59 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F53C061794;
+        Sun, 12 Jul 2020 23:48:59 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B19D7BC0CA;
+        Mon, 13 Jul 2020 06:48:56 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     aaro.koskinen@iki.fi, tony@atomide.com, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: imx6qdl: only enable pcie in the pcie dts file
-Message-ID: <20200713064851.GH12113@dragon>
-References: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ARM: OMAP: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 08:48:50 +0200
+Message-Id: <20200713064850.31701-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:44:41PM +0800, Richard Zhu wrote:
-> Since iMX6Q/DL PCIe has the PM limitation (ERR005723 "PCIe PCIe does
-> not support L2 Power Down").
-> System suspend/resume would be broken by PCIe, if PCIe is enabled.
-> Only enable PCIe in the xxx-pcie.dts files to avoid the brokens when
-> other xxx.dtb files are used on sabresd and sabreauto boards.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  arch/arm/boot/dts/Makefile                  |  4 ++++
->  arch/arm/boot/dts/imx6dl-sabreauto-pcie.dts | 12 ++++++++++++
->  arch/arm/boot/dts/imx6dl-sabresd-pcie.dts   | 12 ++++++++++++
->  arch/arm/boot/dts/imx6q-sabreauto-pcie.dts  | 12 ++++++++++++
->  arch/arm/boot/dts/imx6q-sabresd-pcie.dts    | 12 ++++++++++++
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi    |  4 ----
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi      |  1 -
->  7 files changed, 52 insertions(+), 5 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx6dl-sabreauto-pcie.dts
->  create mode 100644 arch/arm/boot/dts/imx6dl-sabresd-pcie.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-sabreauto-pcie.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-sabresd-pcie.dts
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-No.  There are hundreds of boards based on i.MX6Q/DL.  We are not going
-to maintain a -pcie.dts for every single one of them.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Shawn
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ arch/arm/mach-omap1/Kconfig    | 2 +-
+ arch/arm/mach-omap1/dma.c      | 2 +-
+ arch/arm/mach-omap1/gpio15xx.c | 2 +-
+ arch/arm/mach-omap1/gpio16xx.c | 2 +-
+ arch/arm/mach-omap1/gpio7xx.c  | 2 +-
+ arch/arm/mach-omap1/timer.c    | 2 +-
+ arch/arm/plat-omap/dma.c       | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
+index 948da556162e..9536b8f3c07d 100644
+--- a/arch/arm/mach-omap1/Kconfig
++++ b/arch/arm/mach-omap1/Kconfig
+@@ -146,7 +146,7 @@ config MACH_SX1
+ 	  Support for the Siemens SX1 phone. To boot the kernel,
+ 	  you'll need a SX1 compatible bootloader; check out
+ 	  http://forum.oslik.ru and
+-	  http://www.handhelds.org/moin/moin.cgi/SiemensSX1
++	  https://www.handhelds.org/moin/moin.cgi/SiemensSX1
+ 	  for more information.
+ 	  Say Y here if you have such a phone, say NO otherwise.
+ 
+diff --git a/arch/arm/mach-omap1/dma.c b/arch/arm/mach-omap1/dma.c
+index 0ad8bdc2ed61..2bf659fb6099 100644
+--- a/arch/arm/mach-omap1/dma.c
++++ b/arch/arm/mach-omap1/dma.c
+@@ -10,7 +10,7 @@
+  * OMAP2/3 support Copyright (C) 2004-2007 Texas Instruments, Inc.
+  * Some functions based on earlier dma-omap.c Copyright (C) 2001 RidgeRun, Inc.
+  *
+- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+  * Converted DMA library into platform driver
+  *                   - G, Manjunath Kondaiah <manjugk@ti.com>
+  */
+diff --git a/arch/arm/mach-omap1/gpio15xx.c b/arch/arm/mach-omap1/gpio15xx.c
+index 312a0924d786..3ec08bd5d8a0 100644
+--- a/arch/arm/mach-omap1/gpio15xx.c
++++ b/arch/arm/mach-omap1/gpio15xx.c
+@@ -1,7 +1,7 @@
+ /*
+  * OMAP15xx specific gpio init
+  *
+- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Author:
+  *	Charulatha V <charu@ti.com>
+diff --git a/arch/arm/mach-omap1/gpio16xx.c b/arch/arm/mach-omap1/gpio16xx.c
+index 5b7a29b294d4..500cfd416c42 100644
+--- a/arch/arm/mach-omap1/gpio16xx.c
++++ b/arch/arm/mach-omap1/gpio16xx.c
+@@ -1,7 +1,7 @@
+ /*
+  * OMAP16xx specific gpio init
+  *
+- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Author:
+  *	Charulatha V <charu@ti.com>
+diff --git a/arch/arm/mach-omap1/gpio7xx.c b/arch/arm/mach-omap1/gpio7xx.c
+index 0e5f68de23bf..aeb81c18ffcc 100644
+--- a/arch/arm/mach-omap1/gpio7xx.c
++++ b/arch/arm/mach-omap1/gpio7xx.c
+@@ -1,7 +1,7 @@
+ /*
+  * OMAP7xx specific gpio init
+  *
+- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Author:
+  *	Charulatha V <charu@ti.com>
+diff --git a/arch/arm/mach-omap1/timer.c b/arch/arm/mach-omap1/timer.c
+index 4447210c9b0d..97fc2096b970 100644
+--- a/arch/arm/mach-omap1/timer.c
++++ b/arch/arm/mach-omap1/timer.c
+@@ -6,7 +6,7 @@
+  * device model. It also has a low level function to change the timer
+  * input clock source.
+  *
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  * Tarun Kanti DebBarma <tarun.kanti@ti.com>
+  * Thara Gopinath <thara@ti.com>
+  *
+diff --git a/arch/arm/plat-omap/dma.c b/arch/arm/plat-omap/dma.c
+index 7d859994ff95..b2e9e822426f 100644
+--- a/arch/arm/plat-omap/dma.c
++++ b/arch/arm/plat-omap/dma.c
+@@ -16,7 +16,7 @@
+  *
+  * Support functions for the OMAP internal DMA channels.
+  *
+- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+  * Converted DMA library into DMA platform driver.
+  *	- G, Manjunath Kondaiah <manjugk@ti.com>
+  */
+-- 
+2.27.0
+
