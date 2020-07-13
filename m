@@ -2,101 +2,91 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5886FC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F65C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A54206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666223;
-	bh=Gz1tbOn6WGGUuqnXjDQcSzCKA3wY4PYaQ9UYF1hupR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hoSrFgnSuURgXH3lE/9b3mjIiQr2G9admM8hkCqG4FFUkPP4kmA1WPFE8JrpK7u5Q
-	 0mmm9Ws+RdJOUrG4V/4odIyC4MLz64yy5M9BL5XFHfsr8nPrBwBxGgRr0PsVTqiY2D
-	 hZkjtMEZfpjWw8gNJYNwNlqB9lt7+04ymIZATUIM=
+	by mail.kernel.org (Postfix) with ESMTP id 895902067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LYgd5M71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgGMSuV (ORCPT
+        id S1726834AbgGMSvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:50:21 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46367 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMSuV (ORCPT
+        Mon, 13 Jul 2020 14:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgGMSvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:50:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id a12so14581516ion.13;
-        Mon, 13 Jul 2020 11:50:20 -0700 (PDT)
+        Mon, 13 Jul 2020 14:51:32 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3B3C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:51:32 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 1so6394891pfn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=617BtXfhDhCxYwKbF1MbJDp6FkHkJ91InZTtwhgrWAc=;
+        b=LYgd5M71atEpjo9+l5VDZyOrkPHo9IZuDVdMJYTe4U36kp8vOrC2TapmJ94j/8UYjJ
+         jIEt+3OwdsGQQYvAr3ySOyYYhy4X26dlaOpJV9sAg1NvJQn1Oxrm3vxfzDSrEDJaHUzj
+         g/VMUbc5LxVbW9KyCIxKvMDO3FGJwRAhPNAEfElYDGjrjAND8qcfgqmAREnmg+2Pqj72
+         62k/UVl4GaFMj7zTDTSL8MbS0J/2LKASLUMNdB5y6YbBPfyP8G3ZOpPFmj5q/M8sW0wV
+         ilJG4VB7U77x8hJ7LvAYcrgW6vtacGTNQJzs6T1K/QG3pey6yfK6fwF+1aapm2TRW9xW
+         2VBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dxSIKalG5pmPJrENOgt+knqfr40NsiQacbub2rb1U8U=;
-        b=NRfIHj68tz946k/pbpdCXaHeNf5JZ7yvvlne8Eb41Eh/vvnFiNaaHSGARzlGV0zAWP
-         QpTFMRh8zuAmYyBZMQxDl026wIs0mmxKzi733qvt9qhp3Ury2FkVgDH8m6vESyHtmS2M
-         HQNortKZLOPb3IwdmUpkF12WhFhTZhUrY0Q1R8jWeKnNK/zjwWV0HD/cuo2FtSnPFNWX
-         oY/NG35NPyY1W04WIsmM5m+ityx7m+oyRU8GtJ5mttByQ8Bp6hGlLkFxsyVkFtMXHiFk
-         su8YwHCex36z3OKmCcgl9u7OvvVzmG2of7bry4c/jgqDne4Qq1tmimYa9keRJPQGz6aO
-         d7jw==
-X-Gm-Message-State: AOAM533gUmGu3bO13r7fgUqJeYiNLi8BSGGTGJtN4ae1OARBI14g+CJ0
-        7w+O4zqjxjnTCyG/vgdyKw==
-X-Google-Smtp-Source: ABdhPJyLkZZwvj61ZNsHMThlgpkJfwv9jMCmBiY9npdnk2nVKArKeRCDOvgu1OZdIoirrAR4n2N+qg==
-X-Received: by 2002:a05:6602:21c3:: with SMTP id c3mr1065368ioc.93.1594666219953;
-        Mon, 13 Jul 2020 11:50:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d77sm8967211ill.67.2020.07.13.11.50.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=617BtXfhDhCxYwKbF1MbJDp6FkHkJ91InZTtwhgrWAc=;
+        b=e6qJOEADYRmfMeVaKhI8KSIsrqe7ZPzHSJqvKAIjB3HnXilxSTs3OlEcW6/jKGa/LK
+         486sX+ccUgwO/8FH473ZU0hmoZUPHCS5yR/yzygoAE/XvBP0VtCfQP11VPWNDtw/z9w0
+         U9a7YRraooVLU2smCpcibF68ciI9H+7Uq8E0cM2ShiR9yabo/vwutJkCZgsBHRMmgoAK
+         xMOHtGOEkSQF2eUb3c0tdKp9Y/SZnqkbT52CmYOVu0u0gD+VCIVj3sHYrHPOIdyxwvEe
+         8CNjBLsPrHJReTa2Kb4MaEyX7Ffdsy6U4p9se8ZWRd34Vyho4XLCe+GhqdP4XJcuh8ti
+         wmOA==
+X-Gm-Message-State: AOAM5305x22yJpWVXQqpVMtFhBwYWCmKAMVj/L6PnPMiUKe65WSmBNh+
+        PXN5sFVt+1Wk+XFIzLmeMqzGWQ==
+X-Google-Smtp-Source: ABdhPJwkB7sITv68w2uhGuGyIEDhJuVxctNfcClDDMcucA+tPHFjkiTXUaT2RW1CffXlgMiXC6FjFQ==
+X-Received: by 2002:aa7:97b6:: with SMTP id d22mr1134558pfq.202.1594666292267;
+        Mon, 13 Jul 2020 11:51:32 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id t5sm13652413pgl.38.2020.07.13.11.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:50:19 -0700 (PDT)
-Received: (nullmailer pid 530111 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:50:18 -0000
-Date:   Mon, 13 Jul 2020 12:50:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] dt-bindings: timer: Convert mrvl,mmp-timer to
- json-schema
-Message-ID: <20200713185018.GA529968@bogus>
-References: <20200616223353.993567-1-lkundrak@v3.sk>
- <20200616223353.993567-6-lkundrak@v3.sk>
+        Mon, 13 Jul 2020 11:51:31 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     daniel.lezcano@linaro.org, linux-amlogic@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rui.zhang@intel.com, Amit Kucheria <amit.kucheria@linaro.org>,
+        lee.jones@linaro.org, amit.kucheria@verdurent.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+Date:   Mon, 13 Jul 2020 11:51:31 -0700
+Message-Id: <159466628489.14780.16650652644732625599.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200713065931.19845-1-narmstrong@baylibre.com>
+References: <20200713065931.19845-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616223353.993567-6-lkundrak@v3.sk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 00:33:53 +0200, Lubomir Rintel wrote:
-> A straightforward conversion of the mrvl,mmp-timer binding to DT schema
-> format using json-schema.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v1:
-> - Add default GPL-2.0-only license tag
-> - Fill in maintainers from MAINTAINERS file
-> 
->  .../bindings/timer/mrvl,mmp-timer.txt         | 17 -------
->  .../bindings/timer/mrvl,mmp-timer.yaml        | 46 +++++++++++++++++++
->  2 files changed, 46 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
-> 
+On Mon, 13 Jul 2020 08:59:31 +0200, Neil Armstrong wrote:
+> Add the Khadas MCU node with active FAN thermal nodes for all the
+> Khadas VIM3 variants.
 
 Applied, thanks!
+
+[1/1] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+      commit: cabb1f3827109372dcb80081cc654eb54f997afc
+
+Best regards,
+-- 
+Kevin Hilman <khilman@baylibre.com>
