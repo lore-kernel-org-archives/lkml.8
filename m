@@ -2,306 +2,83 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1337C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B54E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7189E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xB4UytO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgGMMj0 (ORCPT
+        id S1729756AbgGMMkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:39:26 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:36430 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGMMj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:39:26 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 36565BC0CA;
-        Mon, 13 Jul 2020 12:39:21 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jsarha@ti.com, tomi.valkeinen@ti.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] drm/tidss: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 14:39:13 +0200
-Message-Id: <20200713123913.34205-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 08:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:40:07 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7101AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qz2Jv/ggSypwc0uJUR+d7mBt/eDO9LlrpJONIT78xfg=; b=xB4UytO71//Pna0dWhCyanNjbh
+        aFxl8OHX2P+qf5CbnDBiRkxYkgPDUAt7R8rej9YA8miyY8zOEJYaM69AvxXtW/3pNNLC5MljBPvMq
+        eBe5gclv5669CepzpmcbICsop/nzWCn3loAi1ojzoFCE7D79vdxpNqm0UMafSxknzfuniJW4TWO7T
+        Rf0M1luzNSuTTt7UZXuI1eBZMN2PHHU0bgwceAigCPdHgcLMsszqQeuaVuZpAnA/U9c4xSvUy/FWV
+        EMCZqemGtSgGV0dG1uv4A6EQEveiV/aW7QZtC+Bk06L4Zukb1Rw5+KFJeVHf5TRJCURMl+93vAmaE
+        TwbPXCuw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juxkY-0000um-Kw; Mon, 13 Jul 2020 12:40:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C5557300DB4;
+        Mon, 13 Jul 2020 14:39:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AD69420D27C7E; Mon, 13 Jul 2020 14:39:59 +0200 (CEST)
+Date:   Mon, 13 Jul 2020 14:39:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com
+Subject: Re: [PATCH v3 6/7] sched/topology: Introduce SD metaflag for flags
+ needing > 1 groups
+Message-ID: <20200713123959.GI10769@hirez.programming.kicks-ass.net>
+References: <20200701190656.10126-1-valentin.schneider@arm.com>
+ <20200701190656.10126-7-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701190656.10126-7-valentin.schneider@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 01, 2020 at 08:06:54PM +0100, Valentin Schneider wrote:
+> +/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
+> +#define SD_FLAG(name, idx, mflags) (BIT(idx) * (((mflags) & SDF_NEEDS_GROUPS) / SDF_NEEDS_GROUPS)) |
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+#define SD_FLAGS(name, idx, mflags) (!!((mflags) & SDF_NEEDS_GROUPS) * BIT(idx))
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/gpu/drm/tidss/tidss_crtc.c        | 2 +-
- drivers/gpu/drm/tidss/tidss_crtc.h        | 2 +-
- drivers/gpu/drm/tidss/tidss_dispc.c       | 2 +-
- drivers/gpu/drm/tidss/tidss_dispc.h       | 2 +-
- drivers/gpu/drm/tidss/tidss_dispc_regs.h  | 2 +-
- drivers/gpu/drm/tidss/tidss_drv.c         | 2 +-
- drivers/gpu/drm/tidss/tidss_drv.h         | 2 +-
- drivers/gpu/drm/tidss/tidss_encoder.c     | 2 +-
- drivers/gpu/drm/tidss/tidss_encoder.h     | 2 +-
- drivers/gpu/drm/tidss/tidss_irq.c         | 2 +-
- drivers/gpu/drm/tidss/tidss_irq.h         | 2 +-
- drivers/gpu/drm/tidss/tidss_kms.c         | 2 +-
- drivers/gpu/drm/tidss/tidss_kms.h         | 2 +-
- drivers/gpu/drm/tidss/tidss_plane.c       | 2 +-
- drivers/gpu/drm/tidss/tidss_plane.h       | 2 +-
- drivers/gpu/drm/tidss/tidss_scale_coefs.c | 2 +-
- drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 +-
- 17 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
-index 89a226912de8..a591c70b8386 100644
---- a/drivers/gpu/drm/tidss/tidss_crtc.c
-+++ b/drivers/gpu/drm/tidss/tidss_crtc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_crtc.h b/drivers/gpu/drm/tidss/tidss_crtc.h
-index 09e773666228..040d1205496b 100644
---- a/drivers/gpu/drm/tidss/tidss_crtc.h
-+++ b/drivers/gpu/drm/tidss/tidss_crtc.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-index 629dd06393f6..e7d28ec8f7f3 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.c
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-index 902e612ff7ac..5984e0de2cd9 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.h
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc_regs.h b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-index 88a83a41b6e3..13feedfe5d6d 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-+++ b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_drv.c b/drivers/gpu/drm/tidss/tidss_drv.c
-index 99edc66ebdef..f00fadbead3e 100644
---- a/drivers/gpu/drm/tidss/tidss_drv.c
-+++ b/drivers/gpu/drm/tidss/tidss_drv.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
-index 3b0a3d87b7c4..7de4bba52e6f 100644
---- a/drivers/gpu/drm/tidss/tidss_drv.h
-+++ b/drivers/gpu/drm/tidss/tidss_drv.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
-index 30bf2a65949c..e278a9c89476 100644
---- a/drivers/gpu/drm/tidss/tidss_encoder.c
-+++ b/drivers/gpu/drm/tidss/tidss_encoder.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_encoder.h b/drivers/gpu/drm/tidss/tidss_encoder.h
-index 06854d66e7e6..ace877c0e0fd 100644
---- a/drivers/gpu/drm/tidss/tidss_encoder.h
-+++ b/drivers/gpu/drm/tidss/tidss_encoder.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_irq.c b/drivers/gpu/drm/tidss/tidss_irq.c
-index 1b80f2d62e0a..a5ec7931ef6b 100644
---- a/drivers/gpu/drm/tidss/tidss_irq.c
-+++ b/drivers/gpu/drm/tidss/tidss_irq.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_irq.h b/drivers/gpu/drm/tidss/tidss_irq.h
-index aa92db403cca..4aaad5dfd7c2 100644
---- a/drivers/gpu/drm/tidss/tidss_irq.h
-+++ b/drivers/gpu/drm/tidss/tidss_irq.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_kms.c b/drivers/gpu/drm/tidss/tidss_kms.c
-index 4b99e9fa84a5..71dbd331640f 100644
---- a/drivers/gpu/drm/tidss/tidss_kms.c
-+++ b/drivers/gpu/drm/tidss/tidss_kms.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_kms.h b/drivers/gpu/drm/tidss/tidss_kms.h
-index 99aaff099f22..632d79f5983f 100644
---- a/drivers/gpu/drm/tidss/tidss_kms.h
-+++ b/drivers/gpu/drm/tidss/tidss_kms.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-index 0a563eabcbb9..43e72d0b2d84 100644
---- a/drivers/gpu/drm/tidss/tidss_plane.c
-+++ b/drivers/gpu/drm/tidss/tidss_plane.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_plane.h b/drivers/gpu/drm/tidss/tidss_plane.h
-index 80ff1c5a2535..e933e158b617 100644
---- a/drivers/gpu/drm/tidss/tidss_plane.h
-+++ b/drivers/gpu/drm/tidss/tidss_plane.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.c b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-index 5ec68389cc68..c2b84fea89a5 100644
---- a/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-+++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.h b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-index 64b5af5b5361..9c560d0fdac0 100644
---- a/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-+++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Jyri Sarha <jsarha@ti.com>
-  */
- 
--- 
-2.27.0
-
+> +static const int SD_DEGENERATE_GROUPS_MASK =
+> +#include<linux/sched/sd_flags.h>
+> +0;
+> +#undef SD_FLAG
+> +
+>  #ifdef CONFIG_SCHED_DEBUG
+>  #define SD_FLAG(_name, idx, mflags) [idx] = {.meta_flags = mflags, .name = #_name},
+>  static const struct {
+> -- 
+> 2.27.0
+> 
