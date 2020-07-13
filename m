@@ -2,147 +2,200 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C28C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3C6A2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594655874;
-	bh=yaIr3W3gRNyeiwvDjKU5N+IKZQj4ZrZ+IUKbWI+E60o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i7Txei2rEVb0Vx+5VFvzPqBlV2vSxTB6yGb36JgE31Ug7Tbj4HsxIMj6L4E3CiPmR
-	 nBeAkFXFzEcnSejknqzJILzdNPPeW3zPZ+ybu+YFi2I2VZW5GOjCdgGFxYXE8YFLkd
-	 PutSy8UTKrqG+jtFAYdLG09lmc8K2eowzVHpNXbY=
+	by mail.kernel.org (Postfix) with ESMTP id 4E6602068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbgGMP5x (ORCPT
+        id S1730225AbgGMP6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgGMP5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:57:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55FE2068F;
-        Mon, 13 Jul 2020 15:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594655872;
-        bh=yaIr3W3gRNyeiwvDjKU5N+IKZQj4ZrZ+IUKbWI+E60o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EJ1fJ3vuXCvpwl6tcgdeYo4tlGvtfPRux44gveEKYvl3IWk4CHicfRtfCLpBRtoQU
-         KoyR1iF6qU4nEtMY2hNBipSi2CGBHJ84s01SADiHpMRIIHJhNAa1M71YfuU33M2t3K
-         RFSGyjA2mvNotQOghu16p04fvi5NhuyVGse6O7AA=
-Date:   Mon, 13 Jul 2020 17:57:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai,
-        Ofir Bitton <obitton@habana.ai>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH 1/3] habanalabs: implement dma-fence mechanism
-Message-ID: <20200713155752.GC267581@kroah.com>
-References: <20200713155424.24721-1-oded.gabbay@gmail.com>
+        Mon, 13 Jul 2020 11:58:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2464 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729027AbgGMP6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:58:03 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A314B50C6533A0D59C42;
+        Mon, 13 Jul 2020 16:58:02 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 16:58:02 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 1/6] ACPI: Support Generic Initiator only domains
+Date:   Mon, 13 Jul 2020 23:55:55 +0800
+Message-ID: <20200713155600.2272743-2-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
+References: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713155424.24721-1-oded.gabbay@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 06:54:22PM +0300, Oded Gabbay wrote:
-> From: Ofir Bitton <obitton@habana.ai>
-> 
-> Instead of using standard dma-fence mechanism designed for GPU's, we
-> introduce our own implementation based on the former one. This
-> implementation is much more sparse than the original, contains only
-> mandatory functionality required by the driver.
+Generic Initiators are a new ACPI concept that allows for the
+description of proximity domains that contain a device which
+performs memory access (such as a network card) but neither
+host CPU nor Memory.
 
-Sad you can't use the in-kernel code for this, I really don't understand
-what's wrong with using it as-is.
+This patch has the parsing code and provides the infrastructure
+for an architecture to associate these new domains with their
+nearest memory processing node.
 
-Daniel, why do we need/want duplicate code floating around in the tree
-like this?
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/acpi/numa/srat.c | 60 +++++++++++++++++++++++++++++++++++++++-
+ drivers/base/node.c      |  3 ++
+ include/linux/nodemask.h |  1 +
+ 3 files changed, 63 insertions(+), 1 deletion(-)
 
-Copying code leads to errors, here's some documentation ones:
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index ed7d31795f4d..b71941437326 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -130,6 +130,36 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 		}
+ 		break;
+ 
++	case ACPI_SRAT_TYPE_GENERIC_AFFINITY:
++	{
++		struct acpi_srat_generic_affinity *p =
++			(struct acpi_srat_generic_affinity *)header;
++
++		if (p->device_handle_type == 0) {
++			/*
++			 * For pci devices this may be the only place they
++			 * are assigned a proximity domain
++			 */
++			pr_debug("SRAT Generic Initiator(Seg:%u BDF:%u) in proximity domain %d %s\n",
++				 *(u16 *)(&p->device_handle[0]),
++				 *(u16 *)(&p->device_handle[2]),
++				 p->proximity_domain,
++				 (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
++				"enabled" : "disabled");
++		} else {
++			/*
++			 * In this case we can rely on the device having a
++			 * proximity domain reference
++			 */
++			pr_debug("SRAT Generic Initiator(HID=%.8s UID=%.4s) in proximity domain %d %s\n",
++				(char *)(&p->device_handle[0]),
++				(char *)(&p->device_handle[8]),
++				p->proximity_domain,
++				(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
++				"enabled" : "disabled");
++		}
++	}
++	break;
+ 	default:
+ 		pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
+ 			header->type);
+@@ -338,6 +368,32 @@ acpi_parse_gicc_affinity(union acpi_subtable_headers *header,
+ 	return 0;
+ }
+ 
++static int __init
++acpi_parse_gi_affinity(union acpi_subtable_headers *header,
++		       const unsigned long end)
++{
++	struct acpi_srat_generic_affinity *gi_affinity;
++	int node;
++
++	gi_affinity = (struct acpi_srat_generic_affinity *)header;
++	if (!gi_affinity)
++		return -EINVAL;
++	acpi_table_print_srat_entry(&header->common);
++
++	if (!(gi_affinity->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
++		return -EINVAL;
++
++	node = acpi_map_pxm_to_node(gi_affinity->proximity_domain, true);
++	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
++		pr_err("SRAT: Too many proximity domains.\n");
++		return -EINVAL;
++	}
++	node_set(node, numa_nodes_parsed);
++	node_set_state(node, N_GENERIC_INITIATOR);
++
++	return 0;
++}
++
+ static int __initdata parsed_numa_memblks;
+ 
+ static int __init
+@@ -393,7 +449,7 @@ int __init acpi_numa_init(void)
+ 
+ 	/* SRAT: System Resource Affinity Table */
+ 	if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
+-		struct acpi_subtable_proc srat_proc[3];
++		struct acpi_subtable_proc srat_proc[4];
+ 
+ 		memset(srat_proc, 0, sizeof(srat_proc));
+ 		srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
+@@ -402,6 +458,8 @@ int __init acpi_numa_init(void)
+ 		srat_proc[1].handler = acpi_parse_x2apic_affinity;
+ 		srat_proc[2].id = ACPI_SRAT_TYPE_GICC_AFFINITY;
+ 		srat_proc[2].handler = acpi_parse_gicc_affinity;
++		srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
++		srat_proc[3].handler = acpi_parse_gi_affinity;
+ 
+ 		acpi_table_parse_entries_array(ACPI_SIG_SRAT,
+ 					sizeof(struct acpi_table_srat),
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 5b02f69769e8..1a7bd5860f3c 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -980,6 +980,8 @@ static struct node_attr node_state_attr[] = {
+ #endif
+ 	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
+ 	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
++	[N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
++					   N_GENERIC_INITIATOR),
+ };
+ 
+ static struct attribute *node_state_attrs[] = {
+@@ -991,6 +993,7 @@ static struct attribute *node_state_attrs[] = {
+ #endif
+ 	&node_state_attr[N_MEMORY].attr.attr,
+ 	&node_state_attr[N_CPU].attr.attr,
++	&node_state_attr[N_GENERIC_INITIATOR].attr.attr,
+ 	NULL
+ };
+ 
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index 27e7fa36f707..3334ce056335 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -399,6 +399,7 @@ enum node_states {
+ #endif
+ 	N_MEMORY,		/* The node has memory(regular, high, movable) */
+ 	N_CPU,		/* The node has one or more cpus */
++	N_GENERIC_INITIATOR,	/* The node has one or more Generic Initiators */
+ 	NR_NODE_STATES
+ };
+ 
+-- 
+2.19.1
 
-> --- /dev/null
-> +++ b/drivers/misc/habanalabs/hl_dma_fence.c
-> @@ -0,0 +1,338 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Fence mechanism for dma-buf and to allow for asynchronous dma access
-
-Is that what this still does?
-
-> + *
-> + * Copyright (C) 2012 Canonical Ltd
-> + * Copyright (C) 2012 Texas Instruments
-> + *
-> + * Authors:
-> + * Rob Clark <robdclark@gmail.com>
-> + * Maarten Lankhorst <maarten.lankhorst@canonical.com>
-> + *
-> + * The dma_fence module is a copy of dma-fence at drivers/dma-buf.
-
-"The hl_dma_fence" module...
-
-And is it a stand-alone module?  Or just a single file?
-
-> + * This was done due to an explicit request by GPU developers who asked not
-> + * to use the dma-buf module because we aren't part of DRM subsystem.
-
-Why is dma-buf only for use for DRM?
-
-If it is, should the symbol namespace be set to that to catch users that
-want to use it for their own code?
-
-> + * This copy was stripped from all extra features that habanalabs driver
-> + * doesn't use, including the uapi interface dma-buf exposes.
-> + * In addition, we removed the callbacks because the only usage is from inside
-> + * habanalabs driver
-> + */
-> +
-> +#include "hl_dma_fence.h"
-> +#include "habanalabs.h"
-> +#include <linux/slab.h>
-> +#include <linux/export.h>
-> +#include <linux/atomic.h>
-> +#include <linux/sched/signal.h>
-> +
-> +/**
-> + * DOC: DMA fences overview
-> + *
-> + * DMA fences, represented by &struct hl_dma_fence, are the kernel internal
-> + * synchronization primitive for DMA operations like GPU rendering, video
-> + * encoding/decoding, or displaying buffers on a screen.
-
-I don't think this is correct anymore, right?  :(
-
-> --- /dev/null
-> +++ b/drivers/misc/habanalabs/hl_dma_fence.h
-> @@ -0,0 +1,148 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Fence mechanism for dma-buf to allow for asynchronous dma access
-> + *
-> + * Copyright (C) 2012 Canonical Ltd
-> + * Copyright (C) 2012 Texas Instruments
-> + *
-> + * Authors:
-> + * Rob Clark <robdclark@gmail.com>
-> + * Maarten Lankhorst <maarten.lankhorst@canonical.com>
-> + *
-> + * The dma_fence module is a copy of dma-fence at drivers/dma-buf.
-
-Same comments here for the .h file.
-
-thanks,
-
-greg k-h
