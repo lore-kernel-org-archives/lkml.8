@@ -4,113 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AF4C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6D62075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AFC20791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zce1ip8z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bY+eI2Sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgGMOtw (ORCPT
+        id S1730213AbgGMOt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32770 "EHLO
+        Mon, 13 Jul 2020 10:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730139AbgGMOts (ORCPT
+        with ESMTP id S1730177AbgGMOtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3043DC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:48 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so16887746wrw.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:48 -0700 (PDT)
+        Mon, 13 Jul 2020 10:49:51 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65184C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:51 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so16866254wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SMipzZYJu8LR1S684y2mNrnWVA5TCC4bAA7Iz5/5CcI=;
-        b=zce1ip8zmaLh0pqXP0eF7z2mXwnarWeQ7nDj0kV29aJAUrksLMbtyCyhllEs4O/zyS
-         DlLimcmdIq0ekjAoJRvy7abIF6MIpRMlVwGZqqFjJmM+feJ7SxwO3vini+w+xBkwr7OD
-         K0Sp2LoSl9f+ClywO7+Y8RrJpb3Qa4qcT1X/hoH6r7aqg9zsAS+eWfEF7RHMs2P6zLQT
-         QDAqObXmaxXvWmG6Rxb/K0PrZSx5s2O5MMWL849pw4RPD3yOhQuoBj3jyLnbcLWhl+qw
-         CegHSweDUX51vGLFhU1CuFaRRnlpDmNOmWODanqUlMhFJN/IfwZXOV3szs34d9v0/zyP
-         BpNg==
+        bh=8XFfrtDb0YISFxdApa9cgcznz1fKsVfnxLcnox2gJ38=;
+        b=bY+eI2Sa1VcgBw/m+GSPdg+IKtmwOksNpPhNngNhJ4tpus+dIQgVEyXQmm5h/Mo+8d
+         CFGMao+VaidBm/qr7yKY8/suL3RWH+306Rfniq0CT6jdAnE7udAzLAZ38vDwZTSgwCxP
+         9Zfvo7Amfu/J/ldW9uMo1y69ApSm1SwamkBSUJZYzG+E0lsy1bD/tTOlXKuPBU95ZPwZ
+         5NNTSXixUFUk4gTpO9djXoEEhSurqXpdLHwBPR04hIDB8s8nXY4sx0MYqnLsre6mwD/M
+         tVq7d9wH1fGqnHlxr+56BcsdYIdOJk6QJB/JnCveFhAqYodfYN9gC3Sf0THlqUv0vJFp
+         w0fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SMipzZYJu8LR1S684y2mNrnWVA5TCC4bAA7Iz5/5CcI=;
-        b=oWb4cwiTcW+g07yjMWQokVzPwE46axFqg9fj5UGSrCpFA4db1T4KCd++VQhF6mnr6q
-         vXDT8f2gNnccerMY5JW9rtu5/U7OCa1lF2TSfdRMR+ymhTuvZDJGdmC5mq//NP06lCdK
-         Q9riknTyrA5OBwA1RnnTQlBbu67SLFlLPTyfOVJI6m0c8zjcFcBbu28hk21S21QZhz7I
-         XkZ7OfqZdNH8cYPQsHG+nQl0E3am0YmFpQbrbcX6U3SNahb8kvkDMhllgEL7tARdd/A8
-         HKtQ61B4yZOEiSWngVaqFEdfc4fkXCVMNRDy4B4g70y3pyFvPHHSi8yF1emTmrMGL14H
-         h5xA==
-X-Gm-Message-State: AOAM533ebVIdHz3s37Hr1NLcHQmw5yNWNufDz+my88uNzhmtCBSrg1xS
-        crTx7t3pATE1TQGz5xf4XR1E66ST/b8=
-X-Google-Smtp-Source: ABdhPJw3ZQBd6lIQl7siqOdyvmglbqKHXtOVGj8IWar52W8ai94yFUDms0wk9biaFCx3CcZS6soCeg==
-X-Received: by 2002:a5d:474f:: with SMTP id o15mr77598965wrs.306.1594651786953;
-        Mon, 13 Jul 2020 07:49:46 -0700 (PDT)
+        bh=8XFfrtDb0YISFxdApa9cgcznz1fKsVfnxLcnox2gJ38=;
+        b=fMiutFGM8QL4IWhum0ClaK88rlN8FQjNT6ssuiXuQHsEousImTq4XdwDhuhPoae/Oa
+         /8vepCNCCfJNRWcIMk2gTXXQOWCKV/Digjs2phVVhMVTrs7w6BXwJ/v3/zZyc/FxCrwY
+         8AwXyi37f+8yN1dEh84ODAg3OuX949sz38JdODXtdW9oPMpWerb5QdtGLRaFs4R/A0yc
+         rXXPS1gU075HpYTMf1s5124wdaGVt2JfFqbKl6u68/Jrx0FPkuVuihyX3Dp5y2bXSLcX
+         TnOkGaujEdUDSgz23dh5bbgnV8NgKuS3qdxpyJ5nPQYLLqSDbuVgB9S6nhwJh8LVFBP5
+         VW4g==
+X-Gm-Message-State: AOAM530QOff7cTA9VgpRkkVYefRv+rki2WD/G7ZrseAW7NrUG57hd5BW
+        qhfFpHnBds19FYefoTJ5q5Qw9g==
+X-Google-Smtp-Source: ABdhPJwmbiZnb+8yCbeRKEkrxSMvb3wxXhG75vw/5/nsc4kMk/NuIYjdgJ42nxTh62tfqm0segUiEg==
+X-Received: by 2002:adf:fc90:: with SMTP id g16mr79197339wrr.42.1594651790130;
+        Mon, 13 Jul 2020 07:49:50 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.46
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:46 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:49 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 13/25] pinctrl: devicetree: Add one new attribute description and rename another two
-Date:   Mon, 13 Jul 2020 15:49:18 +0100
-Message-Id: <20200713144930.1034632-14-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH 16/25] arch: arm: mach-at91: pm: Move prototypes to mutually included header
+Date:   Mon, 13 Jul 2020 15:49:21 +0100
+Message-Id: <20200713144930.1034632-17-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Both the caller and the supplier's source file should have access to
+the include file containing the prototypes.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/devicetree.c:27: warning: Function parameter or member 'map' not described in 'pinctrl_dt_map'
- drivers/pinctrl/devicetree.c:27: warning: Function parameter or member 'num_maps' not described in 'pinctrl_dt_map'
- drivers/pinctrl/devicetree.c:409: warning: Function parameter or member 'out_args' not described in 'pinctrl_parse_index_with_args'
- drivers/pinctrl/devicetree.c:409: warning: Excess function parameter 'out_arts' description in 'pinctrl_parse_index_with_args'
+ drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
+ 1637 | void at91_pinctrl_gpio_suspend(void)
+ | ^~~~~~~~~~~~~~~~~~~~~~~~~
+ drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
+ 1661 | void at91_pinctrl_gpio_resume(void)
+ | ^~~~~~~~~~~~~~~~~~~~~~~~
 
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/devicetree.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/mach-at91/pm.c             | 17 ++++++-----------
+ drivers/pinctrl/pinctrl-at91.c      |  1 +
+ include/linux/platform_data/atmel.h |  5 +++++
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index c6fe7d64c9137..5eff8c2965528 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -17,7 +17,8 @@
-  * struct pinctrl_dt_map - mapping table chunk parsed from device tree
-  * @node: list node for struct pinctrl's @dt_maps field
-  * @pctldev: the pin controller that allocated this struct, and will free it
-- * @maps: the mapping table entries
-+ * @map: the mapping table entries
-+ * @num_maps: number of mapping table entries
-  */
- struct pinctrl_dt_map {
- 	struct list_head node;
-@@ -397,7 +398,7 @@ static int pinctrl_copy_args(const struct device_node *np,
-  * @np: pointer to device node with the property
-  * @list_name: property that contains the list
-  * @index: index within the list
-- * @out_arts: entries in the list pointed by index
-+ * @out_args: entries in the list pointed by index
-  *
-  * Finds the selected element in a pinctrl array consisting of an index
-  * within the controller and a number of u32 entries specified for each
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 074bde64064e4..59f2a2d6fbbb8 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -25,17 +25,6 @@
+ #include "generic.h"
+ #include "pm.h"
+ 
+-/*
+- * FIXME: this is needed to communicate between the pinctrl driver and
+- * the PM implementation in the machine. Possibly part of the PM
+- * implementation should be moved down into the pinctrl driver and get
+- * called as part of the generic suspend/resume path.
+- */
+-#ifdef CONFIG_PINCTRL_AT91
+-extern void at91_pinctrl_gpio_suspend(void);
+-extern void at91_pinctrl_gpio_resume(void);
+-#endif
+-
+ struct at91_soc_pm {
+ 	int (*config_shdwc_ws)(void __iomem *shdwc, u32 *mode, u32 *polarity);
+ 	int (*config_pmc_ws)(void __iomem *pmc, u32 mode, u32 polarity);
+@@ -325,6 +314,12 @@ static void at91_pm_suspend(suspend_state_t state)
+ static int at91_pm_enter(suspend_state_t state)
+ {
+ #ifdef CONFIG_PINCTRL_AT91
++	/*
++	 * FIXME: this is needed to communicate between the pinctrl driver and
++	 * the PM implementation in the machine. Possibly part of the PM
++	 * implementation should be moved down into the pinctrl driver and get
++	 * called as part of the generic suspend/resume path.
++	 */
+ 	at91_pinctrl_gpio_suspend();
+ #endif
+ 
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 9c52130876597..37997e5ab0538 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -22,6 +22,7 @@
+ #include <linux/pinctrl/pinmux.h>
+ /* Since we request GPIOs from ourself */
+ #include <linux/pinctrl/consumer.h>
++#include <linux/platform_data/atmel.h>
+ 
+ #include "pinctrl-at91.h"
+ #include "core.h"
+diff --git a/include/linux/platform_data/atmel.h b/include/linux/platform_data/atmel.h
+index 99e6069c5fd89..666ef482ea8c0 100644
+--- a/include/linux/platform_data/atmel.h
++++ b/include/linux/platform_data/atmel.h
+@@ -28,4 +28,9 @@ static inline int at91_suspend_entering_slow_clock(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_PINCTRL_AT91
++void at91_pinctrl_gpio_suspend(void);
++void at91_pinctrl_gpio_resume(void);
++#endif
++
+ #endif /* __ATMEL_H__ */
 -- 
 2.25.1
 
