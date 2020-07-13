@@ -2,126 +2,81 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5581206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506E2206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 09:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QyGs6QFD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zwj5RIHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgGMJRO (ORCPT
+        id S1728382AbgGMJV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36118 "EHLO
+        Mon, 13 Jul 2020 05:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgGMJRO (ORCPT
+        with ESMTP id S1726360AbgGMJV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:17:14 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3102C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:17:13 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q15so12570081wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 02:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zVWNX6jCL5YsApWi0gzjueoWHB7cS6uF1CrE5V+21Hk=;
-        b=QyGs6QFD5HNi46nVYCHY3dHWgLUTO5IYVC2Qo8Xb5zJhA35GtHo/WUagZHRyokC+BM
-         NsvACHPtZTjAKemBzxP28+W+gbAjZnrWyzN5py/yAE8tDcnr3s5nJCgkKsnoZr7S42n+
-         8JX52vdIf7+usHlGHKzVyaW1QyvV4HgzlVO/9LToxIR4ethmcAXyhT96KxlKKnuI0f6w
-         OeJXi/Hx5nLDphl7PZZVmXzWMrrrJ8I+jJwbG53qEPCUrT1HzQ7Xspd7EcZApHLHR5UI
-         jKrL9rRGDKjoV4OHvGH4umRUyFdiozAKG+aK+6Evv1qsdWK6JwyR0nWFJ6pjZ1mOx7lR
-         J9Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zVWNX6jCL5YsApWi0gzjueoWHB7cS6uF1CrE5V+21Hk=;
-        b=l4yKjPCwY+7jZ9NyxEo30+liG8DqAg/vRClj6jplV0ijDg3kE04RzSJ7m0EmGjjpE8
-         RSaOppUTEIaa68ej5MMETlAltsqXvdatqHAeOxZBlpjQ1cIHgbXVNBYxAjdpyVHWx52z
-         7vFRt8dY+bZJpf0MGQZWcDgW9wS4ntCtrRPhRW3P0wI32CrRHJAxqVavoZVeXcOvRhRO
-         p4Ww38Mmy39mc8FoMb7J4a475DZ95qPqAcGCnXq1ZtOgIPaIJUVgZTJ+AZPoJsc2ZXcy
-         x/y53+RJdeMFIa0G7HYyWx//jEO4LrT7W0U/Us9Ui+qoQiSzy7EcYK1kw0jbHCYzu7Qz
-         ziBg==
-X-Gm-Message-State: AOAM531ccDcHnTEBchCi1I0ovS8OUX1zKA4s8Z38x27UiOD40QISP6Dg
-        rICHPVHu4k8rYf8GPwnrczy6UQ==
-X-Google-Smtp-Source: ABdhPJxjpfdalXpGMYDzUxakshD9mtDyjOt6mXoXT6N6bvIa2DhgMFAiHm5CzZPMP/Xuovz6Zf0HaA==
-X-Received: by 2002:a1c:a7c4:: with SMTP id q187mr17564334wme.0.1594631831206;
-        Mon, 13 Jul 2020 02:17:11 -0700 (PDT)
-Received: from dell ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id e23sm20860866wme.35.2020.07.13.02.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 02:17:10 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 10:17:08 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, trix@redhat.com,
-        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
-        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>
-Subject: Re: [PATCH 1/2] mfd: intel-m10-bmc: add Max10 BMC chip support for
- Intel FPGA PAC
-Message-ID: <20200713091708.GC3500@dell>
-References: <1594614896-16606-1-git-send-email-yilun.xu@intel.com>
- <1594614896-16606-2-git-send-email-yilun.xu@intel.com>
+        Mon, 13 Jul 2020 05:21:56 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4B5C061755;
+        Mon, 13 Jul 2020 02:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=P/bW5/nprUcxPT3l7Gpx8eG76PtPDRhEsmWS6Xfaf74=; b=Zwj5RIHxYYDF0P/F8xkgcDLK/R
+        vHSnMafKuEB7KReKLmzAE/RZ76JPXiM/CTH4Q/dgMswpIW13wpAyUP5vGqzlkUmk2ma1k4HZunRh9
+        S2zo/UXptc3oKvzwkKEUAAt/yQcCCD93dsd0a0v2GDXWGlvbzj6dMOX3AuvvD1jppbF+un5yi5qXf
+        kidPV315rMgO86C0AyYnOJv96BsgORXu0UyFlME+mPjOcytvrU8nSGRpFqrLFBCilPHWYzlNugrAX
+        z0hP8GpK1z6JwliCORWDsYhDbIWdGQti/oEqVg6jmICjGIV/gVduKO5eB9XZOIBNsG+AxoAAkQI9v
+        WNHinH7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1juuea-0006nD-Aj; Mon, 13 Jul 2020 09:21:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 934E03007CD;
+        Mon, 13 Jul 2020 11:21:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8213720D27AA0; Mon, 13 Jul 2020 11:21:35 +0200 (CEST)
+Date:   Mon, 13 Jul 2020 11:21:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 2/2] locking/pvqspinlock: Optionally store lock holder
+ cpu into lock
+Message-ID: <20200713092135.GC10769@hirez.programming.kicks-ass.net>
+References: <20200711182128.29130-1-longman@redhat.com>
+ <20200711182128.29130-3-longman@redhat.com>
+ <20200712173452.GB10769@hirez.programming.kicks-ass.net>
+ <bed22603-e347-8bff-f586-072a18987946@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594614896-16606-2-git-send-email-yilun.xu@intel.com>
+In-Reply-To: <bed22603-e347-8bff-f586-072a18987946@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020, Xu Yilun wrote:
+On Sun, Jul 12, 2020 at 07:05:36PM -0400, Waiman Long wrote:
+> On 7/12/20 1:34 PM, Peter Zijlstra wrote:
 
-> This patch implements the basic functions of the BMC chip for some Intel
-> FPGA PCIe Acceleration Cards (PAC). The BMC is implemented using the
-> intel max10 CPLD.
-> 
-> This BMC chip is connected to FPGA by a SPI bus. To provide reliable
-> register access from FPGA, an Avalon Memory-Mapped (Avmm) transaction
-> protocol over the SPI bus is used between host and slave.
-> 
-> This driver implements the basic register access with the regmap framework.
-> The mfd cells array is empty now as a placeholder.
-> 
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  .../ABI/testing/sysfs-driver-intel-m10-bmc         |  15 +
->  drivers/mfd/Kconfig                                |  13 +
->  drivers/mfd/Makefile                               |   3 +
->  drivers/mfd/intel-m10-bmc-main.c                   | 176 ++++
+> > And this kills it,.. if it doesn't make unconditional sense, we're not
+> > going to do this. It's just too ugly.
+> > 
+> You mean it has to be unconditional, no option config if we want to do it.
+> Right?
 
->  drivers/mfd/intel-spi-avmm.c                       | 904 +++++++++++++++++++++
-
-This does not belong in MFD.
-
-Please consider moving it to drivers/spi.
-
->  drivers/mfd/intel-spi-avmm.h                       |  35 +
->  include/linux/mfd/intel-m10-bmc.h                  |  57 ++
->  7 files changed, 1203 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
->  create mode 100644 drivers/mfd/intel-m10-bmc-main.c
->  create mode 100644 drivers/mfd/intel-spi-avmm.c
->  create mode 100644 drivers/mfd/intel-spi-avmm.h
->  create mode 100644 include/linux/mfd/intel-m10-bmc.h
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yeah, the very last thing we need in this code is spurious complexity.
