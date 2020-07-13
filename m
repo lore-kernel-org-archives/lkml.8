@@ -2,80 +2,121 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A33C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F535C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B13A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DDD20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594646103;
+	bh=vsfrQkQHuwH4Y1vXh/4DmCZ6tKypfE6qSWFzh+Q1CxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cX7JBmycXf/2E1SyMN+XB2K3g/5EbLrWckhFoSS4hZwVmokTFAgfIkOy1fw/AZkMM
+	 0e4hhzTpBtI7VY8c3Ce5Jzawz/vKFpCfha0yY+XxMGsich4SxwUZ9gOieWQFkO3GId
+	 TBRChMHLrhC5U3i7FRVvlP5wS8vFfZeh5XyRO1gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGMNO3 (ORCPT
+        id S1729782AbgGMNPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:14:29 -0400
-Received: from 8bytes.org ([81.169.241.247]:52542 "EHLO theia.8bytes.org"
+        Mon, 13 Jul 2020 09:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMNO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:14:29 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 9B18D36B; Mon, 13 Jul 2020 15:14:27 +0200 (CEST)
-Date:   Mon, 13 Jul 2020 15:14:26 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
-        jonathan.lemon@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, baolu.lu@linux.intel.com,
-        dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] iommu/dma: Avoid SAC address trick for PCIe devices
-Message-ID: <20200713131426.GQ27672@8bytes.org>
-References: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
- <d412c292d222eb36469effd338e985f9d9e24cd6.1594207679.git.robin.murphy@arm.com>
+        id S1729523AbgGMNPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:15:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF34D206F0;
+        Mon, 13 Jul 2020 13:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594646100;
+        bh=vsfrQkQHuwH4Y1vXh/4DmCZ6tKypfE6qSWFzh+Q1CxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TwkkICUs4b3I5XsQCZ7NO0M3cnFT6s/5dWcTpCmKe+uCGj+BCDhAyzY9QAqbHuGFb
+         CKYDfi+beNX2Cxevmjuhay0f5WcEEfX0KSrJFnDh06AEKGNQOd1Ncu48GrSps1DD5Y
+         8px6YzdOOCHDGSYWOPvvAFmzP/UfGbRI/OhrpNNc=
+Date:   Mon, 13 Jul 2020 14:14:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
+        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
+        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
+        peterx@redhat.com, hao.wu@intel.com, stefanha@gmail.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
+Message-ID: <20200713131454.GA2739@willie-the-truck>
+References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
+ <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d412c292d222eb36469effd338e985f9d9e24cd6.1594207679.git.robin.murphy@arm.com>
+In-Reply-To: <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 12:32:42PM +0100, Robin Murphy wrote:
-> As for the intel-iommu implementation, relegate the opportunistic
-> attempt to allocate a SAC address to the domain of conventional PCI
-> devices only, to avoid it increasingly causing far more performance
-> issues than possible benefits on modern PCI Express systems.
+On Sun, Jul 12, 2020 at 04:20:58AM -0700, Liu Yi L wrote:
+> This patch is added as instead of returning a boolean for DOMAIN_ATTR_NESTING,
+> iommu_domain_get_attr() should return an iommu_nesting_info handle.
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Suggested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  drivers/iommu/dma-iommu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> v4 -> v5:
+> *) address comments from Eric Auger.
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 29 +++++++++++++++++++++++++++--
+>  drivers/iommu/arm-smmu.c    | 29 +++++++++++++++++++++++++++--
+>  2 files changed, 54 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 4959f5df21bd..0ff124f16ad4 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -426,7 +426,8 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
->  		dma_limit = min(dma_limit, (u64)domain->geometry.aperture_end);
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index f578677..ec815d7 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -3019,6 +3019,32 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
+>  	return group;
+>  }
 >  
->  	/* Try to get PCI devices a SAC address */
-> -	if (dma_limit > DMA_BIT_MASK(32) && dev_is_pci(dev))
-> +	if (dma_limit > DMA_BIT_MASK(32) &&
-> +	    dev_is_pci(dev) && !pci_is_pcie(to_pci_dev(dev)))
->  		iova = alloc_iova_fast(iovad, iova_len,
->  				       DMA_BIT_MASK(32) >> shift, false);
->  
+> +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain *smmu_domain,
+> +					void *data)
+> +{
+> +	struct iommu_nesting_info *info = (struct iommu_nesting_info *)data;
+> +	unsigned int size;
+> +
+> +	if (!info || smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
+> +		return -ENODEV;
+> +
+> +	size = sizeof(struct iommu_nesting_info);
+> +
+> +	/*
+> +	 * if provided buffer size is smaller than expected, should
+> +	 * return 0 and also the expected buffer size to caller.
+> +	 */
+> +	if (info->size < size) {
+> +		info->size = size;
+> +		return 0;
+> +	}
+> +
+> +	/* report an empty iommu_nesting_info for now */
+> +	memset(info, 0x0, size);
+> +	info->size = size;
+> +	return 0;
+> +}
 
-Unfortunatly this patch causes XHCI initialization failures on my AMD
-Ryzen system. I will remove both from the IOMMU tree for now.
+Have you verified that this doesn't break the existing usage of
+DOMAIN_ATTR_NESTING in drivers/vfio/vfio_iommu_type1.c?
 
-I guess the XHCI chip in my system does not support full 64bit dma
-addresses and needs a quirk or something like that. But until this is
-resolved its better to not change the IOVA allocation behavior.
-
-Regards,
-
-	Joerg
+Will
