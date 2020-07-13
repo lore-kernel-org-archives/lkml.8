@@ -2,121 +2,116 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B7CC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9250E2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTmeCPcn"
+	by mail.kernel.org (Postfix) with ESMTP id C98F5206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgGMRYJ (ORCPT
+        id S1730464AbgGMRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
+        Mon, 13 Jul 2020 13:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMRYI (ORCPT
+        with ESMTP id S1729644AbgGMRYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:24:08 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF3BC061755;
-        Mon, 13 Jul 2020 10:24:07 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g20so14406759edm.4;
-        Mon, 13 Jul 2020 10:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=e0LSuR+yshIoYGz+eEEY3hbB8A+14sBty8Ug4yMkgfM=;
-        b=nTmeCPcn+ozK+Ag5RxEELeJLLx9ti8jrlnkSeGn+v7o9o0VF9oqTW9mzAjEAFJQnWc
-         qy5WrcnWfHjIf32n1rZMIh7sjY+87PmkNyonBFjkMmm/slYoFKySiIDO6+eFTW7DyjhV
-         dcAIkLxDSgKq8n2k3M6w/g/AfcEEasZ0+ubo5y3FP86jcAmIC3Bp4bSbEpCr+H2fGieA
-         cWR5TAwnj5PuzxwIQ+aw+2sXxWXcbl3OLOr7p1EQo/nTFJ+CtkPPFFCWRh9nn7Mgar9C
-         QL2BtaG9MVgA1PHr+APD1CbIGDru+t9rECcfdiYNqx3sePEn6oCyMM3NaVw/Kh7k8nKA
-         G6Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=e0LSuR+yshIoYGz+eEEY3hbB8A+14sBty8Ug4yMkgfM=;
-        b=RD2tz/ij/m0v8W+5GpwBC+wuXC/3ro4urGU59N40sxUdFCsbt6eAGXoTlooaKBpcJu
-         70BTLDy2TO5AWlS26+3Qdj2Rw9tr3s+/IuBFamDiWVZjK0JFT18My2qQSWPbfaXtq5+8
-         HLF4++GPubqA5KkZ33fguDrwl1ajn2ujIoiCmhv11NMYOiadH8bIZrIDUFvt+oFtHVNQ
-         1Tl6GOgntlRfK4+myjWNJSJDR4eDOGndipwnvglNZDKGvpqCf4zWPE0Y0klrzVcBw+8q
-         +tHTTD14W8LmTDiDaeryCwwptydBfSsBIfN7+HM1nlTzKc4RwwlR9TNURvx/XPliopFl
-         G+Rg==
-X-Gm-Message-State: AOAM530kRQWg1l9k6BNW897Lq6gl/L/lLlkAkxjRdmS80HoY7cQwrNfq
-        Pn0jWlVPoxtqnKjferCskeo=
-X-Google-Smtp-Source: ABdhPJwU6CC1g8gnvm6vkaI0vzF7ML92p+FtcVVEx2//52B6Q3pLKNShFOHB6NyG1tBi9qTBjIHGwg==
-X-Received: by 2002:a05:6402:c82:: with SMTP id cm2mr441209edb.293.1594661046520;
-        Mon, 13 Jul 2020 10:24:06 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id t25sm10192694ejc.34.2020.07.13.10.24.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 10:24:05 -0700 (PDT)
-Subject: Re: [RFC PATCH 09/35] nvme-pci: Change PCIBIOS_SUCCESSFUL to 0
-To:     "Rajashekar, Revanth" <revanth.rajashekar@intel.com>,
-        helgaas@kernel.org, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        bjorn@helgaas.com, linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-10-refactormyself@gmail.com>
- <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <f48dece5-7483-73ac-38bb-0dce323f404c@gmail.com>
-Date:   Mon, 13 Jul 2020 20:24:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Jul 2020 13:24:48 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C73EC061755;
+        Mon, 13 Jul 2020 10:24:48 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 47989BC0CA;
+        Mon, 13 Jul 2020 17:24:45 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     cooldavid@cooldavid.org, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] net: jme: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 19:24:39 +0200
+Message-Id: <20200713172439.36436-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <0762f646-90a1-217c-4e4b-6168d85bb08a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-On 7/13/20 6:42 PM, Rajashekar, Revanth wrote:
-> Hi,
->
-> On 7/13/2020 6:22 AM, Saheed O. Bolarinwa wrote:
->> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
->> Their scope should be limited within arch/x86.
->>
->> Change all PCIBIOS_SUCCESSFUL to 0
->>
->> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
->> ---
->>   drivers/nvme/host/pci.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
->> index b1d18f0633c7..d426efb53f44 100644
->> --- a/drivers/nvme/host/pci.c
->> +++ b/drivers/nvme/host/pci.c
->> @@ -1185,7 +1185,7 @@ static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
->>   
->>   	result = pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
->>   				      &pci_status);
->> -	if (result == PCIBIOS_SUCCESSFUL)
->> +	if (result == 0)
-> How about simplifying the check to if (!result)?
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Thank you for the review.  I did in PATCH 10/35. I will merge both.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-I wanted to separate the goal from the fix but I see it's confusing.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-- Saheed
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/net/ethernet/jme.c | 2 +-
+ drivers/net/ethernet/jme.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
+index c97c74164c73..ddc757680089 100644
+--- a/drivers/net/ethernet/jme.c
++++ b/drivers/net/ethernet/jme.c
+@@ -3,7 +3,7 @@
+  * JMicron JMC2x0 series PCIe Ethernet Linux Device Driver
+  *
+  * Copyright 2008 JMicron Technology Corporation
+- * http://www.jmicron.com/
++ * https://www.jmicron.com/
+  * Copyright (c) 2009 - 2010 Guo-Fu Tseng <cooldavid@cooldavid.org>
+  *
+  * Author: Guo-Fu Tseng <cooldavid@cooldavid.org>
+diff --git a/drivers/net/ethernet/jme.h b/drivers/net/ethernet/jme.h
+index 2bba5ce20289..a2c3b00d939d 100644
+--- a/drivers/net/ethernet/jme.h
++++ b/drivers/net/ethernet/jme.h
+@@ -3,7 +3,7 @@
+  * JMicron JMC2x0 series PCIe Ethernet Linux Device Driver
+  *
+  * Copyright 2008 JMicron Technology Corporation
+- * http://www.jmicron.com/
++ * https://www.jmicron.com/
+  * Copyright (c) 2009 - 2010 Guo-Fu Tseng <cooldavid@cooldavid.org>
+  *
+  * Author: Guo-Fu Tseng <cooldavid@cooldavid.org>
+-- 
+2.27.0
 
