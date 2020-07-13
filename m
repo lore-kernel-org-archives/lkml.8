@@ -2,62 +2,133 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441FDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDE6C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31BEC206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1258420738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594658765;
+	bh=SGsOOfEC4xum3saQgimJUAE9qs7WoAKlLKynjgp7pTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BJNzmjyTHfI6VjhFnBJEfKTMllwlbACPSOAMEKyFyKInlkfW2oOZfIggqlvX5AyxH
+	 hPYtYuHuM2CrS4yxLXUf6p90ucMGzJjA0v5s8OUJCKyovZFzT0byDEzwFLmPlw8csZ
+	 SYNLezgvjs6UxC2tZV54piMD9JdzH9qyEF988Fgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgGMQpt (ORCPT
+        id S1730284AbgGMQqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:45:49 -0400
-Received: from muru.com ([72.249.23.125]:36662 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgGMQps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:45:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id F23588106;
-        Mon, 13 Jul 2020 16:45:45 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 09:45:45 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     dillon.minfei@gmail.com
-Cc:     bcousson@baylibre.com, robh+dt@kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Configure osc clock for d_can on am437x
-Message-ID: <20200713164545.GL5849@atomide.com>
-References: <1592753641-5205-1-git-send-email-dillon.minfei@gmail.com>
- <1592753641-5205-2-git-send-email-dillon.minfei@gmail.com>
+        Mon, 13 Jul 2020 12:46:03 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38476 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729593AbgGMQqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:46:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id l1so14201573ioh.5;
+        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H1m/Teq+x/ilTIvfbGsXt4itCdaLyvafzNxPOtFihBg=;
+        b=ELHmd2f2MdsNZSQGC+F6YlXmesAdgvPRey3aYo6+j1becm7KT+crvC0E7pKd+ry2t5
+         4WItXeeyeNxiie9Zpp4C3i7pjnKaD61r/m4+vXDsdfSB6DbmenYKKvpJD8KPdJFVeNLP
+         4IZCAzIE/eklIUqfSG2Wbe537F85jtFGb/wdwMswpZG8LXv6FDoejBD3fTni7n5rHb7N
+         lq4iH0FvtZcHLVb6YY6lXjfo127T6eumcnAQwwOKyhDkDFZAQsQS9H18er+FfYxGqhRu
+         TLWMa5c4aWynqeCvC/aRuvdBu3vDvey0eDrh9lmX0SX/BfAENOIrJQKks/59fLLdvm+/
+         LxCw==
+X-Gm-Message-State: AOAM530/5wyD5qTTIPUd29ZGjZHUcSLZKcSLM+E9yUYr0OYkGoFzBwN+
+        0+bqZO7LpyuQyHNArAiU/A==
+X-Google-Smtp-Source: ABdhPJxrujumDriuqPPBU6YyvN7fQLld9rwVoqG6+j8iuptKd1wORLde6EnsrYNYBwaOdB0cQ7qrew==
+X-Received: by 2002:a02:cf12:: with SMTP id q18mr1034219jar.3.1594658762332;
+        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y12sm5627632iot.49.2020.07.13.09.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 09:46:01 -0700 (PDT)
+Received: (nullmailer pid 364057 invoked by uid 1000);
+        Mon, 13 Jul 2020 16:46:00 -0000
+Date:   Mon, 13 Jul 2020 10:46:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200713164600.GA359372@bogus>
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+ <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592753641-5205-2-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* dillon.minfei@gmail.com <dillon.minfei@gmail.com> [200621 15:36]:
-> From: dillon min <dillon.minfei@gmail.com>
+On Tue, Jun 30, 2020 at 03:55:31PM +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
 > 
-> Since am437x have the same clock structure with am335x [1][2],
-> reuse the code from Tony Lindgren's patch [3] to fix dcan probe
-> failed on am437x platform.
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 > 
-> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> Integration
-> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> Integration
-> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on
-> am335x")
-> 
-> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to
-> read revision")
+> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> new file mode 100644
+> index 000000000000..120bf3d85a24
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LGM SoC PWM fan controller
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  intel,fan-wire:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: Specifies fan mode. Default when unspecified is 2.
+> +
+> +  intel,max-rpm:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description:
+> +      Specifies maximum RPM of fan attached to the system.
+> +      Default when unspecified is 4000.
 
-Thanks applying into fixes.
+These are properties of the fan, not the PWM. And probably if you 
+need these properties then others would too, so they should be 
+common. Look at the pwm-fan.txt binding.
 
-Tony
+Rob
