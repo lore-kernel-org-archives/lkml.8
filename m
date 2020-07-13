@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C2C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC68C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3124E2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCBA2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 23:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4Hq3idK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tu8y3iLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGMXn7 (ORCPT
+        id S1726914AbgGMXoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58878 "EHLO
+        Mon, 13 Jul 2020 19:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGMXny (ORCPT
+        with ESMTP id S1726794AbgGMXn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:43:54 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0153DC061755;
-        Mon, 13 Jul 2020 16:43:54 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id br7so5638351ejb.5;
-        Mon, 13 Jul 2020 16:43:53 -0700 (PDT)
+        Mon, 13 Jul 2020 19:43:58 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4C8C061755;
+        Mon, 13 Jul 2020 16:43:57 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dr13so19475477ejc.3;
+        Mon, 13 Jul 2020 16:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=fXb4jVJW7mmLk6Sy3VEHPZtT/o7C2qEgdAOhqDZkcwI=;
-        b=D4Hq3idKmP4ZgV6xUI5b9hx7e+E+AHKbbz1+GKdli07/77L6AqZEmZLdE8Ty6a2OJt
-         VAhHGIJjELfknrwa/kx1At1nEZ7P3+SsUHf3vxfIcQGkuSzlU1Es/lLe5H4Nh/Z+aQKr
-         +ocO24nOKsQJ8JsrXxz6zDWinHNg+yb94BG6y8MVuj1DiCa3Zati/EXFDx8HX2ag8WPT
-         6cPtqXz4/+W+ym7EF5XISpKcfmu/O6aMWHYCtQEYtGqAwMznCWlym0+zzR1yVEDzfjK7
-         +cH9AMXTj4QweJS0NPWcmAh6OBxGq1jcb+XmKz6RpVa94aizFm7JAMv3rvF1Tn3t5OGZ
-         C1GQ==
+        bh=5WX6L7s9zCJbAz4+63goRJTZCABfCH31DReSSw3KGQQ=;
+        b=tu8y3iLZhI46qYmfddtRluE6aL11TMyvuYevBslMBOaBKPGJHQSPZj4OMY9OleecPX
+         fxAbOE8nEoo5GvbyrDbXHVkxTrnws6Tb66sT9xhVazdqQHlV4RXzHl7XUGH8OCZGgDnK
+         RNpNTWj18lzfRpMg3ixElf9OovtHqJ8uWwASmV0unpw5CZDIYQ2zLEQhiiFIViGcTyRM
+         s0yun8k/VZHVFE0NkgrdqrIL6oF4YQPa7RMnR7vWaKGE7nobGGFLM5a0s8UHFzlzIUEr
+         guiPsTWY0ANVtZwKBj6WJD7C+RRoqXgFBJKhW+Nt1litqGvrAa74FnGo0ALDP4uexR6q
+         /mlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fXb4jVJW7mmLk6Sy3VEHPZtT/o7C2qEgdAOhqDZkcwI=;
-        b=I18xHvvcqC0EidOJ7lqyGKKW6dualhr4jWiiVKeFCx0YlABxZIiDHnC8dcC/pvdEgv
-         fHM1W+jSI0WpYvsLjFVWFcMXkZm4a6VMazyxvIrE7P0K90lsWO0vYYUP7QVZkislOJqj
-         jzGUQCYyvG8ywyVde8WGO7Fso8MizFv10aUc+A8J5adIa/qSyN8Bhd3wq6YFPn1GhUxg
-         f+1pNbZthaZWb5OOeZklkLzrMQmde5662h23x/CElPuVrWroAbviAODVX0+7gdCwwy7o
-         BLdTBzL+Y3RaUaO6N5/KT/UKgk2tOwjUdJ/7vKY3wi2WKj1JFvsqrinp8cbXgayMEpD+
-         ZHHg==
-X-Gm-Message-State: AOAM531CVHLzeSZMHheYD7piG6k1L1NBUyzkoJmPf3Dx7dt641PYEdLp
-        H2W9eETbKJdCJE1UcC79dzUa58PK
-X-Google-Smtp-Source: ABdhPJz8KYV2PAY5LiQXK/tmFJuCcy7vv/IG4V91UaHE7WdLgHusSnu62k8bqf2WegStEVs38UeK4A==
-X-Received: by 2002:a17:906:3b01:: with SMTP id g1mr2059175ejf.353.1594683832699;
-        Mon, 13 Jul 2020 16:43:52 -0700 (PDT)
+        bh=5WX6L7s9zCJbAz4+63goRJTZCABfCH31DReSSw3KGQQ=;
+        b=oYLa8i2pAufqVfluElAZHE+XeUBiNAcJSnwvMORIfa1vy56kPXkJEtPRG93FV3NJfp
+         puX3R0qZAmN9tZcJHPrQf9Kdb74I45bhpsuv2MqD/ehoYtEzd0nrF8UlP//LDbIHr1SA
+         beTB0HTA8DttL+/7UpPPGS1CTwuLhUaLD5jDY/gsyUnIAN9nSuAjpajZ11gV+G1DAtHz
+         qjl18/EQ11QsuRQnEVl3Gd6fHfOdqvRrufk/da2TVgtlg5lhceVS54oV2lcOWfNmb2xy
+         GerfZvkemCRTXG87/5YLiehBwlh4wVV/icqRtvuZENK7Wl1r85/rpeCxDtacCbTEYNzW
+         fCUg==
+X-Gm-Message-State: AOAM530PMVkG+rDhE/VzYSprC/6EPFms7geRASVsDplT6djDzt7n6EHJ
+        Vc05LTaHebht97zHknx1n5U=
+X-Google-Smtp-Source: ABdhPJw5Ws5ld6m6hMQ3NQksGZjVbB9yauq8NGAr/TPbmcBYX+dH1G0krl8CKtYCcLJb44cYj1uHuA==
+X-Received: by 2002:a17:906:328d:: with SMTP id 13mr2009905ejw.71.1594683836475;
+        Mon, 13 Jul 2020 16:43:56 -0700 (PDT)
 Received: from localhost.localdomain ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id a13sm12964712edk.58.2020.07.13.16.43.51
+        by smtp.gmail.com with ESMTPSA id a13sm12964712edk.58.2020.07.13.16.43.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:43:52 -0700 (PDT)
+        Mon, 13 Jul 2020 16:43:56 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] io_uring: move io_req_complete() definition
-Date:   Tue, 14 Jul 2020 02:41:52 +0300
-Message-Id: <f80a40e508f4e3b10482544060c7a44f4fb96730.1594683622.git.asml.silence@gmail.com>
+Subject: [PATCH 4/5] tasks: add put_task_struct_many()
+Date:   Tue, 14 Jul 2020 02:41:55 +0300
+Message-Id: <97d4ccff189d1df7e0a7656af40ced2642caef99.1594683622.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1594683622.git.asml.silence@gmail.com>
 References: <cover.1594683622.git.asml.silence@gmail.com>
@@ -76,129 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a preparation patch, moving several functions
-(i.e. [__]io_req_complete(), io_submit_flush_completions()) below in
-code to avoid extra declarations.
+put_task_struct_many() is as put_task_struct() but puts several
+references at once. Useful to batching it.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- fs/io_uring.c | 96 +++++++++++++++++++++++++--------------------------
- 1 file changed, 48 insertions(+), 48 deletions(-)
+ include/linux/sched/task.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7038c4f08805..609c7da044d7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1428,54 +1428,6 @@ static void io_cqring_add_event(struct io_kiocb *req, long res, long cflags)
- 	io_cqring_ev_posted(ctx);
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 38359071236a..1301077f9c24 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -126,6 +126,12 @@ static inline void put_task_struct(struct task_struct *t)
+ 		__put_task_struct(t);
  }
  
--static void io_submit_flush_completions(struct io_comp_state *cs)
--{
--	struct io_ring_ctx *ctx = cs->ctx;
--
--	spin_lock_irq(&ctx->completion_lock);
--	while (!list_empty(&cs->list)) {
--		struct io_kiocb *req;
--
--		req = list_first_entry(&cs->list, struct io_kiocb, compl.list);
--		list_del(&req->compl.list);
--		__io_cqring_fill_event(req, req->result, req->compl.cflags);
--		if (!(req->flags & REQ_F_LINK_HEAD)) {
--			req->flags |= REQ_F_COMP_LOCKED;
--			io_put_req(req);
--		} else {
--			spin_unlock_irq(&ctx->completion_lock);
--			io_put_req(req);
--			spin_lock_irq(&ctx->completion_lock);
--		}
--	}
--	io_commit_cqring(ctx);
--	spin_unlock_irq(&ctx->completion_lock);
--
--	io_cqring_ev_posted(ctx);
--	cs->nr = 0;
--}
--
--static void __io_req_complete(struct io_kiocb *req, long res, unsigned cflags,
--			      struct io_comp_state *cs)
--{
--	if (!cs) {
--		io_cqring_add_event(req, res, cflags);
--		io_put_req(req);
--	} else {
--		io_clean_op(req);
--		req->result = res;
--		req->compl.cflags = cflags;
--		list_add_tail(&req->compl.list, &cs->list);
--		if (++cs->nr >= 32)
--			io_submit_flush_completions(cs);
--	}
--}
--
--static void io_req_complete(struct io_kiocb *req, long res)
--{
--	__io_req_complete(req, res, 0, NULL);
--}
--
- static inline bool io_is_fallback_req(struct io_kiocb *req)
- {
- 	return req == (struct io_kiocb *)
-@@ -1840,6 +1792,54 @@ static void io_req_free_batch(struct req_batch *rb, struct io_kiocb *req)
- 		__io_req_free_batch_flush(req->ctx, rb);
- }
++static inline void put_task_struct_many(struct task_struct *t, int nr)
++{
++	if (refcount_sub_and_test(nr, &t->usage))
++		__put_task_struct(t);
++}
++
+ void put_task_struct_rcu_user(struct task_struct *task);
  
-+static void io_submit_flush_completions(struct io_comp_state *cs)
-+{
-+	struct io_ring_ctx *ctx = cs->ctx;
-+
-+	spin_lock_irq(&ctx->completion_lock);
-+	while (!list_empty(&cs->list)) {
-+		struct io_kiocb *req;
-+
-+		req = list_first_entry(&cs->list, struct io_kiocb, compl.list);
-+		list_del(&req->compl.list);
-+		__io_cqring_fill_event(req, req->result, req->compl.cflags);
-+		if (!(req->flags & REQ_F_LINK_HEAD)) {
-+			req->flags |= REQ_F_COMP_LOCKED;
-+			io_put_req(req);
-+		} else {
-+			spin_unlock_irq(&ctx->completion_lock);
-+			io_put_req(req);
-+			spin_lock_irq(&ctx->completion_lock);
-+		}
-+	}
-+	io_commit_cqring(ctx);
-+	spin_unlock_irq(&ctx->completion_lock);
-+
-+	io_cqring_ev_posted(ctx);
-+	cs->nr = 0;
-+}
-+
-+static void __io_req_complete(struct io_kiocb *req, long res, unsigned cflags,
-+			      struct io_comp_state *cs)
-+{
-+	if (!cs) {
-+		io_cqring_add_event(req, res, cflags);
-+		io_put_req(req);
-+	} else {
-+		io_clean_op(req);
-+		req->result = res;
-+		req->compl.cflags = cflags;
-+		list_add_tail(&req->compl.list, &cs->list);
-+		if (++cs->nr >= 32)
-+			io_submit_flush_completions(cs);
-+	}
-+}
-+
-+static void io_req_complete(struct io_kiocb *req, long res)
-+{
-+	__io_req_complete(req, res, 0, NULL);
-+}
-+
- /*
-  * Drop reference to request, return next in chain (if there is one) if this
-  * was the last reference to this request.
+ #ifdef CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT
 -- 
 2.24.0
 
