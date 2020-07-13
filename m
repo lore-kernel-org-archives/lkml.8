@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71924C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D93C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2232068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0662076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgGMP6f (ORCPT
+        id S1730194AbgGMP7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:58:35 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2465 "EHLO huawei.com"
+        Mon, 13 Jul 2020 11:59:05 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2466 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729920AbgGMP6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:58:35 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 25A74AEBE8EAC5225369;
-        Mon, 13 Jul 2020 16:58:33 +0100 (IST)
+        id S1729027AbgGMP7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:59:04 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 68D2B7C9E692F0ED5634;
+        Mon, 13 Jul 2020 16:59:03 +0100 (IST)
 Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 13 Jul 2020 16:58:32 +0100
+ 15.1.1913.5; Mon, 13 Jul 2020 16:59:03 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
@@ -37,9 +37,9 @@ CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Brice Goglin <Brice.Goglin@inria.fr>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v7 2/6] x86: Support Generic Initiator only proximity domains
-Date:   Mon, 13 Jul 2020 23:55:56 +0800
-Message-ID: <20200713155600.2272743-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 3/6] ACPI: Let ACPI know we support Generic Initiator Affinity Structures
+Date:   Mon, 13 Jul 2020 23:55:57 +0800
+Message-ID: <20200713155600.2272743-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
 References: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
@@ -55,74 +55,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In common with memoryless domains we only register GI domains
-if the proximity node is not online. If a domain is already
-a memory containing domain, or a memoryless domain there is
-nothing to do just because it also contains a Generic Initiator.
+Until we tell ACPI that we support generic initiators, it will have
+to operate in fall back domain mode and all _PXM entries should
+be on existing non GI domains.
+
+This patch sets the relevant OSC bit to make that happen.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- arch/x86/include/asm/numa.h |  2 ++
- arch/x86/kernel/setup.c     |  1 +
- arch/x86/mm/numa.c          | 14 ++++++++++++++
- 3 files changed, 17 insertions(+)
+ drivers/acpi/bus.c   | 1 +
+ include/linux/acpi.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
-index bbfde3d2662f..f631467272a3 100644
---- a/arch/x86/include/asm/numa.h
-+++ b/arch/x86/include/asm/numa.h
-@@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
- extern void __init init_cpu_to_node(void);
- extern void numa_add_cpu(int cpu);
- extern void numa_remove_cpu(int cpu);
-+extern void init_gi_nodes(void);
- #else	/* CONFIG_NUMA */
- static inline void numa_set_node(int cpu, int node)	{ }
- static inline void numa_clear_node(int cpu)		{ }
- static inline void init_cpu_to_node(void)		{ }
- static inline void numa_add_cpu(int cpu)		{ }
- static inline void numa_remove_cpu(int cpu)		{ }
-+static inline void init_gi_nodes(void)			{ }
- #endif	/* CONFIG_NUMA */
+diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+index 54002670cb7a..0ac96fb67515 100644
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -302,6 +302,7 @@ static void acpi_bus_osc_support(void)
  
- #ifdef CONFIG_DEBUG_PER_CPU_MAPS
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a3767e74c758..88b2330ef883 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1219,6 +1219,7 @@ void __init setup_arch(char **cmdline_p)
- 	prefill_possible_map();
+ 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_HOTPLUG_OST_SUPPORT;
+ 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
++	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
  
- 	init_cpu_to_node();
-+	init_gi_nodes();
+ #ifdef CONFIG_X86
+ 	if (boot_cpu_has(X86_FEATURE_HWP)) {
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 1414b7e0a486..40ec5f2544ed 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -546,6 +546,7 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
+ #define OSC_SB_PCLPI_SUPPORT			0x00000080
+ #define OSC_SB_OSLPI_SUPPORT			0x00000100
+ #define OSC_SB_CPC_DIVERSE_HIGH_SUPPORT		0x00001000
++#define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00002000
  
- 	io_apic_init_mappings();
- 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 8ee952038c80..7dba4648323d 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
- 	 */
- }
- 
-+/*
-+ * Generic Initiator Nodes may have neither CPU nor Memory.
-+ * At this stage if either of the others were present we would
-+ * already be online.
-+ */
-+void __init init_gi_nodes(void)
-+{
-+	int nid;
-+
-+	for_each_node_state(nid, N_GENERIC_INITIATOR)
-+		if (!node_online(nid))
-+			init_memory_less_node(nid);
-+}
-+
- /*
-  * Setup early cpu_to_node.
-  *
+ extern bool osc_sb_apei_support_acked;
+ extern bool osc_pc_lpi_support_confirmed;
 -- 
 2.19.1
 
