@@ -2,110 +2,107 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54512C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D95C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 302F020B80
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594676491;
-	bh=s21nN0PoT4wYXHHvEcseQ4YAZuyB4muxRpazrtUW9g0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xEW2sJQclWwS7t4FwbquRxSDKaFDGwn2nhWNvpYa9st2LkhJMuYXLy4+dB6DPAwxx
-	 S4Gyc27Xzp9z0AtQdVLof8ysTAGhjAbP+qnuOPLMim1ds+ooe+mSrz4gGlbSgPlgm2
-	 4Fq57KuAJltpbhap4bbYxbq/zNZkiPjZ7RjHyEW8=
+	by mail.kernel.org (Postfix) with ESMTP id B2FF620B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGMVl3 (ORCPT
+        id S1726617AbgGMVsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:41:29 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43812 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgGMVl3 (ORCPT
+        Mon, 13 Jul 2020 17:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGMVsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:41:29 -0400
-Received: by mail-il1-f194.google.com with SMTP id i18so12535835ilk.10;
-        Mon, 13 Jul 2020 14:41:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MnRt+eOdMAkvcPxA/OIYcge3ggOA8Or7nQ7c1V/nZW4=;
-        b=VmnoK5M6/qhbg36I7nwI2cqHPk0dwrYxKznBK84S6dJCl+2KksWs/ODQ7gnjWjPoAo
-         E1sm+RvnjpfYgO0x8s32nx1U09kCEfqzI+xn9SwoVUjI8YjWdKAjUGu74fH8jhtA6bJ4
-         1Db7GkcRYIVbsiBvrBbLjN9AkGD0AHFcQkJj8aNmfiNTIPYX9TMOk2Yj8dOlr36QVMFy
-         h1cDf4VIuB4uSkI8dYkFI20TjaLPYQGTPDHSjCSxAcLklRfb8K0FCjz33ukjYxT9BLgx
-         GBr732hebDrGuRM82bNYvTei8CqMs6PB/ZP01rZzEpjFD6GjkzSZPdOiclWPtX9ymdQ4
-         x4hQ==
-X-Gm-Message-State: AOAM532gJcxW8e26Y3tArPzHY5tKwkEMiXXyYS4q/bXh2CT6oLW503Hf
-        JOUEyNsZ7mKHZVrGgPv4Nw==
-X-Google-Smtp-Source: ABdhPJzfU6/JPJV1rhOxooZnGqbXB9+2KWa1AwQGdCgoztDDyS/knMygq+4uWLe3oZf4ufr4oMDV0w==
-X-Received: by 2002:a05:6e02:11a6:: with SMTP id 6mr1729560ilj.64.1594676488177;
-        Mon, 13 Jul 2020 14:41:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f9sm8790295ilq.9.2020.07.13.14.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 14:41:27 -0700 (PDT)
-Received: (nullmailer pid 776787 invoked by uid 1000);
-        Mon, 13 Jul 2020 21:41:26 -0000
-Date:   Mon, 13 Jul 2020 15:41:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] dt-bindings: interrupt-controller: Fix typos in
- loongson,liointc.yaml
-Message-ID: <20200713214126.GA774746@bogus>
-References: <1594087972-21715-1-git-send-email-yangtiezhu@loongson.cn>
- <1594087972-21715-9-git-send-email-yangtiezhu@loongson.cn>
+        Mon, 13 Jul 2020 17:48:36 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F41EC061755;
+        Mon, 13 Jul 2020 14:48:36 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A0111BC0D1;
+        Mon, 13 Jul 2020 21:48:32 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     sagi@grimberg.me, maxg@mellanox.com, dledford@redhat.com,
+        jgg@ziepe.ca, bvanassche@acm.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH v2] IB: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 23:48:26 +0200
+Message-Id: <20200713214826.42487-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200713135031.GA25301@ziepe.ca>
+References: <20200713135031.GA25301@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594087972-21715-9-git-send-email-yangtiezhu@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:12:52AM +0800, Tiezhu Yang wrote:
-> Fix the following two typos in loongson,liointc.yaml:
-> fron -> from
-> connected -> connect
-> it's -> its
-> 
-> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> index b1db21e..732ad9a 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
-> @@ -51,8 +51,8 @@ properties:
->      description: |
->        This property points how the children interrupts will be mapped into CPU
->        interrupt lines. Each cell refers to a parent interrupt line from 0 to 3
-> -      and each bit in the cell refers to a children interrupt fron 0 to 31.
-> -      If a CPU interrupt line didn't connected with liointc, then keep it's
-> +      and each bit in the cell refers to a children interrupt from 0 to 31.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-While at it, s/children/child/
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-> +      If a CPU interrupt line didn't connect with liointc, then keep its
->        cell with zero.
->      $ref: /schemas/types.yaml#/definitions/uint32-array
->      minItems: 4
-> -- 
-> 2.1.0
-> 
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Just drivers/infiniband. There's nothing for include/rdma.
+
+ drivers/infiniband/ulp/iser/Kconfig | 2 +-
+ drivers/infiniband/ulp/srp/Kconfig  | 2 +-
+ drivers/infiniband/ulp/srpt/Kconfig | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/infiniband/ulp/iser/Kconfig b/drivers/infiniband/ulp/iser/Kconfig
+index 3016a0c9a9f0..6ba73ae1291b 100644
+--- a/drivers/infiniband/ulp/iser/Kconfig
++++ b/drivers/infiniband/ulp/iser/Kconfig
+@@ -9,5 +9,5 @@ config INFINIBAND_ISER
+ 	  that speak iSCSI over iSER over InfiniBand.
+ 
+ 	  The iSER protocol is defined by IETF.
+-	  See <http://www.ietf.org/rfc/rfc5046.txt>
++	  See <https://www.ietf.org/rfc/rfc5046.txt>
+ 	  and <http://members.infinibandta.org/kwspub/spec/Annex_iSER.PDF>
+diff --git a/drivers/infiniband/ulp/srp/Kconfig b/drivers/infiniband/ulp/srp/Kconfig
+index 67cd63d1399c..c33f4e5fa4d7 100644
+--- a/drivers/infiniband/ulp/srp/Kconfig
++++ b/drivers/infiniband/ulp/srp/Kconfig
+@@ -9,5 +9,5 @@ config INFINIBAND_SRP
+ 	  InfiniBand.
+ 
+ 	  The SRP protocol is defined by the INCITS T10 technical
+-	  committee.  See <http://www.t10.org/>.
++	  committee.  See <https://www.t10.org/>.
+ 
+diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
+index 4b5d9b792cfa..f63b34d9ae32 100644
+--- a/drivers/infiniband/ulp/srpt/Kconfig
++++ b/drivers/infiniband/ulp/srpt/Kconfig
+@@ -10,4 +10,4 @@ config INFINIBAND_SRPT
+ 	  that supports the RDMA protocol. Currently the RDMA protocol is
+ 	  supported by InfiniBand and by iWarp network hardware. More
+ 	  information about the SRP protocol can be found on the website
+-	  of the INCITS T10 technical committee (http://www.t10.org/).
++	  of the INCITS T10 technical committee (https://www.t10.org/).
+-- 
+2.27.0
+
