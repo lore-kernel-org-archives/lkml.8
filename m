@@ -2,108 +2,496 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05321C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B07FC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE05D20791
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594622181;
-	bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ViLB4qoiQCOpTGgOh5Cckao6pYOObpR+Dxth5/s+GKAt328+2I7xAVTLh+pw317s1
-	 IbCFMB+CqCG07kPzZP8G6hhUgP8t5OgtM0RCfzq4wqkzUTi0LlUKJiKPn4klg/Etsj
-	 jSnGQmEU8hPAidsfEME3MoFebsxmB+opazI2/nPY=
+	by mail.kernel.org (Postfix) with ESMTP id 0649420720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="OHy8Oo4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgGMGgU (ORCPT
+        id S1729389AbgGMGjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgGMGgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:36:20 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E42C20720;
-        Mon, 13 Jul 2020 06:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594622179;
-        bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u8k47lCLPPTQIhGZPWfJiSk2yvJ8A4JPnhgOjfHlKjK0sxYQ0ohoHESYQlkoLy9Nl
-         p0wwkt6LSxfmr5qx/r6Tt/QII9QRTS/sEVclyFWTfZd0B+m4FvulQfvyFltSc8dUtk
-         P7MZBLAdxg1EOkClpqPtKp8PUfYyXx11frYsrh7o=
-Date:   Mon, 13 Jul 2020 14:36:15 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd"
- properties
-Message-ID: <20200713063611.GF12113@dragon>
-References: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+        Mon, 13 Jul 2020 02:39:14 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.176]:19505 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728950AbgGMGjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:39:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594622345;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ZuPKftG/UL9aesCIrdGgyX49row487rsdXMipnyFKaQ=;
+        b=OHy8Oo4e2Qn7UlMvDvB7yHWMb/m+xPJP8Vw8WAoGn3fB07lMoqjX8DKWFHHY9NsIVH
+        RDwEcz/IhE2VGWm3FmByVKURGfhxDLcX26P/kIjxYq7HgYCp/4/OWV9S0TXckBj0rm6Q
+        ++CQik8Df9wZVzON/IygsOotCzJDAeeUDEw11QKS3lj9mDZjvvkC3HcIg3jZd3O6mcyH
+        SJKcbu/k+PVc1EMSdk8m+MZleK7tgc/OVWpSb0BWcIAPuoHhI/uOHW75lfOUq64i5Q2V
+        QTtFPx38Enz4bbrpCklKVEbNeJSo49fPZfjvtxA0b1/26kX2t/wCK+VH19GvnaXjHQLl
+        7Jnw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaIvSfHReW"
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id y0546bw6D6bpk2K
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 13 Jul 2020 08:37:51 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v31 07/12] LRNG - add kernel crypto API PRNG extension
+Date:   Mon, 13 Jul 2020 08:20:19 +0200
+Message-ID: <2071723.NgBsaNRSFp@positron.chronox.de>
+In-Reply-To: <2050754.Mh6RI2rZIc@positron.chronox.de>
+References: <2050754.Mh6RI2rZIc@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 08:16:10PM -0700, Chris Healy wrote:
-> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
-> properties.
-> 
-> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
-> 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+Add runtime-pluggable support for all PRNGs that are accessible via
+the kernel crypto API, including hardware PRNGs. The PRNG is selected
+with the module parameter drng_name where the name must be one that the
+kernel crypto API can resolve into an RNG.
 
-I would suggest something like below for patch subject.
+This allows using of the kernel crypto API PRNG implementations that
+provide an interface to hardware PRNGs. Using this extension,
+the LRNG uses the hardware PRNGs to generate random numbers. An
+example is the S390 CPACF support providing such a PRNG.
 
-  ARM: dts: vf610-zii-ssmb-dtu: Add no-sdio/no-sd properties
+The hash is provided by a kernel crypto API SHASH whose digest size
+complies with the seedsize of the PRNG.
 
-Also the patch doesn't apply to my branch.
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ drivers/char/lrng/Kconfig      |  11 ++
+ drivers/char/lrng/Makefile     |   1 +
+ drivers/char/lrng/lrng_kcapi.c | 321 +++++++++++++++++++++++++++++++++
+ 3 files changed, 333 insertions(+)
+ create mode 100644 drivers/char/lrng/lrng_kcapi.c
 
-Shawn
+diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+index b32442484823..7afc965a4d52 100644
+=2D-- a/drivers/char/lrng/Kconfig
++++ b/drivers/char/lrng/Kconfig
+@@ -81,6 +81,17 @@ config LRNG_DRBG
+ 	  Enable the SP800-90A DRBG support for the LRNG. Once the
+ 	  module is loaded, output from /dev/random, /dev/urandom,
+ 	  getrandom(2), or get_random_bytes is provided by a DRBG.
++
++config LRNG_KCAPI
++	tristate "Kernel Crypto API support for the LRNG"
++	depends on CRYPTO
++	select CRYPTO_RNG
++	help
++	  Enable the support for generic pseudo-random number
++	  generators offered by the kernel crypto API with the
++	  LRNG. Once the module is loaded, output from /dev/random,
++	  /dev/urandom, getrandom(2), or get_random_bytes is
++	  provided by the selected kernel crypto API RNG.
+ endif # LRNG_DRNG_SWITCH
+=20
+ endif # LRNG
+diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+index 0d320fcb7b9e..94b2dfb2dfdb 100644
+=2D-- a/drivers/char/lrng/Makefile
++++ b/drivers/char/lrng/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
+ obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
+ obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
+ obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
++obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
+diff --git a/drivers/char/lrng/lrng_kcapi.c b/drivers/char/lrng/lrng_kcapi.c
+new file mode 100644
+index 000000000000..482f31627422
+=2D-- /dev/null
++++ b/drivers/char/lrng/lrng_kcapi.c
+@@ -0,0 +1,321 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++/*
++ * Backend for the LRNG providing the cryptographic primitives using the
++ * kernel crypto API.
++ *
++ * Copyright (C) 2018 - 2020, Stephan Mueller <smueller@chronox.de>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <crypto/hash.h>
++#include <crypto/rng.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/lrng.h>
++
++static char *drng_name =3D NULL;
++module_param(drng_name, charp, 0444);
++MODULE_PARM_DESC(drng_name, "Kernel crypto API name of DRNG");
++
++static char *pool_hash =3D "sha512";
++module_param(pool_hash, charp, 0444);
++MODULE_PARM_DESC(pool_hash,
++		 "Kernel crypto API name of hash or keyed message digest to read the ent=
+ropy pool");
++
++static char *seed_hash =3D NULL;
++module_param(seed_hash, charp, 0444);
++MODULE_PARM_DESC(seed_hash,
++		 "Kernel crypto API name of hash with output size equal to seedsize of D=
+RNG to bring seed string to the size required by the DRNG");
++
++struct lrng_hash_info {
++	struct shash_desc shash;
++	char ctx[];
++};
++
++struct lrng_drng_info {
++	struct crypto_rng *kcapi_rng;
++	struct lrng_hash_info *lrng_hash;
++};
++
++static struct lrng_hash_info *_lrng_kcapi_hash_alloc(const char *name)
++{
++	struct lrng_hash_info *lrng_hash;
++	struct crypto_shash *tfm;
++	int size;
++
++	if (!name) {
++		pr_err("Hash name missing\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	tfm =3D crypto_alloc_shash(name, 0, 0);
++	if (IS_ERR(tfm)) {
++		pr_err("could not allocate hash %s\n", name);
++		return ERR_CAST(tfm);
++	}
++
++	size =3D sizeof(struct lrng_hash_info) + crypto_shash_descsize(tfm);
++	lrng_hash =3D kmalloc(size, GFP_KERNEL);
++	if (!lrng_hash) {
++		crypto_free_shash(tfm);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	lrng_hash->shash.tfm =3D tfm;
++
++	return lrng_hash;
++}
++
++static inline u32 _lrng_kcapi_hash_digestsize(struct lrng_hash_info *lrng_=
+hash)
++{
++	struct shash_desc *shash =3D &lrng_hash->shash;
++	struct crypto_shash *tfm =3D shash->tfm;
++
++	return crypto_shash_digestsize(tfm);
++}
++
++static inline void _lrng_kcapi_hash_free(struct lrng_hash_info *lrng_hash)
++{
++	struct shash_desc *shash =3D &lrng_hash->shash;
++	struct crypto_shash *tfm =3D shash->tfm;
++
++	crypto_free_shash(tfm);
++	kfree(lrng_hash);
++}
++
++static void *lrng_kcapi_hash_alloc(const u8 *key, u32 keylen)
++{
++	struct lrng_hash_info *lrng_hash;
++	int ret;
++
++	lrng_hash =3D _lrng_kcapi_hash_alloc(pool_hash);
++	if (IS_ERR(lrng_hash))
++		return ERR_CAST(lrng_hash);
++
++	/* If the used hash is no MAC, ignore the ENOSYS return code */
++	ret =3D crypto_shash_setkey(lrng_hash->shash.tfm, key, keylen);
++	if (ret && ret !=3D -ENOSYS) {
++		pr_err("could not set the key for MAC\n");
++		_lrng_kcapi_hash_free(lrng_hash);
++		return ERR_PTR(ret);
++	}
++
++	pr_info("Hash %s allocated\n", pool_hash);
++
++	return lrng_hash;
++}
++
++static void lrng_kcapi_hash_dealloc(void *hash)
++{
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
++
++	_lrng_kcapi_hash_free(lrng_hash);
++	pr_info("Hash %s deallocated\n", pool_hash);
++}
++
++static u32 lrng_kcapi_hash_digestsize(void *hash)
++{
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
++
++	return _lrng_kcapi_hash_digestsize(lrng_hash);
++}
++
++static int lrng_kcapi_hash_buffer(void *hash, const u8 *inbuf, u32 inbufle=
+n,
++				  u8 *digest)
++{
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
++	struct shash_desc *shash =3D &lrng_hash->shash;
++
++	return crypto_shash_digest(shash, inbuf, inbuflen, digest);
++}
++
++static int lrng_kcapi_drng_seed_helper(void *drng, const u8 *inbuf,
++				       u32 inbuflen)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
++
++	if (lrng_hash) {
++		struct shash_desc *shash =3D &lrng_hash->shash;
++		u32 digestsize =3D _lrng_kcapi_hash_digestsize(lrng_hash);
++		u8 digest[64] __aligned(8);
++		int ret;
++
++		BUG_ON(digestsize > sizeof(digest));
++
++		ret =3D crypto_shash_digest(shash, inbuf, inbuflen, digest);
++		if (ret)
++			return ret;
++
++		ret =3D crypto_rng_reset(kcapi_rng, digest, digestsize);
++		if (ret)
++			return ret;
++
++		memzero_explicit(digest, digestsize);
++
++		return 0;
++	} else {
++		return crypto_rng_reset(kcapi_rng, inbuf, inbuflen);
++	}
++}
++
++static int lrng_kcapi_drng_generate_helper(void *drng, u8 *outbuf,
++					   u32 outbuflen)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	int ret =3D crypto_rng_get_bytes(kcapi_rng, outbuf, outbuflen);
++
++	if (ret < 0)
++		return ret;
++
++	return outbuflen;
++}
++
++static void *lrng_kcapi_drng_alloc(u32 sec_strength)
++{
++	struct lrng_drng_info *lrng_drng_info;
++	struct crypto_rng *kcapi_rng;
++	int seedsize;
++	void *ret =3D  ERR_PTR(-ENOMEM);
++
++	if (!drng_name) {
++		pr_err("DRNG name missing\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!memcmp(drng_name, "drbg", 4)) {
++		pr_err("SP800-90A DRBG cannot be allocated using lrng_kcapi backend, use=
+ lrng_drbg backend instead\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!memcmp(drng_name, "stdrng", 6)) {
++		pr_err("stdrng cannot be allocated using lrng_kcapi backend, it is too u=
+nspecific and potentially may allocate the DRBG\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	lrng_drng_info =3D kmalloc(sizeof(*lrng_drng_info), GFP_KERNEL);
++	if (!lrng_drng_info)
++		return ERR_PTR(-ENOMEM);
++
++	kcapi_rng =3D crypto_alloc_rng(drng_name, 0, 0);
++	if (IS_ERR(kcapi_rng)) {
++		pr_err("DRNG %s cannot be allocated\n", drng_name);
++		ret =3D ERR_CAST(kcapi_rng);
++		goto free;
++	}
++	lrng_drng_info->kcapi_rng =3D kcapi_rng;
++
++	seedsize =3D  crypto_rng_seedsize(kcapi_rng);
++
++	if (sec_strength > seedsize)
++		pr_info("Seedsize DRNG (%u bits) lower than security strength of LRNG no=
+ise source (%u bits)\n",
++			crypto_rng_seedsize(kcapi_rng) * 8, sec_strength * 8);
++
++	if (seedsize) {
++		struct lrng_hash_info *lrng_hash;
++
++		if (!seed_hash) {
++			switch (seedsize) {
++			case 32:
++				seed_hash =3D "sha256";
++				break;
++			case 48:
++				seed_hash =3D "sha384";
++				break;
++			case 64:
++				seed_hash =3D "sha512";
++				break;
++			default:
++				pr_err("Seed size %d cannot be processed\n",
++				       seedsize);
++				goto dealloc;
++				break;
++			}
++		}
++
++		lrng_hash =3D _lrng_kcapi_hash_alloc(seed_hash);
++		if (IS_ERR(lrng_hash)) {
++			ret =3D ERR_CAST(lrng_hash);
++			goto dealloc;
++		}
++
++		if (seedsize !=3D _lrng_kcapi_hash_digestsize(lrng_hash)) {
++			pr_err("Seed hash output size not equal to DRNG seed size\n");
++			_lrng_kcapi_hash_free(lrng_hash);
++			ret =3D ERR_PTR(-EINVAL);
++			goto dealloc;
++		}
++
++		lrng_drng_info->lrng_hash =3D lrng_hash;
++
++		pr_info("Seed hash %s allocated\n", seed_hash);
++	} else {
++		lrng_drng_info->lrng_hash =3D NULL;
++	}
++
++	pr_info("Kernel crypto API DRNG %s allocated\n", drng_name);
++
++	return lrng_drng_info;
++
++dealloc:
++	crypto_free_rng(kcapi_rng);
++free:
++	kfree(lrng_drng_info);
++	return ret;
++}
++
++static void lrng_kcapi_drng_dealloc(void *drng)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
++
++	crypto_free_rng(kcapi_rng);
++	if (lrng_hash) {
++		_lrng_kcapi_hash_free(lrng_hash);
++		pr_info("Seed hash %s deallocated\n", seed_hash);
++	}
++	kfree(lrng_drng_info);
++	pr_info("DRNG %s deallocated\n", drng_name);
++}
++
++static const char *lrng_kcapi_drng_name(void)
++{
++	return drng_name;
++}
++
++static const char *lrng_kcapi_pool_hash(void)
++{
++	return pool_hash;
++}
++
++const static struct lrng_crypto_cb lrng_kcapi_crypto_cb =3D {
++	.lrng_drng_name			=3D lrng_kcapi_drng_name,
++	.lrng_hash_name			=3D lrng_kcapi_pool_hash,
++	.lrng_drng_alloc		=3D lrng_kcapi_drng_alloc,
++	.lrng_drng_dealloc		=3D lrng_kcapi_drng_dealloc,
++	.lrng_drng_seed_helper		=3D lrng_kcapi_drng_seed_helper,
++	.lrng_drng_generate_helper	=3D lrng_kcapi_drng_generate_helper,
++	.lrng_hash_alloc		=3D lrng_kcapi_hash_alloc,
++	.lrng_hash_dealloc		=3D lrng_kcapi_hash_dealloc,
++	.lrng_hash_digestsize		=3D lrng_kcapi_hash_digestsize,
++	.lrng_hash_buffer		=3D lrng_kcapi_hash_buffer,
++};
++
++static int __init lrng_kcapi_init(void)
++{
++	return lrng_set_drng_cb(&lrng_kcapi_crypto_cb);
++}
++static void __exit lrng_kcapi_exit(void)
++{
++	lrng_set_drng_cb(NULL);
++}
++
++late_initcall(lrng_kcapi_init);
++module_exit(lrng_kcapi_exit);
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
++MODULE_DESCRIPTION("Linux Random Number Generator - kernel crypto API DRNG=
+ backend");
+=2D-=20
+2.26.2
 
-> ---
->  arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> index 0bb3dcff0b79..7d4ddfb6b5b5 100644
-> --- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> @@ -81,6 +81,8 @@
->      non-removable;
->      no-1-8-v;
->      keep-power-in-suspend;
-> +    no-sdio;
-> +    no-sd;
->      status = "okay";
->  };
-> 
-> @@ -88,6 +90,7 @@
->      pinctrl-names = "default";
->      pinctrl-0 = <&pinctrl_esdhc1>;
->      bus-width = <4>;
-> +    no-sdio;
->      status = "okay";
->  };
-> 
-> -- 
-> 2.21.3
+
+
+
