@@ -2,171 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21136C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE1B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhlT799S"
+	by mail.kernel.org (Postfix) with ESMTP id 12F532063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgGMHmx (ORCPT
+        id S1728644AbgGMHke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
+        Mon, 13 Jul 2020 03:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgGMHmx (ORCPT
+        with ESMTP id S1725818AbgGMHke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:42:53 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE79C061755;
-        Mon, 13 Jul 2020 00:42:53 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q17so5149662pls.9;
-        Mon, 13 Jul 2020 00:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kv7SaniNrlUPbvo7cWwc80WSNfLRXfgs1fiLYtKopIU=;
-        b=ZhlT799SGBQhoHqAHdZ4lZj1j/AYdgOOYfKXe+d0zRdJWGte52q6+ZlkptRwdhl5v4
-         QV/4eytBNvOoIsIoKXWzcx86NjNK6/6pwau43reCmmEc8nR9FbS/FUPUgB1xvF7Zys2B
-         3nxgz2QzSdL0QR4FYvC/zdx3DWypbf6R/xf02t6VJn9f7Mej+t1xPMUDayyZLFwXJQLs
-         yGFjT8yL9ybELIToHwaEOZK9Na+q37Qt5MWWdutGF7lFA6oqtPBW9UknREOKpdbT0o2m
-         uLm5Eae8jQWqrSRbJV/aK7ExOX6L7L4QyP1+iAmM7mBe2TPqtWFbGmQ/WZ+LWqjsfR7J
-         BfRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kv7SaniNrlUPbvo7cWwc80WSNfLRXfgs1fiLYtKopIU=;
-        b=GB89Ln+TYw04YhHJDcXVqpDR0H+ByfXbbmT7hFDvKviuQ3hm/AoE0FGIFJj7KdNm//
-         l8Fu6YQwLxWn2kzyi0y0J+r2HYPVHspCaVV+uBxtyQLnk4dWVrMhkV48o7PjfuJouHDQ
-         iQ3veBxL3Z/Q2arDB0zZBj7nRpLhU7iakAxniNe1UqOYrXXyFpdpOQOxZPRl1rbwlMoy
-         5aaQK37Is4bMudlTcAJi/1zw12KSSyEv5JLt8uo7eWKV4zpMsO+At8UIDfwBYODBryeX
-         iHzxrtpdeP9rIDAiw/9vk829XADf4vZs3pgHXiMAqazzxS/NhYsGF4wTmCF8m8pHyM7t
-         v6gA==
-X-Gm-Message-State: AOAM530EPCYa24B7D8SP/d6YZxXTjW0H4iqNBGTwg5kVz7awsGpTe4kE
-        TL8xzHzGMhgz+Pkfm6BVEKw=
-X-Google-Smtp-Source: ABdhPJxHcu1Ud7WDBTb4qIFDB5l2yIOfKVi3zND/ElHwtLcc7bQ/TVlT+STA2ZBAjz08dje95SGmYA==
-X-Received: by 2002:a17:90a:bf89:: with SMTP id d9mr19127661pjs.89.1594626172692;
-        Mon, 13 Jul 2020 00:42:52 -0700 (PDT)
-Received: from localhost.localdomain ([103.51.74.198])
-        by smtp.gmail.com with ESMTPSA id e12sm13521180pfd.69.2020.07.13.00.42.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 00:42:52 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v4] phy: samsung: Use readl_poll_timeout function
-Date:   Mon, 13 Jul 2020 07:42:43 +0000
-Message-Id: <20200713074243.530-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 13 Jul 2020 03:40:34 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CDCC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:40:34 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 46481BC070;
+        Mon, 13 Jul 2020 07:40:31 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ARM: vexpress: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 09:40:24 +0200
+Message-Id: <20200713074024.32067-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of a busy waiting while loop using udelay
-use readl_poll_timeout function to check the condition
-is met or timeout occurs in crport_handshake function.
-readl_poll_timeout is called in non atomic context so
-it safe to sleep until the condition is met.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Changes v4:
-Rebased on to of patch [0] https://patchwork.kernel.org/patch/11651673/
---Fix the commit message.
---Fix the error timeout condition for -ETIMEDOUT
----
-Changes v3:
---Fix the commit message.
---Drop the variable, used the value directly.
-Changes v2:
---used the default timeout values.
---Added missing Fixed tags.
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 39 ++++++++----------------
- 1 file changed, 12 insertions(+), 27 deletions(-)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 7f6279fb4f8f..ad81aa65cdff 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -16,6 +16,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-+#include <linux/iopoll.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
-@@ -556,41 +557,25 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
- static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
- 			    u32 val, u32 cmd)
- {
--	u32 usec = 100;
- 	unsigned int result;
-+	int err;
- 
- 	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
- 
--	do {
--		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
--		if (result & PHYREG1_CR_ACK)
--			break;
--
--		udelay(1);
--	} while (usec-- > 0);
--
--	if (!usec) {
--		dev_err(phy_drd->dev,
--			"CRPORT handshake timeout1 (0x%08x)\n", val);
--		return -ETIME;
-+	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-+			result,	(result & PHYREG1_CR_ACK), 1, 100);
-+	if (err == -ETIMEDOUT) {
-+		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
-+		return err;
- 	}
- 
--	usec = 100;
--
- 	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
- 
--	do {
--		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
--		if (!(result & PHYREG1_CR_ACK))
--			break;
--
--		udelay(1);
--	} while (usec-- > 0);
--
--	if (!usec) {
--		dev_err(phy_drd->dev,
--			"CRPORT handshake timeout2 (0x%08x)\n", val);
--		return -ETIME;
-+	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-+			result,	!(result & PHYREG1_CR_ACK), 1, 100);
-+	if (err == -ETIMEDOUT) {
-+		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
-+		return err;
- 	}
- 
- 	return 0;
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ arch/arm/mach-vexpress/Makefile.boot | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
+index cec195d4fcba..5dde7328a7a9 100644
+--- a/arch/arm/mach-vexpress/Makefile.boot
++++ b/arch/arm/mach-vexpress/Makefile.boot
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Empty file waiting for deletion once Makefile.boot isn't needed any more.
+ # Patch waits for application at
+-# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
++# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
 -- 
 2.27.0
 
