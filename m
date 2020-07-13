@@ -2,150 +2,213 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3321F20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ABA2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzhOeaNJ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P3rtYUhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGMEcl (ORCPT
+        id S1727965AbgGMEjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 00:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
+        Mon, 13 Jul 2020 00:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGMEcl (ORCPT
+        with ESMTP id S1725804AbgGMEjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 00:32:41 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B32C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 21:32:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id i14so5447845pfu.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 21:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=G0JQrKT2yetJx9RdaIRiBdtxJ5m9P3e1e1yI2fZaU1U=;
-        b=BzhOeaNJw5mc5XUov/Aby2l6NocWwThlY3twORbn1TwIDEoS3dKplFq8UgCrSYkMGv
-         qEtwSKA1ryLnIiIRujXDfjEWDVKfs8NA7RaZWuMJbRdg1QNecr0Og0cGbpvHL5dNDidB
-         G9ntvhTYoBk5vfpkqDvnryNvn50HxvcDQRy23XjFK0+XArxpAbxzNq7Ef5iHMvb0JCyj
-         cq+3aeq4oisXukStf8Ki6YcAuW2inCs7jsYRr56Vwc00TVGLfymccFg7D0WLsPzONQtM
-         rWazDh0hCkNM+cALPcHJlKJwdj2Y1yblBcZiwCdG56LRNHyL/6wFWRlQWWQniqycLL++
-         kADA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=G0JQrKT2yetJx9RdaIRiBdtxJ5m9P3e1e1yI2fZaU1U=;
-        b=BaahAhWLPMS+5TIyCsQ06mmhgsd19CBv/1rRo6/+mbN3302/drt7OY/JmsPHf6Yp9L
-         n61g4fY1RmerfnkYkFRJ9MCtuBsYJFYhyYTwcj18QNe3zAWgOrpt5wJCLFcH3/WBOoKR
-         s0HpOv7aYC9fpPz8vSksI3MCA6lQdbsWABmzDrXLqvUlXWQGzAdDdfECHVcfSbyTAqYP
-         xYEAZCaSz4l4IzYcd7r6dh8qi+JEHr0lonwTZzYqodMvnO3WoiGmT5ot5h+02cXVmIQM
-         RQRUTkbmvG3fgIp1EOAZcHMX1NaI5AN7M31Ul41DNvvGl9h0zDxwsOHZp3edXW5HYI1h
-         f7NA==
-X-Gm-Message-State: AOAM5338vSRtKy0dJzWIxoPAQ1AEXkE6rh1u9FG9YMFfle2CV1mYLpML
-        Tnv4QFOnxvCVP8aW3LzLykA=
-X-Google-Smtp-Source: ABdhPJwXO6SeKMCmOZOl/KjVLx4853d3XOrA4E29kKM+JtagHQgBdc2yZIz66f924rIWD+2BovOAGA==
-X-Received: by 2002:a62:7a56:: with SMTP id v83mr72044979pfc.114.1594614760091;
-        Sun, 12 Jul 2020 21:32:40 -0700 (PDT)
-Received: from localhost ([2401:4900:1692:3ec9:34c4:54d3:ee0a:4af3])
-        by smtp.gmail.com with ESMTPSA id c1sm11473199pgi.52.2020.07.12.21.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 21:32:39 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 10:02:30 +0530
-From:   Mrinal Pandey <mrinalmni@gmail.com>
-To:     apw@canonical.com, joe@perches.com, linux-kernel@vger.kernel.org
-Cc:     lukas.bulwahn@gmail.com, skhan@linuxfoundation.org,
-        Linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] checkpatch: Fix the usage of capture group ( ... )
-Message-ID: <20200713043230.d7rhv6znvswt2h4u@mrinalpandey>
+        Mon, 13 Jul 2020 00:39:42 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B060AC061794;
+        Sun, 12 Jul 2020 21:39:41 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B4rXS3ndgz9sDX;
+        Mon, 13 Jul 2020 14:39:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594615178;
+        bh=v/MgjPrqiPe4ZuBU4tfWPEezuWjdEPIyi5/ryEXFJ20=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P3rtYUhcPvPZOTsyIvefv/IuitUkCrDUyk1g8GlwotOhWW2079csyInalZwUVs7om
+         gmGUnTAdAyTazMrmdM0SJvBPXkpFvKucxP7C87o4Uc6zzeIk3zbbh/icfTRtHoibq3
+         DIn6xyZbCO/MuZN6DGc5qXSuMn0qVc2pzYeM8R7tMV+xwg8+IbyqD/jURj6E5r70yJ
+         qfoLc/yoP/c7S4+KB2oTgDFG6uan1oOHaz5fNIIqJmarI2QakEoqBDLLXH8t13AbpF
+         PPt3x1dHZzG4YIIIFqyE04kGLgPB//CdxOwmnF8EZksd1JI3QU1eYjtPbGudRLXC3X
+         uSoN4QCd1HZCQ==
+Date:   Mon, 13 Jul 2020 14:39:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoffer Dall <cdall@cs.columbia.edu>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        James Morse <james.morse@arm.com>,
+        Gavin Shan <gshan@redhat.com>
+Subject: linux-next: manual merge of the kvm-arm tree with the kvm tree
+Message-ID: <20200713143935.799861b9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="awgtzp4uvp3ywwiq"
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/mGnpMwZ8P.+TqiQs4kELvSQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---awgtzp4uvp3ywwiq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/mGnpMwZ8P.+TqiQs4kELvSQ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-The usage of "capture group (...)" in the immediate condition after `&&`
-results in `$1` being uninitialized. This issues a warning "Use of
-uninitialized value $1 in regexp compilation at ./scripts/checkpatch.pl
-line 2638".
+Hi all,
 
-I noticed this bug while running checkpatch on the set of commits from
-v5.7 to v5.8-rc1 of the kernel on the commits with a diff content in
-their commit message.
+Today's linux-next merge of the kvm-arm tree got conflicts in:
 
-This bug was introduced in the script by commit e518e9a59ec3
-("checkpatch: emit an error when there's a diff in a changelog"). It has
-been in the script since then.
+  arch/arm64/include/asm/kvm_coproc.h
+  arch/arm64/kvm/handle_exit.c
 
-The author intended to store the match made by capture group in variable
-`$1`. This should have contained the name of the file as `[\w/]+` matched.
-However, this couldn't be accomplished due to usage of capture group and
-`$1` in the same regular expression.
+between commit:
 
-Fix this by placing the capture group in the condition before `&&`.
-Thus, `$1` can be initialized to the text that capture group matches
-thereby setting it to the desired and required value.
+  74cc7e0c35c1 ("KVM: arm64: clean up redundant 'kvm_run' parameters")
 
-Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
----
- scripts/checkpatch.pl | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+from the kvm tree and commits:
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4c820607540b..e73e998d582a 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2636,8 +2636,8 @@ sub process {
-=20
- # Check if the commit log has what seems like a diff which can confuse pat=
-ch
- 		if ($in_commit_log && !$commit_log_has_diff &&
--		    (($line =3D~ m@^\s+diff\b.*a/[\w/]+@ &&
--		      $line =3D~ m@^\s+diff\b.*a/([\w/]+)\s+b/$1\b@) ||
-+		    (($line =3D~ m@^\s+diff\b.*a/([\w/]+)@ &&
-+		      $line =3D~ m@^\s+diff\b.*a/[\w/]+\s+b/$1\b@) ||
- 		     $line =3D~ m@^\s*(?:\-\-\-\s+a/|\+\+\+\s+b/)@ ||
- 		     $line =3D~ m/^\s*\@\@ \-\d+,\d+ \+\d+,\d+ \@\@/)) {
- 			ERROR("DIFF_IN_COMMIT_MSG",
+  6b33e0d64f85 ("KVM: arm64: Drop the target_table[] indirection")
+  750ed5669380 ("KVM: arm64: Remove the target table")
+  3a949f4c9354 ("KVM: arm64: Rename HSR to ESR")
+
+from the kvm-arm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
 --=20
-2.25.1
+Cheers,
+Stephen Rothwell
 
+diff --cc arch/arm64/include/asm/kvm_coproc.h
+index 454373704b8a,147f3a77e6a5..000000000000
+--- a/arch/arm64/include/asm/kvm_coproc.h
++++ b/arch/arm64/include/asm/kvm_coproc.h
+@@@ -19,20 -19,12 +19,12 @@@ struct kvm_sys_reg_table=20
+  	size_t num;
+  };
+ =20
+- struct kvm_sys_reg_target_table {
+- 	struct kvm_sys_reg_table table64;
+- 	struct kvm_sys_reg_table table32;
+- };
+-=20
+- void kvm_register_target_sys_reg_table(unsigned int target,
+- 				       struct kvm_sys_reg_target_table *table);
+-=20
+ -int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu, struct kvm_run *run=
+);
+ -int kvm_handle_cp14_32(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ -int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ -int kvm_handle_cp15_32(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ -int kvm_handle_cp15_64(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ -int kvm_handle_sys_reg(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ +int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu);
+ +int kvm_handle_cp14_32(struct kvm_vcpu *vcpu);
+ +int kvm_handle_cp14_64(struct kvm_vcpu *vcpu);
+ +int kvm_handle_cp15_32(struct kvm_vcpu *vcpu);
+ +int kvm_handle_cp15_64(struct kvm_vcpu *vcpu);
+ +int kvm_handle_sys_reg(struct kvm_vcpu *vcpu);
+ =20
+  #define kvm_coproc_table_init kvm_sys_reg_table_init
+  void kvm_sys_reg_table_init(void);
+diff --cc arch/arm64/kvm/handle_exit.c
+index 1df3beafd73f,98ab33139982..000000000000
+--- a/arch/arm64/kvm/handle_exit.c
++++ b/arch/arm64/kvm/handle_exit.c
+@@@ -87,9 -87,9 +87,9 @@@ static int handle_no_fpsimd(struct kvm_
+   * world-switches and schedule other host processes until there is an
+   * incoming IRQ or FIQ to the VM.
+   */
+ -static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ +static int kvm_handle_wfx(struct kvm_vcpu *vcpu)
+  {
+- 	if (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
++ 	if (kvm_vcpu_get_esr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
+  		trace_kvm_wfx_arm64(*vcpu_pc(vcpu), true);
+  		vcpu->stat.wfe_exit_stat++;
+  		kvm_vcpu_on_spin(vcpu, vcpu_mode_priv(vcpu));
+@@@ -114,12 -115,11 +114,12 @@@
+   * guest and host are using the same debug facilities it will be up to
+   * userspace to re-inject the correct exception for guest delivery.
+   *
+ - * @return: 0 (while setting run->exit_reason), -1 for error
+ + * @return: 0 (while setting vcpu->run->exit_reason), -1 for error
+   */
+ -static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *=
+run)
+ +static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu)
+  {
+ +	struct kvm_run *run =3D vcpu->run;
+- 	u32 hsr =3D kvm_vcpu_get_hsr(vcpu);
++ 	u32 esr =3D kvm_vcpu_get_esr(vcpu);
+  	int ret =3D 0;
+ =20
+  	run->exit_reason =3D KVM_EXIT_DEBUG;
+@@@ -144,12 -144,12 +144,12 @@@
+  	return ret;
+  }
+ =20
+ -static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu, struct kvm_run *r=
+un)
+ +static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu)
+  {
+- 	u32 hsr =3D kvm_vcpu_get_hsr(vcpu);
++ 	u32 esr =3D kvm_vcpu_get_esr(vcpu);
+ =20
+- 	kvm_pr_unimpl("Unknown exception class: hsr: %#08x -- %s\n",
+- 		      hsr, esr_get_class_string(hsr));
++ 	kvm_pr_unimpl("Unknown exception class: esr: %#08x -- %s\n",
++ 		      esr, esr_get_class_string(esr));
+ =20
+  	kvm_inject_undefined(vcpu);
+  	return 1;
+@@@ -237,12 -237,11 +237,12 @@@ static int handle_trap_exceptions(struc
+   * Return > 0 to return to guest, < 0 on error, 0 (and set exit_reason) on
+   * proper exit to userspace.
+   */
+ -int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ -		       int exception_index)
+ +int handle_exit(struct kvm_vcpu *vcpu, int exception_index)
+  {
+ +	struct kvm_run *run =3D vcpu->run;
+ +
+  	if (ARM_SERROR_PENDING(exception_index)) {
+- 		u8 hsr_ec =3D ESR_ELx_EC(kvm_vcpu_get_hsr(vcpu));
++ 		u8 esr_ec =3D ESR_ELx_EC(kvm_vcpu_get_esr(vcpu));
+ =20
+  		/*
+  		 * HVC/SMC already have an adjusted PC, which we need
 
---awgtzp4uvp3ywwiq
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/mGnpMwZ8P.+TqiQs4kELvSQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE8DwCG1PwaC2uTI99xIwpEWwxhGQFAl8L49kACgkQxIwpEWwx
-hGRqHhAAkLywFExf90xnmdGZGVYQ1QQ8aYFuW6gV+Jvehv2GMfZUO35DCLkLfIsP
-Rsx8I58ZbZHv19LfdOYxhb2gvgeTX4/8+eSCtRwyE7Zd6BUMdoJt6/BE/QljA2xF
-CKXlVGX7OpIESqsQbQAq+vMqbcqYDZjCeWh3x8U1cV9pZ09mZ7CL/SqRr4Qfmcbi
-uz8MOA4xNF/hISLgDwbyFiw6GIJJJ+mfrBqdhLHZ+E/W3Jx+1Kj/DwiqoXlMKJz8
-NtOYb2CZ/zvQ89LK5H/Ed1e6az6yG+7a29f78Zes5Z51Pz9ApKjNwonNCyqE3UvH
-04HJ3fAZHicKol5uQAb0RFwmyVUsk+iFCSw065GK738KoQlWNwnQJ3FosuOrvLDQ
-22iIGLCH/sE+gWD7bgjCHJuVvWVHEDBqObFbmymqk/Hm8q/c4d2UGbxBSg0kJll7
-tK6H+QTQCShukdccK8xRj4f5qwJgq6JBfrpEvKuH197ZHp/lrsIf4l4cdnPOhGsI
-bEqg0xOv9jZbBrD3V/YpJhBuKDQxvUc8ihprTHHmWdJDuXtHutpO57r1pu4/UtpT
-2XMPEE+AoV699FJwvHpSKcMu0M8dC+96D+t52knPefO5ea7Vsrmhw1G14fkY3R8i
-DmlwKh/o/W+P04+3eW5uHblwudILshETG2POmU8Hdtzu2+reDOI=
-=757s
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8L5YcACgkQAVBC80lX
+0Gxuhgf/cFDQ0wfIGNx/nFEnhCoKM11C5xyKwgAmkBa5nE8zrjJCI6qpJLcLU0n6
+1AHTcocjSeXAanxA9NXdnRo8LNiQ91zgQnzh2WruQGIkARrxO8DjKSJNg/9yB6tJ
+aQBizgLk+Kd64ZfzC7b4QgZDYZuNLanjrXc7Rp+8byVKprUS1tokdqYLdYdjfZbu
+Eg5Z2SETfSj9f+ms82uHswv59uakDB2vOj38vs25eCRTN4e31q9PjhqXxD9odWit
+kTE9AeF7G0sNwoGaDPJvjij95VxYkL48/6UmLT0e2fGVhgJ2ahUUqWcV5s5PFhKy
+zmlnXo15+3CVh9X1QbiNj4zlaVdrWA==
+=0UEf
 -----END PGP SIGNATURE-----
 
---awgtzp4uvp3ywwiq--
+--Sig_/mGnpMwZ8P.+TqiQs4kELvSQ--
