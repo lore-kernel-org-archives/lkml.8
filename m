@@ -2,73 +2,101 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D572075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81C72075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgGMU0r (ORCPT
+        id S1726850AbgGMU2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgGMU0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:26:47 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77C0207BC;
-        Mon, 13 Jul 2020 20:26:45 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 16:26:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 11/17] static_call: Simple self-test
-Message-ID: <20200713162644.56a2e7a1@oasis.local.home>
-In-Reply-To: <20200711102702.GC597537@hirez.programming.kicks-ass.net>
-References: <20200710133831.943894387@infradead.org>
-        <20200710134336.798619415@infradead.org>
-        <20200710184229.3c3f5d8d@oasis.local.home>
-        <20200711102702.GC597537@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Jul 2020 16:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgGMU2F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:28:05 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B36C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:28:04 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id C55D6BC053;
+        Mon, 13 Jul 2020 20:28:02 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     dot@dotat.at, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] unifdef: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:27:55 +0200
+Message-Id: <20200713202755.38022-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jul 2020 12:27:02 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> > static int __init test_static_call_init(void)
-> > {
-> > 	int i;
-> > 
-> > 	for (i = 0; i < ARRAY_SIZE(static_call_data); i++ ) {
-> > 		if (static_call_data[i].func)
-> > 			static_call_update(sc_selftest, static_call_data[i].func);
-> > 		WARN_ON(run_static_call(static_call_data[i].val) != static_call_data[i].expect);
-> > 	}
-> > 
-> > 	return 0;
-> > }  
-> 
-> Lots of compile errors with that, fixed them all :-)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Hey, I wrote that all without compiling it. I would have been surprised
-if it was clean.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
--- Steve
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ scripts/unifdef.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/unifdef.c b/scripts/unifdef.c
+index db00e3e30a59..4247c6d51885 100644
+--- a/scripts/unifdef.c
++++ b/scripts/unifdef.c
+@@ -59,7 +59,7 @@
+ const char copyright[] =
+     "@(#) $Version: unifdef-2.5 $\n"
+     "@(#) $Author: Tony Finch (dot@dotat.at) $\n"
+-    "@(#) $URL: http://dotat.at/prog/unifdef $\n"
++    "@(#) $URL: https://dotat.at/prog/unifdef $\n"
+ ;
+ 
+ /* types of input lines: */
+-- 
+2.27.0
+
