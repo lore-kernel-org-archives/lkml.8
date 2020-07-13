@@ -2,109 +2,146 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1914DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7C962070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAC720722
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PAtzzUaO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="atIIb926";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="RKBl6Ztq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGMB2G (ORCPT
+        id S1728057AbgGMB3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:28:06 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:54652 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGMB2F (ORCPT
+        Sun, 12 Jul 2020 21:29:51 -0400
+Received: from relay3.mymailcheap.com ([217.182.119.155]:39489 "EHLO
+        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgGMB3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:28:05 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200713012802epoutp03aa0244700c210333695484e2151ff6f3~hK5nECVfy0437304373epoutp03g
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:28:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200713012802epoutp03aa0244700c210333695484e2151ff6f3~hK5nECVfy0437304373epoutp03g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594603682;
-        bh=CLT1OPkpGw1YjUHnIfrbYqXwcJBpjvqV4GFZIs43Tkc=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=PAtzzUaOfXzSe3lfvOa9VgpIjXXFqlgYp1tBMjxNAB08alge2F0XaEnA0zRNW4spL
-         l/0zr11UMd9GYLdzufQmXDoo3aQl8t6nOzCNT2N5/1xsgQdiG+pcRp5DUqtx2nVVKg
-         jAm+z3690rxz4SfI2xWKZxEeWa/MaJ40YeOuop/4=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200713012801epcas1p4b12b1038a5f2c4f926a5aa7eb88d13e1~hK5mm-H4Z0233102331epcas1p44;
-        Mon, 13 Jul 2020 01:28:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <91dcecde-dd0d-c930-7c45-56ba144e748c@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21594603681971.JavaMail.epsvc@epcpadp2>
-Date:   Mon, 13 Jul 2020 10:27:17 +0900
-X-CMS-MailID: 20200713012717epcms2p78e1607a05f5aa19a2aa22399f10f116c
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
-References: <91dcecde-dd0d-c930-7c45-56ba144e748c@acm.org>
-        <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
-        <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
-        <336371513.41594280882718.JavaMail.epsvc@epcpadp2>
-        <SN6PR04MB464021F98E8EDF7C79D6CB4FFC640@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p7>
+        Sun, 12 Jul 2020 21:29:50 -0400
+X-Greylist: delayed 171818 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Jul 2020 21:29:48 EDT
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 537D43F1CC;
+        Mon, 13 Jul 2020 03:29:46 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id 30D9D2A8BF;
+        Mon, 13 Jul 2020 03:29:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1594603786;
+        bh=DzARRrthKRNYxBkHCyNw7Uw/T70usSbNBg4MU6C4hEA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=atIIb9266zB7mZ5nb5Qkxm7bodxDyGsaFXLKbMbdeb1lGdLMzzalIxJYYmRTg3232
+         tPg2rViYVK4SYpAMnTolhNGGoLCVmmujM8hwh8SSaYP9QX1CQyFxCJvZesx9IO/aV7
+         uAsbcQCPbhs7Eq7W6R0oo5x1Yz25rAo3sBSYRfCY=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xFHZdzoDGxTk; Mon, 13 Jul 2020 03:29:44 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Mon, 13 Jul 2020 03:29:44 +0200 (CEST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id EDA1E4013E;
+        Mon, 13 Jul 2020 01:29:41 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="RKBl6Ztq";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.89])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0CD8A4013E;
+        Mon, 13 Jul 2020 01:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1594603779;
+        bh=DzARRrthKRNYxBkHCyNw7Uw/T70usSbNBg4MU6C4hEA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RKBl6ZtqeDEqk8COpA4GInyYpTDhbFfTxnoz816sBdFjWa8kK0if0iGaMmFqA4YKE
+         3lyuMGzdsAwUjorJJn1IpAzs33hga4tKDcRfVX6VJ1MVYztEyM1c7dKOk0qvSAtWy0
+         l4ABvFvaR/cON+zl7QcvNGT3CRuG7dIYdq2fI8Fw=
+Subject: Re:
+ arch/mips/alchemy/devboards/db1300.c:(.text.db1300_wm97xx_probe+0x2c):
+ undefined reference to `wm97xx_config_gpio'
+To:     linux-mips@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        manuel.lauss@gmail.com
+References: <202007121804.QJogPzGx%lkp@intel.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <45336876-6739-e23d-5c02-81d14ee7fb54@flygoat.com>
+Date:   Mon, 13 Jul 2020 09:29:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <202007121804.QJogPzGx%lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: EDA1E4013E
+X-Spamd-Result: default: False [1.40 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         MID_RHS_MATCH_FROM(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[5];
+         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1];
+         ML_SERVERS(-3.10)[213.133.102.83];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         FREEMAIL_CC(0.00)[lists.01.org,vger.kernel.org,alpha.franken.de,gmail.com];
+         SUSPICIOUS_RECIPS(1.50)[];
+         RCVD_COUNT_TWO(0.00)[2]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+在 2020/7/12 18:01, kernel test robot 写道:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   0aea6d5c5be33ce94c16f9ab2f64de1f481f424b
+> commit: ff487d41036035376e47972c7c522490b839ab37 MIPS: Truncate link address into 32bit for 32bit kernel
+> date:   9 weeks ago
+> config: mips-randconfig-c023-20200712 (attached as .config)
+> compiler: mipsel-linux-gcc (GCC) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>     mipsel-linux-ld: arch/mips/alchemy/devboards/db1300.o: in function `db1300_wm97xx_probe':
 
-> > Bart - how do you want to proceed?
-> 
-> Hi Avri and Daejun,
-> 
-> As far as I can see none of the five patches have Reviewed-by tags yet. I
-> think that Martin expects formal reviews for this patch series from one or
-> more reviewers who are not colleagues of the author of this patch series.
-> 
-> Note: recently I have been more busy than usual, hence the delayed reply.
-Thank you for replying to the email even though you are busy.
+Well this seems unrelated with my changes.
 
-Arvi, Bean - if patches looks ok, can this series have your reviewed-by tag?
+Just wonder if alchemy still alive?
+Should I fix it or just drop alchemy support?
 
-Thanks,
-Daejun
+- Jiaxun
+
+>>> arch/mips/alchemy/devboards/db1300.c:(.text.db1300_wm97xx_probe+0x2c): undefined reference to `wm97xx_config_gpio'
+>>> mipsel-linux-ld: arch/mips/alchemy/devboards/db1300.c:(.text.db1300_wm97xx_probe+0x4c): undefined reference to `wm97xx_config_gpio'
+>>> mipsel-linux-ld: arch/mips/alchemy/devboards/db1300.c:(.text.db1300_wm97xx_probe+0x74): undefined reference to `wm97xx_register_mach_ops'
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
