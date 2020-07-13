@@ -2,107 +2,135 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E27C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFDEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4F020738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EAB20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TOHtutDi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqYyZCjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgGMRBp (ORCPT
+        id S1730007AbgGMRDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:01:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24456 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbgGMRBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:01:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594659704; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=KRdL10OGiMuFb36lTpuRBRxlxK8Gr9DMI+wG0F30ZmI=; b=TOHtutDiYcpYtTllGxbuY4ebBSOr2HQocy4kLd8vuwtt+zU6aTGvfpKz5+Noq3IfJzPy4uZN
- fEDlEgh1WRSYV2vucQEM/Ak4qJFnmDvW8K1YrafTzDlEAliGzFM2m1e3h7fjkTOFuAg5aCgj
- 6RL3FIRu2PMa9FIJ89Xk08XT0c8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5f0c933d8423214e13976960 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 17:00:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ED482C4339C; Mon, 13 Jul 2020 17:00:44 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C255C433C6;
-        Mon, 13 Jul 2020 17:00:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C255C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 13 Jul 2020 11:00:32 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/arm-smmu: Add a init_context_bank implementation
- hook
-Message-ID: <20200713170032.GH21059@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Will Deacon <will@kernel.org>,
-        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200611223656.4724-1-jcrouse@codeaurora.org>
- <20200713151123.GB3072@willie-the-truck>
+        Mon, 13 Jul 2020 13:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729854AbgGMRDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 13:03:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA370C08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id q5so17364879wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
+        b=sqYyZCjlzGtKUdjQ8mhJhTfzzemy2MkNKIWqAUalFwRGpbEYxDschPntoZzktQOiAu
+         K+h53t1qzpSeSlG7jIs+5itZw7L3aoHSXonlpbOcTIk4FcPQgaLjOU+sz74Dr8PCz+So
+         gpMoAdFgVaZUl4nWgwg5rrx+GaRcaIsUVl+KHwGU1xC4+e0FvK4AoW5bfyO6KnJ/MlTg
+         nWomACfGj8IQL7NQCAS8To/F62fE9GAqBkiw32JXvgfE9zvZ5Vp1ZOzPzWLrKZVCWrfq
+         OoFVAiW6pdBdKGXZJK6UQBrqlM7d0egxtWC+Au3kS/B2IUd7UQ0FhsnW7x6JGGHiEwGC
+         hGgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
+        b=EaIlMlYMgV1bJBETNAuwYMlHyHgYXpiVovM2Z7NJrfGbIjpz/DiOw2fuVv9kTG/QTz
+         Nkg69IbtsXvnZ9C0lFZUu6kNJ8ueR2HfoAHtso/3Gx0rL+kkNOK3384zHvVElb8RzZ8a
+         iWpoB1jqMtng/BKIg575Pfz1xNW4ZkpoUEbS3PIe3B1706LrApPZ6KP4uHcZD6uybHDQ
+         9qksBW2zejzYWUi8hSPm5QV72VsfQ2JmM3LvZFeOxtM7IU8MSQzdRaIltSFU27uw2JLL
+         JHDA5ae4YGvH2WdnBMFFWwG2M/5VVFTX3KxZHaG+i7QgoUSoHk82iox3PwR0O6IeNkls
+         4t8g==
+X-Gm-Message-State: AOAM530fr4DrW46kM+8Cr/XayoJjH6LYI2nbIbGGI6XtdkXFr4k+Ga6N
+        6v+TuhqW33bb7QWpFVBhNEVDcB6GDc8=
+X-Google-Smtp-Source: ABdhPJxwQBfsNMkNI4xGLvZYHPzk1Tka3WLrm/vB852YmxjUd1eWVokbCzi7pGH2UsnflDHI2l+6iw==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr307750wrj.265.1594659821364;
+        Mon, 13 Jul 2020 10:03:41 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
+        by smtp.googlemail.com with ESMTPSA id a22sm304308wmj.9.2020.07.13.10.03.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 10:03:40 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/4] dt-bindings:thermal:Add cold trip point type
+To:     Thara Gopinath <thara.gopinath@linaro.org>, rui.zhang@intel.com,
+        robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <20200710135154.181454-2-thara.gopinath@linaro.org>
+ <08503e0c-c8db-6d03-9692-5339dadf6c4f@linaro.org>
+ <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b1ee5a73-863b-c6d2-5d09-1ac231f40fe2@linaro.org>
+Date:   Mon, 13 Jul 2020 19:03:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713151123.GB3072@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:11:23PM +0100, Will Deacon wrote:
-> On Thu, Jun 11, 2020 at 04:36:56PM -0600, Jordan Crouse wrote:
-> > Add a new implementation hook to allow the implementation specific code
-> > to tweek the context bank configuration just before it gets written.
-> > The first user will be the Adreno GPU implementation to turn on
-> > SCTLR.HUPCF to ensure that a page fault doesn't terminating pending
-> > transactions. Doing so could hang the GPU if one of the terminated
-> > transactions is a CP read.
-> > 
-> > This depends on the arm-smmu adreno SMMU implementation [1].
-> > 
-> > [1] https://patchwork.kernel.org/patch/11600943/
-> > 
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> > 
-> >  drivers/iommu/arm-smmu-qcom.c | 13 +++++++++++++
-> >  drivers/iommu/arm-smmu.c      | 28 +++++++++++++---------------
-> >  drivers/iommu/arm-smmu.h      | 11 +++++++++++
-> >  3 files changed, 37 insertions(+), 15 deletions(-)
+On 13/07/2020 19:01, Thara Gopinath wrote:
 > 
-> This looks straightforward enough, but I don't want to merge this without
-> a user and Sai's series has open questions afaict.
+> 
+> On 7/13/20 11:05 AM, Daniel Lezcano wrote:
+>> On 10/07/2020 15:51, Thara Gopinath wrote:
+>>> Extend thermal trip point type property to include "cold" trip type
+>>> indicating point in the temperature domain below which a warming action
+>>> must be intiated.
+>>>
+>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/thermal/thermal.txt | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> index f78bec19ca35..1689d9ba1471 100644
+>>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> @@ -87,6 +87,7 @@ Required properties:
+>>>       "active":    A trip point to enable active cooling
+>>>       "passive":    A trip point to enable passive cooling
+>>>       "hot":        A trip point to notify emergency
+>>> +    "cold":        A trip point to enable warming
+>>>       "critical":    Hardware not reliable.
+>>>     Type: string
+>>
+>>
+>> thermal.txt should have been removed. Perhaps, a patch is missing. The
+>> thermal.txt has been converted into 3 yaml schema.
+>>
+>> The change should be in thermal-zones.yaml.
+> 
+> Hi Daniel..
+> 
+> Thanks for the review. My bad.. I will fix this in the next version.
+> I can send a patch removing thermal.txt as well
 
-Not sure what you mean by a user in this context?
-Are you referring to https://patchwork.kernel.org/patch/11628541/?
+Yes, sure.
 
-> Will
+Thanks
+
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
