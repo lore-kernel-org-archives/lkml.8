@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F7DC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F92C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7049C20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3430220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="AnledLj/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="OXfyeza5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgGMGjL (ORCPT
+        id S1729525AbgGMGju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:39:11 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.122]:15076 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgGMGjJ (ORCPT
+        Mon, 13 Jul 2020 02:39:50 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:31932 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbgGMGjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594622344;
+        Mon, 13 Jul 2020 02:39:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594622349;
         s=strato-dkim-0002; d=chronox.de;
         h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZvquNBrwHBAenJw013sZDX5jgj+fGLJduwwf0jGojW8=;
-        b=AnledLj/cK57Ah5xfZbF7nyvaTbV0Wm3z1NNXHcksJKZC3ztahtHEXzvsTtANSNIBE
-        1VpYR1Gnx7O7ZNs835jQ/KyrDimogpobsmibtlXbZGtmJYVIKw1WTnOQ/1wRi2BIHCC4
-        pDiCC7KAArba8X2a5DvT2btWPMJIGWSl5yJEysEitnxmC69FNFzVhtvQYRMzjHDjOvgm
-        dxCgFfjjwB/ztnDhDy8ghUpSiI8TxightLqeq1con5IiDpvba1CPCsjfV0lewUI+Utvp
-        4Zm5PiAbVO8UGASevBadbmTiUflpTIZzqm1O9AomrEhm6GWHEalLewI4iB6LBtsEvJ/Y
-        H3/w==
+        bh=0FtSo+s3Xq4DNfeZ4uKVPtQ8C50oee0gTRDuz+8JCS8=;
+        b=OXfyeza5eGjwEjcilC1FxmnFsAB//SZc99DrhyeIts4nqA+LW6OCO7AWwf+m8eOPuB
+        GTHZOr5sK/N9lhpIyhcGvLwZ8I3k5/g873SPURvLCoDbDEDcF289TtqpWEqmeuOx9fWX
+        vd9SpPuuZIfdM3evq0Ub1JvfM1b2p8PxkSpkDNHt5xcBZ0dVOs1Amgi9e8rACsVOcnqE
+        RK6pQYnln0erT3QI9ByKMadchZmq/2EhqzBzVYs+GO2REfQDjdrX5w+vcHskhCNKsg6u
+        V2AX5hkzW5Wpw31DVrKdFrlU/+coLEYU3cEaGJs3atMjZQBELlcqFgOAfZW5rP6RmssR
+        BMEA==
 X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaIvSfHReW"
 X-RZG-CLASS-ID: mo00
 Received: from positron.chronox.de
         by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id y0546bw6D6bsk2M
+        with ESMTPSA id y0546bw6D6bok2J
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Mon, 13 Jul 2020 08:37:54 +0200 (CEST)
+        Mon, 13 Jul 2020 08:37:50 +0200 (CEST)
 From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -68,9 +68,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Julia Lawall <julia.lawall@inria.fr>,
         Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v31 05/12] crypto: DRBG - externalize DRBG functions for LRNG
-Date:   Mon, 13 Jul 2020 08:19:32 +0200
-Message-ID: <797327385.0ifERbkFSE@positron.chronox.de>
+Subject: [PATCH v31 08/12] crypto: provide access to a static Jitter RNG state
+Date:   Mon, 13 Jul 2020 08:20:44 +0200
+Message-ID: <14128491.tv2OnDr8pf@positron.chronox.de>
 In-Reply-To: <2050754.Mh6RI2rZIc@positron.chronox.de>
 References: <2050754.Mh6RI2rZIc@positron.chronox.de>
 MIME-Version: 1.0
@@ -81,8 +81,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows several DRBG functions to be called by the LRNG kernel
-code paths outside the drbg.c file.
+To support the LRNG operation which uses the Jitter RNG separately
+from the kernel crypto API, at a time where potentially the regular
+memory management is not yet initialized, the Jitter RNG needs to
+provide a state whose memory is defined at compile time. As only once
+instance will ever be needed by the LRNG, define once static memory
+block which is solely to be used by the LRNG.
 
 CC: "Eric W. Biederman" <ebiederm@xmission.com>
 CC: "Alexander E. Patrakov" <patrakov@gmail.com>
@@ -106,122 +110,91 @@ Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
 Tested-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: Stephan Mueller <smueller@chronox.de>
 =2D--
- crypto/drbg.c         | 16 ++++++++++------
- include/crypto/drbg.h |  7 +++++++
- 2 files changed, 17 insertions(+), 6 deletions(-)
+ crypto/jitterentropy-kcapi.c                  |  3 +-
+ crypto/jitterentropy.c                        | 31 ++++++++++++++++++-
+ .../crypto/internal}/jitterentropy.h          |  3 ++
+ 3 files changed, 34 insertions(+), 3 deletions(-)
+ rename {crypto =3D> include/crypto/internal}/jitterentropy.h (84%)
 
-diff --git a/crypto/drbg.c b/crypto/drbg.c
-index 8d80d93cab97..36f1fb41e85e 100644
-=2D-- a/crypto/drbg.c
-+++ b/crypto/drbg.c
-@@ -113,7 +113,7 @@
-  * the SHA256 / AES 256 over other ciphers. Thus, the favored
-  * DRBGs are the latest entries in this array.
-  */
-=2Dstatic const struct drbg_core drbg_cores[] =3D {
-+const struct drbg_core drbg_cores[] =3D {
- #ifdef CONFIG_CRYPTO_DRBG_CTR
- 	{
- 		.flags =3D DRBG_CTR | DRBG_STRENGTH128,
-@@ -190,6 +190,7 @@ static const struct drbg_core drbg_cores[] =3D {
- 	},
- #endif /* CONFIG_CRYPTO_DRBG_HMAC */
- };
-+EXPORT_SYMBOL(drbg_cores);
+diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
+index b43684c0dade..ed21fab13da6 100644
+=2D-- a/crypto/jitterentropy-kcapi.c
++++ b/crypto/jitterentropy-kcapi.c
+@@ -43,8 +43,7 @@
+ #include <linux/time.h>
+ #include <linux/crypto.h>
+ #include <crypto/internal/rng.h>
+=2D
+=2D#include "jitterentropy.h"
++#include <crypto/internal/jitterentropy.h>
 =20
- static int drbg_uninstantiate(struct drbg_state *drbg);
+ /*************************************************************************=
+**
+  * Helper function
+diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
+index 57f4a1ac738b..7ab229c6c96b 100644
+=2D-- a/crypto/jitterentropy.c
++++ b/crypto/jitterentropy.c
+@@ -117,7 +117,7 @@ struct rand_data {
+ #define JENT_EHEALTH		9 /* Health test failed during initialization */
+ #define JENT_ERCT		10 /* RCT failed during initialization */
 =20
-@@ -205,7 +206,7 @@ static int drbg_uninstantiate(struct drbg_state *drbg);
-  * Return: normalized strength in *bytes* value or 32 as default
-  *	   to counter programming errors
-  */
-=2Dstatic inline unsigned short drbg_sec_strength(drbg_flag_t flags)
-+unsigned short drbg_sec_strength(drbg_flag_t flags)
- {
- 	switch (flags & DRBG_STRENGTH_MASK) {
- 	case DRBG_STRENGTH128:
-@@ -218,6 +219,7 @@ static inline unsigned short drbg_sec_strength(drbg_fla=
-g_t flags)
- 		return 32;
- 	}
+=2D#include "jitterentropy.h"
++#include <crypto/internal/jitterentropy.h>
+=20
+ /*************************************************************************=
+**
+  * Adaptive Proportion Test
+@@ -854,3 +854,32 @@ int jent_entropy_init(void)
+=20
+ 	return 0;
  }
-+EXPORT_SYMBOL(drbg_sec_strength);
-=20
- /*
-  * FIPS 140-2 continuous self test for the noise source
-@@ -1214,7 +1216,7 @@ static int drbg_seed(struct drbg_state *drbg, struct =
-drbg_string *pers,
- }
-=20
- /* Free all substructures in a DRBG state without the DRBG state structure=
- */
-=2Dstatic inline void drbg_dealloc_state(struct drbg_state *drbg)
-+void drbg_dealloc_state(struct drbg_state *drbg)
- {
- 	if (!drbg)
- 		return;
-@@ -1235,12 +1237,13 @@ static inline void drbg_dealloc_state(struct drbg_s=
-tate *drbg)
- 		drbg->fips_primed =3D false;
- 	}
- }
-+EXPORT_SYMBOL(drbg_dealloc_state);
-=20
- /*
-  * Allocate all sub-structures for a DRBG state.
-  * The DRBG state structure must already be allocated.
-  */
-=2Dstatic inline int drbg_alloc_state(struct drbg_state *drbg)
-+int drbg_alloc_state(struct drbg_state *drbg)
- {
- 	int ret =3D -ENOMEM;
- 	unsigned int sb_size =3D 0;
-@@ -1321,6 +1324,7 @@ static inline int drbg_alloc_state(struct drbg_state =
-*drbg)
- 	drbg_dealloc_state(drbg);
- 	return ret;
- }
-+EXPORT_SYMBOL(drbg_alloc_state);
-=20
- /*************************************************************************
-  * DRBG interface functions
-@@ -1890,8 +1894,7 @@ static int drbg_kcapi_sym_ctr(struct drbg_state *drbg,
-  *
-  * return: flags
-  */
-=2Dstatic inline void drbg_convert_tfm_core(const char *cra_driver_name,
-=2D					 int *coreref, bool *pr)
-+void drbg_convert_tfm_core(const char *cra_driver_name, int *coreref, bool=
- *pr)
- {
- 	int i =3D 0;
- 	size_t start =3D 0;
-@@ -1918,6 +1921,7 @@ static inline void drbg_convert_tfm_core(const char *=
-cra_driver_name,
- 		}
- 	}
- }
-+EXPORT_SYMBOL(drbg_convert_tfm_core);
-=20
- static int drbg_kcapi_init(struct crypto_tfm *tfm)
- {
-diff --git a/include/crypto/drbg.h b/include/crypto/drbg.h
-index c4165126937e..71d53e028e6d 100644
-=2D-- a/include/crypto/drbg.h
-+++ b/include/crypto/drbg.h
-@@ -278,4 +278,11 @@ enum drbg_prefixes {
- 	DRBG_PREFIX3
- };
-=20
-+extern int drbg_alloc_state(struct drbg_state *drbg);
-+extern void drbg_dealloc_state(struct drbg_state *drbg);
-+extern void drbg_convert_tfm_core(const char *cra_driver_name, int *corere=
-f,
-+				  bool *pr);
-+extern const struct drbg_core drbg_cores[];
-+extern unsigned short drbg_sec_strength(drbg_flag_t flags);
 +
- #endif /* _DRBG_H */
++struct rand_data *jent_lrng_entropy_collector(void)
++{
++	static unsigned char lrng_jent_mem[JENT_MEMORY_SIZE];
++	static struct rand_data lrng_jent_state =3D {
++		.data		=3D 0,
++		.old_data	=3D 0,
++		.prev_time	=3D 0,
++		.last_delta	=3D 0,
++		.last_delta2	=3D 0,
++		.osr		=3D 1,
++		.mem		=3D lrng_jent_mem,
++		.memlocation	=3D 0,
++		.memblocks	=3D JENT_MEMORY_BLOCKSIZE,
++		.memblocksize	=3D JENT_MEMORY_BLOCKS,
++		.memaccessloops	=3D JENT_MEMORY_ACCESSLOOPS,
++		.rct_count	=3D 0,
++		.apt_observations =3D 0,
++		.apt_count	=3D 0,
++		.apt_base	=3D 0,
++		.apt_base_set	=3D 0,
++		.health_failure =3D 0
++	};
++
++	if (jent_entropy_init())
++		return NULL;
++
++	return &lrng_jent_state;
++}
+diff --git a/crypto/jitterentropy.h b/include/crypto/internal/jitterentropy=
+=2Eh
+similarity index 84%
+rename from crypto/jitterentropy.h
+rename to include/crypto/internal/jitterentropy.h
+index c83fff32d130..6e07d86eac82 100644
+=2D-- a/crypto/jitterentropy.h
++++ b/include/crypto/internal/jitterentropy.h
+@@ -15,3 +15,6 @@ extern int jent_read_entropy(struct rand_data *ec, unsign=
+ed char *data,
+ extern struct rand_data *jent_entropy_collector_alloc(unsigned int osr,
+ 						      unsigned int flags);
+ extern void jent_entropy_collector_free(struct rand_data *entropy_collecto=
+r);
++
++/* Access to statically allocated Jitter RNG instance */
++extern struct rand_data *jent_lrng_entropy_collector(void);
 =2D-=20
 2.26.2
 
