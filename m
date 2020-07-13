@@ -2,147 +2,107 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C20C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC9DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0FD20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE7920C56
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594680041;
+	bh=LngYbj1Kf7uDVAe2CfAZmM9u775CIEXPDx/Jo0cAFDY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VFcMz6k5HdYS4wVz0AP+MgyPzbyOWVS/CBs/g9OsWU1gECXSFaIswfyPyqbF32HeU
+	 O4CK5vl+BWlOLBNVJkycJ+Ki0fqp+pcQ1xOGYgsQ17MJH7eSLzQkaNC8H8CshzvxaL
+	 zxiShXMa8jAyzJ5A9vZVz7tpM71cPCwYffXdaFJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgGMWiQ (ORCPT
+        id S1726582AbgGMWkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:38:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5700 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgGMWiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:38:15 -0400
-IronPort-SDR: 44qvSvFyo2lKePg1IkSrTkh6K5bjZHrKtX7eDSAFhv+QIGKhPskQLOqp/pk2qRQvcBcJAFSORs
- gJ6Evsj2karQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146224462"
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="146224462"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 15:38:15 -0700
-IronPort-SDR: IpyIMX0t1rB8a1TTalxn/v1J7mpdLo6d6Z5VYqRXv0StGB90ulFvBo7C0zNAGwuavejuV4PmA3
- OlO8yrVixS9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="429551992"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jul 2020 15:38:14 -0700
-Date:   Mon, 13 Jul 2020 15:38:14 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] KVM: nSVM: introduce
- nested_svm_load_cr3()/nested_npt_enabled()
-Message-ID: <20200713223814.GG29725@linux.intel.com>
-References: <20200710141157.1640173-1-vkuznets@redhat.com>
- <20200710141157.1640173-6-vkuznets@redhat.com>
+        Mon, 13 Jul 2020 18:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGMWkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 18:40:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC67C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:40:39 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y18so10147555lfh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:40:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HnJWx12hVJg3iJ15gjLaMo6h/qhb59V4NN6hR9JaCZg=;
+        b=eb+hINqXmN77iclaBvgzj7oKTDFR5ZM04xBhfglNmVlDSPcSKYlOucCKVU/Y+fOqyF
+         q7nuuQfOytXG4TvlsZs3ifjK68z+xAf23viuOENQPIWTMHJ6tagpGQvg7HjmxfsByic+
+         LLxLOg4FvHKTAVeuFcSKe4/SW5iR44uDXKk+4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HnJWx12hVJg3iJ15gjLaMo6h/qhb59V4NN6hR9JaCZg=;
+        b=pQR5l7mMNHdrjhw+e1D9eG8dOfOHv14i/sHVE7j39YUE1+10926VOwaJ6GY70+6t3r
+         J2lQDWPE9HNkRfVqbUnitwY4vOz9sOSm6SqL8uiWIamyzLXRqHa64LI1XcbXG8cuGafi
+         iAJAB0TuKoBfVuWbHR/ZYW/InTk0E+JEOsKlk9qmGRbZvLpB6fVAESwQHdwRy3gHDmQt
+         7vtwcR1OKLByqgZxYVYZjpfxGnHhgCcNQrZlRSXx17ct9xa/c71DuqMqTPieJAI1FTgi
+         o72Mx8rJMWnWwLjO7Ib3wcs3/zQDeY/FNOgwSiFmn0oHnXReb5+5YqrbQiT82ITy/vYC
+         hN2w==
+X-Gm-Message-State: AOAM532NrKShSV3KDX224gIkjzANeRgVc1b1nmBqU/DjW/oAGR1pyJbl
+        f+AQhfpA3sSgc7UZTtc4ANNONNqt9Ik=
+X-Google-Smtp-Source: ABdhPJxLCS/fWZ+/aN8Lz37xeAuot5ujmcfLlrIMxbn0X6CxYUEIvqVkkR9FufaPhZJ41ZLcuibCgw==
+X-Received: by 2002:ac2:5e6e:: with SMTP id a14mr636611lfr.79.1594680037482;
+        Mon, 13 Jul 2020 15:40:37 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id s4sm4872521lfc.71.2020.07.13.15.40.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 15:40:35 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id f5so20048582ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:40:35 -0700 (PDT)
+X-Received: by 2002:a2e:760b:: with SMTP id r11mr877324ljc.285.1594680035133;
+ Mon, 13 Jul 2020 15:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710141157.1640173-6-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200530221127.459704-1-brgerst@gmail.com> <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
+ <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com> <CAKwvOdmGtZtqF5f-5x0n4GNCWLOnrk2r6e3X2XHGmoOL7f7u0g@mail.gmail.com>
+In-Reply-To: <CAKwvOdmGtZtqF5f-5x0n4GNCWLOnrk2r6e3X2XHGmoOL7f7u0g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 13 Jul 2020 15:40:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=winDAeDTAe33QVoRvTJELMDjQpYPqSPcNwSk+SwPrav=g@mail.gmail.com>
+Message-ID: <CAHk-=winDAeDTAe33QVoRvTJELMDjQpYPqSPcNwSk+SwPrav=g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] x86: Clean up percpu operations
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Alistair Delva <adelva@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 04:11:53PM +0200, Vitaly Kuznetsov wrote:
-> As a preparatory change for implementing nested specifig PGD switch for
+On Mon, Jul 13, 2020 at 3:24 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Otherwise, is there any additional feedback on this series or is it good to go?
 
-s/specifig/specific
+I've lost sight of the series. I'm sure it is fine, but maybe you can
+resend it to me (in private, if it's already been going out on the
+mailing lists and everybody else is completely fed up with it).
 
-> nSVM (following nVMX' nested_vmx_load_cr3()) instead of relying on
+And no, pointing to the "plus this hunk" with a web link isn't what I
+was looking for ;)
 
-nVMX's
-
-> kvm_set_cr3() introduce nested_svm_load_cr3().
-
-The changelog isn't all that helpful to understanding the actual change.
-All this is doing is wrapping kvm_set_cr3(), but that's not at all obvious
-from reading the above.
-
-E.g.
-
-  Add nested_svm_load_cr3() as a pass-through to kvm_set_cr3() as a
-  preparatory change for implementing nested specific PGD switch for nSVM,
-  (following nVMx's nested_vmx_load_cr3()).
-
-> No functional change intended.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/svm/nested.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 5e6c988a4e6b..180929f3dbef 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -311,6 +311,21 @@ static void nested_vmcb_save_pending_event(struct vcpu_svm *svm,
->  	nested_vmcb->control.exit_int_info = exit_int_info;
->  }
->  
-> +static inline bool nested_npt_enabled(struct vcpu_svm *svm)
-> +{
-> +	return svm->nested.ctl.nested_ctl & SVM_NESTED_CTL_NP_ENABLE;
-> +}
-> +
-> +/*
-> + * Load guest's cr3 at nested entry. @nested_npt is true if we are
-> + * emulating VM-Entry into a guest with NPT enabled.
-> + */
-> +static int nested_svm_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3,
-> +			       bool nested_npt)
-
-IMO the addition of nested_npt_enabled() should be a separate patch, and
-the additoin of @nested_npt should be in patch 7.
-
-Hypothetically speaking, if nested_npt_enabled() is inaccurate at the call
-site in nested_prepare_vmcb_save(), then this patch is technically wrong
-even though it doesn't introduce a bug.  Given that the call site of
-nested_svm_load_cr3() is moved in patch 7, I don't see any value in adding
-the placeholder parameter early.
-
-> +{
-> +	return kvm_set_cr3(vcpu, cr3);
-> +}
-> +
->  static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
->  {
->  	/* Load the nested guest state */
-> @@ -324,7 +339,8 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
->  	svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
->  	svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
->  	svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
-> -	(void)kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3);
-> +	(void)nested_svm_load_cr3(&svm->vcpu, nested_vmcb->save.cr3,
-> +				  nested_npt_enabled(svm));
->  
->  	svm->vmcb->save.cr2 = svm->vcpu.arch.cr2 = nested_vmcb->save.cr2;
->  	kvm_rax_write(&svm->vcpu, nested_vmcb->save.rax);
-> @@ -343,7 +359,8 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
->  static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
->  {
->  	const u32 mask = V_INTR_MASKING_MASK | V_GIF_ENABLE_MASK | V_GIF_MASK;
-> -	if (svm->nested.ctl.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
-> +
-> +	if (nested_npt_enabled(svm))
->  		nested_svm_init_mmu_context(&svm->vcpu);
->  
->  	/* Guest paging mode is active - reset mmu */
-> -- 
-> 2.25.4
-> 
+             Linus
