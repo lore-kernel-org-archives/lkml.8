@@ -2,197 +2,176 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6424EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563A72067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fung/LLF"
+	by mail.kernel.org (Postfix) with ESMTP id 4CEB8207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgGMUxo (ORCPT
+        id S1726762AbgGMU6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60926 "EHLO
+        Mon, 13 Jul 2020 16:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgGMUxo (ORCPT
+        with ESMTP id S1726325AbgGMU6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:53:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2616C061755;
-        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so18386147wrw.1;
-        Mon, 13 Jul 2020 13:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GZtfiXav89wkpI0gUU9ArbYeF3poYQO7hSKJ5JBj8Is=;
-        b=fung/LLFRum+RDTwtolw1vvFrmSuH4yuAH9sTFKLqHGXSoVOLz0V+QPjaSF67njYrh
-         c7yACuSsPqsGdbLoSnXE+v5vWPfPRpqBPagAYRLi8BYIdRg1SY/ZEwCjDSxNX8hgCR7i
-         cvDoaUvvedmz2cGAyfc2U0qfLSH1obS3KAu8Y1CmN6suX+iC30domrBnyd/i21FAZxCm
-         pLgyzlEiA72HCw9g9LJeCId9SzUvSi9jf/cWKiTrFkQ6LEwRRetWGdEnvGLQis5XSKHo
-         ddxC6i8d50v+DYMzTTtUSZJCHR90BrTWW+nmgJP6+0sZaGqVNeab366zV0mYRVmRePGH
-         RLmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GZtfiXav89wkpI0gUU9ArbYeF3poYQO7hSKJ5JBj8Is=;
-        b=MXWuVr/XNQsk0n0Rz8VYN62hjANyhojoV9gZQwCXeqww/MNgEuWr7nPxieZr3puCqF
-         PUHY45BOT/s1oXZNxSWuase/kKOtJcHTeq9P355UwOaDmSj3wRGHey3HBgWIzPcVYMHE
-         ODdujQAGZwuxNSCspYv17zFa0xoIT/vX2rWQxY+FymztX7TWIxEXE2dhFoLky9SZdtMh
-         wfYv+znOXWX9FaSShxWUxX3RjPZf1S+85dtf22yq5RXGhx72R9qTleF3L05WdrXejr6G
-         /mKGYWYijrpyyrUFW9mq0PtyhpXUHMhFx/kX2KuWmKJFc645XWGEA8USMCotiiE7pgxT
-         lNgg==
-X-Gm-Message-State: AOAM533H56v2+W68rlNuirsihGAhYvouqGxkOMLByTWWYSmqNKCxh0jS
-        /6oHzgkBmZiJnBR6yE9V1RyN9diu
-X-Google-Smtp-Source: ABdhPJxnGb0JC591zQeRAAFavJrZe5Bs7bJiLfZd0l0fnWlLWIChM52eUyFnE2RxEUQoQUNPkvkS5w==
-X-Received: by 2002:adf:f54b:: with SMTP id j11mr1373720wrp.206.1594673622534;
-        Mon, 13 Jul 2020 13:53:42 -0700 (PDT)
-Received: from cluster5 ([80.76.206.81])
-        by smtp.gmail.com with ESMTPSA id a15sm29443811wrh.54.2020.07.13.13.53.41
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Mon, 13 Jul 2020 13:53:42 -0700 (PDT)
-From:   Matthew Hagan <mnhagan88@gmail.com>
-Cc:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>
-Subject: [PATCH 1/2] net: dsa: qca8k: Add additional PORT0_PAD_CTRL options
-Date:   Mon, 13 Jul 2020 21:50:25 +0100
-Message-Id: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
-X-Mailer: git-send-email 2.25.4
+        Mon, 13 Jul 2020 16:58:31 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60859C061755;
+        Mon, 13 Jul 2020 13:58:31 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 347F8BC07E;
+        Mon, 13 Jul 2020 20:58:27 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] watchdog: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:58:21 +0200
+Message-Id: <20200713205821.38223-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of devices require additional PORT0_PAD configuration that cannot
-otherwise be inferred. This patch is based on John Crispin's "net: dsa:
-qca8k: allow swapping of mac0 and mac6", adding the ability to swap mac0
-and mac6, as well as to set the transmit and receive clock phase to falling
-edge.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-To keep things tidy, a function has been added to handle these device tree
-properties. However this handling could be moved to the
-qca8k_phylink_mac_config function if preferred.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/net/dsa/qca8k.c | 42 +++++++++++++++++++++++++++++++++++------
- drivers/net/dsa/qca8k.h |  3 +++
- 2 files changed, 39 insertions(+), 6 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 4acad5fa0c84..1443f97dd348 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -587,6 +587,28 @@ qca8k_setup_mdio_bus(struct qca8k_priv *priv)
- 	return 0;
- }
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/devicetree/bindings/watchdog/davinci-wdt.txt | 4 ++--
+ drivers/watchdog/Kconfig                                   | 2 +-
+ drivers/watchdog/dw_wdt.c                                  | 2 +-
+ drivers/watchdog/nv_tco.c                                  | 2 +-
+ drivers/watchdog/nv_tco.h                                  | 2 +-
+ drivers/watchdog/sp5100_tco.c                              | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+index e60b9a13bdcb..aa10b8ec36e2 100644
+--- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+@@ -11,8 +11,8 @@ Optional properties:
+ 	   See clock-bindings.txt
  
-+static void
-+qca8k_setup_port_pad_ctrl_reg(struct qca8k_priv *priv)
-+{
-+	u32 val = qca8k_read(priv, QCA8K_REG_PORT0_PAD_CTRL);
-+
-+	/* Swap MAC0-MAC6 */
-+	if (of_property_read_bool(priv->dev->of_node,
-+				  "qca,exchange-mac0-mac6"))
-+		val |= QCA8K_PORT0_PAD_CTRL_MAC06_EXCHG;
-+
-+	/* SGMII Clock phase configuration */
-+	if (of_property_read_bool(priv->dev->of_node,
-+				  "qca,sgmii-rxclk-falling-edge"))
-+		val |= QCA8K_PORT0_PAD_SGMII_RXCLK_FALLING_EDGE;
-+
-+	if (of_property_read_bool(priv->dev->of_node,
-+				  "qca,sgmii-txclk-falling-edge"))
-+		val |= QCA8K_PORT0_PAD_SGMII_TXCLK_FALLING_EDGE;
-+
-+	qca8k_write(priv, QCA8K_REG_PORT0_PAD_CTRL, val);
-+}
-+
- static int
- qca8k_setup(struct dsa_switch *ds)
- {
-@@ -611,6 +633,9 @@ qca8k_setup(struct dsa_switch *ds)
- 	if (ret)
- 		return ret;
+ Documentation:
+-Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+-Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
++Davinci DM646x - https://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
++Keystone - https://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
  
-+	/* Configure additional port pad properties */
-+	qca8k_setup_port_pad_ctrl_reg(priv);
-+
- 	/* Enable CPU Port */
- 	qca8k_reg_set(priv, QCA8K_REG_GLOBAL_FW_CTRL0,
- 		      QCA8K_GLOBAL_FW_CTRL0_CPU_PORT_EN);
-@@ -722,27 +747,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		return;
- 	}
+ Examples:
  
-+	/* Read port pad ctrl reg */
-+	val = qca8k_read(priv, reg);
-+
- 	switch (state->interface) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 		/* RGMII mode means no delay so don't enable the delay */
--		qca8k_write(priv, reg, QCA8K_PORT_PAD_RGMII_EN);
-+		val |= QCA8K_PORT_PAD_RGMII_EN;
-+		qca8k_write(priv, reg, val);
- 		break;
- 	case PHY_INTERFACE_MODE_RGMII_ID:
- 		/* RGMII_ID needs internal delay. This is enabled through
- 		 * PORT5_PAD_CTRL for all ports, rather than individual port
- 		 * registers
- 		 */
--		qca8k_write(priv, reg,
--			    QCA8K_PORT_PAD_RGMII_EN |
--			    QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
--			    QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY));
-+		val |= QCA8K_PORT_PAD_RGMII_EN |
-+		       QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
-+		       QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY);
-+		qca8k_write(priv, reg, val);
- 		qca8k_write(priv, QCA8K_REG_PORT5_PAD_CTRL,
- 			    QCA8K_PORT_PAD_RGMII_RX_DELAY_EN);
- 		break;
- 	case PHY_INTERFACE_MODE_SGMII:
- 	case PHY_INTERFACE_MODE_1000BASEX:
- 		/* Enable SGMII on the port */
--		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-+		val |= QCA8K_PORT_PAD_SGMII_EN;
-+		qca8k_write(priv, reg, val);
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 4f4687c46d38..ab7aad5a1e69 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1027,7 +1027,7 @@ config ADVANTECH_WDT
+ 	  If you are configuring a Linux kernel for the Advantech single-board
+ 	  computer, say `Y' here to support its built-in watchdog timer
+ 	  feature. More information can be found at
+-	  <http://www.advantech.com.tw/products/>
++	  <https://www.advantech.com.tw/products/>
  
- 		/* Enable/disable SerDes auto-negotiation as necessary */
- 		val = qca8k_read(priv, QCA8K_REG_PWS);
-diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-index 10ef2bca2cde..4e115557e571 100644
---- a/drivers/net/dsa/qca8k.h
-+++ b/drivers/net/dsa/qca8k.h
-@@ -26,6 +26,9 @@
- #define   QCA8K_MASK_CTRL_ID_M				0xff
- #define   QCA8K_MASK_CTRL_ID_S				8
- #define QCA8K_REG_PORT0_PAD_CTRL			0x004
-+#define   QCA8K_PORT0_PAD_CTRL_MAC06_EXCHG		BIT(31)
-+#define   QCA8K_PORT0_PAD_SGMII_RXCLK_FALLING_EDGE	BIT(19)
-+#define   QCA8K_PORT0_PAD_SGMII_TXCLK_FALLING_EDGE	BIT(18)
- #define QCA8K_REG_PORT5_PAD_CTRL			0x008
- #define QCA8K_REG_PORT6_PAD_CTRL			0x00c
- #define   QCA8K_PORT_PAD_RGMII_EN			BIT(26)
+ config ALIM1535_WDT
+ 	tristate "ALi M1535 PMU Watchdog Timer"
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index fba21de2bbad..57bbc1434341 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright 2010-2011 Picochip Ltd., Jamie Iles
+- * http://www.picochip.com
++ * https://www.picochip.com
+  *
+  * This file implements a driver for the Synopsys DesignWare watchdog device
+  * in the many subsystems. The watchdog has 16 different timeout periods
+diff --git a/drivers/watchdog/nv_tco.c b/drivers/watchdog/nv_tco.c
+index d7a560e348d5..179fb9aa3cf4 100644
+--- a/drivers/watchdog/nv_tco.c
++++ b/drivers/watchdog/nv_tco.c
+@@ -7,7 +7,7 @@
+  *	Based off i8xx_tco.c:
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	TCO timer driver for NV chipsets
+  *	based on softdog.c by Alan Cox <alan@redhat.com>
+diff --git a/drivers/watchdog/nv_tco.h b/drivers/watchdog/nv_tco.h
+index d325e528010f..c65f82588386 100644
+--- a/drivers/watchdog/nv_tco.h
++++ b/drivers/watchdog/nv_tco.h
+@@ -9,7 +9,7 @@
+  *
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	Neither kernel concepts nor Nils Faerber admit liability nor provide
+  *	warranty for any of this software. This material is provided
+diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+index 93bd302ae7c5..85e9664318c9 100644
+--- a/drivers/watchdog/sp5100_tco.c
++++ b/drivers/watchdog/sp5100_tco.c
+@@ -7,7 +7,7 @@
+  *	Based on i8xx_tco.c:
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	See AMD Publication 43009 "AMD SB700/710/750 Register Reference Guide",
+  *	    AMD Publication 45482 "AMD SB800-Series Southbridges Register
 -- 
-2.25.4
+2.27.0
 
