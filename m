@@ -2,102 +2,123 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA87C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C704AC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776A520771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96878207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PWuqcgBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgGMPmL (ORCPT
+        id S1729946AbgGMPmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        Mon, 13 Jul 2020 11:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729492AbgGMPmK (ORCPT
+        with ESMTP id S1729806AbgGMPmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:42:10 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC510C061755;
-        Mon, 13 Jul 2020 08:42:10 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0F45BBC0C2;
-        Mon, 13 Jul 2020 15:42:07 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     awalls@md.metrocast.net, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] [media] ivtv: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 17:42:01 +0200
-Message-Id: <20200713154201.35478-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 11:42:49 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B16AC08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:42:49 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id u12so10229043qth.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o6mVIteS5H22xj7K9FbgllDWoWh0dWKcuZiDimv8WT0=;
+        b=PWuqcgBxjYScsRLGOLnb7Muj06nTih8BeA2wxRUzz65ls/OgusFE+hlPsst9WP7HSl
+         0wbLJmYCzmvh57Itn/lK1AWfozL4MPIcAdPDZV7lupW5RvF3pkuafSA2sQNkM6/hqZtY
+         qQ4NPXtZUw5pXwb1Xj2IPAY8uHSEfhXfEVSEe3sxsvn9hssb/iaxp+EbEo50Ou1k6Vka
+         T0NCu5E/Xs+oZnort4PcU5yEmqjWsr56TC4r9K+kCGtIZehRrxSMXNVk8vg8XHKv4aXi
+         /32B36zBejkNQ6VA+C5FQU9i4t4HBbFH2GYLmR1lUwNIKq7WPl62vAy/VCAvd+aSzn3g
+         R4Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o6mVIteS5H22xj7K9FbgllDWoWh0dWKcuZiDimv8WT0=;
+        b=dMaN8KLHvlTFi4lOAsSx1PJ2J2nUZ+cXx+ZyUjffVvDXm/8gn2FLgZXEPymg99UW/u
+         HULcHS8cE6dTClTyWeIZbNN1XbFA0JjqOGfquh1gfKYnm73/cKnkQmJcIMjJUmwGV0gW
+         HBVbzB4H6JU4VvbeZMGWpZfafENsJylly1Dc+VuewQ+ph/AwUHR194AS1jN4W0hYf4LU
+         i+YV/o0LS/ZW11lSDz3TT9sB34z0cjPsqhPNo1UnJNSqR/M5ZDGEh7ceNaV1C/xcl2Qw
+         ouURFkfmr0LbJJM+SzWjC8doRY6RMypZhrVeN+s6STu5rWoF2upwmkY8RYk8YPsKVpRa
+         A6vQ==
+X-Gm-Message-State: AOAM530Z0XUPICi1dKP8ts23HLLEcF5g1bAAiztfwGWKRivGe2xwFCf0
+        tCRZvv6WJ/lbT+QhLLKxKSMTjQ==
+X-Google-Smtp-Source: ABdhPJxV2KKXGOQ10kOUx+nUwR0+7ahOgBJa7GfDP+fROft5m6+JqIu5v0A9I3+GFGxVzwGxo7V3eQ==
+X-Received: by 2002:ac8:45d1:: with SMTP id e17mr88246364qto.159.1594654968159;
+        Mon, 13 Jul 2020 08:42:48 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:42:47 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 0/7] Add SM8150 and SM8250 interconnect drivers
+Date:   Mon, 13 Jul 2020 11:41:09 -0400
+Message-Id: <20200713154121.22094-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Most of this is generated from downstream dts using a script.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+There are a couple things I'm still not sure about:
+* When to set keepalive in DEFINE_QBCM macro (set to all false)
+* Size for the reg fields. For the size I just used 0x1000.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+v2: single yaml file for RPMh interconnect bindings, drop display RSC
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Jonathan Marek (7):
+  dt-bindings: interconnect: single yaml file for RPMh interconnect
+    drivers
+  dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
+  dt-bindings: interconnect: Add Qualcomm SM8250 DT bindings
+  interconnect: qcom: Add SM8150 interconnect provider driver
+  interconnect: qcom: Add SM8250 interconnect provider driver
+  arm64: dts: qcom: sm8150: add interconnect nodes
+  arm64: dts: qcom: sm8250: add interconnect nodes
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+ .../{qcom,sc7180.yaml => qcom,rpmh.yaml}      |  55 +-
+ .../bindings/interconnect/qcom,sdm845.yaml    |  74 --
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          |  82 +++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  82 +++
+ drivers/interconnect/qcom/Kconfig             |  20 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/sm8150.c            | 639 +++++++++++++++++
+ drivers/interconnect/qcom/sm8150.h            | 153 ++++
+ drivers/interconnect/qcom/sm8250.c            | 655 ++++++++++++++++++
+ drivers/interconnect/qcom/sm8250.h            | 163 +++++
+ .../dt-bindings/interconnect/qcom,sm8150.h    | 163 +++++
+ .../dt-bindings/interconnect/qcom,sm8250.h    | 173 +++++
+ 12 files changed, 2186 insertions(+), 77 deletions(-)
+ rename Documentation/devicetree/bindings/interconnect/{qcom,sc7180.yaml => qcom,rpmh.yaml} (56%)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+ create mode 100644 drivers/interconnect/qcom/sm8150.c
+ create mode 100644 drivers/interconnect/qcom/sm8150.h
+ create mode 100644 drivers/interconnect/qcom/sm8250.c
+ create mode 100644 drivers/interconnect/qcom/sm8250.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
 
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/media/pci/ivtv/ivtv-cards.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/pci/ivtv/ivtv-cards.c b/drivers/media/pci/ivtv/ivtv-cards.c
-index ca6daba3a34a..c8f4ed7ff2c6 100644
---- a/drivers/media/pci/ivtv/ivtv-cards.c
-+++ b/drivers/media/pci/ivtv/ivtv-cards.c
-@@ -53,7 +53,7 @@ static struct ivtv_card_tuner_i2c ivtv_i2c_tda8290 = {
- 
- /********************** card configuration *******************************/
- 
--/* Please add new PCI IDs to: http://pci-ids.ucw.cz/
-+/* Please add new PCI IDs to: https://pci-ids.ucw.cz/
-    This keeps the PCI ID database up to date. Note that the entries
-    must be added under vendor 0x4444 (Conexant) as subsystem IDs.
-    New vendor IDs should still be added to the vendor ID list. */
 -- 
-2.27.0
+2.26.1
 
