@@ -2,129 +2,59 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ACBC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF19C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D7020771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="p5NtX2gb"
+	by mail.kernel.org (Postfix) with ESMTP id 1B0EF20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgGMPj4 (ORCPT
+        id S1730054AbgGMPk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40502 "EHLO
+        Mon, 13 Jul 2020 11:40:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMPj4 (ORCPT
+        with ESMTP id S1729644AbgGMPk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:39:56 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5823C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:39:55 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g20so14102104edm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=du57OarKMFj2//aqQNh8usAhJGOEHYQoIDCsSqzfRrA=;
-        b=p5NtX2gb+X8NBTzJ3q4wi1YSieEG+HNt+0otz/H/s/4MmLGrJII8dW/W0UVEpeW0Hg
-         qC3dEPnVuhhvBwHhOLmT0GIL1CYUYMo9ubUoSer6T64yW74mkvzKKDKlZDVr19K+cYri
-         LtlbMnBKoOcwmDXe/2csa9LQ7/dQV+rttec6lQsYqYKQLaZDSoi1NaLa2MvaowwAoBYv
-         FeI+RRFcbGjItkCjE4SunsxqoBYnRp76pca1wVuHw/7y67Q/sHjhAzl/ezQtIiTEEG4j
-         yQVjwihttrowt+w804UNoet1fmlmsFKNkFYmUigdIXnkpiItEwYkP2N/ahsYzcyDUeNq
-         Dsyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=du57OarKMFj2//aqQNh8usAhJGOEHYQoIDCsSqzfRrA=;
-        b=pvR+FEi+VVtnzao+ZIP9oxpQ2fGS/Lo7/iqqahRniCbAYUsjQNAIj6OG5a8u5Hm2qo
-         LW60SV8f1GVOZPW670PGPFx1nSMtVCZL22D/vFolxcWaiTCuLW8dDmzcV5WYy0xmh9B4
-         PTauu3Eukdf6SDXzdVmNSaqDOJ48plV2+Fr4avZA+NFx/LN9o2YvXUn+oIrLYrDb4+1B
-         /RVgItyV7MxRzkU6Z5XJpQxL29GVx3r/ukSs/bySX8hcpIDP/5GuFq/4R8JdkCzDIyKY
-         oXE1Wz+LCzPt7QsGZ1Vulniryc/JubTeVq3nuqm4h9I41+Ly5JwQG47J88jvld8+1Rug
-         Qp+Q==
-X-Gm-Message-State: AOAM530s270uDq62c3X7NR+zit4H5pkwTGQmYgiSw1/cvWFgOS6oukNI
-        5FpAKFixVmTKUJgmVCirDlhleepYUy5lKG50SHgFPg==
-X-Google-Smtp-Source: ABdhPJwvCxFFHwbU4mztcnMn5QN22D7JN5cZqYOUrLmDBOAdReDdsMY67wCR/9JL04AtkGrUTxK3CfgbBEbrs6JuO2k=
-X-Received: by 2002:aa7:c24d:: with SMTP id y13mr95634335edo.123.1594654794604;
- Mon, 13 Jul 2020 08:39:54 -0700 (PDT)
+        Mon, 13 Jul 2020 11:40:26 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7200C061755;
+        Mon, 13 Jul 2020 08:40:26 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 36116823;
+        Mon, 13 Jul 2020 15:40:26 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 09:40:25 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, mhiramat@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Replace HTTP links with HTTPS ones
+Message-ID: <20200713094025.180fa813@lwn.net>
+In-Reply-To: <20200709191636.26252-1-grandmaster@al2klimov.de>
+References: <20200708184201.611d929ae6017c87ea98b114@kernel.org>
+        <20200709191636.26252-1-grandmaster@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159457125753.754248.6000936585361264069.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200712170945.GA194499@kroah.com>
-In-Reply-To: <20200712170945.GA194499@kroah.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 13 Jul 2020 08:39:43 -0700
-Message-ID: <CAPcyv4h=7oB+PHEUa6otkoXYx+r_8GFbmuF-j_kOmHjpGB-=eg@mail.gmail.com>
-Subject: Re: [PATCH v2 17/22] drivers/base: Make device_find_child_by_name()
- compatible with sysfs inputs
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 10:09 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jul 12, 2020 at 09:27:37AM -0700, Dan Williams wrote:
-> > Use sysfs_streq() in device_find_child_by_name() to allow it to use a
-> > sysfs input string that might contain a trailing newline.
-> >
-> > The other "device by name" interfaces,
-> > {bus,driver,class}_find_device_by_name(), already account for sysfs
-> > strings.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/base/core.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 67d39a90b45c..5d31b962c898 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -3078,7 +3078,7 @@ struct device *device_find_child_by_name(struct device *parent,
-> >
-> >       klist_iter_init(&parent->p->klist_children, &i);
-> >       while ((child = next_device(&i)))
-> > -             if (!strcmp(dev_name(child), name) && get_device(child))
-> > +             if (sysfs_streq(dev_name(child), name) && get_device(child))
->
-> Who wants to call this function with a name passed from userspace?
->
-> Not objecting to it, just curious...
->
+On Thu,  9 Jul 2020 21:16:36 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-The series that incorporates this patch adds a partitioning mechanism
-to "device-dax region" devices with an:
-    "echo 1 > regionX/create" to create a new partition / sub-instance
-of a region, and...
-    "echo $devname > regionX/delete" to delete. Where $devname is
-searched in the child devices of regionX to trigger device_del().
+>  Documentation/kprobes.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This arrangement avoids one of the design mistakes of libnvdimm which
-uses a sysfs attribute of the device to delete itself. Parent-device
-triggered deletion rather than self-deletion avoids those locking
-entanglements.
+This file no longer exists in docs-next or linux-next (it's been converted
+to RST and moved).  What tree are you making your patches against?
+
+jon
