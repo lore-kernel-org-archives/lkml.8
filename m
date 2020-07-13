@@ -2,137 +2,163 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D99C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88C12068F
+	by mail.kernel.org (Postfix) with ESMTP id EFD1C2068F
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 03:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594612389;
-	bh=rVIyOmY3b4i5COKSEKAYvDTRs4rWV/cl9uZGxqevers=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zbj0kJiOqVnGlEKxdFg1WuG2n45rM02z/NNf1ISzm579XO4s0QQuT+h4G+2tynThZ
-	 VJcqriCC6TPpzTCXb5jB4DiH2s6o+KMruH3LwQSsiBiFEr5h33L7RZREuL39yONp8h
-	 wcHGNEY8uvBVwXJ1DgcrRj8QvsAZOWdGdgoVZ3RI=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoY/vrzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgGMDvr (ORCPT
+        id S1728721AbgGMDxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
+        Sun, 12 Jul 2020 23:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgGMDvr (ORCPT
+        with ESMTP id S1726465AbgGMDxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:51:47 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC4FC061794
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:46 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h22so14760728lji.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:46 -0700 (PDT)
+        Sun, 12 Jul 2020 23:53:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB212C061794;
+        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so5436952pfu.1;
+        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PXZYm8YjUP841mdR1yGtgQbyBqro7EalxNIZG50LFuM=;
-        b=JZ6Y3SBEjypR0Q/yrJj53ldh8gpnRfjQF/RT1b64yjpHydiLr0yIS3u64B/OW5XJ4/
-         tBqykrHxUwjAHq0UxLcdms0xudmr7CC4BSdN8v+rXw8M+XyIrWJaQmCLkL9Q4eyPIlNw
-         tfry+uqmdsBjisvh7Qv+FSefQ995KqX6/6xdY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=P/uMBAFsJSFsMe0s271yKJa7p3nRkmMFxcASFVx3X9s=;
+        b=VoY/vrzIzoUvpLLOWgA04fLa3of+ub+owBKbOFPm4LdVdlbMRJRIXMVMWrrc9BNOKF
+         r1GKF4a3rcQ658wT6pYylfRqzRAtJ0LnTHrzrbJj/RDqE/thsXDNuW6RBEHCF42iA3fG
+         xxO+aGacyGOZsWbLTZosotOjPPtD7nZhnnRp2HdoV1MNWNt3v5+07vL98jQ7SEDH37sY
+         MbzM0SBQhhYgZpuY/z2NCAsBS4v+BJ/xEnbSN7Axq0kCWAa79y7aPFHi/kmMj0PizaT1
+         a9XKlAFkkDACZCXA04uEUl2HNmTg9eaIZMBmmIGD4Qez8apholVrmNLQL7Ak2DfrBBkp
+         8Odg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PXZYm8YjUP841mdR1yGtgQbyBqro7EalxNIZG50LFuM=;
-        b=Kry82EGJ/tMdo/G2nnL4TOr+ihTisRXhGZfuE1In0gRQsfSnzGNHntc/FfX/1HV2Db
-         wZ38jRSwx8KqT85S1tXeffLmLonIHh8yvuOA8yuR/H4FG2KG/UNxQTjvEbbXLYadJHV5
-         oFH5CCzjicFG6SAECOtp6b6KKFMDYT6W17n/ZUlbzVkZ6q4aMbb5mtEcGaHFSSAfPvfC
-         03VqmTCDsLln4qVLRh7BP63s+YSFpEiyxakalO0moPPc8QL3+dYzaRofPzHB3RaAAbSB
-         6+DDDlx6VYELrHvvYJ4qm1PU8YYDhH4NOAjwwxpaQTAwbo5GQ3QOuBzBt/3OBYxb6RBI
-         6aeA==
-X-Gm-Message-State: AOAM531Myk2bn7KWEr63TRxPdrFiHufK2Ewp21PEiMVoTdB2c16+sCfh
-        DebOYVXflbyih64PpgimULuq+hPIJxU=
-X-Google-Smtp-Source: ABdhPJwD0aYR1g+lKjG+HuQt1UZADQBDXT6AUGYYSEPF5zU9NIr3h918I3/silfUx7FpkpcC2I9YHg==
-X-Received: by 2002:a05:651c:1034:: with SMTP id w20mr19399253ljm.382.1594612304739;
-        Sun, 12 Jul 2020 20:51:44 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id a20sm4368828lfl.20.2020.07.12.20.51.43
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P/uMBAFsJSFsMe0s271yKJa7p3nRkmMFxcASFVx3X9s=;
+        b=DRfLaprybVqQ+egJ80tX4kPXJe2tldBy57Ky41KnSfNMz65qZoJcCyn1M+neDhV8+F
+         GAdDZezi5+Qh2RnivFTMzffXpOIdC68mH+o9n1zhgIrB20B4btvlLki39ijVElvN8nKY
+         pfTaQ7UE58j2ZDuwr1G0BB6PofrWxc5OKNMifZLJ2zb/dpRlzDbIN2wPNQHc2pS2tEdN
+         3RBi2iW/R2tRjjwcF8khCYPf1YsRdDY8zwjryRutwC5BGRNGZ2XMYgoY9UrWB0ng8N8/
+         ZHRYpCJZmUpnUKWE+uVJ9XmfjcZtJh/sNk1s77YOpOuxI7iz5MTaFmOQVrcYTPWMTWnG
+         kh6g==
+X-Gm-Message-State: AOAM530o9K5/MfzcaFeiFuuiiOAxW+aZo4f5UtmUNElz2lQka9aZnxTf
+        5bEb4WVCNVPZyrmK4jhTDV4=
+X-Google-Smtp-Source: ABdhPJwyduixaPXyl9nsR8wsh7T30kYdCLoB5U/CwQARqKP0/h/EygceJsHfNzJNv902tkQp43X7rA==
+X-Received: by 2002:a63:f50b:: with SMTP id w11mr66510839pgh.157.1594612387120;
+        Sun, 12 Jul 2020 20:53:07 -0700 (PDT)
+Received: from ?IPv6:2001:470:67:5b9:5dec:e971:4cde:a128? ([2001:470:67:5b9:5dec:e971:4cde:a128])
+        by smtp.gmail.com with ESMTPSA id 207sm13052897pfa.100.2020.07.12.20.53.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 20:51:43 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id k15so7439858lfc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 20:51:43 -0700 (PDT)
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr51926816lfn.30.1594612302784;
- Sun, 12 Jul 2020 20:51:42 -0700 (PDT)
+        Sun, 12 Jul 2020 20:53:06 -0700 (PDT)
+Subject: Re: [v2 PATCH] usb: gadget: bdc: use readl_poll_timeout() to simplify
+ code
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b73d8a90-96cd-42b5-bbc2-26e300da0603@gmail.com>
+Date:   Sun, 12 Jul 2020 20:53:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
- <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
- <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
- <20200712215041.GA3644504@google.com> <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
- <20200713025354.GB3644504@google.com>
-In-Reply-To: <20200713025354.GB3644504@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 12 Jul 2020 20:51:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
-Message-ID: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1594611017-4535-1-git-send-email-chunfeng.yun@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 7:53 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> > But I do feel like you figured out why the bug happened, now we're
-> > just discussing whether the patch is the right thing to do.
->
-> Yes.
->
-> > Maybe saying "doing the pmd copies for the initial stack isn't
-> > important, so let's just note this as a special case and get rid of
-> > the WARN_ON()" might be an alternative solution.
->
-> Personally, I feel it is better to keep the warning just so in the future we
-> can detect any bugs.
 
-I don't disagree, the warning didn't happen to find a bug now, but it
-did fine a case we might be able to do better.
 
-So now that I feel we understand the issue, and it's not a horrible
-problem, just a (very hard to trigger) warning, I don't think there's
-any huge hurry.
+On 7/12/2020 8:30 PM, Chunfeng Yun wrote:
+> Use readl_poll_timeout() to poll register status
+> 
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v2 changes, suggested by Stephen:
+>   1. use unsigned int instead of int for @usec parameter
+>   2. add dev_log() back
+>   3. drop "Err" in error log
+> ---
+>  drivers/usb/gadget/udc/bdc/bdc_core.c | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> index 02a3a77..53dccb1 100644
+> --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/ioport.h>
+>  #include <linux/io.h>
+>  #include <linux/list.h>
+> @@ -29,24 +30,19 @@
+>  #include "bdc_dbg.h"
+>  
+>  /* Poll till controller status is not OIP */
+> -static int poll_oip(struct bdc *bdc, int usec)
+> +static int poll_oip(struct bdc *bdc, u32 usec)
+>  {
+>  	u32 status;
+> -	/* Poll till STS!= OIP */
+> -	while (usec) {
+> -		status = bdc_readl(bdc->regs, BDC_BDCSC);
+> -		if (BDC_CSTS(status) != BDC_OIP) {
+> -			dev_dbg(bdc->dev,
+> -				"poll_oip complete status=%d",
+> -				BDC_CSTS(status));
+> -			return 0;
+> -		}
+> -		udelay(10);
+> -		usec -= 10;
+> -	}
+> -	dev_err(bdc->dev, "Err: operation timedout BDCSC: 0x%08x\n", status);
+> +	int ret;
+>  
+> -	return -ETIMEDOUT;
+> +	ret = readl_poll_timeout(bdc->regs + BDC_BDCSC, status,
+> +		(BDC_CSTS(status) != BDC_OIP), 10, usec);
 
-I think think I will - for now - change the WARN_ON() to
-WARN_ON_ONCE() (so that it doesn't floow the logs if somebody triggers
-this odd special case  this malisiously), and add a note about how
-this happens to the code for posterito.
+You could probably indent this to the opening parenthesis, but with or
+without it:
 
-And if/when you figure out a better way to fix it, we can update the note.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Ok?
+and thanks for picking up the MAINTAINERS file update ;)
 
-             Linus
+> +	if (ret)
+> +		dev_err(bdc->dev, "operation timedout BDCSC: 0x%08x\n", status);
+> +	else
+> +		dev_dbg(bdc->dev, "%s complete status=%d", __func__, BDC_CSTS(status));
+> +
+> +	return ret;
+>  }
+>  
+>  /* Stop the BDC controller */
+> 
+
+-- 
+Florian
