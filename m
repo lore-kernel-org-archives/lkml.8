@@ -2,215 +2,102 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19418C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6430C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF2B62075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/QxOz4W"
+	by mail.kernel.org (Postfix) with ESMTP id A95D32075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594653079;
+	bh=0EhSuGg4L9oUr5UZiJemFXBgmy5gboy4zP9hfDDvMyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h66yQ37H9TCQdqMtjIOXvy1J+4bXRvHSzmGzESKMzr+8yhz1DEg99TdoVRmN/9Xgf
+	 bvHxSC6Q9dr5dwvaoIzOwgEdgFm7ciC+06Lalw0dR50pFo1e/GBXRjIkOGWdERCG5Z
+	 blKzH0OX3WPCJDcD2JS41gPIEHwtkIDQvmp6gECY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgGMPK0 (ORCPT
+        id S1729946AbgGMPLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgGMPK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:10:26 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD50C061755;
-        Mon, 13 Jul 2020 08:10:26 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id h16so11412034ilj.11;
-        Mon, 13 Jul 2020 08:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0aLviF1Tp3qA2WKh5TL8kBFDCcYaBAEuv96ryJ3BdEQ=;
-        b=D/QxOz4WvIUD4B3lvyIkXS7SAxqk0KrEw76vSE31m21XfLI1cegHHImvvF+qnfZzcd
-         JaG5NzQJvqKNc9Dl+lQrD5TNco65lp04gJqJCfVB1t1nPN/3lnzwtk17EhR2ow/XIwhM
-         lbwHRGsF+Shk9P3STfL2y6N9Vu6d1qPBjQS8E+rQroQa7fYNBA3uvzdQQ02T3BfAJrlS
-         PfhhLQS8IA/tRuFgaNOgoYwN3adcsEAbjJX8AlAz+LO04Am3SqhL69WdkNlICCAx4vAH
-         D/pIj3pyS22Q5KDpgUqJF0AKw8J+SILPn0Ga7E2/wLxBae/MWIFCb2r9GG2vivkhw5bl
-         Ta/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0aLviF1Tp3qA2WKh5TL8kBFDCcYaBAEuv96ryJ3BdEQ=;
-        b=UEF+M/FYf/eXvvjA5W5hhyroySc0DJrxozk3Lg9XJCjq/JDfHAEqtXS5thLpcQw8/9
-         tZDUm7TYdDX67tt1RXsh5hZiJ4sq+izjsSwxADV0nXg74IA7CtY7SHfdXRwIpGQKg4lr
-         NcR7EV8e1i5BRAFWnmY+LpuGRElzLov/MVGeNp0w01TFOId9YPKLcqSFZt6VK/FN9wX8
-         zD79bf94HYoLg0jDY++Xt+mxzUiY/bPp+yHnyW4Q2AZi+yL4JgTMzekbeHHgrx8vNMFP
-         o3EwYbjJikZrFRC5CTyuS8M6+CizxwtOai7lg8EZyN8Ce2UP+xl/bPWyjqm4p7GITibu
-         cIYg==
-X-Gm-Message-State: AOAM5320mnpTrpjlFmYey1cCbKrPz/ly1mPrPOkOlhzgymzIfbViJF8U
-        MdpYQaOQFUQa4a/foFPfWsJMb6Y+OQFD9sy82W4Up6Sb
-X-Google-Smtp-Source: ABdhPJz7fEoAdjaSgaCNKEkg33tHudeh5sEOS1URoEDTxPr92qH0X2OfEk+7e2oQcfcZ76Rxra0Ar6VviU2oCqYGB8c=
-X-Received: by 2002:a92:bd0f:: with SMTP id c15mr113475ile.95.1594653025301;
- Mon, 13 Jul 2020 08:10:25 -0700 (PDT)
+        Mon, 13 Jul 2020 11:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729308AbgGMPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:11:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14FB2065D;
+        Mon, 13 Jul 2020 15:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594653077;
+        bh=0EhSuGg4L9oUr5UZiJemFXBgmy5gboy4zP9hfDDvMyw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sRlk2CCWSV6skQKVYGnd+p5UPIMSicwh16rBhWneAhoN97A0BKGdK1UBRG7807adq
+         krBEfqc5VZovU6iZunotJOWc687DJ48U4/xD0I8kKwfNkW5go37qkuIyv4FrsMmVoS
+         ttM4lyknAk+KtcbYA76cLLkjV1Lx2b642x2las8g=
+Date:   Mon, 13 Jul 2020 16:11:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
+ Kontron boards
+Message-ID: <20200713151108.GB4420@sirena.org.uk>
+References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
+ <20200702142511.GF4483@sirena.org.uk>
+ <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
+ <20200702150725.GI4483@sirena.org.uk>
+ <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+ <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
 MIME-Version: 1.0
-References: <20200710113046.421366-1-mst@redhat.com> <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
- <20200712105926-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200712105926-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 13 Jul 2020 08:10:14 -0700
-Message-ID: <CAKgT0UdY1xpEH1Hg4HWJEkGwH5s64sm1y4O_XmHe8P_f=tDhpg@mail.gmail.com>
-Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
+Content-Disposition: inline
+In-Reply-To: <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
+X-Cookie: Fast, cheap, good: pick two.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 8:10 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
-> > On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > Page reporting features were never supported by legacy hypervisors.
-> > > Supporting them poses a problem: should we use native endian-ness (like
-> > > current code assumes)? Or little endian-ness like the virtio spec says?
-> > > Rather than try to figure out, and since results of
-> > > incorrect endian-ness are dire, let's just block this configuration.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> >
-> > So I am not sure about the patch description. In the case of page
-> > poison and free page reporting I don't think we are defining anything
-> > that doesn't already have a definition of how to use in legacy.
-> > Specifically the virtio_balloon_config is already defined as having
-> > all fields as little endian in legacy mode, and there is a definition
-> > for all of the fields in a virtqueue and how they behave in legacy
-> > mode.
-> >
-> > As far as I can see the only item that may be an issue is the command
-> > ID being supplied via the virtqueue for free page hinting, which
-> > appears to be in native endian-ness. Otherwise it would have fallen
-> > into the same category since it is making use of virtio_balloon_config
-> > and a virtqueue for supplying the page location and length.
->
->
->
-> So as you point out correctly balloon spec says all fields are little
-> endian.  Fair enough.
-> Problem is when virtio 1 is not negotiated, then this is not what the
-> driver assumes for any except a handlful of fields.
->
-> But yes it mostly works out.
->
-> For example:
->
->
-> static void update_balloon_size(struct virtio_balloon *vb)
-> {
->         u32 actual = vb->num_pages;
->
->         /* Legacy balloon config space is LE, unlike all other devices. */
->         if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
->                 actual = (__force u32)cpu_to_le32(actual);
->
->         virtio_cwrite(vb->vdev, struct virtio_balloon_config, actual,
->                       &actual);
-> }
->
->
-> this is LE even without VIRTIO_F_VERSION_1, so matches spec.
->
->                 /* Start with poison val of 0 representing general init */
->                 __u32 poison_val = 0;
->
->                 /*
->                  * Let the hypervisor know that we are expecting a
->                  * specific value to be written back in balloon pages.
->                  */
->                 if (!want_init_on_free())
->                         memset(&poison_val, PAGE_POISON, sizeof(poison_val));
->
->                 virtio_cwrite(vb->vdev, struct virtio_balloon_config,
->                               poison_val, &poison_val);
->
->
-> actually this writes a native endian-ness value. All bytes happen to be
-> the same though, and host only cares about 0 or non 0 ATM.
 
-So we are safe assuming it is a repeating value, but for correctness
-maybe we should make certain to cast this as a le32 value. I can
-submit a patch to do that.
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> As you say correctly the command id is actually assumed native endian:
->
->
-> static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
-> {
->         if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
->                                &vb->config_read_bitmap))
->                 virtio_cread(vb->vdev, struct virtio_balloon_config,
->                              free_page_hint_cmd_id,
->                              &vb->cmd_id_received_cache);
->
->         return vb->cmd_id_received_cache;
-> }
->
->
-> So guest assumes native, host assumes LE.
+On Mon, Jul 13, 2020 at 03:19:52PM +0200, Frieder Schrempf wrote:
 
-This wasn't even the one I was talking about, but now that you point
-it out this is definately bug. The command ID I was talking about was
-the one being passed via the descriptor ring. That one I believe is
-native on both sides.
+> I would have expected that there is some kind of existing userspace API to
+> load an overlay manually, but it seems like there isn't!?
 
->
->
->
-> > > ---
-> > >  drivers/virtio/virtio_balloon.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > > index 5d4b891bf84f..b9bc03345157 100644
-> > > --- a/drivers/virtio/virtio_balloon.c
-> > > +++ b/drivers/virtio/virtio_balloon.c
-> > > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
-> > >
-> > >  static int virtballoon_validate(struct virtio_device *vdev)
-> > >  {
-> > > +       /*
-> > > +        * Legacy devices never specified how modern features should behave.
-> > > +        * E.g. which endian-ness to use? Better not to assume anything.
-> > > +        */
-> > > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
-> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
-> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
-> > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
-> > > +       }
-> > >         /*
-> > >          * Inform the hypervisor that our pages are poisoned or
-> > >          * initialized. If we cannot do that then we should disable
-> >
-> > The patch content itself I am fine with since odds are nobody would
-> > expect to use these features with a legacy device.
-> >
-> > Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->
-> Hmm so now you pointed out it's just cmd id, maybe I should just fix it
-> instead? what do you say?
+> So what's the reasoning behind this? How can I solve this in a
+> mainline-compliant way, meaning without either keeping downstream patches to
+> bind spidev to my device or writing and maintaining code that does the
+> overlay loading?
 
-So the config issues are bugs, but I don't think you saw the one I was
-talking about. In the function send_cmd_id_start the cmd_id_active
-value which is initialized as a virtio32 is added as a sg entry and
-then sent as an outbuf to the device. I'm assuming virtio32 is a host
-native byte ordering.
+Basically the reasoning is that nobody's done it rather than any grand
+design not to do it.  There's some issues for more complex connectors
+present on multiple boards with mapping the same connector onto multiple
+boards where a resource on the connector might be provided by different
+things on the base board so it's not quite as trivial for them as it
+should be.
+
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8MeYsACgkQJNaLcl1U
+h9AKgAf/RVJtgNv6Z3fUhzq82kWwWm9uKsWRdDtx1vCBgF122XEZOiwgIIFoEZiP
+3Z74idl9I1ProBlKc78WdeBc0wUHMP+ZPuX9U3Ur2oN0slkEInIADrZtRhv2Yzl/
+pHD84omYE8gdfOPzh39Gp0PMWEEaK4gQ5RjNeSnjMDMrScAXMBmPJfDu05s+udBM
+9shL0iZNl+TKxeoNCvuZLok9rkZvYCMoadLJKcXsmbmnerOCIojd2oQxJ8yeHFg8
+KRoWiLk6cuHXcM/h+GFZBi16fuwA09jg1p9GfNDT+22n0WljTv/Cedxe70oQFgZU
+BSErXQy68GPSfs7P/WV0Uuk3q6l1iQ==
+=B3S0
+-----END PGP SIGNATURE-----
+
+--CdrF4e02JqNVZeln--
