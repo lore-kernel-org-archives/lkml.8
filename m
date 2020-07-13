@@ -2,113 +2,147 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A196EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8078BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753C420720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXB05T+w"
+	by mail.kernel.org (Postfix) with ESMTP id 618242075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGMUWQ (ORCPT
+        id S1726798AbgGMUR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56032 "EHLO
+        Mon, 13 Jul 2020 16:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgGMUWP (ORCPT
+        with ESMTP id S1726506AbgGMUR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:22:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52589C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:22:15 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so1223674wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Un7dCCnkxcZsvwr/aTPovVdtJrLxmvJRKWCcD5TCwew=;
-        b=lXB05T+wtWcVmb/ToU2CDb7Jolp2Phtrkp863Dkj50ce4afhbb2DtrWXSd5dr/XFRq
-         6HlKu2bvqEwgfLU17lzzcRQTDW/YGm7udhfknmHh7XM5KM1yfQgFF7S8V4BDeVOY4rX5
-         uVwyQCLgcU6NojcJ8v9hq0eljOvV6jXz9bs863Acsp/S7slXIwt17eJm4Raw0KacFweq
-         t+CCbHbnXXQ9uC/a5l/Xjl6lIYAWeKgSEFwuCRIbL/l33ANQ6BFbfgqHlf0uovajE5Yk
-         WhNxww3SS9gsftVAA2xX5NB3UIkh5rza4YLB0xwxKF6Fc8QYl2YHRrE09hE7tIAuEUOb
-         FP8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Un7dCCnkxcZsvwr/aTPovVdtJrLxmvJRKWCcD5TCwew=;
-        b=P1i58UUTPgAJ66b43NhB276+gfjOODEP+F7U/oLd5oJOq09xH7xtYSNhYA/LwO8+fq
-         cFK73p8DlGGBs+kOrOQ+COm1RwD7XORG0TrG5EZ4Ca7ZYMpdvBoIKXIy2YHKRwNNy3Ql
-         UMcRqmnYJb3unzNTrpy9Vx77xuOsG94J3SMfCrg34/Vj1AqyXv4cvCbsSGP3KXaNvOwS
-         kTorzKsochnI4goYFgAY4y0fE1ViLVzveKs0Xrck8JEu7grqX+1zMzdGw5q8lAHEsfrK
-         wdfmj5JUzJtDISTKcQtIIQf9zoISGdJqgw0w5XfKlnLIhABgegdsIGbU9nARGX2q7CPm
-         QHiA==
-X-Gm-Message-State: AOAM531Lq0aNfhLqzV96jxFA0tw7wXD4BnpzWwMuj+1nBXCNm9Xxw5Ql
-        vsS3zxiJnnJSwM/7MJg87w0=
-X-Google-Smtp-Source: ABdhPJwb4tLfgGCNFfgqcCjcbJr/U2aVoM5vrdZp/oSZZm+oTjo0hS+XhLTRGDICUWQLSdI57bQ8cQ==
-X-Received: by 2002:a7b:cd90:: with SMTP id y16mr1092698wmj.20.1594671733950;
-        Mon, 13 Jul 2020 13:22:13 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id f17sm1076862wme.14.2020.07.13.13.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 13:22:13 -0700 (PDT)
-Subject: Re: [PATCH] iommu/mediatek: Include liunx/dma-mapping.h
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>
-References: <20200713101648.32056-1-joro@8bytes.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <151352ff-d518-174a-9601-1cffc212d008@gmail.com>
-Date:   Mon, 13 Jul 2020 22:22:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 13 Jul 2020 16:17:56 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDB4C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:17:56 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 559CBBC0B5;
+        Mon, 13 Jul 2020 20:17:54 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] uio: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:17:47 +0200
+Message-Id: <20200713201747.37955-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200713101648.32056-1-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-On 13/07/2020 12:16, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> This fixes a compile error when cross-compiling the driver
-> on x86-32.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+ drivers/uio/Kconfig     | 6 +++---
+ drivers/uio/uio_netx.c  | 2 +-
+ drivers/uio/uio_pruss.c | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..cdad8dc66b5e 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -81,7 +81,7 @@ config UIO_SERCOS3
+ 	  available for download from the Automata GmbH web site.
+ 
+ 	  Automata GmbH:        http://www.automataweb.com
+-	  Sercos III interface: http://www.sercos.com
++	  Sercos III interface: https://www.sercos.com
+ 
+ 	  If you compile this as a module, it will be called uio_sercos3.
+ 
+@@ -100,7 +100,7 @@ config UIO_NETX
+ 	help
+ 	  Driver for Hilscher NetX based fieldbus cards (cifX, comX).
+ 	  This driver requires a userspace component that comes with the card
+-	  or is available from Hilscher (http://www.hilscher.com).
++	  or is available from Hilscher (https://www.hilscher.com).
+ 
+ 	  To compile this driver as a module, choose M here; the module
+ 	  will be called uio_netx.
+@@ -123,7 +123,7 @@ config UIO_FSL_ELBC_GPCM_NETX5152
+ 	  together with the userspace netX stack from Hilscher.
+ 
+ 	  Information about this hardware can be found at:
+-	  http://www.hilscher.com/netx
++	  https://www.hilscher.com/netx
+ 
+ config UIO_PRUSS
+ 	tristate "Texas Instruments PRUSS driver"
+diff --git a/drivers/uio/uio_netx.c b/drivers/uio/uio_netx.c
+index 9ae29ffde410..3d5a92daa0b1 100644
+--- a/drivers/uio/uio_netx.c
++++ b/drivers/uio/uio_netx.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * UIO driver for Hilscher NetX based fieldbus cards (cifX, comX).
+- * See http://www.hilscher.com for details.
++ * See https://www.hilscher.com for details.
+  *
+  * (C) 2007 Hans J. Koch <hjk@hansjkoch.de>
+  * (C) 2008 Manuel Traut <manut@linutronix.de>
+diff --git a/drivers/uio/uio_pruss.c b/drivers/uio/uio_pruss.c
+index 1cc175d3c25c..64e5dfa92a0d 100644
+--- a/drivers/uio/uio_pruss.c
++++ b/drivers/uio/uio_pruss.c
+@@ -4,7 +4,7 @@
+  * This driver exports PRUSS host event out interrupts and PRUSS, L3 RAM,
+  * and DDR RAM to user space for applications interacting with PRUSS firmware
+  *
+- * Copyright (C) 2010-11 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2010-11 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+-- 
+2.27.0
 
-> ---
->   drivers/iommu/mtk_iommu.h | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index 6ff62452bbf9..122925dbe547 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -15,6 +15,7 @@
->   #include <linux/iommu.h>
->   #include <linux/list.h>
->   #include <linux/spinlock.h>
-> +#include <linux/dma-mapping.h>
->   #include <soc/mediatek/smi.h>
->   
->   #define MTK_LARB_COM_MAX	8
-> 
