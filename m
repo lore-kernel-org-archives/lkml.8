@@ -2,150 +2,137 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E833C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979E02072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0203E206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="AsDVnUJk"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CMkxtAGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgGMNsb (ORCPT
+        id S1729982AbgGMNug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
+        Mon, 13 Jul 2020 09:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728950AbgGMNsb (ORCPT
+        with ESMTP id S1729873AbgGMNue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:48:31 -0400
+        Mon, 13 Jul 2020 09:50:34 -0400
 Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E43FC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:48:31 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id w27so9893610qtb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:48:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34C6C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:50:33 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g13so9916337qtv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=whfCCmO7TNNcabn6+SFR27U2aTuxTD9IQzPOWcIz0mw=;
-        b=AsDVnUJkW8wZ4111n1Q2nBdNdYPimCzz0UVZq8a8y3pPyw4jKLDeAIPjYRjwIHz8a4
-         KymFI69PumnZQljIoO+ffRr5sAfyxh9Tx3H1ihNSu6xSBNqO32qk+tcxIRdtO31UIC4H
-         LfQPmrPeG2vYkt7eSxE72k5v70O4W2b8JbCF6T6KzqZREOUTQk3C6bc/sJ4+OyzvDOWC
-         9UszW5zQUhKDyNdZy5X9IeMqKunocanY56DVBsN64wX96hrvHQFXjEXE9h39GyZUsmfU
-         UUIJmZHpfHr85GsHMS24mZR7WE8AusHSUW94rzZc5Cp0HhgwM31f5Sr6pAtjCOMFo0Hy
-         iNgA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vlrDlUYUKGml5UggZTrPldaeCrJJpueT2vaP2F68WPk=;
+        b=CMkxtAGi5opCIFDLDXatbH+st+eB5Ijn5qpYvzvMWfQ90tknvaEy3MWVjkhemIW8eG
+         U5/7yxTthqhhWaMF/SpDUkLPGfC8wmS+ZoPJxCjfWU4vs+KvgGotLhm8u/F79uArh6vf
+         1Ds0opoMWMhCcpz6uuq1Ant+g33AgkPod8rY6ovOdjQnv8ZkjVJBbP5HvcAIVonbgi6+
+         940mziew1e1lRJYw16UpuD1W1jd+ofNNjVqHZvyIf8Dxe0jyq4mjBrXTtjfA4Gy45JyL
+         mxhnBofUAvf8q4M4qCdC5UnJ4rTOMRmGIXxgyz/SWGDdf5yxktbW9ueC4//mrcduf65f
+         sCDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=whfCCmO7TNNcabn6+SFR27U2aTuxTD9IQzPOWcIz0mw=;
-        b=k0H+MLqDu60HMOijU0ghzPnvjWlo8AtVGvimQpclmFcp468SI0tjiOQ8rk4YIw38Jt
-         wWoSvaaIqlBda0VCfcgNRxV0D1KEitHXks6X3/qPqHYdgFSawdMx+vvNPBNL0xxrpO/m
-         8I69mQ6zBEukNo5Xc8bNbIBUyVEJyeOcqAen3Js6J++c9bAuTOG8K9PAdeS1V7hr/K51
-         eoGfz7fbmj8iUGRwdV7Q/rWECmCdOrQovZpIgHnT2I8/QNhSFuNpv/jhJ8gWmzPKxdBk
-         jywt9lAE9feHSbOWegAohL0jWZ4D9p8h3kJbLTOuR8QyOcKKvWc9XPemWfoa4u4me9tt
-         FGcA==
-X-Gm-Message-State: AOAM531oTv+veahHJ+Q0JTGoRnVEQJpQthNfJ+3fAM0WM8Ih5aUkQ1DS
-        FBHhRRnzAO6KJj239uB3GjiHDA==
-X-Google-Smtp-Source: ABdhPJxx00W1Vp+MsZHSypI4tIxcsugNKbIon/mXh6bzEpDLyfmXuCLJZ4RJS3bp+btXAF773E+ZRw==
-X-Received: by 2002:ac8:3ff9:: with SMTP id v54mr84259416qtk.352.1594648110322;
-        Mon, 13 Jul 2020 06:48:30 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id r7sm18415476qtm.66.2020.07.13.06.48.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 06:48:29 -0700 (PDT)
-Subject: Re: [PATCH 4/6] interconnect: qcom: Add SM8250 interconnect provider
- driver
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200701134259.8055-1-jonathan@marek.ca>
- <20200701134259.8055-5-jonathan@marek.ca>
- <5a0eca0e-d496-d8af-ca41-0f07e9a3e01d@linaro.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <5074d900-da92-0b8a-a7c6-1ebfe4ae2d56@marek.ca>
-Date:   Mon, 13 Jul 2020 09:47:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vlrDlUYUKGml5UggZTrPldaeCrJJpueT2vaP2F68WPk=;
+        b=AmAF9bMgC5igplKHaPRmKjQ7o9uUCkf+tbIdrRUjrmdPD/zMwr595I5w94Rsa8czCh
+         3PyOScg92B+GtgflN4vM+He63xDY8dmEHEld95Ja9PvytUrtyfa+nSdNAT6JOAw9lDdi
+         n2My9RXJDEkJ3+WSy5mQwxTqQb0k8KTz/cyfBww1otpsLkX8Bbp/ckVgUEdY1An5tc5q
+         J8syqF7c81nxv/bYTKtmh0BFz44sNfpK63OZV3HTY/mGL1U5Z41vaqsw/rKl7iS3LzCK
+         UwizW2vu60anx6gOdf9idB9vLbD+Y6QWPz4EY1WBcibnvHGR/RL6Ly5Od8GWMtkkgFjn
+         qwgQ==
+X-Gm-Message-State: AOAM531wr3XDh9JaiSAIUCVJj25C9ZZXAnrO6bUJFyhXFxYXw99h6x2o
+        60rnH9yWT4IIiSFdmPELYi5HY3asTe3ZWg==
+X-Google-Smtp-Source: ABdhPJwLXMUyr7KJNqN8opqxSnS0V/qOb48twXlcI7xQ5LwDgvA+ZzNgxKc5tOh2DjVsaADIqEy1Gw==
+X-Received: by 2002:ac8:4588:: with SMTP id l8mr85227289qtn.189.1594648232276;
+        Mon, 13 Jul 2020 06:50:32 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id a185sm18070623qkg.3.2020.07.13.06.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 06:50:31 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1juyql-009hrJ-6b; Mon, 13 Jul 2020 10:50:31 -0300
+Date:   Mon, 13 Jul 2020 10:50:31 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>, dledford@redhat.com,
+        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] SCSI RDMA PROTOCOL (SRP) TARGET: Replace HTTP links with
+ HTTPS ones
+Message-ID: <20200713135031.GA25301@ziepe.ca>
+References: <20200709194820.27032-1-grandmaster@al2klimov.de>
+ <3d230abd-752e-8ac1-e18d-b64561b409ff@acm.org>
+ <8fca4633-41ad-7e86-2354-36381bf5c734@al2klimov.de>
+ <bf85e454-cccc-37ef-d55f-d44a5c5c51df@acm.org>
+ <c6b97005-e4c7-0a46-37eb-b5bb187ee919@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <5a0eca0e-d496-d8af-ca41-0f07e9a3e01d@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c6b97005-e4c7-0a46-37eb-b5bb187ee919@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 9:30 AM, Georgi Djakov wrote:
-> Hi Jonathan,
+On Sun, Jul 12, 2020 at 10:15:29PM +0200, Alexander A. Klimov wrote:
 > 
-> Thanks for posting these patches!
 > 
-> On 7/1/20 16:42, Jonathan Marek wrote:
->> Add driver for the Qualcomm interconnect buses found in SM8250 based
->> platforms. The topology consists of several NoCs that are controlled by
->> a remote processor that collects the aggregated bandwidth for each
->> master-slave pairs.
->>
->> Based on SC7180 driver and generated from downstream dts.
->>
->> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> ---
-> [..]
->> +
->> +static const struct of_device_id qnoc_of_match[] = {
->> +	{ .compatible = "qcom,sm8250-aggre1-noc",
->> +	  .data = &sm8250_aggre1_noc},
->> +	{ .compatible = "qcom,sm8250-aggre2-noc",
->> +	  .data = &sm8250_aggre2_noc},
->> +	{ .compatible = "qcom,sm8250-compute-noc",
->> +	  .data = &sm8250_compute_noc},
->> +	{ .compatible = "qcom,sm8250-config-noc",
->> +	  .data = &sm8250_config_noc},
->> +	{ .compatible = "qcom,sm8250-dc-noc",
->> +	  .data = &sm8250_dc_noc},
->> +	{ .compatible = "qcom,sm8250-gem-noc",
->> +	  .data = &sm8250_gem_noc},
->> +	{ .compatible = "qcom,sm8250-ipa-virt",
->> +	  .data = &sm8250_ipa_virt},
->> +	{ .compatible = "qcom,sm8250-mc-virt",
->> +	  .data = &sm8250_mc_virt},
->> +	{ .compatible = "qcom,sm8250-mmss-noc",
->> +	  .data = &sm8250_mmss_noc},
->> +	{ .compatible = "qcom,sm8250-npu-noc",
->> +	  .data = &sm8250_npu_noc},
->> +	{ .compatible = "qcom,sm8250-system-noc",
->> +	  .data = &sm8250_system_noc},
->> +	{ .compatible = "qcom,sm8250-gem-noc-display",
->> +	  .data = &sm8250_gem_noc_display},
->> +	{ .compatible = "qcom,sm8250-mc-virt-display",
->> +	  .data = &sm8250_mc_virt_display},
->> +	{ .compatible = "qcom,sm8250-mmss-noc-display",
->> +	  .data = &sm8250_mmss_noc_display},
->> +	{ }
+> Am 12.07.20 um 21:52 schrieb Bart Van Assche:
+> > On 2020-07-10 11:12, Alexander A. Klimov wrote:
+> > > Am 10.07.20 um 16:22 schrieb Bart Van Assche:
+> > > > On 2020-07-09 12:48, Alexander A. Klimov wrote:
+> > > > > diff --git a/drivers/infiniband/ulp/srpt/Kconfig b/drivers/infiniband/ulp/srpt/Kconfig
+> > > > > index 4b5d9b792cfa..f63b34d9ae32 100644
+> > > > > +++ b/drivers/infiniband/ulp/srpt/Kconfig
+> > > > > @@ -10,4 +10,4 @@ config INFINIBAND_SRPT
+> > > > >          that supports the RDMA protocol. Currently the RDMA protocol is
+> > > > >          supported by InfiniBand and by iWarp network hardware. More
+> > > > >          information about the SRP protocol can be found on the website
+> > > > > -      of the INCITS T10 technical committee (http://www.t10.org/).
+> > > > > +      of the INCITS T10 technical committee (https://www.t10.org/).
+> > > > 
+> > > > It is not clear to me how modifying an URL in a Kconfig file helps to
+> > > > reduce the attack surface on kernel devs?
+> > > 
+> > > Not on all, just on the ones who open it.
+> > 
+> > Is changing every single HTTP URL in the kernel into a HTTPS URL the best
+> > solution? Is this the only solution? Has it been considered to recommend
+> > kernel developers who are concerned about MITM attacks to install a browser
+> > extension like HTTPS Everywhere instead?
+> I've installed that addon myself.
+> But IMAO it's just a workaround which is (not available to all browsers, not
+> installed by default in any of them and) not even 100% secure unless you
+> tick a particular checkbox.
 > 
-> My main concern here are the display RSC nodes. We should not add the nodes
-> for voting on the display RSC, but use the "qcom,bcm-voters" property in DT
-> to list both "hlos" and "disp" as bcm voters for gem-noc, mc-virt and
-> mmss-noc.
+> Anyway the majority of maintainers and Torvalds himself agree with my
+> solution.
 > 
+> I mean, just look at
+> git log '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' \
+> 
+> Or (better) wait for v5.9-rc1 (and all the yet just applied patches it will
+> consist of) *and then* run the command.
 
-Would it be OK to just drop the display RSC parts from this series then? 
-Not sure if anything needs it to work, but I'm not using it currently.
+Well, if you are going to do this please send just one patch for all
+of drivers/infiniband/ and include/rdma
 
-Though if you can provide details for a solution, I could implement it 
-(qcom_icc_provider needs to have a list of voters, but I'm not sure how 
-to deal with everything else).
+I don't need to see it broken up any more than that
 
-> Thanks,
-> Georgi
-> 
+Jason
