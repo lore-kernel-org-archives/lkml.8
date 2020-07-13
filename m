@@ -2,92 +2,87 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A3C20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FC62072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gm73Hz1K"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dy7wxJFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgGMM1f (ORCPT
+        id S1729631AbgGMMge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbgGMM1f (ORCPT
+        Mon, 13 Jul 2020 08:36:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49088 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbgGMMgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:27:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BA6C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:27:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b9so5452511plx.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=B5fC/VSpjwy0J2AgPE2pfNPefXcs6+XE85WC452HsHQ=;
-        b=Gm73Hz1KOqgIrGThMs1484OyaDZq9vZzjZurtmpdZ2GhKEo66WRqzFHZGE24Oj4WHQ
-         j8CiJfOZHOxYV+OanBPV1WiEVIznXZQRpDSuoRrfV1Yym0uDoTp3qM5NRo41AoYkEwnL
-         YnWvESyNrksaaODvzUn2YOyZoRB4CRKJVOQX0xpFv/C/D5E156S/JlUCWt4zxLjXCccd
-         zzjck1g6GgNN2/aIVSLDc43v+g7wghMHcSlPgMi6aujWcy0ZmjdBKbvCc3IEoG3664Kx
-         jyg06FBPnFhbanV/GzQ+NPxTkvQylDq+LUo/74JsbY6KRtCDQDplRn4wrexLumJbr6IV
-         sF+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B5fC/VSpjwy0J2AgPE2pfNPefXcs6+XE85WC452HsHQ=;
-        b=JOM/oe2FO91GYex3A9Go+7cptA8Gd/j05EcZOPAJhYzZpzTBBawxwqlHZbcp/cgcRC
-         f4Hi8yRvCd5kNjF/uv3NbjptyeuTL8tUlCW4ydSt7weMyVVgFzQXNe92cd24JBXZkcKB
-         Hw4U8u/ML2YFJlfprlA/MT7GkUeH1DAWaHZmhkGeYhlI5D77/y+Aqn8lX5YSh4FwgcZt
-         u3tvQ9BfQJQ1c9IB0g5zYRpl8Re+08QMl/2etCLi2kNiV3phQmce9guk7xyoe89Ep3Mo
-         JYT/+UaYd9T/X1YBkMpJj17s/sSWjGus8JqogSq/5EBmbocXgM0x5D6HeCWZjQInNZyQ
-         rp4A==
-X-Gm-Message-State: AOAM530pz4HVsvd62Anwhq8uQg0jjlVlngcvFV5R7NIYt815pLDmop5y
-        ghe7hgNjv2zIE7IxUcfpUoU=
-X-Google-Smtp-Source: ABdhPJwRseJb/T0TsF6O5SADNMjjo/qYxg9ui4DclsJjyZSzJVxpa0fuXrgqdCXKvnc9BXuIVxZnug==
-X-Received: by 2002:a17:902:6544:: with SMTP id d4mr27503826pln.138.1594643254872;
-        Mon, 13 Jul 2020 05:27:34 -0700 (PDT)
-Received: from hyd1soter3.caveonetworks.com ([115.113.156.2])
-        by smtp.googlemail.com with ESMTPSA id p1sm31891839pja.2.2020.07.13.05.27.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 05:27:34 -0700 (PDT)
-From:   rakeshs.lkm@gmail.com
-To:     sbhatta@marvell.com, sgoutham@marvell.com, jerinj@marvell.com,
-        rsaladi2@marvell.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rakesh Babu <rakeshs.lkm@gmail.com>
-Subject: [net-next PATCH 0/2] Interrupt handler support for NPA and NIX in
-Date:   Mon, 13 Jul 2020 17:56:38 +0530
-Message-Id: <20200713122640.4155-1-rakeshs.lkm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jul 2020 08:36:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DCaGMG079966;
+        Mon, 13 Jul 2020 07:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594643776;
+        bh=VGBP2fIvmzT/XXdWJZL2v9UPK0oBAiOObCttmYvr9e8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Dy7wxJFOQ9y+4BaB9nvQMW+g6oR4tUrvYcpjjyCuNcBsLexBQPbPHss1Q75DC9CoO
+         KlH2MIa9boqTorbzui0f8DIRCo7RSowGVwxmQbzAh1/+f/tp/WmrN8/V30lXSa2EI3
+         YAISUwHmIw+2VoDso8hOZmmqx5syXIybr+vUNKxo=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DCaGsG013820
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 07:36:16 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 07:36:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 07:36:15 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DCaFWw021000;
+        Mon, 13 Jul 2020 07:36:15 -0500
+Subject: Re: [PATCH v29 05/16] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Marek Behun <marek.behun@nic.cz>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-6-dmurphy@ti.com> <20200712192103.5e24ed2a@nic.cz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <47d846d9-9a49-02b1-ce59-d0cc157c268a@ti.com>
+Date:   Mon, 13 Jul 2020 07:36:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200712192103.5e24ed2a@nic.cz>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Babu <rakeshs.lkm@gmail.com>
+Marek
 
-Different types of error interrupts are reported by NPA and NIX blocks like
-unmapped slot errors, RAS interrupts, memory fault errors etc. This patch
-series adds interrupt handler support for NPA and NIX functional blocks in
-RVU AF driver to know the source of error interrupts.
+Thanks for the review
 
-Jerin Jacob (2):
-  octeontx2-af: add npa error af interrupt handlers
-  octeontx2-af: add nix error af interrupt handlers
+On 7/12/20 12:21 PM, Marek Behun wrote:
+> Hi Dan, one bug in this driver, see below.
 
- .../net/ethernet/marvell/octeontx2/af/rvu.c   |  12 +
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |   4 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 202 +++++++++++++++
- .../ethernet/marvell/octeontx2/af/rvu_npa.c   | 230 ++++++++++++++++++
- .../marvell/octeontx2/af/rvu_struct.h         |  33 +++
- 5 files changed, 481 insertions(+)
+This is not really a bug.  It is an enhancement to the driver.
 
---
-2.17.1
+I will update it since I have to touch the series anyway.
+
+Dan
+
