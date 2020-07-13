@@ -2,146 +2,154 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A092C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67388206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E08jUUD9"
+	by mail.kernel.org (Postfix) with ESMTP id 346D8206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594642606;
+	bh=oaI4s2MsM8xroW8K8RHL20N6Yf7Pmnda3h0N0nAm4sA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pp1hA3HUXmBUeO1uQVoHcLCY0r3gFL1iqMXRGiB89yLvSo426P9ePuMdm+rs9EQlj
+	 T4KmEQ+/XHVOcel98sax4YVg+oV3htxxqTLJQx2QBhvtiAUKeRMBbJT30bfcQ1ILBe
+	 rj58EABcRTXxn/PQ7x3HH0wOz+9wb90fDVClIDOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgGMMQf (ORCPT
+        id S1729776AbgGMMQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMQe (ORCPT
+        Mon, 13 Jul 2020 08:16:45 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44402 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:16:34 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDCEC061755;
-        Mon, 13 Jul 2020 05:16:34 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so6158197pjc.4;
-        Mon, 13 Jul 2020 05:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lLOk7rW4/byxbGdkeQSwDePJbFv55lWDJWAbGgIeO8I=;
-        b=E08jUUD9Guyz5JlCO5wNfxTPFIyn/hzpAYddrVpcRIPdARH3MJ79H0G9rkb+jcKutN
-         dqpK/KKV+hXC1EbeA4uw6qCjoI+nBirFUDDUyyfm/Si2zu1a0nYGG+zGGUaJeXY5IFSW
-         3aaf6LpCIMPPlT4mOm87cgnGrzRbqZhXm14eVy7oe+cdYuiwwH79ibQNth7115eGwV0O
-         KW9Ap0Wa4mGkKrldpWqKAvvrXVUsqkfzNaDqn/PUQDj8U9IvVzmWDsQQKaR8gDIXEtPF
-         bxkyNnyUePp9e+cjycLDZ59UW7vsx7XGiVRvQ7nEo3pSuyIU6x9T7VmGYXiXQNQmBPYC
-         Iemg==
+        Mon, 13 Jul 2020 08:16:44 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 5so9296289oty.11;
+        Mon, 13 Jul 2020 05:16:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lLOk7rW4/byxbGdkeQSwDePJbFv55lWDJWAbGgIeO8I=;
-        b=aejy5MGUlw5xvm520vlmi/oSVOeWAZIKiKqygJzLCavAVBgd++zhHyPdGF4B+RrxZ5
-         jDmBVLBjazA9Wyz4HYxUaODOg2xXRBLLmiMUUM8yyFFiOhax+WXhkuAH0nqde0DkQC9O
-         yz/t1JpyKwWQWidkbMQwWnMSzYetvmTqDDgQ7vv24YgHnwdEi2k/DqflfCFmRRNsgKvF
-         pmO2+g9XN5pTmbKBrbJYvPFx4PSEHhZ6Gn+qobVqVexSTWtBRCspcPdKK2pTXdN1uDnf
-         NbBp7gmomVVVxc5w2UH8Kf05epXmOBeNhbS4nZxqQdKIk0lm54mCdPvSWyVwbrEz0BAh
-         gI8A==
-X-Gm-Message-State: AOAM533VERXFPqYRo5KGzVSSLE6v2WPYgsSTiAZDDIoMW1Z93E6VKq5k
-        aebPZ75VtD3t1LuhBI2DZTGrJzOBEA8Odw==
-X-Google-Smtp-Source: ABdhPJxNO1ea46TfHeaFd7sxGBVN42EIq2/b736PE7owHtr4DVTpsXBHt8g8O7bkhcVKZgrNPP2ISQ==
-X-Received: by 2002:a17:902:243:: with SMTP id 61mr13222662plc.29.1594642594128;
-        Mon, 13 Jul 2020 05:16:34 -0700 (PDT)
-Received: from blackclown ([103.88.82.220])
-        by smtp.gmail.com with ESMTPSA id k100sm14960073pjb.57.2020.07.13.05.16.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jul 2020 05:16:33 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:46:21 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org
-Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] staging: qlge: qlge_dbg: Simplify while statements
-Message-ID: <79e35c695a80168639c073137a80804da3362301.1594642213.git.usuraj35@gmail.com>
-References: <cover.1594642213.git.usuraj35@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pO75K6jp9I0TgVd5uiJ2Fq8Rt2TkoAscNvbsoxxq4gc=;
+        b=dPWa6aQZgW7DGcWueb0oDzNGa1E+TbEIvYUXVbCEdclJbzvViyU+bANV1337iivQSx
+         8lLqLCt7h9X/BPhvZey6kO4jL17Ky1I9XRD1LGUYxTJ7U6gVQRcdlRWBWxFrEetBVoHO
+         bpkCze66VeDJ9CmNmsWqM91+BIpArS84TDeHPMieh5Dq650r4l8HPxHjyplI2LGs/9FS
+         7c7U9GLYHihG8JX+YXU8VPNSYUgQQcCBF1Y7OgGdZJzcEov9OX32r2VrUosRHQy4yxCH
+         dc2EI6RGNy5ZNqwLLSNJSsJd4hWKvEdquVDANHVvjIFX2Aa8XdlSekHufEXZ37S1MOJI
+         HaFw==
+X-Gm-Message-State: AOAM532PD7cmMoPfOrUrF5L1ydYM0cNGKeb4Zldk+vHUQwPbiZEQf57L
+        GTLWYc0H6BuLQODq4yB/bVns/kgs6N4kQnSrWok=
+X-Google-Smtp-Source: ABdhPJww6iKdpqCo7i0DLnnBg8yn+ASnskqRd8nMWT8j5w3LUd+Vv/EmoEO2GQob/q2uJhtuznO0DPhZzhOpQWxyyg0=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr33047434oth.262.1594642603476;
+ Mon, 13 Jul 2020 05:16:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Content-Disposition: inline
-In-Reply-To: <cover.1594642213.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <2016232.ihCVsphvri@kreacher> <2988949.NgUrjYMkJj@kreacher> <000801d65634$14f0ecb0$3ed2c610$@net>
+In-Reply-To: <000801d65634$14f0ecb0$3ed2c610$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 13 Jul 2020 14:16:32 +0200
+Message-ID: <CAJZ5v0gmzUAXavNY=hFnG+983sQWWuAJhCeJBumD3mmt79cepg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cpufreq: intel_pstate: Use passive mode by default
+ without HWP
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 9, 2020 at 11:01 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> Hi Rafael,
+>
+> As you may or may not recall, I am attempting to untangle
+> and separate multiple compounding issues around the
+> intel_pstate driver and HWP (or not).
+>
+> Until everything is figured out, I am using the following rules:
+>
+> . never use x86_energy_perf_policy.
+> . For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
+> . after boot always check and reset the various power limit log bits that are set.
+> . never compile the kernel (well, until after any tests), which will set those bits again.
+> . never run prime95 high heat torture test, which will set those bits again.
+> . try to never do anything else that will set those bits again.
+>
+> On 2020.03.28 05:58 Rafael J. Wysocki wrote:
+> >
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > After recent changes allowing scale-invariant utilization to be
+> > used on x86, the schedutil governor on top of intel_pstate in the
+> > passive mode should be on par with (or better than) the active mode
+> > "powersave" algorithm of intel_pstate on systems in which
+> > hardware-managed P-states (HWP) are not used, so it should not be
+> > necessary to use the internal scaling algorithm in those cases.
+> >
+> > Accordingly, modify intel_pstate to start in the passive mode by
+> > default if the processor at hand does not support HWP of if the driver
+> > is requested to avoid using HWP through the kernel command line.
+> >
+> > Among other things, that will allow utilization clamps and the
+> > support for RT/DL tasks in the schedutil governor to be utilized on
+> > systems in which intel_pstate is used.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  Documentation/admin-guide/pm/intel_pstate.rst | 32 ++++++++++++++++-----------
+> >  drivers/cpufreq/intel_pstate.c                |  3 ++-
+> >  2 files changed, 21 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-
+> > guide/pm/intel_pstate.rst
+> > index ad392f3aee06..39d80bc29ccd 100644
+> > --- a/Documentation/admin-guide/pm/intel_pstate.rst
+> > +++ b/Documentation/admin-guide/pm/intel_pstate.rst
+> > @@ -62,9 +62,10 @@ on the capabilities of the processor.
+> >  Active Mode
+> >  -----------
+> >
+> > -This is the default operation mode of ``intel_pstate``.  If it works in this
+> > -mode, the ``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq``
+> > -policies contains the string "intel_pstate".
+> > +This is the default operation mode of ``intel_pstate`` for processors with
+> > +hardware-managed P-states (HWP) support.  If it works in this mode, the
+> > +``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq`` policies
+> > +contains the string "intel_pstate".
+> >
+> >  In this mode the driver bypasses the scaling governors layer of ``CPUFreq`` and
+> >  provides its own scaling algorithms for P-state selection.  Those algorithms
+> > @@ -138,12 +139,13 @@ internal P-state selection logic to be less performance-focused.
+> >  Active Mode Without HWP
+> >  ~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > -This is the default operation mode for processors that do not support the HWP
+> > -feature.  It also is used by default with the ``intel_pstate=no_hwp`` argument
+> > -in the kernel command line.  However, in this mode ``intel_pstate`` may refuse
+> > -to work with the given processor if it does not recognize it.  [Note that
+> > -``intel_pstate`` will never refuse to work with any processor with the HWP
+> > -feature enabled.]
+> > +This operation mode is optional for processors that do not support the HWP
+> > +feature or when the ``intel_pstate=no_hwp`` argument is passed to the kernel in
+> > +the command line.  The active mode is used in those cases if the
+> > +``intel_pstate=active`` argument is passed to the kernel in the command line.
+>
+> ???
+> I can not see anywhere in the code where the kernel command line argument
+> "intel_pstate=active" is dealt with.
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bad, sorry about this.
 
-Simplify while loops into more readable and simple for loops.
+I'll send a patch to fix this issue shortly.
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/qlge/qlge_dbg.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_db=
-g.c
-index 32fbd30a6a2e..985a6c341294 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -42,9 +42,9 @@ static int ql_wait_other_func_reg_rdy(struct ql_adapter *=
-qdev, u32 reg,
- 				      u32 bit, u32 err_bit)
- {
- 	u32 temp;
--	int count =3D 10;
-+	int count;
-=20
--	while (count) {
-+	for (count =3D 10; count; count--) {
- 		temp =3D ql_read_other_func_reg(qdev, reg);
-=20
- 		/* check for errors */
-@@ -53,7 +53,6 @@ static int ql_wait_other_func_reg_rdy(struct ql_adapter *=
-qdev, u32 reg,
- 		else if (temp & bit)
- 			return 0;
- 		mdelay(10);
--		count--;
- 	}
- 	return -1;
- }
---=20
-2.17.1
-
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8MUJQACgkQ+gRsbIfe
-745D1w//XhdUHMBxnx+36FHOhbFo/mXsfM9kHZmUBYmQKRdsquDqK0Rv+go3p6qf
-L1i6E+6oLh/r7ZL0u3wXbNx1KsorCNsBmncK53AxzpzXag8Atu4rtwGiYVJvcaYU
-rH3/PqoMWRj2yPhMWDZUuZf1IqDaubGAd4MtR5DMhCpI94qp9DDJ+m4N71ys4NAl
-B3EK6lZ5AIim5FFk09CdCi1BgvZna1BxngQS1xa3HnCoLf9GRm570E3xJ/1jTCOE
-5wYEkaKbfE+3Yn+MgkeBTos2CLw1Fv2lCLQm3FyKoCr2TxZfWSIjVL6/xZBXA9d5
-7hwsuJOSl/gRsE5hw4dLNxnzvcDSo4zsWDb6HA4akwaL6CZGr2KnuJOVU+Fxuu1M
-ZqUgBga5D0dFbkJEGZi96KWLWjWrsbo20gmnmHwsYtdOc2YkDLQQ4eKoJfV3nBsV
-lSWCo2k9lncMvbRrl1N3Frbx81oQYTe690X7N6lU+60fasMy/pIhZC9Gr+A/yu8R
-AGwOKyg9rLhdr5iPnFXmQiKBnfypePnXEohAFKuSDDIbwsGbuz4kQcIVK0XG373R
-K+VKPI1Z6HuZpCFJruQYAgsXsu/GUFBznuvq36+Gk3d39jlVv/fe0CiSxVcwbl5I
-V/XpFnTUN1FqEYFExL4K9XvJcCn7Zola4dBZu0eev2cM/AQUqB4=
-=p1SM
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+Thanks!
