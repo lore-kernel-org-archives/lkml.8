@@ -2,262 +2,134 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C521C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27E0D2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE3520791
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 04:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XgqehFBf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twLvAk0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGMEwu (ORCPT
+        id S1726729AbgGME6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 00:52:50 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:47663 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgGMEwu (ORCPT
+        Mon, 13 Jul 2020 00:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGME6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 00:52:50 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200713045245epoutp023d3b50032c6868d50934b0d382ea6a95~hNsW2iLWr2976829768epoutp02u
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:52:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200713045245epoutp023d3b50032c6868d50934b0d382ea6a95~hNsW2iLWr2976829768epoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594615965;
-        bh=I5cL9FuCwCcdGU1fGtoRpCNr8gbu+uCnxfubUVaeCsU=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=XgqehFBfDxx2Cnhha6kppQ54VihvC75uu8cit+vE+RzBAnZWA3KJ2fLUnEMZVwgf+
-         iMR30Mu4TL3zfna1hK5S0xtjJAxCiptaRyUG3xjJ+pDp99Q/waKWMrzd7ynb1jhycL
-         44BLG+1Xl2GpsqZFpXJ4YjMBpFQ1cerbdyiUky2c=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200713045245epcas1p232c02c960f5705eae10ddfa7ebb149a8~hNsWR53If0175901759epcas1p2Q;
-        Mon, 13 Jul 2020 04:52:45 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4B4rqc2VcWzMqYkt; Mon, 13 Jul
-        2020 04:52:44 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        67.E6.28578.C98EB0F5; Mon, 13 Jul 2020 13:52:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200713045243epcas1p2570d36dcc0c012233e551a7e00c21a0f~hNsVBzEXI0171901719epcas1p2l;
-        Mon, 13 Jul 2020 04:52:43 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200713045243epsmtrp22505ca4fca6ffb1024d55b60cc388556~hNsVBFLWS1137211372epsmtrp2s;
-        Mon, 13 Jul 2020 04:52:43 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-72-5f0be89cd4b5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7D.97.08382.B98EB0F5; Mon, 13 Jul 2020 13:52:43 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200713045243epsmtip1e3998b2d569c8f0983dfbcbff1540629~hNsU3FDmH1324213242epsmtip1G;
-        Mon, 13 Jul 2020 04:52:43 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200708095746.4179-1-kohada.t2@gmail.com>
-Subject: RE: [PATCH] exfat: retain 'VolumeFlags' properly
-Date:   Mon, 13 Jul 2020 13:52:43 +0900
-Message-ID: <005101d658d1$7202e5d0$5608b170$@samsung.com>
+        Mon, 13 Jul 2020 00:58:22 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C536C061794;
+        Sun, 12 Jul 2020 21:58:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j20so5490263pfe.5;
+        Sun, 12 Jul 2020 21:58:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=P9lvh6IbVzCStjX6UUqQ4hMLI1Givor5C1Gp3Fr1r88=;
+        b=twLvAk0ZReArj6wfcl7hQ//jm11HXj/KFahAEPL+UM6ujjMxhZiF0A0GOyw2PNcD6n
+         mpih/dpKWaQtDJIw68Mh6Mc/STHYFqpCPq5h12R3J5lg6CFdfbcacHxe/Hbw2um73nEr
+         bYGFr3b9Btax772OMVBYuUmLxSf7OP35btmVMCe+X8dfchC/n+BTM4c9hQJgnzjZKXNs
+         cOlxmSMsn5/NM+lPQSJGSh167XGYYbPSShRi+exUS8TdpmMudsYE/pFUxAFqyIS6bzXB
+         byoyuNxro9XNx2Xd0kYoj7WbW86Izvr05PEjwIPv3cEJydPxXqXYo3/liFM/xZSJ6Hgq
+         jchQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=P9lvh6IbVzCStjX6UUqQ4hMLI1Givor5C1Gp3Fr1r88=;
+        b=QKhSaCCTUPm9xhSOXkuADiMpFmdELqJ/bnAnlXiKe2IWKGV37DXbgNc8JqwuLiQRm9
+         FEcT4arhPj21WUsd0ZrWdhTqWNeUiRdYmye8zTuD8e4LAqn2CUYe89F70Cz1OJIRppir
+         /GPszMCwWGYntMrzR8Y2NiBK5SkbP3Mmeypt0pZoxpqBwmpE9sDfBiBUL9IXEyp7TO+c
+         JWleqW/nx24slJULX9DQ95L4wI4oAMVahydyK/cRSujoy+ryNOFgMi+ikPbrVkaz0Dvi
+         A9EpeD4AfahRE6HbvgfOWcZOTU5F6kmriBdwRKCkL3bjKTwoYUQi1OS9HCjFk5opnSU4
+         879w==
+X-Gm-Message-State: AOAM5323px8mmIzWnFrgIfHoNBIDmcv1qSHDRNGbPJ8rKu4ftQfEQxKa
+        yHzT1uQ4cgwuJfDaQ5xnWU/7ThPI
+X-Google-Smtp-Source: ABdhPJyVdzyfh+4/fnCB+gvx/RI5CNBM3ozikU//q1BXlfMf+CY/xIg+P4iZrF3k5Z/5NYCTX1F4YQ==
+X-Received: by 2002:a63:4543:: with SMTP id u3mr62898286pgk.398.1594616302094;
+        Sun, 12 Jul 2020 21:58:22 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id g5sm13135499pfh.168.2020.07.12.21.58.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2020 21:58:21 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 14:58:16 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
+ tlb option
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        x86@kernel.org
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+        <20200710015646.2020871-8-npiggin@gmail.com>
+        <20200710093556.GY4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200710093556.GY4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJOchBlupSQwdEhi4rggGDYoy3yLwE5agcKqAruaRA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmnu6cF9zxBrv7BCx+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
-        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
-        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
-        0MDAyBSoMiEnY//7mUwFU7Uqpn/YxdLA+FGxi5GTQ0LARGL6gutMXYxcHEICOxgl1jy6zg7h
-        fGKUOPLwDQuE841R4uyJfkaYloaGFawQib2MEm2TJ7FBOC8ZJZbf3ckGUsUmoCvx789+MFtE
-        QE/i5MnrYEXMAo1MEstPfGEGSXAKWEhcf98PZgsLWEq8nATRzCKgKjHnxFN2EJsXKL770FJW
-        CFtQ4uTMJywgNrOAvMT2t3OYIU5SkPj5dBkrxDIricMHpjJB1IhIzO5sYwZZLCGwlEPiyMY+
-        qB9cJLafuw5lC0u8Or6FHcKWkvj8bi/QERxAdrXEx/1Q8zsYJV58t4WwjSVurt/AClLCLKAp
-        sX6XPkRYUWLn77mMEGv5JN597WGFmMIr0dEmBFGiKtF36TAThC0t0dX+gX0Co9IsJI/NQvLY
-        LCQPzEJYtoCRZRWjWGpBcW56arFhgSlybG9iBCdULcsdjNPfftA7xMjEwXiIUYKDWUmEN1qU
-        M16INyWxsiq1KD++qDQntfgQoykwqCcyS4km5wNTel5JvKGpkbGxsYWJmbmZqbGSOO+/s+zx
-        QgLpiSWp2ampBalFMH1MHJxSDUyT2jO59tnHnJjX02kj3Z33/9SzlxLiK3slGM9xepkV2FxR
-        2j0pkKdR4d/bFelGJf9Xzr6qt+HQvow1noEWotumdXQE1rw94JQ7ofKQyrNdqdaRy5j3fJ52
-        vl2v//f9k+VtTQbtCebXDtRmXDypfJth3a79nycYHPXaJ5S7y9OXv2td+rZjJsY875q29C7y
-        WTmJ+dPDmYFJSokxxjrCd6bv/9q+/WFYeNhhs2f3M7n83n3ds53NhH8WY6/hUun5Mg/LZp6/
-        oOZavKMj+5G8lX28bHL2q6j2g9ZzlzPKHdj7pKVgr3phNtdje94tnwXOmvdEyVc3SXVdmxX6
-        b97afQm5Rfd1/ou4/ijieL055L0SS3FGoqEWc1FxIgAo3mFyMQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJTnf2C+54g+lbjC1+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
-        MXp83iQXwBbFZZOSmpNZllqkb5fAlbH//UymgqlaFdM/7GJpYPyo2MXIySEhYCLR0LCCtYuR
-        i0NIYDejxKPXx5ggEtISx06cYe5i5ACyhSUOHy6GqHnOKHF993tWkBo2AV2Jf3/2s4HYIgJ6
-        EidPXmcDKWIWaGaS+PZsCTNIQkigk1Hi5AsWEJtTwELi+vt+sLiwgKXEy0k7wZpZBFQl5px4
-        yg5i8wLFdx9aygphC0qcnPmEBeQIZqAFbRsZQcLMAvIS29/OYYa4U0Hi59NlrBA3WEkcPjCV
-        CaJGRGJ2ZxvzBEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dL
-        zs/dxAiOKi3NHYzbV33QO8TIxMF4iFGCg1lJhDdalDNeiDclsbIqtSg/vqg0J7X4EKM0B4uS
-        OO+NwoVxQgLpiSWp2ampBalFMFkmDk6pBqZrBucDj4RvFzps4xJRtP7Kk4/35apzBM5KLe49
-        HiF44E7Bg98PXT3WbpzwXNPi+8GgMw2n1We46ax8f2vivNa8hS+XcYa/WxRvXZF87PyTk59W
-        L+TyuBJpIlK0sGblG739SRoav2YmiWcfTolRSrbzn3HE44kKr8DsfVc/rtpkKWS+nWvC0Zd/
-        +OfMls5/8fy/SUve44hr+U+iHazjSt2mT5toGSd/cLbopuR15W2XvvodmvJhv8xPsep2Lp/A
-        7McdfOWxihF+2VfyJpxzXydwzXX7q825bxJ4dskk/jn28rrM79/uqy3yC6uv/d53Purns3Vp
-        4d7HJDa+tJvuqNXy+UCGzgPGTc6zgzM+h69ercRSnJFoqMVcVJwIAOCAXFsZAwAA
-X-CMS-MailID: 20200713045243epcas1p2570d36dcc0c012233e551a7e00c21a0f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
-        <20200708095746.4179-1-kohada.t2@gmail.com>
+Message-Id: <1594615574.lowminiy4u.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tetsuhiro,
+Excerpts from Peter Zijlstra's message of July 10, 2020 7:35 pm:
+> On Fri, Jul 10, 2020 at 11:56:46AM +1000, Nicholas Piggin wrote:
+>> On big systems, the mm refcount can become highly contented when doing
+>> a lot of context switching with threaded applications (particularly
+>> switching between the idle thread and an application thread).
+>>=20
+>> Abandoning lazy tlb slows switching down quite a bit in the important
+>> user->idle->user cases, so so instead implement a non-refcounted scheme
+>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot down
+>> any remaining lazy ones.
+>>=20
+>> On a 16-socket 192-core POWER8 system, a context switching benchmark
+>> with as many software threads as CPUs (so each switch will go in and
+>> out of idle), upstream can achieve a rate of about 1 million context
+>> switches per second. After this patch it goes up to 118 million.
+>=20
+> That's mighty impressive, however:
 
-> Retain ActiveFat, MediaFailure and ClearToZero fields.
-> And, never clear VolumeDirty, if it is dirty at mount.
-> 
-> In '3.1.13.3 Media Failure Field' of exfat specification says ...
->  If, upon mounting a volume, the value of this field is 1, implementations  which scan the entire
-> volume for media failures and record all failures as  "bad" clusters in the FAT (or otherwise resolve
-> media failures) may clear  the value of this field to 0.
-> Therefore, should not clear MediaFailure without scanning volume.
-> 
-> In '8.1 Recommended Write Ordering' of exfat specification says ...
->  Clear the value of the VolumeDirty field to 0, if its value prior to the  first step was 0 Therefore,
-> should not clear VolumeDirty when mounted.
-> 
-> Also, rename ERR_MEDIUM to MED_FAILURE.
-I think that MEDIA_FAILURE looks better.
-> 
-> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
-> ---
->  fs/exfat/exfat_fs.h  |  5 +++--
->  fs/exfat/exfat_raw.h |  2 +-
->  fs/exfat/super.c     | 22 ++++++++++++++--------
->  3 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index cb51d6e83199..3f8dc4ca8109 100644
-> --- a/fs/exfat/exfat_fs.h
-> +++ b/fs/exfat/exfat_fs.h
-> @@ -224,7 +224,8 @@ struct exfat_sb_info {
->  	unsigned int num_FAT_sectors; /* num of FAT sectors */
->  	unsigned int root_dir; /* root dir cluster */
->  	unsigned int dentries_per_clu; /* num of dentries per cluster */
-> -	unsigned int vol_flag; /* volume dirty flag */
-> +	unsigned int vol_flags; /* volume flags */
-> +	unsigned int vol_flags_noclear; /* volume flags to retain */
->  	struct buffer_head *boot_bh; /* buffer_head of BOOT sector */
-> 
->  	unsigned int map_clu; /* allocation bitmap start cluster */ @@ -380,7 +381,7 @@ static inline
-> int exfat_sector_to_cluster(struct exfat_sb_info *sbi,  }
-> 
->  /* super.c */
-> -int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag);
-> +int exfat_set_vol_flags(struct super_block *sb, unsigned short
-> +new_flags);
-> 
->  /* fatent.c */
->  #define exfat_get_next_cluster(sb, pclu) exfat_ent_get(sb, *(pclu), pclu) diff --git
-> a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h index 350ce59cc324..d86a8a6b0601 100644
-> --- a/fs/exfat/exfat_raw.h
-> +++ b/fs/exfat/exfat_raw.h
-> @@ -16,7 +16,7 @@
-> 
->  #define VOL_CLEAN		0x0000
->  #define VOL_DIRTY		0x0002
-> -#define ERR_MEDIUM		0x0004
-> +#define MED_FAILURE		0x0004
-> 
->  #define EXFAT_EOF_CLUSTER	0xFFFFFFFFu
->  #define EXFAT_BAD_CLUSTER	0xFFFFFFF7u
-> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index b5bf6dedbe11..c26b0f5a0875 100644
-> --- a/fs/exfat/super.c
-> +++ b/fs/exfat/super.c
-> @@ -96,17 +96,22 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
->  	return 0;
->  }
-> 
-> -int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
-> +int exfat_set_vol_flags(struct super_block *sb, unsigned short
-> +new_flags)
->  {
->  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
->  	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
->  	bool sync;
-If dirty bit is set in on-disk volume flags, we can just return 0 at the beginning
-of this function ?
+Well, it's the usual case of "find a bouncing line and scale up the
+machine size until you achieve your desired improvements" :) But we
+are looking at some fundamental scalabilities and seeing if we can
+improve a few things.
 
-> 
-> +	if (new_flags == VOL_CLEAN)
-> +		new_flags = (sbi->vol_flags & ~VOL_DIRTY) | sbi->vol_flags_noclear;
-> +	else
-> +		new_flags |= sbi->vol_flags;
-> +
->  	/* flags are not changed */
-> -	if (sbi->vol_flag == new_flag)
-> +	if (sbi->vol_flags == new_flags)
->  		return 0;
-> 
-> -	sbi->vol_flag = new_flag;
-> +	sbi->vol_flags = new_flags;
-> 
->  	/* skip updating volume dirty flag,
->  	 * if this volume has been mounted with read-only @@ -114,9 +119,9 @@ int
-> exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
->  	if (sb_rdonly(sb))
->  		return 0;
-> 
-> -	p_boot->vol_flags = cpu_to_le16(new_flag);
-> +	p_boot->vol_flags = cpu_to_le16(new_flags);
-How about set or clear only dirty bit to on-disk volume flags instead of using
-sbi->vol_flags_noclear ?
-       if (set)
-               p_boot->vol_flags |= cpu_to_le16(VOL_DIRTY);
-       else
-               p_boot->vol_flags &= cpu_to_le16(~VOL_DIRTY);
+>=20
+>> +static void shoot_lazy_tlbs(struct mm_struct *mm)
+>> +{
+>> +	if (IS_ENABLED(CONFIG_MMU_LAZY_TLB_SHOOTDOWN)) {
+>> +		smp_call_function_many(mm_cpumask(mm), do_shoot_lazy_tlb, (void *)mm,=
+ 1);
+>> +		do_shoot_lazy_tlb(mm);
+>> +	}
+>> +}
+>=20
+> IIRC you (power) never clear a CPU from that mask, so for other
+> workloads I can see this resulting in massive amounts of IPIs.
+>=20
+> For instance, take as many processes as you have CPUs. For each,
+> manually walk the task across all CPUs and exit. Again.
+>=20
+> Clearly, that's an extreme, but still...
 
-> 
-> -	if (new_flag == VOL_DIRTY && !buffer_dirty(sbi->boot_bh))
-> +	if ((new_flags & VOL_DIRTY) && !buffer_dirty(sbi->boot_bh))
->  		sync = true;
->  	else
->  		sync = false;
-> @@ -457,7 +462,8 @@ static int exfat_read_boot_sector(struct super_block *sb)
->  	sbi->dentries_per_clu = 1 <<
->  		(sbi->cluster_size_bits - DENTRY_SIZE_BITS);
-> 
-> -	sbi->vol_flag = le16_to_cpu(p_boot->vol_flags);
-> +	sbi->vol_flags = le16_to_cpu(p_boot->vol_flags);
-> +	sbi->vol_flags_noclear = sbi->vol_flags & (VOL_DIRTY | MED_FAILURE);
->  	sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
->  	sbi->used_clusters = EXFAT_CLUSTERS_UNTRACKED;
-> 
-> @@ -472,9 +478,9 @@ static int exfat_read_boot_sector(struct super_block *sb)
->  		exfat_err(sb, "bogus data start sector");
->  		return -EINVAL;
->  	}
-> -	if (sbi->vol_flag & VOL_DIRTY)
-> +	if (sbi->vol_flags & VOL_DIRTY)
->  		exfat_warn(sb, "Volume was not properly unmounted. Some data may be corrupt. Please run
-> fsck.");
-> -	if (sbi->vol_flag & ERR_MEDIUM)
-> +	if (sbi->vol_flags & MED_FAILURE)
->  		exfat_warn(sb, "Medium has reported failures. Some data may be lost.");
-> 
->  	/* exFAT file size is limited by a disk volume size */
-> --
-> 2.25.1
+We do have some issues with that, it does tend to be very self-limiting
+though, short lived tasks that can drive lots of exits won't get to run
+on a lot of cores.
 
+It's worth keeping an eye on, it may not be too hard to mitigate the IPIs
+doing something dumb like collecting a queue of mms before killing a
+batch of them.
 
+Thanks,
+Nick
