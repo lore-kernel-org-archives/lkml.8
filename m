@@ -2,103 +2,162 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E864EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6188B206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6505206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dU+8SVFw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdxBOQVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgGMOG2 (ORCPT
+        id S1729893AbgGMOGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOG2 (ORCPT
+        Mon, 13 Jul 2020 10:06:48 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36448 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729659AbgGMOGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:06:28 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40937C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:06:28 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so13426842wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AYBT93/x6rrYq9RPd2K35aqbqlGYbFacLRXNWsdWgbc=;
-        b=dU+8SVFwmJ267v2437oNfANVH0w+KtdmF9nlS2MFnrlicHxPWJba+nGK3mBC1/TMue
-         lfjmeyk2ndOV4n+34k+r2FM1693H8W0za4PmgmOmiWm+EdpE+ewUND7/X4bUSYs0ourB
-         sqAPho5W/cEVWxjkjy1ueK9vvnSrtfhsSw9XN8adimyJbzDhXoeREA+KQUXb4NAeSnCn
-         Nuhn4lgVc9NCG2mO9w/SJu8mWyOHAM+C6WZce27gosSNTyOf16LEN+e/ST1rlpK3C69D
-         F4x+M67cw1w8E3e+JyVfa3WjN8acPOkjrWhuqpJ2O0XXkiVWNhPBjWmN0RztZYtp34Vc
-         WnfA==
+        Mon, 13 Jul 2020 10:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594649206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=cVAnTWhIdLYJKO73w7wojsiljd9+XyaexVrW7ZP7+wg=;
+        b=OdxBOQVf5G2D2UVYUWKL8fOso0/qFcpnRDd3WHu0/pFpyYIjMijKP86h6AVCEV5rKwzTLn
+        xbe9wu+tGdfFphT0T/cqwn1QZ4nAHHTiZYGE4IwyQniIxYao/vrKuC/GnprHKWoKNBbOGr
+        Lb0/rUauAXokEUgsxjm7zJs7w35GtfQ=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-408-ftzxv9sxOB66tPAch-Wggw-1; Mon, 13 Jul 2020 10:06:44 -0400
+X-MC-Unique: ftzxv9sxOB66tPAch-Wggw-1
+Received: by mail-qt1-f199.google.com with SMTP id e6so10202229qtb.19
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:06:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AYBT93/x6rrYq9RPd2K35aqbqlGYbFacLRXNWsdWgbc=;
-        b=iKolf61+WU1g8lfhxaTfbvuIKGpoGvHO4lMgnuTu1yA6WLZnCVho1OAANB9HcY9eFJ
-         kMBorLD70qZrsrZpMb0Ij5AtRrTMKlWC0PzmYEuUETEMBzmGRtSNvcwgYjHcN4zjtWN2
-         tRDyKKKU3R29v+Mvh6ZFbMGZVudYtvvkXwYfkSnqhgVT8+NllFZmW5Jj2F+Jfg/pUyg3
-         yGYn/roC1KXaY7NSfogt2fSo+WRUKVaT8LcL6lRsNAaTarVaLaLEdKTT+BARbMWEtVaU
-         ffgDEVF/eHBFcyzCKzGntvQjMPCQm2CCqQHVV8njG6wZxHZk+VZBCTnwADrNueDB1TCr
-         9jYg==
-X-Gm-Message-State: AOAM531K7OLs04VnBZ2KHdHUII5CqqDUT9HcZqwWwOY6g+sLSfpSBmyN
-        dKxZsm1O/XF+plUmIfZ8/A==
-X-Google-Smtp-Source: ABdhPJz3OFpkcawfZxoAkzyzpvPTTaS800Rls2LKkpXfbGS8hiN+ULKhhCWMIwYbyBMRLsJTLf4Qdg==
-X-Received: by 2002:a1c:80d3:: with SMTP id b202mr120710wmd.111.1594649186814;
-        Mon, 13 Jul 2020 07:06:26 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.252.34])
-        by smtp.gmail.com with ESMTPSA id 51sm25807572wrc.44.2020.07.13.07.06.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cVAnTWhIdLYJKO73w7wojsiljd9+XyaexVrW7ZP7+wg=;
+        b=CmjR7Fyxj+MDPE+YV7tCDQAKGsmN9fCPvewkf0E1edwwV4k63/3M8MT3b588B+wdxb
+         jzlWbD5M2ZpqSjxLxPvTad2b46ojqVm9mEvXM4J1HeUZJqOlhGM9WVc7I2K58HdKazup
+         t2LTK9s3OTjorqUOmw9JBJN2evOAg1cJMlKknzoBeXbV4GVt5hK074xqW0IfOTTfxz1X
+         uSg7X/oLYziHhgpkb4B0PMvk6PSF4252i+yLyNKAvO4w77hq579hUMszIFR9tHC9/RoQ
+         tX9uXNMw/HKBzLsHSgmJiJC5LM+UWYgV8pplc0UNXs3yWRtuxIq27YeGzuQq5/+ybK2Y
+         YbgA==
+X-Gm-Message-State: AOAM5331sPhFQRw2ma6nF663bHq0U1Cg39niU2ohPmGArrk2TQWyBlcK
+        wdGkRFI3ehsXt/5twzuFCdJKZEQbEZZOuvxz5I5rRG8hZbDf/2wK/RcMFLLYzTC8fSyUVcvFM/Z
+        I8WSdytMNI7NCKUfre2TAumcx
+X-Received: by 2002:ad4:57c3:: with SMTP id y3mr61518413qvx.38.1594649203769;
+        Mon, 13 Jul 2020 07:06:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzc2v24kRRcIx9iU41389LXjIqZiB59Sm2o0YB8K6V71/qbHAgcbnd4J0M72wpearx39vRRHA==
+X-Received: by 2002:ad4:57c3:: with SMTP id y3mr61518386qvx.38.1594649203525;
+        Mon, 13 Jul 2020 07:06:43 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id m4sm20218627qtf.43.2020.07.13.07.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:06:25 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:06:24 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, will@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rwsem: fix commas in initialisation
-Message-ID: <20200713140624.GA17904@localhost.localdomain>
-References: <20200711145954.GA1178171@localhost.localdomain>
- <20200713115141.GH10769@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200713115141.GH10769@hirez.programming.kicks-ass.net>
+        Mon, 13 Jul 2020 07:06:42 -0700 (PDT)
+From:   trix@redhat.com
+To:     giovanni.cabiddu@intel.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, wojciech.ziemba@intel.com,
+        karen.xiang@intel.com, bruce.w.allan@intel.com, bo.cui@intel.com,
+        pingchaox.yang@intel.com
+Cc:     qat-linux@intel.com, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] crypto: qat: fix double free in qat_uclo_create_batch_init_list
+Date:   Mon, 13 Jul 2020 07:06:34 -0700
+Message-Id: <20200713140634.14730-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:51:41PM +0200, Peter Zijlstra wrote:
-> On Sat, Jul 11, 2020 at 05:59:54PM +0300, Alexey Dobriyan wrote:
-> > Leading comma prevents arbitrary reordering of initialisation clauses.
-> > The whole point of C99 initialisation is to allow any such reordering.
-> 
-> I'm conflicted on this argument, the only reason I'd be inclined to take
-> this patch is that it allows fixing the initialization order to not be
-> random.
+From: Tom Rix <trix@redhat.com>
 
-Yes, this is how the issue was noticed.
+clang static analysis flags this error
 
-> That is, I'd fold in the below.
-> 
-> --- a/include/linux/rwsem.h
-> +++ b/include/linux/rwsem.h
-> @@ -89,9 +89,9 @@ static inline int rwsem_is_locked(struct
->  #define __RWSEM_INITIALIZER(name)				\
->  	{ __RWSEM_INIT_COUNT(name),				\
->  	  .owner = ATOMIC_LONG_INIT(0),				\
-> -	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
-> -	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock),\
->  	  __RWSEM_OPT_INIT(name)				\
-> +	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock),\
-> +	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
+qat_uclo.c:297:3: warning: Attempt to free released memory
+  [unix.Malloc]
+                kfree(*init_tab_base);
+                ^~~~~~~~~~~~~~~~~~~~~
 
-One less chunk to compile with g++, a billion to go :^)
+When input *init_tab_base is null, the function allocates memory for
+the head of the list.  When there is problem allocating other list
+elements the list is unwound and freed.  Then a check is made if the
+list head was allocated and is also freed.
+
+Keeping track of the what may need to be freed is the variable 'tail_old'.
+The unwinding/freeing block is
+
+	while (tail_old) {
+		mem_init = tail_old->next;
+		kfree(tail_old);
+		tail_old = mem_init;
+	}
+
+The problem is that the first element of tail_old is also what was
+allocated for the list head
+
+		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
+		...
+		*init_tab_base = init_header;
+		flag = 1;
+	}
+	tail_old = init_header;
+
+So *init_tab_base/init_header are freed twice.
+
+There is another problem.
+When the input *init_tab_base is non null the tail_old is calculated by
+traveling down the list to first non null entry.
+
+	tail_old = init_header;
+	while (tail_old->next)
+		tail_old = tail_old->next;
+
+When the unwinding free happens, the last entry of the input list will
+be freed.
+
+So the freeing needs a general changed.
+If locally allocated the first element of tail_old is freed, else it
+is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
+as null.
+
+Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/crypto/qat/qat_common/qat_uclo.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/crypto/qat/qat_common/qat_uclo.c b/drivers/crypto/qat/qat_common/qat_uclo.c
+index 4cc1f436b075..bff759e2f811 100644
+--- a/drivers/crypto/qat/qat_common/qat_uclo.c
++++ b/drivers/crypto/qat/qat_common/qat_uclo.c
+@@ -288,13 +288,18 @@ static int qat_uclo_create_batch_init_list(struct icp_qat_fw_loader_handle
+ 	}
+ 	return 0;
+ out_err:
++	/* Do not free the list head unless we allocated it. */
++	tail_old = tail_old->next;
++	if (flag) {
++		kfree(*init_tab_base);
++		*init_tab_base = NULL;
++	}
++
+ 	while (tail_old) {
+ 		mem_init = tail_old->next;
+ 		kfree(tail_old);
+ 		tail_old = mem_init;
+ 	}
+-	if (flag)
+-		kfree(*init_tab_base);
+ 	return -ENOMEM;
+ }
+ 
+-- 
+2.18.1
+
