@@ -2,149 +2,101 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE59C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0EB2077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594672902;
-	bh=EfjZyIyOJJ9ZpcpbZsAt/5tbMgMvg5Sxk8oJKq+81B8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5GIRFTVdwY5t/QEWibPZ9hIjQpp4JA1F96LWoEYoaSWLi6l4LlkP1CGbPlzUzzk8
-	 Hyq0iBQnXzwS0gq6nx/jBf3TcaEh5ERACp6YVyRLYlCbe0ZjEWddXqDTNumYj9UihJ
-	 GTv50dpfKfN9tRwjF1ahLxdLN98l1pw4kur6n1NA=
+	by mail.kernel.org (Postfix) with ESMTP id 7ADF220771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGMUll (ORCPT
+        id S1726734AbgGMUiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgGMUll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:41:41 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D602075B;
-        Mon, 13 Jul 2020 20:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594672899;
-        bh=EfjZyIyOJJ9ZpcpbZsAt/5tbMgMvg5Sxk8oJKq+81B8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nt1F9FwNWlh3ItAJBSfO+GOMZUKSHNW6RmnKqNaWBGoPR/a0t0k1D7ETnpHmU6aVp
-         GdPahgwV9KKwXVsvx1AsgSZnFQ76WaIazikpVkhcTJeRGUwgrcqd7bE6nlXHUIk2iD
-         Ifd9xuqq/wJE+8QCnQ5iSLLw2CSUcgUtJeQoj7J8=
-Date:   Mon, 13 Jul 2020 21:41:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20200713204133.GA3731@willie-the-truck>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
- <20200625001039.56174-6-john.stultz@linaro.org>
- <20200702141825.GA16941@willie-the-truck>
- <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
- <20200710075411.GA30011@willie-the-truck>
- <CALAqxLWadLrxckRHRAR0Q417RnFKquQJbRfO_DLEVH56cykRow@mail.gmail.com>
+        Mon, 13 Jul 2020 16:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgGMUiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:38:12 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7205C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 13:38:12 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 935E1BC078;
+        Mon, 13 Jul 2020 20:38:10 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] vlynq: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:38:04 +0200
+Message-Id: <20200713203804.38089-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLWadLrxckRHRAR0Q417RnFKquQJbRfO_DLEVH56cykRow@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:21:53PM -0700, John Stultz wrote:
-> On Fri, Jul 10, 2020 at 12:54 AM Will Deacon <will@kernel.org> wrote:
-> > On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
-> > > On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
-> > > > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
-> > > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > > > > index b510f67dfa49..714893535dd2 100644
-> > > > > --- a/drivers/iommu/Kconfig
-> > > > > +++ b/drivers/iommu/Kconfig
-> > > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
-> > > > >  config ARM_SMMU
-> > > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> > > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-> > > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > > > >       select IOMMU_API
-> > > > >       select IOMMU_IO_PGTABLE_LPAE
-> > > > >       select ARM_DMA_USE_IOMMU if ARM
-> > > >
-> > > > This looks like a giant hack. Is there another way to handle this?
-> > >
-> > > Sorry for the slow response here.
-> > >
-> > > So, I agree the syntax looks strange (requiring a comment obviously
-> > > isn't a good sign), but it's a fairly common way to ensure drivers
-> > > don't get built in if they optionally depend on another driver that
-> > > can be built as a module.
-> > >   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
-> > > !USB_GADGET" in various Kconfig files.
-> > >
-> > > I'm open to using a different method, and in a different thread you
-> > > suggested using something like symbol_get(). I need to look into it
-> > > more, but that approach looks even more messy and prone to runtime
-> > > failures. Blocking the unwanted case at build time seems a bit cleaner
-> > > to me, even if the syntax is odd.
-> >
-> > Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
-> > as that driver _really_ doesn't care about SoC details like this. In other
-> > words, add a new entry along the lines of:
-> >
-> >         config ARM_SMMU_QCOM_IMPL
-> >         default y
-> >         #if QCOM_SCM=m this can't be =y
-> >         depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
-> >
-> > and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
-> > which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
-> > so that we don't bother to compile arm-smmu-qcom.o in that case.
-> >
-> > Would that work?
-> 
-> I think this proposal still has problems with the directionality of the call.
-> 
-> The arm-smmu-impl.o calls to arm-smmu-qcom.o which calls qcom_scm.o
-> So if qcom_scm.o is part of a module, the calling code in
-> arm-smmu-qcom.o also needs to be a module, which means CONFIG_ARM_SMMU
-> needs to be a module.
-> 
-> I know you said the arm-smmu driver doesn't care about SoC details,
-> but the trouble is that currently the arm-smmu driver does directly
-> call the qcom-scm code. So it is a real dependency. However, if
-> QCOM_SCM is not configured, it calls stubs and that's ok.  In that
-> way, the "depends on QCOM_SCM || !QCOM_SCM" line actually makes sense.
-> It looks terrible because we're used to boolean logic, but it's
-> ternary.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Yes, it looks ugly, but the part I really have issues with is that building
-QCOM_SCM=m and ARM_SMMU=y is perfectly fine if you don't run on an SoC
-with the qcom implementation. I don't see why we need to enforce things
-here beyond making sure that all selectable permutations _build_ and
-fail gracefully at runtime on the qcom SoC if SCM isn't available.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Will
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/vlynq/vlynq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/vlynq/vlynq.c b/drivers/vlynq/vlynq.c
+index e966981c0215..c05de4805b24 100644
+--- a/drivers/vlynq/vlynq.c
++++ b/drivers/vlynq/vlynq.c
+@@ -3,7 +3,7 @@
+  * Copyright (C) 2006, 2007 Eugene Konev <ejka@openwrt.org>
+  *
+  * Parts of the VLYNQ specification can be found here:
+- * http://www.ti.com/litv/pdf/sprue36a
++ * https://www.ti.com/litv/pdf/sprue36a
+  */
+ 
+ #include <linux/init.h>
+-- 
+2.27.0
+
