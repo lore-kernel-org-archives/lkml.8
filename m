@@ -2,127 +2,100 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930CDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBD3206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVHCGlJR"
+	by mail.kernel.org (Postfix) with ESMTP id 7AD93207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgGMSfp (ORCPT
+        id S1726675AbgGMSfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgGMSfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:35:45 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50679C061755;
-        Mon, 13 Jul 2020 11:35:45 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id e4so11835306oib.1;
-        Mon, 13 Jul 2020 11:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pfifxRNrRUR2T4uYGwKiE9RMe487XzOwMSNlNFzce1k=;
-        b=HVHCGlJRjYfmXT7uQQTMqziIBypODRZa7gCfW4kTMKTzzuv3te+ebl9nfo5ikRkY3g
-         ZZBk3lmPazFumhe2INJfkq16MDSGwl3YCJbANDNbzBuY440EXwvbyuBmTTeWi27pcykR
-         m9FfjxokzGaBlJ4wGVcVYTMGaZ2uin1SB7zCs+pU/gAj8SGFpjX4B0mf3i5NSVriEFty
-         713nUE12sid3xqDCL4x2RfdeME6g9f674IZLzWyNgUGKfpplb0VOozAdowMbcfVrLu4/
-         M91CXZTtp1kK1zfoa5Bh0AM+tWHWWrIev+fp8655BD3GtZtFknvVp93t1EYQ0apE+d23
-         kKhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pfifxRNrRUR2T4uYGwKiE9RMe487XzOwMSNlNFzce1k=;
-        b=IlfE3o/MAlf2nSFY5uJZjnNzlUXdoPqereaz6dRBBdkoDyqgMHsoN8qaO1OQUqe3Uk
-         9qd/DMhUkF7L28DeAD1YgGe4d2PlLxw1KDU9Lzqp6FkegFUFonvQ8N85beXkPim2ohM6
-         jfz+YCk1Ujc/AXEdkrUMZ7rbBk3JZUwqpILOksex0ppL/Oy4FEjU3DcvQXO67B9ryCAS
-         I8naNuADhf2sb384Mk8aJS4jQeULwpasxhL1z9GS/DyoVIHj3MKXLTmZ0P8yakfS/Csm
-         9gHiMxrWaB+wTz9ekPp/ZdEUC/AfMUvHTaH5bqvJO6I0s4tkbHtpEAhDsZCCNwCwoSNU
-         HK3w==
-X-Gm-Message-State: AOAM531l62gD34w9kLLFqPOFofaBrnyF2FXmIc2ZKAxK9dl43meOg5ox
-        kyEWtAyW3KgRMFWtTYUeAs+xCjl4
-X-Google-Smtp-Source: ABdhPJz3GQ+85yUO/+PkLfsc+YTRMOpRwB45jn1PhyabY7CvTaSczcOYsYChj491oYeq1eXtgklM+g==
-X-Received: by 2002:aca:4e16:: with SMTP id c22mr648602oib.53.1594665344656;
-        Mon, 13 Jul 2020 11:35:44 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id n84sm2957528oih.9.2020.07.13.11.35.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 11:35:44 -0700 (PDT)
-Subject: Re: [RFC PATCH 02/35] ssb: Change PCIBIOS_SUCCESSFUL to 0
-To:     Saheed Bolarinwa <refactormyself@gmail.com>, helgaas@kernel.org,
-        Michael Buesch <m@bues.ch>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-3-refactormyself@gmail.com>
- <70e57af0-6a8c-a893-67c9-0181af16ae2b@lwfinger.net>
- <78b52ad5-015f-4452-0cd0-dbb2c8597672@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <886881ac-37c6-596e-5f68-07242ed1d2e0@lwfinger.net>
-Date:   Mon, 13 Jul 2020 13:35:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 14:35:52 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:43794 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgGMSfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:35:52 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 46C16BC070;
+        Mon, 13 Jul 2020 18:35:48 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     linus.walleij@linaro.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 20:35:41 +0200
+Message-Id: <20200713183541.36963-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <78b52ad5-015f-4452-0cd0-dbb2c8597672@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 2:13 PM, Saheed Bolarinwa wrote:
-> Hello Larry,
-> 
-> On 7/13/20 7:16 PM, Larry Finger wrote:
->> On 7/13/20 7:22 AM, Saheed O. Bolarinwa wrote:
->>> In reference to the PCI spec (Chapter 2), PCIBIOS* is an x86 concept.
->>> Their scope should be limited within arch/x86.
->>>
->>> Change all PCIBIOS_SUCCESSFUL to 0
->>>
->>> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
->>
->> Could you please tell me what difference this makes? It looks like source 
->> churn rather than a substantive change. The symbol is defined in pci.h and is 
->> used in many architures. Certainly, PCIBIOS_SUCCESSFUL indicates success even 
->> more clearly than 0 does.
->>
-> It is a trivial first step towards a probably significant task. I explained in 
-> the Cover Letter, I can see it didn't get through but I Cc linux-wireless 
-> (properly this time). Probably, too many addresses.
-> 
-> I have resent it. It is here 
-> https://lore.kernel.org/linux-wireless/20200713185559.31967-1-refactormyself@gmail.com/T/#u 
-> 
-> 
->> Why is your name inside quotes in your s-o-b?
->>
-> To keep me company before I get to know my way within the kernel.
-> 
-> I saw people with >2 names do it, so I did! Please let me know if it is odd.
-> 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Thank you for the explanations. The cover letter did help.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-For both SSB and BMCA changes,
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-Larry
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/pinctrl/pinctrl-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index c07324d1f265..a94b54636da9 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -9,7 +9,7 @@
+  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+  * Copyright (c) 2012 Linaro Ltd
+- *		http://www.linaro.org
++ *		https://www.linaro.org
+  *
+  * and pinctrl-at91:
+  * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+-- 
+2.27.0
 
