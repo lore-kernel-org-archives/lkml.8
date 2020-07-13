@@ -2,98 +2,107 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB01DC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4440D206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594647213;
-	bh=V6r4Vd0ntf60ms9BvuVNTsa0FkIV6RXDVM+LwGICXLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uXT+xSCI3VbqC03duRimymS2sx3kO0rF2tW9SsAMdXDHl5uGHIkBE5bwVSnn8eIDa
-	 Zv1+moUbia77YVfh2DM2FK4I/+LsfEWh/ut1B+cj7M0Kf/87WS8IYxvXS5lYvqSzmb
-	 N6vMNU4F2d63hvUI303mp1XYmrj9WtOLVMe6v3Qs=
+	by mail.kernel.org (Postfix) with ESMTP id 91A86206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgGMNdc (ORCPT
+        id S1729863AbgGMNdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:33:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729564AbgGMNdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:33:31 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD012206F0;
-        Mon, 13 Jul 2020 13:33:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594647211;
-        bh=V6r4Vd0ntf60ms9BvuVNTsa0FkIV6RXDVM+LwGICXLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jebLbqpU9BkeoVARZiIrMIIpbl3sUjLWNqnwQQ2WDCSlwQ8i8dKzW/gqYFKA7+bGw
-         DxLSazw26HbvtDAtyGTI7VXXv5Y3D+wk9lZlsQ7tOz8E8EB0qoNnbAp4RJ6Np/AmmA
-         1P2GA7GUN8Nbuzv6Kvic8JC292fM30ZxjLrlEK2k=
-Date:   Mon, 13 Jul 2020 14:33:26 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>, joro@8bytes.org
-Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iommu/arm-smmu: Mark qcom_smmu_client_of_match as
- possibly unused
-Message-ID: <20200713133326.GB2739@willie-the-truck>
-References: <20200604203905.31964-1-jcrouse@codeaurora.org>
- <20200608151308.GB8060@willie-the-truck>
+        Mon, 13 Jul 2020 09:33:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2457 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729564AbgGMNdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:33:36 -0400
+Received: from lhreml714-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id AAD3E441B1BF1BE1EE13;
+        Mon, 13 Jul 2020 14:33:34 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml714-chm.china.huawei.com (10.201.108.65) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 13 Jul 2020 14:33:34 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Mon, 13 Jul 2020 14:33:34 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Topic: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Index: AQHWSI3SBRG6MT5ZnEeiXXWtP5HqWakFTx6ggAAdaICAADIgMA==
+Date:   Mon, 13 Jul 2020 13:33:33 +0000
+Message-ID: <9a5b81441f7149f8bfc4e65a4309a2c5@huawei.com>
+References: <20200622120527.690-1-shiju.jose@huawei.com>
+ <20200622120527.690-2-shiju.jose@huawei.com>
+ <05c8916f4f85421f871e9cbff112512b@huawei.com>
+ <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gfpsejvNAOso2ODqLdSBCZFe=mV32BtTr6aZ2-C=X-BA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.82.58]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608151308.GB8060@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 04:13:08PM +0100, Will Deacon wrote:
-> On Thu, Jun 04, 2020 at 02:39:04PM -0600, Jordan Crouse wrote:
-> > When CONFIG_OF=n of_match_device() gets pre-processed out of existence
-> > leaving qcom-smmu_client_of_match unused. Mark it as possibly unused to
-> > keep the compiler from warning in that case.
-> > 
-> > Fixes: 0e764a01015d ("iommu/arm-smmu: Allow client devices to select direct mapping")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Acked-by: Will Deacon <will@kernel.org>
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> > 
-> >  drivers/iommu/arm-smmu-qcom.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> > index cf01d0215a39..be4318044f96 100644
-> > --- a/drivers/iommu/arm-smmu-qcom.c
-> > +++ b/drivers/iommu/arm-smmu-qcom.c
-> > @@ -12,7 +12,7 @@ struct qcom_smmu {
-> >  	struct arm_smmu_device smmu;
-> >  };
-> >  
-> > -static const struct of_device_id qcom_smmu_client_of_match[] = {
-> > +static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
-> >  	{ .compatible = "qcom,adreno" },
-> >  	{ .compatible = "qcom,mdp4" },
-> >  	{ .compatible = "qcom,mdss" },
-> 
-> Thanks. Joerg -- can you pick this one up, please? I don't have any other
-> SMMU fixes pending at the moment.
-
-I can't see this in Joerg's tree or in linux-next. Joerg: did you pick this
-one up? (I thought you did, but I can't find it!).
-
-Will
+SGkgUmFmYWVsLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBSYWZhZWwg
+Si4gV3lzb2NraSBbbWFpbHRvOnJhZmFlbEBrZXJuZWwub3JnXQ0KPlNlbnQ6IDEzIEp1bHkgMjAy
+MCAxMjoxOA0KPlRvOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxp
+bnV4LWFjcGlAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnOyByandAcmp3eXNvY2tpLm5ldDsgaGVsZ2Fhc0Br
+ZXJuZWwub3JnOw0KPmJwQGFsaWVuOC5kZTsgamFtZXMubW9yc2VAYXJtLmNvbTsgbGVuYkBrZXJu
+ZWwub3JnOw0KPnRvbnkubHVja0BpbnRlbC5jb207IGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbTsN
+Cj56aGFuZ2xpZ3VhbmdAbGludXguYWxpYmFiYS5jb207IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4
+LmludGVsLmNvbTsNCj5XYW5na2VmZW5nIChPUyBLZXJuZWwgTGFiKSA8d2FuZ2tlZmVuZy53YW5n
+QGh1YXdlaS5jb20+Ow0KPmpyb2VkZWxAc3VzZS5kZTsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdl
+aS5jb20+OyB5YW5neWljb25nDQo+PHlhbmd5aWNvbmdAaHVhd2VpLmNvbT47IEpvbmF0aGFuIENh
+bWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsgdGFueGlhb2ZlaSA8dGFueGlh
+b2ZlaUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjExIDEvMl0gQUNQSSAvIEFQ
+RUk6IEFkZCBhIG5vdGlmaWVyIGNoYWluIGZvciB1bmtub3duDQo+KHZlbmRvcikgQ1BFUiByZWNv
+cmRzDQo+DQo+T24gTW9uLCBKdWwgMTMsIDIwMjAgYXQgMTA6MzUgQU0gU2hpanUgSm9zZSA8c2hp
+anUuam9zZUBodWF3ZWkuY29tPg0KPndyb3RlOg0KPj4NCj4+IEhpIFJhZmFlbCwgSGkgSmFtZXMs
+DQo+Pg0KPj4gQ2FuIHlvdSBoZWxwIHRvIG1lcmdlIHRoaXMgcGF0Y2ggYmVjYXVzZSBJIGFkZGVk
+IGFuZCB0ZXN0ZWQgYWxsIHRoZQ0KPnN1Z2dlc3Rpb25zIGZyb20gSmFtZXMuDQo+DQo+SSBjb3Vs
+ZCBhcHBseSB0aGUgWzEvMl0gaW4gcHJpbmNpcGxlLCBidXQgSSBuZWVkIGFuIEFDSyBmb3IgdGhl
+IFsyLzJdIGZyb20gdGhlDQo+UENJIHNpZGUuDQo+DQo+VGhhdCBzYWlkLCBpdCBsb29rcyBsaWtl
+IHRoZSBbMS8yXSBpcyBhIEphbWVzJyBwYXRjaCB0aGF0IHlvdSBhcmUgc2VuZGluZyB3aXRoDQo+
+c29tZSBjaGFuZ2VzIG1hZGUgYnkgeW91Lg0KSmFtZXMgYWRkZWQgZm9sbG93aW5nIGNoYW5nZXMg
+b24gdG9wIG9mIHRoZSBvcmlnaW5hbCBwYXRjaChWMTApIGJ5IG1lLCANClsgUmVtb3ZlZCBrZmlm
+byBhbmQgZ2hlc19nZGF0YV9wb29sLiBFeHBhbmRlZCBjb21taXQgbWVzc2FnZSBdDQpJIGhhZCBj
+b25mdXNpb24gaG93IHRoZSBTLW8tYiB0YWcgdG8gYmUgYWRkZWQgZm9yIEphbWVzJ3MgY2hhbmdl
+cyBpbiB0aGUgVjExIHBhdGNoIHBvc3RlZC4NCg0KPg0KPkluIHRoYXQgY2FzZSB0aGUgb3JkZXJp
+bmcgb2YgdGhlIFMtby1iIHRhZ3MgdW5kZXIgaXQgc2hvdWxkIGJlIGRpZmZlcmVudCAodGhlIFMt
+DQo+by1iIGZyb20gSmFtZXMsIHRoZSB3aGF0LXlvdS1oYXZlLWNoYW5nZSBsaW5lIGFuZCB0aGUg
+Uy1vLWIgZnJvbSB5b3UpIGFuZA0KPmFsc28gdGhlIEZyb206IHRhZyBzaG91bGQgcG9pbnQgdG8g
+SmFtZXMuDQo+DQo+VGhhbmtzIQ0KDQpUaGFua3MsDQpTaGlqdQ0K
