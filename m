@@ -2,159 +2,244 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A974C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2DBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB9E20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3C720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="aF5ymyb6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Teqn0wLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbgGMLyB (ORCPT
+        id S1729736AbgGMLzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:54:01 -0400
-Received: from mail-eopbgr80131.outbound.protection.outlook.com ([40.107.8.131]:19854
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729594AbgGMLyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:54:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EdwWzLcDO+Oz9WhWtfUJ63HzlvwrzMhQgLRoQCCC80j5FHGrZPan5d3znjULt/+GWt5xM73EZDm1aZYB3Vx1/SYjppFLY4Xk1Fx/uMxzMVdcBJNDtOAqWqF2LsPkG4IgHmL6J85/CtGvuVc5Sa/abcoHWqyX1qJ9mC8FdFKiioxgMTMwbnOWNqSQvSNg7st2OfzEn/fJ9iJWlXU8Sjm0LZ+jGtLnfcuT64FRBDN/qNpwMUa/zRNXEXOFii+tiNKmicNLMvE+fgArCbc0whwk54aqy5nKY7lYKxb+f6eOgPV4Pz51wD4qG35nVI4DJuNbrAWZY78NFIu8JozIYWG74g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EdsE6j6dUjw3aV9Rc0azsl7B5uTW+zuUl6suh82K40A=;
- b=nUHRAVNcXeVemtOUjRminvZK+LKH4PYN4iOFyIEgGAxXP3WGvxv6d6DBj+L9wVD1HSV46Wcu49uivMR0iJmfl318zmIC3ysbHsX3toKVDQLGaG193W03qm2LzhbIYpj2OzGgAopnIxTBbGyJ9Nmyxu9yW13zfQw/I7Ff4i6i0HHJw7HyJ2F5F37s3nnk//EUijRUj1Gbi+ObwTcqy2vhQdHO6/nwYOuQQNK75ygsn6lWBSeqKKi10ANksBIWwupTpzGEovuDHISJege/TGuZ/E54MPr0sPvhQglfl7WcJBbivDva5kxYBdrLHd6VTX4wwWdGmGKxCbImrdJFPJUyWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EdsE6j6dUjw3aV9Rc0azsl7B5uTW+zuUl6suh82K40A=;
- b=aF5ymyb60iBxbTWwTu0Oumkh/Gd9AXk5rwnl5I+UtYTwzvdTQGq6zjVhVVWAwnD+EI398f7iSw2HmFM4B52Ka8OYeXtrUwAAR/5aLCE0WiZabcrQIvAeHLrLrsdPvPcEtgBPVYfLIS3npnhXdZaIYhDuhcDMrd7OCi+lK3MM7dg=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM7PR05MB7058.eurprd05.prod.outlook.com (2603:10a6:20b:1ab::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Mon, 13 Jul
- 2020 11:53:56 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
- 11:53:56 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Topic: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Index: AQHWVr15sZvxLwnO3E+b+KcqajdLWakFR14AgAAjuQA=
-Date:   Mon, 13 Jul 2020 11:53:56 +0000
-Message-ID: <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
-         <20200710132423.497230-3-philippe.schenker@toradex.com>
-         <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-In-Reply-To: <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=toradex.com;
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b14ada26-8e83-4170-d27e-08d827236c6c
-x-ms-traffictypediagnostic: AM7PR05MB7058:
-x-microsoft-antispam-prvs: <AM7PR05MB705850D253279F80E277989DF4600@AM7PR05MB7058.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ij+W7air9s/kEB2bArfX9ruaDuswsR35GLwV5RfPYjsXZmkK+L4f5TP3Vc+0gm4lCWlnEAp4NUgqk7Rx4eMO+tB63Licr71chFxcaR7OdLSFjzSEjiofAv42K+XgTJc0WsXMOoByxdTwX7PxS8hItfjdjI9Wv72694tRkFa+Y0YiVtEz0uf10CgycdrZC3IavQ7p+8x57cdXrrXxBWNfxO9vH0v32exhYfuD6woJhRG0F0EaYB8dpVjscDDsy1LAItpjbGoEtdUp0+u8eJgTWQAbvzkl9YavYlGHLjR4EIldB5etO/g5LO4MfhiVvlUHlL42rrU3cucLeG7YBHegJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39840400004)(66446008)(4326008)(26005)(316002)(64756008)(6512007)(71200400001)(8676002)(8936002)(186003)(83380400001)(6486002)(86362001)(2616005)(44832011)(478600001)(110136005)(66556008)(66476007)(54906003)(66946007)(2906002)(6506007)(91956017)(76116006)(53546011)(7416002)(36756003)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Mdzd/gmYKCYCzcxe6ig3G9lIZfBd68xSmlZUPhvfkCROo2QxmO2bPksZNkeMbpaPKJkfAjMwqUlrfldw6XFP1G+d2WItlytCjMKsb/fhJ8itpg7XCSyepxpaKBn+YQoJEqmIqCNlpq/q/zXf7IqL65/rKpSw+Re9SYs1eJq6UlNp4nnQHZpG9r5zO8Zzk79z5nBOchtur7xwcoX1vSnQZi9Ri8OaJgd0zAeYjwSUW/By7lnKz2FpIG7iRiVV3yn/NqXoTAmgVn6T8kWXneRSPz975LxY3ioHmp7dX6dr+j6nzbrzBYueOLQNFgEwsCWofcKK1ArJ0npuSYAeYMngHVq5IKGWZ0xA2bP7C4C4O2eqjMq9uGk7a0YNdE2qeqcqw5pbvzuPCpWdNk+6bqEC17us/tQtJ0dF/4pN4GxNnrd74OL3GW44kjIQXN2a37kK2sr2CSffzz/vPerkwDTEiqLGKys9CtJwLYraebUgcvQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8064FA273BFAA841AC63E113A8B17019@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b14ada26-8e83-4170-d27e-08d827236c6c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 11:53:56.8785
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7Fp7GyqaXroRjWYG7iARvmKmMa98peHMkPdSYm0ArwUyhNc18lP+QlFus1GvyJcMdJhP7tWtixOf288d8baiGkUgtRlTRjIu1RqBZcrisFE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR05MB7058
+        Mon, 13 Jul 2020 07:55:37 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59358 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729613AbgGMLzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:55:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DBq27C030635;
+        Mon, 13 Jul 2020 11:54:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=q9XY0O9VNOoVVMsxnoaHwNhhpztYHwFwPYqqNlIdYC4=;
+ b=Teqn0wLq3Oa48MyWdCNgFk8lvHsNg1uMBBCvb9Yc7vD2yYcATgLjQLFIVJChyyyajtao
+ zNS7GfaQJEISkXMEHQD+AYsKjOBRq9vprn7ihrgIyTxRmehACrFH2C6wmgZAxuzPPTtb
+ pV6ZKsAyosyVghw3f5o5LR0qeqwTyEyx/knItHTeUIskDwDKHn5qPVcKdDX3WlgFLNAs
+ 22dykDKADsFNxEAMmAOHPKyMpX4fVniAgjjPAp5mlOhjCZUKFBsdwBMN3py/9AJEYv2/
+ MujJv4/Sp6WDMFgHVi89Fzcg5n58ycwNkeKpMtC8knKAZFKW+qNyM1Os4NuT1w/ZbnPa iw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 3274uqxk8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 11:54:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DBhgwU104109;
+        Mon, 13 Jul 2020 11:52:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 327qb0epev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 11:52:51 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DBqoYM020293;
+        Mon, 13 Jul 2020 11:52:50 GMT
+Received: from localhost.uk.oracle.com (/10.175.215.251)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jul 2020 04:52:50 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
+        daniel@iogearbox.net
+Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v3 bpf-next 1/2] bpf: use dedicated bpf_trace_printk event instead of trace_printk()
+Date:   Mon, 13 Jul 2020 12:52:33 +0100
+Message-Id: <1594641154-18897-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
+References: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130088
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9680 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTEzIGF0IDExOjQ2ICswMjAwLCBBaG1hZCBGYXRvdW0gd3JvdGU6DQo+
-IEhlbGxvIFBoaWxpcHBlLA0KPiANCj4gT24gNy8xMC8yMCAzOjI0IFBNLCBQaGlsaXBwZSBTY2hl
-bmtlciB3cm90ZToNCj4gPiBTaW5jZSB0aGUgcnVudGltZS1wbSB3YWtldXAgYnVnIHdhcyBmaXhl
-ZCBpbg0KPiA+IGRyaXZlcnMvdXNiL2NoaXBpZGVhL2NvcmUuYyB1c2IgZHVhbC1yb2xlIGhvc3Qv
-ZGV2aWNlIHN3aXRjaGluZyBpcw0KPiA+IHdvcmtpbmcuIFNvIG1ha2UgdXNlIG9mIGl0Lg0KPiA+
-IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtl
-ckB0b3JhZGV4LmNvbT4NCj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiAgYXJjaC9hcm0vYm9vdC9k
-dHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDkgKysrKysrKysrDQo+ID4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpICAgICAgICAgfCA0ICsrLS0NCj4gPiAgMiBmaWxl
-cyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+
-ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+ID4gaW5k
-ZXggOTc2MDEzNzVmMjY0Li5kYjU2YTUzMmEzNGEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gPiBAQCAtMjAsNiArMjAsMTQgQEAg
-Y2xrMTZtOiBjbGsxNm0gew0KPiA+ICAJCWNsb2NrLWZyZXF1ZW5jeSA9IDwxNjAwMDAwMD47DQo+
-ID4gIAl9Ow0KPiA+ICANCj4gPiArCWV4dGNvbl91c2JjX2RldDogdXNiY19kZXQgew0KPiA+ICsJ
-CWNvbXBhdGlibGUgPSAibGludXgsZXh0Y29uLXVzYi1ncGlvIjsNCj4gDQo+IEFjY29yZGluZyB0
-byA0NjAyZjNiZmYyNjYgKCJ1c2I6IGNvbW1vbjogYWRkIFVTQiBHUElPIGJhc2VkIGNvbm5lY3Rp
-b24NCj4gZGV0ZWN0aW9uIGRyaXZlciIpOg0KPiAidGhlIG9sZCB3YXkgdXNpbmcgZXh0Y29uIHRv
-IHN1cHBvcnQgVVNCIER1YWwtUm9sZSBzd2l0Y2ggaXMgbm93DQo+IGRlcHJlY2F0ZWQNCj4gIHdo
-ZW4gdXNlIFR5cGUtQiBjb25uZWN0b3IuIg0KPiANCj4gSGF2ZSB5b3UgY29uc2lkZXJlZCB1c2lu
-ZyBhIGNvbXBhdGlibGUgPSAiZ3Bpby11c2ItYi1jb25uZWN0b3IiIGNoaWxkDQo+IG5vZGUgaW5z
-dGVhZD8NCj4gDQo+IENoZWVycywNCj4gQWhtYWQNCg0KVGhhbmtzIGZvciB0aGUgSGludCBBaG1h
-ZCwNCg0KSSBhbHJlYWR5IHRyaWVkIGFuZCBqdXN0IG5vdyB0cmllZCBhZ2FpbiBidXQgaXQgZG9l
-c24ndCB3b3JrIG9uIG91cg0KaGFyZHdhcmUuIEFyZSB5b3Ugc3VyZSB0aGlzIHdvcmtzIHdpdGgg
-Y2hpcGlkZWEgZHJpdmVyPw0KDQpTaG91bGQgdGhpcyBuZXcgdXNiLWNvbm5lY3RvciBzdHVmZiB3
-b3JrIGluIGdlbmVyYWwgd2l0aCBldmVyeSBvbGQNCmRyaXZlcj8NCg0KUGhpbGlwcGUNCg0KPiAN
-Cj4gPiArCQlpZC1ncGlvID0gPCZncGlvNyAxNCBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArCQlw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJCXBpbmN0cmwtMCA9IDwmcGluY3RybF91
-c2JjX2RldD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArDQo+ID4gIAlncGlvLWtleXMgew0KPiA+
-ICAJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsNCj4gPiAgCQlwaW5jdHJsLW5hbWVzID0gImRl
-ZmF1bHQiOw0KPiA+IEBAIC0xNzQsNiArMTgyLDcgQEAgJnVhcnQzIHsNCj4gPiAgfTsNCj4gPiAg
-DQo+ID4gICZ1c2JvdGcxIHsNCj4gPiArCWV4dGNvbiA9IDwwPiwgPCZleHRjb25fdXNiY19kZXQ+
-Ow0KPiA+ICAJc3RhdHVzID0gIm9rYXkiOw0KPiA+ICB9Ow0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gaW5kZXggZTE4ZTg5ZGVjODc5Li5jYWVhOTBk
-MjQyMWYgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0
-c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiA+IEBA
-IC00NTcsNyArNDU3LDcgQEAgJnVhcnQzIHsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gICZ1c2JvdGcx
-IHsNCj4gPiAtCWRyX21vZGUgPSAiaG9zdCI7DQo+ID4gKwlkcl9tb2RlID0gIm90ZyI7DQo+ID4g
-IH07DQo+ID4gIA0KPiA+ICAmdXNkaGMxIHsNCj4gPiBAQCAtNDg2LDcgKzQ4Niw3IEBAICZ1c2Ro
-YzMgew0KPiA+ICAmaW9tdXhjIHsNCj4gPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+
-ID4gIAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZ3BpbzEgJnBpbmN0cmxfZ3BpbzIgJnBpbmN0cmxf
-Z3BpbzMNCj4gPiAmcGluY3RybF9ncGlvNA0KPiA+IC0JCSAgICAgJnBpbmN0cmxfZ3BpbzcgJnBp
-bmN0cmxfdXNiY19kZXQ+Ow0KPiA+ICsJCSAgICAgJnBpbmN0cmxfZ3Bpbzc+Ow0KPiA+ICANCj4g
-PiAgCXBpbmN0cmxfZ3BpbzE6IGdwaW8xLWdycCB7DQo+ID4gIAkJZnNsLHBpbnMgPSA8DQo+ID4g
-DQo=
+The bpf helper bpf_trace_printk() uses trace_printk() under the hood.
+This leads to an alarming warning message originating from trace
+buffer allocation which occurs the first time a program using
+bpf_trace_printk() is loaded.
+
+We can instead create a trace event for bpf_trace_printk() and enable
+it in-kernel when/if we encounter a program using the
+bpf_trace_printk() helper.  With this approach, trace_printk()
+is not used directly and no warning message appears.
+
+This work was started by Steven (see Link) and finished by Alan; added
+Steven's Signed-off-by with his permission.
+
+Link: https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+---
+ kernel/trace/Makefile    |  2 ++
+ kernel/trace/bpf_trace.c | 42 +++++++++++++++++++++++++++++++++++++-----
+ kernel/trace/bpf_trace.h | 34 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 73 insertions(+), 5 deletions(-)
+ create mode 100644 kernel/trace/bpf_trace.h
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 6575bb0..aeba5ee 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -31,6 +31,8 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
+ GCOV_PROFILE := y
+ endif
+ 
++CFLAGS_bpf_trace.o := -I$(src)
++
+ CFLAGS_trace_benchmark.o := -I$(src)
+ CFLAGS_trace_events_filter.o := -I$(src)
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index e0b7775..0a2716d 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -11,6 +11,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/ctype.h>
+ #include <linux/kprobes.h>
++#include <linux/spinlock.h>
+ #include <linux/syscalls.h>
+ #include <linux/error-injection.h>
+ 
+@@ -19,6 +20,9 @@
+ #include "trace_probe.h"
+ #include "trace.h"
+ 
++#define CREATE_TRACE_POINTS
++#include "bpf_trace.h"
++
+ #define bpf_event_rcu_dereference(p)					\
+ 	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
+ 
+@@ -374,6 +378,30 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
+ 	}
+ }
+ 
++static DEFINE_RAW_SPINLOCK(trace_printk_lock);
++
++#define BPF_TRACE_PRINTK_SIZE   1024
++
++static inline __printf(1, 0) int bpf_do_trace_printk(const char *fmt, ...)
++{
++	static char buf[BPF_TRACE_PRINTK_SIZE];
++	unsigned long flags;
++	va_list ap;
++	int ret;
++
++	raw_spin_lock_irqsave(&trace_printk_lock, flags);
++	va_start(ap, fmt);
++	ret = vsnprintf(buf, sizeof(buf), fmt, ap);
++	va_end(ap);
++	/* vsnprintf() will not append null for zero-length strings */
++	if (ret == 0)
++		buf[0] = '\0';
++	trace_bpf_trace_printk(buf);
++	raw_spin_unlock_irqrestore(&trace_printk_lock, flags);
++
++	return ret;
++}
++
+ /*
+  * Only limited trace_printk() conversion specifiers allowed:
+  * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pB %pks %pus %s
+@@ -483,8 +511,7 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
+  */
+ #define __BPF_TP_EMIT()	__BPF_ARG3_TP()
+ #define __BPF_TP(...)							\
+-	__trace_printk(0 /* Fake ip */,					\
+-		       fmt, ##__VA_ARGS__)
++	bpf_do_trace_printk(fmt, ##__VA_ARGS__)
+ 
+ #define __BPF_ARG1_TP(...)						\
+ 	((mod[0] == 2 || (mod[0] == 1 && __BITS_PER_LONG == 64))	\
+@@ -521,10 +548,15 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
+ const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
+ {
+ 	/*
+-	 * this program might be calling bpf_trace_printk,
+-	 * so allocate per-cpu printk buffers
++	 * This program might be calling bpf_trace_printk,
++	 * so enable the associated bpf_trace/bpf_trace_printk event.
++	 * Repeat this each time as it is possible a user has
++	 * disabled bpf_trace_printk events.  By loading a program
++	 * calling bpf_trace_printk() however the user has expressed
++	 * the intent to see such events.
+ 	 */
+-	trace_printk_init_buffers();
++	if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
++		pr_warn_ratelimited("could not enable bpf_trace_printk events");
+ 
+ 	return &bpf_trace_printk_proto;
+ }
+diff --git a/kernel/trace/bpf_trace.h b/kernel/trace/bpf_trace.h
+new file mode 100644
+index 0000000..9acbc11
+--- /dev/null
++++ b/kernel/trace/bpf_trace.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM bpf_trace
++
++#if !defined(_TRACE_BPF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++
++#define _TRACE_BPF_TRACE_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(bpf_trace_printk,
++
++	TP_PROTO(const char *bpf_string),
++
++	TP_ARGS(bpf_string),
++
++	TP_STRUCT__entry(
++		__string(bpf_string, bpf_string)
++	),
++
++	TP_fast_assign(
++		__assign_str(bpf_string, bpf_string);
++	),
++
++	TP_printk("%s", __get_str(bpf_string))
++);
++
++#endif /* _TRACE_BPF_TRACE_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#define TRACE_INCLUDE_FILE bpf_trace
++
++#include <trace/define_trace.h>
+-- 
+1.8.3.1
+
