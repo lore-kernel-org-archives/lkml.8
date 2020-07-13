@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F73C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11616C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62FB82068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCF1207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aai3HAWx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gwi7NMPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgGMGJ0 (ORCPT
+        id S1729204AbgGMGJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
+        Mon, 13 Jul 2020 02:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729148AbgGMGJT (ORCPT
+        with ESMTP id S1729183AbgGMGJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:09:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB744C08C5DD
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so5577804pgb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:19 -0700 (PDT)
+        Mon, 13 Jul 2020 02:09:26 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4FB0C08C5DB
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so5563956pfh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=od+s8D7sQgTmw85zfRSLd23Y+ImDYFPzNWcvRKsmRCA=;
-        b=Aai3HAWxaz+GjbxPniSs9/JhAru3ScS+cyevS+ZxJ/l5ccQVp9CucQqLRC/b8i9m0g
-         pPkCrb3A6OEQhRzJos63eQ85MSK7RlhNH4iHm2a4TMuJXRFvZ8EuJ2ZC/JxKdzw2uFtr
-         gUd66HFgfByRQnCCefpO5/pBFw0SPpKnIU8Jc=
+        bh=3XKFNOxhocAfWz9PkYcbxt2H0/xDypTKMLAV5ERewKY=;
+        b=gwi7NMPoK6HvtnoRfRqUmipRFPVzx2jmnB4a+vb6lTkSpv0J8vgdI74tWkzmlAZ4Kt
+         uGU9dnhgL4ZH5QMoNPwq8joP1pNAa6nnjApUDCM7yxWbXmBS0MHh3RTOkPU/Fo/zaYrG
+         Oxild8VPE6FQ7hYTiW6fYXpXXh/PYbv0WMIw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=od+s8D7sQgTmw85zfRSLd23Y+ImDYFPzNWcvRKsmRCA=;
-        b=WusEWrxu+FEJkm0ldLzAE1zCK5AxqwkW791aTDZINO6qIY21EJeRQS5YYjqX9Y0nbv
-         wRc3Ea5MN4FTc6+08IBu1zsMGmHWNpc48vnKqRTI6rYySRBxzjhIthBIy0pvzhiUG9IT
-         SY6TIYW87/1Fdv1zpb0CVM67E8fUaJqgpPUlSfog+3H2+7OhAx+kZzA+f9Q0YRIyaePh
-         ugZ3pXe+sjNmudNyVhq1/lG1gTCgGBXl/lbJ6uj0EjpINsQI6aM+7n19xkcAJyja8Tsl
-         Hr2Jz8YfNfFsUzWhHFoic3ewIPCdfEqYI4aRnijWAJ+tWrIfslrTocLMQXKE5jFz8l/P
-         4KTQ==
-X-Gm-Message-State: AOAM531ditFAeWbHwi49NH9vq/nY2cYTlaxOCvu7/4gTTng6Bk0E7Khx
-        iwPqhlnn0yBFzE15Tc8CpUUF1g==
-X-Google-Smtp-Source: ABdhPJxyNM8fIDHdgOQy1/cK6WWjOgJvKXYgZI7TVpcd1Y8lDhvPZ0utoPQ6H5JQk35/uyGkYF88JQ==
-X-Received: by 2002:a63:b06:: with SMTP id 6mr65423158pgl.116.1594620559230;
-        Sun, 12 Jul 2020 23:09:19 -0700 (PDT)
+        bh=3XKFNOxhocAfWz9PkYcbxt2H0/xDypTKMLAV5ERewKY=;
+        b=kwEkjJuZkOFIC8kKB6C3VrBpscMYHyKcvRoZ9kp16doJa6kzxN6IHwWeE1iiLYlyOa
+         AnKtnqK7wzlaYZ/Mxud6Bixz6eV4BIN+eMES3MBtKcfs/mgGTNqoFrfcbrVjh37chJ04
+         FcY+SSqxbkM9BhlP9bRdfR2Cw/HFtnq2RzrpSt5rMkW69rMWYACpbpLAWRMHs0cFixtI
+         aAjrATTxvUUbkZYxqHkeR0XHoWTheF6Xgu86ti1Lbd1T+ePTMXvjd/1ThXrxTfJZl4vR
+         6yZkVweAtzTf+RlMAlBj9Y5IeeWVq+lAsjJ47XolSJvX8MwgnSAkUnxPthA6HbOcC5Vw
+         p8ZQ==
+X-Gm-Message-State: AOAM532ch3i5nI7Uk8y+sk+GVQRtuQ6OhmYIgYW1JteKskKgQHbJOroJ
+        L9EeVbMHF+4DNjBndO8HqICbcQ==
+X-Google-Smtp-Source: ABdhPJxKCOG9CyNv/lGl0TYSaQg/dbaGIRy9BN9vt6Bh210MLYkBml9Selj2XzQGRyOBPBXbQvezYA==
+X-Received: by 2002:a62:de81:: with SMTP id h123mr72836119pfg.217.1594620565458;
+        Sun, 12 Jul 2020 23:09:25 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.16
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:18 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:24 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -66,9 +66,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 03/16] media: mtk-vcodec: add SCP firmware ops
-Date:   Mon, 13 Jul 2020 15:08:29 +0900
-Message-Id: <20200713060842.471356-4-acourbot@chromium.org>
+Subject: [PATCH v3 05/16] media: mtk-vcodec: venc: handle firmware version field
+Date:   Mon, 13 Jul 2020 15:08:31 +0900
+Message-Id: <20200713060842.471356-6-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -79,186 +79,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfei Dong <yunfei.dong@mediatek.com>
+Firmwares for encoders newer than MT8173 will include an ABI version
+number in their initialization ack message. Add the capacity to manage
+it and make initialization fail if the firmware ABI is of a version that
+we don't support.
 
-Add support for communicating with the SCP firmware, which will be used
-by MT8183.
+For MT8173, this ABI version field is reserved and thus undefined ; thus
+ignore it on this chip. There should only be one firmware version available
+for it anyway.
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-[acourbot: refactor, cleanup and split]
-Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- drivers/media/platform/Kconfig                |  1 +
- .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  3 +
- .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  3 +
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 56 +++++++++++++++++++
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  2 +
- 5 files changed, 65 insertions(+)
+ .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  8 ++++++
+ .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  1 +
+ .../media/platform/mtk-vcodec/venc_ipi_msg.h  |  9 ++++---
+ .../media/platform/mtk-vcodec/venc_vpu_if.c   | 27 ++++++++++++++++---
+ 4 files changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index c57ee78fa99d..f0dbe048efea 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -256,6 +256,7 @@ config VIDEO_MEDIATEK_VCODEC
- 	select VIDEOBUF2_DMA_CONTIG
- 	select V4L2_MEM2MEM_DEV
- 	select VIDEO_MEDIATEK_VPU
-+	select MTK_SCP
- 	help
- 	    Mediatek video codec driver provides HW capability to
- 	    encode and decode in a range of video formats
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-index 4f07a5fcce7f..5b5765b98e57 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-@@ -225,6 +225,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get vdec IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-index 4340ea10afd0..42530cd01a30 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-@@ -233,6 +233,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get venc IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-index 967bb100a990..f2a62ea62fc6 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-@@ -19,6 +19,7 @@ struct mtk_vcodec_fw {
- 	enum mtk_vcodec_fw_type type;
- 	const struct mtk_vcodec_fw_ops *ops;
- 	struct platform_device *pdev;
-+	struct mtk_scp *scp;
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index 45c8adfc6a0c..e7b155e7432e 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -300,13 +300,21 @@ struct mtk_vcodec_ctx {
+ 
  };
  
- static int mtk_vcodec_vpu_load_firmware(struct mtk_vcodec_fw *fw)
-@@ -71,6 +72,48 @@ static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
- 	.ipi_send = mtk_vcodec_vpu_ipi_send,
- };
- 
-+static int mtk_vcodec_scp_load_firmware(struct mtk_vcodec_fw *fw)
-+{
-+	return rproc_boot(scp_get_rproc(fw->scp));
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_vdec_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_vdec_hw_capa(fw->scp);
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_venc_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_venc_hw_capa(fw->scp);
-+}
-+
-+static void *mtk_vcodec_vpu_scp_dm_addr(struct mtk_vcodec_fw *fw,
-+					u32 dtcm_dmem_addr)
-+{
-+	return scp_mapping_dm_addr(fw->scp, dtcm_dmem_addr);
-+}
-+
-+static int mtk_vcodec_scp_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
-+		mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-+{
-+	return scp_ipi_register(fw->scp, id, handler, priv);
-+}
-+
-+static int mtk_vcodec_scp_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-+		unsigned int len, unsigned int wait)
-+{
-+	return scp_ipi_send(fw->scp, id, buf, len, wait);
-+}
-+
-+static const struct mtk_vcodec_fw_ops mtk_vcodec_rproc_msg = {
-+	.load_firmware = mtk_vcodec_scp_load_firmware,
-+	.get_vdec_capa = mtk_vcodec_scp_get_vdec_capa,
-+	.get_venc_capa = mtk_vcodec_scp_get_venc_capa,
-+	.map_dm_addr = mtk_vcodec_vpu_scp_dm_addr,
-+	.ipi_register = mtk_vcodec_scp_set_ipi_register,
-+	.ipi_send = mtk_vcodec_scp_ipi_send,
++enum mtk_chip {
++	MTK_MT8173,
 +};
 +
- static void mtk_vcodec_reset_handler(void *priv)
- {
- 	struct mtk_vcodec_dev *dev = priv;
-@@ -94,6 +137,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 	const struct mtk_vcodec_fw_ops *ops;
- 	struct mtk_vcodec_fw *fw;
- 	struct platform_device *fw_pdev = NULL;
-+	struct mtk_scp *scp = NULL;
- 
- 	switch (type) {
- 	case VPU:
-@@ -106,6 +150,14 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 		vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
- 				    dev, rst_id);
- 		break;
-+	case SCP:
-+		ops = &mtk_vcodec_rproc_msg;
-+		scp = scp_get(dev->plat_dev);
-+		if (!scp) {
-+			mtk_v4l2_err("could not get vdec scp handle");
-+			return ERR_PTR(-EPROBE_DEFER);
-+		}
-+		break;
- 	default:
- 		mtk_v4l2_err("invalid vcodec fw type");
- 		return ERR_PTR(-EINVAL);
-@@ -118,6 +170,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 	fw->type = type;
- 	fw->ops = ops;
- 	fw->pdev = fw_pdev;
-+	fw->scp = scp;
- 
- 	return fw;
+ /**
+  * struct mtk_vcodec_enc_pdata - compatible data for each IC
+  *
++ * @chip: chip this encoder is compatible with
++ *
+  * @uses_ext: whether the encoder uses the extended firmware messaging format
+  * @has_lt_irq: whether the encoder uses the LT irq
+  */
+ struct mtk_vcodec_enc_pdata {
++	enum mtk_chip chip;
++
+ 	bool uses_ext;
+ 	bool has_lt_irq;
+ };
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+index 922bc8883811..c1365209263e 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+@@ -378,6 +378,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
  }
-@@ -129,6 +182,9 @@ void mtk_vcodec_fw_release(struct mtk_vcodec_fw *fw)
- 	case VPU:
- 		put_device(&fw->pdev->dev);
- 		break;
-+	case SCP:
-+		scp_put(fw->scp);
-+		break;
- 	}
- }
- EXPORT_SYMBOL_GPL(mtk_vcodec_fw_release);
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-index ff25b0c19f74..ced1b6a10e07 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-@@ -4,6 +4,7 @@
- #define _MTK_VCODEC_FW_H_
  
- #include <linux/remoteproc.h>
-+#include <linux/remoteproc/mtk_scp.h>
- 
- #include "../mtk-vpu/mtk_vpu.h"
- 
-@@ -11,6 +12,7 @@ struct mtk_vcodec_dev;
- 
- enum mtk_vcodec_fw_type {
- 	VPU,
-+	SCP,
+ static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
++	.chip = MTK_MT8173,
+ 	.has_lt_irq = true,
  };
  
- struct mtk_vcodec_fw;
+diff --git a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
+index 4cafbf92d9cd..31a3c76f7d0d 100644
+--- a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
++++ b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
+@@ -131,16 +131,17 @@ struct venc_vpu_ipi_msg_common {
+  * @venc_inst:	AP encoder instance (struct venc_vp8_inst/venc_h264_inst *)
+  * @vpu_inst_addr:	VPU encoder instance addr
+  *			(struct venc_vp8_vsi/venc_h264_vsi *)
+- * @reserved:	reserved for future use. vpu is running in 32bit. Without
+- *		this reserved field, if kernel run in 64bit. this struct size
+- *		will be different between kernel and vpu
++ * @venc_abi_version:	ABI version of the firmware. Kernel can use it to
++ *			ensure that it is compatible with the firmware.
++ *			For MT8173 the value of this field is undefined and
++ *			should not be used.
+  */
+ struct venc_vpu_ipi_msg_init {
+ 	uint32_t msg_id;
+ 	uint32_t status;
+ 	uint64_t venc_inst;
+ 	uint32_t vpu_inst_addr;
+-	uint32_t reserved;
++	uint32_t venc_abi_version;
+ };
+ 
+ /**
+diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+index 6c77bf025172..472503701003 100644
+--- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
++++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+@@ -4,6 +4,7 @@
+  * Author: PoChun Lin <pochun.lin@mediatek.com>
+  */
+ 
++#include "mtk_vcodec_drv.h"
+ #include "mtk_vcodec_fw.h"
+ #include "venc_ipi_msg.h"
+ #include "venc_vpu_if.h"
+@@ -15,6 +16,23 @@ static void handle_enc_init_msg(struct venc_vpu_inst *vpu, const void *data)
+ 	vpu->inst_addr = msg->vpu_inst_addr;
+ 	vpu->vsi = mtk_vcodec_fw_map_dm_addr(vpu->ctx->dev->fw_handler,
+ 					     msg->vpu_inst_addr);
++
++	/* Firmware version field value is unspecified on MT8173. */
++	if (vpu->ctx->dev->venc_pdata->chip == MTK_MT8173)
++		return;
++
++	/* Check firmware version. */
++	mtk_vcodec_debug(vpu, "firmware version: 0x%x\n",
++			 msg->venc_abi_version);
++	switch (msg->venc_abi_version) {
++	case 1:
++		break;
++	default:
++		mtk_vcodec_err(vpu, "unhandled firmware version 0x%x\n",
++			       msg->venc_abi_version);
++		vpu->failure = 1;
++		break;
++	}
+ }
+ 
+ static void handle_enc_encode_msg(struct venc_vpu_inst *vpu, const void *data)
+@@ -35,6 +53,11 @@ static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv)
+ 	mtk_vcodec_debug(vpu, "msg_id %x inst %p status %d",
+ 			 msg->msg_id, vpu, msg->status);
+ 
++	vpu->signaled = 1;
++	vpu->failure = (msg->status != VENC_IPI_MSG_STATUS_OK);
++	if (vpu->failure)
++		goto failure;
++
+ 	switch (msg->msg_id) {
+ 	case VPU_IPIMSG_ENC_INIT_DONE:
+ 		handle_enc_init_msg(vpu, data);
+@@ -51,9 +74,7 @@ static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv)
+ 		break;
+ 	}
+ 
+-	vpu->signaled = 1;
+-	vpu->failure = (msg->status != VENC_IPI_MSG_STATUS_OK);
+-
++failure:
+ 	mtk_vcodec_debug_leave(vpu);
+ }
+ 
 -- 
 2.27.0.383.g050319c2ae-goog
 
