@@ -2,83 +2,131 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A555C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30507C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7B820722
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cy5PcgTQ"
+	by mail.kernel.org (Postfix) with ESMTP id 02DD4206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 01:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgGMB4R (ORCPT
+        id S1728408AbgGMB4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:56:17 -0400
-Received: from vps.xff.cz ([195.181.215.36]:34152 "EHLO vps.xff.cz"
+        Sun, 12 Jul 2020 21:56:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:11551 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMB4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:56:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594605374; bh=gdZ3L0fVux68kDxio9119EDiHzxmA4TjQjhbhQ4czvE=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=cy5PcgTQu8i9lsZhTxxDX+7Yv+rsSYFKlkTIirreGfpV9uAyTkhiiIkolj7GXzsX3
-         jHkLjZ0dIFAa6PkPG7qz1ARepmtzP5oq1OMMh+rRNax93tVC4ZSVPdl1nkUKXNX4Si
-         XqwzwGfdBhhgi2ZNPWU5HqbStXj6Zl63leIr3hEc=
-Date:   Mon, 13 Jul 2020 03:56:13 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        marek.behun@nic.cz
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200713015613.tr6l5svn6ddkktbo@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        marek.behun@nic.cz
-References: <20200702144712.1994685-1-megous@megous.com>
- <20200711100409.GA18901@amd>
- <20200711210111.5ysijhexgyzyr7u7@core.my.home>
- <20200712072554.GC4721@duo.ucw.cz>
- <20200712134911.r3lig4hgyqhmslth@core.my.home>
- <20200712191111.GA20592@amd>
+        id S1726261AbgGMB4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jul 2020 21:56:33 -0400
+IronPort-SDR: fSTj7bQRcEsB1XtstARi7P2B3kqSy4Cgy1UudQq4NUtd2Coiv/Q5lEc9ArK1pJ8Fgrwi2IZXUJ
+ MZgujUHND89w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="136718378"
+X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
+   d="scan'208";a="136718378"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2020 18:56:32 -0700
+IronPort-SDR: Zs6lenS7Wgpo3n8w5Vp2sagKfsqwSr7MBh4M5MGPbpuwx84FK+KuMJAKbgXVDysn5amjPIxRj7
+ cfW9QpGNYa4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,345,1589266800"; 
+   d="scan'208";a="317223746"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Jul 2020 18:56:30 -0700
+Date:   Mon, 13 Jul 2020 09:52:24 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     "Wu, Hao" <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>,
+        yilun.xu@intel.com
+Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Message-ID: <20200713015224.GA2624@yilunxu-OptiPlex-7050>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200709093527.GA32541@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+ <20200710052443.GB8689@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819BF1B54D64AD706BF832E85650@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200710154616.GA130068@epycbox.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200712191111.GA20592@amd>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200710154616.GA130068@epycbox.lan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel,
-
-On Sun, Jul 12, 2020 at 09:11:11PM +0200, Pavel Machek wrote:
-> > > So.. 48 triggers on Marek's systems means I'll not apply your patch.
+On Fri, Jul 10, 2020 at 08:46:16AM -0700, Moritz Fischer wrote:
+> On Fri, Jul 10, 2020 at 06:14:19AM +0000, Wu, Hao wrote:
+> > > On Thu, Jul 09, 2020 at 06:00:40AM -0700, Tom Rix wrote:
+> > > >
+> > > > On 7/9/20 3:14 AM, Wu, Hao wrote:
+> > > > >> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
+> > > > >>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+> > > > >>>>
+> > > > >>>> Add PCIe Device ID for Intel FPGA PAC N3000.
+> > > > >>>>
+> > > > >>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > > >>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > > >>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > > >>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > > > >>>> ---
+> > > > >>>>  drivers/fpga/dfl-pci.c | 2 ++
+> > > > >>>>  1 file changed, 2 insertions(+)
+> > > > >>>>
+> > > > >>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > > > >>>> index 73b5153..824aecf 100644
+> > > > >>>> --- a/drivers/fpga/dfl-pci.c
+> > > > >>>> +++ b/drivers/fpga/dfl-pci.c
+> > > > >>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev
+> > > *pcidev)
+> > > > >>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
+> > > > >>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
+> > > > >>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
+> > > > >>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
+> > > > >>> Should we drop _PF_ here? and also do you want _INTEL_ here?
+> > > > >> I think we could keep _PF_, also there is no need to support VF of pac
+> > > > >> n3000 in product now, but it does exist (ID: 0x0b31).
+> > > >
+> > > > I was wondering about the vf id, thanks!
+> > > >
+> > > > >>
+> > > > >> And add _INTEL_ is good to me.
+> > > > >>
+> > > > >> Then how about this one:
+> > > > >>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+> > > > > I am just considering the alignment with ids defined in
+> > > include/linux/pci_ids.h
+> > > > > So drop _PF_ before _INTEL_ would be better? : )
+> > > >
+> > > > To be consistent, all the id's are intel and all could drop pf.
 > > > 
-> > > Please take a look at my version, it is as simple and avoids that
-> > > problem.
+> > > That's good to me after checking the pci_ids.h. So we have:
+> > > 
+> > > #define PCIE_DEVICE_ID_INTEL_PAC_N3000        0x0B30
 > > 
-> > I would, but I don't see your version linked or mentioned in this
-> > thread.
+> > Sounds good to me.
+> > 
+> > Hao
 > 
-> Ah! Sorry about that. Here it is. (I verified it compiles in the
-> meantime).
+> Heads up I was gonna send out the PR early next week. I can fix this up
+> myself if you want if you want or you can resend it?
 
-I tried implementing a driver using this API:
+I sent the v2 patch for this. Please help check it.
 
-https://megous.com/git/linux/commit/?h=tbs-a711-5.8&id=adda29f57685155ac35bd810b51befbfb266da48
+Thanks,
+Yilun
 
-and it works pretty nicely for me.
-
-thank you and regards,
-	o.
+> 
+> Thanks,
+> Moritz
