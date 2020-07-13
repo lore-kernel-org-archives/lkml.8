@@ -2,287 +2,77 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF46C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD601C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3E062067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666492;
-	bh=vCVncfvo5bfbS+YBtIZZhv3ZJo0EUNJoxFdJDWEMXSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gk6V3jn+MC9GDDXTfTC+AcXlH232ydo6aXqUwOAgfV4oJJOLsAJn4HgPeUay553Ad
-	 ukUHPyy2rL5BeDBNyRqOeimpV7iqWa9zGO2G3EW8oPEGRGH2jVQsC2jvQ2F4QXGaM7
-	 /yKCYdcWfqofsO1fWlUFEJDCRFSSmgBOMwB3AnFE=
+	by mail.kernel.org (Postfix) with ESMTP id 9D7DD20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGMSyv (ORCPT
+        id S1726818AbgGMSzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:54:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39343 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMSyu (ORCPT
+        Mon, 13 Jul 2020 14:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMSzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:54:50 -0400
-Received: by mail-io1-f65.google.com with SMTP id f23so14653280iof.6;
-        Mon, 13 Jul 2020 11:54:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GpjldxV+7Jj2vT+IvkGpTu9C3cb82+6pyMRNKhGFrns=;
-        b=dIXpME/JD8rpfMSCteagWjef8EaBjoer3sikstmxe0GIvEqRDniB2X8tJ1YRwrIa8w
-         pFQAC8qCwCVR6aWW6iI6cBs7BARt8F9lcoD+D4qIQGEtIN0nkc++GcZ+G0a3+7NaPqTx
-         mFAsgQUOCotmbLLeCmttG9tuOFJhiT/KmogdKCjpigWLOBk7cSGua3EQB3FRshr9nmDm
-         aRHI7qSQg+B25HOAAau7CoDa/sHUQIHXE0ZiFs00/DDw7jIZZ25QQNVRW1MJ/K1Wq9NT
-         3RYs3QjDT2wJFc15qY0EM2955x9apDL+M9Y7wIohxpMX6fJ2pm9Fi6HZSAByNr+wtArC
-         hHUA==
-X-Gm-Message-State: AOAM5302zkMiyOGIbbYwTW233MxDEJ1rbo/RQEqMJ0c17BHpj+g8gnV/
-        eXJj+ukseuWQanbQfxpKXQ==
-X-Google-Smtp-Source: ABdhPJwfBTESnW9A9BK0215CPEqL1tvb5pOJfUAQ5J+a1D83Ui/ogMwIHTrR/fSKXGi3VJ9a15EbAg==
-X-Received: by 2002:a6b:ba8b:: with SMTP id k133mr1207385iof.204.1594666489080;
-        Mon, 13 Jul 2020 11:54:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a24sm8109070ioe.46.2020.07.13.11.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:54:48 -0700 (PDT)
-Received: (nullmailer pid 536032 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:54:47 -0000
-Date:   Mon, 13 Jul 2020 12:54:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     hyunk@xilinx.com, laurent.pinchart@ideasonboard.com,
-        hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com,
-        michals@xilinx.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, joe@perches.com, sandipk@xilinx.com,
-        dineshk@xilinx.com
-Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Message-ID: <20200713185447.GA531731@bogus>
-References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
- <20200618053304.14551-3-vishal.sagar@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618053304.14551-3-vishal.sagar@xilinx.com>
+        Mon, 13 Jul 2020 14:55:03 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13014C061755;
+        Mon, 13 Jul 2020 11:55:03 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7A2FA1295A400;
+        Mon, 13 Jul 2020 11:55:02 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 11:55:01 -0700 (PDT)
+Message-Id: <20200713.115501.208223024761834676.davem@davemloft.net>
+To:     grandmaster@al2klimov.de
+Cc:     gerrit@erg.abdn.ac.uk, kuba@kernel.org, masahiroy@kernel.org,
+        dccp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [DCCP]: Replace HTTP links with HTTPS ones
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200713075108.32143-1-grandmaster@al2klimov.de>
+References: <20200713075108.32143-1-grandmaster@al2klimov.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 13 Jul 2020 11:55:02 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
-> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Date: Mon, 13 Jul 2020 09:51:08 +0200
+
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
-> core, an SDI RX to Video Bridge IP core to convert SDI video to native
-> video and a Video In to AXI4-Stream IP core to convert native video to
-> AXI4-Stream.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 > 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> ---
-> v3
-> - bpc instead of bpp
-> - removed bpc as required property (default to 10 bpc)
-> - add dt-bindings/media/xilinx-sdi.h
-> - made line-rate as u32 instead of string
-> - fixed reg
-> - fixed s/upto/up to/
-> 
-> v2
-> - Removed references to xlnx,video*
-> - Fixed as per Sakari Ailus and Rob Herring's comments
-> - Converted to yaml format
-> 
->  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
->  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
->  2 files changed, 152 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
->  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
-> 
-> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> new file mode 100644
-> index 000000000000..6cfc18ca435f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +
-> +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
-> +
-> +maintainers:
-> +  - Vishal Sagar <vishal.sagar@xilinx.com>
-> +
-> +description: |
-> +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
-> +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
-> +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
-> +  native SDI using Xilinx transceivers as the physical layer.
-> +
-> +  The subsystem consists of
-> +  1 - SMPTE UHD-SDI Rx
-> +  2 - SDI Rx to Native Video Bridge
-> +  3 - Video In to AXI4-Stream Bridge
-> +
-> +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
-> +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Should be indented 2 more spaces.
+Git will remove everything inside of [] brackets, so "[DCCP]" is
+not appropriate.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: List of clock specifiers
+I changed it to use "dccp: " which is consistent with other recent
+changes to this code when I applied your patch.
 
-Drop. That's every 'clocks' property.
-
-> +    items:
-> +      - description: AXI4-Lite clock
-> +      - description: SMPTE UHD-SDI Rx core clock
-> +      - description: Video clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: s_axi_aclk
-> +      - const: sdi_rx_clk
-> +      - const: video_out_clk
-> +
-> +  xlnx,bpc:
-> +    description: Bits per component supported. Can be 10 or 12 bits per component only.
-> +    allOf:
-
-You can drop the 'allOf' now.
-
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum: [10, 12]
-
-Seems like this should be a standard property?
-
-> +
-> +  xlnx,line-rate:
-> +    description: |
-> +      The maximum mode supported by the design. Possible values are as below
-> +      0 - XSDI_STD_3G      -  3G mode
-> +      1 - XSDI_STD_6G      -  6G mode
-> +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum: [0, 1, 2]
-
-Standard?
-
-> +
-> +  xlnx,include-edh:
-> +    type: boolean
-> +    description: |
-> +      This is present when the Error Detection and Handling processor is
-> +      enabled in design.
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      Generally the SDI port is connected to a device like SDI Broadcast camera
-> +      which is independently controlled. Hence port@0 is a source port which can be
-> +      connected to downstream IP which can work with AXI4 Stream data.
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: Source port
-> +        properties:
-> +          reg:
-> +            const: 0
-> +          endpoint:
-> +            type: object
-> +            properties:
-> +              remote-endpoint: true
-> +            required:
-> +              - remote-endpoint
-> +            additionalProperties: false
-> +        additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - xlnx,line-rate
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/media/xilinx-sdi.h>
-> +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
-> +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
-> +      interrupt-parent = <&gic>;
-> +      interrupts = <0 89 4>;
-> +      reg = <0x80000000 0x10000>;
-> +      xlnx,include-edh;
-> +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
-> +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
-> +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
-> +      xlnx,bpc = <10>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        port@0 {
-> +          reg = <0>;
-> +          sdirx_out: endpoint {
-> +            remote-endpoint = <&vcap_sdirx_in>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +...
-> diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
-> new file mode 100644
-> index 000000000000..11938fade041
-> --- /dev/null
-> +++ b/include/dt-bindings/media/xilinx-sdi.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Xilinx SDI device tree bindings
-> + *
-> + * Copyright (C) 2020 Xilinx, Inc.
-> + *
-> + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> +
-> +/*
-> + * SDI Configurations
-> + */
-> +#define XSDI_STD_3G		0
-> +#define XSDI_STD_6G		1
-> +#define XSDI_STD_12G_8DS	2
-> +
-> +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
-> -- 
-> 2.21.0
-> 
+Thank you.
