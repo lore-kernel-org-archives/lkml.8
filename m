@@ -2,137 +2,94 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFEEC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EDC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEAB92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VWDGXW/N"
+	by mail.kernel.org (Postfix) with ESMTP id DD75920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 19:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594667146;
+	bh=sNhKapxPDlwhCnRfMXkzSS3A9t2NEquc9rTmjE2KS6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EanFJu/BUccynoNZU1ls/8/SokmIqbbTtCYZLvdzGVvbYCS2lew5cEfhynO0yHWMn
+	 0AbU3LbzQHUq4SVBYT6Iaccsc7VQTPu3z2/1/LLpcrpIiEd2FTj32UNTLOaY/bU1Wm
+	 hQUC1xW1hICMJAUu+VjklbVDXXrFEgI3PZXm1fWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgGMTEA (ORCPT
+        id S1726788AbgGMTFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgGMTEA (ORCPT
+        Mon, 13 Jul 2020 15:05:45 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46095 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgGMTFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 15:04:00 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B7BC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:04:00 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id i18so12149274ilk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 12:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XA1EpHrdmYjsC6ofF2H7iz3RZthRfSSjC9rfBgRGN6M=;
-        b=VWDGXW/NXw25gdZJAvtRUIvPTZDkBqrgY3CT2vzlzhRjMcRQIxRLBAnCJ3lpKSJpFE
-         xT0tyMQ0kws9PblSt76PpMPaVVDnfI0c8WDxS8ltFpz/oNNfxz9BkUOdx2EQgjyR+YY/
-         YlkbxjOna4FFyv5rCJXy94vXpvS1KnQJY4K0lKyVZm9AlDkywFjXCRoGsnMlp1XaLDK4
-         +2wyPVNbDhyGrwQlxKnFaRcbj6BKXFsVhmyjq1XvZOE4nnuFLOfi0oyhx/ODt8ces/LL
-         ati5yeNujl4IhJvCI6cN+Dbau+wRoRKvlWhK3sOJ2J4f5tkaCxtF/q/LXuZjOapBQPD3
-         zrfw==
+        Mon, 13 Jul 2020 15:05:45 -0400
+Received: by mail-il1-f193.google.com with SMTP id p15so4531258ilh.13;
+        Mon, 13 Jul 2020 12:05:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XA1EpHrdmYjsC6ofF2H7iz3RZthRfSSjC9rfBgRGN6M=;
-        b=eS2aimE7U/LYLkSiQN6kG4co2sQ6f/iMAjPF7PmYMTRjDFC9WAMYixa2D+Nn62jO1Z
-         rg7rk0zWv2BTOaiMn5lWssQoTzfEhdBSIgZlTaI+x0C8yr9XuXM9oNVkLO2BkQtMu9rw
-         5OIFB3qQzYR3XehFdMV/fW6KqVHT0IJyCKhvhXRGoKEHIeBC2wxy3Rgt/8WFMwlC8VXk
-         uwnzn1mkAVK5A7H/n+iY96dTmZiw+53aKrw0VLHj7Jkx8SpZp9V2zxzM7UQooXhfZVC4
-         u3DxeF9fYoFdoHzDTA63kSRYDJWJOTYrqTOlJm4vC2OzO85DY1MnOHE8x9/jHrlOaHRg
-         5N0A==
-X-Gm-Message-State: AOAM530Vgb/xdWgseSpGmJkgqF9PprvmAL/XK2aQ1v3GTFyBad820Xpz
-        yXjG0W6wmKxthN6FF5UcAG0Xtg==
-X-Google-Smtp-Source: ABdhPJyRHfvJDQGCnEFTKbipmxwJmFZaEpNpmIxk+hQ+Xky9CJ5Yi9Ms8cMrdsBETw747p3cb8+W7w==
-X-Received: by 2002:a92:c7c3:: with SMTP id g3mr1271721ilk.164.1594667039054;
-        Mon, 13 Jul 2020 12:03:59 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id y6sm8676368ila.74.2020.07.13.12.03.58
+        bh=KrvcQ3XXk1KzrgC6nT6teiKkOx2wvAzWo3+7umnWakI=;
+        b=Ezjx3XcsktzLE4tXb/dpKq8DtswUPJY5SBdG4LKQPHMdXvasLnddjw2SgNSq3ePfIq
+         UHDJLvtFxwsSHV0wK2HWD4KPpBzw1Bp0T7INIuCRV+ukWodcZkQ7brgH9S/hU+SzIaCh
+         wRcFYfH4lN5ou1covnr7ivzQ3YWUvTWy4z4BsvGGEEEARxCYTmgqaBeTF5orvieELpuo
+         48CU3vKHs06SmBo+cseO8+smkrKPZCeDVrjPzM9Nni6it0O/pyMvmiRqObGFw/BKpmE9
+         VyCtzOkbp5jTB4+LecOGW50zE6y2OpdC2X9RpRSWVP2ROxvb0wRBXMgeIYv54aIIWz/Y
+         1ofw==
+X-Gm-Message-State: AOAM531hWL2LjH4+8uVq6hY0HoNW0mSeYI5gsv4/kgfiHhehpuoPmrsI
+        9FJ08ViVmWhYSof0fuJ9+Q==
+X-Google-Smtp-Source: ABdhPJzI5P2l/De91UCc2ApLOJll02gpiZ1KuuMFwDXuiZHOiQC9FRAd9TMA2QCnxrkIHZs5vlNOqA==
+X-Received: by 2002:a92:bb0b:: with SMTP id w11mr1278077ili.238.1594667144105;
+        Mon, 13 Jul 2020 12:05:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c9sm8627870ilm.57.2020.07.13.12.05.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:03:58 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jv3k5-009wVE-3L; Mon, 13 Jul 2020 16:03:57 -0300
-Date:   Mon, 13 Jul 2020 16:03:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SW_Drivers@habana.ai, Ofir Bitton <obitton@habana.ai>
-Subject: Re: [PATCH 1/3] habanalabs: implement dma-fence mechanism
-Message-ID: <20200713190357.GC25301@ziepe.ca>
-References: <20200713155424.24721-1-oded.gabbay@gmail.com>
- <20200713155752.GC267581@kroah.com>
- <CAKMK7uH=Ch4ce-9D5e-RvVwq_oK6Doqtq5QbvpmQ8uPWkMCi2w@mail.gmail.com>
+        Mon, 13 Jul 2020 12:05:43 -0700 (PDT)
+Received: (nullmailer pid 551183 invoked by uid 1000);
+        Mon, 13 Jul 2020 19:05:42 -0000
+Date:   Mon, 13 Jul 2020 13:05:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: bmc150_magn: Document and fix
+ missing compatibles
+Message-ID: <20200713190542.GA551135@bogus>
+References: <20200629100537.20365-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uH=Ch4ce-9D5e-RvVwq_oK6Doqtq5QbvpmQ8uPWkMCi2w@mail.gmail.com>
+In-Reply-To: <20200629100537.20365-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 08:34:12PM +0200, Daniel Vetter wrote:
-> On Mon, Jul 13, 2020 at 5:57 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 13, 2020 at 06:54:22PM +0300, Oded Gabbay wrote:
-> > > From: Ofir Bitton <obitton@habana.ai>
-> > >
-> > > Instead of using standard dma-fence mechanism designed for GPU's, we
-> > > introduce our own implementation based on the former one. This
-> > > implementation is much more sparse than the original, contains only
-> > > mandatory functionality required by the driver.
-> >
-> > Sad you can't use the in-kernel code for this, I really don't understand
-> > what's wrong with using it as-is.
-> >
-> > Daniel, why do we need/want duplicate code floating around in the tree
-> > like this?
+On Mon, 29 Jun 2020 12:05:36 +0200, Krzysztof Kozlowski wrote:
+> The driver supports also BMC156B and BMM150B.  Add existing compatibles
+> marking the BMM150B one as deprecated (due to redundant suffix "_magn"
+> because the device unlike two others is a magnetometer only).  Introduce
+> a new, proper compatible for the deprecated one.
 > 
-> The rules around dma-fence are ridiculously strict, and it only makes
-> sense to inflict that upon you if you actually want to participate in
-> the cross driver uapi built up around dma-buf and dma-fence.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> I've recently started some lockdep annotations to better enforce these
-> rules (and document them), and it's finding tons of subtle bugs even
-> in drivers/gpu (and I only just started with annotating drivers:
+> ---
 > 
-> https://lore.kernel.org/dri-devel/20200707201229.472834-1-daniel.vetter@ffwll.ch/
+> Changes since v2:
+> 1. Add compatible only for bmm150.
 > 
-> You really don't want to deal with this if you don't have to. If
-> drivers/gpu folks (who created this) aren't good enough to understand
-> it, maybe it's not a good idea to sprinkle this all over the tree. And
-> fundamentally all this is is a slightly fancier struct completion. Use
-> that one instead, or a wait_queue.
+> Changes since v1:
+> 1. Mark old compatibles as deprecated, add new one.
+> ---
+>  .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt    | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> I discussed this a bit with Oded, and he thinks it's easier to
-> copypaste and simplify, but given that all other drivers seem to get
-> by perfectly well with completion or wait_queue, I'm not sure that's a
-> solid case.
-> 
-> Also adding Jason Gunthorpe, who very much suggested this should be
-> limited to dma-buf/gpu related usage only.
 
-Without all the cross-driver stuff dma_fence is just a
-completion. Using dma_fence to get a completion is big abuse of what
-it is intended for.
-
-I think the only problem with this patch is that it keeps too much of
-the dma_fence stuff around. From what I could tell it really just
-wants to add a kref and completion to struct hl_cs_compl and delete
-everything to do with dma_fence.
-
-Not even sure the kref is needed ;)
-
-Jason
+Reviewed-by: Rob Herring <robh@kernel.org>
