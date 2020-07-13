@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BE2C4345C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95949C4345E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FD32068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708692068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xv7zUAsf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JbHX0YdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgGMGJo (ORCPT
+        id S1729331AbgGMGJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35350 "EHLO
+        Mon, 13 Jul 2020 02:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729291AbgGMGJl (ORCPT
+        with ESMTP id S1729291AbgGMGJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:09:41 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC357C08C5DB
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:41 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cv18so6129091pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:41 -0700 (PDT)
+        Mon, 13 Jul 2020 02:09:45 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0980EC08C5DB
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:45 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so5598007pgf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jul 2020 23:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IcRaprGcacmXEtaZDoYaeITf2CeXezTPgbu/TUwH/wk=;
-        b=Xv7zUAsfDC9egAaQ0BcClz2WM5+fh3wifI39ifJcxBbpA8Tr/TTSgpzxGJVYLaHGdo
-         qZS7+EpYcY1t9audISeWq7atWgxE/xrCg0TyJ7lHPeGBthUGRHi7HFL9bpI+U1InEbYY
-         CaoAO4AnZl60ZVzFyKYwEMqfAn6E4pgp4A7d8=
+        bh=8vtvohJFj5DhHOwcKV42+FAe6eItys47TuzDpZd6Sp0=;
+        b=JbHX0YdTuTKPraV5j0+Ujs09z3xmVLzJBs5dtbV2ca2zlEIpw9/Xwx2cr8kRrzd5zL
+         WMhXzbgQmxy4ma6ZB4meDw7ruUpf5RClj2KFH+fzH/rThCe+0uM0s0+va0IQqpPBd0+n
+         FimYaQ9nAce5kSkWg50D4Onk1O0RXwlS7HOHA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IcRaprGcacmXEtaZDoYaeITf2CeXezTPgbu/TUwH/wk=;
-        b=ES+670UriRfUEF2Ves5y8NnbixxoM32Qihxw3FBqI8H+9kjJK5awnNRUOYidVaMAvv
-         QdncvcWXKyhYfME64SlvAzzHFIHgMvSLdL5Y54mpJo3Jo0FMkM1HhCkYKbUMqOedeAT1
-         hBtF4TqtRkOQJ1BHDxW+QePZMi7h+D2o9N6+AJMwqq+7HMSho8JvS8unP/igyT3ylmt1
-         BlYtm9x5vKoC/Ft3ktqzX51ya8NCan9g6zfBCki9KqsAaVzns4nDeUPr6SN+d8lujZ2g
-         QRSXuzgdmUguqPZ77UgmzrC7KhNHkbDTn/nPXZEf51Z9cUl39IxbFO8yR86zFkdp30QY
-         1CvA==
-X-Gm-Message-State: AOAM530yZ3isGYNzRNCRlprOZNmmUnF0H57m2i3Tcqe+lpXS8hvJcD8S
-        LxwwzRK6oX8XtRYl3kmFVnpagg==
-X-Google-Smtp-Source: ABdhPJzI8PyjujMeZZ3draC5n2wfwTuhX4JPRIprJxtwpYdFMXJV6VXNh93ZIaginz3CJUCrI6A9pQ==
-X-Received: by 2002:a17:902:7484:: with SMTP id h4mr26844856pll.243.1594620581371;
-        Sun, 12 Jul 2020 23:09:41 -0700 (PDT)
+        bh=8vtvohJFj5DhHOwcKV42+FAe6eItys47TuzDpZd6Sp0=;
+        b=G7QOO+rAW/4KIZn55RZINnbnrJ4s276p1aHrXEuF2KquXzAJTrFkB9BNzGLc8p0ysI
+         flb8NYR/QMdiQIiuUaTPq5TZVkyByiIliyWcqdRBMVn7UPXS5GbDNvwwZDee1ZgFIqb2
+         TYxi7YUN2A8WasFQJTj0ergov2Aj42cxXCk7gVeWupviVzk6HI+dXS3Ln7KMXanE5mmb
+         TR/NAP6F4+u2qegI7btTq2/R1Fe7RC7CZBNadNl4Umhw3pftyVn8xD2Az0XDqoJSIzH4
+         NKXT7+BfPCR5ZimLn8RX++Ez2C/YdpYAh5aVxmeHv1ToHKzNxxbSWphBtoOf9Js4paNd
+         wXgg==
+X-Gm-Message-State: AOAM5311rWxnQXy4YTxE/3Uywf9mtbY0llcdgFRMe2sgUAw2NQTqlHr0
+        fBeuA5KrTn7xbcy026dVgKEWEg==
+X-Google-Smtp-Source: ABdhPJx40QbqJZpmVOJjZEznYEBEY1KsemgvYMG41NmDSjiFnZj8wuKUzbGtLGNNdplayD3iq4xSFQ==
+X-Received: by 2002:a63:757:: with SMTP id 84mr68486625pgh.275.1594620584647;
+        Sun, 12 Jul 2020 23:09:44 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.38
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:40 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:43 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -66,9 +66,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 10/16] Revert "media: mtk-vcodec: Remove extra area allocation in an input buffer on encoding"
-Date:   Mon, 13 Jul 2020 15:08:36 +0900
-Message-Id: <20200713060842.471356-11-acourbot@chromium.org>
+Subject: [PATCH v3 11/16] media: mtk-vcodec: venc support MIN_OUTPUT_BUFFERS control
+Date:   Mon, 13 Jul 2020 15:08:37 +0900
+Message-Id: <20200713060842.471356-12-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -79,49 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 81735ecb62f882853a37a8c157407ec4aed44fd0.
-
-The hardware needs data to follow the previous alignment, so this extra
-space was not superfluous after all. Besides, this also made
-v4l2-compliance's G_FMT and S_FMT tests regress.
+This control is required by v4l2-compliance for encoders. A value of 1
+should be suitable for all scenarios.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index 05743a745a11..f2ba19c32400 100644
+index f2ba19c32400..f833aee4a06f 100644
 --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
 +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -299,12 +299,14 @@ static int vidioc_try_fmt(struct v4l2_format *f,
+@@ -1206,6 +1206,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
  
- 		pix_fmt_mp->num_planes = fmt->num_planes;
- 		pix_fmt_mp->plane_fmt[0].sizeimage =
--			pix_fmt_mp->width * pix_fmt_mp->height;
-+				pix_fmt_mp->width * pix_fmt_mp->height +
-+				((ALIGN(pix_fmt_mp->width, 16) * 2) * 16);
- 		pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+ 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
  
- 		if (pix_fmt_mp->num_planes == 2) {
- 			pix_fmt_mp->plane_fmt[1].sizeimage =
--				(pix_fmt_mp->width * pix_fmt_mp->height) / 2;
-+				(pix_fmt_mp->width * pix_fmt_mp->height) / 2 +
-+				(ALIGN(pix_fmt_mp->width, 16) * 16);
- 			pix_fmt_mp->plane_fmt[2].sizeimage = 0;
- 			pix_fmt_mp->plane_fmt[1].bytesperline =
- 							pix_fmt_mp->width;
-@@ -312,7 +314,8 @@ static int vidioc_try_fmt(struct v4l2_format *f,
- 		} else if (pix_fmt_mp->num_planes == 3) {
- 			pix_fmt_mp->plane_fmt[1].sizeimage =
- 			pix_fmt_mp->plane_fmt[2].sizeimage =
--				(pix_fmt_mp->width * pix_fmt_mp->height) / 4;
-+				(pix_fmt_mp->width * pix_fmt_mp->height) / 4 +
-+				((ALIGN(pix_fmt_mp->width, 16) / 2) * 16);
- 			pix_fmt_mp->plane_fmt[1].bytesperline =
- 				pix_fmt_mp->plane_fmt[2].bytesperline =
- 				pix_fmt_mp->width / 2;
++	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
++			  1, 1, 1, 1);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
+ 			  ctx->dev->venc_pdata->min_bitrate,
+ 			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
 -- 
 2.27.0.383.g050319c2ae-goog
 
