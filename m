@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0654C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90302065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8D2206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fdmit8Ei"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f4GU+aNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgGMQbg (ORCPT
+        id S1730505AbgGMQbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:31:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20365 "EHLO
+        Mon, 13 Jul 2020 12:31:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49280 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730479AbgGMQbf (ORCPT
+        with ESMTP id S1729884AbgGMQbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:31:35 -0400
+        Mon, 13 Jul 2020 12:31:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594657894;
+        s=mimecast20190719; t=1594657903;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Iouzq0Yi3HPtZd0p4FYDjFy4Q/8dNzl3FIny7ymXMV0=;
-        b=fdmit8EigoS4OB9DWx9RYdAii+zqBtQ+6M6WXfNNAmwpX7+e2440A9MUF48YmWk960jcu3
-        9BSrgcQNBicUAXWExsDRI5Me8wgti0GLCXShhheBomoc9ue211RLVhErceOJ14MwraHYX6
-        INL4RLEu7GPv5DQAKFfSwIl94V+e72k=
+        bh=xY8bHMAAYMuhdLzdE9CY5HGi5hz2/1pR5v57pe/8g3I=;
+        b=f4GU+aNgCUxemeObboKtNk/cd31aAWd5WVW9yblAlX/ZYfXb05nEevy2xWawN1ViUCcUDy
+        xag2QGKMrnBcErfR/h0jX8Y9gf/aPW8QNg7ye9UPCQCrQOARnAGj0tp3FnLz02itWAlq4w
+        v9u0OPwIk6LhDqLUfnkS5+81KBHh2DU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-ImBpIKiBM4Gp04BjYK3ydg-1; Mon, 13 Jul 2020 12:31:30 -0400
-X-MC-Unique: ImBpIKiBM4Gp04BjYK3ydg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-19-x9G9ssjJP3ucHZsk_1l_bA-1; Mon, 13 Jul 2020 12:31:41 -0400
+X-MC-Unique: x9G9ssjJP3ucHZsk_1l_bA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24F7C100A8C1;
-        Mon, 13 Jul 2020 16:31:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8716218FF669;
+        Mon, 13 Jul 2020 16:31:39 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 548C110021B3;
-        Mon, 13 Jul 2020 16:31:24 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 299BF7621B;
+        Mon, 13 Jul 2020 16:31:34 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 04/32] vfs: Provide S_CACHE_FILE inode flag
+Subject: [PATCH 05/32] mm: Provide lru_to_last_page() to get last of a page
+ list
 From:   David Howells <dhowells@redhat.com>
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -62,41 +63,40 @@ Cc:     Jeff Layton <jlayton@redhat.com>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 17:31:24 +0100
-Message-ID: <159465788421.1376674.17851071117062513659.stgit@warthog.procyon.org.uk>
+Date:   Mon, 13 Jul 2020 17:31:33 +0100
+Message-ID: <159465789337.1376674.4843292427395367970.stgit@warthog.procyon.org.uk>
 In-Reply-To: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
 References: <159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.22
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an S_CACHE_FILE inode flag that cachefiles can set to ward off
-other kernel services and drivers (including itself) from using its cache
-files.
+Provide a macro, lru_to_last_page(), to find the last page in a page list
+(the opposite of lru_to_page()).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- include/linux/fs.h |    1 +
+ include/linux/mm.h |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index aa3e3af92220..33d30742b26e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2003,6 +2003,7 @@ struct super_operations {
- #define S_ENCRYPTED	16384	/* Encrypted file (using fs/crypto/) */
- #define S_CASEFOLD	32768	/* Casefolded file */
- #define S_VERITY	65536	/* Verity file (using fs/verity/) */
-+#define S_CACHE_FILE	0x20000	/* File is in use as cache file (eg. fs/cachefiles) */
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index dc7b87310c10..9692b9b58b06 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -216,6 +216,7 @@ int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
+ #define PAGE_ALIGNED(addr)	IS_ALIGNED((unsigned long)(addr), PAGE_SIZE)
+ 
+ #define lru_to_page(head) (list_entry((head)->prev, struct page, lru))
++#define lru_to_last_page(head) (list_entry((head)->next, struct page, lru))
  
  /*
-  * Note that nosuid etc flags are inode-specific: setting some file-system
+  * Linux kernel virtual memory manager primitives.
 
 
