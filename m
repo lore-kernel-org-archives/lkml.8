@@ -2,134 +2,115 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30B1C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 367042067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DD92067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 16:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmmxQ/aE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LWb7VIGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbgGMQzU (ORCPT
+        id S1730203AbgGMQzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:55:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
+        Mon, 13 Jul 2020 12:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730325AbgGMQzQ (ORCPT
+        with ESMTP id S1729659AbgGMQzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:55:16 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A1CC061755;
-        Mon, 13 Jul 2020 09:55:15 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d18so14277287edv.6;
-        Mon, 13 Jul 2020 09:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iiHt01yExxr+UGjzI6XflZ+uDY4MKkRXHZbIPXDUuRY=;
-        b=HmmxQ/aEsuwnYmu7uvp6iPKhOMZAIHMXP42//F908Nkqa4MLYdR6vM0f8CaAYqWowF
-         cmLlcXg6JpO6pxfq/D/zt1YR+ZwGTV4syUfrH+YTz6B1Fs4vVUcsGP19zyzOASXLQlmZ
-         qTKgzZNYZoquze0LtCBNYu9CdDrzkE2u3ekNQis8W69z1bxrl9hJzhzv1GepBQWS873d
-         gw2++hMdnjYAB3HOhDaTO0eEJ/h40zjf9peBORLPHgXxyloTyKyiPqbw9YGSUU9NprrK
-         bMu4dxYW7BLe+/eTe3hwCtah6QY+qHfien1FLHGr9zVADP/vvGBpx56b4RcfHUG+cyQ5
-         6/bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iiHt01yExxr+UGjzI6XflZ+uDY4MKkRXHZbIPXDUuRY=;
-        b=Ih8UPvzzHNrcy17DJmaMUJ1Y3SxO8ttDv/THiPQE7VeOvZoBZ7iZeoXNnzU6BPo+O0
-         VJ1dm28QyoRMCu7B/h3E9QqZYUWWaK/5RRpvuJJRiwXI1468LvqszfFhsqs+oYx31gRS
-         xd/m58vmpZAL8q567UndpK+siXMaiFb1C3MYQ1vF58uB/ugRBrV0ynsLTKre+Zi+YioI
-         7b27SxgKp4Plh5DcirZgFMoe18N2/EvD2ehCZRHLR1uFFoGDys7CmK7ol7WXjz+OlIFn
-         EvaOcDW8SO/5TJf5fix0hvGExqQvBiDF+Oq7nXjJ+0gxPHhAgp62EdaS7VJmSqMBTvOh
-         Twcw==
-X-Gm-Message-State: AOAM532/+1xQokP3L/X4qqZiT1TTe8WWaK+HO5/e1vuF2cqtova3JNVx
-        p3JOpYZsaMBhCYGSR3MMFI+JCLUeZr+TPA==
-X-Google-Smtp-Source: ABdhPJz2hbS/YAxk7ynpXEBxv0L7UVNCdcghPyy01UrXKtCfUacUfQIn8EVUfGf1smzuZiWEtLdarg==
-X-Received: by 2002:a05:6402:3099:: with SMTP id de25mr348700edb.228.1594659314697;
-        Mon, 13 Jul 2020 09:55:14 -0700 (PDT)
-Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id w3sm11838938edq.65.2020.07.13.09.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:55:14 -0700 (PDT)
-From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     skhan@linuxfoundation.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Subject: [PATCH 8/14 v3] PCI/ACPI: Check the return value of pcie_capability_read_*()
-Date:   Mon, 13 Jul 2020 19:55:28 +0200
-Message-Id: <20200713175529.29715-4-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200713175529.29715-1-refactormyself@gmail.com>
-References: <20200713175529.29715-1-refactormyself@gmail.com>
+        Mon, 13 Jul 2020 12:55:12 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB39C061794;
+        Mon, 13 Jul 2020 09:55:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HuDdCAe7E/MURwBsmW1Ls9iUs+3VUz9I3ziwdok6E+A=; b=LWb7VIGpl0H9u+jUhBSNqsfnkh
+        bI7HOZD2MHbpne8P2z3FF2pANyq/O8ttXKz04u7N2xaiedmLEqGd7qOcFY968v9TUKHQcTqqL20Pj
+        xg7dow/Qn1uV2dvTd1URZW80j6On7agD3JZkY64Vl13C7EVuq5rvK8R3oosHdsHeal3ejwztgJoAq
+        QlFoNCgY1gQ5BnT1IW9JY3YBcnbg78ejezNjzOSS3rtMjNoBARVCMx5ckbwcX3Ig7VBuWikmnkQEI
+        GBZE8bahcF2hRsRXOQeIN67F1ZxxHaiCnIX0mnSlZoZdfbE0vIseds6GoqtLPbjxMMHoM7S1LZr7s
+        ro7N6bwA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jv1jA-00043K-2o; Mon, 13 Jul 2020 16:54:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E60EE303A02;
+        Mon, 13 Jul 2020 18:54:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CCBF020D28BB0; Mon, 13 Jul 2020 18:54:49 +0200 (CEST)
+Date:   Mon, 13 Jul 2020 18:54:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT
+ default boost value
+Message-ID: <20200713165449.GM10769@hirez.programming.kicks-ass.net>
+References: <20200706142839.26629-1-qais.yousef@arm.com>
+ <20200706142839.26629-2-qais.yousef@arm.com>
+ <20200713112125.GG10769@hirez.programming.kicks-ass.net>
+ <20200713121246.xjif3g4zpja25o5r@e107158-lin.cambridge.arm.com>
+ <20200713133558.GK10769@hirez.programming.kicks-ass.net>
+ <20200713142754.tri5jljnrzjst2oe@e107158-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713142754.tri5jljnrzjst2oe@e107158-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On Mon, Jul 13, 2020 at 03:27:55PM +0100, Qais Yousef wrote:
+> On 07/13/20 15:35, Peter Zijlstra wrote:
+> > > I protect this with rcu_read_lock() which as far as I know synchronize_rcu()
+> > > will ensure if we do the update during this section; we'll wait for it to
+> > > finish. New forkees entering the rcu_read_lock() section will be okay because
+> > > they should see the new value.
+> > > 
+> > > spinlocks() and mutexes seemed inferior to this approach.
+> > 
+> > Well, didn't we just write in another patch that p->uclamp_* was
+> > protected by both rq->lock and p->pi_lock?
+> 
+> __setscheduler_uclamp() path is holding these locks, not sure by design or it
+> just happened this path holds the lock. I can't see the lock in the
+> uclamp_fork() path. But it's hard sometimes to unfold the layers of callers,
+> especially not all call sites are annotated for which lock is assumed to be
+> held.
+> 
+> Is it safe to hold the locks in uclamp_fork() while the task is still being
+> created? My new code doesn't hold it of course.
+> 
+> We can enforce this rule if you like. Though rcu critical section seems lighter
+> weight to me.
+> 
+> If all of this does indeed start looking messy we can put the update in
+> a delayed worker and schedule that instead of doing synchronous setup.
 
-On failure pcie_capability_read_dword() sets it's last parameter,
-val to 0.
-However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x). 
-
-This bug can be avoided if the return value of pcie_capability_read_word
-is checked to confirm success.
-
-Check the return value of pcie_capability_read_word() to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
----
- drivers/pci/pci-acpi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 7224b1e5f2a8..39eb816bc3b8 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -248,12 +248,13 @@ static bool pcie_root_rcb_set(struct pci_dev *dev)
- {
- 	struct pci_dev *rp = pcie_find_root_port(dev);
- 	u16 lnkctl;
-+	int ret;
- 
- 	if (!rp)
- 		return false;
- 
--	pcie_capability_read_word(rp, PCI_EXP_LNKCTL, &lnkctl);
--	if (lnkctl & PCI_EXP_LNKCTL_RCB)
-+	ret = pcie_capability_read_word(rp, PCI_EXP_LNKCTL, &lnkctl);
-+	if (!ret && (lnkctl & PCI_EXP_LNKCTL_RCB))
- 		return true;
- 
- 	return false;
-@@ -792,12 +793,13 @@ bool pciehp_is_native(struct pci_dev *bridge)
- {
- 	const struct pci_host_bridge *host;
- 	u32 slot_cap;
-+	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
- 		return false;
- 
--	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
--	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
-+	ret = pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
-+	if (ret || !(slot_cap & PCI_EXP_SLTCAP_HPC))
- 		return false;
- 
- 	if (pcie_ports_native)
--- 
-2.18.2
-
+sched_fork() doesn't need the locks, because at that point the task
+isn't visible yet. HOWEVER, sched_post_fork() is after pid-hash (per
+design) and thus the task is visible, so we can race against
+sched_setattr(), so we'd better hold those locks anyway.
