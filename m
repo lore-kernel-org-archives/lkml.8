@@ -7,119 +7,109 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B3DC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBAAC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8592075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A15A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 14:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JW8Zfxng"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rodZuMhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgGMOto (ORCPT
+        id S1730155AbgGMOtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
+        Mon, 13 Jul 2020 10:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730109AbgGMOtm (ORCPT
+        with ESMTP id S1730139AbgGMOto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:49:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBA1C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so16865717wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
+        Mon, 13 Jul 2020 10:49:44 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084D0C08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:44 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so13445132wml.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 07:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EdngZibp0zWCAAM+UJcwsurIH7yKZeYEzW9/AfNLRBM=;
-        b=JW8ZfxngbL67Sj8u+8Odvmzrwr0Un0a8dfJga8fvIiSWVdYg9aR4Bmk+ZaZcNRFo4H
-         mYYCCmw1FyfXDWpX/JP8gcpGpLbGjVhpgBWMLQ7nU3B60mmVu0+j3wYxmW0D0X1k5/zs
-         4NS/fGYu/LscQ5CzpkfJBoQy0++MW25LdnoHtLiIDNIoujjsb4iXIpRxjgIXjCQSUeu5
-         5RKO/zCJXFqGKYoHk3QXfi69WgeFYkcFR2GtBorrikmsDs+1KrMwPTr8T2C2QkbQBRi/
-         bgI7VvRNsxOtIgc9DXtgUbv6Ox4Z0pppzdqBGQdi7TUTRWQYpytYkMNaweHWedM6aOUQ
-         zj4A==
+        bh=CLuyrhW1Ep4UqvYQzgiCgMPgEzGrhSBhnQKWSj6/aQI=;
+        b=rodZuMheOaiuJ6ysjx6ilt8n3oIFeHyyJQvyszrQaBH/ZMKq6ZNgOwolHB/N1nLCey
+         GDOHdRy2iqJG26wPbpMoZMUVy7vU06RWHv/WhoSXqFiHSF1Kw3kgMc0lLhajbTlG7MMv
+         jpnVkEkSM/bKfUdYZLNOAsTOARnhiQkf7HQGA+r/uqY0/fgW6Ps6FTW17gSrRfMZWQem
+         zloaHCQcyTMc383ovLgCzPrNQ2+j/JP4aQEe2rBO9ZcMKvwX1rIBoJxSCfAEwJg6JNp6
+         tpKpvjjIu3NBSCW9vwwXuawtF+VIEPb2jEhvv3x9vVKsafRumWWxagDQObXQjO79AAx4
+         cToA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EdngZibp0zWCAAM+UJcwsurIH7yKZeYEzW9/AfNLRBM=;
-        b=R6yGdT9kZde+Pc/wfBYUVWOVcowr5WwdJrCMHdEqAyDWk1nl/rDa9fHwYZVuoxrPrD
-         r5UTECQueqF64t4hlgR9PoeRD7tUefOy938A3r7ClLNfTbUFUYfZzouJ1X5pTyhdGWnd
-         iqbmExKjeBKk5EYY0GXpVjrXetRaWmy9McDuLTfr7Ro+WcE94894d1v3ivIolgmIVWmb
-         Lx6VtQLAgtE3rhlV6q7xXyIz1QzdN08WNlNX7h2HlBiIxsujO5R4tFplFwY4BKAYu/b1
-         YkCJUTUFlGnxrOoh2ByBnZK1+1P+uOXPCMFudxqWJPKvL/iYqcC9EEcy7l6vcTomp2dS
-         FUrg==
-X-Gm-Message-State: AOAM5339yIP+3Ldpq8FkVfEhw8lvvIKwdPdcWWWTjoKvqPbyxg4GtKME
-        Hj3lkUv+B2CGl5ACuU1N0G4fmA==
-X-Google-Smtp-Source: ABdhPJwbwkd7iM4SmIi+fTezp7zvJuFCTmoF3U2ec6u5Z2hwzXy9AZwysrE+mhaEjypi6okk23x0gg==
-X-Received: by 2002:a5d:6a07:: with SMTP id m7mr81416990wru.324.1594651779599;
-        Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
+        bh=CLuyrhW1Ep4UqvYQzgiCgMPgEzGrhSBhnQKWSj6/aQI=;
+        b=je94LVS1tARwdDWiExPO0hFMc5tambmQQ0Hy5nmvIi9KUF68/GMNvVoeuVngwfoNuD
+         Kez4dAymZWk5PgSn+NMCaNgX5EDwQYI3zZLjadCx3kIXRWZKboW3YJAvFL08NFT4tzdl
+         Vh9LXIlHL2083caf/+6QdlzF+b+ruzRKeo5d0XFME9e7U1usEa0/cRwJvFbRaP1/JRrw
+         N9yGA+y3zPCFpWrCi/ag5pWZDAp8TCXBv9nSMqGAFGgLRyCw0bnBIcXzWVGSj7QrS+U6
+         dLGfboIf0MG7dIx8f4pd9kd95LStEHhODMiEWsng8OFDQPFNEiQk5hfyC2OS7k6IW8rD
+         Kmrw==
+X-Gm-Message-State: AOAM532Ohbhsy8REIeunDgleGpxN3XYyh2mCHj84EyfbZY3i5ypMYthb
+        h1CSYqfUsJI45tVg1axbrAJSfA==
+X-Google-Smtp-Source: ABdhPJwNCN9IKrrBQRXxfQyO4DBNoD0hRSiA2S/GsibhAVbnDvY8RU02RNJDtcsp8xzBWa+YyE4XtQ==
+X-Received: by 2002:a7b:cb92:: with SMTP id m18mr313387wmi.94.1594651782718;
+        Mon, 13 Jul 2020 07:49:42 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.38
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:42 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Thomas Abraham <thomas.ab@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Mon, 13 Jul 2020 15:49:11 +0100
-Message-Id: <20200713144930.1034632-7-lee.jones@linaro.org>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Del Regno <kholk11@gmail.com>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH 09/25] pinctrl: qcom: pinctrl-msm8976: Remove unused variable 'nav_tsync_groups'
+Date:   Mon, 13 Jul 2020 15:49:14 +0100
+Message-Id: <20200713144930.1034632-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document either of the demoted functions here.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
- drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
+ drivers/pinctrl/qcom/pinctrl-msm8976.c:802:27: warning: ‘nav_tsync_groups’ defined but not used [-Wunused-const-variable=]
+ 802 | static const char
+ const nav_tsync_groups[] = {
+ | ^~~~~~~~~~~~~~~~
 
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Thomas Abraham <thomas.ab@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Del Regno <kholk11@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm8976.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index f26574ef234ab..608eb5a07248e 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1140,7 +1140,7 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--/**
-+/*
-  * samsung_pinctrl_suspend - save pinctrl state for suspend
-  *
-  * Save data for all banks handled by this device.
-@@ -1187,7 +1187,7 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
- 	return 0;
- }
- 
--/**
-+/*
-  * samsung_pinctrl_resume - restore pinctrl state from suspend
-  *
-  * Restore one of the banks that was saved during suspend.
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm8976.c b/drivers/pinctrl/qcom/pinctrl-msm8976.c
+index 183f0b2d9f8e8..ec43edf9b660a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm8976.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm8976.c
+@@ -799,9 +799,6 @@ static const char * const pa_indicator_groups[] = {
+ static const char * const modem_tsync_groups[] = {
+ 	"gpio93",
+ };
+-static const char * const nav_tsync_groups[] = {
+-	"gpio93",
+-};
+ static const char * const ssbi_wtr1_groups[] = {
+ 	"gpio79", "gpio94",
+ };
 -- 
 2.25.1
 
