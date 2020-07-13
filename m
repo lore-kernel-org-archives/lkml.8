@@ -2,130 +2,120 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A853FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4A020899
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786A520899
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j/XT5yyF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOzwig1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGMWVM (ORCPT
+        id S1726149AbgGMWX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45668 "EHLO
+        Mon, 13 Jul 2020 18:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGMWR5 (ORCPT
+        with ESMTP id S1726517AbgGMWRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:17:57 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B0CC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:57 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id b205so3203925vkb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:57 -0700 (PDT)
+        Mon, 13 Jul 2020 18:17:48 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3AFC08C5E0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:39 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id z63so13836930qkb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q6bh/1yGmZao7f6eku70ZfEjUaW4mF5NYpD2HrmZqeI=;
-        b=j/XT5yyFl2LbkH2lZtHlwHq+F8pmbt1Tm85qFPI0z7iEFb3EPc0mzXcrqsqbTS90ZE
-         m+To0qUhXZYncSMgOThqPs0W9mh1DSWxfcv8lMcNrpkhXIgav4O5Rdvp3cc2hXPZIt4/
-         scL1jsPMSGprQyr2BJIXvr5HxYY7wWu9lH3s8=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8mP0/ymvYdWX4Ld0g89D/EXAhNhPehRLoxYuTMnOItM=;
+        b=eOzwig1MEKj6WwbUfNm+F7dSk4yDh93j3Yi6iCNKuIez0XT9IKb8IognTEJcIDtDr0
+         gwZEBXqf840eO7XynL2UX+VvKkMZRa4gt2FxjpDgLMo/YCSRDUw/GSvt92R3s0hd1wEW
+         ViPs7L4vuiTXlyXqNk3pq3JU72yKOs1X4fA5s0ha01KJpwR1Vc3xBRjO65kFkBGtjk1C
+         ps6CB4c8OGM7zLzp4xykhq52kk1R+TFrYb7fEi/wrQsvrjYAsK296yNtgtsd28QdxSFu
+         e+uHTJSywgRkgJ8ciRr0fGkpB9mqMDNLfsjRa2k4zEEaih+z7KvzjF0AJGHSslzHmgAy
+         5YNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q6bh/1yGmZao7f6eku70ZfEjUaW4mF5NYpD2HrmZqeI=;
-        b=tLoqvo8qvYno2FaRUrq9SaCVT2nFD4hLQRNL/+U7V/cwPiKU+NZsNsFpZTGWiOxsJq
-         CauJoa3Yf1pZUTEakHNJ+zd5IBf1pBg5zugamKD85bne6FdPPmqdkF7vHgivy2BvWa7N
-         uBH213hYZhzNo5x1Wi8i9kWVJ5kiUvR/r9O3saUa4rNnJwM4SRjZArsnat9xa4hvCFlo
-         3RkqoGbzd665ORklDxj6BHWjQjrk30BsaZa4LABT2sJ/a+k94VRH4SNFIyE/J+Rr8X0u
-         Os358qLrdR0Sq+m6HzoHmBgNW5XKP922eUbfPP9HYq6VgwX984wzwy6pgenUdKdEocac
-         2pgg==
-X-Gm-Message-State: AOAM531++TUu8PS30UfA3WlFxmMUiJzZOqTWYgMiA0cfRTTfvBA5TXnz
-        1XKrrBB2unvrw3qk1cIXVuSz8lY8ywc=
-X-Google-Smtp-Source: ABdhPJxZj42MHITjsRyZzs2YUnE01cxtTnhJyxJzhfoYc52IJQPuyZEIF2g1C8EzpW3vJxYe/dRO4g==
-X-Received: by 2002:a1f:930f:: with SMTP id v15mr1627717vkd.63.1594678676074;
-        Mon, 13 Jul 2020 15:17:56 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id u22sm2209810vkb.19.2020.07.13.15.17.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 15:17:55 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id k7so7505641vso.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:17:54 -0700 (PDT)
-X-Received: by 2002:a05:6102:30b5:: with SMTP id y21mr1130601vsd.42.1594678673804;
- Mon, 13 Jul 2020 15:17:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 15:17:42 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
-Message-ID: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=8mP0/ymvYdWX4Ld0g89D/EXAhNhPehRLoxYuTMnOItM=;
+        b=ceeTOJ00FcHt4r2pHoCY9cGUCWzanGd6EMSdRSJxyHzfUiU91AM8QEINRa95bxfGLx
+         o69DxHodbM37C/17L8ATN9pAgv1REFUgKetgNYo5Y/ENEXhOEblBL/gCN85tvwkJqpO1
+         0R/pq9pT5vyPKUBz0UHMA2dGyXZSxHk/L52a2sUwb5HBkRczu6REaXpmmKCCJsSYf5gh
+         So0sPZVCympsn2BXQjTdhQnxbVo/3Cmu7OLwilFwZ7RfJakC63HuEUAOEBHhQ4CYe8PD
+         9qsiB6cafC67ZHwBFO2tTIrjlYSQ8HoytoJnjTNsLY/cV/iREhEqdjQa0x/zFK4B3lrO
+         6sWg==
+X-Gm-Message-State: AOAM530Mvkg8VTRrMnsll8XwYwcMVAmbf3euB7xYOwqdOeWJUFTv5947
+        2ioZjp9kwW2D/dW5g6j0Xlc=
+X-Google-Smtp-Source: ABdhPJyued74AMBeYTSae/krqvjOPAeZcMvZFKgr1Ct9UOmmNgGEc/uOW+zkCn7kB3gbXBEg+NL36A==
+X-Received: by 2002:a05:620a:24cc:: with SMTP id m12mr1779104qkn.318.1594678659036;
+        Mon, 13 Jul 2020 15:17:39 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d14sm20694364qti.41.2020.07.13.15.17.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 15:17:38 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 13 Jul 2020 18:17:36 -0400
+To:     Jian Cai <caij2003@gmail.com>
+Cc:     jiancai@google.com, ndesaulniers@google.com, manojgupta@google.com,
+        sedat.dilek@gmail.com, Brian Gerst <brgerst@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] x86/entry: add compatibility with IAS
+Message-ID: <20200713221736.GA1904448@rani.riverdale.lan>
+References: <20200713012428.1039487-1-caij2003@gmail.com>
+ <20200713213803.1274795-1-caij2003@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200713213803.1274795-1-caij2003@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 22, 2020 at 2:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
-> during suspend and mask before setting irq type.
->
-> Masking before changing type should make sure any spurious interrupt
-> is not detected during this operation.
->
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+On Mon, Jul 13, 2020 at 02:38:01PM -0700, Jian Cai wrote:
+> Clang's integrated assembler does not allow symbols with non-absolute
+> values to be reassigned. This patch allows the affected code to be
+> compatible with IAS.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1043
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Jian Cai <caij2003@gmail.com>
 > ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 2419023..b909ffe 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->         pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
->         pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
-> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
+>  arch/x86/include/asm/idtentry.h | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+> index f3d70830bf2a..7d22684eafdf 100644
+> --- a/arch/x86/include/asm/idtentry.h
+> +++ b/arch/x86/include/asm/idtentry.h
+> @@ -469,16 +469,15 @@ __visible noinstr void func(struct pt_regs *regs,			\
+>  	.align 8
+>  SYM_CODE_START(irq_entries_start)
+>      vector=FIRST_EXTERNAL_VECTOR
+> -    pos = .
+>      .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
+> +0 :
+>  	UNWIND_HINT_IRET_REGS
 
-I haven't tested it, but with my suggestion in patch #4 to use
-irq_suspend and irq_resume, I presume adding IRQCHIP_MASK_ON_SUSPEND
-is no longer needed?
-
-
-> +                               | IRQCHIP_SET_TYPE_MASKED;
-
-IIUC adding "IRQCHIP_SET_TYPE_MASKED" is unrelated to the rest of this
-series, right?
-
--Doug
+I know I had it this way, but I think it may be slightly safer to put
+the label immediately after UNWIND_HINT_IRET_REGS instead of before,
+just in case anyone adds a 0: inside that macro.
