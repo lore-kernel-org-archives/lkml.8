@@ -2,196 +2,127 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E771C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E702072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76942072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:12:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rBNMv/m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgGMMLp (ORCPT
+        id S1729613AbgGMMMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:11:45 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:63464 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728714AbgGMMLp (ORCPT
+        Mon, 13 Jul 2020 08:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:11:45 -0400
-X-IronPort-AV: E=Sophos;i="5.75,347,1589209200"; 
-   d="scan'208";a="51780162"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Jul 2020 21:11:43 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5AF334008542;
-        Mon, 13 Jul 2020 21:11:43 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, vkoul@kernel.org
-Cc:     wsa+renesas@sang-engineering.com, geert+renesas@glider.be,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] phy: renesas: rcar-gen3-usb2: fix SError happen if DEBUG_SHIRQ is enabled
-Date:   Mon, 13 Jul 2020 21:11:28 +0900
-Message-Id: <1594642288-9986-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Jul 2020 08:12:48 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E483AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:12:47 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i3so9646504qtq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 05:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RpYSNQC2exuWKUTSRfbzznKwmjgAwfUEWqW8RzotbS4=;
+        b=rBNMv/m7LaTM5arw6QzFTxkwPH7OghzX2+1T4d0DECfS6DFMcAv1644Lu5aG+V9mCd
+         PMKwN8m//5IvkMkE7befYGE5dNlHQGJ1XgOmVUFV5n1VP1FlkC+JoX7DQVbBuwjIflg0
+         Xiha5OPk6LbG69HWASAzNTROcVKp7AAUVGBPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RpYSNQC2exuWKUTSRfbzznKwmjgAwfUEWqW8RzotbS4=;
+        b=OGp+xJWJFiX+SYosr8B0nmmFk5XwOR6a4fAt6ksdlU5/w4gpzW38HdemImIeqWczQb
+         UfrTG8hFmmA097rTtaW6E/2o3UhD/eW5R0fnkj8RQR6X8DDB3e6B4pwSxTbn7LPZUYQr
+         IqpBVr2MJgQydp1BuB+zzb28f4WTeX19aAFQ55/ierT+DjjxTd57gv8rhX4Se6DGZ0HO
+         DyUlMaF5X2+C4Cgv6GkefprctNYiI4CvoK879pfQqKoFwoWyc8gv8U8cwYYUhEDxVLTW
+         TwSRRG8z4DL6vEXDAX0TawVYpymR18qXPim+6gdU2mi8t8cE8EmeeeZC/vnJUD6gF4AQ
+         Oxgw==
+X-Gm-Message-State: AOAM533oDggZNSes+wNatHHCxRR8n2EEVtpNUpgHXs0TNMHdhZk6lSGW
+        lsDAcs6vA6Z3C4tORv6nNn8b+8KxYms=
+X-Google-Smtp-Source: ABdhPJwx4Win/yPZB7k/hma4rHDpqXlvpi9H6cFu4C0fIA3YbzEIBjZE/+zuFQEGlEfG1eUL1EaC+w==
+X-Received: by 2002:ac8:1a12:: with SMTP id v18mr85096949qtj.347.1594642366926;
+        Mon, 13 Jul 2020 05:12:46 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id b8sm19823302qtg.45.2020.07.13.05.12.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 05:12:46 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 08:12:45 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+Message-ID: <20200713121245.GA3926869@google.com>
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <20200712215041.GA3644504@google.com>
+ <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
+ <20200713025354.GB3644504@google.com>
+ <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whmbpZN6-Q=8cDM42UmHmqzgNDucLLP4BvR1jQ73+KSgw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
-correctly. If we appended "earlycon keep_bootcon" to the kernel
-command like, we could get kernel log like below.
+On Sun, Jul 12, 2020 at 08:51:26PM -0700, Linus Torvalds wrote:
+> > > Maybe saying "doing the pmd copies for the initial stack isn't
+> > > important, so let's just note this as a special case and get rid of
+> > > the WARN_ON()" might be an alternative solution.
+> >
+> > Personally, I feel it is better to keep the warning just so in the future we
+> > can detect any bugs.
+> 
+> I don't disagree, the warning didn't happen to find a bug now, but it
+> did fine a case we might be able to do better.
+> 
+> So now that I feel we understand the issue, and it's not a horrible
+> problem, just a (very hard to trigger) warning, I don't think there's
+> any huge hurry.
+> 
+> I think think I will - for now - change the WARN_ON() to
+> WARN_ON_ONCE() (so that it doesn't floow the logs if somebody triggers
+> this odd special case  this malisiously), and add a note about how
+> this happens to the code for posterito.
+> 
+> And if/when you figure out a better way to fix it, we can update the note.
+> 
+> Ok?
 
-    SError Interrupt on CPU0, code 0xbf000002 -- SError
-    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
-    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-    pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
-    pc : rcar_gen3_phy_usb2_irq+0x14/0x54
-    lr : free_irq+0xf4/0x27c
+Yes, that sounds great to me.
 
-This means free_irq() calls the interrupt handler while PM runtime
-is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
-failed. To fix the issue, move the irq registration place to
-rcar_gen3_phy_usb2_init() which is ready to handle the interrupts.
+thanks,
 
-Note that after the commit 549b6b55b005 ("phy: renesas: rcar-gen3-usb2:
-enable/disable independent irqs") which is merged into v5.2, since this
-driver creates multiple phy instances, needs to check whether one of
-phy instances is initialized. However, if we backport this patch to v5.1
-or less, we don't need to check it because such kernel have single
-phy instance.
-
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Changes from v1:
- - Move the irq registration to rcar_gen3_phy_usb2_init() instead of
-   add a condition into the irq handler.
- https://patchwork.kernel.org/patch/11654097/
-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 62 +++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index bfb22f8..6978f86 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -111,6 +111,7 @@ struct rcar_gen3_chan {
- 	struct work_struct work;
- 	struct mutex lock;	/* protects rphys[...].powered */
- 	enum usb_dr_mode dr_mode;
-+	int irq;
- 	bool extcon_host;
- 	bool is_otg_channel;
- 	bool uses_otg_pins;
-@@ -389,12 +390,39 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
- 	rcar_gen3_device_recognition(ch);
- }
- 
-+static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
-+{
-+	struct rcar_gen3_chan *ch = _ch;
-+	void __iomem *usb2_base = ch->base;
-+	u32 status = readl(usb2_base + USB2_OBINTSTA);
-+	irqreturn_t ret = IRQ_NONE;
-+
-+	if (status & USB2_OBINT_BITS) {
-+		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
-+		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-+		rcar_gen3_device_recognition(ch);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	return ret;
-+}
-+
- static int rcar_gen3_phy_usb2_init(struct phy *p)
- {
- 	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
- 	struct rcar_gen3_chan *channel = rphy->ch;
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
-+	int ret;
-+
-+	if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
-+		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
-+		ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
-+				  IRQF_SHARED, dev_name(channel->dev), channel);
-+		if (ret < 0)
-+			dev_err(channel->dev, "No irq handler (%d)\n",
-+				channel->irq);
-+	}
- 
- 	/* Initialize USB2 part */
- 	val = readl(usb2_base + USB2_INT_ENABLE);
-@@ -433,6 +461,9 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
- 		val &= ~USB2_INT_ENABLE_UCOM_INTEN;
- 	writel(val, usb2_base + USB2_INT_ENABLE);
- 
-+	if (channel->irq >= 0 && !rcar_gen3_is_any_rphy_initialized(channel))
-+		free_irq(channel->irq, channel);
-+
- 	return 0;
- }
- 
-@@ -503,23 +534,6 @@ static const struct phy_ops rz_g1c_phy_usb2_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
--static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
--{
--	struct rcar_gen3_chan *ch = _ch;
--	void __iomem *usb2_base = ch->base;
--	u32 status = readl(usb2_base + USB2_OBINTSTA);
--	irqreturn_t ret = IRQ_NONE;
--
--	if (status & USB2_OBINT_BITS) {
--		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
--		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
--		rcar_gen3_device_recognition(ch);
--		ret = IRQ_HANDLED;
--	}
--
--	return ret;
--}
--
- static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
- 	{
- 		.compatible = "renesas,usb2-phy-r8a77470",
-@@ -598,7 +612,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	struct phy_provider *provider;
- 	struct resource *res;
- 	const struct phy_ops *phy_usb2_ops;
--	int irq, ret = 0, i;
-+	int ret = 0, i;
- 
- 	if (!dev->of_node) {
- 		dev_err(dev, "This driver needs device tree\n");
-@@ -614,16 +628,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	if (IS_ERR(channel->base))
- 		return PTR_ERR(channel->base);
- 
--	/* call request_irq for OTG */
--	irq = platform_get_irq_optional(pdev, 0);
--	if (irq >= 0) {
--		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
--		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
--				       IRQF_SHARED, dev_name(dev), channel);
--		if (irq < 0)
--			dev_err(dev, "No irq handler (%d)\n", irq);
--	}
--
-+	/* get irq number here and request_irq for OTG in phy_init */
-+	channel->irq = platform_get_irq_optional(pdev, 0);
- 	channel->dr_mode = rcar_gen3_get_dr_mode(dev->of_node);
- 	if (channel->dr_mode != USB_DR_MODE_UNKNOWN) {
- 		int ret;
--- 
-2.7.4
+ - Joel
 
