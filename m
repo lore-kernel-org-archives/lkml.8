@@ -4,176 +4,304 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E4EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1337C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223A62075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B54E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgGMMib (ORCPT
+        id S1729650AbgGMMj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:38:31 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:57176 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:38:31 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1juxj1-0001AD-UL; Mon, 13 Jul 2020 06:38:27 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1juxj0-0000e9-Sw; Mon, 13 Jul 2020 06:38:27 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-kernel@vger.kernel.org, tj@kernel.org,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com
-References: <20200704205619.11172-1-richard@nod.at>
-Date:   Mon, 13 Jul 2020 07:35:39 -0500
-In-Reply-To: <20200704205619.11172-1-richard@nod.at> (Richard Weinberger's
-        message of "Sat, 4 Jul 2020 22:56:19 +0200")
-Message-ID: <87sgdvbnj8.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 13 Jul 2020 08:39:26 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:36430 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgGMMj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:39:26 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 36565BC0CA;
+        Mon, 13 Jul 2020 12:39:21 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jsarha@ti.com, tomi.valkeinen@ti.com, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] drm/tidss: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 14:39:13 +0200
+Message-Id: <20200713123913.34205-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1juxj0-0000e9-Sw;;;mid=<87sgdvbnj8.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18pMLZQ3OtSquT9B9ftcoTj28hZic45tqk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] [RFC] kernfs: Allow vm_ops->close() if VMA is never split
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard Weinberger <richard@nod.at> writes:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> 10 years ago commit a6849fa1f7d7 ("sysfs: Fail bin file mmap if vma close is implemented.")
-> removed support for vm_ops->close() for mmap on sysfs.
-> As far I understand the reason is that due to the wrapping in kernfs
-> every VMA split operation needs to be tracked to call vm_ops->close()
-> for all fragments. This is not feasible with reasonable effort.
->
-> Since commit 31383c6865a5 ("mm, hugetlbfs: introduce ->split() to vm_operations_struct")
-> we can get notified as soon a VMA is split, this can help to relax the restriction.
-> So I propose to allow having a custom close under the condition that a
-> VMA cannot get split.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-The existence of split may help but your patch does not address the
-problem.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-The difficult to handle case is not split.  Simply wrapping
-vma->vm_ops->open and vma->vm_ops->close is enough to handle split.  The
-challenge is when the kernel revokes acess to a kernfs file.  Revokes
-happen when the module supporting a kernfs file is removed, or when a
-piece of hardware is removed.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-The code path for that revocation looks like:
-	kernfs_remove or kernfs_remove_self
-		__kernfs_remove
-			kernfs_drain
-        			kernfs_drain_open_files
-                			unmap_mapping_range
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-The fundamental problem is that at the time of unmap_mapping_range the
-code if it is to implement vma->vm_ops->close properly needs to call
-close on all of the vmas.  The code can not wait longer as after
-kernfs_remove returns the kernfs code makes the guarantee that the code
-implementing vma->vm_ops->close has been removed from the kernel.
+ drivers/gpu/drm/tidss/tidss_crtc.c        | 2 +-
+ drivers/gpu/drm/tidss/tidss_crtc.h        | 2 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c       | 2 +-
+ drivers/gpu/drm/tidss/tidss_dispc.h       | 2 +-
+ drivers/gpu/drm/tidss/tidss_dispc_regs.h  | 2 +-
+ drivers/gpu/drm/tidss/tidss_drv.c         | 2 +-
+ drivers/gpu/drm/tidss/tidss_drv.h         | 2 +-
+ drivers/gpu/drm/tidss/tidss_encoder.c     | 2 +-
+ drivers/gpu/drm/tidss/tidss_encoder.h     | 2 +-
+ drivers/gpu/drm/tidss/tidss_irq.c         | 2 +-
+ drivers/gpu/drm/tidss/tidss_irq.h         | 2 +-
+ drivers/gpu/drm/tidss/tidss_kms.c         | 2 +-
+ drivers/gpu/drm/tidss/tidss_kms.h         | 2 +-
+ drivers/gpu/drm/tidss/tidss_plane.c       | 2 +-
+ drivers/gpu/drm/tidss/tidss_plane.h       | 2 +-
+ drivers/gpu/drm/tidss/tidss_scale_coefs.c | 2 +-
+ drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 +-
+ 17 files changed, 17 insertions(+), 17 deletions(-)
 
-The technical challenge is how to implement walking the list of vmas and
-call the vma->vops->close method on all of them at revoke time.  Last
-I looked taking the locks that are necessary to do that is not safe to
-do when holding the locks that are held in the kernfs_remove path.
+diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+index 89a226912de8..a591c70b8386 100644
+--- a/drivers/gpu/drm/tidss/tidss_crtc.c
++++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_crtc.h b/drivers/gpu/drm/tidss/tidss_crtc.h
+index 09e773666228..040d1205496b 100644
+--- a/drivers/gpu/drm/tidss/tidss_crtc.h
++++ b/drivers/gpu/drm/tidss/tidss_crtc.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index 629dd06393f6..e7d28ec8f7f3 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Jyri Sarha <jsarha@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+index 902e612ff7ac..5984e0de2cd9 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.h
++++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc_regs.h b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
+index 88a83a41b6e3..13feedfe5d6d 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc_regs.h
++++ b/drivers/gpu/drm/tidss/tidss_dispc_regs.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Jyri Sarha <jsarha@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_drv.c b/drivers/gpu/drm/tidss/tidss_drv.c
+index 99edc66ebdef..f00fadbead3e 100644
+--- a/drivers/gpu/drm/tidss/tidss_drv.c
++++ b/drivers/gpu/drm/tidss/tidss_drv.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
+index 3b0a3d87b7c4..7de4bba52e6f 100644
+--- a/drivers/gpu/drm/tidss/tidss_drv.h
++++ b/drivers/gpu/drm/tidss/tidss_drv.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
+index 30bf2a65949c..e278a9c89476 100644
+--- a/drivers/gpu/drm/tidss/tidss_encoder.c
++++ b/drivers/gpu/drm/tidss/tidss_encoder.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_encoder.h b/drivers/gpu/drm/tidss/tidss_encoder.h
+index 06854d66e7e6..ace877c0e0fd 100644
+--- a/drivers/gpu/drm/tidss/tidss_encoder.h
++++ b/drivers/gpu/drm/tidss/tidss_encoder.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_irq.c b/drivers/gpu/drm/tidss/tidss_irq.c
+index 1b80f2d62e0a..a5ec7931ef6b 100644
+--- a/drivers/gpu/drm/tidss/tidss_irq.c
++++ b/drivers/gpu/drm/tidss/tidss_irq.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_irq.h b/drivers/gpu/drm/tidss/tidss_irq.h
+index aa92db403cca..4aaad5dfd7c2 100644
+--- a/drivers/gpu/drm/tidss/tidss_irq.h
++++ b/drivers/gpu/drm/tidss/tidss_irq.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_kms.c b/drivers/gpu/drm/tidss/tidss_kms.c
+index 4b99e9fa84a5..71dbd331640f 100644
+--- a/drivers/gpu/drm/tidss/tidss_kms.c
++++ b/drivers/gpu/drm/tidss/tidss_kms.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_kms.h b/drivers/gpu/drm/tidss/tidss_kms.h
+index 99aaff099f22..632d79f5983f 100644
+--- a/drivers/gpu/drm/tidss/tidss_kms.h
++++ b/drivers/gpu/drm/tidss/tidss_kms.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
+index 0a563eabcbb9..43e72d0b2d84 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.c
++++ b/drivers/gpu/drm/tidss/tidss_plane.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.h b/drivers/gpu/drm/tidss/tidss_plane.h
+index 80ff1c5a2535..e933e158b617 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.h
++++ b/drivers/gpu/drm/tidss/tidss_plane.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.c b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
+index 5ec68389cc68..c2b84fea89a5 100644
+--- a/drivers/gpu/drm/tidss/tidss_scale_coefs.c
++++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Jyri Sarha <jsarha@ti.com>
+  */
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.h b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+index 64b5af5b5361..9c560d0fdac0 100644
+--- a/drivers/gpu/drm/tidss/tidss_scale_coefs.h
++++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Jyri Sarha <jsarha@ti.com>
+  */
+ 
+-- 
+2.27.0
 
-A lot has changed in kernfs and the mm subsystem since I examined it,
-so it might be worth looking at this again.
-
-So in short the problem is that the code does not exist to call close
-when the kernfs file is revoked.  Your patch below does not implement
-that code.
-
-Eric
-
->
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
->  fs/kernfs/file.c | 42 ++++++++++++++++++++++++++++++++++--------
->  1 file changed, 34 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-> index 06b342d8462b..82b09e72acff 100644
-> --- a/fs/kernfs/file.c
-> +++ b/fs/kernfs/file.c
-> @@ -347,6 +347,38 @@ static void kernfs_vma_open(struct vm_area_struct *vma)
->  	kernfs_put_active(of->kn);
->  }
->  
-> +static void kernfs_vma_close(struct vm_area_struct *vma)
-> +{
-> +	struct file *file = vma->vm_file;
-> +	struct kernfs_open_file *of = kernfs_of(file);
-> +
-> +	if (!of->vm_ops)
-> +		return;
-> +
-> +	if (!kernfs_get_active(of->kn))
-> +		return;
-> +
-> +	if (of->vm_ops->close)
-> +		of->vm_ops->close(vma);
-> +
-> +	kernfs_put_active(of->kn);
-> +}
-> +
-> +static int kernfs_vma_split(struct vm_area_struct *vma, unsigned long addr)
-> +{
-> +	struct file *file = vma->vm_file;
-> +	struct kernfs_open_file *of = kernfs_of(file);
-> +
-> +	/*
-> +	 * We cannot keep track of split operations,
-> +	 * so refuse splitting a VMA if someone uses close.
-> +	 */
-> +	if (of->vm_ops && of->vm_ops->close)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
->  static vm_fault_t kernfs_vma_fault(struct vm_fault *vmf)
->  {
->  	struct file *file = vmf->vma->vm_file;
-> @@ -457,6 +489,8 @@ static struct mempolicy *kernfs_vma_get_policy(struct vm_area_struct *vma,
->  
->  static const struct vm_operations_struct kernfs_vm_ops = {
->  	.open		= kernfs_vma_open,
-> +	.close		= kernfs_vma_close,
-> +	.split		= kernfs_vma_split,
->  	.fault		= kernfs_vma_fault,
->  	.page_mkwrite	= kernfs_vma_page_mkwrite,
->  	.access		= kernfs_vma_access,
-> @@ -505,14 +539,6 @@ static int kernfs_fop_mmap(struct file *file, struct vm_area_struct *vma)
->  	if (of->mmapped && of->vm_ops != vma->vm_ops)
->  		goto out_put;
->  
-> -	/*
-> -	 * It is not possible to successfully wrap close.
-> -	 * So error if someone is trying to use close.
-> -	 */
-> -	rc = -EINVAL;
-> -	if (vma->vm_ops && vma->vm_ops->close)
-> -		goto out_put;
-> -
->  	rc = 0;
->  	of->mmapped = true;
->  	of->vm_ops = vma->vm_ops;
