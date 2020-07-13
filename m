@@ -2,113 +2,115 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC786C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B1F20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594655311;
-	bh=FiLSo9R0STPJ54NQ+j4cquzz90YqRrZ+tVdT8FICfPw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0aPtosy8tS1faz0Jb76yI/NyseJLF1r/H9bMVQxExCnuw6J9tzJJ4quZviZWKiPlJ
-	 9mIO2dNzfM2DSYNHcNKJuAYA/7HwWBBsLRcAi9wrwy8EmfXOXHcyltl4abr38H4XNU
-	 xGvqNZ/pOp2KxIMDbBU5enbDIpPtTYxLv0fqYzh4=
+	by mail.kernel.org (Postfix) with ESMTP id BFB4B2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NB7aPTPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbgGMPsa (ORCPT
+        id S1730192AbgGMPsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729492AbgGMPs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:48:29 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74402207BC
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594655309;
-        bh=FiLSo9R0STPJ54NQ+j4cquzz90YqRrZ+tVdT8FICfPw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u/HSfMU9F7rxmTiqX4sRr4Pk8VxlDbewsgkjIe6pG2nB4ATgq01e1Xrr0clJ4LJmf
-         KF6xr1Xv2GX82a28cw4dDUZuiL8A6ohB3EUIdPA0Gz22eJVXxmjte4lc3XkjzocFbw
-         v5Jvv0F2fEGEoQbUjFwMLPV7iO/JAL2dOHC42qck=
-Received: by mail-wr1-f41.google.com with SMTP id o11so17104053wrv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:48:29 -0700 (PDT)
-X-Gm-Message-State: AOAM530tom3A97R68mbGlaHoXk8oCo/OVIXgx6qkqAHNYL7Oz/xQfYxF
-        ablweiqaJkwDY2AWBF2o06yFs/RW6MIRaChZOXZYLQ==
-X-Google-Smtp-Source: ABdhPJx0toL1Ye0o0H7c4Y3A41BrSlbEq0nHhnxAApxWZf2y0+ABJ/8JMUZOzKNFFHuITvPQPnyOqJdLGjq2hZLzWb4=
-X-Received: by 2002:adf:a111:: with SMTP id o17mr79174967wro.257.1594655308027;
- Mon, 13 Jul 2020 08:48:28 -0700 (PDT)
+        Mon, 13 Jul 2020 11:48:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729902AbgGMPsj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:48:39 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE85C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:48:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id by13so14072761edb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W36OcjXryM8jgoewQfeJp3IZBi2EgGKHyNoHZfcaUKg=;
+        b=NB7aPTPiP9qMPZ0y5PyZjEZciyC3DGD/+k/bgqBjuSVN7xIiMDgNbsaF6/pgADNch+
+         Ppp6lmsRYZBZaFrRPXfH/OKEHROSUnQaiibSBid42105KDuiFDu1QwTgOqxAL6c2lRjW
+         MB7BlEtHL+kZqmH7hAMfNq/xbtRyDjIYnMpKNKQ38wZaBZBH3mGvzkSQ9nxlcL+jduGt
+         GFhsoxForK/GfjOiwcjP4X5Npt3KHapXh9bsKOxwM98za+n3VD8+3bVQ2bTLNFDGInhy
+         BOsBa2M/13YjYvQeW8U+bOZfC3IeaBPpjGLKUN+S0b/5sR0Bwju5V17YorGeaFaOIYCu
+         VGKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W36OcjXryM8jgoewQfeJp3IZBi2EgGKHyNoHZfcaUKg=;
+        b=cDgcvwaLqFJjaxK35NBynOoE0XIpxZxbrYbMZWSXHXVj5XIU3aUeQn6vxSDkpfiuhr
+         gTxthnw7jkfvG06O6K2LRjqjH2s1n7G78WBr18uDertogByx6dfblnKikkL1THN0lvoM
+         JzOWbG5Xj0AM7oAGaHXcH2hej6r8AcOjyaEXHgNfLhV5Hh4P0LBFUwUevlpzWD2WR57Z
+         DrECpyaSHHxIUDPQtIhTl6Du06nCFnfQX8MAZajxYsOnVHLYoTxvB0dDX//DnioYiB+J
+         5LG13qX9XXj1N1/BzIzT5BLhxpvf1jR8xoO9eakNc5KVfGypjaZ71cfk/PZg2tyjscU4
+         TqDw==
+X-Gm-Message-State: AOAM531sBLibDCaYzhWX1f1khkLgoK6+r2M6TDrLiMk5/6r6Iw/Mu/tM
+        DMxAbkvoK765fgFhpsHlejSoHMzzotyOKEAjUfB5FQ==
+X-Google-Smtp-Source: ABdhPJy9eW9eIp+1KepqCPSTRPe76Dr5VVVESCrZMoaRV0JKP6GTk/JYXKXYNywspxI5vIOjjZtqBIKR4ru2y3M6GsE=
+X-Received: by 2002:aa7:d043:: with SMTP id n3mr73787edo.102.1594655318157;
+ Mon, 13 Jul 2020 08:48:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710015646.2020871-1-npiggin@gmail.com> <20200710015646.2020871-5-npiggin@gmail.com>
- <CALCETrVqHDLo09HcaoeOoAVK8w+cNWkSNTLkDDU=evUhaXkyhQ@mail.gmail.com>
- <1594613902.1wzayj0p15.astroid@bobo.none> <1594647408.wmrazhwjzb.astroid@bobo.none>
- <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
-In-Reply-To: <284592761.9860.1594649601492.JavaMail.zimbra@efficios.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 13 Jul 2020 08:48:16 -0700
-X-Gmail-Original-Message-ID: <CALCETrUHsYp0oGAiy3N-yAauPyx2nKqp1AiETgSJWc77GwO-Sg@mail.gmail.com>
-Message-ID: <CALCETrUHsYp0oGAiy3N-yAauPyx2nKqp1AiETgSJWc77GwO-Sg@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457120893.754248.7783260004248722175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200713070304.GC11000@linux.ibm.com>
+In-Reply-To: <20200713070304.GC11000@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 13 Jul 2020 08:48:27 -0700
+Message-ID: <CAPcyv4iRJRz==VRgq=M_FYz0TfNKqKASOD1+NRfMLcHzEOBApQ@mail.gmail.com>
+Subject: Re: [PATCH v2 08/22] memblock: Introduce a generic phys_addr_to_target_node()
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Joao Martins <joao.m.martins@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 7:13 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On Mon, Jul 13, 2020 at 12:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
 >
-> ----- On Jul 13, 2020, at 9:47 AM, Nicholas Piggin npiggin@gmail.com wrote:
+> Hi Dan,
 >
-> > Excerpts from Nicholas Piggin's message of July 13, 2020 2:45 pm:
-> >> Excerpts from Andy Lutomirski's message of July 11, 2020 3:04 am:
-> >>> Also, as it stands, I can easily see in_irq() ceasing to promise to
-> >>> serialize.  There are older kernels for which it does not promise to
-> >>> serialize.  And I have plans to make it stop serializing in the
-> >>> nearish future.
-> >>
-> >> You mean x86's return from interrupt? Sounds fun... you'll konw where to
-> >> update the membarrier sync code, at least :)
-> >
-> > Oh, I should actually say Mathieu recently clarified a return from
-> > interrupt doesn't fundamentally need to serialize in order to support
-> > membarrier sync core.
+> On Sun, Jul 12, 2020 at 09:26:48AM -0700, Dan Williams wrote:
+> > Similar to how generic memory_add_physaddr_to_nid() interrogates
+> > memblock data for numa information, introduce
+> > get_reserved_pfn_range_from_nid() to enable the same operation for
+> > reserved memory ranges. Example memory ranges that are reserved, but
+> > still have associated numa-info are persistent memory or Soft Reserved
+> > (EFI_MEMORY_SP) memory.
 >
-> Clarification to your statement:
+> Here again, I would prefer to add a weak default for
+> phys_to_target_node() because the "generic" implementation is not really
+> generic.
 >
-> Return from interrupt to kernel code does not need to be context serializing
-> as long as kernel serializes before returning to user-space.
->
-> However, return from interrupt to user-space needs to be context serializing.
->
+> The fallback to reserved ranges is x86 specfic because on x86 most of the
+> reserved areas is not in memblock.memory. AFAIK, no other architecture
+> does this.
 
-Indeed, and I figured this out on the first read through because I'm
-quite familiar with the x86 entry code.  But Nick somehow missed this,
-and Nick is the one who wrote the patch.
+True, I was pre-fetching ARM using the new EFI "Special Purpose"
+memory attribute. However, until that becomes something that platforms
+deploy in practice I'm ok with not solving that problem for now.
 
-Nick, I think this helps prove my point.  The code you're submitting
-may well be correct, but it's unmaintainable.  At the very least, this
-needs a comment explaining, from the perspective of x86, *exactly*
-what exit_lazy_tlb() is promising, why it's promising it, how it
-achieves that promise, and what code cares about it.  Or we could do
-something with TIF flags and make this all less magical, although that
-will probably end up very slightly slower.
+> And x86 anyway has implementation of phys_to_target_node().
 
---Andy
+Sure, let's go with the default stub for non-x86.
+
+Justin, do you think it would make sense to fold your dax_kmem
+enabling for arm64 series into my enabling of dax_hmem for all
+memory-hotplug archs?
