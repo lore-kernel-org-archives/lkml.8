@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44906C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA8C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF3D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9146E206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vYg1QXkr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PrmHEa5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgGMN3w (ORCPT
+        id S1729888AbgGMN3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
+        Mon, 13 Jul 2020 09:29:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbgGMN3s (ORCPT
+        with ESMTP id S1729857AbgGMN3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:29:48 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD75C08C5EE
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:46 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so13325582wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:46 -0700 (PDT)
+        Mon, 13 Jul 2020 09:29:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3E2C08C5DB
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k6so16550617wrn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 06:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QLryLftXHujJqlJtPMVgQIevZpScR7URaSYQFGMf70Q=;
-        b=vYg1QXkrPB4tKtY/J12E9irR+rl+St7VpoMQvDD3sdENXMl7hNUJoPpt8dxHHq4WCv
-         CPijOiC7QDFUo0WPLzm60ANpKUHRHimoQHRyGV2FnQkxistFnE06weWgWLjXG8XGGMHj
-         dG1ZX6gvm6vEw/AvTlp9uA8XCGaTY/njfpK4Kbk2wSNX3f265/o4CZU6jDHdlR3C44BI
-         6zBENnKs7WkMIOMrj2G1f+c5wSXtSsS9WMRMvLthCkuEK/OIn3Eurh3UR2a1v+1JRBdL
-         v7klvlMmYrodM7wovd181BU/5/LoemsCXV6INeUtFdZReHYpsjXRdysQa3qJZr5XGP4q
-         gXvg==
+        bh=ku9aM1vtf8T+FGw4lj5ZIPzjxBiChVO0/pPdJg2fBGw=;
+        b=PrmHEa5FPW0LpbYElEyKRcYnhJi5XmlC36lx5TSUk0I4eKD5oBsz61WrgLwaHWBGIX
+         Ut63kpeIUoPgm/Iugy6CdW2TIR25zGavB/guDK5USe1uzqHhQIzZmP4SybSuqPzcYscF
+         EpwVxFYP4NgYDzzlW7/wtUOdb6KvFamYq/rsjAhy7Pv/QfGSzORPzVUZLWXXKh3oBHXM
+         kmLBRJzeMfEs2EaHJlYuyMfD0K6LX8k2KCDF1nSPRFMgYE8kZN4eCxgtwF15LSmpbSGc
+         lpjY8R1Mjpf7JpeZjWoq/AMQ4feht55IcICbLW8Zw9qNxbusSYWa6dd9BuiEWOSp9Q0t
+         n3hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QLryLftXHujJqlJtPMVgQIevZpScR7URaSYQFGMf70Q=;
-        b=GQon1LOeLXi32g5JVmmaOeJwp/zeIstQRgX6LYN5GXMP64ZQHFwHoScOfIq2xPcn6p
-         g+u23ow2eWYb8PCQPDsvXdlwYD1U67tx+mkImQHrHO6FQOD6WqfDSjG+WZ9MN/eZpxGM
-         rBxcNZyL5e07TRbfNitIY4oVKi7tIKoR0i8XlihJh0ndkM9J7AWq8Qg1jlOpDPWO1EkT
-         LzkLxd0x8vQSBMaLqAUjFoiFW5HRqY4c6FiT4BtCxn9q9TJzBhHClFxGm4VUdz2OWR1z
-         BnYgH7CnNeOM7eCra4RaVFmx1zzDUHQyuCzfDNu0mDc9x4Qn5EMHyfqITe/2oM57LwtL
-         bsIw==
-X-Gm-Message-State: AOAM530dvhhIppOzCt+8fNKclWV8eWuFcni/1NLbICkmD6KVIbmWwacT
-        nQdUBmCSy2cQxw8Dz6qxCfrizw==
-X-Google-Smtp-Source: ABdhPJxtI2aU9Tn4XMAVUn0tMxGni2Keg7oC3cwRrzpDovC4u7fv3y7dpujSmm3QsvKjFxQHR93NsQ==
-X-Received: by 2002:a1c:48c5:: with SMTP id v188mr25055wma.58.1594646985632;
-        Mon, 13 Jul 2020 06:29:45 -0700 (PDT)
+        bh=ku9aM1vtf8T+FGw4lj5ZIPzjxBiChVO0/pPdJg2fBGw=;
+        b=rPB5wmFDrdSpaU+mGcw6SxpXOg/ZRbBXxg3KhUOzJGyeUN5bf8kTT6VECAEXCXjqPl
+         SGyVpAitPMUBncPtmOxWf4QgUhxtF3zDbKEZj+JbI5nnpmB6jlzltVgdCD1G6+ZKm5Nj
+         nbufdDeHvljSXjv6gKTp9qNH9QAaqMUNsX+QFsuMPmJ6QHogrLND+7J9odXZ9QNsl7mD
+         goJWYEqNgHFoN7AaGyG/oRe7slChz4AOOAV4NVjKpjeFdoF9eXtVEoJYBmLAl/2XQV/S
+         LHvCF8VwYIIBUOzP0/Pt4B7UblggVvvudziikgEb1oR+UXL2AAPi/h9b2xY8E0nJlH9m
+         SdJg==
+X-Gm-Message-State: AOAM532CsLEav3ytyPmSRAhyH8HKmXd2N3eoWLfTaMR4w9HQ07CpGvRq
+        ERafmG+3OSXtJsGzMEmFWLvppg==
+X-Google-Smtp-Source: ABdhPJw27IwpFadhq+5bRv4bzXdsWZ8YmL639ivQFIAbVn7c+uDln0qheLOT9j1ytM6vhX/7UJNMeg==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr85726204wrm.390.1594646980907;
+        Mon, 13 Jul 2020 06:29:40 -0700 (PDT)
 Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.44
+        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:29:45 -0700 (PDT)
+        Mon, 13 Jul 2020 06:29:40 -0700 (PDT)
 From:   Alexandre Bailon <abailon@baylibre.com>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         matthias.bgg@gmail.com
@@ -66,9 +66,9 @@ Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH 5/6] remoteproc: mtk_apu: Don't try to use the APU local RAM
-Date:   Mon, 13 Jul 2020 15:29:26 +0200
-Message-Id: <20200713132927.24925-6-abailon@baylibre.com>
+Subject: [PATCH 1/6] dt bindings: remoteproc: Add bindings for MT8183 APU
+Date:   Mon, 13 Jul 2020 15:29:22 +0200
+Message-Id: <20200713132927.24925-2-abailon@baylibre.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200713132927.24925-1-abailon@baylibre.com>
 References: <20200713132927.24925-1-abailon@baylibre.com>
@@ -79,57 +79,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, this local RAM is not accessible from the CPU.
-If the CPU tries to access it, then the CPU will hang.
-
-Remoteproc may try to use it when it load a firmware
-that has some sections in the local RAM.
-This workarounds the issue by skiping this section.
+This adds dt bindings for the APU present in the MT8183.
 
 Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- drivers/remoteproc/mtk_apu_rproc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../bindings/remoteproc/mtk,apu.yaml          | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
 
-diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
-index 565b3adca5de..e16d3258a785 100644
---- a/drivers/remoteproc/mtk_apu_rproc.c
-+++ b/drivers/remoteproc/mtk_apu_rproc.c
-@@ -57,6 +57,9 @@
- #define CORE_DEFAULT2_SPIDEN			BIT(0)
- #define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
- 
-+#define DRAM0_START				(0x7ff00000)
-+#define IRAM0_END				(0x7ff80000)
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
+new file mode 100644
+index 000000000000..1d5fcc135617
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
 +
- struct mtk_vpu_rproc {
- 	struct device *dev;
- 	struct rproc *rproc;
-@@ -139,6 +142,7 @@ static void mtk_vpu_rproc_kick(struct rproc *rproc, int vqid)
- 
- int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
- {
-+	struct mtk_vpu_rproc *vpu_rproc = rproc->priv;
- 	const u8 *elf_data = fw->data;
- 	struct elf32_hdr *ehdr;
- 	struct elf32_phdr *phdr;
-@@ -156,6 +160,16 @@ int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
- 		/* Remove empty PT_LOAD section */
- 		if (phdr->p_type == PT_LOAD && !phdr->p_paddr)
- 			phdr->p_type = PT_NULL;
-+		/*
-+		 * Workaround: Currently, the CPU can't access to the APU
-+		 * local RAM. This removes the local RAM section from the
-+		 * firmware. Please note that may cause some issues.
-+		 */
-+		if (phdr->p_paddr >= DRAM0_START && phdr->p_paddr < IRAM0_END) {
-+			dev_warn_once(vpu_rproc->dev,
-+				      "Skipping the APU local RAM section\n");
-+			phdr->p_type = PT_NULL;
-+		}
- 	}
- 
- 	return 0;
++---
++$id: "http://devicetree.org/schemas/remoteproc/mtk,apu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: MT8183 Vision Processor Unit (VPU) devices
++
++description:
++  This document defines the binding for the APU, a co-processor that could
++  offload the CPU for machine learning and neural network.
++
++maintainers:
++  - Alexandre Bailon <abailon@bayLibre.com>
++
++properties:
++  compatible:
++    const: mediatek,mt8183-apu
++
++  reg:
++    description:
++      Address ranges of the APU MMIO.
++    maxItems: 1
++
++  interrupts:
++    description:
++      The interrupt number used to receive the interrupts from the DSP.
++    maxItems: 1
++
++  clocks:
++    description:
++      "Clocks for co-processor (See: ../clock/clock-bindings.txt)
++      Three clocks are expected for AXI, IPU and JTAG.
++      The JTAG clock seems to be required to run the DSP,
++      even when JTAG is not in use."
++    maxItems: 3
++  clock-names:
++    description:
++      The name of clocks, must be ipu, axi and jtag
++    items:
++      - const: ipu
++      - const: axi
++      - const: jtag
++
++  iommu:
++    description: "IOMMU (See: ../iommu/iommu.txt)"
++    maxItems: 3
++
++  memory-region:
++    description: "Reserved memory (See: ../reserved-memory/reserved-memory.txt)"
++    maxItems: 1
++
++  power-domains:
++    description: "Power domain (see: ../power/power_domain.txt)"
++    maxItems: 1
++
++  pinctrl:
++    description: pinctrl handles, required to configure pins for JTAG.
++    maxItems: 2
++
++  pinctrl-names:
++    description:
++      pinctrl name, must be "default", "jtag".
++      "default" must configure the pins when JTAG is disabled.
++      "jtag" must configure the pins for JTAG operations.
++    items:
++      - const: default
++      - const: jtag
++    maxItems: 2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - iommu
++  - memory-region
++  - power-domains
++
++examples:
++  - |
++    #include <dt-bindings/clock/mt8183-clk.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/memory/mt8183-larb-port.h>
++    #include <dt-bindings/power/mt8183-power.h>
++
++    reserved-memory {
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++
++      vpu_ram: vpu_ram@0x60000000 {
++        compatible = "shared-dma-pool";
++        reg = <0 0x60000000 0 0x040000000>;
++        no-map;
++        linux,cma-default;
++      };
++    };
++
++    vpu0: vpu@0x19100000 {
++      compatible = "mediatek,mt8183-apu";
++      reg = <0 0x19180000 0 0x14000>;
++      reg-names = "mmio";
++      interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_LOW>;
++
++      iommus = <&iommu M4U_PORT_IMG_IPUO>,
++         <&iommu M4U_PORT_IMG_IPU3O>,
++         <&iommu M4U_PORT_IMG_IPUI>;
++
++      clocks = <&ipu_core0 CLK_IPU_CORE0_AXI>,
++         <&ipu_core0 CLK_IPU_CORE0_IPU>,
++         <&ipu_core0 CLK_IPU_CORE0_JTAG>;
++
++      clock-names = "axi", "ipu", "jtag";
++
++      power-domains = <&scpsys MT8183_POWER_DOMAIN_VPU_CORE0>;
++      memory-region = <&vpu_ram>;
++    };
++...
 -- 
 2.26.2
 
