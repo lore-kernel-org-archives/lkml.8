@@ -2,111 +2,108 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D31C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EB12065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E9C2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="YKsGX6vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgGMPLq (ORCPT
+        id S1730069AbgGMPMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:11:46 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:59858 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgGMPLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:11:46 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id EE8AEBC0E4;
-        Mon, 13 Jul 2020 15:11:43 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] mailbox: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 17:11:37 +0200
-Message-Id: <20200713151137.35259-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 11:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbgGMPML (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:12:11 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1BCC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:12:11 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so16969159wrw.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c9xxbXFyrtlGeFDUjb611TWuOvSdsWZ5MdXBOYYr2j8=;
+        b=YKsGX6vZMawq7T2fMKOHhZBjRXmK2aFNzZOc1jZ6HIHbBIqYejfmAC9S7AQhTVE7u6
+         0Qo66R4UQGE9m5FcdrBHVZm08dkZngp4+e3dIjfTn1y2R1CtM6jJGmgeSukEbmjVxb88
+         /fK8ZVsp94fwqQ4Wfjd+aHg+wPYKvdFccL8/4BNe0LrzXvkTq1gJiD+KaoCaak+eFFBo
+         UvmJ3kTp13r6Ey7PGzV+17Hey7b7JzDu/fp09foEBdOYBYLCfRuRyJwXjTe0GOGm+eqa
+         xO6NefVRgOmwcmplwCqHyZioMU8cfFuQOUCSzc8y6S6jY5V9kWzk+KgdOUANk4DXYwKg
+         m5QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c9xxbXFyrtlGeFDUjb611TWuOvSdsWZ5MdXBOYYr2j8=;
+        b=pOQQ4g5vyXhrmNvCYcUzZsqbjl+UCDmuVDSgmB033ZRKehHgecC1r+HhH5vipm0YFA
+         hZcGlbWOaD3vbZNW/EadNEUf+LIzl1xCy/My8dTxD6c2pvtFyPYLJ10EX/nbkeFqAO35
+         xwmJQ3tegVo7YChe8McDunO95rmqTCmaFgcnNQmlvJXO5fLwhiC7/IecwoIm/N8zDIN3
+         hI49vWvEcsH8MaGCgG9/Ae4mPLihuEAl3tJeO8PUUulQXOjZNSbKYFkKdjd7Bi/WpzOd
+         KlqOUVq61gx2WuYIQAZVim2DJJxhMvnnEjjH0atUX8Z1DeYDRGgw9Imy8P3kwqIe/J1J
+         oa6g==
+X-Gm-Message-State: AOAM531uIl6AasuHdZDAB00xAfKQoU+YiKf0F/w/UVm0me/NVebxrVAQ
+        yOW2+t9ScDJaxhXCR0+l9xMM5g==
+X-Google-Smtp-Source: ABdhPJxgl7e4SXZGiBQHgW6nDqBxiEfI26ZYvhrRLJFDd7dULkmU0/xIRAlcSaiExjcYdao35CCBvg==
+X-Received: by 2002:a5d:4a84:: with SMTP id o4mr38781714wrq.104.1594653130157;
+        Mon, 13 Jul 2020 08:12:10 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id j24sm25203665wrd.43.2020.07.13.08.12.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:12:09 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] net: phy: fix mdio-mscc-miim build
+Date:   Mon, 13 Jul 2020 17:12:07 +0200
+Message-Id: <20200713151207.29451-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+PHYLIB is not selected by mdio-mscc-miim but it uses mdio devres helpers.
+Explicitly select MDIO_DEVRES in this driver's Kconfig entry.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 1814cff26739 ("net: phy: add a Kconfig option for mdio_devres")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+ drivers/net/phy/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/mailbox/omap-mailbox.c | 2 +-
- drivers/mailbox/ti-msgmgr.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index 5978a35aac6d..93fe08aef3ca 100644
---- a/drivers/mailbox/omap-mailbox.c
-+++ b/drivers/mailbox/omap-mailbox.c
-@@ -3,7 +3,7 @@
-  * OMAP mailbox driver
-  *
-  * Copyright (C) 2006-2009 Nokia Corporation. All rights reserved.
-- * Copyright (C) 2013-2019 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013-2019 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Contact: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-  *          Suman Anna <s-anna@ti.com>
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 88047d835211..0130628f4d9d 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments' Message Manager Driver
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  *	Nishanth Menon
-  */
- 
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 7ffa8a4529a8e..dd20c2c27c2f6 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -185,6 +185,7 @@ config MDIO_MOXART
+ config MDIO_MSCC_MIIM
+ 	tristate "Microsemi MIIM interface support"
+ 	depends on HAS_IOMEM
++	select MDIO_DEVRES
+ 	help
+ 	  This driver supports the MIIM (MDIO) interface found in the network
+ 	  switches of the Microsemi SoCs; it is recommended to switch on
 -- 
-2.27.0
+2.26.1
 
