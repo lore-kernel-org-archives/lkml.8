@@ -2,160 +2,72 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8499FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E57620702
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M1jy5gJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 652D52072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgGMIAO (ORCPT
+        id S1729052AbgGMIFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgGMIAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:00:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C27C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so12213964wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xTqXVtAy6STm+CsKD82SFXkbTZ9Yyt2OGjfREOk+wxw=;
-        b=M1jy5gJQ6q6Im0MkFHexnEREq0mj1rrikwdZtcYdA6zsdX/0IaDB10D+ciO2ksEULj
-         jwtXJ3k/kj40jZ8nFulo3+wJ5a8rrkT1kZzZ2YCNAxDaxV1/Ffv7Issr8BJvRgocrr4M
-         2SsslluBcGHQnu+v9r3QYQBFat4xkjWGmgGCwJ7lkGte4LdnM/a9K6DR/SlyPUDwgEXF
-         UQDMakGne06+yKh1ighWESgggI9u+7C/6Js9c4kOL9EZVsA298m4B3xoBHwY9EArY0ZD
-         4RWq3AQIonkUhmpq941Y3K6B+C8OBcTy/+Vmttz8vtBnU29zkqrndoIT/DDVWy6WnUyT
-         n43w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xTqXVtAy6STm+CsKD82SFXkbTZ9Yyt2OGjfREOk+wxw=;
-        b=H8UBtEAWpe3fCPHGt4rTRW5PBxOKK355+RsZ7bGlZdTDappy4cpAcn8xlwWTd+aIKx
-         FeiInRwamIhcKw5hIuyY5qmX5la3xTcTfq6MVRzEOlj1Dec8sVwidpRN5pz52dMHIBbY
-         IU/6K1wQLHhKSC30B4YUSleDAZAQw46WOdm3w0K2vy7Q+t+dX0fqaT6dyzFTLnKhzShq
-         XxuXsbt9pjabkNhhtTWAjKGQ/Qs3AsXH/iRPkKqSOhNjHUgyzdzEey/O0rLE1uzSkyFw
-         7sH+e/NBH267Xa+KPDfzW7lbHRxv9XHFlCP51BYNeXc32aGFKe0Jrl5YHxWUF7uz+rBe
-         akcw==
-X-Gm-Message-State: AOAM532dhaCAH6eQDWYbXW7GGZyvGq+g3rQGnF0zauB08I7flAhaqWwp
-        jTIOXEMWdg+i8vlSisSCg/pyFA==
-X-Google-Smtp-Source: ABdhPJyTMv5tMDSgCuhXi8HCsSyPHplkvrTob7qbPSgKoC+NvFButhbbYGnX22+SeXRtRZ3CXVx//g==
-X-Received: by 2002:a1c:2349:: with SMTP id j70mr17327334wmj.22.1594627209769;
-        Mon, 13 Jul 2020 01:00:09 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id 33sm24383549wri.16.2020.07.13.01.00.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 01:00:09 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Subject: [PATCH v2 02/24] scsi: aacraid: commctrl: Fix a few kerneldoc issues
-Date:   Mon, 13 Jul 2020 08:59:39 +0100
-Message-Id: <20200713080001.128044-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200713080001.128044-1-lee.jones@linaro.org>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jul 2020 04:05:36 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:38370 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgGMIFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:05:35 -0400
+Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
+        by mail.ispras.ru (Postfix) with ESMTPS id 327C140AAD8D;
+        Mon, 13 Jul 2020 08:05:33 +0000 (UTC)
+From:   Evgeny Novikov <novikov@ispras.ru>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
+Subject: [PATCH] fbdev: sm712fb: handle ioremap() errors in probe
+Date:   Mon, 13 Jul 2020 11:05:32 +0300
+Message-Id: <20200713080532.15504-1-novikov@ispras.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Functions must follow imediately after the header documenting them and
-all parameters must be present.
+smtcfb_pci_probe() does not handle ioremap() errors for case 0x720. The
+patch fixes that exactly like for case 0x710/2.
 
-Fixes the following W=1 kernel build warning(s):
+Found by Linux Driver Verification project (linuxtesting.org).
 
- drivers/scsi/aacraid/commctrl.c:43: warning: Excess function parameter 'dev' description in 'AAC_DEBUG_PREAMBLE'
- drivers/scsi/aacraid/commctrl.c:43: warning: Excess function parameter 'arg' description in 'AAC_DEBUG_PREAMBLE'
- drivers/scsi/aacraid/commctrl.c:167: warning: Function parameter or member 'dev' not described in 'open_getadapter_fib'
- drivers/scsi/aacraid/commctrl.c:167: warning: Function parameter or member 'arg' not described in 'open_getadapter_fib'
- drivers/scsi/aacraid/commctrl.c:458: warning: Cannot understand  *
- on line 458 - I thought it was a doc line
-
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
 ---
- drivers/scsi/aacraid/commctrl.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/video/fbdev/sm712fb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
-index 34e65dea992e4..59e82a832042f 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -32,6 +32,8 @@
- 
- #include "aacraid.h"
- 
-+# define AAC_DEBUG_PREAMBLE	KERN_INFO
-+# define AAC_DEBUG_POSTAMBLE
- /**
-  *	ioctl_send_fib	-	send a FIB from userspace
-  *	@dev:	adapter is being processed
-@@ -40,9 +42,6 @@
-  *	This routine sends a fib to the adapter on behalf of a user level
-  *	program.
-  */
--# define AAC_DEBUG_PREAMBLE	KERN_INFO
--# define AAC_DEBUG_POSTAMBLE
--
- static int ioctl_send_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct hw_fib * kfib;
-@@ -158,11 +157,12 @@ static int ioctl_send_fib(struct aac_dev * dev, void __user *arg)
- 
- /**
-  *	open_getadapter_fib	-	Get the next fib
-+ *	@dev:	adapter is being processed
-+ *	@arg:	arguments to the open call
-  *
-  *	This routine will get the next Fib, if available, from the AdapterFibContext
-  *	passed in from the user.
-  */
--
- static int open_getadapter_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct aac_fib_context * fibctx;
-@@ -234,7 +234,6 @@ static int open_getadapter_fib(struct aac_dev * dev, void __user *arg)
-  *	This routine will get the next Fib, if available, from the AdapterFibContext
-  *	passed in from the user.
-  */
--
- static int next_getadapter_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct fib_ioctl f;
-@@ -455,11 +454,10 @@ static int check_revision(struct aac_dev *dev, void __user *arg)
- 
- 
- /**
-- *
-  * aac_send_raw_scb
-- *
-+ *	@dev:	adapter is being processed
-+ *	@arg:	arguments to the send call
-  */
--
- static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- {
- 	struct fib* srbfib;
+diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
+index 6a1b4a853d9e..0171b23fa211 100644
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1602,6 +1602,14 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 		sfb->fb->fix.mmio_start = mmio_base;
+ 		sfb->fb->fix.mmio_len = 0x00200000;
+ 		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
++		if (!sfb->dp_regs) {
++			dev_err(&pdev->dev,
++				"%s: unable to map memory mapped IO!\n",
++				sfb->fb->fix.id);
++			err = -ENOMEM;
++			goto failed_fb;
++		}
++
+ 		sfb->lfb = sfb->dp_regs + 0x00200000;
+ 		sfb->mmio = (smtc_regbaseaddress =
+ 		    sfb->dp_regs + 0x000c0000);
 -- 
-2.25.1
+2.16.4
 
