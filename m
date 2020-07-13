@@ -2,145 +2,151 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D75E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B372067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 18:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZIlMaZV/"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="u4CmsHwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgGMSQP (ORCPT
+        id S1729969AbgGMSTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36576 "EHLO
+        Mon, 13 Jul 2020 14:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729687AbgGMSQP (ORCPT
+        with ESMTP id S1729687AbgGMSTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:16:15 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C6C061755;
-        Mon, 13 Jul 2020 11:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GgQfa/zfUs4bMYvIRWAhtn5sur2upOt/Z4JLH9TrGEM=; b=ZIlMaZV/jZOHCAtlQd+3Z++Q7
-        JhPpsrPZqorJpQ3t4Qwesz55IgHFXO6XUQFO5d0zQShjk0pIXEzCGfy25MgzMCApJ/7bLYjBe/1lT
-        kCSw9XeFE5hIUuAF+91y6uMNVwUkiFgthqtCwReTIqcBvAYm8DiwVP5AnvVxxLckis0XEh4Ua/O0l
-        qtuUgpu+5xTnHK66nbvWUyFn4wlMipWq7lqqbsDzqewhgOG8FGcu3Bmysf1WTl9SsX9Xsy1yfPBSZ
-        CzVt0y9OL3swkbvqHzLn+rE7/2/rY/fNDAh+z9FQVwpanQZWlfYYgdySO5dwY5PdocFPmCv2wUak6
-        UFKgSDmXw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39072)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jv2zq-0004DP-9A; Mon, 13 Jul 2020 19:16:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jv2zm-0006Up-O7; Mon, 13 Jul 2020 19:16:06 +0100
-Date:   Mon, 13 Jul 2020 19:16:06 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
- ability constants
-Message-ID: <20200713181606.GV1551@shell.armlinux.org.uk>
-References: <20200709213526.21972-1-michael@walle.cc>
- <20200709213526.21972-2-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709213526.21972-2-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 13 Jul 2020 14:19:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1665C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ls15so264432pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=DMv6KVcfwWuUfVxq/TG9jnHiUvzjJiD3obg8ZekXyMs=;
+        b=u4CmsHwa7xaCe3zDb4jrOUPoyQAwVMb0GO0GgYreE3k9fxWU5POmlIk30LPDTgAQUj
+         UXSamG1nn5bzlmnsItQRLjFVeTX9jNNZSWB3UwJkV82kO9sw8mlCK+8QA2A6XZi7xW2p
+         cYw26U3rmfF6mijGvSDefylxiQCOhgYcxL7pxRoq9V/UTMxzAkw29s2tnGqbRpV7VXiB
+         xUZoWpQGSZUmOzxEuR/l0sY53x7ZhIn9xs7ai2/qJ8GwCFJdnk5CAStVEdHSJJZOWF44
+         QORefjrjcSrzgiOPOEdXNRfrCTZl39dyw6LhXayUWrSOVuTaE7f9koQ+xXXMyR2rQ5bk
+         e1xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=DMv6KVcfwWuUfVxq/TG9jnHiUvzjJiD3obg8ZekXyMs=;
+        b=TBx/M07vuoyHW5ho37HFt/xf4xJbseN8hmsplBuV/LgNMOBcXdld71dpXYtqSzCTrp
+         bY69ocYx3YUG+xbVQpsiCvMyvsNLet2R0N1aZiKMkNjfAPp+AN6nmutVAEFdJgIXDd08
+         CQOHfWQ1Y7Lw6zRZuVCdlGVlghM7RaZ94g8XADZ1c/IUm8+4zNidlrVPxcu2BagCdTfw
+         BOAoT2xoipPtE6wcpKeOgs3yX74TAHYzEeMoAPkAW4jIpJ0UiJU2wpKpUtpvhdmyG4bv
+         HMGHWDx3G1+Mh9slgAI7gDyi6gAVr2MpkWDi6g26hq9dlFcHfY9RLlsng5guLTZUsJjj
+         nE5g==
+X-Gm-Message-State: AOAM5334u3WjudFUmU6BnUj2rOheC8Lm9znKQ7s2T0BelPhnBTJXwYe/
+        1H3kbda3w1PC3PDz1HHG2msQ+w==
+X-Google-Smtp-Source: ABdhPJxyhASCLIINvghsf6QoRE0SwaPQ4do1QD3z/4f/3BAYiXHFhS0sGlAWxIM465D2lRN3W0sD0g==
+X-Received: by 2002:a17:90a:ba86:: with SMTP id t6mr719906pjr.10.1594664345260;
+        Mon, 13 Jul 2020 11:19:05 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:3071:afe7:f805:6350? ([2601:646:c200:1ef2:3071:afe7:f805:6350])
+        by smtp.gmail.com with ESMTPSA id j5sm15051298pfa.5.2020.07.13.11.19.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 11:19:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy tlb option
+Date:   Mon, 13 Jul 2020 11:18:57 -0700
+Message-Id: <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
+References: <1594658283.qabzoxga67.astroid@bobo.none>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
+In-Reply-To: <1594658283.qabzoxga67.astroid@bobo.none>
+To:     Nicholas Piggin <npiggin@gmail.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
-> The constants are taken from the USXGMII Singleport Copper Interface
-> specification. The naming are based on the SGMII ones, but with an MDIO_
-> prefix.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
-> index 4bcb41c71b8c..784723072578 100644
-> --- a/include/uapi/linux/mdio.h
-> +++ b/include/uapi/linux/mdio.h
-> @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int prtad, int devad)
->  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
->  }
->  
-> +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
-> +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop supported */
 
-Bit 7 is the EEE clock stop capability, set when supported.  Tick.
+> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
+>=20
+> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 am:=
 
-> +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
+>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wrote=
+:
+>>>=20
+>>> On big systems, the mm refcount can become highly contented when doing
+>>> a lot of context switching with threaded applications (particularly
+>>> switching between the idle thread and an application thread).
+>>>=20
+>>> Abandoning lazy tlb slows switching down quite a bit in the important
+>>> user->idle->user cases, so so instead implement a non-refcounted scheme
+>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot down
+>>> any remaining lazy ones.
+>>>=20
+>>> On a 16-socket 192-core POWER8 system, a context switching benchmark
+>>> with as many software threads as CPUs (so each switch will go in and
+>>> out of idle), upstream can achieve a rate of about 1 million context
+>>> switches per second. After this patch it goes up to 118 million.
+>>>=20
+>>=20
+>> I read the patch a couple of times, and I have a suggestion that could
+>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
+>> refcount.  You're saying "hey, this mm has no more references, but it
+>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
+>> those references too."  I'm wondering whether you actually need the
+>> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
+>> for real?  Roughly, in __mmdrop(), you would only free the page tables
+>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
+>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check if
+>> you just removed the last bit from mm_cpumask and potentially free the
+>> mm.
+>>=20
+>> Getting the locking right here could be a bit tricky -- you need to
+>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
+>> should free the mm, and you also need to avoid an mm with mm_users
+>> hitting zero concurrently with the last remote CPU using it lazily
+>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
+>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns the=
 
-Bit 8 is the EEE capability, set when supported.  Tick.
+>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some careful
+>> cmpxchg or dec_return to make sure that only one CPU frees it.
+>>=20
+>> Or maybe you'd need a lock or RCU for this, but the idea would be to
+>> only ever take the lock after mm_users goes to zero.
+>=20
+> I don't think it's nonsense, it could be a good way to avoid IPIs.
+>=20
+> I haven't seen much problem here that made me too concerned about IPIs=20
+> yet, so I think the simple patch may be good enough to start with
+> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the
+> unlazying with the exit TLB flush without doing anything fancy with
+> ref counting, but we'll see.
 
-> +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
+I would be cautious with benchmarking here. I would expect that the nasty ca=
+ses may affect power consumption more than performance =E2=80=94 the specifi=
+c issue is IPIs hitting idle cores, and the main effects are to slow down ex=
+it() a bit but also to kick the idle core out of idle. Although, if the idle=
+ core is in a deep sleep, that IPI could be *very* slow.
 
-Bits 9 through 11 are the speed.  Tick.
+So I think it=E2=80=99s worth at least giving this a try.
 
-> +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full duplex */
-
-Bit 12 is the duplex mode, set for full, clear for half.  Tick.
-
-> +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex and speed bits */
-> +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
-> +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
-> +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
-> +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
-> +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
-> +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
-> +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
-> +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
-> +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
-> +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
-> +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
-> +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
-> +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
-> +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
-> +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
-> +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
-> +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
-> +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
-> +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with copper-side partner */
-
-Bit 15 is the link bit, set for link up.  Tick.
-
-The speed bits correspond (they're a little harder to check, it would
-have been easier for them to be 2 << 9 etc), tick.
-
-The speed+duplex bits correspond (same issue with the raw speed bits,
-defining them as MDIO_LPA_USXGMII_1000 | MDIO_LPA_USXGMII_FULL_DUPLEX
-would've made them more obvious, but at the expense of being more
-long winded), tick.
-
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+>=20
+> Thanks,
+> Nick
