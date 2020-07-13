@@ -2,90 +2,175 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE5AC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF116C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 570E320771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71032075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594671946;
+	bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WOe5yvX7HYHAIQLazV2ivWKR9QGBrrxQbet5V9Nehbn174JvyYczj4ZC0sPaYkAed
+	 Yztt4V5SM5wII+1p7N5W791PpdmwbdrsDPhw7ZX/URXAgwzTj97d1kBHUcauyO6pEN
+	 YN2zfsAEiFB4vbzcuXFbAg72Ye5Q+G2LkfYUTX0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGMUY0 (ORCPT
+        id S1726898AbgGMUZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34196 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 16:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgGMUYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:24:25 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726321AbgGMUZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:25:45 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB7D20720;
-        Mon, 13 Jul 2020 20:24:22 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 16:24:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 15/17] static_call: Allow early init
-Message-ID: <20200713162419.3a45f334@oasis.local.home>
-In-Reply-To: <20200711050831.GY597537@hirez.programming.kicks-ass.net>
-References: <20200710133831.943894387@infradead.org>
-        <20200710134337.036717190@infradead.org>
-        <20200710211426.298a3d94@oasis.local.home>
-        <20200711050831.GY597537@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F562080D;
+        Mon, 13 Jul 2020 20:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594671944;
+        bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DOQurS/Ibt581N9zjmP/Pqa8hl78moJnuITh6tQCapRRRq3lmxAkJao/TRTea4zip
+         M3IgIl+ogsfoJJPTcHZUxX93MDkAakZHpcmyPOpXRWk2Tc9UVg/06l2MQwzMxTTpA7
+         cZj7SPprMA2NR6Y6IEGnVzak4K3X+xXevHfSU7AU=
+Received: by mail-oi1-f181.google.com with SMTP id y22so12072744oie.8;
+        Mon, 13 Jul 2020 13:25:44 -0700 (PDT)
+X-Gm-Message-State: AOAM532IX77W1ELrAjS8I4hr8C/bUxpYaQYDrw8iTxrNdEPWBHPufDUr
+        +O8ppvJLKOw56nelDW3bb5VJIzoEmkOT3pJ8oA==
+X-Google-Smtp-Source: ABdhPJz4yVpioDr20qd9s5LSTk+AV4nU2x5TPIq7IEfqTgA5EioBNPLPC36euXlnKruM3zNGoxsQBu0ZdZFRaXmekfM=
+X-Received: by 2002:aca:4844:: with SMTP id v65mr1078680oia.152.1594671943516;
+ Mon, 13 Jul 2020 13:25:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com> <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+In-Reply-To: <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 13 Jul 2020 14:25:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
+ speed booting
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jul 2020 07:08:31 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > I found that if I ever had a little mistake in my kernel config,
+> > > or device tree, or graphics driver that my system would sit in a loop
+> > > at bootup trying again and again and again.  An example log was:
+> >
+> > Why do we care about optimizing the error case?
+>
+> It actually results in a _fully_ infinite loop.  That is: if anything
+> small causes a component of DRM to fail to probe then the whole system
+> doesn't boot because it just loops trying to probe over and over
+> again.  The messages I put in the commit message are printed over and
+> over and over again.
 
-> On Fri, Jul 10, 2020 at 09:14:26PM -0400, Steven Rostedt wrote:
-> > On Fri, 10 Jul 2020 15:38:46 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> >   
-> > > In order to use static_call() to wire up x86_pmu, we need to
-> > > initialize earlier; copy some of the tricks from jump_label to enable
-> > > this.
-> > > 
-> > > Primarily we overload key->next to store a sites pointer when there
-> > > are no modules, this avoids having to use kmalloc() to initialize the
-> > > sites and allows us to run much earlier.
-> > >   
-> > 
-> > I'm confused. What was the need to have key->next store site pointers
-> > in order to move it up earlier?  
-> 
-> The critical part was to not need an allocation.
+Sounds like a bug as that's not what should happen.
 
-Why is an allocation needed? What's different about calling it early
-that we need an allocation or this trick?
+If you defer during boot (initcalls), then you'll be on the deferred
+list until late_initcall and everything is retried. After
+late_initcall, only devices getting added should trigger probing. But
+maybe the adding and then removing a device is causing a re-trigger.
 
-The two paragraphs above seem totally disconnected.
+> > >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
+> > >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
+> > >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
+> > >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
+> > >   ...
+> > >
+> > > I finally tracked it down where this was happening:
+> > >   - msm_pdev_probe() is called.
+> > >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
+> > >     off processing of probe deferrals.
+> > >   - component_master_add_with_match() could return -EPROBE_DEFER.
+> > >     making msm_pdev_probe() return -EPROBE_DEFER.
+> > >   - When msm_pdev_probe() returned the processing of probe deferrals
+> > >     happens.
+> > >   - Loop back to the start.
+> > >
+> > > It looks like we can fix this by marking "mdss" as a "simple-bus".
+> > > I have no idea if people consider this the right thing to do or a
+> > > hack.  Hopefully it's the right thing to do.  :-)
+> >
+> > It's a simple test. Do the child devices have any dependency on the
+> > parent to probe and/or function? If so, not a simple-bus.
+>
+> Great!  You can see in the earlier patch in the series that the very
+> first thing that happens when the parent device probes is that it
+> calls devm_of_platform_populate().  That means no dependencies, right?
 
-"In order to use static_call() to wire up x86_pmu, we need to
-initialize earlier; copy some of the tricks from jump_label to enable
-this."
+It should. But then I reviewed the MDSS binding today and it looks
+like the MDSS is the interrupt parent for at least some child devices?
 
-What tricks were copied?
+>  So that means it's fine/correct to add "simple-bus" here?
+>
+>
+> > > Once I do this I notice that my boot gets marginally faster (you
+> > > don't need to probe the sub devices over and over) and also if I
+> >
+> > Can you quantify that?
+>
+> I'd say < 100 us.  I can try to quantify more if needed, but it wasn't
+> the point of this patch.
+>
+>
+> > Have you run with devlinks enabled. You need a command line option to
+> > enable. That too should reduce deferred probes.
+>
+> Ah, good idea!  I will try it.  However, even with devlinks, if there
+> is any chance of deferred probes then we need a fix like this.  The
+> point of the patch isn't about speeding things up but about avoiding
+> an infinite loop at bootup due to a small bug.
 
-"Primarily we overload key->next to store a sites pointer when there
-are no modules, this avoids having to use kmalloc() to initialize the
-sites and allows us to run much earlier."
+I think a deferred probe would only happen if there's a dependency we
+don't track (but we're tracking about everything that's common). But
+if there's some error, I'm not sure what would happen. Seems like a
+good test case. :)
 
-Why is kmalloc() (or this trick) needed to initialize the sites?
+> > > have a problem it doesn't loop forever (on my system it still
+> > > gets upset about some stuck clocks in that case, but at least I
+> > > can boot up).
+> >
+> > Deferred probe only runs when a device is added, so it's not like it
+> > is continually running.
+>
+> If you don't mind looking at the code patch, see:
+>
+> https://lore.kernel.org/r/20200710160131.4.I358ea82de218ea5f4406572ade23f5e121297555@changeid/
+>
+> Specifically you can see that each time we try to probe we were
+> calling of_platform_populate().  That appeared to be enough to trigger
+> things.
 
--- Steve
+Like I said, sounds like a bug. Even if 'simple-bus' is the
+appropriate thing to do here, it should be fixed or at least
+understood.
+
+Rob
