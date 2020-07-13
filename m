@@ -2,95 +2,111 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D93C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71FFC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0662076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED732076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594655959;
+	bh=KyCw4fkjqGBP+Ng7/LXUCofxHSgPOYAylS5bQauPuV4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GzE3+fmXhMXHYfQnMsYoaI7avnvAWA0JcGESWUwpBT8+uENQUfBjvRj3mcgpKhqWt
+	 881Ok/Fg6KDMqNqBs419Oq88S3iv3SM72A2TuUsVdwI6TXgi49mXoUZ5jAlYralYJJ
+	 JLc85gKWTtDllSo+GPgKVD40RRmtRNsnDfZLwpoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgGMP7F (ORCPT
+        id S1729644AbgGMP7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:59:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2466 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729027AbgGMP7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:59:04 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 68D2B7C9E692F0ED5634;
-        Mon, 13 Jul 2020 16:59:03 +0100 (IST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 13 Jul 2020 16:59:03 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v7 3/6] ACPI: Let ACPI know we support Generic Initiator Affinity Structures
-Date:   Mon, 13 Jul 2020 23:55:57 +0800
-Message-ID: <20200713155600.2272743-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
-References: <20200713155600.2272743-1-Jonathan.Cameron@huawei.com>
+        Mon, 13 Jul 2020 11:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgGMP7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 11:59:18 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561652076D
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594655957;
+        bh=KyCw4fkjqGBP+Ng7/LXUCofxHSgPOYAylS5bQauPuV4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J6B1/an87Uz+Ik5Zm/ikXniJFfkB0OJpKuPGtOS2jbFknhgYBK84N6z3WsA+39h32
+         PIVdl90MO3IcY5znDYwiVHWLvaEypp3S2PIYeR4tpEiDakNY6jKisITSFJqHaHAgj5
+         vtQuv/rRYW1/UBP9ICpJLNgkUogL19k2zGmWv098=
+Received: by mail-wr1-f50.google.com with SMTP id r12so17063500wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:59:17 -0700 (PDT)
+X-Gm-Message-State: AOAM532Osot6WujLqURPW/n8BgtsMeaDiV4GfFzKDDkUHX+SpTJx9Fma
+        YafYTn2GG4bYXnujzTcR3fxEAu/0oI8zKir0QUad/g==
+X-Google-Smtp-Source: ABdhPJxU2n3wnRIWWwiKNhxrwmUD4JY7g5VTemgvAdq6OBgmfsRoQL9sAN5gakJjmLDCt30osVAF5ooJLNn0n7EpJd8=
+X-Received: by 2002:adf:e482:: with SMTP id i2mr11665wrm.75.1594655955925;
+ Mon, 13 Jul 2020 08:59:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200710015646.2020871-1-npiggin@gmail.com> <20200710015646.2020871-8-npiggin@gmail.com>
+In-Reply-To: <20200710015646.2020871-8-npiggin@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 13 Jul 2020 08:59:04 -0700
+X-Gmail-Original-Message-ID: <CALCETrWbD=3SUOuq9P7Syb+a1DoBjjem8hq9_HCvn7wyqETkpw@mail.gmail.com>
+Message-ID: <CALCETrWbD=3SUOuq9P7Syb+a1DoBjjem8hq9_HCvn7wyqETkpw@mail.gmail.com>
+Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
+ tlb option
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>, Anton Blanchard <anton@ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Until we tell ACPI that we support generic initiators, it will have
-to operate in fall back domain mode and all _PXM entries should
-be on existing non GI domains.
+On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+>
+> On big systems, the mm refcount can become highly contented when doing
+> a lot of context switching with threaded applications (particularly
+> switching between the idle thread and an application thread).
+>
+> Abandoning lazy tlb slows switching down quite a bit in the important
+> user->idle->user cases, so so instead implement a non-refcounted scheme
+> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot down
+> any remaining lazy ones.
+>
+> On a 16-socket 192-core POWER8 system, a context switching benchmark
+> with as many software threads as CPUs (so each switch will go in and
+> out of idle), upstream can achieve a rate of about 1 million context
+> switches per second. After this patch it goes up to 118 million.
+>
 
-This patch sets the relevant OSC bit to make that happen.
+I read the patch a couple of times, and I have a suggestion that could
+be nonsense.  You are, effectively, using mm_cpumask() as a sort of
+refcount.  You're saying "hey, this mm has no more references, but it
+still has nonempty mm_cpumask(), so let's send an IPI and shoot down
+those references too."  I'm wondering whether you actually need the
+IPI.  What if, instead, you actually treated mm_cpumask as a refcount
+for real?  Roughly, in __mmdrop(), you would only free the page tables
+if mm_cpumask() is empty.  And, in the code that removes a CPU from
+mm_cpumask(), you would check if mm_users == 0 and, if so, check if
+you just removed the last bit from mm_cpumask and potentially free the
+mm.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/bus.c   | 1 +
- include/linux/acpi.h | 1 +
- 2 files changed, 2 insertions(+)
+Getting the locking right here could be a bit tricky -- you need to
+avoid two CPUs simultaneously exiting lazy TLB and thinking they
+should free the mm, and you also need to avoid an mm with mm_users
+hitting zero concurrently with the last remote CPU using it lazily
+exiting lazy TLB.  Perhaps this could be resolved by having mm_count
+== 1 mean "mm_cpumask() is might contain bits and, if so, it owns the
+mm" and mm_count == 0 meaning "now it's dead" and using some careful
+cmpxchg or dec_return to make sure that only one CPU frees it.
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 54002670cb7a..0ac96fb67515 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -302,6 +302,7 @@ static void acpi_bus_osc_support(void)
- 
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_HOTPLUG_OST_SUPPORT;
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
-+	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
- 
- #ifdef CONFIG_X86
- 	if (boot_cpu_has(X86_FEATURE_HWP)) {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 1414b7e0a486..40ec5f2544ed 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -546,6 +546,7 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
- #define OSC_SB_PCLPI_SUPPORT			0x00000080
- #define OSC_SB_OSLPI_SUPPORT			0x00000100
- #define OSC_SB_CPC_DIVERSE_HIGH_SUPPORT		0x00001000
-+#define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00002000
- 
- extern bool osc_sb_apei_support_acked;
- extern bool osc_pc_lpi_support_confirmed;
--- 
-2.19.1
+Or maybe you'd need a lock or RCU for this, but the idea would be to
+only ever take the lock after mm_users goes to zero.
 
+--Andy
