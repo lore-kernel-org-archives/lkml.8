@@ -2,174 +2,223 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9808C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F733206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A1D206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 08:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kdkwnrwz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o4W3X0HW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgGMITw (ORCPT
+        id S1728990AbgGMIPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:19:52 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:61061 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgGMITv (ORCPT
+        Mon, 13 Jul 2020 04:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgGMIPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:19:51 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200713081947epoutp02a8b2db4d4c760e3c47dd65b94ce0c205~hQhHfmSfA2077920779epoutp02w
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 08:19:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200713081947epoutp02a8b2db4d4c760e3c47dd65b94ce0c205~hQhHfmSfA2077920779epoutp02w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594628387;
-        bh=yu6itZWiAmcUaJ+QXSa0fa211Ngc9QUGJ4KMoZyhcMQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=kdkwnrwzYsksIqXYZ0mU020jdOx6pqrrVpPmCu0gYO5I6wsZ4hCLWXeSnuUIusQo3
-         iTClZi2Sv0LUhPol5T4pbcFqjL2F2skU+rKDwZFMl/EaIRF0xhcBXMme/oWbUdQ7zH
-         GJQm1wfE02VyqvAmJuWg8NxCRpF2J1+XakzDYLWM=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200713081947epcas1p32422b17ad8f84d8ef9bb2e67caf9216b~hQhG8793o2571125711epcas1p3k;
-        Mon, 13 Jul 2020 08:19:47 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4B4xQS2V6TzMqYkp; Mon, 13 Jul
-        2020 08:19:44 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        31.20.19033.0291C0F5; Mon, 13 Jul 2020 17:19:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200713081943epcas1p451280630c83a47b2687ab84d28ccdea0~hQhD8Rjgo2871028710epcas1p4U;
-        Mon, 13 Jul 2020 08:19:43 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200713081943epsmtrp21084a2aade8c8ce5db93c132e8577fe5~hQhD7YNmK2276722767epsmtrp2c;
-        Mon, 13 Jul 2020 08:19:43 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-ff-5f0c19209e19
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8D.F3.08303.F191C0F5; Mon, 13 Jul 2020 17:19:43 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200713081943epsmtip269a92944d6051baa2df175ffac540b2d~hQhDtGyjk2539325393epsmtip2E;
-        Mon, 13 Jul 2020 08:19:43 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
-        enric.balletbo@collabora.com, hl@rock-chips.com, digetx@gmail.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
-        cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Subject: [PATCH v2 0/2] PM / devfreq: Add governor flags
-Date:   Mon, 13 Jul 2020 17:31:11 +0900
-Message-Id: <20200713083113.5595-1-cw00.choi@samsung.com>
+        Mon, 13 Jul 2020 04:15:16 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D22C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:15:15 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a1so15431541ejg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 01:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=QmsCPrjsmF9ge6HxrBzs06s6K7Fzeye/XmayjmsFHts=;
+        b=o4W3X0HWod6I8G+MqrbvI720nnYRbPalw90Q4ujasVKbLO0fEGRyAnhUNWCXWL1/9+
+         fWYzZvnX5BrfksAvL/o4bBt9ykx/q3H3vXjURDZAV8WznnRMZf8FqV9Lty912PKBoOLi
+         zEoy8osXqbQ3vFRlsrsy554DJlX/tl7W9gLMRkjjccOH1o5Xhhgi9J4fYbVGvi77a8s0
+         uupbghw2wCl0NCGmPMonPtalDsyn2DhFbd/Z1nVssYQcLbLL8oWWDYFXy/Ga4TpyeXVP
+         Zxwuw29DcQYUgYtdmMhtDEIRVyjMHBqgTdvaLYeP/jVG9wvnErzgFg2qGZI0Ve077/8b
+         bC5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QmsCPrjsmF9ge6HxrBzs06s6K7Fzeye/XmayjmsFHts=;
+        b=re0qLnzDFeyDuNx7zJs2ceJEbehIs6Cw35tHVlDx7rKn5VK/p2fidu0HHbRjR55NWK
+         v/Dm6t1ZC44qXLu3B9kKcOOj6dzSE57BsJ8iamRRpIduDFfJj9AXWt7dNx5VfhLMHamh
+         wXNWDNB4Xc0D7HTWFmjsXZfMaXUX6C0atm3CiW5Nqb9NfRdahguBjsdL3BKAZkAvC2Ny
+         BSxXpoZC6DSe2WDcNuXT2rKaxEdEwTvn6jcscnjK/WfB3See4FycZKrkgIybpLxgf9rQ
+         IE4fDWHHvC27WZdxPe7SC7Wuv06pDwgrRy1THEknVw1phElnYkZPRtsyb8B1dhKFq0gf
+         oY4A==
+X-Gm-Message-State: AOAM5328GJBHzTeswwnKynIpZqUszbk2sUBWWNzj7bSijOQoTYVfpuBh
+        vNCNpwBpEXAtnywgiiiIDdtLuw==
+X-Google-Smtp-Source: ABdhPJyrc4lrFNKmJoah8Opz7rVlPN6JXN7FEpuxIPb+M5Z5QWxTLOJildCJSTLH8zHcsCDdFcfUuA==
+X-Received: by 2002:a17:906:2799:: with SMTP id j25mr58883707ejc.466.1594628114456;
+        Mon, 13 Jul 2020 01:15:14 -0700 (PDT)
+Received: from localhost.localdomain (212-5-158-188.ip.btc-net.bg. [212.5.158.188])
+        by smtp.gmail.com with ESMTPSA id q3sm10721085eds.41.2020.07.13.01.15.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 01:15:13 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] v4l2-ctrl: Add VP9 codec levels
+Date:   Mon, 13 Jul 2020 11:15:01 +0300
+Message-Id: <20200713081501.28609-1-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdljTQFdBkifeYN1JHotll44yWky8cYXF
-        4vqX56wWqz8+ZrRYc/sQo8WPDaeYLVpmLWKxONv0ht1ixd2PrBaXd81hs/jce4TRYmFTC7vF
-        7cYVbBY/d81jceDzWDNvDaPHjrtLGD12zrrL7rFpVSebR2/zOzaPje92MHn8nbWfxaNvyypG
-        j8+b5AI4o7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0y
-        c4CuV1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBboFSfmFpfmpesl5+daGRoY
-        GJkCFSZkZ7RtXstasFywYmv/FaYGxh6+LkYODgkBE4l7q5hBTCGBHYwSmxW6GDmBzE+MEq+f
-        VHcxcgHZnxkl/rxczwaSACk/s2I9K0RiF6PErCvb2CCcL4wS/W3fmEGq2AS0JPa/uAHWISJg
-        JXH6fwczSBGzwDwmicWnr7KAJIQFLCS23F8EVsQioCpxvuMGWJxXwFLi2u9VTBDr5CVWbzgA
-        1iwh0Moh0dD/lR0i4SLxY9dNRghbWOLV8S1QcSmJz+/2Qt1aLbHy5BE2iOYORokt+y+wQiSM
-        JfYvncwE8jSzgKbE+l36EGFFiZ2/54LNZBbgk3j3tYcVEkS8Eh1tQhAlyhKXH9yFuk1SYnF7
-        J9QqD4mOS7OYIWEXK7H3Sjv7BEbZWQgLFjAyrmIUSy0ozk1PLTYsMEKOo02M4PSoZbaDcdLb
-        D3qHGJk4GA8xSnAwK4nwRotyxgvxpiRWVqUW5ccXleakFh9iNAUG2ERmKdHkfGCCziuJNzQ1
-        MjY2tjAxNDM1NFQS5/13lj1eSCA9sSQ1OzW1ILUIpo+Jg1OqgSnDP1qTw9r9+g7Oy24N8xLa
-        NQvWL3R3fbXu6gr7ze3KS17Vz8g8ufujwYLPpjI16z/0d9s0qG+Kf2xZs99Z90ew8cpHEtv7
-        W/VDF3/aW3Va/tfcs9rvN2069nF9oe8v5iPdNoEJ54y3F2is0F+9+tCu55cn2Ae05bXzHJfr
-        dmhm2CYZIvO19YT4ysbsa1G2Pp7hpiLa65jlcsTWzGDkXXK0TevnpBO3Jyy3/1aqeHtdbuSP
-        7tOKR+yDWi5t7Tz7ynsWJ+9OhaCnwjFVC21rjlcV1Z1qZTvFGW6Z3igVw/2e0eXPprbSN3bX
-        /psU3VhqXBaUtoBBsdOu9GHU1O1TUifPseI+aSof4Mn+Lbf4tBJLcUaioRZzUXEiABQ8SZsY
-        BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSvK68JE+8wY1fWhbLLh1ltJh44wqL
-        xfUvz1ktVn98zGix5vYhRosfG04xW7TMWsRicbbpDbvFirsfWS0u75rDZvG59wijxcKmFnaL
-        240r2Cx+7prH4sDnsWbeGkaPHXeXMHrsnHWX3WPTqk42j97md2weG9/tYPL4O2s/i0ffllWM
-        Hp83yQVwRnHZpKTmZJalFunbJXBltG1ey1qwXLBia/8VpgbGHr4uRk4OCQETiTMr1rN2MXJx
-        CAnsYJR4t/ocG0RCUmLaxaPMXYwcQLawxOHDxSBhIYFPjBIrn3iD2GwCWhL7X9wAKxcRsJG4
-        u/gaC8gcZoE1TBLvth9iAkkIC1hIbLm/CKyIRUBV4nzHDRYQm1fAUuLa71VMELvkJVZvOMA8
-        gZFnASPDKkbJ1ILi3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4JDV0trBuGfVB71DjEwcjIcY
-        JTiYlUR4o0U544V4UxIrq1KL8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TB
-        KdXA5OT0K/Lnfentt/gkF618uYF77hmFQ5+m7imQCF+SF1Mffthn1wyHBIFJHsadISsF+6+1
-        bzdMqjDt75WIk9m755TOxHMyYTN1Zj9J1bFlKXT6VfbB7MX6u06z57Zavvu16AvD5C4+422Z
-        f3+dsOd+vO/tgdXuTBcrm50aRfYsMb12qvy3j/EByxmqxyeHf1WN5ov1ffRBxy/Ya8Llw8qO
-        O9/F1X4+73i5UHX1XtENUa57dTLqhU7OX8R+hKn06N+Js64db2f/9PhTV3x/I+8C0+u5j27P
-        t9X4811p8XapPz/XyrxP7LLQFE2pan6Ufp6fR+u9Yudux8uh0hvfnY822/JlfW64mJKGSl/k
-        D8GVq5VYijMSDbWYi4oTAejwnufIAgAA
-X-CMS-MailID: 20200713081943epcas1p451280630c83a47b2687ab84d28ccdea0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200713081943epcas1p451280630c83a47b2687ab84d28ccdea0
-References: <CGME20200713081943epcas1p451280630c83a47b2687ab84d28ccdea0@epcas1p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devfreq provides the multiple governors and sysfs interface for user.
-But, some sysfs attributes are useful or not useful. Prior to that
-the user can access all sysfs attributes regardless of availability.
+Add menu control for VP9 codec levels. A total of 14 levels are
+defined for Profile 0 (8bit) and Profile 2 (10bit). Each level
+is a set of constrained bitstreams coded with targeted resolutions,
+frame rates, and bitrates.
 
-So, clarify the access permission of sysfs attributes according to governor.
-Provide the governor flag to specify what is necessary or not.
-When adding the devfreq governor, governor can specify the available
-attributes with DEVFREQ_GOV_ATTR_ATTR_* defintion as following.
+The definition has been taken from webm project.
 
-[Definition for sysfs attributes]
-- DEVFREQ_GOV_ATTR_GOVERNOR
-- DEVFREQ_GOV_ATTR_AVAIL_GOVERNORS
-- DEVFREQ_GOV_ATTR_AVAIL_FREQUENCIES
-- DEVFREQ_GOV_ATTR_CUR_FREQ
-- DEVFREQ_GOV_ATTR_TARGET_FREQ
-- DEVFREQ_GOV_ATTR_MIN_FREQ
-- DEVFREQ_GOV_ATTR_MAX_FREQ
-- DEVFREQ_GOV_ATTR_TRANS_STAT
-- DEVFREQ_GOV_ATTR_POLLING_INTERVAL
-- DEVFREQ_GOV_ATTR_TIMER
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ .../media/v4l/ext-ctrls-codec.rst             | 42 +++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 21 ++++++++++
+ include/uapi/linux/v4l2-controls.h            | 17 ++++++++
+ 3 files changed, 80 insertions(+)
 
-Also, the devfreq governor is able to have the specific flag as follows
-in order to implement the specific feature with DEVFREQ_GOV_FLA_*.
-For exmaple, the devfreq deivce using passive governor cannot change
-their own governor because passive governor requires the 'immutable'
-feature with DEVFREQ_GOV_FLAG_IMMUTABLE.
-
-[Definition for governor flag]
-- DEVFREQ_GOV_FLAG_IMMUTABLE
-: If immutable flag is set, governor is never changeable to other governors.
-- DEVFREQ_GOV_FLAG_IRQ_DRIVEN
-: Devfreq core won't schedule polling work for this governor if value is set.
-
-
-Changes from v1:
-- Rebase it on latest devfreq-next branch
-- Fix typo issue of tegra30-devfreq.c and test it with COMPILE_TEST
-
-Chanwoo Choi (2):
-  PM / devfreq: Clean up the devfreq instance name in sysfs attr
-  PM / devfreq: Add governor flags to clarify the features
-
- drivers/devfreq/devfreq.c                 | 186 +++++++++++++++++-----
- drivers/devfreq/governor.h                |  44 ++++-
- drivers/devfreq/governor_passive.c        |   3 +-
- drivers/devfreq/governor_performance.c    |   1 +
- drivers/devfreq/governor_powersave.c      |   1 +
- drivers/devfreq/governor_simpleondemand.c |   3 +
- drivers/devfreq/governor_userspace.c      |   1 +
- drivers/devfreq/tegra30-devfreq.c         |   6 +-
- 8 files changed, 192 insertions(+), 53 deletions(-)
-
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index d0d506a444b1..d49bdafa768a 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -3316,6 +3316,48 @@ enum v4l2_mpeg_video_vp9_profile -
+     * - ``V4L2_MPEG_VIDEO_VP9_PROFILE_3``
+       - Profile 3
+ 
++.. _v4l2-mpeg-video-vp9-level:
++
++``V4L2_CID_MPEG_VIDEO_VP9_LEVEL (enum)``
++
++enum v4l2_mpeg_video_vp9_level -
++    This control allows selecting the level for VP9 encoder.
++    This is also used to enumerate supported levels by VP9 encoder or decoder.
++    Possible values are:
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_0``
++      - Level 1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_1``
++      - Level 1.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_0``
++      - Level 2
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_1``
++      - Level 2.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_0``
++      - Level 3
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_1``
++      - Level 3.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_0``
++      - Level 4
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_1``
++      - Level 4.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_0``
++      - Level 5
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_1``
++      - Level 5.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_2``
++      - Level 5.2
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_0``
++      - Level 6
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_1``
++      - Level 6.1
++    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_2``
++      - Level 6.2
++
+ 
+ High Efficiency Video Coding (HEVC/H.265) Control Reference
+ ===========================================================
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 3f3fbcd60cc6..359dc737053d 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -474,6 +474,23 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		"3",
+ 		NULL,
+ 	};
++	static const char * const vp9_level[] = {
++		"1",
++		"1.1",
++		"2",
++		"2.1",
++		"3",
++		"3.1",
++		"4",
++		"4.1",
++		"5",
++		"5.1",
++		"5.2",
++		"6",
++		"6.1",
++		"6.2",
++		NULL,
++	};
+ 
+ 	static const char * const flash_led_mode[] = {
+ 		"Off",
+@@ -685,6 +702,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		return vp8_profile;
+ 	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
+ 		return vp9_profile;
++	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
++		return vp9_level;
+ 	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
+ 		return jpeg_chroma_subsampling;
+ 	case V4L2_CID_DV_TX_MODE:
+@@ -938,6 +957,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_VPX_P_FRAME_QP:		return "VPX P-Frame QP Value";
+ 	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:			return "VP8 Profile";
+ 	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:			return "VP9 Profile";
++	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:			return "VP9 Level";
+ 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:		return "VP8 Frame Header";
+ 
+ 	/* HEVC controls */
+@@ -1294,6 +1314,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
+ 	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:
+ 	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
++	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
+ 	case V4L2_CID_DETECT_MD_MODE:
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_PROFILE:
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_LEVEL:
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 62271418c1be..1b0bc79c1bc3 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -650,6 +650,23 @@ enum v4l2_mpeg_video_vp9_profile {
+ 	V4L2_MPEG_VIDEO_VP9_PROFILE_2				= 2,
+ 	V4L2_MPEG_VIDEO_VP9_PROFILE_3				= 3,
+ };
++#define V4L2_CID_MPEG_VIDEO_VP9_LEVEL			(V4L2_CID_MPEG_BASE+513)
++enum v4l2_mpeg_video_vp9_level {
++	V4L2_MPEG_VIDEO_VP9_LEVEL_1_0	= 0,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_1_1	= 1,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_2_0	= 2,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_2_1	= 3,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_3_0	= 4,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_3_1	= 5,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_4_0	= 6,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_4_1	= 7,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_5_0	= 8,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_5_1	= 9,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_5_2	= 10,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_6_0	= 11,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_6_1	= 12,
++	V4L2_MPEG_VIDEO_VP9_LEVEL_6_2	= 13,
++};
+ 
+ /* CIDs for HEVC encoding. */
+ 
 -- 
 2.17.1
 
