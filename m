@@ -2,70 +2,102 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB20C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA87C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D24C20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776A520771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgGMPk5 (ORCPT
+        id S1729933AbgGMPmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
+        Mon, 13 Jul 2020 11:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMPk4 (ORCPT
+        with ESMTP id S1729492AbgGMPmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 11:40:56 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99D3C061755;
-        Mon, 13 Jul 2020 08:40:56 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8887E60C;
-        Mon, 13 Jul 2020 15:40:56 +0000 (UTC)
-Date:   Mon, 13 Jul 2020 09:40:55 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] doc: yama: Swap HTTP for HTTPS and replace dead link
-Message-ID: <20200713094055.2fa4d033@lwn.net>
-In-Reply-To: <202007091141.C008B89EC@keescook>
-References: <202007091141.C008B89EC@keescook>
-Organization: LWN.net
+        Mon, 13 Jul 2020 11:42:10 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC510C061755;
+        Mon, 13 Jul 2020 08:42:10 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 0F45BBC0C2;
+        Mon, 13 Jul 2020 15:42:07 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     awalls@md.metrocast.net, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] [media] ivtv: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 17:42:01 +0200
+Message-Id: <20200713154201.35478-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 11:51:35 -0700
-Kees Cook <keescook@chromium.org> wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> Replace one dead link for the same person's original presentation on the
-> topic and swap an HTTP URL with HTTPS. While here, linkify the text to
-> make it more readable when rendered.
-> 
-> Link: https://lore.kernel.org/lkml/20200708073346.13177-1-grandmaster@al2klimov.de/
-> Co-developed-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2:
-> - replace storm.net.nz url (kees)
-> - refactor with descriptive text (kees)
-> v1: https://lore.kernel.org/lkml/20200708073346.13177-1-grandmaster@al2klimov.de/
-> ---
->  Documentation/admin-guide/LSM/Yama.rst | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Applied, thanks.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-jon
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/media/pci/ivtv/ivtv-cards.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/pci/ivtv/ivtv-cards.c b/drivers/media/pci/ivtv/ivtv-cards.c
+index ca6daba3a34a..c8f4ed7ff2c6 100644
+--- a/drivers/media/pci/ivtv/ivtv-cards.c
++++ b/drivers/media/pci/ivtv/ivtv-cards.c
+@@ -53,7 +53,7 @@ static struct ivtv_card_tuner_i2c ivtv_i2c_tda8290 = {
+ 
+ /********************** card configuration *******************************/
+ 
+-/* Please add new PCI IDs to: http://pci-ids.ucw.cz/
++/* Please add new PCI IDs to: https://pci-ids.ucw.cz/
+    This keeps the PCI ID database up to date. Note that the entries
+    must be added under vendor 0x4444 (Conexant) as subsystem IDs.
+    New vendor IDs should still be added to the vendor ID list. */
+-- 
+2.27.0
+
