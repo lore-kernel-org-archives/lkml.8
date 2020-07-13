@@ -2,145 +2,106 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD41C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 473072089D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58ABD20899
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 22:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cSeqsacE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZc0mePO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgGMWZN (ORCPT
+        id S1726821AbgGMWVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 18:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46784 "EHLO
+        Mon, 13 Jul 2020 18:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgGMWZM (ORCPT
+        with ESMTP id S1726742AbgGMWTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 18:25:12 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D0AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:25:12 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id k18so11339252qtm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:25:12 -0700 (PDT)
+        Mon, 13 Jul 2020 18:19:52 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A994C061755;
+        Mon, 13 Jul 2020 15:19:52 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so601713pje.0;
+        Mon, 13 Jul 2020 15:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QHfgfv2mP6dp6kaJTVFYuFviBEEN6wpOON6T0JxtLVk=;
-        b=cSeqsacEiX0VNBd7mC9bj3A8JzJZlyD3j4cmXLuYevvPoeKEk8W+U5HnPEomxpm5bo
-         LRaqdmOo5RVCRntAP5RSqQ9O5u+EP+mswHCf4O+Kth2ygENQ1VWCkbAMFQ+01IILIQun
-         O0GExOUmlRIqEf/OfFr3Ctc6cYjV3RMpNtbgU=
+        bh=wlS+SrJ1At0Y30vYRvZttOy99z1jpaOiiIPmyhb9Ml4=;
+        b=SZc0mePOLPkM8suKnl42aCZU8qbo1+nkeiK4zK/rppBg5PIKM2/oVqznAx/L5S9HGu
+         f2Oy+1Ows+HGeq8g3ZfrMcp+vds2KCDZCxdibGJE0IPMfhk6us7P8OBJwXnVSBuBios2
+         EtYw5FkGy7iBsR0yisc8uUNEBz0Ak+4nizxWnl91L6juu5qlwDYFKdQa82kdNPXa8Uqp
+         oWLRLfHgFngnfWzfV9ftTfTTtxLZ+awdREZZRF1nQl3/omEy3MedgKvbqMLnOxAjf5E7
+         BBn5YQ1gBF4o6eIc9JpVvZ1+L78TquyiKOOs+/E2+hHWJ8c0ZIi0nPjZEKmhQ38TBplC
+         m2ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QHfgfv2mP6dp6kaJTVFYuFviBEEN6wpOON6T0JxtLVk=;
-        b=MT95qihyQL5FANcr421MckKhSzLcD0IxT5caCGg35+bR28aO14GEAC4AwboTOwa4si
-         kym+jpRR9S9WCcJqlspLpzLxAI3fz+WExiRQiHdlpPHCOfvG/LvXL3OFYWxAUowwj4gW
-         YJih6tTXfqhaFHjBahSdVIpdOPF+y8AWL4ep8kQuKvPWX9S+uUs+BXUEpAQY92tfRI9l
-         D9vVROL1uQN914DpFPgr7XDmyT+NmEhIeB65moio33ufkachJe+ArH1mW8PFjACsEM+9
-         fw7KQmO+aS1q7LbUApS92+olIaSGrS9y1EK8fN7ZDTBaNonehvBYFvV/JgV33QolflcC
-         /TIg==
-X-Gm-Message-State: AOAM532mMnqRIg6KCVJpMWt7FL0oXkJg4vKNpO/KBLC9MKeDJRhBu6IA
-        c2oqItmIc5PWq3DNijuxjvunZupf4Kw=
-X-Google-Smtp-Source: ABdhPJwJEQ6owRV0pVvewCU5NeDzFrOVzjGyUanPFZfFao5TpZZAKpqHV5TceXuSA/miqgyLaCup4A==
-X-Received: by 2002:ac8:7a69:: with SMTP id w9mr1654919qtt.179.1594679111392;
-        Mon, 13 Jul 2020 15:25:11 -0700 (PDT)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com. [209.85.219.51])
-        by smtp.gmail.com with ESMTPSA id i22sm19052158qki.4.2020.07.13.15.25.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 15:25:11 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id t11so6601089qvk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 15:25:11 -0700 (PDT)
-X-Received: by 2002:a67:e046:: with SMTP id n6mr1294693vsl.6.1594678686784;
- Mon, 13 Jul 2020 15:18:06 -0700 (PDT)
+        bh=wlS+SrJ1At0Y30vYRvZttOy99z1jpaOiiIPmyhb9Ml4=;
+        b=Bc1sjGmaxhjOy96meTxqNwsLSQQ64Mer2mBUA3t/LllK/VR9T0alRIJIqgTDzaoZwh
+         zF2aoPC5cXATDywu4QfE6ZfLbSwitIfto5UkW+6J4CD0TI9qLhc9FT6hAoMzc2yy9cr3
+         jKDbhnbzNUraKwwEjig/zh166Jk9Z2wxA/hB8E0ZLm76l7+o9+YMc9AtDE4ujp9D+AuN
+         aYesJ3VwhiBPiaA7Os7auX7WQ0g7q0sVyqmqL6fm76pSGJwxz1ov5Sj+4Mx0aK5Qnqyx
+         ewVix8uRYi1ETjFqGU04IBeLIf9xv1lDwHU0vqEkb5m/RZqxOQlMzy6xFg9eSmfwIBW/
+         bAGw==
+X-Gm-Message-State: AOAM533cTY0XgNkUADv9EpaV+r3cAJ2kf1QhBhezBBRzHz5sa8NQdEzc
+        uNfIuAs+2xjKqvc/oTDM4TEKPg2rpbRlHdA9YCw=
+X-Google-Smtp-Source: ABdhPJxbwLVlRvHK/+MG1x/6woHP7PD4EX7f2JQR/H7+5atQI2SfSgHpNem4GXmhzjnfxXNdySYlU7OLv5CHeGztG9c=
+X-Received: by 2002:a17:90b:34c:: with SMTP id fh12mr1512876pjb.210.1594678791777;
+ Mon, 13 Jul 2020 15:19:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-2-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1592818308-23001-2-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 15:17:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WcbEH2O+7xqCyDfrPR0+g+MpWWsgORNPepC=VrhOanFQ@mail.gmail.com>
-Message-ID: <CAD=FV=WcbEH2O+7xqCyDfrPR0+g+MpWWsgORNPepC=VrhOanFQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] pinctrl: qcom: Remove irq_disable callback from
- msmgpio irqchip
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
+References: <20200708043754.46554-1-xie.he.0141@gmail.com> <4b46b0f6-8424-5a6e-a4ae-3729f54c5d4b@gmail.com>
+In-Reply-To: <4b46b0f6-8424-5a6e-a4ae-3729f54c5d4b@gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 13 Jul 2020 15:19:40 -0700
+Message-ID: <CAJht_ENaDzwwtqupZf=pK4MBUsU1=OdXO=TRVn0a44YxC5U1SQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 22, 2020 at 2:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Mon, Jul 13, 2020 at 2:21 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
 >
-> The gpio can be marked for wakeup and drivers can invoke disable_irq()
-> during suspend, in such cases unlazy approach will also disable at HW
-> and such gpios will not wakeup device from suspend to RAM.
+> It is not clear to me what guarantee we have to have one byte of headroom in the skb
+> at this point.
 >
-> Remove irq_disable callback to allow gpio interrupts to lazy disabled.
-> The gpio interrupts will get disabled during irq_mask callback.
+> You might add to be safe : (as done in lapbeth_data_indication(), but after the skb_push() which seems wrong)
 >
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 13 -------------
->  1 file changed, 13 deletions(-)
+>       if (skb_cow(skb, 1)) {
+>             kfree_skb(skb); /* This line I am not sure, but looking at
+>                              * lapb_data_indication() this might be needed.
+>                              */
+>             return NET_RX_DROP;
+>       }
+>
+Thank you for your review, Eric!
 
-While the code of this patch looks fairly correct to me (there's no
-need to implement the irq_disable callback and we can just rely on the
-masking), I'm slightly anxious about the description.  It almost feels
-like you're somehow relying on the laziness to "fix" your issue here.
-...but the laziness is supposed to just be an optimization.
-Specifically if an interrupt happens to fire at any point in time
-after a driver has called disable_irq() then it acts just like a
-non-lazy disable.
+The function "x25_asy_data_indication" is called by the "lapb" module
+(net/lapb/). Before the "lapb" module calls this function, it has
+removed from the skb an LAPB header which is at least 2 bytes (in the
+function "lapb_decode"). So I thought there would always be a headroom
+of one byte at this point.
 
-Said another way, I think this is a valid thing for a driver to do and
-it should get woken up if the irq fires in suspend:
+But yes, it is always safer to add "skb_cow" at this point, so that it
+is clearer the code would not crash here. I'll add it in the second
+version of this patch. Thank you for your suggestion!
 
-disable_irq();
-msleep(1000);
-enable_irq_wake()
-
-Specifically if an IRQ comes in during that sleep then it will be just
-like you had a non-lazy IRQ.
-
-
-So while I'm for this patch, I'd suggest a simpler description
-(assuming my understanding is correct):
-
-There is no reason to implement irq_disable() and irq_mask().  Let's just
-use irq_mask() and let the rest of the core handle it.
-
-
-Also: it feels really weird to me that you're getting rid of the
-irq_disable() but keeping irq_enable().  That seems like asking for
-trouble, though I'd have to do more research to see if I could figure
-out exactly what might go wrong.  Could you remove your irq_enable()
-too?
-
-
--Doug
+And yes, I agree that in "lapbeth_data_indication", the order of
+"skb_push" and "skb_cow" is probably wrong. Let us submit another
+patch to fix this problem!
