@@ -2,331 +2,110 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B192AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8878BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92825206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B88E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 12:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594642138;
+	bh=1qbvfcMKN5hP6zOyDUgdL4znQEsqmFuoCgnlTBk45c0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xu1eNMqhxxEp058uhKLtTn18tNQ3kiJQjX6fSRLTUrL/zinBRTB/y1uK/iN2tjthe
+	 NhxXuOnWqoiUFCM+37L32HTyGSbVnkDaCCmh3I3gLnnnFULWGhWClpfmSQiAiNzUs3
+	 zarZUEsxGpoatOyWqOWQLoFHmwoK+uwxmMirymRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbgGMMHu (ORCPT
+        id S1729631AbgGMMI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:07:50 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:53196 "EHLO smtp.al2klimov.de"
+        Mon, 13 Jul 2020 08:08:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgGMMHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 08:07:49 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 02322BC053;
-        Mon, 13 Jul 2020 12:07:43 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, corbet@lwn.net, rcu@vger.kernel.org,
+        id S1728714AbgGMMI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 08:08:57 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C956206F0;
+        Mon, 13 Jul 2020 12:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594642136;
+        bh=1qbvfcMKN5hP6zOyDUgdL4znQEsqmFuoCgnlTBk45c0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ARRPO0hM3y8uwt5JcDs+5sqPXZ3hHBPVOJ46tDyorL8sz4Bs1R8hgfjZDOYNei8fo
+         gwttVzG88WukbjWmZ4IKta16HDiOLLztQ1vR8jhKYYeJxvfs8DfuXWLCTVj2MBDGXu
+         UVgp5HqYslkA2AB+3T+V0xfVLYIDsnoW/qcY3JXE=
+Date:   Mon, 13 Jul 2020 15:08:42 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, david@redhat.com, dwmw@amazon.com,
+        foersleo@amazon.de, irogers@google.com, jolsa@redhat.com,
+        kirill@shutemov.name, mark.rutland@arm.com, mgorman@suse.de,
+        minchan@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org, riel@surriel.com,
+        rientjes@google.com, rostedt@goodmis.org, sblbir@amazon.com,
+        shakeelb@google.com, shuah@kernel.org, sj38.park@gmail.com,
+        snu@amazon.de, vbabka@suse.cz, vdavydov.dev@gmail.com,
+        yang.shi@linux.alibaba.com, ying.huang@intel.com,
+        linux-damon@amazon.com, linux-mm@kvack.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] docs: rcu: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 14:07:37 +0200
-Message-Id: <20200713120737.33971-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH v18 01/14] mm/page_ext: Export lookup_page_ext() to GPL
+ modules
+Message-ID: <20200713120842.GA707159@kernel.org>
+References: <20200713084144.4430-1-sjpark@amazon.com>
+ <20200713084144.4430-2-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713084144.4430-2-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On Mon, Jul 13, 2020 at 10:41:31AM +0200, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
+> by DAMON in following commit for the implementation of the region based
+> sampling.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Maybe I'm missing something, but why is DAMON a module?
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+> Reviewed-by: Varad Gautam <vrd@amazon.de>
+> ---
+>  mm/page_ext.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/page_ext.c b/mm/page_ext.c
+> index a3616f7a0e9e..9d802d01fcb5 100644
+> --- a/mm/page_ext.c
+> +++ b/mm/page_ext.c
+> @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
+>  					MAX_ORDER_NR_PAGES);
+>  	return get_entry(base, index);
+>  }
+> +EXPORT_SYMBOL_GPL(lookup_page_ext);
+>  
+>  static int __init alloc_node_page_ext(int nid)
+>  {
+> -- 
+> 2.17.1
+> 
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/RCU/RTFP.txt       | 46 ++++++++++++++++----------------
- Documentation/RCU/rcubarrier.rst |  4 +--
- Documentation/RCU/whatisRCU.rst  |  4 +--
- 3 files changed, 27 insertions(+), 27 deletions(-)
-
-diff --git a/Documentation/RCU/RTFP.txt b/Documentation/RCU/RTFP.txt
-index 9bccf16736f7..fab2870f59cb 100644
---- a/Documentation/RCU/RTFP.txt
-+++ b/Documentation/RCU/RTFP.txt
-@@ -566,7 +566,7 @@ Operating System Design and Implementation}"
- 	Use of RCU-like facility in K42/Tornado.  Another independent
- 	invention of RCU.
- 	See especially pages 7-9 (Section 5).
--	http://www.usenix.org/events/osdi99/full_papers/gamsa/gamsa.pdf
-+	https://www.usenix.org/events/osdi99/full_papers/gamsa/gamsa.pdf
- 	[Viewed August 30, 2006]
- }
- }
-@@ -921,7 +921,7 @@ Michal Ostrowski and Bryan Rosenburg and Jimi Xenidis"
- ,number="114"
- ,pages="18-26"
- ,note="Available:
--\url{http://www.linuxjournal.com/article/6993}
-+\url{https://www.linuxjournal.com/article/6993}
- [Viewed November 14, 2007]"
- ,annotation={
- 	Reader-friendly intro to RCU, with the infamous old-man-and-brat
-@@ -967,7 +967,7 @@ Michal Ostrowski and Bryan Rosenburg and Jimi Xenidis"
- ,pages="38-46"
- ,annotation={
- 	Reader friendly intro to dcache and RCU.
--	http://www.linuxjournal.com/node/7124
-+	https://www.linuxjournal.com/node/7124
- 	[Viewed December 26, 2010]
- }
- }
-@@ -1134,7 +1134,7 @@ Oregon Health and Sciences University"
- ,month="October"
- ,year="2004"
- ,note="Available:
--\url{http://www.cs.toronto.edu/~tomhart/masters_thesis.html}
-+\url{https://www.cs.toronto.edu/~tomhart/masters_thesis.html}
- [Viewed October 15, 2004]"
- ,annotation={
- 	Proposes comparing RCU to lock-free methods for the Linux kernel.
-@@ -1288,7 +1288,7 @@ Data Structures"
- ,day="3"
- ,year="2005"
- ,note="Available:
--\url{http://lwn.net/Articles/134484/}
-+\url{https://lwn.net/Articles/134484/}
- [Viewed May 3, 2005]"
- ,annotation={
- 	Jon Corbet describes deprecation of synchronize_kernel()
-@@ -1322,7 +1322,7 @@ Data Structures"
- [Viewed May 13, 2005]"
- ,annotation={
- 	Realtime turns into making RCU yet more realtime friendly.
--	http://lca2005.linux.org.au/Papers/Paul%20McKenney/Towards%20Hard%20Realtime%20Response%20from%20the%20Linux%20Kernel/LKS.2005.04.22a.pdf
-+	https://lca2005.linux.org.au/Papers/Paul%20McKenney/Towards%20Hard%20Realtime%20Response%20from%20the%20Linux%20Kernel/LKS.2005.04.22a.pdf
- }
- }
- 
-@@ -1453,7 +1453,7 @@ Distributed Processing Symposium"
- [Viewed April 28, 2008]"
- ,annotation={
- 	Compares QSBR, HPBR, EBR, and lock-free reference counting.
--	http://www.cs.toronto.edu/~tomhart/perflab/ipdps06.tgz
-+	https://www.cs.toronto.edu/~tomhart/perflab/ipdps06.tgz
- }
- }
- 
-@@ -1540,7 +1540,7 @@ Revised:
- ,month="August"
- ,day="18"
- ,year="2006"
--,note="\url{http://www.nada.kth.se/~snilsson/publications/TRASH/trash.pdf}"
-+,note="\url{https://www.nada.kth.se/~snilsson/publications/TRASH/trash.pdf}"
- ,annotation={
- 	RCU-protected dynamic trie-hash combination.
- 	[Viewed March 4, 2011]
-@@ -1723,7 +1723,7 @@ Revised:
- ,day="14"
- ,year="2007"
- ,note="Available:
--\url{http://lwn.net/Articles/217484/}
-+\url{https://lwn.net/Articles/217484/}
- [Viewed November 22, 2007]"
- ,annotation={
- 	LWN article introducing the rcu_barrier() primitive.
-@@ -2057,7 +2057,7 @@ lot of {Linux} into your technology!!!"
- ,day="24"
- ,year="2008"
- ,note="Available:
--\url{http://lwn.net/Articles/279077/}
-+\url{https://lwn.net/Articles/279077/}
- [Viewed April 24, 2008]"
- ,annotation={
- 	Describes use of Promela and Spin to validate (and fix!) the
-@@ -2229,7 +2229,7 @@ lot of {Linux} into your technology!!!"
- ,day="17"
- ,year="2009"
- ,note="Available:
--\url{http://lwn.net/Articles/323929/}
-+\url{https://lwn.net/Articles/323929/}
- [Viewed March 20, 2009]"
- ,annotation={
- 	Uniprocessor assumptions allow simplified RCU implementation.
-@@ -2298,7 +2298,7 @@ lot of {Linux} into your technology!!!"
- , month  = "December"
- , year   = 2009
- ,note="Available:
--\url{http://www.lttng.org/pub/thesis/desnoyers-dissertation-2009-12.pdf}
-+\url{https://www.lttng.org/pub/thesis/desnoyers-dissertation-2009-12.pdf}
- [Viewed December 9, 2009]"
- ,annotation={
- 	Chapter 6 (page 97) covers user-level RCU.
-@@ -2375,7 +2375,7 @@ lot of {Linux} into your technology!!!"
- ,Title="User-Level Implementations of Read-Copy Update"
- ,month="December"
- ,year="2010"
--,url={\url{http://www.computer.org/csdl/trans/td/2012/02/ttd2012020375-abs.html}}
-+,url={\url{https://www.computer.org/csdl/trans/td/2012/02/ttd2012020375-abs.html}}
- ,annotation={
- 	RCU overview, desiderata, semi-formal semantics, user-level RCU
- 	usage scenarios, three classes of RCU implementation, wait-free
-@@ -2437,7 +2437,7 @@ lot of {Linux} into your technology!!!"
- ,month="February"
- ,year="2010"
- ,note="Available:
--\url{http://www.mail-archive.com/kvm@vger.kernel.org/msg28640.html}
-+\url{https://www.mail-archive.com/kvm@vger.kernel.org/msg28640.html}
- [Viewed March 20, 2010]"
- ,annotation={
- 	Use of RCU permits KVM to increase the size of guest OSes from
-@@ -2466,7 +2466,7 @@ lot of {Linux} into your technology!!!"
- ,year="2010"
- ,annotation={
- 	Data-race detector incorporating RCU.
--	http://www.filesystems.org/docs/abhinav-thesis/abhinav_thesis.pdf
-+	https://www.filesystems.org/docs/abhinav-thesis/abhinav_thesis.pdf
- }
- }
- 
-@@ -2551,7 +2551,7 @@ lot of {Linux} into your technology!!!"
- ,location = {Berkeley, CA}
- ,pages = {1--6}
- ,numpages = {6}
--,url = {http://www.usenix.org/event/hotpar11/tech/final_files/Howard.pdf}
-+,url = {https://www.usenix.org/event/hotpar11/tech/final_files/Howard.pdf}
- ,publisher = {USENIX Association}
- ,address = {Berkeley, CA, USA}
- }
-@@ -2581,7 +2581,7 @@ lot of {Linux} into your technology!!!"
- ,year = {2011}
- ,pages = {145--158}
- ,numpages = {14}
--,url={http://www.usenix.org/event/atc11/tech/final_files/Triplett.pdf}
-+,url={https://www.usenix.org/event/atc11/tech/final_files/Triplett.pdf}
- ,publisher = {The USENIX Association}
- ,address = {Portland, OR USA}
- }
-@@ -2654,7 +2654,7 @@ lot of {Linux} into your technology!!!"
- ,year="2012"
- ,issn="1045-9219"
- ,pages="375-382"
--,doi="http://doi.ieeecomputersociety.org/10.1109/TPDS.2011.159"
-+,doi="https://doi.ieeecomputersociety.org/10.1109/TPDS.2011.159"
- ,publisher="IEEE Computer Society"
- ,address="Los Alamitos, CA, USA"
- ,annotation={
-@@ -2677,7 +2677,7 @@ lot of {Linux} into your technology!!!"
- ,numpages = {12}
- ,publisher = {ACM}
- ,address = {London, UK}
--,url="http://people.csail.mit.edu/nickolai/papers/clements-bonsai.pdf"
-+,url="https://people.csail.mit.edu/nickolai/papers/clements-bonsai.pdf"
- }
- 
- @unpublished{PaulEMcKenney2012ELCbattery
-@@ -2729,7 +2729,7 @@ lot of {Linux} into your technology!!!"
- ,month="July"
- ,day="10"
- ,year="2012"
--,note="\url{http://software.imdea.org/~gotsman/papers/recycling-esop13-ext.pdf}"
-+,note="\url{https://software.imdea.org/~gotsman/papers/recycling-esop13-ext.pdf}"
- ,annotation={
- 	Separation-logic formulation of RCU uses.
- }
-@@ -2768,9 +2768,9 @@ lot of {Linux} into your technology!!!"
- ,annotation={
- 	Looking for data races, including those involving RCU.
- 	Proposal:
--	http://www.fsl.cs.sunysb.edu/docs/jseyster-proposal/redflag.pdf
-+	https://www.fsl.cs.sunysb.edu/docs/jseyster-proposal/redflag.pdf
- 	Dissertation:
--	http://www.fsl.cs.sunysb.edu/docs/jseyster-dissertation/redflag.pdf
-+	https://www.fsl.cs.sunysb.edu/docs/jseyster-dissertation/redflag.pdf
- }
- }
- 
-@@ -2795,7 +2795,7 @@ lot of {Linux} into your technology!!!"
- ,publisher = {Springer}
- ,address = {Rome, Italy}
- ,annotation={
--	http://software.imdea.org/~gotsman/papers/recycling-esop13.pdf
-+	https://software.imdea.org/~gotsman/papers/recycling-esop13.pdf
- }
- }
- 
-diff --git a/Documentation/RCU/rcubarrier.rst b/Documentation/RCU/rcubarrier.rst
-index f64f4413a47c..e7b229bb4db7 100644
---- a/Documentation/RCU/rcubarrier.rst
-+++ b/Documentation/RCU/rcubarrier.rst
-@@ -3,7 +3,7 @@
- RCU and Unloadable Modules
- ==========================
- 
--[Originally published in LWN Jan. 14, 2007: http://lwn.net/Articles/217484/]
-+[Originally published in LWN Jan. 14, 2007: https://lwn.net/Articles/217484/]
- 
- RCU (read-copy update) is a synchronization mechanism that can be thought
- of as a replacement for read-writer locking (among other things), but with
-@@ -59,7 +59,7 @@ But what if p_callback is defined in an unloadable module?
- If we unload the module while some RCU callbacks are pending,
- the CPUs executing these callbacks are going to be severely
- disappointed when they are later invoked, as fancifully depicted at
--http://lwn.net/images/ns/kernel/rcu-drop.jpg.
-+https://lwn.net/images/ns/kernel/rcu-drop.jpg.
- 
- We could try placing a synchronize_rcu() in the module-exit code path,
- but this is not sufficient. Although synchronize_rcu() does wait for a
-diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
-index c7f147b8034f..c1d5105a7317 100644
---- a/Documentation/RCU/whatisRCU.rst
-+++ b/Documentation/RCU/whatisRCU.rst
-@@ -11,8 +11,8 @@ to start learning about RCU:
- | 3.	RCU part 3: the RCU API      http://lwn.net/Articles/264090/
- | 4.	The RCU API, 2010 Edition    http://lwn.net/Articles/418853/
- | 	2010 Big API Table           http://lwn.net/Articles/419086/
--| 5.	The RCU API, 2014 Edition    http://lwn.net/Articles/609904/
--|	2014 Big API Table           http://lwn.net/Articles/609973/
-+| 5.	The RCU API, 2014 Edition    https://lwn.net/Articles/609904/
-+|	2014 Big API Table           https://lwn.net/Articles/609973/
- 
- 
- What is RCU?
 -- 
-2.27.0
-
+Sincerely yours,
+Mike.
