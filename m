@@ -2,91 +2,229 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9F6C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853D92075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC4E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 11:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="rO39pjE0"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="e1FeX0GR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgGMLmQ (ORCPT
+        id S1729597AbgGMLmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
+        Mon, 13 Jul 2020 07:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMLmP (ORCPT
+        with ESMTP id S1729027AbgGMLmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:42:15 -0400
+        Mon, 13 Jul 2020 07:42:37 -0400
 Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767D1C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:42:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id p20so16631294ejd.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:42:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BFBAC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:42:37 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so16641914ejc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 04:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=TvJxYzvOgzlC3BuPyn0KYnjcr7/OFk0QNHyHHZoEtGc=;
-        b=rO39pjE0Wei+6nLZvaupuo2Ex4KuQD2qZ+3t6eBYQNcRJtvYdxAC8ONfkblcinlcJO
-         CsVJ3UHvyqauDlk9iXmWwHEWUAv6UaIhcERBX4YfcmGPRVnAF+ubSh8IYXCZ3iIBZhvT
-         yOhcnmyjlTvVR4JTTXRQsTb9HRlMgpn7BBmrM=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=asIUMaHIscmVUOt9O3PjjLWYy2UNKC6B4ByL+UWtDFY=;
+        b=e1FeX0GR+KD623Ybe45d+HmtHhrVBq/5lHLV88DeXVo5dTMNF7JFmFa8IE/NcRmlIM
+         kW3MDiMLjPHtp+vFl/UhNCB7LrIgkpwbXdS7xi3bcM5jqM5WCnz/tfSLQFDQeb0Awkg6
+         FF7K4opZLmhkbQILg412dwpU2CrRZiOpa9ceg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TvJxYzvOgzlC3BuPyn0KYnjcr7/OFk0QNHyHHZoEtGc=;
-        b=FQS3NIFUwQtVo/S7YLBCH9ucc/D16JLfqhRDapjAP50dtJnWFQ4rEHoKtgQNb7JdQS
-         RDOJ/1xOtZ7py32gEYK/bv5nafoxkw67q8+4MzAVUMSzjrVyuow/F1QXNy6OaX8cnSjZ
-         6DBDVOZZZs6jOlytdVW86p0239x9spi4mBpxYNOY+pQYL6N9W6XpmhOMcwuNJHWJ5z1H
-         UHfGFTWaodupem9AcuBpkZ591sSLlcbvK8wsiYoK1St9ECkNYBmO7KeZMFFY4jBKvRla
-         d5T/NVMvl6QL1U6XkNQ2Mh5hW6ei7eoOjzn9E0To9bkzK6GjZzVOdQCcbF49fmyMTjeb
-         v50A==
-X-Gm-Message-State: AOAM533GkcF30mT8lgCRBzWG2twNdPdKU2h+96eBXylrZwyEjmbiurzC
-        FHs4rzKFJDUpQivRkFp41oKuRw==
-X-Google-Smtp-Source: ABdhPJzGgq6RGP3XIbwumibrODkGvKT1MpPv2MlO3N6NK25YXE3CCow3QCIXO8inZ0byPzPoTPrA+Q==
-X-Received: by 2002:a17:906:c142:: with SMTP id dp2mr76749291ejc.541.1594640534092;
-        Mon, 13 Jul 2020 04:42:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=asIUMaHIscmVUOt9O3PjjLWYy2UNKC6B4ByL+UWtDFY=;
+        b=smgxpJOtk+cqn0Re+Wwo4+CdxMpqAk5ERR3De1Ic9B3wGtO3vx0AdH40gu8rhk+F7c
+         CaPIInDEI8fftepbHdvpnXTTi/6VJWLfXeL4N4To4z1xIwf0ArlIhq1g5Ly9Id3sUutM
+         fodidUa56xokcOk52KJ2E+S3jjeJbViSYhV6m+867IUocsxpLingJSw2T5JPkf0y//fj
+         JxShTdoCyXI7RH2ZsMpmpESLSPBR4bWC85LCvzxNA0fTSmV6vgOOeU5/BQaUv3X7OUWi
+         /ImIJ3mIMMudrAo2CVa0sDpCqbjgjr1mGUMkkKVXb8SQWLWAlCvI613pDEIkck3D7QVH
+         2tdQ==
+X-Gm-Message-State: AOAM5331DeapCb1VZvlv4D/zr4SnFTCIxO5lKznQ8SJmlL6aGnsGGRI5
+        svN/oP2tTaNJiNg5c3oxDXL75Q==
+X-Google-Smtp-Source: ABdhPJyEII+P/2ZM/6AJWX/HZTCj9WuOpxMw0/9G1G/WCLiRXlRknK18NtlPg7X4YJGjehL2raIBIA==
+X-Received: by 2002:a17:906:27c9:: with SMTP id k9mr71713920ejc.74.1594640555870;
+        Mon, 13 Jul 2020 04:42:35 -0700 (PDT)
 Received: from localhost ([2620:10d:c093:400::5:ef88])
-        by smtp.gmail.com with ESMTPSA id bz14sm5377849ejc.88.2020.07.13.04.42.13
+        by smtp.gmail.com with ESMTPSA id bs18sm11363158edb.38.2020.07.13.04.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 04:42:13 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 12:42:13 +0100
+        Mon, 13 Jul 2020 04:42:35 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 12:42:35 +0100
 From:   Chris Down <chris@chrisdown.name>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Johannes Weiner <hannes@cmpxchg.org>,
         Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH v2 0/2] mm, memcg: reclaim harder before high throttling
-Message-ID: <cover.1594640214.git.chris@chrisdown.name>
+Subject: [PATCH v2 1/2] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <a4e23b59e9ef499b575ae73a8120ee089b7d3373.1594640214.git.chris@chrisdown.name>
+References: <cover.1594640214.git.chris@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1594640214.git.chris@chrisdown.name>
 User-Agent: Mutt/1.14.5 (2020-06-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v1:
+In Facebook production, we've seen cases where cgroups have been put
+into allocator throttling even when they appear to have a lot of slack
+file caches which should be trivially reclaimable.
 
-- Reclaim only SWAP_CLUSTER_MAX pages on reclaim retries, and add
-  comment explaining why. Thanks Johannes for the suggestion.
-- Unify into series.
+Looking more closely, the problem is that we only try a single cgroup
+reclaim walk for each return to usermode before calculating whether or
+not we should throttle. This single attempt doesn't produce enough
+pressure to shrink for cgroups with a rapidly growing amount of file
+caches prior to entering allocator throttling.
 
-Chris Down (2):
-  mm, memcg: reclaim more aggressively before high allocator throttling
-  mm, memcg: unify reclaim retry limits with page allocator
+As an example, we see that threads in an affected cgroup are stuck in
+allocator throttling:
 
- mm/memcontrol.c | 53 ++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 41 insertions(+), 12 deletions(-)
+    # for i in $(cat cgroup.threads); do
+    >     grep over_high "/proc/$i/stack"
+    > done
+    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
 
+...however, there is no I/O pressure reported by PSI, despite a lot of
+slack file pages:
+
+    # cat memory.pressure
+    some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
+    full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
+    # cat io.pressure
+    some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
+    full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
+    # grep _file memory.stat
+    inactive_file 1370939392
+    active_file 661635072
+
+This patch changes the behaviour to retry reclaim either until the
+current task goes below the 10ms grace period, or we are making no
+reclaim progress at all. In the latter case, we enter reclaim throttling
+as before.
+
+To a user, there's no intuitive reason for the reclaim behaviour to
+differ from hitting memory.high as part of a new allocation, as opposed
+to hitting memory.high because someone lowered its value. As such this
+also brings an added benefit: it unifies the reclaim behaviour between
+the two.
+
+There's precedent for this behaviour: we already do reclaim retries when
+writing to memory.{high,max}, in max reclaim, and in the page allocator
+itself.
+
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+---
+ mm/memcontrol.c | 42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0145a77aa074..d4b0d8af3747 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -73,6 +73,7 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
+ 
+ struct mem_cgroup *root_mem_cgroup __read_mostly;
+ 
++/* The number of times we should retry reclaim failures before giving up. */
+ #define MEM_CGROUP_RECLAIM_RETRIES	5
+ 
+ /* Socket memory accounting disabled? */
+@@ -2365,18 +2366,23 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 	return 0;
+ }
+ 
+-static void reclaim_high(struct mem_cgroup *memcg,
+-			 unsigned int nr_pages,
+-			 gfp_t gfp_mask)
++static unsigned long reclaim_high(struct mem_cgroup *memcg,
++				  unsigned int nr_pages,
++				  gfp_t gfp_mask)
+ {
++	unsigned long nr_reclaimed = 0;
++
+ 	do {
+ 		if (page_counter_read(&memcg->memory) <=
+ 		    READ_ONCE(memcg->memory.high))
+ 			continue;
+ 		memcg_memory_event(memcg, MEMCG_HIGH);
+-		try_to_free_mem_cgroup_pages(memcg, nr_pages, gfp_mask, true);
++		nr_reclaimed += try_to_free_mem_cgroup_pages(memcg, nr_pages,
++							     gfp_mask, true);
+ 	} while ((memcg = parent_mem_cgroup(memcg)) &&
+ 		 !mem_cgroup_is_root(memcg));
++
++	return nr_reclaimed;
+ }
+ 
+ static void high_work_func(struct work_struct *work)
+@@ -2532,16 +2538,32 @@ void mem_cgroup_handle_over_high(void)
+ {
+ 	unsigned long penalty_jiffies;
+ 	unsigned long pflags;
++	unsigned long nr_reclaimed;
+ 	unsigned int nr_pages = current->memcg_nr_pages_over_high;
++	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+ 	struct mem_cgroup *memcg;
++	bool in_retry = false;
+ 
+ 	if (likely(!nr_pages))
+ 		return;
+ 
+ 	memcg = get_mem_cgroup_from_mm(current->mm);
+-	reclaim_high(memcg, nr_pages, GFP_KERNEL);
+ 	current->memcg_nr_pages_over_high = 0;
+ 
++retry_reclaim:
++	/*
++	 * The allocating task should reclaim at least the batch size, but for
++	 * subsequent retries we only want to do what's necessary to prevent oom
++	 * or breaching resource isolation.
++	 *
++	 * This is distinct from memory.max or page allocator behaviour because
++	 * memory.high is currently batched, whereas memory.max and the page
++	 * allocator run every time an allocation is made.
++	 */
++	nr_reclaimed = reclaim_high(memcg,
++				    in_retry ? SWAP_CLUSTER_MAX : nr_pages,
++				    GFP_KERNEL);
++
+ 	/*
+ 	 * memory.high is breached and reclaim is unable to keep up. Throttle
+ 	 * allocators proactively to slow down excessive growth.
+@@ -2568,6 +2590,16 @@ void mem_cgroup_handle_over_high(void)
+ 	if (penalty_jiffies <= HZ / 100)
+ 		goto out;
+ 
++	/*
++	 * If reclaim is making forward progress but we're still over
++	 * memory.high, we want to encourage that rather than doing allocator
++	 * throttling.
++	 */
++	if (nr_reclaimed || nr_retries--) {
++		in_retry = true;
++		goto retry_reclaim;
++	}
++
+ 	/*
+ 	 * If we exit early, we're guaranteed to die (since
+ 	 * schedule_timeout_killable sets TASK_KILLABLE). This means we don't
 -- 
 2.27.0
 
