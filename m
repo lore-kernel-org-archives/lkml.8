@@ -2,119 +2,168 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16679C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC755C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60F82085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897C52077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 10:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wbrqOCwa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVH7yoV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgGMK3C (ORCPT
+        id S1729510AbgGMK3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        Mon, 13 Jul 2020 06:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbgGMK3C (ORCPT
+        with ESMTP id S1728883AbgGMK3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:29:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07EEC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 03:29:01 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so15697767wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 03:29:01 -0700 (PDT)
+        Mon, 13 Jul 2020 06:29:13 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60635C061755;
+        Mon, 13 Jul 2020 03:29:13 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k17so8595779lfg.3;
+        Mon, 13 Jul 2020 03:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3MJX5x5YwOBMETG5rGZnV0iZGjYD8NtnFnnMSRYbSiA=;
-        b=wbrqOCwaE5Lrdh5sth6gvUV9+kdt8nDAVw6kTEFQEoIr6lB9BhI8hULrjO4swEcZ71
-         CyTJo6bPo7TDNfcXoobVGcX1n2DjDv5d/lVO1S6QZPqS77ANfajhhN3OtL8rxAkD/Ryn
-         R86Drdxu5CHmRmxYuL3T2gGccFaa1dNZAxNRQGgUZZ515YCGkOBKUrP2+6WXgj1UQAUf
-         qJzIO0dzIWp+rlOvctUbAYkEOSZasleU1SMYxsybVMPoiRqJk2P1XOnuk9Xs07yzauA7
-         zuCGVAaLRMWnX3DjcT6C8OTcn4+cVD4xdMiHrjNtKfMwj+9ZgABItg9FKzTyhs0IEzg2
-         qxCw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ROwNa64qSxchEG+kY4fFrmxZ7DSyGh7vNLriuITASyo=;
+        b=FVH7yoV0vwQBLOIotzDbk5UZspAhdbsxCBd12gEPKVMhyL81KxjGxkz5oLt9AwfODA
+         fh2dsgQPUh82ecOnO38cF/ncpj7Xc34ihS3jEv/GmWddShwhD+ImVq1Iq10NXGr+Odo/
+         p1mcBok4dzHjkrJB6sIWe+AL/5lj4pLMMy5wIf9O9rleYWjgKZML0quCJBCf0xEUA9uW
+         G39E7CVgk6PkzlhYxJ8yN20JWKdvNS5XW23kHn3y4UsAI00BFhZf6oKI3BwhK4ImP2fY
+         8a6AzhwkHUJ66GdKw8tcMCP4xjjfJUgybqDIvLF0QHb5obS+AfZ65mCIXX9YaB19aQwN
+         vtOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3MJX5x5YwOBMETG5rGZnV0iZGjYD8NtnFnnMSRYbSiA=;
-        b=YQXlQ6b1/DOMD/n+1NDNw0QZhQfDOXBLDI4KDR/GXpCqmnijB/x5UhRFMdIZt7nJcH
-         b+YuEOBtoqR9q0K02dOI6NA3p88gO+PNAvOMxZGWwsWlcHyr5vPpE2cLPCoZzhNDUjSs
-         UNtIcEe9OH9RayDbYp3pJMm6npAw+TcmuIt293lzxUK3WyXlxCETX03Oz4Px/eJ6fx2l
-         5JNVyWxEA/P3JpFqHxskF8qGzpygBnfO4iTbVbRzFHsy5IXpXlASyyNMRHyxyvHEXIkL
-         5idTU9fhFL7rKfxl6j8yhAZa9nIDbJXTQmN0pjxIJkMNWKXAbdvMqsbh40EUp6yqTzpe
-         PAwQ==
-X-Gm-Message-State: AOAM531WWmjsc3p0h6dSmSzG623845KGnqfzzBFXq4DFTgmKEPAG2YVe
-        yH580pn8WtmFfN/8E/0BTrupyw==
-X-Google-Smtp-Source: ABdhPJx5eiayCX5gKHrF27TtdrsfGxYcPWYLSfX24i9X7ZnmB1weVmvQ2a9Sinp8q04khH2B8N/Sog==
-X-Received: by 2002:a5d:6912:: with SMTP id t18mr77882766wru.411.1594636140316;
-        Mon, 13 Jul 2020 03:29:00 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
-        by smtp.googlemail.com with ESMTPSA id u23sm25191253wru.94.2020.07.13.03.28.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 03:28:59 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
- <20200706105538.2159-4-daniel.lezcano@linaro.org>
- <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
- <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
- <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
- <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
- <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <adfbb6a5-4cce-a1f3-c6a7-a56a72ac38ba@linaro.org>
-Date:   Mon, 13 Jul 2020 12:28:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ROwNa64qSxchEG+kY4fFrmxZ7DSyGh7vNLriuITASyo=;
+        b=DnM2ThTExFfzYwMbG5N7EEnXi+JfotktOj6lpabYQiEi8QAzqXf487dHTXJFvMw9AD
+         cGxRuG+ccjWvVtwbMpwtY7k9a+AX+VT8Hod4k1RYSlIpJEC1isFhF301iuybFlKqpXUk
+         tZpEr6xFfQw4S6A58ia6SO2uFd1zX437eBP/6XsAvjlYqBVrPYfmckqpmcrldINALGtc
+         fLDzGxTV0/8nWuNlngjSlb/XBsk5c0BFoqe490RDa1pYzC7m1zfeSLFwsQ8KjD2WZmng
+         PxwldBuAr6wtmeYM3pEm1p01IYog7+Y2wYZ0LF3bg5X7fsvJD6cy1k+AY+XS3t73vEAj
+         xCAA==
+X-Gm-Message-State: AOAM533iJ0aNB6JASVR5Nk0TnLY4GMOs0oidjTOIA3J1V2hmSQRk6DeU
+        laFOGtw1gaancWVpKLMnswTibJviYbhNoJTafBU=
+X-Google-Smtp-Source: ABdhPJxz4maK+sOWeXA7wvUaczVHLEMa7dkdr7kRuWo4yMFR0Nh80OYo+mGKcapc+h2v8Sqd2BLPuMvDXS22mxAhK00=
+X-Received: by 2002:ac2:5629:: with SMTP id b9mr52585478lff.208.1594636151850;
+ Mon, 13 Jul 2020 03:29:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cpuwolf@gmail.com> <20200710065112.18286-1-cpuwolf@gmail.com>
+ <CACa7zykn0q9XJAUvrqnNATr4DUv3Kc7XujF3vm6sfRB5pE6YNQ@mail.gmail.com> <20200713090653.GB3703480@smile.fi.intel.com>
+In-Reply-To: <20200713090653.GB3703480@smile.fi.intel.com>
+From:   Wei Shuai <cpuwolf@gmail.com>
+Date:   Mon, 13 Jul 2020 18:29:00 +0800
+Message-ID: <CACa7zympptGqVTx5njTuwNixz1yQ7Zc3Lynx2C4j+NXg8s4u3w@mail.gmail.com>
+Subject: Re: [PATCH] Input: break joystick limitation of maximum 80 buttons
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Borislav Petkov <bp@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
+        Mark Gross <mgross@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Erwan Velu <e.velu@criteo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 11:31, Marek Szyprowski wrote:
-> Hi
-> 
-> On 07.07.2020 11:15, Marek Szyprowski wrote:
->> On 06.07.2020 15:46, Daniel Lezcano wrote:
->>> On 06/07/2020 15:17, Marek Szyprowski wrote:
->>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
->>>>> The generic netlink protocol is implemented but the different
->>>>> notification functions are not yet connected to the core code.
->>>>>
->>>>> These changes add the notification calls in the different
->>>>> corresponding places.
->>>>>
->>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
->>>> ("thermal: core: Add notifications call in the framework"). Sadly it
->>>> breaks booting various Samsung Exynos based boards. Here is an example
->>>> log from Odroid U3 board:
+hi Andy,
+sorry from a newbie
 
-Does it break also arm64 platforms?
+we found Linux kernel has max joystick buttons up to 80, no more
 
+We are selling USB joystick device QMCP737C for flight simulator,
+which is nothing but common USB joystick. it has 104 buttons
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Product link
+https://x-plane.vip/quickmade/qmcp737c/
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+it works well on Windows, Mac, but not on Linux.
+Linux kernel exposes /dev/input/js0 max to 80 button, but we have 104 butto=
+ns.
+
+I did a lot of google search, but nothing I got. then I have to look
+at Kernel source, to find out where this number max 80 comes from
+
+Eventually, I found the final limitation
+
+#define BTN_JOYSTICK 0x120
+#define BTN_DEAD 0x12f
+#define BTN_TRIGGER_HAPPY 0x2c0
+#define KEY_MAX 0x2ff
+
+include/uapi/linux/input-event-codes.h
+
+according to function hidinput_configure_usage() in file drivers/hid/hid-in=
+put.c
+
+the joystick button mapping is not a continues space, generally speak
+the mapping space is from
+
+BTN_JOYSTICK~BTN_DEAD
+BTN_TRIGGER_HAPPY~KEY_MAX
+
+and finally, I got the max limitation is 80.
+
+my question is why KEY_MAX is 0x2ff?  this number 0x2ff looks like not
+align with char? integer? the answer is no
+
+so may I ask to expand KEY_MAX to such as 0x4ff?
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> =E4=BA=8E2020=E5=B9=B47=
+=E6=9C=8813=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:06=E5=86=99=E9=
+=81=93=EF=BC=9A
+>
+> On Sun, Jul 12, 2020 at 07:54:54AM +0800, Wei Shuai wrote:
+> > The joystick max buttons 80 limitation comes from
+> >
+> > #define BTN_JOYSTICK 0x120
+> > #define BTN_DEAD 0x12f
+> > #define BTN_TRIGGER_HAPPY 0x2c0
+> > #define KEY_MAX 0x2ff
+> >
+> > include/uapi/linux/input-event-codes.h
+> >
+> > according to function hidinput_configure_usage() in file drivers/hid/hi=
+d-input.c
+> >
+> > the joystick button mapping is not a continues space
+> > generally speaking, the mapping space is from
+> >
+> > 1. BTN_JOYSTICK~BTN_DEAD
+> > 2. BTN_TRIGGER_HAPPY~KEY_MAX
+> >
+> > Finally, I got the max limitation is 80.
+> > The patch is expanding KEY_MAX from 0x2ff to 4ff
+> > and the change has been verified on 104 button USB HID device on Ubuntu
+>
+>
+> If you send and resend this patch too often, nobody will take you serious=
+ly.
+> Also, you have to provide versioning and changelog in each submission.
+> Besides that, above doesn't answer to question "why?". Why are you doing =
+this
+> at all? What the problem?
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
