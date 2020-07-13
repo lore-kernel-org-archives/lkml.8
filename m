@@ -2,141 +2,104 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111C620C56
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5F620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 21:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nfJ/VJzZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YdJOjCV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGMV5d (ORCPT
+        id S1726758AbgGMV62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:57:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46559 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGMV5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:57:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5HZ16f7rz9sRK;
-        Tue, 14 Jul 2020 07:57:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594677450;
-        bh=AsUmxseH5BnH3garHqf+P/Tp9k4EnP/BQK2s7sSigaM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nfJ/VJzZQiSxfLSzyqBxpgmrPVT4faoDz66WsMFnIDrcycdNS2nyps9IsJBYT1WTy
-         HlgZJOaJgY7/8Jt3R/2G6/DQjMIuQyuYBGdeJs++nFWp10kbLAUG/2p/YvP8Rtfp+m
-         xYFDXaMBAR13lirY9X+tV7H7dbpIufl+Tcc6dpnMpbXtna9tRfBgoK4/v/xsl4Pr8G
-         0XcvH2GftdqgDFczFNpZ9/QEWNuUCb5iXct9bmdrsSXFX4mkXBbCIUl7E+kwjE/E/0
-         KkVa3YX1n82fdlE/D+qMwvyAxu8Q5l7P/4ZyH8OtmhmQ8KgPt8T2yJc6723QRFkVWL
-         ix8O+ziDApQGA==
-Date:   Tue, 14 Jul 2020 07:57:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>
-Subject: linux-next: Fixes tags need some work in the arm-soc-fixes tree
-Message-ID: <20200714075729.68b92239@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vqTgWJ30.lxte2gY6BSQ4yy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 13 Jul 2020 17:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgGMV61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 17:58:27 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37186C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:58:27 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id r17so18876800ybj.22
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 14:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Gs/Gv3Cy5wqDBUEc1MH9Cm/5K7mAub8SPlwC+wQyYqE=;
+        b=YdJOjCV7fIReprKUDgUqFRgD7IdA0HPn3o836MbjtwW5cjTi5pUg25Y/X/oLHsHOiq
+         /dLDHo22UeKa9ZgZodQ/TxC5er0jV/ttg2YVNgxC6l+QIqgeTnfN2HSdyWKfBxwvuPyH
+         ikcV3icBhj8W+JJAu3MWOqZcDkjwEN1ppZ3Mx8V81ot5qNKRaPDiT+5r3f/jCTa0nFp3
+         LZHboA8G6zKKHlbyiDIYDuQawcKreTDOA1yhBekhAWB1CpYbf1JYSfd3k2xhpMKJMuw4
+         S+Dxpv0zG66M5AantRlwmPLrSGGSwSKIvOnRdPUmRYTPitDSrZ4tbqul9mIBO24Bp9KX
+         wMNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Gs/Gv3Cy5wqDBUEc1MH9Cm/5K7mAub8SPlwC+wQyYqE=;
+        b=jQXd3yXDzA+W8aIWfBHkhl9bwiQdcPoT0t6EF3Ou8buKuWX9l4wzt/SLSQDBpvnv5+
+         mgxSMgk8UoDrGHq6eW2xLeRLlFmnzUDGc3yTZCRZo0gmuAj8W7/PUUOmZz3UsdHt3BLe
+         NXqGn3LROqY5pj0H/Ucew00wpv4y5cw3wdR5D/jekFdqJLFjRoJRaHAVIV1YjV7rLgP0
+         WBbuJpvXOSGjLUII0dOj+X/H997R+VgqiaQPx3QGkkUJsZEO9UlgCaWOWlsOHf3Ji2m9
+         TwD2RAnTFNo69bj27kQCIremVdFQewbP09Hz1oE8b9MDhToFMwbtZy9yx3o94rLHqh5x
+         XTOg==
+X-Gm-Message-State: AOAM531DU8lOFsM59EvTjBR+UjSLucOuT+aqM335JbM6zXa57h1jMEkm
+        2q1O+oaRpZ7nX2iMeuOvznp1MMojbbk/T4ToMA==
+X-Google-Smtp-Source: ABdhPJzoH1tIybvnt/uhpJ3VlQqwMSj3mOdOZMzcjfyYW8JRP/j82atHUsw1U6qKlkhK2AGbwHpshmfQ0hVXj+uHEA==
+X-Received: by 2002:a25:6910:: with SMTP id e16mr3394641ybc.207.1594677506340;
+ Mon, 13 Jul 2020 14:58:26 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 14:57:59 -0700
+Message-Id: <20200713215759.3701482-1-victorhsieh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH] fs/9p: Fix TCREATE's fid in protocol
+From:   Victor Hsieh <victorhsieh@google.com>
+To:     v9fs-developer@lists.sourceforge.net,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Victor Hsieh <victorhsieh@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vqTgWJ30.lxte2gY6BSQ4yy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The fid parameter of TCREATE represents the directory that the file
+should be created at. The current implementation mistakenly passes a
+locally created fid for the file. The correct file fid is usually
+retrieved by another WALK call, which does happen right after.
 
-Hi all,
+The problem happens when a new created fd is read from (i.e. where
+private_data->fid is used), but not write to.
 
-In commit
+Fixes: 5643135a2846 ("fs/9p: This patch implements TLCREATE for 9p2000.L protocol.")
+Signed-off-by: Victor Hsieh <victorhsieh@google.com>
+Cc: stable@vger.kernel.org
+---
+ fs/9p/vfs_inode_dotl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  3e189a193471 ("ARM: dts: socfpga: Align L2 cache-controller nodename with=
- dtschema")
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index 60328b21c5fb..90a7aaea918d 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -285,7 +285,7 @@ v9fs_vfs_atomic_open_dotl(struct inode *dir, struct dentry *dentry,
+ 			 err);
+ 		goto error;
+ 	}
+-	err = p9_client_create_dotl(ofid, name, v9fs_open_to_dotl_flags(flags),
++	err = p9_client_create_dotl(dfid, name, v9fs_open_to_dotl_flags(flags),
+ 				    mode, gid, &qid);
+ 	if (err < 0) {
+ 		p9_debug(P9_DEBUG_VFS, "p9_client_open_dotl failed in creat %d\n",
+-- 
+2.27.0.383.g050319c2ae-goog
 
-Fixes tag
-
-  Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for Altera's Arr=
-ia10
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-In commit
-
-  8e343e71b092 ("arm64: dts: stratix10: increase QSPI reg address in nand d=
-ts file")
-
-Fixes tag
-
-  Fixes: 80f132d73709 ("arm64: dts: increase the QSPI reg address for Strat=
-ix10
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-In commit
-
-  c188c8348836 ("arm64: dts: stratix10: add status to qspi dts node")
-
-Fixes tag
-
-  Fixes: 0cb140d07fc75 ("arm64: dts: stratix10: Add QSPI support for
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-In commit
-
-  390a90089db5 ("arm64: dts: agilex: add status to qspi dts node")
-
-Fixes tag
-
-  Fixes: c4c8757b2d895 ("arm64: dts: agilex: add QSPI support for Intel
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more than one line.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/vqTgWJ30.lxte2gY6BSQ4yy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8M2MkACgkQAVBC80lX
-0Gzg3Qf8Dl8JMliIWTydxbP+rQP3eJC+jTJomQOaSjLzaLA7B/ttRQ1EPHEtgqAj
-SnITsJl9MxvGP+9ZtIgREUqg3Vt3HM2KV2EENwjqhfHzIYj4GGhEllK7zeJwEiaH
-eXgCNgabYbEI/JTib5r2Sr7o39LT6I48Pzmb/V792ZspcxU70H4tzXInAc7W/x1n
-b4TcysaJFce5DvOBwAnquvqU6bMk1Qw7ISICNZ5fAIh9x/gDvx7aw6F7iYUKggJt
-F0C9sD9yRmCmc76PgDdKIsU/kJiKuh+pZDppkq3Z/U5ug4R7QK3qZj7ZW3dkqFyE
-/bbLqyDxwAWFxcvc2P1PZOBSWpUdgA==
-=JKHq
------END PGP SIGNATURE-----
-
---Sig_/vqTgWJ30.lxte2gY6BSQ4yy--
