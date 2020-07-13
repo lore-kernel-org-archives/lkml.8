@@ -7,119 +7,119 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546FBC43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE0620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A5720720
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 07:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h3We5EGH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ntBIcsLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbgGMHsO (ORCPT
+        id S1729590AbgGMHsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50408 "EHLO
+        Mon, 13 Jul 2020 03:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgGMHrI (ORCPT
+        with ESMTP id S1729247AbgGMHrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:47:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F6BC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so14661092wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:08 -0700 (PDT)
+        Mon, 13 Jul 2020 03:47:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C545C08C5DE
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so14660925wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 00:47:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Gv6x0VpkNH1KBubo4tbm9ETrzBqqoMdr5YdMKsMLhQk=;
-        b=h3We5EGHY+d73i7DGq8hIsezjttX0RldsdM2Yb4yPAS1BlvU/qFrpOkgTss/FWe7Dv
-         6voHcFczh90xSmIleS/eYO89Qg7sqQckZf0piP9gSqthJGj98l171XUTuGnhqBSgqYe/
-         N0iIhOrIkGDgxsZ5WgdCPONgiy1JoTVuFbge9QHmmiQsZmdnIDImXhCVAQChL8amLvYl
-         PjnFBKVTWWPb1mMYh7td9UhT3Pp2CWWmbob+cMNtvMysWZsFw9jyxx07ycfj8ah31Vfv
-         2biKDBl+wvt/VDSse3BwCum18kWXqe8YNxXwfnkPHOipZYnidqr8RVSvfDh777Swxlr6
-         RxZA==
+        bh=rsv1890EAaVy29cSOpHY+htSuPNyhdWUNl+08rJAqiI=;
+        b=ntBIcsLkqlyxYanzlfC2o1xlo6Ee7AL4sI/5CvVsDBQG26dGWUk4Q40RjQJ7gs5anB
+         rxovhh6wJ9o+YYM+zaze8u60YveI9FzLur/49aOY4Bi7mDHnEJHPqadeTji0qiBM8DMx
+         5O2jYjgUcgXCCKdXvVh7grHzr6kGvWLOlcNwoRoPNkdzOEcckh7/RjDSi5RE5v4IpJGM
+         mW6yxKma4yTybwzHNJ6bvxKQK5Jq5lzVA0hYJQJ+2gYzeCXuDvm9Pjrlrh45B6ZUVMnr
+         icpuurgf/2KXjBDKjL1R+EXbjy6dyE+fUGGSeNRlXsZgo6xLEPXQ8fF3qxFNaw6lxk5c
+         DOqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Gv6x0VpkNH1KBubo4tbm9ETrzBqqoMdr5YdMKsMLhQk=;
-        b=H13rWN/IyJIB2WBcdstzXqqmraxtsXPddiSkihGgkzFUOVjJu4HpDjAwby8FHXwpAx
-         HNzcMepqEwxPtXVbw09z+SAa++HlP3lmRr9b/LIEQ+5mKS+0C4Ydc5R2Gzg42K41OFUo
-         FqlrfnyfBB95R/2j/FhqJAvcphRALEolZ8wum6/LtGy7D8AKH1r6gbTSHS3SbFxoSS2u
-         7+ihYXHGTVLYfthbdDifKJpgqYW/uN/OQjVa8TKXpm7+pOzPPqydo//6vvsc7z4vSjrN
-         G82h3/SySTUvQyit+4+hD8aL3vnjXnRn42+I+AP4fMhcklZoxNj1noPCDM/gSY/GQN2B
-         EOsA==
-X-Gm-Message-State: AOAM530hlG0lBpTIPnGlDEdSAUgSzxJn/9mHAQUrbnDvb43NlGOsPYPd
-        c6p5Bt4o0Bj7JwLzapc8/9BM9WI7Nlc=
-X-Google-Smtp-Source: ABdhPJwuQZGC6O7FHTpaqPf6Xxya9WoxijPmSij2dtUtqbf9Nwq9tugkzVqsD3tXy1EuD9J+sp3WrQ==
-X-Received: by 2002:a5d:664e:: with SMTP id f14mr78871515wrw.6.1594626427249;
-        Mon, 13 Jul 2020 00:47:07 -0700 (PDT)
+        bh=rsv1890EAaVy29cSOpHY+htSuPNyhdWUNl+08rJAqiI=;
+        b=dhDGjTKWvCaLrvu6pmUGXn89wKDFeHR4hAGXcqQTa0HXV6YgT3bU/wFEyFxt4dw0+W
+         bCYjuFPwBDrvSFYcjJoZGcRFC4LUTvGppVOVUv7m4kILQCG0z08RzDx2pYPk2qkVG3lq
+         aWg8IN6+fqxH+TK51XXXYc7gnqcUCECyL8w0wtCFQNCNx9oY7TNeqxZAxtMd4HEaHced
+         7Byfxuhn/WmWNgyKafA292QJK8MVd7ray+vLhy9WfTz/H4mXnCgxxVntcAgqg5SEmq7n
+         SLD6vnb24iwOB1QhZxfa0htp2/qDgbf2dCigYZPwEgWLHecQkDgmVZHt0mEMgxqbwhTT
+         Ce1A==
+X-Gm-Message-State: AOAM532KVhAylUmZafFpajmnuNWLi2tTdWVLPFyfibela2MYVcnUOpq2
+        Ir7BdupZw8itjD0KLb14Ya3QIg==
+X-Google-Smtp-Source: ABdhPJyL+QoRk9tlBZ1jCq/yf05x9CJ8M3cuEcOCJtrRqvY9LuI4ZhaSGLIhILeHNSZvBUzhxzxyTw==
+X-Received: by 2002:adf:dc90:: with SMTP id r16mr79169289wrj.264.1594626425952;
+        Mon, 13 Jul 2020 00:47:05 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.47.06
+        by smtp.gmail.com with ESMTPSA id k11sm25142488wrd.23.2020.07.13.00.47.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 00:47:06 -0700 (PDT)
+        Mon, 13 Jul 2020 00:47:05 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "Daniel M. Eischen" <deischen@iworks.InterWorks.org>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH v2 18/29] scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'tinfo'
-Date:   Mon, 13 Jul 2020 08:46:34 +0100
-Message-Id: <20200713074645.126138-19-lee.jones@linaro.org>
+        QLogic-Storage-Upstream@qlogic.com,
+        Prakash Gollapudi <bprakash@broadcom.com>
+Subject: [PATCH v2 17/29] scsi: bnx2fc: bnx2fc_tgt: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Mon, 13 Jul 2020 08:46:33 +0100
+Message-Id: <20200713074645.126138-18-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713074645.126138-1-lee.jones@linaro.org>
 References: <20200713074645.126138-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like none of the artifact from  ahc_fetch_transinfo() are used anymore.
+No attempt has been made to document either of the demoted functions here.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aic7xxx/aic7xxx_osm.c: In function ‘ahc_linux_target_alloc’:
- drivers/scsi/aic7xxx/aic7xxx_osm.c:567:30: warning: variable ‘tinfo’ set but not used [-Wunused-but-set-variable]
- 567 | struct ahc_initiator_tinfo *tinfo;
- | ^~~~~
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c:442: warning: Function parameter or member 'lport' not described in 'bnx2fc_rport_event_handler'
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c:442: warning: Function parameter or member 'rdata' not described in 'bnx2fc_rport_event_handler'
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c:442: warning: Function parameter or member 'event' not described in 'bnx2fc_rport_event_handler'
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c:665: warning: Function parameter or member 'hba' not described in 'bnx2fc_alloc_session_resc'
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c:665: warning: Function parameter or member 'tgt' not described in 'bnx2fc_alloc_session_resc'
 
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: "Daniel M. Eischen" <deischen@iworks.InterWorks.org>
-Cc: Doug Ledford <dledford@redhat.com>
+Cc: QLogic-Storage-Upstream@qlogic.com
+Cc: Prakash Gollapudi <bprakash@broadcom.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_osm.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/scsi/bnx2fc/bnx2fc_tgt.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-index 2edfa0594f183..32bfe20d79cc1 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-@@ -564,8 +564,6 @@ ahc_linux_target_alloc(struct scsi_target *starget)
- 	struct scsi_target **ahc_targp = ahc_linux_target_in_softc(starget);
- 	unsigned short scsirate;
- 	struct ahc_devinfo devinfo;
--	struct ahc_initiator_tinfo *tinfo;
--	struct ahc_tmode_tstate *tstate;
- 	char channel = starget->channel + 'A';
- 	unsigned int our_id = ahc->our_id;
- 	unsigned int target_offset;
-@@ -612,9 +610,6 @@ ahc_linux_target_alloc(struct scsi_target *starget)
- 			spi_max_offset(starget) = 0;
- 		spi_min_period(starget) = 
- 			ahc_find_period(ahc, scsirate, maxsync);
--
--		tinfo = ahc_fetch_transinfo(ahc, channel, ahc->our_id,
--					    starget->id, &tstate);
- 	}
- 	ahc_compile_devinfo(&devinfo, our_id, starget->id,
- 			    CAM_LUN_WILDCARD, channel,
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_tgt.c b/drivers/scsi/bnx2fc/bnx2fc_tgt.c
+index 50384b4a817c8..a3e2a38aabf2f 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_tgt.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_tgt.c
+@@ -431,7 +431,7 @@ static int bnx2fc_init_tgt(struct bnx2fc_rport *tgt,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * This event_callback is called after successful completion of libfc
+  * initiated target login. bnx2fc can proceed with initiating the session
+  * establishment.
+@@ -656,9 +656,8 @@ static void bnx2fc_free_conn_id(struct bnx2fc_hba *hba, u32 conn_id)
+ 	spin_unlock_bh(&hba->hba_lock);
+ }
+ 
+-/**
+- *bnx2fc_alloc_session_resc - Allocate qp resources for the session
+- *
++/*
++ * bnx2fc_alloc_session_resc - Allocate qp resources for the session
+  */
+ static int bnx2fc_alloc_session_resc(struct bnx2fc_hba *hba,
+ 					struct bnx2fc_rport *tgt)
 -- 
 2.25.1
 
