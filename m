@@ -2,116 +2,67 @@ Return-Path: <SRS0=gGKB=AY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB66C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98F5206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0AE20773
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jul 2020 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgGMRYs (ORCPT
+        id S1730451AbgGMRY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56824 "EHLO
+        Mon, 13 Jul 2020 13:24:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMRYs (ORCPT
+        with ESMTP id S1729644AbgGMRY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 13:24:48 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C73EC061755;
-        Mon, 13 Jul 2020 10:24:48 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 47989BC0CA;
-        Mon, 13 Jul 2020 17:24:45 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     cooldavid@cooldavid.org, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] net: jme: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 19:24:39 +0200
-Message-Id: <20200713172439.36436-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 13:24:59 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C563C061755;
+        Mon, 13 Jul 2020 10:24:59 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id E1ED42E2;
+        Mon, 13 Jul 2020 17:24:58 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 11:24:57 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     me@bobcopeland.com, linux-karma-devel@lists.sourceforge.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: OMFS
+Message-ID: <20200713112457.3db4212f@lwn.net>
+In-Reply-To: <20200708062842.12214-1-grandmaster@al2klimov.de>
+References: <20200708062842.12214-1-grandmaster@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed,  8 Jul 2020 08:28:42 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+>  Documentation/filesystems/omfs.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/filesystems/omfs.rst b/Documentation/filesystems/omfs.rst
+> index 4c8bb3074169..a104c25b7a2f 100644
+> --- a/Documentation/filesystems/omfs.rst
+> +++ b/Documentation/filesystems/omfs.rst
+> @@ -24,7 +24,7 @@ More information is available at:
+>  Various utilities, including mkomfs and omfsck, are included with
+>  omfsprogs, available at:
+>  
+> -    http://bobcopeland.com/karma/
+> +    https://bobcopeland.com/karma/
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Applied, thanks.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/net/ethernet/jme.c | 2 +-
- drivers/net/ethernet/jme.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
-index c97c74164c73..ddc757680089 100644
---- a/drivers/net/ethernet/jme.c
-+++ b/drivers/net/ethernet/jme.c
-@@ -3,7 +3,7 @@
-  * JMicron JMC2x0 series PCIe Ethernet Linux Device Driver
-  *
-  * Copyright 2008 JMicron Technology Corporation
-- * http://www.jmicron.com/
-+ * https://www.jmicron.com/
-  * Copyright (c) 2009 - 2010 Guo-Fu Tseng <cooldavid@cooldavid.org>
-  *
-  * Author: Guo-Fu Tseng <cooldavid@cooldavid.org>
-diff --git a/drivers/net/ethernet/jme.h b/drivers/net/ethernet/jme.h
-index 2bba5ce20289..a2c3b00d939d 100644
---- a/drivers/net/ethernet/jme.h
-+++ b/drivers/net/ethernet/jme.h
-@@ -3,7 +3,7 @@
-  * JMicron JMC2x0 series PCIe Ethernet Linux Device Driver
-  *
-  * Copyright 2008 JMicron Technology Corporation
-- * http://www.jmicron.com/
-+ * https://www.jmicron.com/
-  * Copyright (c) 2009 - 2010 Guo-Fu Tseng <cooldavid@cooldavid.org>
-  *
-  * Author: Guo-Fu Tseng <cooldavid@cooldavid.org>
--- 
-2.27.0
-
+jon
