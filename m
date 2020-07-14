@@ -2,161 +2,168 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0448EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84193C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8FAF206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61015206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Dn/xsk6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgGNDrW (ORCPT
+        id S1726796AbgGNDry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:47:22 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50315 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgGNDrW (ORCPT
+        Mon, 13 Jul 2020 23:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgGNDrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:47:22 -0400
-Received: by mail-pj1-f67.google.com with SMTP id k71so933826pje.0;
-        Mon, 13 Jul 2020 20:47:21 -0700 (PDT)
+        Mon, 13 Jul 2020 23:47:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3013FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so19562407wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
+        b=Dn/xsk6EaU3zSb3BKgpl+10/FOdZR1egP1f1UGyP/yNSXO++t5ytc1+ErOGmvm+3Qw
+         sKKbiNY4LnTQ8EzxXcs6o3fPg+FB3aGqwwk3T6BNlzi4Ebc4Vte3BvxGAccxcvLgprJa
+         dFBBCrQvDqm3cTojPiUdKlSODLmPVNibHOmFmaV2z2OCkvZrDheBxM9q99AG3Wx/GhRM
+         k91NIQFoXCd1vjRmkwAntBQQEg72tpb5qFckMM4QyANyda/c40HxMabSblMYJX4kJvGL
+         FujGdM2y3OlTkTveXMZupSqKsV0sqI50l2HoHWCBz7yh3OzxseS/idJUYn88p5lbQsXx
+         a7aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZW7X7MiMm0piZVcnl+najW7cQiAtAEIaX/u1ZH2T6cM=;
-        b=Bkxhn/73U045pf9sq5AaCbHqGuJz4CSD34ZXPdbHu+w7LT2k9XxWrOOhilvtJmYCyq
-         Wy9GIRbgQmPziLjh0z0nBBtCKilhqawBQ1jRBPhmE6myBr6wNEzlxzwKi3SL4QlkeZSy
-         RC4dGod7P5p5o4m/Czb7WVX6gnyZLNgQ1zVhEmJ/48c8h8EhtZXQpAIKUdzm5YvUsabb
-         tDWRLx1V2u2AbpeZWluO/bPeEcL3LYlb1m/tYSNhgGIu3zrIe5YwwPNuBd0Ug4+gqlwg
-         RfnT7vFkg4nKLcLBH1PSrvmLbIp3RrcR2rBPRL/Q8Y0NPkKv39G7uDukXkfOAebA1wG6
-         Iy0g==
-X-Gm-Message-State: AOAM532XVh2kzQ2/YrGE5/Dgqgmjesm5EpSJ/0qk8Xwcu95xjgLPWBh1
-        BrEp8D1+AUuJBqrbZxlSvLeG1NOP
-X-Google-Smtp-Source: ABdhPJw4nTTlAcX8d+BhUjxjdiFwhbDwVyk1t/I78GmhUejlpVVnVlmgNC4Agenn3OiQSj2VnHfthA==
-X-Received: by 2002:a17:902:a50c:: with SMTP id s12mr2162224plq.119.1594698440688;
-        Mon, 13 Jul 2020 20:47:20 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id az16sm890478pjb.7.2020.07.13.20.47.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:47:19 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] ufs: ufs-qcom: Fix a few BUGs in func
- ufs_qcom_dump_dbg_regs()
-To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
- <1594693693-22466-4-git-send-email-cang@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <7b0f8a73-d49d-eb7d-defe-8e77a49064ae@acm.org>
-Date:   Mon, 13 Jul 2020 20:47:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
+        b=MMpmJKBBO2ntA6zYo89AJVpL98IDyfIeQ+j8Xjx+0XbcJBgy9/5nAu43AR+x0TqIm1
+         l1jL/DB0eqaPTs0rVHm5+/1wvOox37wLd2WEkPjoaIkMEydMNhdnSarRNalagiPgqQat
+         woyp5fNMFd/jvDs0u/5ZQH58GOQ60MvNQMtu7huMPyrKlweoObETpta1mYiwQ54f/HRT
+         2YETThreyAd1bm+Hey4beJoXBs6k5mnrlhCGYE+v1LYO5fYH5CT8u+g2IknLz1WVEpu6
+         iqLah2Do7P8pL+LeEVoA45z/R6Wg8Cx/tFAIQN4LxqwbY9cKXv86iL89xEO/sJg2FEBQ
+         eAEQ==
+X-Gm-Message-State: AOAM533iq1pWGiNKiYeNmM+Dc6IH2ImLdQuKoDjzPThCQKjWEaKvgBbE
+        OcC/pJGHm4ux/fyZRx5lzek+5rGtMpez6kbkCSz41Q==
+X-Google-Smtp-Source: ABdhPJyzmGfojs4K3LUS8fPXgGa7xK2rYTn4JhLpsd4yeuJCR3uTFmQBj4zD54/cXBQfEZqb4E1JRCJz4UWUThjGymE=
+X-Received: by 2002:adf:fcca:: with SMTP id f10mr2659455wrs.325.1594698471722;
+ Mon, 13 Jul 2020 20:47:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594693693-22466-4-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200627161957.134376-1-anup.patel@wdc.com> <20200627161957.134376-6-anup.patel@wdc.com>
+ <20200714023748.GA1164267@bogus>
+In-Reply-To: <20200714023748.GA1164267@bogus>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 14 Jul 2020 09:17:39 +0530
+Message-ID: <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-13 19:28, Can Guo wrote:
-> Dumping testbus registers needs to sleep a bit intermittently as there are
-> too many of them. Skip them for those contexts where sleep is not allowed.
-> 
-> Meanwhile, if ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() from
-> ufshcd_suspend/resume and/or clk gate/ungate context, pm_runtime_get_sync()
-> and ufshcd_hold() will cause racing problems. Fix it by removing the
-> unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 2e6ddb5..3743c17 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
->  	 */
->  	}
->  	mask <<= offset;
-> -
-> -	pm_runtime_get_sync(host->hba->dev);
-> -	ufshcd_hold(host->hba, false);
->  	ufshcd_rmwl(host->hba, TEST_BUS_SEL,
->  		    (u32)host->testbus.select_major << 19,
->  		    REG_UFS_CFG1);
-> @@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
->  	 * committed before returning.
->  	 */
->  	mb();
-> -	ufshcd_release(host->hba);
-> -	pm_runtime_put_sync(host->hba->dev);
->  
->  	return 0;
->  }
-> @@ -1658,11 +1653,13 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
->  
->  	/* sleep a bit intermittently as we are dumping too much data */
->  	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
-> -	udelay(1000);
-> -	ufs_qcom_testbus_read(hba);
-> -	udelay(1000);
-> -	ufs_qcom_print_unipro_testbus(hba);
-> -	udelay(1000);
-> +	if (in_task()) {
-> +		udelay(1000);
-> +		ufs_qcom_testbus_read(hba);
-> +		udelay(1000);
-> +		ufs_qcom_print_unipro_testbus(hba);
-> +		udelay(1000);
-> +	}
->  }
+On Tue, Jul 14, 2020 at 8:07 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
+> > We add DT bindings documentation for CLINT device.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> > ---
+> >  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
+>
+> Bindings should be in DT schema format now.
 
-It is not clear to me how udelay() calls can help in code that takes long
-since these functions use busy-waiting? Should the udelay() calls perhaps
-be changed into cond_resched() calls?
+Okay, will update.
 
-Thanks,
+>
+> >
+> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > new file mode 100644
+> > index 000000000000..45b75347a7d5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > @@ -0,0 +1,34 @@
+> > +SiFive Core Local Interruptor (CLINT)
+> > +-------------------------------------
+> > +
+> > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
+> > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
+> > +
+> > +It directly connects to the timer and inter-processor interrupt lines of
+> > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
+> > +controller is the parent interrupt controller for CLINT device.
+> > +
+> > +The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > +property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +
+> > +Required properties:
+> > +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
+>
+> A new versioning scheme from SiFive? To review, we don't do version
+> numbers unless there's a well defined and documented scheme. IOW, one
+> that's not s/w folks just making up v1, v2, v3, etc.
 
-Bart.
+The "riscv,clint0" is already used by various RISC-V systems (including QEMU).
+
+The "sifive,clint-1.0.0" is for being consistent with the PLIC
+versioning scheme.
+
+There is no clear documentation of CLINT versioning scheme. I think it's best
+to just drop "sifive,clint-1.0.0" . Agree ??
+
+>
+> > +  string identifying the actual implementation can be added if implementation
+> > +  specific worked arounds are needed.
+> > +- reg : Should contain 1 register range (address and length).
+> > +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
+> > +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
+> > +  has a riscv node as parent.
+> > +
+> > +Example:
+> > +
+> > +     clint@2000000 {
+> > +             compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
+>
+> Doesn't match the binding.
+
+Okay, will update.
+
+>
+> > +             interrupts-extended = <
+> > +                     &cpu1-intc 3 &cpu1-intc 7
+> > +                     &cpu2-intc 3 &cpu2-intc 7
+> > +                     &cpu3-intc 3 &cpu3-intc 7
+> > +                     &cpu4-intc 3 &cpu4-intc 7>;
+> > +             reg = <0x2000000 0x4000000>;
+> > +     };
+> > --
+> > 2.25.1
+> >
+
+Regards,
+Anup
