@@ -2,222 +2,115 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1018EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE2F2193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFadGpuF"
+	by mail.kernel.org (Postfix) with ESMTP id B492021973
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGNDhn (ORCPT
+        id S1726798AbgGNDiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:37:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgGNDhn (ORCPT
+        Mon, 13 Jul 2020 23:38:18 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38988 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgGNDiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:37:43 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621F7C061755;
-        Mon, 13 Jul 2020 20:37:43 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t4so13113061iln.1;
-        Mon, 13 Jul 2020 20:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=x5kA50WCYmAo+Q8432Sy1VWAEloJEHU1E0inGU7UJt4=;
-        b=NFadGpuFjJ3tv7FOJrDxOb09SxgAqSP6xTut0HFSaivRjSIvWM4zedl+yOsvzbHyGp
-         GZ6V8je0HHQQ/gAH4Ajffl0VN8ZchHbXb8mj+jkCQvVV9ymE5qlRxXvdFzVA6CJu1qCL
-         3Q2HvrpVvjDeviw41DVzRWAyMqRI+/Hu33o7yypqALpNrQz3i2GSaO0Vju0oGbucTSDm
-         C4YO1Sb2E1/qkZ+MoLUFnSRdc6Tg8n3SbvkV+yKtNIixJvvtJc2yPGP2P30xWvBB/dKc
-         0hxWjARpQYsrxL8c6dYfo7Wea3UrF6zqRUhXAbflAcf+HaGEGFC0VdFpPZnVv09CEtP7
-         7BZA==
+        Mon, 13 Jul 2020 23:38:17 -0400
+Received: by mail-pj1-f66.google.com with SMTP id b92so877225pjc.4;
+        Mon, 13 Jul 2020 20:38:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=x5kA50WCYmAo+Q8432Sy1VWAEloJEHU1E0inGU7UJt4=;
-        b=MVWK2ypUrAEARPY/oAMPjxIhsyK3aBAaAf/1QTY6B2AmS8SCknJQ89l5Xts2SVWx0a
-         P/eFPK2RScorPnoFrPKcxAQvQq0yS7mSmLEFT3S4aBHyK5O1vzqEGxa5VUCu1FW5/YM5
-         vDmV/OSEWPKks0oesZnpBQlrnS8dXhJYZD+Fi2NBfCY8oA6xZLF2U4JsUCt27f/Ehjxe
-         Di5JidEKpaaO99hsZeUjfQyfkCv//TpqC5dmVLlQkQ2n/cQJHZFTae6A47ZhgtJwjYjV
-         WpQl1R0UjlObgbf5x6mwU/QQZxOkjB8Dvo6qJbvExlXbX87utKCMyp6NWjbaBRWK9/6F
-         SebA==
-X-Gm-Message-State: AOAM530C9SMd6XH3yIGXApUmChY30uJ1/+oFPw15rxK8ic6DuufZM/++
-        NH3Nl8EjKo3JTw9bH04sjhJ+T76KYTMTjHkB3yMhLTWzYo00/A==
-X-Google-Smtp-Source: ABdhPJwt2i4uMXnI/aDf/IMCkp+fkfiR8T1ZV0Xq5jPXfVkLqk1/z6xJceU91wFxGtS0OwHxE8OGOEvpPZuhVEc/yDo=
-X-Received: by 2002:a92:d6d2:: with SMTP id z18mr2855668ilp.272.1594697862742;
- Mon, 13 Jul 2020 20:37:42 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Zpl3uAk1cyPC0bXhe+o2OJ9Nd/1R0pm/+fLCm+9cuOI=;
+        b=YWdzRfjQ8qR2Vq/ZmVkg9qdJJGm+0yj2zPaU/lTXFPuQS3fVwGAHPIJXgvDP79/N6y
+         ODBmp6ADJKj2fdzWgTH87H1W+dmGNQgKTtHbBq1tngB6k9fjmTtedvZ5jAydF1OWhp0N
+         Fi0T+On01+Zbzfmi0Lkvf6rK9YgaqZDy/5/J5/k4VxfQpR0+oIZB6PLj0GinwkHmv876
+         LGnNDc16HdGCYb9FhwjVM35Kj8pZiWe/wXruqgIWqmEOTxB/xulLKOj7O2cjBtU3LFyg
+         +4+wAp8GIkHbRmTP+bSYpneDwdF58z3bolH9dSEU+2dRkzDt2kf5Oddp4lQOVcWBz3vf
+         TiQw==
+X-Gm-Message-State: AOAM531Ve6xge6EjEbJfxmySV2pHhWYy/TO0tZGpNDOcd3795C9o9drv
+        /LDKgGGqVVUCT/+WiHUAm4uxBGar
+X-Google-Smtp-Source: ABdhPJz9XE/3kh4Lmrhnn90GWK/clAcS4bZPgWFvTD8Of2ZgoVOW6ordi83zmSdxVe8cYvt72TXPzw==
+X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr2376991pjb.161.1594697896437;
+        Mon, 13 Jul 2020 20:38:16 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id p12sm802196pjz.44.2020.07.13.20.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 20:38:15 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] scsi: ufs: Add checks before setting clk-gating
+ states
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, hongwus@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
+ <1594693693-22466-2-git-send-email-cang@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <31ef233b-2562-2f61-d899-587092b5c033@acm.org>
+Date:   Mon, 13 Jul 2020 20:38:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702172714.158786-1-pop.adrian61@gmail.com> <20200702172714.158786-2-pop.adrian61@gmail.com>
-In-Reply-To: <20200702172714.158786-2-pop.adrian61@gmail.com>
-From:   Hua Dillon <dillonhua@gmail.com>
-Date:   Tue, 14 Jul 2020 11:37:30 +0800
-Message-ID: <CAPTRvHm0gX=myLBeztq-7q8hMGZ+a0pH_ZB8hH+RZtSSsqVGDw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: stm32: Enable MIPI DSI display support.
-To:     Adrian Pop <pop.adrian61@gmail.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594693693-22466-2-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Adrian,
+On 2020-07-13 19:28, Can Guo wrote:
+> @@ -2538,7 +2540,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+>  		err = SCSI_MLQUEUE_HOST_BUSY;
+>  		goto out;
+>  	}
+> -	WARN_ON(hba->clk_gating.state != CLKS_ON);
+> +	if (ufshcd_is_clkgating_allowed(hba))
+> +		WARN_ON(hba->clk_gating.state != CLKS_ON);
 
-Just one suggestion for you.
+A minor comment: has it been considered to change this into the
+following?
 
-Adrian Pop <pop.adrian61@gmail.com> =E4=BA=8E2020=E5=B9=B47=E6=9C=883=E6=97=
-=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:30=E5=86=99=E9=81=93=EF=BC=9A
->
-> STM32f769-disco features a 4" MIPI DSI display: add support for it.
-> On Cortex-M7 DMA can't use cached memory. For this reason I use a dedicat=
-ed
-> memory pool for DMA with no-cache attribute which is located at the end o=
-f
->  RAM.
->
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
-> ---
->  arch/arm/boot/dts/stm32f746.dtsi      | 34 +++++++++++++++++++
->  arch/arm/boot/dts/stm32f769-disco.dts | 49 +++++++++++++++++++++++++++
->  2 files changed, 83 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f7=
-46.dtsi
-> index 93c063796780..577a812ca01c 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -48,6 +48,19 @@ / {
->         #address-cells =3D <1>;
->         #size-cells =3D <1>;
->
-> +       reserved-memory {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               ranges;
-> +
-> +               linux,dma {
-> +                       compatible =3D "shared-dma-pool";
-> +                       linux,dma-default;
-> +                       no-map;
-> +                       reg =3D <0xc0f00000 0x100000>;
-> +               };
-> +       };
-> +
-Christoph Hellwig was submit a patch for !CONFIG_MMU platforms to support m=
-map.
-the patch is : 1fbf57d05302 dma-direct: re-enable mmap for !CONFIG_MMU
-i thought there is no need to create a reserved-memory for it.
+	WARN_ON(ufshcd_is_clkgating_allowed(hba) &&
+		hba->clk_gating.state != CLKS_ON);
 
->         clocks {
->                 clk_hse: clk-hse {
->                         #clock-cells =3D <0>;
-> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
->         };
->
->         soc {
-> +               ltdc: display-controller@40016800 {
-> +                       compatible =3D "st,stm32-ltdc";
-> +                       reg =3D <0x40016800 0x200>;
-> +                       interrupts =3D <88>, <89>;
-> +                       resets =3D <&rcc STM32F7_APB2_RESET(LTDC)>;
-> +                       clocks =3D <&rcc 1 CLK_LCD>;
-> +                       clock-names =3D "lcd";
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               dsi: dsi@40016c00 {
-> +                       compatible =3D "st,stm32-dsi";
-> +                       reg =3D <0x40016c00 0x800>;
-> +                       interrupts =3D <98>;
-> +                       clocks =3D <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-> +                       clock-names =3D "pclk", "ref";
-> +                       resets =3D <&rcc STM32F7_APB2_RESET(DSI)>;
-> +                       reset-names =3D "apb";
-> +                       status =3D "disabled";
-> +               };
-> +
->                 timer2: timer@40000000 {
->                         compatible =3D "st,stm32-timer";
->                         reg =3D <0x40000000 0x400>;
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/st=
-m32f769-disco.dts
-> index 1626e00bb2cb..a9e81b49809c 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -153,3 +153,52 @@ &usbotg_hs {
->         pinctrl-names =3D "default";
->         status =3D "okay";
->  };
-> +
-> +&dsi {
-> +       #address-cells =3D <1>;
-> +       #size-cells =3D <0>;
-> +       status =3D "okay";
-> +
-> +       ports {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               port@0 {
-> +                       reg =3D <0>;
-> +                       dsi_in: endpoint {
-> +                               remote-endpoint =3D <&ltdc_out_dsi>;
-> +                       };
-> +               };
-> +
-> +               port@1 {
-> +                       reg =3D <1>;
-> +                       dsi_out: endpoint {
-> +                               remote-endpoint =3D <&dsi_in_panel>;
-> +                       };
-> +               };
-> +
-> +       };
-> +
-> +       panel: panel {
-> +               compatible =3D "orisetech,otm8009a";
-> +               reg =3D <0>;
-> +               reset-gpios =3D <&gpioj 15 GPIO_ACTIVE_LOW>;
-> +               status =3D "okay";
-> +
-> +               port {
-> +                       dsi_in_panel: endpoint {
-> +                               remote-endpoint =3D <&dsi_out>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&ltdc {
-> +       status =3D "okay";
-> +
-> +       port {
-> +               ltdc_out_dsi: endpoint {
-> +                       remote-endpoint =3D <&dsi_in>;
-> +               };
-> +       };
-> +};
-> --
-> 2.27.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks,
+
+Bart.
