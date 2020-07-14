@@ -8,74 +8,75 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CEDC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21763C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D539E221E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00912193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HsfWo4XA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RcQ8N4yE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgGNE7D (ORCPT
+        id S1726660AbgGNE7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:59:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53922 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNE7C (ORCPT
+        Tue, 14 Jul 2020 00:59:19 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37726 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgGNE7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:59:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4wjnN100227;
-        Tue, 14 Jul 2020 04:58:52 GMT
+        Tue, 14 Jul 2020 00:59:17 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4utuQ172701;
+        Tue, 14 Jul 2020 04:59:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=/IZ1YNfpxlLHPkt4HIZERPrzGr+mYFv0E0nW5zjjxg8=;
- b=HsfWo4XA5gsjakLpL5myGZsSFxsKxHXHNNP1diOyouEyRm/daI5S6bYlz515Uy2vBYSL
- ISDyhNs0DgzJ4JeFahZBG4+KNnu0lXE+HxMtcY+1SvEMOsKxi76pM381Y6DEnDxUbbkR
- 7DfRRc3ZOYaAams3IBFI7/jVq2YaFhOlPF0Zypw8qeKXxIhbMwB2oFOoA+eJbQmXTyFc
- achtSxRBC1X4IYrelcHQ/2WtUk0bUzBO0nLZUOfWBKFtrpZ6qZQwbyly+hD4NDJ4H/Qy
- MZhSSWDttxooal7BSVFXUucVzJWFg2OhlIkm9gvsLrc+JnfzsYiiVuSzzK0zY27R69+1 SQ== 
+ bh=8OamBc93tsElgQQ1UHHoc9Ay6yPCeE9e643okWZufPE=;
+ b=RcQ8N4yE75AJIagGybBj1DOtp5WeLXeVMtnLPD7qSA1s9F8HbroJ3EngD0TfjMpAWiL5
+ bEklOkbecflIy1SNslBC8cOi2ixycHJaUezl+e56jtcDbOPKFloEvpG61tHxbi7LFBkS
+ nICuMdIbIJ53L52lKTOizUedA+Ky6g65LdPWbAUBqJllz8LIDmJUR5vHbS0nk3DFdyuT
+ wAI0q9Cwp3w/kO5lZUKSzfhV/ApSg74ldxDoXt48oBkWaxQrKklt7/oen8IICsN3A+DX
+ VMoXc3mJVH3gLonR22yKfXRFGULbH11pQti19gK2zWrTOjQyh0xljI0yk+O1f7JAWZsj mA== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3274ur2ypx-1
+        by aserp2120.oracle.com with ESMTP id 3275cm2x3c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 04:58:51 +0000
+        Tue, 14 Jul 2020 04:59:01 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4vXZ0174075;
-        Tue, 14 Jul 2020 04:58:51 GMT
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4vXKT174023;
+        Tue, 14 Jul 2020 04:59:01 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 327qb2nuf0-1
+        by aserp3020.oracle.com with ESMTP id 327qb2nuud-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 04:58:50 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E4wmk2025040;
-        Tue, 14 Jul 2020 04:58:49 GMT
+        Tue, 14 Jul 2020 04:59:01 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E4wxg2025076;
+        Tue, 14 Jul 2020 04:58:59 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 21:58:48 -0700
+        with ESMTP ; Mon, 13 Jul 2020 21:58:59 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        Varun Prakash <varun@chelsio.com>, linux-scsi@vger.kernel.org,
-        Colin King <colin.king@canonical.com>
+To:     mst@redhat.com, pbonzini@redhat.com, jasowang@redhat.com,
+        Xianting Tian <xianting_tian@126.com>, jejb@linux.ibm.com,
+        stefanha@redhat.com
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: cxgb4i: fix dereference of pointer tdata before it is null checked
-Date:   Tue, 14 Jul 2020 00:58:39 -0400
-Message-Id: <159470266467.11195.3151931908467404359.b4-ty@oracle.com>
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: virtio_scsi: remove unnecessary condition check
+Date:   Tue, 14 Jul 2020 00:58:47 -0400
+Message-Id: <159470266467.11195.10910825066875185491.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200709135217.1408105-1-colin.king@canonical.com>
-References: <20200709135217.1408105-1-colin.king@canonical.com>
+In-Reply-To: <1594307167-8807-1-git-send-email-xianting_tian@126.com>
+References: <1594307167-8807-1-git-send-email-xianting_tian@126.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=938 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=998 malwarescore=0
  mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007140037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=953 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007140037
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,17 +84,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 14:52:17 +0100, Colin King wrote:
+On Thu, 9 Jul 2020 11:06:07 -0400, Xianting Tian wrote:
 
-> Currently pointer tdata is being dereferenced on the initialization of
-> pointer skb before tdata is null checked. This could lead to a potential
-> null pointer dereference.  Fix this by dereferencing tdata after tdata
-> has been null pointer sanity checked.
+> kmem_cache_destroy and mempool_destroy can correctly handle
+> null pointer parameter, so there is no need to check if the
+> parameter is null before calling kmem_cache_destroy and
+> mempool_destroy.
 
 Applied to 5.9/scsi-queue, thanks!
 
-[1/1] scsi: cxgb4i: Fix dereference of pointer tdata before it is null checked
-      https://git.kernel.org/mkp/scsi/c/b92a4a9f7be8
+[1/1] scsi: virtio_scsi: Remove unnecessary condition check
+      https://git.kernel.org/mkp/scsi/c/92e8d0323a51
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
