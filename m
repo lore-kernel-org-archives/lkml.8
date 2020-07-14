@@ -2,54 +2,52 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CB9C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1240DC433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E1D207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA5AE223B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752691;
-	bh=dShFMiilCJWGcWTyh18//MxFOxtwTYwGKLalvCV8Wo8=;
+	s=default; t=1594752694;
+	bh=dy2uQDYAA9PIx9olKKhx+sOCYXjelwa7t4G64V/NNKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCMHOkJWuhMvQFadndDdDg0DwqPdzHiewewKRlUeVZEZdVnZFB+B0P7Tkcj7js2ri
-	 0Kytl3Z29vvXFuH117eAJA+aCQNiuazWS10NbwfJ6Wef8sYwVVsMRVSGz7x6Wfpw0I
-	 lvfxHfdTl/8NLU8/Ff5B1F0biYsaZG1ZHzQfXHew=
+	b=bGEWNXdabbJQZekIg46nSNGD2lB6D3JuAmH9aZfKRID3c1KeNfBx/WfLnyD5RMmwG
+	 YwtnxFFYG69J639FeGLWd2gjYdBgcAFhRTxUejowYVn07wd7z+z8kUgxtUKLXK5Qzg
+	 Gnu+tndpoYBGdBwo76wOfkGZtrvs2JrTuO9isH3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgGNSv3 (ORCPT
+        id S1730410AbgGNSvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:51:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730401AbgGNSvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:23 -0400
+        id S1730406AbgGNSv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E080207F5;
-        Tue, 14 Jul 2020 18:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AFD722BF3;
+        Tue, 14 Jul 2020 18:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752683;
-        bh=dShFMiilCJWGcWTyh18//MxFOxtwTYwGKLalvCV8Wo8=;
+        s=default; t=1594752688;
+        bh=dy2uQDYAA9PIx9olKKhx+sOCYXjelwa7t4G64V/NNKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Puv9nMp/4ssXRDA7Z+xzfwwCPTN/mEyLVFSbsuALjfRzFa/vt9oq4LL07IHF7ZZC1
-         AAc7NXAPwYt3UbmWdBll/83IJ6S3h4EpFXGVpcaugcJDUKKJvOA1QYCG+MGJM91XND
-         SKep1V3S3jMbKTuP4kXbVDWrLUbq92NUJnycMVO8=
+        b=RLooLLrsLTF4bZ3/C5yYZ2K1e6uS7Mf6hRdVYf3RgahuBvFscgQweU2nUjNlbdsXe
+         6yckD6Ac+ueHh0nxau4xlgiAZgWpjn1JFfu3Nd5/rWpyZqb8rDxVemjAnVclQ79ejU
+         LINgu63fBypTHrxAO8OqlDdXniqDzZ+t12Pmj0EA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 5.4 070/109] IB/hfi1: Do not destroy hfi1_wq when the device is shut down
-Date:   Tue, 14 Jul 2020 20:44:13 +0200
-Message-Id: <20200714184108.890144912@linuxfoundation.org>
+        stable@vger.kernel.org, Divya Indi <divya.indi@oracle.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 045/109] IB/sa: Resolv use-after-free in ib_nl_make_request()
+Date:   Tue, 14 Jul 2020 20:43:48 +0200
+Message-Id: <20200714184107.680715975@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -62,158 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Divya Indi <divya.indi@oracle.com>
 
-commit 28b70cd9236563e1a88a6094673fef3c08db0d51 upstream.
+[ Upstream commit f427f4d6214c183c474eeb46212d38e6c7223d6a ]
 
-The workqueue hfi1_wq is destroyed in function shutdown_device(), which is
-called by either shutdown_one() or remove_one(). The function
-shutdown_one() is called when the kernel is rebooted while remove_one() is
-called when the hfi1 driver is unloaded. When the kernel is rebooted,
-hfi1_wq is destroyed while all qps are still active, leading to a kernel
-crash:
+There is a race condition where ib_nl_make_request() inserts the request
+data into the linked list but the timer in ib_nl_request_timeout() can see
+it and destroy it before ib_nl_send_msg() is done touching it. This could
+happen, for instance, if there is a long delay allocating memory during
+nlmsg_new()
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000102
-  IP: [<ffffffff94cb7b02>] __queue_work+0x32/0x3e0
-  PGD 0
-  Oops: 0000 [#1] SMP
-  Modules linked in: dm_round_robin nvme_rdma(OE) nvme_fabrics(OE) nvme_core(OE) ib_isert iscsi_target_mod target_core_mod ib_ucm mlx4_ib iTCO_wdt iTCO_vendor_support mxm_wmi sb_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm rpcrdma sunrpc irqbypass crc32_pclmul ghash_clmulni_intel rdma_ucm aesni_intel ib_uverbs lrw gf128mul opa_vnic glue_helper ablk_helper ib_iser cryptd ib_umad rdma_cm iw_cm ses enclosure libiscsi scsi_transport_sas pcspkr joydev ib_ipoib(OE) scsi_transport_iscsi ib_cm sg ipmi_ssif mei_me lpc_ich i2c_i801 mei ioatdma ipmi_si dm_multipath ipmi_devintf ipmi_msghandler wmi acpi_pad acpi_power_meter hangcheck_timer ip_tables ext4 mbcache jbd2 mlx4_en sd_mod crc_t10dif crct10dif_generic mgag200 drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm hfi1(OE)
-  crct10dif_pclmul crct10dif_common crc32c_intel drm ahci mlx4_core libahci rdmavt(OE) igb megaraid_sas ib_core libata drm_panel_orientation_quirks ptp pps_core devlink dca i2c_algo_bit dm_mirror dm_region_hash dm_log dm_mod
-  CPU: 19 PID: 0 Comm: swapper/19 Kdump: loaded Tainted: G OE ------------ 3.10.0-957.el7.x86_64 #1
-  Hardware name: Phegda X2226A/S2600CW, BIOS SE5C610.86B.01.01.0024.021320181901 02/13/2018
-  task: ffff8a799ba0d140 ti: ffff8a799bad8000 task.ti: ffff8a799bad8000
-  RIP: 0010:[<ffffffff94cb7b02>] [<ffffffff94cb7b02>] __queue_work+0x32/0x3e0
-  RSP: 0018:ffff8a90dde43d80 EFLAGS: 00010046
-  RAX: 0000000000000082 RBX: 0000000000000086 RCX: 0000000000000000
-  RDX: ffff8a90b924fcb8 RSI: 0000000000000000 RDI: 000000000000001b
-  RBP: ffff8a90dde43db8 R08: ffff8a799ba0d6d8 R09: ffff8a90dde53900
-  R10: 0000000000000002 R11: ffff8a90dde43de8 R12: ffff8a90b924fcb8
-  R13: 000000000000001b R14: 0000000000000000 R15: ffff8a90d2890000
-  FS: 0000000000000000(0000) GS:ffff8a90dde40000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000102 CR3: 0000001a70410000 CR4: 00000000001607e0
-  Call Trace:
-  [<ffffffff94cb8105>] queue_work_on+0x45/0x50
-  [<ffffffffc03f781e>] _hfi1_schedule_send+0x6e/0xc0 [hfi1]
-  [<ffffffffc03f78a2>] hfi1_schedule_send+0x32/0x70 [hfi1]
-  [<ffffffffc02cf2d9>] rvt_rc_timeout+0xe9/0x130 [rdmavt]
-  [<ffffffff94ce563a>] ? trigger_load_balance+0x6a/0x280
-  [<ffffffffc02cf1f0>] ? rvt_free_qpn+0x40/0x40 [rdmavt]
-  [<ffffffff94ca7f58>] call_timer_fn+0x38/0x110
-  [<ffffffffc02cf1f0>] ? rvt_free_qpn+0x40/0x40 [rdmavt]
-  [<ffffffff94caa3bd>] run_timer_softirq+0x24d/0x300
-  [<ffffffff94ca0f05>] __do_softirq+0xf5/0x280
-  [<ffffffff9537832c>] call_softirq+0x1c/0x30
-  [<ffffffff94c2e675>] do_softirq+0x65/0xa0
-  [<ffffffff94ca1285>] irq_exit+0x105/0x110
-  [<ffffffff953796c8>] smp_apic_timer_interrupt+0x48/0x60
-  [<ffffffff95375df2>] apic_timer_interrupt+0x162/0x170
-  <EOI>
-  [<ffffffff951adfb7>] ? cpuidle_enter_state+0x57/0xd0
-  [<ffffffff951ae10e>] cpuidle_idle_call+0xde/0x230
-  [<ffffffff94c366de>] arch_cpu_idle+0xe/0xc0
-  [<ffffffff94cfc3ba>] cpu_startup_entry+0x14a/0x1e0
-  [<ffffffff94c57db7>] start_secondary+0x1f7/0x270
-  [<ffffffff94c000d5>] start_cpu+0x5/0x14
+This causes a use-after-free in the send_mad() thread:
 
-The solution is to destroy the workqueue only when the hfi1 driver is
-unloaded, not when the device is shut down. In addition, when the device
-is shut down, no more work should be scheduled on the workqueues and the
-workqueues are flushed.
+  [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+  [ <ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+  [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+  [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+  [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850 [rds_rdma]
+  [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850 [rds_rdma]
+  [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+  [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+  [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+  [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+  [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+  [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+  [<ffffffff810a68fb>] kthread+0xcb/0xf0
+  [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+  [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+  [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+  [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+  [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
 
-Fixes: 8d3e71136a08 ("IB/{hfi1, qib}: Add handling of kernel restart")
-Link: https://lore.kernel.org/r/20200623204047.107638.77646.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+The ownership rule is once the request is on the list, ownership transfers
+to the list and the local thread can't touch it any more, just like for
+the normal MAD case in send_mad().
+
+Thus, instead of adding before send and then trying to delete after on
+errors, move the entire thing under the spinlock so that the send and
+update of the lists are atomic to the conurrent threads. Lightly reoganize
+things so spinlock safe memory allocations are done in the final NL send
+path and the rest of the setup work is done before and outside the lock.
+
+Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")
+Link: https://lore.kernel.org/r/1592964789-14533-1-git-send-email-divya.indi@oracle.com
+Signed-off-by: Divya Indi <divya.indi@oracle.com>
 Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/init.c     |   27 +++++++++++++++++++++++----
- drivers/infiniband/hw/hfi1/qp.c       |    5 ++++-
- drivers/infiniband/hw/hfi1/tid_rdma.c |    5 ++++-
- 3 files changed, 31 insertions(+), 6 deletions(-)
+ drivers/infiniband/core/sa_query.c | 38 +++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/init.c
-+++ b/drivers/infiniband/hw/hfi1/init.c
-@@ -845,6 +845,25 @@ wq_error:
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index bddb5434fbed2..d2d70c89193ff 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -829,13 +829,20 @@ static int ib_nl_get_path_rec_attrs_len(ib_sa_comp_mask comp_mask)
+ 	return len;
  }
  
- /**
-+ * destroy_workqueues - destroy per port workqueues
-+ * @dd: the hfi1_ib device
-+ */
-+static void destroy_workqueues(struct hfi1_devdata *dd)
-+{
-+	int pidx;
-+	struct hfi1_pportdata *ppd;
+-static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
++static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+ {
+ 	struct sk_buff *skb = NULL;
+ 	struct nlmsghdr *nlh;
+ 	void *data;
+ 	struct ib_sa_mad *mad;
+ 	int len;
++	unsigned long flags;
++	unsigned long delay;
++	gfp_t gfp_flag;
++	int ret;
 +
-+	for (pidx = 0; pidx < dd->num_pports; ++pidx) {
-+		ppd = dd->pport + pidx;
-+
-+		if (ppd->hfi1_wq) {
-+			destroy_workqueue(ppd->hfi1_wq);
-+			ppd->hfi1_wq = NULL;
-+		}
-+	}
-+}
-+
-+/**
-  * enable_general_intr() - Enable the IRQs that will be handled by the
-  * general interrupt handler.
-  * @dd: valid devdata
-@@ -1118,11 +1137,10 @@ static void shutdown_device(struct hfi1_
- 		 */
- 		hfi1_quiet_serdes(ppd);
++	INIT_LIST_HEAD(&query->list);
++	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
  
--		if (ppd->hfi1_wq) {
--			destroy_workqueue(ppd->hfi1_wq);
--			ppd->hfi1_wq = NULL;
--		}
-+		if (ppd->hfi1_wq)
-+			flush_workqueue(ppd->hfi1_wq);
- 		if (ppd->link_wq) {
-+			flush_workqueue(ppd->link_wq);
- 			destroy_workqueue(ppd->link_wq);
- 			ppd->link_wq = NULL;
- 		}
-@@ -1814,6 +1832,7 @@ static void remove_one(struct pci_dev *p
- 	 * clear dma engines, etc.
- 	 */
- 	shutdown_device(dd);
-+	destroy_workqueues(dd);
+ 	mad = query->mad_buf->mad;
+ 	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+@@ -860,36 +867,25 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+ 	/* Repair the nlmsg header length */
+ 	nlmsg_end(skb, nlh);
  
- 	stop_timers(dd);
+-	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+-}
++	gfp_flag = ((gfp_mask & GFP_ATOMIC) == GFP_ATOMIC) ? GFP_ATOMIC :
++		GFP_NOWAIT;
  
---- a/drivers/infiniband/hw/hfi1/qp.c
-+++ b/drivers/infiniband/hw/hfi1/qp.c
-@@ -381,7 +381,10 @@ bool _hfi1_schedule_send(struct rvt_qp *
- 	struct hfi1_ibport *ibp =
- 		to_iport(qp->ibqp.device, qp->port_num);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
--	struct hfi1_devdata *dd = dd_from_ibdev(qp->ibqp.device);
-+	struct hfi1_devdata *dd = ppd->dd;
-+
-+	if (dd->flags & HFI1_SHUTDOWN)
-+		return true;
+-static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+-{
+-	unsigned long flags;
+-	unsigned long delay;
+-	int ret;
++	spin_lock_irqsave(&ib_nl_request_lock, flags);
++	ret = rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_flag);
  
- 	return iowait_schedule(&priv->s_iowait, ppd->hfi1_wq,
- 			       priv->s_sde ?
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -5406,7 +5406,10 @@ static bool _hfi1_schedule_tid_send(stru
- 	struct hfi1_ibport *ibp =
- 		to_iport(qp->ibqp.device, qp->port_num);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
--	struct hfi1_devdata *dd = dd_from_ibdev(qp->ibqp.device);
-+	struct hfi1_devdata *dd = ppd->dd;
-+
-+	if ((dd->flags & HFI1_SHUTDOWN))
-+		return true;
+-	INIT_LIST_HEAD(&query->list);
+-	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
++	if (ret)
++		goto out;
  
- 	return iowait_tid_schedule(&priv->s_iowait, ppd->hfi1_wq,
- 				   priv->s_sde ?
+-	/* Put the request on the list first.*/
+-	spin_lock_irqsave(&ib_nl_request_lock, flags);
++	/* Put the request on the list.*/
+ 	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+ 	query->timeout = delay + jiffies;
+ 	list_add_tail(&query->list, &ib_nl_request_list);
+ 	/* Start the timeout if this is the only request */
+ 	if (ib_nl_request_list.next == &query->list)
+ 		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+-	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+ 
+-	ret = ib_nl_send_msg(query, gfp_mask);
+-	if (ret) {
+-		ret = -EIO;
+-		/* Remove the request */
+-		spin_lock_irqsave(&ib_nl_request_lock, flags);
+-		list_del(&query->list);
+-		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+-	}
++out:
++	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
+
 
 
