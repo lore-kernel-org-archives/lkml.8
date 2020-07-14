@@ -7,150 +7,126 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AC3C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4E3C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A12D21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFF121D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oan2KmRn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MHULfHb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgGNOvH (ORCPT
+        id S1728868AbgGNOvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
+        Tue, 14 Jul 2020 10:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728704AbgGNOvB (ORCPT
+        with ESMTP id S1728827AbgGNOvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:51:01 -0400
+        Tue, 14 Jul 2020 10:51:07 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B684C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:01 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q5so22195771wru.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDB4C08C5DE
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:04 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so22168910wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=87fYCk78HvnEcHEWI8252kKdAErne/JGHZaNtIMV4DM=;
-        b=oan2KmRnlmziHA33dlWeKxYSz99uymPx4Upt4DdPZqzkE7Pn6aNbVFcS4EqijPPT1b
-         epm+Z0+gabomO1htq+2nGq7mfGaa4AQjVGvinv2W7rG4Yf4zrX1lLQEsQqp/IxzwJsZK
-         KsU3lyQE4BSuu7m+y0e17j3xQipWcaeFlmiHFAjUhm+t5oiOf17IImiudspjVz2Gr4Np
-         +3ggtvvQ+Y0p36Roz5hpma2QxOSlmCwdpxC50LPbuzXaY/z9L0dMBVjNrKdi9Dd18Pfz
-         bjl9EDQ3qx3ytSsCNXEZ3bn0ERkPJPoJyn67O07VbJKTig+xN3S9JouZaVPvYAKfp92V
-         EHyw==
+        bh=xAmlwZf9FF5B+fNw3FLwoudWl6EScDCCxEL7TtadPBI=;
+        b=MHULfHb/qq2DdPxVtZdND+73JTuMCaIpc5HvzUeGk6dbIqMsJzHFttAq159KGZhl+E
+         uc32b1iIIALtw+ydZp8fFCVf22oX/ZdWCauKax3caYhdVkySmLHWnfqsCdIC72Zkwchc
+         0HSG5fFKVugqRl0OpEK9Pw86gfD9D3MreYxK7XhNMk+0Inko/tj6sj1308edItjH6uo6
+         E5+EcxAVfNcEsuIU/t2HPJ2VjGAKGSOfJyddVycUripolPiZXCNSEbtHOJSdnPoQdyBC
+         z5kKNMEq5B9YxP3pmvcBN6urA6s4KBar6ixz9U4qx3EMF/Ca6qnZHRoNaYFvLzVkUo89
+         chLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=87fYCk78HvnEcHEWI8252kKdAErne/JGHZaNtIMV4DM=;
-        b=rghLBb4GE72lgGdXiw2U7EaivWozpxQza1FKMi9aUUFu3LlYbEQ0LtlexEkdoSPKFe
-         dtnQGImZtnv33/pwTJ57Y5zd61tNRe4iueB6MBun1tJgzMRTD40/RZptJ5eJwnkEgVeF
-         1p+NdH4OGVwu2whjt83/q5Gcs9gBWnldV0a4S60Fl2qJ9hIuGvxfJ26QnX3LJo+kfPAZ
-         MvK4XSyGgP7ovo4hDKmr5uTsZsbgpyDbJ+hsRLnetrdRbb1leNHn3j7Y+zwcL+VWX63/
-         bwpGIPvu6rJFJGnly0OuyClV8jpn01kDY5abRNLpce3RhMmeLE0PTj+ENKZukIBiQDFK
-         qukQ==
-X-Gm-Message-State: AOAM533hGORvrgcn6gQQ9g1GgH/Uns4KK8U58k32Y2RZEP7KKrapZL0H
-        P1MORSu6EcsMbleicXFY1q4QrA==
-X-Google-Smtp-Source: ABdhPJyholUMWz/5/8DrxA2fX1xTdZCmREnCcugfLGT0R3+RARPOD0BiRca7mzrYbDfRATUmPfhpCg==
-X-Received: by 2002:a5d:6990:: with SMTP id g16mr6060756wru.131.1594738259994;
-        Tue, 14 Jul 2020 07:50:59 -0700 (PDT)
+        bh=xAmlwZf9FF5B+fNw3FLwoudWl6EScDCCxEL7TtadPBI=;
+        b=rDCqN7agqKyEnIaLgQvO/dvNtISPlif66WRnola9Of63znsPAf1CQepH6AKzwL2ZGT
+         4LX3irzGwZKkTwkYTf4p6P9WfN7nN2bUBsq5Xe/RWjE5GCzp5vcsawycJjeBAr3/SXyW
+         u+TpNsIEYrYalWA+IpYrNnUEJrghIN02v02ljqRDGJO7+pcw4hDqA+NZoCXZ0L6u7I1s
+         3iQxEfz+DUoWCl4WTVkjoZ5bnHVEBDv2zC6S+kFQPd1RjwmqBfT3NJB42fN67s+ia8OI
+         TNKzeBHZteO8PrjQfAbm9RyNfEIkUfNwwQjM/FBRuBeX/G+KmPvTux+/1v3yiT+GmOpv
+         rbdw==
+X-Gm-Message-State: AOAM5335Zwjd+MOwjl1nXnGFOimvF+ut8dClaXa7VF931bPnPCG2wcKO
+        GVxQ2xy3iZs4TNyzQ1ZuAd6GNA==
+X-Google-Smtp-Source: ABdhPJyoziaq49v5CTUiEUg6/TO+E0QrGY8bGLFPGBYZLqb4ZcvlqiI8gGMCMznhtGm8VhY3kHmpDA==
+X-Received: by 2002:adf:82f5:: with SMTP id 108mr6085256wrc.218.1594738263620;
+        Tue, 14 Jul 2020 07:51:03 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.58
+        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.51.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:50:59 -0700 (PDT)
+        Tue, 14 Jul 2020 07:51:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 07/13] cpufreq: powernv-cpufreq: Fix a bunch of kerneldoc related issues
-Date:   Tue, 14 Jul 2020 15:50:43 +0100
-Message-Id: <20200714145049.2496163-8-lee.jones@linaro.org>
+        Andreas Herrmann <herrmann.der.user@googlemail.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        Paul Devriendt <paul.devriendt@amd.com>,
+        Mark Langsdorf <mark.langsdorf@amd.com>
+Subject: [PATCH 10/13] cpufreq: powernow-k8: Make use of known set but not used variables
+Date:   Tue, 14 Jul 2020 15:50:46 +0100
+Message-Id: <20200714145049.2496163-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714145049.2496163-1-lee.jones@linaro.org>
 References: <20200714145049.2496163-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Repair problems with formatting and missing attributes/parameters, and
-demote header comments which do not meet the required standards
-applicable to kerneldoc.
+If we fail to use a variable, even a 'dummy' one, then the compiler
+complains that it is set but not used.  We know this is fine, so we
+set it to its own value here.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/cpufreq/powernv-cpufreq.c:84: warning: Function parameter or member 'last_lpstate_idx' not described in 'global_pstate_info'
- drivers/cpufreq/powernv-cpufreq.c:84: warning: Function parameter or member 'last_gpstate_idx' not described in 'global_pstate_info'
- drivers/cpufreq/powernv-cpufreq.c:84: warning: Function parameter or member 'policy' not described in 'global_pstate_info'
- drivers/cpufreq/powernv-cpufreq.c:182: warning: Function parameter or member 'i' not described in 'idx_to_pstate'
- drivers/cpufreq/powernv-cpufreq.c:201: warning: Function parameter or member 'pstate' not described in 'pstate_to_idx'
- drivers/cpufreq/powernv-cpufreq.c:670: warning: Function parameter or member 't' not described in 'gpstate_timer_handler'
- drivers/cpufreq/powernv-cpufreq.c:670: warning: Excess function parameter 'data' description in 'gpstate_timer_handler'
+ drivers/cpufreq/powernow-k8.c: In function ‘pending_bit_stuck’:
+ drivers/cpufreq/powernow-k8.c:89:10: warning: variable ‘hi’ set but not used [-Wunused-but-set-variable]
+ 89 | u32 lo, hi;
+ | ^~
+ drivers/cpufreq/powernow-k8.c: In function ‘core_voltage_pre_transition’:
+ drivers/cpufreq/powernow-k8.c:285:14: warning: variable ‘lo’ set but not used [-Wunused-but-set-variable]
+ 285 | u32 maxvid, lo, rvomult = 1;
+ | ^~
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Andreas Herrmann <herrmann.der.user@googlemail.com>
+Cc: Dominik Brodowski <linux@brodo.de>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Paul Devriendt <paul.devriendt@amd.com>
+Cc: Mark Langsdorf <mark.langsdorf@amd.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/cpufreq/powernv-cpufreq.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/cpufreq/powernow-k8.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
-index 068cc53abe320..2e5a8b8a4abaa 100644
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -64,13 +64,14 @@
-  *				highest_lpstate_idx
-  * @last_sampled_time:		Time from boot in ms when global pstates were
-  *				last set
-- * @last_lpstate_idx,		Last set value of local pstate and global
-- * last_gpstate_idx		pstate in terms of cpufreq table index
-+ * @last_lpstate_idx:		Last set value of local pstate and global
-+ * @last_gpstate_idx:		pstate in terms of cpufreq table index
-  * @timer:			Is used for ramping down if cpu goes idle for
-  *				a long time with global pstate held high
-  * @gpstate_lock:		A spinlock to maintain synchronization between
-  *				routines called by the timer handler and
-  *				governer's target_index calls
-+ * @policy:			Associated CPUFreq policy
-  */
- struct global_pstate_info {
- 	int highest_lpstate_idx;
-@@ -170,7 +171,7 @@ static inline u8 extract_pstate(u64 pmsr_val, unsigned int shift)
+diff --git a/drivers/cpufreq/powernow-k8.c b/drivers/cpufreq/powernow-k8.c
+index 3984959eed1d5..b76df81044c4f 100644
+--- a/drivers/cpufreq/powernow-k8.c
++++ b/drivers/cpufreq/powernow-k8.c
+@@ -89,6 +89,7 @@ static int pending_bit_stuck(void)
+ 	u32 lo, hi;
  
- /* Use following functions for conversions between pstate_id and index */
- 
--/**
-+/*
-  * idx_to_pstate : Returns the pstate id corresponding to the
-  *		   frequency in the cpufreq frequency table
-  *		   powernv_freqs indexed by @i.
-@@ -188,7 +189,7 @@ static inline u8 idx_to_pstate(unsigned int i)
- 	return powernv_freqs[i].driver_data;
+ 	rdmsr(MSR_FIDVID_STATUS, lo, hi);
++	hi &= hi; /* Silence set but not used warning */
+ 	return lo & MSR_S_LO_CHANGE_PENDING ? 1 : 0;
  }
  
--/**
-+/*
-  * pstate_to_idx : Returns the index in the cpufreq frequencytable
-  *		   powernv_freqs for the frequency whose corresponding
-  *		   pstate id is @pstate.
-@@ -660,7 +661,7 @@ static inline void  queue_gpstate_timer(struct global_pstate_info *gpstates)
- /**
-  * gpstate_timer_handler
-  *
-- * @data: pointer to cpufreq_policy on which timer was queued
-+ * @t: Timer context used to fetch global pstate info struct
-  *
-  * This handler brings down the global pstate closer to the local pstate
-  * according quadratic equation. Queues a new timer if it is still not equal
+@@ -292,6 +293,7 @@ static int core_voltage_pre_transition(struct powernow_k8_data *data,
+ 		rvomult = 2;
+ 	rvosteps *= rvomult;
+ 	rdmsr(MSR_FIDVID_STATUS, lo, maxvid);
++	lo &= lo; /* Silence set but not used warning */
+ 	maxvid = 0x1f & (maxvid >> 16);
+ 	pr_debug("ph1 maxvid=0x%x\n", maxvid);
+ 	if (reqvid < maxvid) /* lower numbers are higher voltages */
 -- 
 2.25.1
 
