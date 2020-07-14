@@ -2,248 +2,134 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EEDC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563A4C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27AD322206
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C17E22206
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B7SSwoUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGNKnt (ORCPT
+        id S1726975AbgGNKns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:43:49 -0400
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:47662 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNKnr (ORCPT
+        Tue, 14 Jul 2020 06:43:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:26801 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726928AbgGNKnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:43:47 -0400
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jvIPW-0001w7-TI; Tue, 14 Jul 2020 10:43:43 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jvIPU-0005de-CT; Tue, 14 Jul 2020 11:43:42 +0100
-Subject: Re: [PATCH v2 2/3] um: some fixes to build UML with musl
-To:     Ignat Korchagin <ignat@cloudflare.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>, johannes.berg@intel.com
-References: <20200704085213.444645-1-ignat@cloudflare.com>
- <20200704085213.444645-3-ignat@cloudflare.com>
- <8b168d8c-f526-42b4-7cec-ec7c26c64122@cambridgegreys.com>
- <CALrw=nFaeMPH9GbMWwiT4rV32=uLKa3ZOYpmnkKTA3bvMiyXYg@mail.gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <72b84dca-e285-bb1f-1b69-5b29c70806d8@cambridgegreys.com>
-Date:   Tue, 14 Jul 2020 11:43:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 14 Jul 2020 06:43:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594723426; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=tRdAbZo3R01ks+KVQQD/t8o7o2T01LJHhULszvC+t1g=; b=B7SSwoUyrHwbWGJHes8MYR+GRb5QzvbW2QSJG9/dWEUIjJ6W0UFoJnx0ac7vSOlcjQ/GNLA0
+ PdOjLEEattuNdA2JL6HbawAKBonPX/Rss3yHfbTC5VSjYNGNCV8TMo+fx+hrEet54/FAXm79
+ FyiboL9/+kVtc66riqetcR6Ely0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f0d8c5ec9bd2efa2ecb0768 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 10:43:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 58C71C433A0; Tue, 14 Jul 2020 10:43:42 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.75.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D7C5C43387;
+        Tue, 14 Jul 2020 10:43:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D7C5C43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v3 2/5] pinctrl: qcom: Add msmgpio irqchip flags
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
+References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
+ <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <5f6c3eec-5c2c-d546-ac3c-65e7d25c9031@codeaurora.org>
+Date:   Tue, 14 Jul 2020 16:13:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CALrw=nFaeMPH9GbMWwiT4rV32=uLKa3ZOYpmnkKTA3bvMiyXYg@mail.gmail.com>
+In-Reply-To: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 7/14/2020 3:47 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Jun 22, 2020 at 2:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+>> during suspend and mask before setting irq type.
+>>
+>> Masking before changing type should make sure any spurious interrupt
+>> is not detected during this operation.
+>>
+>> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> index 2419023..b909ffe 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>>          pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+>>          pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
+>>          pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
+>> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
+> I haven't tested it, but with my suggestion in patch #4 to use
+> irq_suspend and irq_resume, I presume adding IRQCHIP_MASK_ON_SUSPEND
+> is no longer needed?
+it will still be needed, to let the non wakeup capable IRQ masked during 
+suspend.
+>
+>
+>> +                               | IRQCHIP_SET_TYPE_MASKED;
+> IIUC adding "IRQCHIP_SET_TYPE_MASKED" is unrelated to the rest of this
+> series, right?
 
-On 14/07/2020 11:23, Ignat Korchagin wrote:
-> On Tue, Jul 14, 2020 at 9:40 AM Anton Ivanov
-> <anton.ivanov@cambridgegreys.com> wrote:
->>
->>
->> On 04/07/2020 09:52, Ignat Korchagin wrote:
->>> musl toolchain and headers are a bit more strict. These fixes enable building
->>> UML with musl as well as seem not to break on glibc.
->>>
->>> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
->>> ---
->>>    arch/um/drivers/daemon_user.c |  1 +
->>>    arch/um/drivers/pcap_user.c   | 12 ++++++------
->>>    arch/um/drivers/slip_user.c   |  2 +-
->>>    arch/um/drivers/vector_user.c |  4 +---
->>>    arch/um/os-Linux/util.c       |  2 +-
->>>    arch/x86/um/user-offsets.c    |  2 +-
->>>    6 files changed, 11 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/arch/um/drivers/daemon_user.c b/arch/um/drivers/daemon_user.c
->>> index 3695821d06a2..785baedc3555 100644
->>> --- a/arch/um/drivers/daemon_user.c
->>> +++ b/arch/um/drivers/daemon_user.c
->>> @@ -7,6 +7,7 @@
->>>     */
->>>
->>>    #include <stdint.h>
->>> +#include <string.h>
->>>    #include <unistd.h>
->>>    #include <errno.h>
->>>    #include <sys/types.h>
->>> diff --git a/arch/um/drivers/pcap_user.c b/arch/um/drivers/pcap_user.c
->>> index bbd20638788a..52ddda3e3b10 100644
->>> --- a/arch/um/drivers/pcap_user.c
->>> +++ b/arch/um/drivers/pcap_user.c
->>> @@ -32,7 +32,7 @@ static int pcap_user_init(void *data, void *dev)
->>>        return 0;
->>>    }
->>>
->>> -static int pcap_open(void *data)
->>> +static int pcap_user_open(void *data)
->>
->> This change in the function name was introduced on purpose to avoid name clash in some version of libpcap which export pcap_open
-> 
-> Yes
-> 
->>
->>
->>>    {
->>>        struct pcap_data *pri = data;
->>>        __u32 netmask;
->>> @@ -44,14 +44,14 @@ static int pcap_open(void *data)
->>>        if (pri->filter != NULL) {
->>>                err = dev_netmask(pri->dev, &netmask);
->>>                if (err < 0) {
->>> -                     printk(UM_KERN_ERR "pcap_open : dev_netmask failed\n");
->>> +                     printk(UM_KERN_ERR "pcap_user_open : dev_netmask failed\n");
->>>                        return -EIO;
->>>                }
->>>
->>>                pri->compiled = uml_kmalloc(sizeof(struct bpf_program),
->>>                                        UM_GFP_KERNEL);
->>>                if (pri->compiled == NULL) {
->>> -                     printk(UM_KERN_ERR "pcap_open : kmalloc failed\n");
->>> +                     printk(UM_KERN_ERR "pcap_user_open : kmalloc failed\n");
->>>                        return -ENOMEM;
->>>                }
->>>
->>> @@ -59,14 +59,14 @@ static int pcap_open(void *data)
->>>                                   (struct bpf_program *) pri->compiled,
->>>                                   pri->filter, pri->optimize, netmask);
->>>                if (err < 0) {
->>> -                     printk(UM_KERN_ERR "pcap_open : pcap_compile failed - "
->>> +                     printk(UM_KERN_ERR "pcap_user_open : pcap_compile failed - "
->>>                               "'%s'\n", pcap_geterr(pri->pcap));
->>>                        goto out;
->>>                }
->>>
->>>                err = pcap_setfilter(pri->pcap, pri->compiled);
->>>                if (err < 0) {
->>> -                     printk(UM_KERN_ERR "pcap_open : pcap_setfilter "
->>> +                     printk(UM_KERN_ERR "pcap_user_open : pcap_setfilter "
->>>                               "failed - '%s'\n", pcap_geterr(pri->pcap));
->>>                        goto out;
->>>                }
->>> @@ -127,7 +127,7 @@ int pcap_user_read(int fd, void *buffer, int len, struct pcap_data *pri)
->>>
->>>    const struct net_user_info pcap_user_info = {
->>>        .init           = pcap_user_init,
->>> -     .open           = pcap_open,
->>> +     .open           = pcap_user_open,
->>>        .close          = NULL,
->>>        .remove         = pcap_remove,
->>>        .add_address    = NULL,
->>> diff --git a/arch/um/drivers/slip_user.c b/arch/um/drivers/slip_user.c
->>> index 8016d32b6809..482a19c5105c 100644
->>> --- a/arch/um/drivers/slip_user.c
->>> +++ b/arch/um/drivers/slip_user.c
->>> @@ -9,7 +9,7 @@
->>>    #include <errno.h>
->>>    #include <fcntl.h>
->>>    #include <string.h>
->>> -#include <sys/termios.h>
->>> +#include <termios.h>
->>>    #include <sys/wait.h>
->>>    #include <net_user.h>
->>>    #include <os.h>
->>> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
->>> index c4a0f26b2824..45d4164ad355 100644
->>> --- a/arch/um/drivers/vector_user.c
->>> +++ b/arch/um/drivers/vector_user.c
->>> @@ -18,9 +18,7 @@
->>>    #include <fcntl.h>
->>>    #include <sys/socket.h>
->>>    #include <sys/un.h>
->>> -#include <net/ethernet.h>
->>>    #include <netinet/ip.h>
->>> -#include <netinet/ether.h>
->>>    #include <linux/if_ether.h>
->>>    #include <linux/if_packet.h>
->>>    #include <sys/wait.h>
->>> @@ -332,7 +330,7 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
->>>        }
->>>        switch (id) {
->>>        case ID_BESS:
->>> -             if (connect(fd, remote_addr, sizeof(struct sockaddr_un)) < 0) {
->>> +             if (connect(fd, (const struct sockaddr *) remote_addr, sizeof(struct sockaddr_un)) < 0) {
->>>                        printk(UM_KERN_ERR "bess open:cannot connect to %s %i", remote_addr->sun_path, -errno);
->>>                        goto unix_cleanup;
->>>                }
->>> diff --git a/arch/um/os-Linux/util.c b/arch/um/os-Linux/util.c
->>> index ecf2f390fad2..07327425d06e 100644
->>> --- a/arch/um/os-Linux/util.c
->>> +++ b/arch/um/os-Linux/util.c
->>> @@ -10,7 +10,7 @@
->>>    #include <signal.h>
->>>    #include <string.h>
->>>    #include <termios.h>
->>> -#include <wait.h>
->>> +#include <sys/wait.h>
->>>    #include <sys/mman.h>
->>>    #include <sys/utsname.h>
->>>    #include <init.h>
->>> diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
->>> index c51dd8363d25..bae61554abcc 100644
->>> --- a/arch/x86/um/user-offsets.c
->>> +++ b/arch/x86/um/user-offsets.c
->>> @@ -2,7 +2,7 @@
->>>    #include <stdio.h>
->>>    #include <stddef.h>
->>>    #include <signal.h>
->>> -#include <sys/poll.h>
->>> +#include <poll.h>
->>>    #include <sys/mman.h>
->>>    #include <sys/user.h>
->>>    #define __FRAME_OFFSETS
->>>
->>
->> Apologies for the delay in answering, I was buried under OVS for the last month or so.
->>
->> With the exception of this patch the rest of the series looks OK. Can you please resumbit and if Johannes and Richard are OK with it I will +1 it.
-> 
-> I didn't quite understand how I should improve this patch. Could you,
-> please, clarify?
-
-Sorry, not reading it correctly :)
-
-My fault. You actually did exactly what has been in the queue for a while after Brendan noticed it: https://lkml.org/lkml/2019/12/5/868
-
-Patch is OK with me, should not read patches before the 3rd double espresso next time.
-
-I will +1 it, Richard, Johannes, what do you think?
+Right, but since we are adding missing flags, i added it together.
 
 Thanks,
+Maulik
 
-> 
->> Best regards,
->>
->> --
->> Anton R. Ivanov
->> Cambridgegreys Limited. Registered in England. Company Number 10273661
->> https://www.cambridgegreys.com/
-> 
+>
+> -Doug
 
 -- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
