@@ -2,234 +2,78 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52479C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283B722200
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n6tiwRQK"
+	by mail.kernel.org (Postfix) with ESMTP id 478C222206
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgGNKzD (ORCPT
+        id S1726788AbgGNK4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:55:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24879 "EHLO m43-7.mailgun.net"
+        Tue, 14 Jul 2020 06:56:13 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:19378 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNKzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:55:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594724100; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=l+PMrsBEotyAY188agVyUbHI6J4WW3/QMEFx1brNrwA=; b=n6tiwRQKzfLpiKLx2oLzgR1fVw8ZbY7vpA1cZwhyOchs5wvmrKN+923xlVsyU/CuKz6p+Dpi
- 6Dl7KvzOoWKbnSIckCqmXPsrB3fqC2Vsm+lOTpY7jDIJGHYbd6uXgt4W1qP4DLKROlpS63Ni
- e9bcjo/GhjQgUEBLC1xiztBQBPE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f0d8ee11e603dbb44c5e489 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 10:54:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1420C43395; Tue, 14 Jul 2020 10:54:24 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.75.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80BEBC433C8;
-        Tue, 14 Jul 2020 10:54:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80BEBC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 4/5] irqchip: qcom-pdc: Introduce irq_set_wake call
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
- <1592818308-23001-5-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=Wa6mUAM_bMN7E-D1Wi9qbFNJWWjfVsgcAVUBmwGqBhSg@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <339f24ce-8114-2008-87d4-0e3772487f10@codeaurora.org>
-Date:   Tue, 14 Jul 2020 16:24:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Wa6mUAM_bMN7E-D1Wi9qbFNJWWjfVsgcAVUBmwGqBhSg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        id S1726041AbgGNK4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:56:12 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 4E764778292AA454EF6B;
+        Tue, 14 Jul 2020 18:56:10 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id 06EAu4vZ053028;
+        Tue, 14 Jul 2020 18:56:04 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020071418561828-4282339 ;
+          Tue, 14 Jul 2020 18:56:18 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     sfrench@samba.org
+Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
+        Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH] cifs: Remove the superfluous break
+Date:   Tue, 14 Jul 2020 18:59:12 +0800
+Message-Id: <1594724352-11451-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-07-14 18:56:18,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-07-14 18:56:07,
+        Serialize complete at 2020-07-14 18:56:07
+X-MAIL: mse-fl1.zte.com.cn 06EAu4vZ053028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-On 7/14/2020 3:46 AM, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Jun 22, 2020 at 2:33 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Remove irq_disable callback to allow lazy disable for pdc interrupts.
->>
->> Add irq_set_wake callback that unmask interrupt in HW when drivers
->> mark interrupt for wakeup. Interrupt will be cleared in HW during
->> lazy disable if its not marked for wakeup.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   drivers/irqchip/qcom-pdc.c | 34 ++++++++++++++++------------------
->>   1 file changed, 16 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index 6ae9e1f..8beb6f7 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -36,6 +36,7 @@ struct pdc_pin_region {
->>          u32 cnt;
->>   };
->>
->> +static DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
->>   static DEFINE_RAW_SPINLOCK(pdc_lock);
->>   static void __iomem *pdc_base;
->>   static struct pdc_pin_region *pdc_region;
->> @@ -87,22 +88,17 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->>          raw_spin_unlock(&pdc_lock);
->>   }
->>
->> -static void qcom_pdc_gic_disable(struct irq_data *d)
->> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
->>   {
->> -       if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> -               return;
->> -
->> -       pdc_enable_intr(d, false);
->> -       irq_chip_disable_parent(d);
->> -}
->> -
->> -static void qcom_pdc_gic_enable(struct irq_data *d)
->> -{
->> -       if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> -               return;
->> +       if (on) {
->> +               pdc_enable_intr(d, true);
->> +               irq_chip_enable_parent(d);
->> +               set_bit(d->hwirq, pdc_wake_irqs);
->> +       } else {
->> +               clear_bit(d->hwirq, pdc_wake_irqs);
->> +       }
->>
->> -       pdc_enable_intr(d, true);
->> -       irq_chip_enable_parent(d);
->> +       return irq_chip_set_wake_parent(d, on);
->>   }
->>
->>   static void qcom_pdc_gic_mask(struct irq_data *d)
->> @@ -111,6 +107,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
->>                  return;
->>
->>          irq_chip_mask_parent(d);
->> +
->> +       if (!test_bit(d->hwirq, pdc_wake_irqs))
->> +               pdc_enable_intr(d, false);
-> I _think_ this will break masking, right?  In other words, consider
-> the following (having nothing to do with suspend/resume):
->
-> 1. Driver requests an interrupt.
-> 2. Driver masks interrupt (calls disable_irq())
-> 3. Interrupt fires while it is masked.
-> 4. Driver unmasks interrupt (calls enable_irq().
->
-> After step #4 the interrupt should fire since it was only masked, not
-> disabled (yes, it's super confusing that the driver calls
-> disable_irq() but it expecting it to be masked--as I understand it
-> that's just how it is).  I haven't tested, but I suspect that's broken
-> for you now (assuming you're working on a pin that wasn't a wakeup
-> pin) because you won't track edges when you're "disabled".
-No its not broken, it works as expected. after step #4, interrupt will fire.
->
-> I suspect that the right thing to do here is to:
->
-> a) Make qcom_pdc_gic_set_wake() just keep "pdc_wake_irqs" up to date
-> and then call parent.
->
-> b) Implement irq_suspend and irq_resume.  In irq_suspend() you disable
-> all interrupts that aren't in "pdc_wake_irqs".  In irq_resume() you
-> just re-enable all of them (masking will be handled by the parent).
->
-> Would that work?
->
-> ...oh, drat!  The .irq_suspend() callback is only there if you're
-> using "irq/generic-chip.c".  OK, well unless we want to move over to
-> using generic-chip we can just register for syscore ourselves.  OK, I
-> tested and <https://crrev.com/c/2296160> works.
+Remove the superfuous break, as there is a 'return' before it.
 
-I too thought of using syscore ops earlier, but syscore ops won't work 
-if device chooses to enter "s2idle" suspend state since they are not 
-invoked in s2idle entry path.
+Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ fs/cifs/sess.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-even if you register for "irq/generic-chip.c" , this driver too 
-registers for syscore ops only, it won't work if you enter s2idle 
-suspend state.
-
-Current patch works fine with both s2idle and deep suspend states.
-
-Thanks,
-Maulik
->
->
->
->>   }
->>
->>   static void qcom_pdc_gic_unmask(struct irq_data *d)
->> @@ -118,6 +117,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
->>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>                  return;
->>
->> +       pdc_enable_intr(d, true);
->>          irq_chip_unmask_parent(d);
->>   }
->>
->> @@ -197,15 +197,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
->>          .irq_eoi                = irq_chip_eoi_parent,
->>          .irq_mask               = qcom_pdc_gic_mask,
->>          .irq_unmask             = qcom_pdc_gic_unmask,
->> -       .irq_disable            = qcom_pdc_gic_disable,
->> -       .irq_enable             = qcom_pdc_gic_enable,
->>          .irq_get_irqchip_state  = qcom_pdc_gic_get_irqchip_state,
->>          .irq_set_irqchip_state  = qcom_pdc_gic_set_irqchip_state,
->>          .irq_retrigger          = irq_chip_retrigger_hierarchy,
->>          .irq_set_type           = qcom_pdc_gic_set_type,
->> +       .irq_set_wake           = qcom_pdc_gic_set_wake,
->>          .flags                  = IRQCHIP_MASK_ON_SUSPEND |
->> -                                 IRQCHIP_SET_TYPE_MASKED |
->> -                                 IRQCHIP_SKIP_SET_WAKE,
->> +                                 IRQCHIP_SET_TYPE_MASKED,
->>          .irq_set_vcpu_affinity  = irq_chip_set_vcpu_affinity_parent,
->>          .irq_set_affinity       = irq_chip_set_affinity_parent,
->>   };
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+diff --git a/fs/cifs/sess.c b/fs/cifs/sess.c
+index 5d05bd2..6708ab0 100644
+--- a/fs/cifs/sess.c
++++ b/fs/cifs/sess.c
+@@ -1705,7 +1705,6 @@ static int select_sec(struct cifs_ses *ses, struct sess_data *sess_data)
+ #else
+ 		cifs_dbg(VFS, "Kerberos negotiated but upcall support disabled!\n");
+ 		return -ENOSYS;
+-		break;
+ #endif /* CONFIG_CIFS_UPCALL */
+ 	case RawNTLMSSP:
+ 		sess_data->func = sess_auth_rawntlmssp_negotiate;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.9.5
 
