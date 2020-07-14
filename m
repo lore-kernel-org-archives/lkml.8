@@ -2,94 +2,84 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E85C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCEFC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97A1221F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bN8EsUsx"
+	by mail.kernel.org (Postfix) with ESMTP id 6E910221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgGNGpK (ORCPT
+        id S1726788AbgGNGpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:45:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59597 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgGNGpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:45:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5WGp4HPBz9s1x;
-        Tue, 14 Jul 2020 16:45:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594709107;
-        bh=ClduEeAgs47lVi4Z75/vHJ8zjThpPjpSsYlX2EXPZ7E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bN8EsUsxELG1u7TALvBxLWL2r85/raNsB6NeSDJwP8CbQy/fxXZlXQdvSTYv2KxbH
-         fmFDt0FmRdU/4vwViuqWGpJCib+mE9RWE3u7CnjwUm570RQiIlpPML2K2emLWNE3JI
-         XkV2SN50Xwvh62h1qLywY8UKFr6Ot6S+SUAIs5IwBYCbV98Kg5QufuGrvfGgyjgZRD
-         5DZIBtAa+HjwgA8IJYzALpbyljS3wWqmBb+ZBtsx7BE5jfxT0NvPHSR/ZtSexNs3JF
-         dONbgqHyBkoyQLoyrS1BuMAUJRkh+t2n2mId3vEXVonwcZeOz1TzXdYhjRMt+6BUuG
-         hJw8U06OUu7rQ==
-Date:   Tue, 14 Jul 2020 16:45:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     dillon.minfei@gmail.com
-Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] Fix dcan driver probe failed on am437x platform
-Message-ID: <20200714164504.10b23697@canb.auug.org.au>
-In-Reply-To: <1594708507-6794-2-git-send-email-dillon.minfei@gmail.com>
-References: <1594708507-6794-1-git-send-email-dillon.minfei@gmail.com>
-        <1594708507-6794-2-git-send-email-dillon.minfei@gmail.com>
+        Tue, 14 Jul 2020 02:45:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51410 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726375AbgGNGpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:45:12 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A34E061132CB930F3ED4;
+        Tue, 14 Jul 2020 14:45:08 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Tue, 14 Jul 2020 14:45:04 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <socketcan@hartkopp.net>, <mkl@pengutronix.de>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] can: silence remove_proc_entry warning
+Date:   Tue, 14 Jul 2020 14:44:50 +0800
+Message-ID: <1594709090-3203-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+.0IClS8DjJjchbmw_qi_zA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+.0IClS8DjJjchbmw_qi_zA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If can_init_proc() fail to create /proc/net/can directory,
+can_remove_proc() will trigger a warning:
 
-Hi Dillon,
+WARNING: CPU: 6 PID: 7133 at fs/proc/generic.c:672 remove_proc_entry+0x17b0
+Kernel panic - not syncing: panic_on_warn set ...
 
-> Hi Stephen,
->=20
-> This changes correct commit messages based on your reviewing.
-> make Fixes tags to oneline.
-> make all commit message tags at the end of commit message
-> make Fixes tags before Signed-off-by line.
-> add probe failed log to commit message.
+Fix to return early from can_remove_proc() if can proc_dir
+does not exists.
 
-Thanks for persisting.  It looks good to me, now.
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+---
+ net/can/proc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/net/can/proc.c b/net/can/proc.c
+index e6881bf..077af42 100644
+--- a/net/can/proc.c
++++ b/net/can/proc.c
+@@ -471,6 +471,9 @@ void can_init_proc(struct net *net)
+  */
+ void can_remove_proc(struct net *net)
+ {
++	if (!net->can.proc_dir)
++		return;
++
+ 	if (net->can.pde_version)
+ 		remove_proc_entry(CAN_PROC_VERSION, net->can.proc_dir);
+ 
+@@ -498,6 +501,5 @@ void can_remove_proc(struct net *net)
+ 	if (net->can.pde_rcvlist_sff)
+ 		remove_proc_entry(CAN_PROC_RCVLIST_SFF, net->can.proc_dir);
+ 
+-	if (net->can.proc_dir)
+-		remove_proc_entry("can", net->proc_net);
++	remove_proc_entry("can", net->proc_net);
+ }
+-- 
+1.8.3.1
 
---Sig_/+.0IClS8DjJjchbmw_qi_zA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NVHAACgkQAVBC80lX
-0GyuHAgAmwBoMVZJJ41XqErZe0fvVMe9O7xJmHSy+4TlJlzE9R+Aiw3fgWsmzA82
-UoVQZo708iuMwvsbnFl56rq8jJipnsgVl4Ajy4qPbtFLZ5eW8aa3ZmiA3DMhmVzi
-WXY18QLsb+vdvIi0+CjGu88dOR3+nweWGcsAEN3PQroHFf7Y3VQPCNqEdCd/wf2H
-xGt4wyz1YpWOeAEYq89wm45WgnnfjxJ2aUEpTABGlp1NaGoJViMIBFdNgzbCf8li
-FDhLuj6Pjgzw7X9Pn9OduA+prLrTCd0Y2lf89moTfFLgWbCY3RSdJeDGEx8AyCzj
-TcBnhcCOVlGMSmO6AqTpvNfHxhHmhw==
-=mxjk
------END PGP SIGNATURE-----
-
---Sig_/+.0IClS8DjJjchbmw_qi_zA--
