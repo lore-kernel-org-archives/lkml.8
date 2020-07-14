@@ -2,218 +2,137 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4F7C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3CC22A99
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB8C2231B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752355;
-	bh=3OfvyawWxOWWLmXQVPZtn6FECuVWd3F0Ue8HezI5sRQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=F9AlVxNkthTucECNythwLThgzeKfPkui9YPXVxyJPrJB9ySdG+0UcoY7ZdlvquGF3
-	 rR9L8Yr10mlV10C9xEi6I5o0ukvKK/tUCeFbnUQ/kTPf2GCKvSjZvmAAaB/EkyeO/C
-	 wDr6Vr8PqN2EexL93gU5EpzyXfpaBvOB1otEZYwc=
+	s=default; t=1594752359;
+	bh=v7i3vODcfsNt9qz80CBL3nKZlwMLOBfzh+PZ/J8FKLU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rxGrEdc1Gm+3RuFGnGFQw5Ilkg9fyHUSbA5INfCj8oXp55r0/CpUvJD9lbJ1YRbfy
+	 wI0L5dxKI2wnsSC/viaDVQQhiEh/p0EuKHwPRBeS+oSikeg7CyoUU5zUPXhi6DvHjv
+	 rE2Sc7d4O61hqZEXQvFKV2CzlpbeOuVVtxEaX4gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgGNSpx (ORCPT
+        id S1729282AbgGNSp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgGNSpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:45:52 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1728948AbgGNSpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:45:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839FA222B9;
-        Tue, 14 Jul 2020 18:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCAA9222E9;
+        Tue, 14 Jul 2020 18:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752352;
-        bh=3OfvyawWxOWWLmXQVPZtn6FECuVWd3F0Ue8HezI5sRQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M9TjDOCdh9hdhfOxp+E/b+GQRQRJigrTzFdSr08bZTbYfgplA8ZfIK7sw2uU4D17i
-         JnwGLNAMtpemAssFF0Jl2PbTYsF6P1lbaXH8vsBMr+WVIisiILxg/v2D+n7zNSVt6u
-         tBiC82XAr1HVg4w3jwKWvTKOh5aFHvV/m2Ll8Hf4=
-Date:   Tue, 14 Jul 2020 13:45:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-Message-ID: <20200714184550.GA397277@bjorn-Precision-5520>
+        s=default; t=1594752354;
+        bh=v7i3vODcfsNt9qz80CBL3nKZlwMLOBfzh+PZ/J8FKLU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BEP6KLJ/V/ftyPDIQqiLUt7DAMtYFJKByLrAFfAUW5FxsLYt0Sr9ZF53ZEwk4g4b0
+         R42vQjdqc5Ubd4QTwpjxEqq6ryJMjZqzcLJgTx7SdZM2u/DzSttyqUnHXGi0epgrt/
+         mLmr+kSTr+/KhwxXRCtwkZqyJF5MkVKayBeNXUy4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peng Ma <peng.ma@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/58] spi: spi-fsl-dspi: Adding shutdown hook
+Date:   Tue, 14 Jul 2020 20:43:35 +0200
+Message-Id: <20200714184056.265252863@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+References: <20200714184056.149119318@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[trimmed the cc list; it's still too large but maybe arch folks care]
+From: Peng Ma <peng.ma@nxp.com>
 
-On Mon, Jul 13, 2020 at 05:08:10PM +0200, Arnd Bergmann wrote:
-> On Mon, Jul 13, 2020 at 3:22 PM Saheed O. Bolarinwa
-> <refactormyself@gmail.com> wrote:
-> > This goal of these series is to move the definition of *all*
-> > PCIBIOS* from include/linux/pci.h to arch/x86 and limit their use
-> > within there.  All other tree specific definition will be left for
-> > intact. Maybe they can be renamed.
-> >
-> > PCIBIOS* is an x86 concept as defined by the PCI spec. The
-> > returned error codes of PCIBIOS* are positive values and this
-> > introduces some complexities which other archs need not incur.
-> 
-> I think the intention is good, but I find the series in its current
-> form very hard to review, in particular the way you touch some
-> functions three times with trivial changes. Instead of
-> 
-> 1) replace PCIBIOS_SUCCESSFUL with 0
-> 2) drop pointless 0-comparison
-> 3) reformat whitespace
-> 
-> I would suggest to combine the first two steps into one patch per
-> subsystem and drop the third step.
+[ Upstream commit dc234825997ec6ff05980ca9e2204f4ac3f8d695 ]
 
-I agree.  BUT please don't just run out and post new patches to do
-this.  Let's talk about Arnd's further ideas below first.
+We need to ensure dspi controller could be stopped in order for kexec
+to start the next kernel.
+So add the shutdown operation support.
 
-> ...
-> Maybe the work can be split up differently, with a similar end
-> result but fewer and easier reviewed patches. The way I'd look at
-> the problem, there are three main areas that can be dealt with one
-> at a time:
-> 
-> a) callers of the high-level config space accessors
->    pci_{write,read}_config_{byte,word,dword}, mostly in device
->    drivers.
-> b) low-level implementation of the config space accessors
->     through struct pci_ops
-> c) all other occurrences of these constants
-> 
-> Starting with a), my first question is whether any high-level
-> drivers even need to care about errors from these functions. I see
-> 4913 callers that ignore the return code, and 576 that actually
-> check it, and almost none care about the specific error (as you
-> found as well). Unless we conclude that most PCI drivers are wrong,
-> could we just change the return type to 'void' and assume they never
-> fail for valid arguments on a valid pci_device* ?
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-fsl-dspi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-I really like this idea.
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 3082e72e4f6c6..9296bcbbd32ce 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ //
+ // Copyright 2013 Freescale Semiconductor, Inc.
++// Copyright 2020 NXP
+ //
+ // Freescale DSPI driver
+ // This file contains a driver for the Freescale DSPI
+@@ -43,6 +44,9 @@
+ #define SPI_MCR_CLR_TXF	(1 << 11)
+ #define SPI_MCR_CLR_RXF	(1 << 10)
+ #define SPI_MCR_XSPI		(1 << 3)
++#define SPI_MCR_DIS_TXF		(1 << 13)
++#define SPI_MCR_DIS_RXF		(1 << 12)
++#define SPI_MCR_HALT		(1 << 0)
+ 
+ #define SPI_TCR			0x08
+ #define SPI_TCR_GET_TCNT(x)	(((x) & 0xffff0000) >> 16)
+@@ -1140,6 +1144,24 @@ static int dspi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void dspi_shutdown(struct platform_device *pdev)
++{
++	struct spi_controller *ctlr = platform_get_drvdata(pdev);
++	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
++
++	/* Disable RX and TX */
++	regmap_update_bits(dspi->regmap, SPI_MCR,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
++
++	/* Stop Running */
++	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
++
++	dspi_release_dma(dspi);
++	clk_disable_unprepare(dspi->clk);
++	spi_unregister_controller(dspi->master);
++}
++
+ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.name    = DRIVER_NAME,
+ 	.driver.of_match_table = fsl_dspi_dt_ids,
+@@ -1147,6 +1169,7 @@ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.pm = &dspi_pm,
+ 	.probe          = dspi_probe,
+ 	.remove		= dspi_remove,
++	.shutdown	= dspi_shutdown,
+ };
+ module_platform_driver(fsl_dspi_driver);
+ 
+-- 
+2.25.1
 
-pci_write_config_*() has one return value, and only 100ish of 2500
-callers check for errors.  It's sometimes possible for config
-accessors to detect PCI errors and return failure, e.g., device was
-removed or didn't respond, but most of them don't, and detecting these
-errors is not really that valuable.
 
-pci_read_config_*() is much more interesting because it returns two
-things, the function return value and the value read from the PCI
-device, and it's complicated to check both. 
 
-Again it's sometimes possible for config read accessors to detect PCI
-errors, but in most cases a PCI error means the accessor returns
-success and the value from PCI is ~0.
-
-Checking the function return value catches programming errors (bad
-alignment, etc) but misses most of the interesting errors (device was
-unplugged or reported a PCI error).
-
-Checking the value returned from PCI is tricky because ~0 is a valid
-value for some config registers, and only the driver knows for sure.
-If the driver knows that ~0 is a possible value, it would have to do
-something else, e.g., another config read of a register that *cannot*
-be ~0, to see whether it's really an error.
-
-I suspect that if we had a single value to look at it would be easier
-to get right.  Error checking with current interface would look like
-this:
-
-  err = pci_read_config_word(dev, addr, &val);
-  if (err)
-    return -EINVAL;
-
-  if (PCI_POSSIBLE_ERROR(val)) {
-    /* if driver knows ~0 is invalid */
-    return -EINVAL;
-
-    /* if ~0 is potentially a valid value */
-    err = pci_read_config_word(dev, PCI_VENDOR_ID, &val2);
-    if (err)
-      return -EINVAL;
-
-    if (PCI_POSSIBLE_ERROR(val2))
-      return -EINVAL;
-  }
-
-Error checking with a possible interface that returned only a single
-value could look like this:
-
-  val = pci_config_read_word(dev, addr);
-  if (PCI_POSSIBLE_ERROR(val)) {
-    /* if driver knows ~0 is invalid */
-    return -EINVAL;
-
-    /* if ~0 is potentially a valid value */
-    val2 = pci_config_read_word(dev, PCI_VENDOR_ID);
-    if (PCI_POSSIBLE_ERROR(val2))
-      return -EINVAL;
-  }
-
-Am I understanding you correctly?
-
-> For b), it might be nice to also change other aspects of the
-> interface, e.g. passing a pci_host_bridge pointer plus bus number
-> instead of a pci_bus pointer, or having the callback in the
-> pci_host_bridge structure.
-
-I like this idea a lot, too.  I think the fact that
-pci_bus_read_config_word() requires a pci_bus * complicates things in
-a few places.
-
-I think it's completely separate, as you say, and we should defer it
-for now because even part a) is a lot of work.  I added it to my list
-of possible future projects.
-
-Bjorn
