@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4000C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47735C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C7A229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF9622B2E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753147;
-	bh=Tf7Ys4DJj3+tqhy6HZ6SoxXADmO3OI/lTItEAJWcBtc=;
+	s=default; t=1594753154;
+	bh=St2pw05xyaaVWoBdM5zmWV914ertFmW8ms8PzxGR/e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2+RZwy4t4h/fcvJRvS3mKM+8ulWItq8GhNQ1F6oWcijIpKYvAYVSoS61GDr5Qbxd
-	 60wlnr4jAmgT2unH6obwMQosZZucyE7/xvQfZrLMvIESMb2FQGReZsXjN4K8/OFOeN
-	 UxK/KygCGMLEJmxTkg6pJNGA2bR2caGioA8qvafA=
+	b=VduSt/gbw7uftLb8q/e4sH05/69cGHj49Hl7d4q4cNVwLKzTVlOYfDLfSjbxpR1as
+	 dK/rUo635YDFi6K9V1FIIbXSRbk/2HQpl/8qJBrHeXL/ET3u3suXXvHD+kxAmxlSLO
+	 VXZB0Q7WobsdVmuFcVLLykRMoECJeKnaiLk2sUPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgGNS7G (ORCPT
+        id S1731087AbgGNS7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57522 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbgGNS7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:59:00 -0400
+        id S1731085AbgGNS7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:59:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B56E22B2B;
-        Tue, 14 Jul 2020 18:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C4F222AAF;
+        Tue, 14 Jul 2020 18:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753139;
-        bh=Tf7Ys4DJj3+tqhy6HZ6SoxXADmO3OI/lTItEAJWcBtc=;
+        s=default; t=1594753144;
+        bh=St2pw05xyaaVWoBdM5zmWV914ertFmW8ms8PzxGR/e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hS2QH8svYLnpmUGSWlTJSuedoXvnj1jHNB8g7ecs89E7CfMdMyqrxKAszgKFltWf
-         jm3ri/MdqSOz17hYLRSYInNHnVjGpRIZCxKKtrqPQj1ZFkSVy59+31Qx7qYXUJTPmz
-         +Egy7M9dmaL5L9qR+k79apWuat1kSO0pH92YypCQ=
+        b=i4JOabC4H/QdLcfOhKRWdlCDhnFL0ZBJE0RvWq1jHxo4XRvgnW5mBZvMFdp4IB5Md
+         OspwaRc29b0w2AkMjTborENyECLgIedxgxQCV7oNjE+rlAWjmgrGTVar5v0OqEtzVu
+         eiiklu9IMRckTqUOCrEboujGIqqNEiGZPHpv7ofI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
-        Nikolay Borisov <nborisov@suse.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 135/166] btrfs: reset tree root pointer after error in init_tree_roots
-Date:   Tue, 14 Jul 2020 20:45:00 +0200
-Message-Id: <20200714184122.294065688@linuxfoundation.org>
+Subject: [PATCH 5.7 137/166] btrfs: fix double put of block group with nocow
+Date:   Tue, 14 Jul 2020 20:45:02 +0200
+Message-Id: <20200714184122.393557082@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -63,72 +62,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit 0465337c5599bbe360cdcff452992a1a6b7ed2d4 upstream.
+commit 230ed397435e85b54f055c524fcb267ae2ce3bc4 upstream.
 
-Eric reported an issue where mounting -o recovery with a fuzzed fs
-resulted in a kernel panic.  This is because we tried to free the tree
-node, except it was an error from the read.  Fix this by properly
-resetting the tree_root->node == NULL in this case.  The panic was the
-following
+While debugging a patch that I wrote I was hitting use-after-free panics
+when accessing block groups on unmount.  This turned out to be because
+in the nocow case if we bail out of doing the nocow for whatever reason
+we need to call btrfs_dec_nocow_writers() if we called the inc.  This
+puts our block group, but a few error cases does
 
-  BTRFS warning (device loop0): failed to read tree root
-  BUG: kernel NULL pointer dereference, address: 000000000000001f
-  RIP: 0010:free_extent_buffer+0xe/0x90 [btrfs]
-  Call Trace:
-   free_root_extent_buffers.part.0+0x11/0x30 [btrfs]
-   free_root_pointers+0x1a/0xa2 [btrfs]
-   open_ctree+0x1776/0x18a5 [btrfs]
-   btrfs_mount_root.cold+0x13/0xfa [btrfs]
-   ? selinux_fs_context_parse_param+0x37/0x80
-   legacy_get_tree+0x27/0x40
-   vfs_get_tree+0x25/0xb0
-   fc_mount+0xe/0x30
-   vfs_kern_mount.part.0+0x71/0x90
-   btrfs_mount+0x147/0x3e0 [btrfs]
-   ? cred_has_capability+0x7c/0x120
-   ? legacy_get_tree+0x27/0x40
-   legacy_get_tree+0x27/0x40
-   vfs_get_tree+0x25/0xb0
-   do_mount+0x735/0xa40
-   __x64_sys_mount+0x8e/0xd0
-   do_syscall_64+0x4d/0x90
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+if (nocow) {
+    btrfs_dec_nocow_writers();
+    goto error;
+}
 
-Nik says: this is problematic only if we fail on the last iteration of
-the loop as this results in init_tree_roots returning err value with
-tree_root->node = -ERR. Subsequently the caller does: fail_tree_roots
-which calls free_root_pointers on the bogus value.
+unfortunately, error is
 
-Reported-by: Eric Sandeen <sandeen@redhat.com>
-Fixes: b8522a1e5f42 ("btrfs: Factor out tree roots initialization during mount")
-CC: stable@vger.kernel.org # 5.5+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+error:
+	if (nocow)
+		btrfs_dec_nocow_writers();
+
+so we get a double put on our block group.  Fix this by dropping the
+error cases calling of btrfs_dec_nocow_writers(), as it's handled at the
+error label now.
+
+Fixes: 762bf09893b4 ("btrfs: improve error handling in run_delalloc_nocow")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
-[ add details how the pointer gets dereferenced ]
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/btrfs/inode.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -2583,10 +2583,12 @@ static int __cold init_tree_roots(struct
- 		    !extent_buffer_uptodate(tree_root->node)) {
- 			handle_error = true;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1690,12 +1690,8 @@ out_check:
+ 			ret = fallback_to_cow(inode, locked_page, cow_start,
+ 					      found_key.offset - 1,
+ 					      page_started, nr_written);
+-			if (ret) {
+-				if (nocow)
+-					btrfs_dec_nocow_writers(fs_info,
+-								disk_bytenr);
++			if (ret)
+ 				goto error;
+-			}
+ 			cow_start = (u64)-1;
+ 		}
  
--			if (IS_ERR(tree_root->node))
-+			if (IS_ERR(tree_root->node)) {
- 				ret = PTR_ERR(tree_root->node);
--			else if (!extent_buffer_uptodate(tree_root->node))
-+				tree_root->node = NULL;
-+			} else if (!extent_buffer_uptodate(tree_root->node)) {
- 				ret = -EUCLEAN;
-+			}
- 
- 			btrfs_warn(fs_info, "failed to read tree root");
- 			continue;
+@@ -1711,9 +1707,6 @@ out_check:
+ 					  ram_bytes, BTRFS_COMPRESS_NONE,
+ 					  BTRFS_ORDERED_PREALLOC);
+ 			if (IS_ERR(em)) {
+-				if (nocow)
+-					btrfs_dec_nocow_writers(fs_info,
+-								disk_bytenr);
+ 				ret = PTR_ERR(em);
+ 				goto error;
+ 			}
 
 
