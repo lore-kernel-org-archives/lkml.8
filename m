@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE2C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF480C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A242240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5DA2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753489;
-	bh=/OB5+buJ/dYANcHnH4H5AnXekZPVzzEHTMS/vT95zmQ=;
+	s=default; t=1594753493;
+	bh=/63arVv2yF+aZ8Pzf5dquTJuilNwkjyY26Szdcnco3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STTKFVDjHUUs7Ba2G5Pvp8d+6CtxbKBgHI1XNvMtFcPDb1CGbx0a26xAInurn7KAW
-	 8zqrYE5/ebZz6BSkQjlxh1m4Xfw0WxKIBlHEpaxCh3kiQZuDMsuJq2QbqWegJO8yOi
-	 wVcxZHoAFPWy8jhVEmGwB+vdT3+hOFlWEy0qQ+7A=
+	b=1QYHMmSHLoZDQA5rtfiV9UE9oN5oscpGBYQRGsORRHBZ46EYu1u5QWHC+gCfOBoP8
+	 ObUumYX3guQbkbXBGqMPClodoGnifn2LU4URYXYrMb6qmw3+I2mziKfZKEL3Q2iUuE
+	 SR/I7kP1JeZp65o58rrnTN+SzBW92HkoA8nubX4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbgGNSzm (ORCPT
+        id S1731342AbgGNTEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730886AbgGNSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:36 -0400
+        id S1729718AbgGNSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1D9A21D79;
-        Tue, 14 Jul 2020 18:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A5B22282;
+        Tue, 14 Jul 2020 18:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752935;
-        bh=/OB5+buJ/dYANcHnH4H5AnXekZPVzzEHTMS/vT95zmQ=;
+        s=default; t=1594752940;
+        bh=/63arVv2yF+aZ8Pzf5dquTJuilNwkjyY26Szdcnco3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B2X1Wb1g5VmPC6CCbfBREeo2ALgk2YO8ZLUWL763Ox/qu7eGjetoTY9z3Nub/YKen
-         9jTVPo/JW5gz5mStiEWXljEVDn91+C9hpx8SSXfexT+kwBaDnynjocUTv4p4UdHYfG
-         OUUA6okiLTyD1dyxuzXvjt/vK+IOx47G6ZqdJhZA=
+        b=NjN+rqZNn1AG3hf1g8nE5GGEhJHvU/z8Scmdz1xfcDG/ZIRzDqRcM4cvPscceS88K
+         SrkZy8PYPeimR5H5U2UgduOJ3vO3LhO9IuiwVMnL34XqtiA8HWm+dLJ4BIB0MhYT6A
+         ko4TtK4UqBdhFl5Yn5H/TSPPnmnP9HHhEOChD0Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 055/166] bpf: Do not allow btf_ctx_access with __int128 types
-Date:   Tue, 14 Jul 2020 20:43:40 +0200
-Message-Id: <20200714184118.509799543@linuxfoundation.org>
+        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 028/166] iommu/vt-d: Dont apply gfx quirks to untrusted devices
+Date:   Tue, 14 Jul 2020 20:43:13 +0200
+Message-Id: <20200714184117.232454967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,74 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Rajat Jain <rajatja@google.com>
 
-[ Upstream commit a9b59159d338d414acaa8e2f569d129d51c76452 ]
+[ Upstream commit 67e8a5b18d41af9298db5c17193f671f235cce01 ]
 
-To ensure btf_ctx_access() is safe the verifier checks that the BTF
-arg type is an int, enum, or pointer. When the function does the
-BTF arg lookup it uses the calculation 'arg = off / 8'  using the
-fact that registers are 8B. This requires that the first arg is
-in the first reg, the second in the second, and so on. However,
-for __int128 the arg will consume two registers by default LLVM
-implementation. So this will cause the arg layout assumed by the
-'arg = off / 8' calculation to be incorrect.
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
 
-Because __int128 is uncommon this patch applies the easiest fix and
-will force int types to be sizeof(u64) or smaller so that they will
-fit in a single register.
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
 
-v2: remove unneeded parens per Andrii's feedback
-
-Fixes: 9e15db66136a1 ("bpf: Implement accurate raw_tp context access via BTF")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159303723962.11287.13309537171132420717.stgit@john-Precision-5820-Tower
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-4-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/btf.h | 5 +++++
- kernel/bpf/btf.c    | 4 ++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/include/linux/btf.h b/include/linux/btf.h
-index 5c1ea99b480fa..8b81fbb4497cf 100644
---- a/include/linux/btf.h
-+++ b/include/linux/btf.h
-@@ -82,6 +82,11 @@ static inline bool btf_type_is_int(const struct btf_type *t)
- 	return BTF_INFO_KIND(t->info) == BTF_KIND_INT;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 34b2ed91cf4d9..2acf2842c3bd2 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -6206,6 +6206,23 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
+ 	return ret;
  }
  
-+static inline bool btf_type_is_small_int(const struct btf_type *t)
++/*
++ * Check that the device does not live on an external facing PCI port that is
++ * marked as untrusted. Such devices should not be able to apply quirks and
++ * thus not be able to bypass the IOMMU restrictions.
++ */
++static bool risky_device(struct pci_dev *pdev)
 +{
-+	return btf_type_is_int(t) && t->size <= sizeof(u64);
++	if (pdev->untrusted) {
++		pci_info(pdev,
++			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
++			 pdev->vendor, pdev->device);
++		pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
++		return true;
++	}
++	return false;
 +}
 +
- static inline bool btf_type_is_enum(const struct btf_type *t)
- {
- 	return BTF_INFO_KIND(t->info) == BTF_KIND_ENUM;
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index d65c6912bdaf6..d1f5d428c9fe2 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3744,7 +3744,7 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
- 				return false;
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+@@ -6235,6 +6252,9 @@ const struct iommu_ops intel_iommu_ops = {
  
- 			t = btf_type_skip_modifiers(btf, t->type, NULL);
--			if (!btf_type_is_int(t)) {
-+			if (!btf_type_is_small_int(t)) {
- 				bpf_log(log,
- 					"ret type %s not allowed for fmod_ret\n",
- 					btf_kind_str[BTF_INFO_KIND(t->info)]);
-@@ -3766,7 +3766,7 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
- 	/* skip modifiers */
- 	while (btf_type_is_modifier(t))
- 		t = btf_type_by_id(btf, t->type);
--	if (btf_type_is_int(t) || btf_type_is_enum(t))
-+	if (btf_type_is_small_int(t) || btf_type_is_enum(t))
- 		/* accessing a scalar */
- 		return true;
- 	if (!btf_type_is_ptr(t)) {
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6276,6 +6296,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6306,6 +6329,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (risky_device(dev))
++		return;
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6339,6 +6365,12 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6348,6 +6380,11 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
 -- 
 2.25.1
 
