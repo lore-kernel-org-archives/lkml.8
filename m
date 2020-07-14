@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E218C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9D3C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADE62240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3046E2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="crhQAYps"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S9jHOlV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgGNTJk (ORCPT
+        id S1731446AbgGNTJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
+        Tue, 14 Jul 2020 15:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731402AbgGNTJW (ORCPT
+        with ESMTP id S1730722AbgGNTJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:09:22 -0400
+        Tue, 14 Jul 2020 15:09:20 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E35C08C5DE;
-        Tue, 14 Jul 2020 12:09:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4BFC08C5DD;
+        Tue, 14 Jul 2020 12:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=OlVLWFib6FtnZCFxbnvi/3T2WDZ4jfVYULPs6vsSQuo=; b=crhQAYpsKdjX291gbV28QcA/Nx
-        sJx9XT4L9omZ3HkZpZ7FtuxJZahDQv+cFISe8Nx6Zgy5qThex3aUMCjRfLw9+xw9jMcJr/kpwJpLn
-        p6dhGvF1kO0hesjGm+Ke3tHJf+7ySRKJdyFkcUsIQjD5LJdNRxjOf4fAJKaBy+/BeONWT3VBmOk4Q
-        +oTJpFpVPFZgAf0UKKOIOUPULCP6GEDCpx8HJVgwtzkh1P04embpPMfhGLqp0EQ5q3VOziIcPTiC3
-        serKq1W7fn52fpZxZL4fYWr8nevFDvQceR5UDI3RF8/R16UBGH0wQ8VoYNyM4MgYOvJFya1P452Bu
-        12M905uA==;
+        bh=u1Gx992eL8IyHPne45xCbOLvqdQ4XPo321MOmSxzgfU=; b=S9jHOlV8j3DPsJfCv4rE/2zFKA
+        lbw/Z2b0EPRjY6A/+OCFOibLjSPy/uRbTek0DSCaiOj6sJ47ZhY3xDsE6H/LXBdpNHE3x6E1LV0fH
+        ilhd2hHmSCLFLNxfz+twPgKx6JP1tWhqLcNh1FY6LcDiVPbjqrltgBZCfFolC3GMVZgocNe7PY0NN
+        ot/FWB2kF8cH8C8oo6a4BnA5w3yd5BTQpLc0nyJL55Jw8bEF1ZGQSLxtS15/nXRp1TmsBpjQQXYlr
+        MtmCqx7dFMUMadDCDYBukDo3EsernUZvsKBImANWmtW+K+bGadnxKaBG41v8saGbGRk1V5Q3esuFr
+        UHyIoRzQ==;
 Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIq-0005ui-6o; Tue, 14 Jul 2020 19:09:20 +0000
+        id 1jvQIp-0005uX-1D; Tue, 14 Jul 2020 19:09:19 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 22/23] fs: remove ksys_fchmod
-Date:   Tue, 14 Jul 2020 21:04:26 +0200
-Message-Id: <20200714190427.4332-23-hch@lst.de>
+Subject: [PATCH 21/23] fs: remove ksys_dup
+Date:   Tue, 14 Jul 2020 21:04:25 +0200
+Message-Id: <20200714190427.4332-22-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714190427.4332-1-hch@lst.de>
 References: <20200714190427.4332-1-hch@lst.de>
@@ -63,47 +63,47 @@ Fold it into the only remaining caller.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/open.c                | 7 +------
+ fs/file.c                | 7 +------
  include/linux/syscalls.h | 1 -
  2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/fs/open.c b/fs/open.c
-index ab3671af8a9705..b316dd6a86a8b9 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -608,7 +608,7 @@ int vfs_fchmod(struct file *file, umode_t mode)
- 	return chmod_common(&file->f_path, mode);
+diff --git a/fs/file.c b/fs/file.c
+index abb8b7081d7a44..85b7993165dd2f 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -985,7 +985,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
+ 	return ksys_dup3(oldfd, newfd, 0);
  }
  
--int ksys_fchmod(unsigned int fd, umode_t mode)
-+SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
+-int ksys_dup(unsigned int fildes)
++SYSCALL_DEFINE1(dup, unsigned int, fildes)
  {
- 	struct fd f = fdget(fd);
- 	int err = -EBADF;
-@@ -620,11 +620,6 @@ int ksys_fchmod(unsigned int fd, umode_t mode)
- 	return err;
+ 	int ret = -EBADF;
+ 	struct file *file = fget_raw(fildes);
+@@ -1000,11 +1000,6 @@ int ksys_dup(unsigned int fildes)
+ 	return ret;
  }
  
--SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
+-SYSCALL_DEFINE1(dup, unsigned int, fildes)
 -{
--	return ksys_fchmod(fd, mode);
+-	return ksys_dup(fildes);
 -}
 -
- int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
+ int f_dupfd(unsigned int from, struct file *file, unsigned flags)
  {
- 	struct path path;
+ 	int err;
 diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index b6d90057476260..39ff738997a172 100644
+index 363baaadf8e19a..b6d90057476260 100644
 --- a/include/linux/syscalls.h
 +++ b/include/linux/syscalls.h
-@@ -1240,7 +1240,6 @@ int ksys_umount(char __user *name, int flags);
+@@ -1237,7 +1237,6 @@ asmlinkage long sys_ni_syscall(void);
+  */
+ 
+ int ksys_umount(char __user *name, int flags);
+-int ksys_dup(unsigned int fildes);
  int ksys_chroot(const char __user *filename);
  ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
  int ksys_chdir(const char __user *filename);
--int ksys_fchmod(unsigned int fd, umode_t mode);
- int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
- int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
 -- 
 2.27.0
 
