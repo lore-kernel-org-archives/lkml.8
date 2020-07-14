@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2848C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD125C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8E8B21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A044621927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGNJD2 (ORCPT
+        id S1726748AbgGNJEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:03:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47712 "EHLO mga07.intel.com"
+        Tue, 14 Jul 2020 05:04:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33811 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgGNJD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:03:28 -0400
-IronPort-SDR: T2YRdmqBPH0W3Q9YQ2v6TuEdm/1QN7rnfpWNq3D7Et2wJ0ZVGZ80W9lufZpgsB3sGBnu5LOOM5
- hoDVVYHocT7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213654905"
+        id S1726492AbgGNJEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:04:11 -0400
+IronPort-SDR: /qF6Wyk7gixvFXTIavzYuxYiGPDWaIWV0uMVFXKA+OjIT2KfxeBDYEg3NxXrQY7R7v/xjCsZ6X
+ qvisyo0k2Kog==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128933440"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="213654905"
+   d="scan'208";a="128933440"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:03:26 -0700
-IronPort-SDR: R8ZSUNuIhPrEx8ErZdX92HeHnSneVpK+jpXJNRB9MG+WbJDNCdtB7rYYa4TlWQQnZHEs9dLLpY
- jQCyOYDLZk2w==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:04:08 -0700
+IronPort-SDR: 2Bk+WdJLlm4vvhmZ/ie5IoJXGOJMOSRo5YEvnAcSuUEUocJ3eLPDaGngWEMi5ouaIkjKud3hn/
+ w/afOGIDR1qA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="316326032"
+   d="scan'208";a="325783362"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jul 2020 02:03:26 -0700
+  by orsmga007.jf.intel.com with ESMTP; 14 Jul 2020 02:04:05 -0700
 Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
-        by linux.intel.com (Postfix) with ESMTP id C3802580810;
-        Tue, 14 Jul 2020 02:03:24 -0700 (PDT)
-Subject: [PATCH v11 01/15] tools/libperf: avoid internal moving of fdarray fds
+        by linux.intel.com (Postfix) with ESMTP id F35F6580814;
+        Tue, 14 Jul 2020 02:04:01 -0700 (PDT)
+Subject: [PATCH v11 02/15] tools/libperf: add flags to fdarray fds objects
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -50,8 +50,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <35f2832f-3ea8-56d6-b0a9-03623588fc12@linux.intel.com>
-Date:   Tue, 14 Jul 2020 12:03:23 +0300
+Message-ID: <b8ffc59b-fbc9-3d94-7019-3a2b0833bccc@linux.intel.com>
+Date:   Tue, 14 Jul 2020 12:03:59 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -65,110 +65,142 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Avoid moving of fds by fdarray__filter() so fds indices returned
-by fdarray__add() can be used for access and processing of
-objects at struct pollfd *entries.
+Store flags per struct pollfd *entries object in a bitmap of int size.
+Implement fdarray_flag__nonfilterable flag to skip object from counting
+by fdarray__filter().
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/lib/api/fd/array.c   | 11 +++++------
- tools/perf/tests/fdarray.c | 20 ++------------------
- 2 files changed, 7 insertions(+), 24 deletions(-)
+ tools/lib/api/fd/array.c                 |  3 ++-
+ tools/lib/api/fd/array.h                 | 16 ++++++++++++----
+ tools/lib/perf/evlist.c                  |  6 +++---
+ tools/lib/perf/include/internal/evlist.h |  2 +-
+ tools/perf/tests/fdarray.c               |  2 +-
+ tools/perf/util/evlist.c                 |  2 +-
+ 6 files changed, 20 insertions(+), 11 deletions(-)
 
 diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 58d44d5eee31..89f9a2193c2d 100644
+index 89f9a2193c2d..37f291e6fc21 100644
 --- a/tools/lib/api/fd/array.c
 +++ b/tools/lib/api/fd/array.c
-@@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 		return 0;
- 
- 	for (fd = 0; fd < fda->nr; ++fd) {
-+		if (!fda->entries[fd].events)
-+			continue;
-+
- 		if (fda->entries[fd].revents & revents) {
- 			if (entry_destructor)
- 				entry_destructor(fda, fd, arg);
- 
-+			fda->entries[fd].revents = fda->entries[fd].events = 0;
- 			continue;
- 		}
- 
--		if (fd != nr) {
--			fda->entries[nr] = fda->entries[fd];
--			fda->priv[nr]	 = fda->priv[fd];
--		}
--
- 		++nr;
- 	}
- 
--	return fda->nr = nr;
-+	return nr;
+@@ -69,7 +69,7 @@ void fdarray__delete(struct fdarray *fda)
+ 	free(fda);
  }
  
- int fdarray__poll(struct fdarray *fda, int timeout)
+-int fdarray__add(struct fdarray *fda, int fd, short revents)
++int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags)
+ {
+ 	int pos = fda->nr;
+ 
+@@ -79,6 +79,7 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
+ 
+ 	fda->entries[fda->nr].fd     = fd;
+ 	fda->entries[fda->nr].events = revents;
++	fda->priv[fda->nr].flags = flags;
+ 	fda->nr++;
+ 	return pos;
+ }
+diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
+index b39557d1a88f..7f517a33af6f 100644
+--- a/tools/lib/api/fd/array.h
++++ b/tools/lib/api/fd/array.h
+@@ -21,19 +21,27 @@ struct fdarray {
+ 	int	       nr_alloc;
+ 	int	       nr_autogrow;
+ 	struct pollfd *entries;
+-	union {
+-		int    idx;
+-		void   *ptr;
++	struct {
++		union {
++			int    idx;
++			void   *ptr;
++		};
++		unsigned int flags;
+ 	} *priv;
+ };
+ 
++enum fdarray_flags {
++	fdarray_flag__default	    = 0x00000000,
++	fdarray_flag__nonfilterable = 0x00000001
++};
++
+ void fdarray__init(struct fdarray *fda, int nr_autogrow);
+ void fdarray__exit(struct fdarray *fda);
+ 
+ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
+ void fdarray__delete(struct fdarray *fda);
+ 
+-int fdarray__add(struct fdarray *fda, int fd, short revents);
++int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags);
+ int fdarray__poll(struct fdarray *fda, int timeout);
+ int fdarray__filter(struct fdarray *fda, short revents,
+ 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 6a875a0f01bb..2208444ecb44 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -305,9 +305,9 @@ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
+ }
+ 
+ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
+-			    void *ptr, short revent)
++			    void *ptr, short revent, enum fdarray_flags flags)
+ {
+-	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
++	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP, flags);
+ 
+ 	if (pos >= 0) {
+ 		evlist->pollfd.priv[pos].ptr = ptr;
+@@ -488,7 +488,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 		revent = !overwrite ? POLLIN : 0;
+ 
+ 		if (!evsel->system_wide &&
+-		    perf_evlist__add_pollfd(evlist, fd, map, revent) < 0) {
++		    perf_evlist__add_pollfd(evlist, fd, map, revent, fdarray_flag__default) < 0) {
+ 			perf_mmap__put(map);
+ 			return -1;
+ 		}
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index 74dc8c3f0b66..2d0fa02b036f 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -45,7 +45,7 @@ struct perf_evlist_mmap_ops {
+ 
+ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
+ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
+-			    void *ptr, short revent);
++			    void *ptr, short revent, enum fdarray_flags flags);
+ 
+ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
 diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
-index c7c81c4a5b2b..d0c8a05aab2f 100644
+index d0c8a05aab2f..d9eca8e86a6b 100644
 --- a/tools/perf/tests/fdarray.c
 +++ b/tools/perf/tests/fdarray.c
-@@ -12,6 +12,7 @@ static void fdarray__init_revents(struct fdarray *fda, short revents)
- 
- 	for (fd = 0; fd < fda->nr; ++fd) {
- 		fda->entries[fd].fd	 = fda->nr - fd;
-+		fda->entries[fd].events  = revents;
- 		fda->entries[fd].revents = revents;
+@@ -112,7 +112,7 @@ int test__fdarray__add(struct test *test __maybe_unused, int subtest __maybe_unu
  	}
- }
-@@ -29,7 +30,7 @@ static int fdarray__fprintf_prefix(struct fdarray *fda, const char *prefix, FILE
  
- int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_unused)
+ #define FDA_ADD(_idx, _fd, _revents, _nr)				   \
+-	if (fdarray__add(fda, _fd, _revents) < 0) {			   \
++	if (fdarray__add(fda, _fd, _revents, fdarray_flag__default) < 0) { \
+ 		pr_debug("\n%d: fdarray__add(fda, %d, %d) failed!",	   \
+ 			 __LINE__,_fd, _revents);			   \
+ 		goto out_delete;					   \
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1b884695b4d3..bcbe0cb8482e 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -497,7 +497,7 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
+ 
+ int evlist__add_pollfd(struct evlist *evlist, int fd)
  {
--	int nr_fds, expected_fd[2], fd, err = TEST_FAIL;
-+	int nr_fds, err = TEST_FAIL;
- 	struct fdarray *fda = fdarray__new(5, 5);
+-	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN);
++	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN, fdarray_flag__default);
+ }
  
- 	if (fda == NULL) {
-@@ -55,7 +56,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 
- 	fdarray__init_revents(fda, POLLHUP);
- 	fda->entries[2].revents = POLLIN;
--	expected_fd[0] = fda->entries[2].fd;
- 
- 	pr_debug("\nfiltering all but fda->entries[2]:");
- 	fdarray__fprintf_prefix(fda, "before", stderr);
-@@ -66,17 +66,9 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_delete;
- 	}
- 
--	if (fda->entries[0].fd != expected_fd[0]) {
--		pr_debug("\nfda->entries[0].fd=%d != %d\n",
--			 fda->entries[0].fd, expected_fd[0]);
--		goto out_delete;
--	}
--
- 	fdarray__init_revents(fda, POLLHUP);
- 	fda->entries[0].revents = POLLIN;
--	expected_fd[0] = fda->entries[0].fd;
- 	fda->entries[3].revents = POLLIN;
--	expected_fd[1] = fda->entries[3].fd;
- 
- 	pr_debug("\nfiltering all but (fda->entries[0], fda->entries[3]):");
- 	fdarray__fprintf_prefix(fda, "before", stderr);
-@@ -88,14 +80,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_delete;
- 	}
- 
--	for (fd = 0; fd < 2; ++fd) {
--		if (fda->entries[fd].fd != expected_fd[fd]) {
--			pr_debug("\nfda->entries[%d].fd=%d != %d\n", fd,
--				 fda->entries[fd].fd, expected_fd[fd]);
--			goto out_delete;
--		}
--	}
--
- 	pr_debug("\n");
- 
- 	err = 0;
+ int evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask)
 -- 
 2.24.1
+
 
