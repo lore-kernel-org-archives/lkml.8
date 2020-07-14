@@ -2,120 +2,134 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8408C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C453CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C8F207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F6421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tb+8hA/X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwF5+Zb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgGNDuS (ORCPT
+        id S1726786AbgGNDwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
+        Mon, 13 Jul 2020 23:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDuR (ORCPT
+        with ESMTP id S1726432AbgGNDwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:50:17 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EDBC061755;
-        Mon, 13 Jul 2020 20:50:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5RP063kjz9sRK;
-        Tue, 14 Jul 2020 13:50:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594698613;
-        bh=BUgT/3b0JRK7+j8QnjhD2/MoY3BUHt7B8rzQiVq/mxk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Tb+8hA/XtjHiKnHF7cAfvZ1rniwl7GheGWMPJZsuDjuOMP4AASnMnIYRo6iIk6J8n
-         vxzUMNsV6JzXe2vX2WbxCOfv1/FJjrYS2fnYWpemDVr7qO+jkLV0uy1zdj60aAyVRR
-         cybpbEZGbsjAnf3Xb1J6nj2cSAcqMbuwu4hKxDqTlklwQtSn2w2HhGmC3r8SPtFPbM
-         /2XWHAF69AYBueZr+AbteqGVDPWZI0gZ1XpEJiIEXX8EeN1pKnDlxv3NT28NfD2cqh
-         SNmFN58k1gt+HCJ0beqsIWfKN5Mu4sb8g2YDrgYPqZwmnszXmjwgy4IuXZ4GXK4Uvl
-         H8si6Ez6SggOQ==
-Date:   Tue, 14 Jul 2020 13:50:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200714135012.447d185c@canb.auug.org.au>
-In-Reply-To: <20200707123301.79ca8a94@canb.auug.org.au>
-References: <20200622113700.3dd74527@canb.auug.org.au>
-        <20200630125459.0ca67c38@canb.auug.org.au>
-        <20200707123301.79ca8a94@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/n8naVaqUJ6scjJTLUV9rb4D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 13 Jul 2020 23:52:11 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1185FC061755;
+        Mon, 13 Jul 2020 20:52:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so7003413pfu.1;
+        Mon, 13 Jul 2020 20:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BBW3oa13Oa8CN3zGFpEI3FHknw3Uj0TMLjOHYEFkNdM=;
+        b=QwF5+Zb6uv1oHdz/iyAarbRcEm9woy225E53I+2oBKpb9u+ubyywQdyk75QBbKtMPB
+         l2PVQZtQ1ineCMboClfowLPsciRCgpUEw0WGd5IDKgm+Agd9rUHYsZH2rzmB9s8KgTXM
+         NsSfANR7QnH8JpkA/jtRa1bT9emFcy4kjCT99EeB5J6Z8dSOwflirm5pp/t2NNXr8aEn
+         nro+THY4n/0rymYHngR25igGKGMT6bP+C93QjtB+FeAItLSyNVQUZyzeinLLbCVA7vni
+         AJNX0zTuJoZbHrSMm1FqtQV78jkTncJ4mHRyDKrOg29Y216AOIVJ9YGrNZvfK5nx19SN
+         sIyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BBW3oa13Oa8CN3zGFpEI3FHknw3Uj0TMLjOHYEFkNdM=;
+        b=ga8R4dig30j23JdnuPk5nqZqy7/VxbRL+9pyCLxcLX6m7yVkt+6iLO/6orsaX9wzmO
+         ZbLw4KVBH9e6JbG610iJPTq9B5feJiJn20BCFzDIxgOviNIjFUKc6DSXFQN+PqviIz3Q
+         qCoKu29lXyWrZv1fWnMV058Y2zfxhIt2tDy46N0gMvB325CL3ebE+MA+oQvyW1jSfCTn
+         3qCJT6pFepyFm/LXPtJHn+NVglcLrjCAtxkrOxWm0Rg97am0hJ8Ps3IYw+/4hNUy8qIQ
+         zxj6mSLb/lEnADQ0zoNxUv3+tWd+Zc5WtabYZJgW78ZKXhlrg8wjPHd1iswuJ4nVof2w
+         5lbw==
+X-Gm-Message-State: AOAM5312BIu/W2JgQRwdNlE1yGT9+wvbHXFnQYXE/r0Fzz1U2Z1M+HLB
+        vhDsG6uDD8srJw/5OFi4r8M=
+X-Google-Smtp-Source: ABdhPJzGFvPrVkkdZmdazY4aHmlfE0Mk7hut0QL4mPKgFTjhQE1zq6iNlbs4o1q+q9Znn1iWIZ7KCA==
+X-Received: by 2002:a05:6a00:2286:: with SMTP id f6mr2566676pfe.303.1594698730624;
+        Mon, 13 Jul 2020 20:52:10 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
+        by smtp.gmail.com with ESMTPSA id v11sm17595832pfc.108.2020.07.13.20.52.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 20:52:10 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
+        robh+dt@kernel.org
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v3] ARM: dts: Configure osc clock for d_can on am437x
+Date:   Tue, 14 Jul 2020 11:52:05 +0800
+Message-Id: <1594698726-4557-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n8naVaqUJ6scjJTLUV9rb4D
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: dillon min <dillon.minfei@gmail.com>
 
-Hi all,
+V2 -> V3:
+make Fixes tags after Signed-off-by line.
 
-On Tue, 7 Jul 2020 12:33:01 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Tue, 30 Jun 2020 12:54:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > On Mon, 22 Jun 2020 11:37:00 +1000 Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote: =20
-> > >
-> > > After merging the tip tree, today's linux-next build (x86_64 allmodco=
-nfig)
-> > > failed like this:
-> > >=20
-> > > ERROR: modpost: "sched_setscheduler" [kernel/trace/ring_buffer_benchm=
-ark.ko] undefined!
-> > >=20
-> > > Caused by commit
-> > >=20
-> > >   616d91b68cd5 ("sched: Remove sched_setscheduler*() EXPORTs")
-> > >=20
-> > > Missed one :-)
-> > >=20
-> > > I have reverted that commit for today.   =20
-> >=20
-> > I am still reverting that commit. =20
->=20
-> Ditto ...
+V1 -> V2:
+correct commit messages based on Stephen Rothwell's reviewing.
+make Fixes tags to oneline.
+make all commit message tags at the end of commit message
 
-Ping?
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/n8naVaqUJ6scjJTLUV9rb4D
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+V1:
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
 
------BEGIN PGP SIGNATURE-----
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with
+error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with
+error -2
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NK3QACgkQAVBC80lX
-0GyozQf9GdvxQZx/M0eIEScU8ejFUCGRGLL79PiBqiGRoRifp/qa0Q5u0X609JrY
-XeTo/9QaU7e6VIKJvZ/kDRNZZCE4s70g+VgujRBgm3sCVRr78F+ibFMW20W2/78K
-sfE7LGRa2EnG7Py347+3GpSs8ofiHTJ7Smc2jMJyYzojhLMzVKdzHFb6R+IgABfe
-6hvVeKWuXLCz0rDpjFwPHWOZi0GzD4/Z0s8lyo7YOSiDgOfFtHtZ9EZLM+Ir7ZAI
-5Or9SGKXHTSHbpS5r4iAIxm4zEXAgL0zZtSXFqcJAdaN/eRnzGXJeWHcvJfWK9Mk
-kMvXRfORFlrTC9sai46FmF6I28Goyw==
-=1Y8R
------END PGP SIGNATURE-----
+actually, Tony has fixed this issue on am335x, the patch [3]
+commit messages:
+"
+The reason why the issue happens is because we now attempt to read the
+interconnect target module revision register by first manually enabling
+all the device clocks in sysc_probe(). And looks like d_can also needs
+the osc clock in addition to the module clock, and it may or may not be
+enabled depending on the bootloader version and if other devices have
+already requested osc clock.
 
---Sig_/n8naVaqUJ6scjJTLUV9rb4D--
+Let's fix the issue by adding osc clock as an optional clock for the
+module for am335x. Note that am437x does not seem to list the osc clock
+at all, so presumably it is not needed for am437x.
+"
+
+from TRM of am335x/am437x [1][2], they have the same clock structure,
+so, we can just reuse [3] for am437x platform.
+
+Tested on custom am4372 board.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+
+
+dillon min (1):
+  Since am437x have the same clock structure with am335x [1][2],    
+    reuse the code from Tony Lindgren's patch [reference] to fix dcan
+    probe     failed on am437x platform.
+
+ arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.7.4
+
