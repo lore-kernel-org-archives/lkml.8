@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93E0C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA0DC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA00122BEF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCCB22BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752893;
-	bh=RBIbnZzztTdxZ/SbCqbKeaEtPBUQ+wEz5vBOHX/Wrjk=;
+	s=default; t=1594752896;
+	bh=WDOcpm8AiqOoHahlx7bW0LSDjS5IJ/h+aOG5VQUvvuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAtMcVk0Bqv+ET/JxLG9T3eblyoR/ryBBMjnFhog9Ve8qP0psfeVQ9iu97v3/2C58
-	 8YP3unlHSw67TeZO6vtiSdvHs/OHF+4fAAPyL3P49fF7AfbAQvP6tJCP568HYTXAg/
-	 dnrmwhWzxkG6JDp6hcKagl5mzXfdcwvyhdXQeGvk=
+	b=KrEUwfAqwI43dN/vI1W8p/vTkItoOrZWdHeTlDJWanuyJAZe48qGVhS2YV+KehaAj
+	 olKz0+0+AtN40BKCK9ro/tmdNfVdzXpVs/hUnSycWSDqPOgYUxgoq6XxkbfLm7gM2K
+	 mwPvzwQZJiLwYVX773EcdgnWG6fmJugG3d6jCof0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgGNSyw (ORCPT
+        id S1730148AbgGNSyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:54:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729677AbgGNSyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:54:46 -0400
+        id S1730794AbgGNSys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E6A22BEF;
-        Tue, 14 Jul 2020 18:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA8F22B45;
+        Tue, 14 Jul 2020 18:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752886;
-        bh=RBIbnZzztTdxZ/SbCqbKeaEtPBUQ+wEz5vBOHX/Wrjk=;
+        s=default; t=1594752888;
+        bh=WDOcpm8AiqOoHahlx7bW0LSDjS5IJ/h+aOG5VQUvvuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcf8IYg8ZQUA52/SWeFSIEydXtjwoW1lsuyLZFJen9hiWkQXvaQlV4GyGDw14mVEw
-         /JjQsXHpAEqZzNfdfFYteuF2FbxrFs4etdi/LaXd6nkwg+vJuJFCtbjiCE5QIUmZcC
-         N5JwB5EY1hhsL36a0xDvM+/Gsm2UEKDJWTGv5WaI=
+        b=OUaQIMSePprqQhBIY5+V7cPLP3mhExf7oa6GWexB+++1SODHxMx8q/Cl7tqWl3HSt
+         kTESy+XdONAgwfCkfxcCILe1Mb5n3YI3h8ISdby/4LaSSJdut6dU5oIMsdYAFAxaPt
+         Kr1/upw/alCJ0tmwe9+0lxzewywTvaM3AnZAAdUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 038/166] arm64: kpti: Add KRYO{3, 4}XX silver CPU cores to kpti safelist
-Date:   Tue, 14 Jul 2020 20:43:23 +0200
-Message-Id: <20200714184117.703665553@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 039/166] block: release bip in a right way in error path
+Date:   Tue, 14 Jul 2020 20:43:24 +0200
+Message-Id: <20200714184117.750537236@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,34 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-[ Upstream commit f4617be35b4b547e82d30993f56d631dfc2d5f88 ]
+[ Upstream commit 0b8eb629a700c0ef15a437758db8255f8444e76c ]
 
-QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on Cortex-A55
-and are meltdown safe, hence add them to kpti_safe_list[].
+Release bip using kfree() in error path when that was allocated
+by kmalloc().
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Link: https://lore.kernel.org/r/20200624123406.3472-1-saiprakash.ranjan@codeaurora.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bio-integrity.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fac745aa7bb2..b0fb1d5bf2235 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1059,6 +1059,8 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
- 		MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
- 		MIDR_ALL_VERSIONS(MIDR_NVIDIA_CARMEL),
-+		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
-+		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
- 		{ /* sentinel */ }
- 	};
- 	char const *str = "kpti command line option";
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index ae07dd78e9518..c9dc2b17ce251 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -24,6 +24,18 @@ void blk_flush_integrity(void)
+ 	flush_workqueue(kintegrityd_wq);
+ }
+ 
++void __bio_integrity_free(struct bio_set *bs, struct bio_integrity_payload *bip)
++{
++	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
++		if (bip->bip_vec)
++			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
++				  bip->bip_slab);
++		mempool_free(bip, &bs->bio_integrity_pool);
++	} else {
++		kfree(bip);
++	}
++}
++
+ /**
+  * bio_integrity_alloc - Allocate integrity payload and attach it to bio
+  * @bio:	bio to attach integrity metadata to
+@@ -75,7 +87,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
+ 
+ 	return bip;
+ err:
+-	mempool_free(bip, &bs->bio_integrity_pool);
++	__bio_integrity_free(bs, bip);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ EXPORT_SYMBOL(bio_integrity_alloc);
+@@ -96,14 +108,7 @@ void bio_integrity_free(struct bio *bio)
+ 		kfree(page_address(bip->bip_vec->bv_page) +
+ 		      bip->bip_vec->bv_offset);
+ 
+-	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
+-		bvec_free(&bs->bvec_integrity_pool, bip->bip_vec, bip->bip_slab);
+-
+-		mempool_free(bip, &bs->bio_integrity_pool);
+-	} else {
+-		kfree(bip);
+-	}
+-
++	__bio_integrity_free(bs, bip);
+ 	bio->bi_integrity = NULL;
+ 	bio->bi_opf &= ~REQ_INTEGRITY;
+ }
 -- 
 2.25.1
 
