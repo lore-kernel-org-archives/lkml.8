@@ -2,213 +2,124 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC054C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DBCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919B9206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734CF21924
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="py84OM+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGNBYq (ORCPT
+        id S1726864AbgGNB3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:24:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:3555 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgGNBYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:24:46 -0400
-IronPort-SDR: SIGcOZgvAqjfH//LbaTL/KD/vLUq4oLQendT9QYk+KT9Vc/gGkuPgu+UzIWhuWJ4SapHoLU21S
- Rprxhe2HE5tg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128335352"
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="128335352"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 18:24:45 -0700
-IronPort-SDR: zTuwavoXlFX6hjRzlLozhiHIC7rdTX3dDznO7Xsbcd+TcvNnPRYsMfxCNvEFbKCCwi91T5suab
- 2Nu9R/xpPjRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="485691184"
-Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Jul 2020 18:24:44 -0700
-Date:   Mon, 13 Jul 2020 18:18:54 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is not
- in use
-Message-ID: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
+        Mon, 13 Jul 2020 21:29:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgGNB3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 21:29:30 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936C7C061755;
+        Mon, 13 Jul 2020 18:29:30 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c30so14195428qka.10;
+        Mon, 13 Jul 2020 18:29:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R5IIzVMOgCGftVB47FAaShDA0o6roHJ+qQ1SXjjeBPw=;
+        b=py84OM+5bG/8beCPdSOmQckjN7FoZchWH/ZlMsgqV0kEXJzeMI3pkaCzwYjHe8FN7q
+         7lkkAI/fQ4Bu8cS6E5f0PFiFL0D6+fhbm9SLHkASWNLELrUBTnIBwoEECSb+fHP52QMX
+         svXQQgU+Sm9cq4s1ikEcdzccc5mS4h87wkIcsPIpApZRk5/yyyfSrZb67FBOxqWKVt95
+         lsAMYIkTgw/TZ+Hd4srf3NaLYg0Wp3lo2J2vWXGeKmhvr72JlJCzW1U9xftaXYJ06UCX
+         6e2yRiMobflrXWYyMLPittWrzTkFblzDCn/ay5piTeaLgkIxbVK3+xWqYGwammud6K4v
+         D3Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R5IIzVMOgCGftVB47FAaShDA0o6roHJ+qQ1SXjjeBPw=;
+        b=CqerWyAImO6k7YCKx55S3ll4WqPw04l4qckjmxsNlvjCSE+xothRGg1qvhK7d1eOmi
+         PK96srrEdms33KPVzmmNXQ6bgWpANUDehyCkNFgrJpE4iiOBR6wgCgNyXd18V+bBER5W
+         U6/WBeAs9dWMRfH16h3RXHlBn6A2BhvfjvFRT70cGO8Npu2FDcM3f3VIkrXK49HljdkL
+         7dP02AAtO66bVvNeENLRSt6ThwHFMCtltEhC+l1KvlLiMB1M4BY2udxVY+aGpwX+gBhR
+         hP7JQ0fvYmQXNYAauDVZBa4Phq6vkRkl3MiwHcRaHY1kNFkKFOoG4KpzlYPKXtZGZDOi
+         rwSQ==
+X-Gm-Message-State: AOAM532htHZ9YM7uywImzTmx/tIRuA4zpXsjcKU8z5m80A0jQxsZdhSJ
+        QnvCQorKbr+g8VSvoia11A==
+X-Google-Smtp-Source: ABdhPJwiHJEuFip+53k+1C0OC/E9TC3f8o1MxGFmfFAYhf0A8tB6Hb8t/KlSZbhCmgIH8HWpRiLTYw==
+X-Received: by 2002:ae9:ea13:: with SMTP id f19mr2317534qkg.331.1594690169776;
+        Mon, 13 Jul 2020 18:29:29 -0700 (PDT)
+Received: from localhost.localdomain ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id w28sm19125827qkw.92.2020.07.13.18.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 18:29:29 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Andrii Nakryiko <andriin@fb.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [Linux-kernel-mentees] [PATCH v2] bpf: Fix NULL pointer dereference in __btf_resolve_helper_id()
+Date:   Mon, 13 Jul 2020 21:27:32 -0400
+Message-Id: <20200714012732.195466-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAEf4BzZRGOsTiW3uFWd1aY6K5Yi+QBrTeC5FNOo6uVXviXuX4g@mail.gmail.com>
+References: <CAEf4BzZRGOsTiW3uFWd1aY6K5Yi+QBrTeC5FNOo6uVXviXuX4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On systems that have virtualization disabled or KVM module is not
-loaded, sysfs mitigation state of X86_BUG_ITLB_MULTIHIT is reported
-incorrectly as:
+Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
+as NULL. This patch fixes the following syzbot bug:
 
-  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
-  KVM: Vulnerable
+    https://syzkaller.appspot.com/bug?id=5edd146856fd513747c1992442732e5a0e9ba355
 
-System is not vulnerable to DoS attack from a rogue guest when:
- - KVM module is not loaded or
- - Virtualization is disabled in the hardware or
- - Kernel was configured without support for KVM
-
-Change the reporting to "Currently not affected (KVM not in use)" for
-such cases.
-
-Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 ---
- .../admin-guide/hw-vuln/multihit.rst          |  5 +++-
- arch/x86/include/asm/processor.h              |  6 +++++
- arch/x86/kernel/cpu/bugs.c                    | 24 +++++++++----------
- arch/x86/kvm/mmu/mmu.c                        |  9 +++++--
- 4 files changed, 29 insertions(+), 15 deletions(-)
+Thank you for reviewing my patch! I am new to Linux kernel development; would
+the log message and errno be appropriate for this case?
 
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-index ba9988d8bce5..842961419f3e 100644
---- a/Documentation/admin-guide/hw-vuln/multihit.rst
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -82,7 +82,10 @@ The possible values in this file are:
-        - Software changes mitigate this issue.
-      * - KVM: Vulnerable
-        - The processor is vulnerable, but no mitigation enabled
--
-+     * - Currently not affected (KVM not in use)
-+       - The processor is vulnerable but no mitigation is required because
-+         KVM module is not loaded or virtualization is disabled in the hardware or
-+         kernel was configured without support for KVM.
+Change in v2:
+    - Split NULL and IS_ERR cases.
+
+ kernel/bpf/btf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 30721f2c2d10..092116a311f4 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -4088,6 +4088,11 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
+ 	const char *tname, *sym;
+ 	u32 btf_id, i;
  
- Enumeration of the erratum
- --------------------------------
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 03b7c4ca425a..830a3e7725af 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -989,4 +989,10 @@ enum mds_mitigations {
- 	MDS_MITIGATION_VMWERV,
- };
- 
-+enum itlb_multihit_mitigations {
-+	ITLB_MULTIHIT_MITIGATION_OFF,
-+	ITLB_MULTIHIT_MITIGATION_FULL,
-+	ITLB_MULTIHIT_MITIGATION_NO_KVM,
-+};
++	if (!btf_vmlinux) {
++		bpf_log(log, "btf_vmlinux doesn't exist\n");
++		return -EINVAL;
++	}
 +
- #endif /* _ASM_X86_PROCESSOR_H */
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d..97f66a93f2be 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1395,8 +1395,15 @@ void x86_spec_ctrl_setup_ap(void)
- 		x86_amd_ssb_disable();
- }
- 
--bool itlb_multihit_kvm_mitigation;
--EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
-+/* Default to KVM not in use, KVM module changes this later */
-+enum itlb_multihit_mitigations itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_NO_KVM;
-+EXPORT_SYMBOL_GPL(itlb_multihit_mitigation);
-+
-+static const char * const itlb_multihit_strings[] = {
-+	[ITLB_MULTIHIT_MITIGATION_OFF]		= "KVM: Vulnerable",
-+	[ITLB_MULTIHIT_MITIGATION_FULL]		= "KVM: Mitigation: Split huge pages",
-+	[ITLB_MULTIHIT_MITIGATION_NO_KVM]	= "Currently not affected (KVM not in use)",
-+};
- 
- #undef pr_fmt
- #define pr_fmt(fmt)	"L1TF: " fmt
-@@ -1553,25 +1560,18 @@ static ssize_t l1tf_show_state(char *buf)
- 		       l1tf_vmx_states[l1tf_vmx_mitigation],
- 		       sched_smt_active() ? "vulnerable" : "disabled");
- }
--
--static ssize_t itlb_multihit_show_state(char *buf)
--{
--	if (itlb_multihit_kvm_mitigation)
--		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
--	else
--		return sprintf(buf, "KVM: Vulnerable\n");
--}
- #else
- static ssize_t l1tf_show_state(char *buf)
- {
- 	return sprintf(buf, "%s\n", L1TF_DEFAULT_MSG);
- }
-+#endif
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--	return sprintf(buf, "Processor vulnerable\n");
-+	return sprintf(buf, "%s\n",
-+		       itlb_multihit_strings[itlb_multihit_mitigation]);
- }
--#endif
- 
- static ssize_t mds_show_state(char *buf)
- {
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 6d6a0ae7800c..e089b9e565a5 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -50,7 +50,7 @@
- #include <asm/kvm_page_track.h>
- #include "trace.h"
- 
--extern bool itlb_multihit_kvm_mitigation;
-+extern enum itlb_multihit_mitigations itlb_multihit_mitigation;
- 
- static int __read_mostly nx_huge_pages = -1;
- #ifdef CONFIG_PREEMPT_RT
-@@ -6158,7 +6158,12 @@ static bool get_nx_auto_mode(void)
- 
- static void __set_nx_huge_pages(bool val)
- {
--	nx_huge_pages = itlb_multihit_kvm_mitigation = val;
-+	nx_huge_pages = val;
-+
-+	if (val)
-+		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_FULL;
-+	else
-+		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_OFF;
- }
- 
- static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
+ 	if (IS_ERR(btf_vmlinux)) {
+ 		bpf_log(log, "btf_vmlinux is malformed\n");
+ 		return -EINVAL;
 -- 
-2.21.3
+2.25.1
 
