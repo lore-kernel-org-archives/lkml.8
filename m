@@ -2,195 +2,84 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C428C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23754C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0A62242E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC64D2236F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mn0Ryrht"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="POLxeDk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGNPrI (ORCPT
+        id S1727925AbgGNPra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37836 "EHLO
+        Tue, 14 Jul 2020 11:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgGNPrI (ORCPT
+        with ESMTP id S1726338AbgGNPra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:47:08 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE403C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:47:07 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b15so17719144edy.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QXa/a8+v6atJW9I3K/8i8cY/Lmvtpiv+5qg62twrTiI=;
-        b=mn0RyrhtCpG4LO11bnCZa/lH0u4e10/twWy/TsKJcWSQwrFQ5uc6hzPuo8XA/9zijo
-         WXpQOqlkhvbUvdaMnYvaL5yMyMBiI13+6TT7c2XLV0U0dSXQYpZixce2KzXkEc9EMl61
-         OqZZyQ5PLT6Z1OFgRTGde6rsKiTpakTwwGXYbmnV9rjo/Kjf6jGOKvwGN+YRjLW9lkhC
-         kRnWpIq1+3mRuVGMoYQC1U7VWPy3zx8sqXja+EjvisR61blv1JMOgRN/U/u/wo35VUQo
-         WZNr9i8Jsh/wLAI1XKQxMW1+KlUDFBsmTNNVjEHsl9KYkXD8OHwk3pGLriKFn9pzN7k3
-         84yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QXa/a8+v6atJW9I3K/8i8cY/Lmvtpiv+5qg62twrTiI=;
-        b=A6aMEGV/VxvHrE8O0D7vegzYrHgQD1Wo1ud8GO7VOxnA9H1jF2MNAx7Z3W6aQ3MAxp
-         rUIQs8k1pzN6j6VqYxGy6jvcoOpCbKgG/x6CWoITmbVAC18F8iFjEqZfQcDLx96Wryuc
-         gz6eY0uktFc2gfhx34Tk1slGZZVsSh9IyAX4ACqPmCDDRtw2FA+MGzpfW4GludiE0Ube
-         YrVlq/CqFMtGR2bNA6bPjhuqd5TRPz/tl6n7JT2wFMX9NddnQIBiVOB9aegRKqboQM7x
-         Yr/xQnBxYKeX/JtYwOdefgDyTLXEc7t6POhfNgcFToroTIsBGz8o3s/FRT0QJpaMkj+s
-         8Kgg==
-X-Gm-Message-State: AOAM530PHPI5yGzjVJYnJiGnsqoxvUeLJhOKWZcUArXcWOl/3w48j9te
-        hokWM0oHTVxiCYXoLaAQYOhvZz0nz32WKQmUrHYhxA==
-X-Google-Smtp-Source: ABdhPJy+kyePNsPhuIE7ky0xWpId0cA5UdAi/NGYJUBWmwsXrWoAfYSuKigLeAwba34hq5mKjf42yjcDEybxERrageM=
-X-Received: by 2002:aa7:dd8e:: with SMTP id g14mr5326572edv.208.1594741626195;
- Tue, 14 Jul 2020 08:47:06 -0700 (PDT)
+        Tue, 14 Jul 2020 11:47:30 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18418C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:47:30 -0700 (PDT)
+Received: from nazgul.tnic (77-85-108-148.ip.btc-net.bg [77.85.108.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0A701EC0344;
+        Tue, 14 Jul 2020 17:47:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1594741646;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=GYuwCWwzK+ziSG55zkdLFouJVnC8IgBoEQyI2gj6P44=;
+        b=POLxeDk+OXvpF/ABe/kUqflUXRd9pZrkAXqFjTbyR28YPDutmFZP+tGHGEVYaO54asx1GA
+        teljim4zuVfvnqBkWxSWE1k4fDpGKMX1E1NRwMflnJlx0PP4N3xlgo5R7XBUfkCKlmxT+f
+        4Pr88qaEHYTY4gZFSsk4rms5P6wa+BU=
+Date:   Tue, 14 Jul 2020 17:47:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        tony.luck@intel.com, torvalds@linux-foundation.org, x86@kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
+Message-ID: <20200714154728.GA3101@nazgul.tnic>
+References: <20200615063837.GA14668@zn.tnic>
+ <20200714121955.GA2080@chrisdown.name>
 MIME-Version: 1.0
-References: <0000000000000b5f9d059aa2037f@google.com> <20200714033252.8748-1-hdanton@sina.com>
- <20200714053205.15240-1-hdanton@sina.com> <20200714140859.15156-1-hdanton@sina.com>
- <20200714141815.GP24642@dhcp22.suse.cz>
-In-Reply-To: <20200714141815.GP24642@dhcp22.suse.cz>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Tue, 14 Jul 2020 08:46:55 -0700
-Message-ID: <CAHRSSEzbCW3E0QTR0ryf3p=5J5uhs_vY2D6fFQEzP=HeCDkPGQ@mail.gmail.com>
-Subject: Re: possible deadlock in shmem_fallocate (4)
-To:     Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Hridya Valsaraju <hridya@google.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        syzbot <syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Martijn Coenen <maco@android.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Todd Kjos <tkjos@android.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200714121955.GA2080@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Suren Baghdasaryan +Hridya Valsaraju who support the ashmem driver.
+On Tue, Jul 14, 2020 at 01:19:55PM +0100, Chris Down wrote:
+> That is, even with pr_err_ratelimited, we still end up logging on basically
+> every single write, even though it's from the same TGID writing to the same
+> MSRs, and end up becoming >80% of kmsg.
+> 
+> Of course, one can boot with `allow_writes=1` to avoid these messages at
 
+Yes, use that.
 
-On Tue, Jul 14, 2020 at 7:18 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 14-07-20 22:08:59, Hillf Danton wrote:
-> >
-> > On Tue, 14 Jul 2020 10:26:29 +0200 Michal Hocko wrote:
-> > > On Tue 14-07-20 13:32:05, Hillf Danton wrote:
-> > > >
-> > > > On Mon, 13 Jul 2020 20:41:11 -0700 Eric Biggers wrote:
-> > > > > On Tue, Jul 14, 2020 at 11:32:52AM +0800, Hillf Danton wrote:
-> > > > > >
-> > > > > > Add FALLOC_FL_NOBLOCK and on the shmem side try to lock inode upon the
-> > > > > > new flag. And the overall upside is to keep the current gfp either in
-> > > > > > the khugepaged context or not.
-> > > > > >
-> > > > > > --- a/include/uapi/linux/falloc.h
-> > > > > > +++ b/include/uapi/linux/falloc.h
-> > > > > > @@ -77,4 +77,6 @@
-> > > > > >   */
-> > > > > >  #define FALLOC_FL_UNSHARE_RANGE              0x40
-> > > > > >
-> > > > > > +#define FALLOC_FL_NOBLOCK            0x80
-> > > > > > +
-> > > > >
-> > > > > You can't add a new UAPI flag to fix a kernel-internal problem like this.
-> > > >
-> > > > Sounds fair, see below.
-> > > >
-> > > > What the report indicates is a missing PF_MEMALLOC_NOFS and it's
-> > > > checked on the ashmem side and added as an exception before going
-> > > > to filesystem. On shmem side, no more than a best effort is paid
-> > > > on the inteded exception.
-> > > >
-> > > > --- a/drivers/staging/android/ashmem.c
-> > > > +++ b/drivers/staging/android/ashmem.c
-> > > > @@ -437,6 +437,7 @@ static unsigned long
-> > > >  ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
-> > > >  {
-> > > >   unsigned long freed = 0;
-> > > > + bool nofs;
-> > > >
-> > > >   /* We might recurse into filesystem code, so bail out if necessary */
-> > > >   if (!(sc->gfp_mask & __GFP_FS))
-> > > > @@ -445,6 +446,11 @@ ashmem_shrink_scan(struct shrinker *shri
-> > > >   if (!mutex_trylock(&ashmem_mutex))
-> > > >           return -1;
-> > > >
-> > > > + /* enter filesystem with caution: nonblock on locking */
-> > > > + nofs = current->flags & PF_MEMALLOC_NOFS;
-> > > > + if (!nofs)
-> > > > +         current->flags |= PF_MEMALLOC_NOFS;
-> > > > +
-> > > >   while (!list_empty(&ashmem_lru_list)) {
-> > > >           struct ashmem_range *range =
-> > > >                   list_first_entry(&ashmem_lru_list, typeof(*range), lru);
-> > >
-> > > I do not think this is an appropriate fix. First of all is this a real
-> > > deadlock or a lockdep false positive? Is it possible that ashmem just
-> >
-> > The warning matters and we can do something to quiesce it.
->
-> The underlying issue should be fixed rather than _something_ done to
-> silence it.
->
-> > > needs to properly annotate its shmem inodes? Or is it possible that
-> > > the internal backing shmem file is visible to the userspace so the write
-> > > path would be possible?
-> > >
-> > > If this a real problem then the proper fix would be to set internal
-> > > shmem mapping's gfp_mask to drop __GFP_FS.
-> >
-> > Thanks for the tip, see below.
-> >
-> > Can you expand a bit on how it helps direct reclaimers like khugepaged
-> > in the syzbot report wrt deadlock?
->
-> I do not understand your question.
->
-> > TBH I have difficult time following
-> > up after staring at the chart below for quite a while.
->
-> Yes, lockdep reports are quite hard to follow and they tend to confuse
-> one hell out of me. But this one says that there is a reclaim dependency
-> between the shmem inode lock and the reclaim context.
->
-> > Possible unsafe locking scenario:
-> >
-> >        CPU0                    CPU1
-> >        ----                    ----
-> >   lock(fs_reclaim);
-> >                                lock(&sb->s_type->i_mutex_key#15);
-> >                                lock(fs_reclaim);
-> >
-> >   lock(&sb->s_type->i_mutex_key#15);
->
-> Please refrain from proposing fixes until the actual problem is
-> understood. I suspect that this might be just false positive because the
-> lockdep cannot tell the backing shmem which is internal to ashmem(?)
-> with any general shmem. But somebody really familiar with ashmem code
-> should have a look I believe.
->
-> --
-> Michal Hocko
-> SUSE Labs
+From a quick scan over that "tool" you pointed me at, it pokes at some
+MSRs from userspace which the kernel *also* writes to and this is
+exactly what should not be allowed.
+
+As to the "MSR hack", please describe what the issue is exactly so that
+we can get the proper people involved. If anything, this needs to be
+fixed in the kernel properly. If people are waiting for a year for a
+BIOS fix, I'd say there's a very slim chance for that to ever happen...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
