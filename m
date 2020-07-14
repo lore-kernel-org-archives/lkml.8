@@ -2,53 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792C0C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FFC433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A79D221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545C2221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753924;
-	bh=l3HCVOUYRX0UhaSQiRBah5J1WNMVD+e/own6R+sxXq0=;
+	s=default; t=1594753933;
+	bh=lHoFsJHhdG2dbnh2ce7yjRas4/oHkqce+YQiHAMMOGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BUyLIJLPFPXsTExocr58VPtnISI18EKe4ForeeGROBB3oMsoL+wR8kXKmX5xgjbk1
-	 59IUunJoS4zKlJVzLVBASHEci592RfSd9m0JvO71MGi1xXIpCxuwYyY13vvY2Z3Fgz
-	 p6O1AQT41d6/cj85+16Qu79EuaVFvNDc28zm1JZE=
+	b=LztuZNtWeLTzVxdaGLaOSQn4l/nJv3CpxeUhNbSL2Nh5GdiDXb7Jbs5GY/N+5Lil+
+	 M6BLlMyze0Gt4DawaG4RalRFHHdU10bEHTabmA4qrf2k8WDyB9b0hRU6JjGdTUIpHV
+	 iY0ibazxOXMV87NhewqnsGBmvbxI8kddl7xwYQDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgGNSrz (ORCPT
+        id S1730474AbgGNTML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:47:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43126 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729828AbgGNSrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:51 -0400
+        id S1729738AbgGNSrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9793622B2D;
-        Tue, 14 Jul 2020 18:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 788DB22AAE;
+        Tue, 14 Jul 2020 18:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752471;
-        bh=l3HCVOUYRX0UhaSQiRBah5J1WNMVD+e/own6R+sxXq0=;
+        s=default; t=1594752455;
+        bh=lHoFsJHhdG2dbnh2ce7yjRas4/oHkqce+YQiHAMMOGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a//p7p9Kngatusd/0uFcYrQalKbJ5BpGm3qXT8XzwmX6qhR07UOkYfEcorx958GOi
-         dtt3kcmogDFHsKHCysHIoFYAUkIPaxrmOXbINmRgyI5WJTdjimUyXPTemkkmv3Aje3
-         DhFAR7UMQNhu+jyQrLu7pPt7u/eTKmrU9A+tPe6c=
+        b=bODN6zQpyX9qAwvAUsXaFLcpd040evA0KX1PTpTIW34ePsD+VSlh+46Yco7zCwXYz
+         8FBQ6lXpDhahAcu/1RQFkMLJYIEJ6rghfV08UtjjM713fi9LMGmkeiVBJ5PdXnywVp
+         /dn5+5+wJwXkdfO4ofa9kTCW/8SSy+XdwwmLdu3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Li Heng <liheng40@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/58] net: cxgb4: fix return error value in t4_prep_fw
-Date:   Tue, 14 Jul 2020 20:44:00 +0200
-Message-Id: <20200714184057.486322368@linuxfoundation.org>
+        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 48/58] module: Refactor section attr into bin attribute
+Date:   Tue, 14 Jul 2020 20:44:21 +0200
+Message-Id: <20200714184058.548988651@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,58 +59,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Heng <liheng40@huawei.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 8a259e6b73ad8181b0b2ef338b35043433db1075 ]
+commit ed66f991bb19d94cae5d38f77de81f96aac7813f upstream.
 
-t4_prep_fw goto bye tag with positive return value when something
-bad happened and which can not free resource in adap_init0.
-so fix it to return negative value.
+In order to gain access to the open file's f_cred for kallsym visibility
+permission checks, refactor the module section attributes to use the
+bin_attribute instead of attribute interface. Additionally removes the
+redundant "name" struct member.
 
-Fixes: 16e47624e76b ("cxgb4: Add new scheme to update T4/T5 firmware")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Li Heng <liheng40@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/module.c |   45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index 5934ec9b6a31f..abc2a66754bd0 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3499,7 +3499,7 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
- 	drv_fw = &fw_info->fw_hdr;
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1451,8 +1451,7 @@ static inline bool sect_empty(const Elf_
+ }
  
- 	/* Read the header of the firmware on the card */
--	ret = -t4_read_flash(adap, FLASH_FW_START,
-+	ret = t4_read_flash(adap, FLASH_FW_START,
- 			    sizeof(*card_fw) / sizeof(uint32_t),
- 			    (uint32_t *)card_fw, 1);
- 	if (ret == 0) {
-@@ -3528,8 +3528,8 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
- 		   should_install_fs_fw(adap, card_fw_usable,
- 					be32_to_cpu(fs_fw->fw_ver),
- 					be32_to_cpu(card_fw->fw_ver))) {
--		ret = -t4_fw_upgrade(adap, adap->mbox, fw_data,
--				     fw_size, 0);
-+		ret = t4_fw_upgrade(adap, adap->mbox, fw_data,
-+				    fw_size, 0);
- 		if (ret != 0) {
- 			dev_err(adap->pdev_dev,
- 				"failed to install firmware: %d\n", ret);
-@@ -3560,7 +3560,7 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
- 			FW_HDR_FW_VER_MICRO_G(c), FW_HDR_FW_VER_BUILD_G(c),
- 			FW_HDR_FW_VER_MAJOR_G(k), FW_HDR_FW_VER_MINOR_G(k),
- 			FW_HDR_FW_VER_MICRO_G(k), FW_HDR_FW_VER_BUILD_G(k));
--		ret = EINVAL;
-+		ret = -EINVAL;
- 		goto bye;
+ struct module_sect_attr {
+-	struct module_attribute mattr;
+-	char *name;
++	struct bin_attribute battr;
+ 	unsigned long address;
+ };
+ 
+@@ -1462,11 +1461,16 @@ struct module_sect_attrs {
+ 	struct module_sect_attr attrs[0];
+ };
+ 
+-static ssize_t module_sect_show(struct module_attribute *mattr,
+-				struct module_kobject *mk, char *buf)
++static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
++				struct bin_attribute *battr,
++				char *buf, loff_t pos, size_t count)
+ {
+ 	struct module_sect_attr *sattr =
+-		container_of(mattr, struct module_sect_attr, mattr);
++		container_of(battr, struct module_sect_attr, battr);
++
++	if (pos != 0)
++		return -EINVAL;
++
+ 	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+ 		       (void *)sattr->address : NULL);
+ }
+@@ -1476,7 +1480,7 @@ static void free_sect_attrs(struct modul
+ 	unsigned int section;
+ 
+ 	for (section = 0; section < sect_attrs->nsections; section++)
+-		kfree(sect_attrs->attrs[section].name);
++		kfree(sect_attrs->attrs[section].battr.attr.name);
+ 	kfree(sect_attrs);
+ }
+ 
+@@ -1485,42 +1489,41 @@ static void add_sect_attrs(struct module
+ 	unsigned int nloaded = 0, i, size[2];
+ 	struct module_sect_attrs *sect_attrs;
+ 	struct module_sect_attr *sattr;
+-	struct attribute **gattr;
++	struct bin_attribute **gattr;
+ 
+ 	/* Count loaded sections and allocate structures */
+ 	for (i = 0; i < info->hdr->e_shnum; i++)
+ 		if (!sect_empty(&info->sechdrs[i]))
+ 			nloaded++;
+ 	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
+-			sizeof(sect_attrs->grp.attrs[0]));
+-	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
++			sizeof(sect_attrs->grp.bin_attrs[0]));
++	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
+ 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+ 	if (sect_attrs == NULL)
+ 		return;
+ 
+ 	/* Setup section attributes. */
+ 	sect_attrs->grp.name = "sections";
+-	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
++	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
+ 
+ 	sect_attrs->nsections = 0;
+ 	sattr = &sect_attrs->attrs[0];
+-	gattr = &sect_attrs->grp.attrs[0];
++	gattr = &sect_attrs->grp.bin_attrs[0];
+ 	for (i = 0; i < info->hdr->e_shnum; i++) {
+ 		Elf_Shdr *sec = &info->sechdrs[i];
+ 		if (sect_empty(sec))
+ 			continue;
++		sysfs_bin_attr_init(&sattr->battr);
+ 		sattr->address = sec->sh_addr;
+-		sattr->name = kstrdup(info->secstrings + sec->sh_name,
+-					GFP_KERNEL);
+-		if (sattr->name == NULL)
++		sattr->battr.attr.name =
++			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
++		if (sattr->battr.attr.name == NULL)
+ 			goto out;
+ 		sect_attrs->nsections++;
+-		sysfs_attr_init(&sattr->mattr.attr);
+-		sattr->mattr.show = module_sect_show;
+-		sattr->mattr.store = NULL;
+-		sattr->mattr.attr.name = sattr->name;
+-		sattr->mattr.attr.mode = S_IRUSR;
+-		*(gattr++) = &(sattr++)->mattr.attr;
++		sattr->battr.read = module_sect_read;
++		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
++		sattr->battr.attr.mode = 0400;
++		*(gattr++) = &(sattr++)->battr;
  	}
+ 	*gattr = NULL;
  
--- 
-2.25.1
-
+@@ -1610,7 +1613,7 @@ static void add_notes_attrs(struct modul
+ 			continue;
+ 		if (info->sechdrs[i].sh_type == SHT_NOTE) {
+ 			sysfs_bin_attr_init(nattr);
+-			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
++			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
+ 			nattr->attr.mode = S_IRUGO;
+ 			nattr->size = info->sechdrs[i].sh_size;
+ 			nattr->private = (void *) info->sechdrs[i].sh_addr;
 
 
