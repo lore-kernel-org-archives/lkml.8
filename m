@@ -2,119 +2,124 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44276C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A7EC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239D4217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300DA21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DsVuBHOS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv8VOWzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGNAxh (ORCPT
+        id S1727019AbgGNAxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41356 "EHLO
+        Mon, 13 Jul 2020 20:53:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgGNAxf (ORCPT
+        with ESMTP id S1726918AbgGNAxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 20:53:35 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B855C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:53:34 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m18so2832639vkk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:53:34 -0700 (PDT)
+        Mon, 13 Jul 2020 20:53:36 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229EAC061755;
+        Mon, 13 Jul 2020 17:53:36 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 1so6802878pfn.9;
+        Mon, 13 Jul 2020 17:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uBmPGkwb8F27DgB7ghpu4ldmH1wyapHT/SdG1wNVoGM=;
-        b=DsVuBHOSfihKaNkABXRm4ftNILFS5xlzW6RCsluK4T11o2qaXfRJa5N0UNwsp+0kCJ
-         53tVV/PwX28dzQ54HAuuCIN7gy+nUOCPu2EunQOHMCfOVUG950g7F3158McC+Q3pXBLw
-         KdViqNVDKlGvtHk3ZRRKIfsi3+Ub9nFkvXgaw=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=1WZl3SA6KMxtfbG5PMx34SOFRA0PpKVq9Dty/hOwW44=;
+        b=iv8VOWzPYj+OxwIko8MRq3OMGpatZTvQ0Y5pOdmjF9HpBXZ/069lOpNv2Bmu1s/UKU
+         3snl9GQSZz6SVSbqNIz4Is83acJSFZYvfJiT9g+aXOjVz+AOOSgaKBztRMzPTSAhGgDq
+         3snAREEl66DIBaUNb2OdjsljkYKecksOOWtwlQhOJ12Pn0i0OeUIKOALDs5hKDk7+oBX
+         AbzJo9XEHPgFa3Al9DZ0byAB4faRfWnS4xY9fPy+s91nO0IWHhSxOq9QGFCzgo5eiYeU
+         ATqWVkQLcDeUx2dJkFpKV6IWKcfXNB1jGZptph8XnPg2ze00Fl0rbuxvju0xNLc7PCJY
+         Topg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uBmPGkwb8F27DgB7ghpu4ldmH1wyapHT/SdG1wNVoGM=;
-        b=fbf6/Q/GKXIKqFh4FPYJNGvbQLhqI5X3/P/N/nGeIKXrBvaoURUcSYeBiUKKPdIUmU
-         1koEsUWINxddmvbg+R3068nHEjJYp86CgGAPlCXesaMl0hWT91R9IrwyBncbKX8trpdw
-         6oxaSLkFG4iYOYK0gFqfP39k7ZoS3VIK17GpjuHW3ugBca4pdmePyEYO1KfD1K7Pn8Ek
-         4WlulIBnjwyISlcOnTN3I0E2kre5tYHpclSE8dv223hX7zZVHwk6grxfjfJmfKT2CaSk
-         shvGFVeV3II/GhbbHGFSXJ75o3cu3VbwOqE9nknB604zVVE/B+LzY+GT6AgfS+7P06XV
-         rGvQ==
-X-Gm-Message-State: AOAM530B4tn7ZB3NXSInSaQu8STlkeZWAIBRY6Tlu1s1rBozCV3ynqlg
-        xKcyVl3qagU98kX/2QmfFD02eoaO7KE=
-X-Google-Smtp-Source: ABdhPJw9KDSy7PuaAgYz0ybvCYnXfDLwg8YQtmk+acRfMp36k9w7l4kd/3YHGu2kclF0TWxQVxqkmQ==
-X-Received: by 2002:a1f:24cc:: with SMTP id k195mr2027651vkk.61.1594688013356;
-        Mon, 13 Jul 2020 17:53:33 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id q7sm1890405vsp.14.2020.07.13.17.53.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 17:53:32 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id c7so4952083uap.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:53:31 -0700 (PDT)
-X-Received: by 2002:ab0:6e8e:: with SMTP id b14mr1932767uav.0.1594688011224;
- Mon, 13 Jul 2020 17:53:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=1WZl3SA6KMxtfbG5PMx34SOFRA0PpKVq9Dty/hOwW44=;
+        b=qrzkUKqXfE2QktUUbhLsbsW2KuL4PdSmoAUdhlhzuOMZOIud7tu8akHRriBTu1VYAR
+         MZCVlP7aqmp4UeqsoKtnZl80LapVS/qL2Q9d7SxD1J7yHDOVDP2R7mrRkGjrJ4qKMBIC
+         +7tOxMT6+Cn3rOgFFBCkOiDPEO0GC4w1oRYqz7Oml63XNqUIzu2e1SfpOMwWSPAc0JQp
+         ZcsNuP7wzwKqGJKXTXo6wkju9mrG0wNLv9NF9Bk2CUsCiHgQYLowvOfrihis+8FUEYjK
+         gACSqkYkgxzCTX6sWRHmk8Sg89aEkvfBmFjLMhxMzWoWi0ays2TQqwuAVi+e5OPR1qzU
+         cGRQ==
+X-Gm-Message-State: AOAM531Hd8vbvn2b9vfY2lgU3loUuAc8l1+0SOr3/SKXS+Ot9TjZhoZI
+        9vXu2KWpTX3s9Z/rZkNOXPYCqGUfVvM=
+X-Google-Smtp-Source: ABdhPJxEL50DSzvXMc7ikYncO/bul+8bsW/aa7e+aif3CI56u0vdWc3z/J8xXNJIgaAIqJHHwlgY4g==
+X-Received: by 2002:a65:6403:: with SMTP id a3mr1453280pgv.246.1594688015562;
+        Mon, 13 Jul 2020 17:53:35 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id i128sm15914850pfe.74.2020.07.13.17.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 17:53:34 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:53:32 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.8-rc5
+Message-ID: <20200714002748.GA1477546@dtor-ws>
 MIME-Version: 1.0
-References: <1594287420-24141-1-git-send-email-rnayak@codeaurora.org> <20200710124152.GC1567243@kroah.com>
-In-Reply-To: <20200710124152.GC1567243@kroah.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 17:53:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XJQaAHsDb6uvKpwU87qtqTQgNeoiuRr2kF9pqjBLhLpg@mail.gmail.com>
-Message-ID: <CAD=FV=XJQaAHsDb6uvKpwU87qtqTQgNeoiuRr2kF9pqjBLhLpg@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: qcom-geni-serial: Drop the icc bw votes in
- suspend for console
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rajendra,
+Hi Linus,
 
-On Fri, Jul 10, 2020 at 5:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 09, 2020 at 03:07:00PM +0530, Rajendra Nayak wrote:
-> > When using the geni-serial as console, its important to be
-> > able to hit the lowest possible power state in suspend,
-> > even with no_console_suspend.
-> > The only thing that prevents it today on platforms like the sc7180
-> > is the interconnect BW votes, which we certainly don't need when
-> > the system is in suspend. So in the suspend handler mark them as
-> > ACTIVE_ONLY (0x3) and on resume switch them back to the ALWAYS tag (0x7)
-> >
-> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > ---
-> > Note: Patch applies on qcom for-next, which has the ICC support patches.
-> > The tag macros are currently not exported and hence the hardcoded values.
-> > Perhaps if and when https://patchwork.kernel.org/patch/11619705/ lands I
-> > can refresh this patch to use the macros.
->
-> Feel free to take this patch through that tree.
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Please pull from:
 
-Could you post a v2?  Bjorn landed some of my geni serial patches to
-make console / kgdb work better, but then I realized that your patch
-no longer applies cleanly.  It's trivial to resolve, so hopefully a v2
-should be quick and then Bjorn can land?
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-Thanks!
+to receive updates for the input subsystem. You will get a few quirks
+for the Elan touchpad driver, another Thinkpad is being switched over
+from PS/2 to native RMI4 interface, and we gave a brand new
+SW_MACHINE_COVER switch definition.
 
--Doug
+Changelog:
+---------
+
+Dave Wang (1):
+      Input: elan_i2c - add more hardware ID for Lenovo laptops
+
+David Pedersen (1):
+      Input: i8042 - add Lenovo XiaoXin Air 12 to i8042 nomux list
+
+Derek Basehore (1):
+      Input: elan_i2c - only increment wakeup count on touch
+
+Dmitry Torokhov (1):
+      Revert "Input: elants_i2c - report resolution information for touch major"
+
+Ilya Katsnelson (1):
+      Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
+
+Merlijn Wajer (2):
+      Input: add `SW_MACHINE_COVER`
+      ARM: dts: n900: remove mmc1 card detect gpio
+
+Diffstat:
+--------
+
+ arch/arm/boot/dts/omap3-n900.dts       | 12 ++++++++----
+ drivers/input/mouse/elan_i2c_core.c    |  9 +++++----
+ drivers/input/mouse/synaptics.c        |  1 +
+ drivers/input/serio/i8042-x86ia64io.h  |  7 +++++++
+ drivers/input/touchscreen/elants_i2c.c |  1 -
+ include/linux/input/elan-i2c-ids.h     |  7 +++++++
+ include/linux/mod_devicetable.h        |  2 +-
+ include/uapi/linux/input-event-codes.h |  3 ++-
+ 8 files changed, 31 insertions(+), 11 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
