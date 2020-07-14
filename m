@@ -2,117 +2,135 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF71C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4469C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A661D224F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A182C22B51
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giu+sL5n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXt6kevx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgGNTmW (ORCPT
+        id S1730361AbgGNTm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
+        Tue, 14 Jul 2020 15:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729427AbgGNTmU (ORCPT
+        with ESMTP id S1729329AbgGNTm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:42:20 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4585C061755;
-        Tue, 14 Jul 2020 12:42:20 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o13so8056344pgf.0;
-        Tue, 14 Jul 2020 12:42:20 -0700 (PDT)
+        Tue, 14 Jul 2020 15:42:26 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BED1C061755;
+        Tue, 14 Jul 2020 12:42:26 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id s26so8017344pfm.4;
+        Tue, 14 Jul 2020 12:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+ZhRanqEZ6xrzrFJNj1TcXKoTTLAuy/jV3gWLNq6hZ4=;
-        b=giu+sL5nBFSemahOaz6MWi28NSoEh5gBWf7W/REahIs3P6gyU45zkCg2aKS23Dn0S0
-         M/gnZ9RUATYkOYeuop9a3noUH4U0ds3U4otsNJ3HVeUWMSUBQ7IDgRWFohRw/8wrjVne
-         /FdX1Ekj/KQ4rJjpw1GwMn2lSMiwaZL63W0lUaeaAzpL/U7drbicEP46mKpmZZEN4yfi
-         vq3nQnGox9EZjQ3R2vpbG+OjVSMFpNwSvFu6oSjZCZ54dJcJMeMQ8ucWLY+KPQ7UHG25
-         QyNK4NgQT6oUSL/7yWEFfasxf5/E5Dii8tH73DLtBasnMYN0HnD90rSMFe4A8zWEpl1z
-         +v/A==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=PQoiTk/94i+cEQXK8JsAB0AkTjYJXwZwOn4dJ+xwUDg=;
+        b=AXt6kevxd3MbkPZ1VCvIa7CWEeXW1Hnzu9JlVFfg+1OzvgzUAs4ASun5mkK+0k500o
+         54P7OkAxIMaeRNbb/vjw0CL+AutZpp0r7vyr5oyUq4ShbS2sVv/2A0MWOOff+TCUY+GK
+         pKhZ2JjaGSpeJShOUUlm56WAoCdzjQg0SPcnrkLVptvoSMr5T1Sf0HXgY2zsFwfsPWm7
+         8xSYOIfbXa2kgyKX++hsK8Zo0qwamVWWPEzJ9ZaztPc5qb4phTanBGehRlouMu37JdT2
+         E1mOz3JeXHs6zZyqFIEezDNeKtT8bcUCsxRPjyv/6wcz6xCO27uD+xryOUOnbqiuvk3/
+         s5Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+ZhRanqEZ6xrzrFJNj1TcXKoTTLAuy/jV3gWLNq6hZ4=;
-        b=EhRU0Ax1MA68QUWzp0TtspNjurMN2WYEcgfTY73L5U60QBAyKTVY7KLL4/Tl/ReEhB
-         wUtKY/OxtzOljKMhypikF4l3zpNfA4NoIEyHBqLxvrji1H9p9QOjpLiH2s/knx6Emnd2
-         lObxVTA/jNZZnNf1sRUtY7r4z6ARnouJqnl/eEGg3EUrS7hMFPzHM5wwKOqnbPUKUsWV
-         ssp9bAvj6UXdsKJ2B0KbgsSsiZRLPw0JRuFEQfy1jKCWqnRD1+jPyK60DPeMerJ6pGRZ
-         OfptGinbrciwJx9+GW/wctkgSIf7E4WeSlxsCHbz3156d32aXi5JRHcNvMflai6I7Cb0
-         WOgw==
-X-Gm-Message-State: AOAM533XtrJ0iK+azwqC8EQP9P8D8VSeUGEsmgM9b+yftBlooD2heZv5
-        40vR0iuVZs4h43oRKEmNjfb3+kAQi7I=
-X-Google-Smtp-Source: ABdhPJwCZW0EI5rCFgMKvm2MFTrsjjZtvXTrUu9XHGbNrwtGiJZJ/jM8nhz7CjNBJzySZOjUfWeRrw==
-X-Received: by 2002:a62:4e06:: with SMTP id c6mr5741389pfb.296.1594755740258;
-        Tue, 14 Jul 2020 12:42:20 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:96f0])
-        by smtp.gmail.com with ESMTPSA id f2sm5394pfb.184.2020.07.14.12.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 12:42:19 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 12:42:16 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [merged][PATCH v3 00/16] Make the user mode driver code a better
- citizen
-Message-ID: <20200714194216.sq2e3z44htts57qf@ast-mbp.dhcp.thefacebook.com>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <87r1tke44q.fsf_-_@x220.int.ebiederm.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=PQoiTk/94i+cEQXK8JsAB0AkTjYJXwZwOn4dJ+xwUDg=;
+        b=DESTiRP7FsW38nmw1gQZbi3qU8xRLcn71EQXmRD5PyMl6Myay80O6zjOZ9c7TqFjU6
+         j+wLU/+kBEMs9x5pqrBamK8lKJkUi5xorzW7eMaWwPlajXxKz04W/KUUOqz0IKA9UmL4
+         0TZpxxacJ/CW3hOM9jK3Jw8ibWPIz+u5fCx8wrSecRWWbJigL6CiKskrvC8dfjodVy0g
+         DKrx7/oBmOW3GJ7626jGHYcPEbZktjs8w2UUX6vCGdW+c/nrGaQM324liUAtphPLK5W7
+         yT2DXWPkIxLD424E+u6vbOu5zXVRg8y2CsQk6aM0x7q62bmoPJvXSbWgTLYlwiZwTIBP
+         DQBQ==
+X-Gm-Message-State: AOAM5323sFKUVeqHJAVqZsecNnmo+Rdj+nIAURbDUOhKFhZQhzj8dArv
+        ysEUxseC+GZIf7pm54nw9bc=
+X-Google-Smtp-Source: ABdhPJwAec0PSq8vCkDHhMwK5e+77YkqFKNDRznTfSIalx/Ujpnz4QHpwP48pufGGWmOeeKFrr9t7g==
+X-Received: by 2002:a05:6a00:f:: with SMTP id h15mr5547490pfk.193.1594755745915;
+        Tue, 14 Jul 2020 12:42:25 -0700 (PDT)
+Received: from blackclown ([103.88.82.145])
+        by smtp.gmail.com with ESMTPSA id g6sm10805pfr.129.2020.07.14.12.42.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jul 2020 12:42:25 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 01:12:13 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH 4/4] ixgbe/ixgbe_ethtool.c: Remove unnecessary usages of
+ memset.
+Message-ID: <20200714194212.GA21612@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <87r1tke44q.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 05:05:09PM -0500, Eric W. Biederman wrote:
-> 
-> I have merged all of this into my exec-next tree.
-> 
-> The code is also available on the frozen branch:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git usermode-driver-cleanup
-> 
-> Declaring this set of changes done now, allows the work that depends
-> upon this change to proceed.
 
-Now I've pulled it into bpf-next as well.
-In the mean time there were changes to kernel_write that broke bpfilter.ko
-I fixed it up as well.
-Thanks.
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Replace memsets of 1 byte with simple assignment.
+Issue found with checkpatch.pl
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net=
+/ethernet/intel/ixgbe/ixgbe_ethtool.c
+index 6725d892336e..71ec908266a6 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+@@ -1951,8 +1951,8 @@ static void ixgbe_create_lbtest_frame(struct sk_buff =
+*skb,
+ 	memset(skb->data, 0xFF, frame_size);
+ 	frame_size >>=3D 1;
+ 	memset(&skb->data[frame_size], 0xAA, frame_size / 2 - 1);
+-	memset(&skb->data[frame_size + 10], 0xBE, 1);
+-	memset(&skb->data[frame_size + 12], 0xAF, 1);
++	skb->data[frame_size + 10] =3D 0xBE;
++	skb->data[frame_size + 12] =3D 0xAF;
+ }
+=20
+ static bool ixgbe_check_lbtest_frame(struct ixgbe_rx_buffer *rx_buffer,
+--=20
+2.17.1
+
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8OCpQACgkQ+gRsbIfe
+747X5hAAmO9wn96MNt3fhAqcRyBhBhOvp01FWsT+wzrwjc+1bw4lkhROTDcrOjpf
+1efjH5SijYmhpe5WwtmmW82lLLBf8Dz1P3z50LDW/P/Y4LJBJa401d+iUubw8VNI
+an0hcZ7RqJuxO9P4LI1HT+xa7OlI5nZB1bYEPToeQRdbutLXZg7KmIP/mlMYK76i
+2e4cj0oVCkKtYcsPTK6tMCAmWFhR58uxoiS5OVIqz2r6kyISMplwF0rzv3uUbz8Q
+hUBh3dtQfoAENaSTlvcWCb8Bpdgp/DoaQOPgRD97nxbWmaX+byg9elyzElMjtvKv
+6oU5D9FuDSnO4Z+qciTkajLE+hq2rBpN44WA55DDBcT2q7wbaVtfu18+GJQyUhqb
+4PBKeGLLnVORKGhbEtofmDV1mSt+GjvW60YIkaJlF084Our7850xWdqO7jpd5Wtc
+jfGQph7TTC7Myqk6xi7foWRe7kuTZNuProC7DFN9z6idow/q9+PVrO2YKEI8pDwi
+xj6g3DLurusKneJR1wMFv4T1iU7/Aafc5q90xwSGAku7/W155CO7LR6OkA6Tv/Wg
+AcFMBtKyTrUL+1q0zb3eg36DjpH2Tr7T40mtyK5XPo31Bv4PIx8Q1XjLXbCFaDtD
+pST0Sam3+M5Ng88ktcGITfbvLzHQ6bNJhGbDstTbW/tqCRZ9peg=
+=mpgA
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
