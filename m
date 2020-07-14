@@ -7,125 +7,112 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD250C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE71222C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B2A222C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPwQpN+Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qjP2GZD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgGNOu6 (ORCPT
+        id S1728910AbgGNOvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
+        Tue, 14 Jul 2020 10:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgGNOuy (ORCPT
+        with ESMTP id S1728792AbgGNOvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:50:54 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CE3CC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:54 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so22218513wrv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:54 -0700 (PDT)
+        Tue, 14 Jul 2020 10:51:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14DEDC08C5E0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j4so22189743wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PyDCzRLu9Rp5ffLvCZoaXuGAE+qn3bcIj12X3rgDaY8=;
-        b=mPwQpN+Qu91QZ2MKryhuGiiJzJqon/gMYBCzo8EhqXVyHMQU0f+SMVudmHG3byrsFK
-         JJYM1icU5EgZZbY6UYqyJwH565d2EsGYC3ePxJSqwzt3Sa2srbEpSqLjlpkYKxWjp1tw
-         ujqOlhVyy3Yhl2YAiVxMF+wEXe1nzyw7RUCYva3xlELef2BJOfsvWrUonzTeAAs2K2cl
-         +OI1ZY/+TGOGmYtPt09UgSnQS0g97Lw8dAr+PkDKclYLsAo6vPt4dQpPqsTDRb+XCLLN
-         +QPntCH68/N596jApxTdK3oGeuqqT+RPWpopbMCXmfq3KHiUYiEjhSsk2tsn5jF4REAr
-         5jDg==
+        bh=c4FLx3muVHP2pCB5GbFp6A725ffqNGbokYtDZodR17k=;
+        b=qjP2GZD7DEKVihUDEr8DOQw2jWLp1ateuBsMjM0zK6Bb2UqoHJmPYlUHozDy416wNM
+         WrAuxkpdR4itLlHHdt6zK11R6J+YF3H2X9qJZ66q2VApdxJKRjggHHHabWQwZw7hB96T
+         QWs5bcfcqHQm4RaN+IvzHqT8YkR/SDeIgCjE/O23h5GB6yX7uF3f+mu5tH4VFffzfF2E
+         fIKqvH4tnupS9kNadhZE35Og9MwXuvniL9jmbgbMP0p9qLqc/WadErfR6kfmfJxcmI4T
+         vuRdQt4/I+wCmwLpf95BYtk6T5qUhTEM2vcn+XQP1s8jt4AyNsu7U5RSJOLSG0O1B47Q
+         SZtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PyDCzRLu9Rp5ffLvCZoaXuGAE+qn3bcIj12X3rgDaY8=;
-        b=RLXAQMzPT+Txi5mGFqvVDI8M9ivenmRGln5OIQ58/Y9CcKOpL34d/+9yA+P9P5kJRR
-         fYDs8L8GlhNEVf+smuHzqAnbEP4R2yGX+ZcwgIAx4IVHgE7t+dqxoBpuWmsUH1auTMyT
-         +q5VN4yRNwSbh92rjn4yqCfIYViSYaUHYBsPCCEuu2rVwDlpFO2iFBC7FUyYIhWS4sVD
-         uDZsczal+hthJPKES9Dp5y8kvk0tcpT428UlGwp2gJk+oLCl3z+CSyXLZjkV/i+swIfo
-         mV+YTQaLyfMBK63oJ6F6PsoqBV8yDIS0c3Mj1G5lXPSFzfyNk2DITn0RU6uynTTQq1y+
-         BOqg==
-X-Gm-Message-State: AOAM5318f8hj/vrzpzEgMHRJUMY3CK3+5guODIEpj0niMVWBce9u05k9
-        +Gd45++hNPld+1CIqwcOAJP3Hg==
-X-Google-Smtp-Source: ABdhPJyfB1Tf3EHgK0lx0lDBNPNcHN0//kJ4X5HF1TFk9KcRccYA9FoOD6xF1iEC2VIyddc1Jc7SAA==
-X-Received: by 2002:a5d:4c82:: with SMTP id z2mr5923643wrs.287.1594738253227;
-        Tue, 14 Jul 2020 07:50:53 -0700 (PDT)
+        bh=c4FLx3muVHP2pCB5GbFp6A725ffqNGbokYtDZodR17k=;
+        b=IbNOCnw9z6wr3h9Z1cP8eUuHH+Drwctuf+vvmWAbKgvJGFjgZs7NaHDrVTJnvoru6D
+         jCBuko4AztE5JRvJRJHxI8gz7MDALgNhw1OwhGujJKw+39Da5F9ptxdniWzAIrg+yWNe
+         SnTdVNByjZBxVQi/1lVAK2IM/uckDQKAsycIjlyfn20lVEnAHNKT3mOHdslDJnaLUsNi
+         5VvbAh09nNdLIwkPcxk3VhDT92TRJoYxCRJMnyEFz6b/3RDd4yHBt7r6XL+Nj+sWMy9B
+         uTXf2qvRZuH52V20rlRe7qh1AqqUeoKik1FJ1aHPj/CjD96jFqynD86Kq3liImfoEzWP
+         yX9Q==
+X-Gm-Message-State: AOAM533E6jnJg8mnarC38QYntwxsL7DNRbL8SSNQRZ86c49xy5FLaNFb
+        gf7gVQrJuGYewf/9ggPk/b2EFw==
+X-Google-Smtp-Source: ABdhPJyQdxIA4lIDbDulsvOs0NZhV4S0UZCnh86sCShA7ZRuRfPhL4qVQmpdKI2T4VJMz3HcRktgOA==
+X-Received: by 2002:adf:8442:: with SMTP id 60mr6633538wrf.276.1594738264728;
+        Tue, 14 Jul 2020 07:51:04 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.52
+        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.51.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:50:52 -0700 (PDT)
+        Tue, 14 Jul 2020 07:51:04 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Dominik Brodowski <linux@brodo.de>
-Subject: [PATCH 01/13] cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Tue, 14 Jul 2020 15:50:37 +0100
-Message-Id: <20200714145049.2496163-2-lee.jones@linaro.org>
+        Matthew Garrett <mjg@redhat.com>,
+        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
+Subject: [PATCH 11/13] cpufreq: pcc-cpufreq: Remove unused ID structs
+Date:   Tue, 14 Jul 2020 15:50:47 +0100
+Message-Id: <20200714145049.2496163-12-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714145049.2496163-1-lee.jones@linaro.org>
 References: <20200714145049.2496163-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document any of the demoted functions here.
+Can't see them being used anywhere and the compiler doesn't complain
+that they're missing, so ...
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'policy' not described in 'show_available_freqs'
- drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'buf' not described in 'show_available_freqs'
- drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'show_boost' not described in 'show_available_freqs'
- drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'policy' not described in 'scaling_available_frequencies_show'
- drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'buf' not described in 'scaling_available_frequencies_show'
- drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'policy' not described in 'scaling_boost_frequencies_show'
- drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'buf' not described in 'scaling_boost_frequencies_show'
+ drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
+ 619 | static const struct acpi_device_id processor_device_ids[] = {
+ | ^~~~~~~~~~~~~~~~~~~~
 
-Cc: Dominik Brodowski <linux@brodo.de>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/cpufreq/freq_table.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/cpufreq/pcc-cpufreq.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-index e117b0059123e..f839dc9852c08 100644
---- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -221,7 +221,7 @@ int cpufreq_frequency_table_get_index(struct cpufreq_policy *policy,
+diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
+index 5789fe7a94bd3..99cf8b78c032a 100644
+--- a/drivers/cpufreq/pcc-cpufreq.c
++++ b/drivers/cpufreq/pcc-cpufreq.c
+@@ -616,13 +616,6 @@ static void __exit pcc_cpufreq_exit(void)
+ 	free_percpu(pcc_cpu_info);
  }
- EXPORT_SYMBOL_GPL(cpufreq_frequency_table_get_index);
  
--/**
-+/*
-  * show_available_freqs - show available frequencies for the specified CPU
-  */
- static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
-@@ -260,7 +260,7 @@ static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
- struct freq_attr cpufreq_freq_attr_##_name##_freqs =     \
- __ATTR_RO(_name##_frequencies)
- 
--/**
-+/*
-  * show_scaling_available_frequencies - show available normal frequencies for
-  * the specified CPU
-  */
-@@ -272,7 +272,7 @@ static ssize_t scaling_available_frequencies_show(struct cpufreq_policy *policy,
- cpufreq_attr_available_freq(scaling_available);
- EXPORT_SYMBOL_GPL(cpufreq_freq_attr_scaling_available_freqs);
- 
--/**
-+/*
-  * show_available_boost_freqs - show available boost frequencies for
-  * the specified CPU
-  */
+-static const struct acpi_device_id processor_device_ids[] = {
+-	{ACPI_PROCESSOR_OBJECT_HID, },
+-	{ACPI_PROCESSOR_DEVICE_HID, },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(acpi, processor_device_ids);
+-
+ MODULE_AUTHOR("Matthew Garrett, Naga Chumbalkar");
+ MODULE_VERSION(PCC_VERSION);
+ MODULE_DESCRIPTION("Processor Clocking Control interface driver");
 -- 
 2.25.1
 
