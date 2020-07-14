@@ -2,221 +2,245 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CBDC433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA02C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB3722515
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C342251D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="0+uSjkFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgGNQJC (ORCPT
+        id S1727795AbgGNQJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        Tue, 14 Jul 2020 12:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgGNQJC (ORCPT
+        with ESMTP id S1725905AbgGNQJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:09:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2E2C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:09:02 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvNUI-0006MO-Nr; Tue, 14 Jul 2020 18:08:58 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvNUG-00029L-H1; Tue, 14 Jul 2020 18:08:56 +0200
-Date:   Tue, 14 Jul 2020 18:08:56 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
- <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
- <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+        Tue, 14 Jul 2020 12:09:56 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCE6C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:09:56 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i3so13172382qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=7jEn3zuLk36oYYZwJZX9GhU9ZvoJ77DkQbq9DGM/MOM=;
+        b=0+uSjkFdVf22udT4i8ELLkG+3cUk7Pim4b8TT8jXVBK2VFAhKYsjGtN1F93iR0oMeY
+         FOGqyfIOsqLLtfnYA7KRyjjnSeBTdD9g9QqwSECUMGvYE9Pu1fxEBQZkbYL/nZN+WsY8
+         ebmiWKkdvyveKC2qCSWrihB0dYs24khYxZDskbVFlmA47YM9Pl2ZTYu+vLkNGeh9fbii
+         I/JhV7ocLEr38rDVwiCBZr3LB6AM9WunMHuTqDF7ZuyHlLX3+YYf47FVbAdJrU1sU1S8
+         tZlHX7M/Y6n/8Vkt1qFHEeNhVxNq7Hitmk9KzyxrXt+SinVnqu0mvaq9oT2mx78iYjel
+         7gNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=7jEn3zuLk36oYYZwJZX9GhU9ZvoJ77DkQbq9DGM/MOM=;
+        b=jdN337cdUMIC9wvfkmb1hchKwlEeI10Vjnr1pKaCNP6XYUJTsViJYrsLKxWsKjwEfC
+         tARyTb3LuwOSd9va/if5+mzuyeY5X6lSFmJNdHGL69yPN9in+bbhzHNk5wZRrjdr/2YK
+         PMJ9AwbRAGKjKPk6iB0tLANlNyoMZI7NrRddWYEIlgj+lIt1Thtl7y35dRxmMF7djPds
+         fkDcCzQrRmbpqPIJtJcn6Tx+iTC7o1AMoznQErK3tZaZXmLm0kufRJa59xNExHK/2ErU
+         G2toK5QCpS0nJjuCYKq8oO6YDSj5N/Pya+3UEo5BRhrvuloMpI2j0sxt0B71MqzUsedO
+         MkOA==
+X-Gm-Message-State: AOAM532lnTbMfljsYXiJYjZd/nZdGVjd5e3WS7lbETomzjkN4ksr34E0
+        9tLlFECYG9mDfc7Jzvpyk5sufw==
+X-Google-Smtp-Source: ABdhPJzNfzghEsFOtOt3syv1MCuBZcvzJbpJuIhKOx57orrbIVp5vLMlFg3PlXnyRqmCfjy+co0XAA==
+X-Received: by 2002:ac8:311d:: with SMTP id g29mr5438301qtb.54.1594742995844;
+        Tue, 14 Jul 2020 09:09:55 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id o187sm22967225qke.76.2020.07.14.09.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 09:09:54 -0700 (PDT)
+Message-ID: <dade9f23deba2f12ad8ab2f277e08047af73f46c.camel@ndufresne.ca>
+Subject: Re: [PATCH] v4l2-ctrl: Add VP9 codec levels
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Date:   Tue, 14 Jul 2020 12:09:53 -0400
+In-Reply-To: <20200713081501.28609-1-stanimir.varbanov@linaro.org>
+References: <20200713081501.28609-1-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ochzazkc36dtv4os"
-Content-Disposition: inline
-In-Reply-To: <c0594c34c712ce26b3936d42c92d2361@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le lundi 13 juillet 2020 à 11:15 +0300, Stanimir Varbanov a écrit :
+> Add menu control for VP9 codec levels. A total of 14 levels are
+> defined for Profile 0 (8bit) and Profile 2 (10bit). Each level
+> is a set of constrained bitstreams coded with targeted resolutions,
+> frame rates, and bitrates.
 
---ochzazkc36dtv4os
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me. Perhaps literally put the link in the message ?
 
-Hello Michael,
+https://www.webmproject.org/vp9/levels/
 
-On Tue, Jul 14, 2020 at 01:31:13PM +0200, Michael Walle wrote:
-> Am 2020-07-13 10:47, schrieb Uwe Kleine-K=F6nig:
-> > I already thought about proposing pwm_get_rate_hw(), but for now there
-> > is (AFAICT) no user who would need it. And it's hard to know which
-> > variant is actually preferred by consumers. My expectation is that most
-> > don't even care.
-> >=20
-> > I also have a pwm_round_rate() function in mind that will give you the
-> > actual rate without applying it. This can then be used by consumers who
-> > care. But also there is no user who would need it today.
->=20
-> Ok. I take it that all such improvements are still in the making ;)
+> 
+> The definition has been taken from webm project.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 42 +++++++++++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c          | 21 ++++++++++
+>  include/uapi/linux/v4l2-controls.h            | 17 ++++++++
+>  3 files changed, 80 insertions(+)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d0d506a444b1..d49bdafa768a 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -3316,6 +3316,48 @@ enum v4l2_mpeg_video_vp9_profile -
+>      * - ``V4L2_MPEG_VIDEO_VP9_PROFILE_3``
+>        - Profile 3
+>  
+> +.. _v4l2-mpeg-video-vp9-level:
+> +
+> +``V4L2_CID_MPEG_VIDEO_VP9_LEVEL (enum)``
+> +
+> +enum v4l2_mpeg_video_vp9_level -
+> +    This control allows selecting the level for VP9 encoder.
+> +    This is also used to enumerate supported levels by VP9 encoder or decoder.
+> +    Possible values are:
 
-If you have a real use case, present it, then I give it a boost on my
-todo list.
+Shall we add some hint in the doc itself upon where these levels are
+from so one can figure-out what constraints they impose.
 
-> > > But the PWM subsystem returns the cached state,
-> > > right? get_state() is called only on device request (and during
-> > > debug it seems). Actually, enabling PWM_DEBUG might choke on this
-> > > workaround (".apply didn't pick the best available period"). Is
-> > > this ok?
-> >=20
-> > hmm, I didn't consider this when writing the checks for PWM_DEBUG.
-> > According to the currently checked rules the expected configuration is
-> > to pick the 250Hz mode and use cycle =3D 0x7f.
->=20
-> Not to use 0x80, which is the max_duty_cycle? Like its 0x40 for the 500Hz
-> mode.
+Also, as for other levels (H264/HEVC), all drivers are mostly dummy and
+don't validate any of this, shall we keep it this way ? Levels are in
+fact complex, because some of the constraints are in image size, and
+most of the other constraints are raw or compressed size over time, so
+requires timing information for let's say a CBR encoder to enforce it,
+for the S_FMT function for the raw constraints.
 
-No, when I thought about a sane set of rules (and so checks for
-PWM_DEBUG) I didn't consider a PWM that can implement 100% but not for
-all otherwise available period lengths. I'm still amazed sometimes how
-different the capabilities of different implementations for something so
-seemingly easy like a PWM are.
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_0``
+> +      - Level 1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_1``
+> +      - Level 1.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_0``
+> +      - Level 2
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_1``
+> +      - Level 2.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_0``
+> +      - Level 3
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_1``
+> +      - Level 3.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_0``
+> +      - Level 4
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_1``
+> +      - Level 4.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_0``
+> +      - Level 5
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_1``
+> +      - Level 5.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_2``
+> +      - Level 5.2
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_0``
+> +      - Level 6
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_1``
+> +      - Level 6.1
+> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_2``
+> +      - Level 6.2
+> +
+>  
+>  High Efficiency Video Coding (HEVC/H.265) Control Reference
+>  ===========================================================
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 3f3fbcd60cc6..359dc737053d 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -474,6 +474,23 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  		"3",
+>  		NULL,
+>  	};
+> +	static const char * const vp9_level[] = {
+> +		"1",
+> +		"1.1",
+> +		"2",
+> +		"2.1",
+> +		"3",
+> +		"3.1",
+> +		"4",
+> +		"4.1",
+> +		"5",
+> +		"5.1",
+> +		"5.2",
+> +		"6",
+> +		"6.1",
+> +		"6.2",
+> +		NULL,
+> +	};
+>  
+>  	static const char * const flash_led_mode[] = {
+>  		"Off",
+> @@ -685,6 +702,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  		return vp8_profile;
+>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
+>  		return vp9_profile;
+> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
+> +		return vp9_level;
+>  	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
+>  		return jpeg_chroma_subsampling;
+>  	case V4L2_CID_DV_TX_MODE:
+> @@ -938,6 +957,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_VPX_P_FRAME_QP:		return "VPX P-Frame QP Value";
+>  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:			return "VP8 Profile";
+>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:			return "VP9 Profile";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:			return "VP9 Level";
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:		return "VP8 Frame Header";
+>  
+>  	/* HEVC controls */
+> @@ -1294,6 +1314,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
+>  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:
+>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
+> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
+>  	case V4L2_CID_DETECT_MD_MODE:
+>  	case V4L2_CID_MPEG_VIDEO_HEVC_PROFILE:
+>  	case V4L2_CID_MPEG_VIDEO_HEVC_LEVEL:
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 62271418c1be..1b0bc79c1bc3 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -650,6 +650,23 @@ enum v4l2_mpeg_video_vp9_profile {
+>  	V4L2_MPEG_VIDEO_VP9_PROFILE_2				= 2,
+>  	V4L2_MPEG_VIDEO_VP9_PROFILE_3				= 3,
+>  };
+> +#define V4L2_CID_MPEG_VIDEO_VP9_LEVEL			(V4L2_CID_MPEG_BASE+513)
+> +enum v4l2_mpeg_video_vp9_level {
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_0	= 0,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_1	= 1,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_0	= 2,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_1	= 3,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_0	= 4,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_1	= 5,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_0	= 6,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_1	= 7,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_0	= 8,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_1	= 9,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_2	= 10,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_0	= 11,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_1	= 12,
+> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_2	= 13,
+> +};
+>  
+>  /* CIDs for HEVC encoding. */
+>  
 
-> > Hmm, I have to think about
-> > this. Maybe we should weaken the check to the cases with
-> > 0 < duty_cycle < period. Thierry, what do you think?
-> >=20
-> > Special casing 0% and 100% is annoying, but insisting 250Hz + 0x7f seems
-> > to be far from reality. (Is it?)
->=20
-> If you mean by insisting to clip at 0x7f, yeah thats bad IMHO, because
-> the user wants an all-high line, but in the end it would be a toggling
-> line. It wouldn't be that bad for anything in between 0% and 100% but
-> IMHO its bad for exactly 0% and 100%.
->=20
-> You could also ask the driver about known quirks, like special 0% and
-> 100% handling and exclude it from the tests accordingly.
-
-Do you care enough to propose a patch? You're in the situation to test
-it.
-
-> > > > > +	ret =3D regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctr=
-l);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE,
-> > > > > (u8)cycle);
-> > > >
-> > > > I assume this can result in broken output? Consider the hardware ru=
-ns
-> > > > with mode =3D 1 & cycle =3D 0x23 and you want to go to mode =3D 0 &=
- cycle =3D
-> > > > 0x42: Can this result in a period that has mode =3D 0 & cycle =3D 0=
-x23?
-> > >=20
-> > > Isn't that always the case if a write may fail and there are more than
-> > > one register to configure?
-> >=20
-> > Depending on hardware capabilities you might not be able to prevent
-> > this yes. Unfortunately this is quite common.
-> >=20
-> > But there are hardware implementations that are not prone to such
-> > failures. (E.g. the registers written can be only shadow values that are
-> > latched into hardware only when the last value is written.)
->=20
-> Maybe this could be improved in the future.
-
-We should somewhere describe, what an ideal PWM can do.=20
-My wishlist (just as it comes to my mind, so no guarantee of
-completeness):
-
- - can do 0% duty cycle for all supported period lengths
- - can do 100% duty cycle for all supported period lengths
- - supports both polarities
- - supports immediate change of configuration and after completion of
-   the currently running period
- - atomic update (i.e. if you go from configuration A to configuration B
-   the hardware guarantees to only emit periods of type A and then type
-   B. (Depending on the item above, the last A period might be cut off.)
- - emits an irq when configuration changes
-
-> > If you change only cycle but not mode, does the hardware complete the
-> > currently running period?
->=20
-> No it does not.
-
-Please document this as a Limitation.
-=20
-> > What about disable()?
->=20
-> Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
-> fix that (in hardware), not much we can do in the driver here. We are
-> _very_ constraint in size, therefore all that little edge cases fall off
-> the table.
-
-You're saying that on disable the hardware emits a constant high level
-for one cycle? I hope not ...
-
-I never programmed a CPLD to emulate a hardware PWM, but I wonder if
-these are really edge cases that increase the size of the binary?!
-
-Best regards
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ochzazkc36dtv4os
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8N2JUACgkQwfwUeK3K
-7AkhFQf/QeUghp0itjnebSKuCcU1Du1FgZx19oml+qdZdrWg9phaEQGAQxXc7m+N
-HoMLWaZLv3O8L5DS4hpYKyj+hK1w7pN1qjuRbkevrgYUlDcU/NYeA+3UUfB7TAMz
-N7muhIaeivH8Z4gJfLtnFtosfOHt3sqZTEYeX5frrCTHro4f7ecgwqkbtAv9MO+M
-Ct382nabV/hgbpuyAya4PbeHtpJXqRVB4fgXFim8n86jJVZcqLgm+Cjk+NG3BABF
-+gaDplLA8kTNTKJnKUxpMbKpsR4YBz6hqmP/YlhmWHweIwDy6HXMQyOkrnH0LINz
-4YQ4iZLwcCQt6CY4bEP1h+aiZJjm+g==
-=A67j
------END PGP SIGNATURE-----
-
---ochzazkc36dtv4os--
