@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580B4C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06802C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399CF2240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B3D2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753219;
-	bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+	s=default; t=1594753224;
+	bh=sw0ALnkgVPkZIbmwtCxhXYy2uvT5QOHsQSK5xEnka0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I/aMqcN4rN8ODNctZQxm86fjcXt5L9/KVPkUzsSWqP3BoCpHifxG2xCCfpB+Gx6wS
-	 nAIvmCgi4IKKW5nQ5DCfrnIzp3tZ2JdFWNnYqsYb4wuHirNQVQXf0bzlI5uasMRdMR
-	 rcsaHn0cs4sVdW3jCYzmKZoveI7WS5KInH/5M40I=
+	b=VfaYQpNfS3UxbnsMdPIwwvB+mqUG+3ZDCMz1AClkcyiyxuAj8zwoaSwz4m2BYGW4l
+	 +M0EmlwNj8s4h055C5XYstD12uMJbaKxUjximCDT8tfwJOBgefXfzc0tR4iU57Q9Hf
+	 +xtuotTdox1u/q1c3iIYIoxE75Zcp4QwyZptqJYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731094AbgGNTAS (ORCPT
+        id S1730820AbgGNTAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbgGNTAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:14 -0400
+        id S1730432AbgGNTAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77ECE22507;
-        Tue, 14 Jul 2020 19:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18B2C222B9;
+        Tue, 14 Jul 2020 19:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753214;
-        bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+        s=default; t=1594753216;
+        bh=sw0ALnkgVPkZIbmwtCxhXYy2uvT5QOHsQSK5xEnka0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=omlI0mWt3ZXeEigMEm+ODmsxKGpycnzhvFhjvJc/uFJZMxvC4cDAHV1W0069yxmp1
-         0W4YjPRBGjgXNWUGI6wq0UklHdlMW5AXzNcxoBDbqHFK+AgNb/eEX9iYaB93oBcil4
-         oCRPU2vsDBbEw3P8wLeGUF91NEeUPNj23Gkke6F0=
+        b=Yj7KQvs29UOCvR8sNRccNsIZhLuBZj6epqWcAkC9kb7GmNzjch++rYdLc5V0YaBLY
+         IuGaeYdtGkWZ6hxbB0Fvp/4LuZEbznarcezn/UL7gxNirE/XYvqmXS5Crx3phnyd3a
+         a826Bf4ok+YP3RElzyTEIhiu0Aj0QqFzmjrwg5DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH 5.7 156/166] s390/mm: fix huge pte soft dirty copying
-Date:   Tue, 14 Jul 2020 20:45:21 +0200
-Message-Id: <20200714184123.293574193@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.7 165/166] perf scripts python: exported-sql-viewer.py: Fix unexpanded Find result
+Date:   Tue, 14 Jul 2020 20:45:30 +0200
+Message-Id: <20200714184123.727630133@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,35 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janosch Frank <frankja@linux.ibm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 528a9539348a0234375dfaa1ca5dbbb2f8f8e8d2 upstream.
+commit 3a3cf7c570a486b07d9a6e68a77548aea6a8421f upstream.
 
-If the pmd is soft dirty we must mark the pte as soft dirty (and not dirty).
-This fixes some cases for guest migration with huge page backings.
+Using Python version 3.8.2 and PySide2 version 5.14.0, ctrl-F ('Find')
+would not expand the tree to the result. Fix by using setExpanded().
 
-Cc: <stable@vger.kernel.org> # 4.8
-Fixes: bc29b7ac1d9f ("s390/mm: clean up pte/pmd encoding")
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Example:
+
+  $ perf record -e intel_pt//u uname
+  Linux
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.034 MB perf.data ]
+  $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
+  2020-06-26 15:32:14.928997 Creating database ...
+  2020-06-26 15:32:14.933971 Writing records...
+  2020-06-26 15:32:15.535251 Adding indexes
+  2020-06-26 15:32:15.542993 Dropping unused tables
+  2020-06-26 15:32:15.549716 Done
+  $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
+
+  Select: Reports -> Context-Sensitive Call Graph    or     Reports -> Call Tree
+  Press: Ctrl-F
+  Enter: main
+  Press: Enter
+
+Before: line showing 'main' does not display
+
+After: tree is expanded to line showing 'main'
+
+Fixes: ebd70c7dc2f5f ("perf scripts python: exported-sql-viewer.py: Add ability to find symbols in the call-graph")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200629091955.17090-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/mm/hugetlbpage.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/scripts/python/exported-sql-viewer.py |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsign
- 					     _PAGE_YOUNG);
- #ifdef CONFIG_MEM_SOFT_DIRTY
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
--					     _PAGE_DIRTY);
-+					     _PAGE_SOFT_DIRTY);
- #endif
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
- 					     _PAGE_NOEXEC);
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -1052,6 +1052,7 @@ class TreeWindowBase(QMdiSubWindow):
+ 				child = self.model.index(row, 0, parent)
+ 				if child.internalPointer().dbid == dbid:
+ 					found = True
++					self.view.setExpanded(parent, True)
+ 					self.view.setCurrentIndex(child)
+ 					parent = child
+ 					break
 
 
