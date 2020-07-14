@@ -2,124 +2,102 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4879CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD28EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2550921D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cuuaMK8f"
+	by mail.kernel.org (Postfix) with ESMTP id B567A21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgGNJTk (ORCPT
+        id S1726836AbgGNJUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:19:40 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:23848 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbgGNJTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:19:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594718379; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=zlrj8wHvZscOUM1wkDSJh1QyspQdZdaCu/BwRVbN4oA=;
- b=cuuaMK8fmGw6GBTgml04qlNn0HanPwOHbl7+3aDl5KJrZUoPlZQsYd64BCikXLrd/+DEP/9R
- 5A6J+oZYiYJdHAkho0jhV1xazbPaC5ORCSZl5TelGPl9Monpzq4Q73HHhftW5V2uv9Dkt46G
- 8CUKYZiM4hoyoFSLpvvWgMDn75o=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f0d78a3f9ca681bd010a97c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:19:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7E442C43387; Tue, 14 Jul 2020 09:19:30 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8FAAC433CA;
-        Tue, 14 Jul 2020 09:19:29 +0000 (UTC)
+        Tue, 14 Jul 2020 05:20:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32899 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgGNJUA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:20:00 -0400
+Received: by mail-ot1-f66.google.com with SMTP id h13so12557339otr.0;
+        Tue, 14 Jul 2020 02:19:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lr6ehkiA+wQTlVbgKUBtfLmjH6B35ZHI7I1BOUE7Afo=;
+        b=t3icOm9FBPBdB2+Fp9LxU1YRusbuEdz/FTmz/ZCHqoWOaIJToTAFWFvq4MrZip0sfH
+         ZMtC7It3CW5yQfa+pssA3AAvkW3IT/HAKF9jU9QOqBDbtczWUxPw2zg9yYD4ca6Ul4sl
+         /L66+Puw1yhpyMFAYHctjn/9JMtvwjGQOhwXjUmKFPj+4BXAEOdElceJkVwCZ3vD2DV4
+         6mPyNtQKIQTP4I5SDmy554m65nHLOAj8u2Xe5fzFUs2h5vfCqgzKejrdtXFcL1NzO5FH
+         ahkSm4JZ3HVGo4amx+d+pM7QHf93Xjbja0YndPyvwUfMNB+c/Hz6xoivmRvkKdgT6mlX
+         nG5w==
+X-Gm-Message-State: AOAM530SPu3PO0/rLqk3e50aJcENKQN27GqjkgC2Nmc6KZhzPu/yN/3/
+        8vjI8IOk+xylsKRYGi/+YRDRYz+09eZiiomFn94=
+X-Google-Smtp-Source: ABdhPJymM3jUthOU7MUC7BJJVYVEZLSfzetmtXN1UCJV7+dkv0NdChE4LhYysx3KVtt2ozOxEExy7AyZyfrvt66ViT4=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr3032121otb.107.1594718399477;
+ Tue, 14 Jul 2020 02:19:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 17:19:29 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v1 2/2] scsi: ufs: Fix and simplify setup_xfer_req variant
- operation
-In-Reply-To: <20200706060707.32608-3-stanley.chu@mediatek.com>
-References: <20200706060707.32608-1-stanley.chu@mediatek.com>
- <20200706060707.32608-3-stanley.chu@mediatek.com>
-Message-ID: <74cc1ad32c414762ab5d18ed8b46c26a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200714122247.797cf01e@canb.auug.org.au> <20200714061654.GE183694@krava>
+ <20200714083133.GF183694@krava>
+In-Reply-To: <20200714083133.GF183694@krava>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 Jul 2020 11:19:47 +0200
+Message-ID: <CAMuHMdVjyHAJJNNUwva=RnyLxV--kVpgSWAic7WoJMgf_Ri+NQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-06 14:07, Stanley Chu wrote:
-> Add missing "setup_xfer_req" call in ufshcd_issue_devman_upiu_cmd()
-> by ufs-bsg path, and collect all "setup_xfer_req" calls to an unified
-> place, i.e., ufshcd_send_command(), to simplify the driver.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Hi Jiri,
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+On Tue, Jul 14, 2020 at 10:33 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> On Tue, Jul 14, 2020 at 08:16:54AM +0200, Jiri Olsa wrote:
+> > On Tue, Jul 14, 2020 at 12:22:47PM +1000, Stephen Rothwell wrote:
+> > > After merging the bpf-next tree, today's linux-next build (arm
+> > > multi_v7_defconfig) failed like this:
+> > >
+> > > tmp/ccsqpVCY.s: Assembler messages:
+> > > tmp/ccsqpVCY.s:78: Error: unrecognized symbol type ""
+> > > tmp/ccsqpVCY.s:91: Error: unrecognized symbol type ""
+> > >
+> > > I don't know what has caused this (I guess maybe the resolve_btfids
+> > > branch).
+> > >
+> > > I have used the bpf-next tree from next-20200713 for today.
 
-> ---
->  drivers/scsi/ufs/ufshcd.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 71e8d7c782bd..8603b07045a6 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1925,8 +1925,11 @@ static void
-> ufshcd_clk_scaling_update_busy(struct ufs_hba *hba)
->  static inline
->  void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
->  {
-> -	hba->lrb[task_tag].issue_time_stamp = ktime_get();
-> -	hba->lrb[task_tag].compl_time_stamp = ktime_set(0, 0);
-> +	struct ufshcd_lrb *lrbp = &hba->lrb[task_tag];
-> +
-> +	lrbp->issue_time_stamp = ktime_get();
-> +	lrbp->compl_time_stamp = ktime_set(0, 0);
-> +	ufshcd_vops_setup_xfer_req(hba, task_tag, (lrbp->cmd ? true : 
-> false));
->  	ufshcd_add_command_trace(hba, task_tag, "send");
->  	ufshcd_clk_scaling_start_busy(hba);
->  	__set_bit(task_tag, &hba->outstanding_reqs);
-> @@ -2544,7 +2547,6 @@ static int ufshcd_queuecommand(struct Scsi_Host
-> *host, struct scsi_cmnd *cmd)
-> 
->  	/* issue command to the controller */
->  	spin_lock_irqsave(hba->host->host_lock, flags);
-> -	ufshcd_vops_setup_xfer_req(hba, tag, true);
->  	ufshcd_send_command(hba, tag);
->  out_unlock:
->  	spin_unlock_irqrestore(hba->host->host_lock, flags);
-> @@ -2731,7 +2733,6 @@ static int ufshcd_exec_dev_cmd(struct ufs_hba 
-> *hba,
->  	/* Make sure descriptors are ready before ringing the doorbell */
->  	wmb();
->  	spin_lock_irqsave(hba->host->host_lock, flags);
-> -	ufshcd_vops_setup_xfer_req(hba, tag, false);
->  	ufshcd_send_command(hba, tag);
->  	spin_unlock_irqrestore(hba->host->host_lock, flags);
+Bummer, didn't find this report before I had bisected this to
+c9a0f3b85e09dd16 ("bpf: Resolve BTF IDs in vmlinux image"), and
+investigated the root cause (@object) myself, as the failing file path
+(net/core/filter.o) was not mentioned...
+
+> > ok, trying to reproduce
+>
+> damn crossbuilds.. change below fixes it for me,
+> will do some more testing and post it today
+
+Thanks, this fixes my (cross)arm32 build, and the (cross)arm64 build
+keeps working, and everything boots, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
