@@ -2,125 +2,164 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A38722473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737938;
-	bh=Iwpq0K3LI/457THLc5GqV5NyV/1EOMMNxj0I7YNH3+c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xbhv/CwnTsBNavrtj8KSTPsoTLEVzIZ6qG9dSdvlCfJyqgUEnG1xiuVQN1vvVKQzE
-	 kjIV2cS4OOeszXg+zho3SOd6NhqsVytilzH4skYuFmjQ9cHncPPHikcy0REohLGqdc
-	 yPG0JZTOQ+hXVj9gvy9+3BXnqG3bnxL1ZivmBCsI=
+	by mail.kernel.org (Postfix) with ESMTP id 21F06208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yUOzy5EU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbgGNOph (ORCPT
+        id S1726934AbgGNOsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbgGNOi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:38:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3926222C8;
-        Tue, 14 Jul 2020 14:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737536;
-        bh=Iwpq0K3LI/457THLc5GqV5NyV/1EOMMNxj0I7YNH3+c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5jEPgTezU+byQQVS1Me13LKRT5bEOqTVr8LKj2MrZ9V38keHKA89xU8JtYHaSTOw
-         Xyq/5wZnlTG5peDEXtGIotlJEoWudWWKDVhZ2wm3zNlZ1VKoVpaEpdcH/HTfdjPVnA
-         Y5dd7mYhAy53fn2RbF580BeNebw3qJ3JTRHLpyjk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 05/19] bpf: Set the number of exception entries properly for subprograms
-Date:   Tue, 14 Jul 2020 10:38:35 -0400
-Message-Id: <20200714143849.4035283-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
-References: <20200714143849.4035283-1-sashal@kernel.org>
+        Tue, 14 Jul 2020 10:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgGNOsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:48:41 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1421AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:48:41 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k23so17507329iom.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GD6BIvUqA5Oi+YyOCn6l+FUN1jjJuNH169fVbfbKorw=;
+        b=yUOzy5EUMjvhqbWr7ZrVYyrIXLxGpaCLUABbU4iuOkQWVkI5kWR8EW71NcPvUxuIZ1
+         yv6KVrznNf3pOZ2zxgzZfhzGAq6CJ2gDZYqDqo3j9Bk0cVALNvQSwhOFsGOARQeNHT/C
+         LcwQT5zZJbnUWa9mO7mr9WTKE+quzSZvGYPk/mMQFfFhsdrqjT5bB/ma4kWT94Gg9ReO
+         sE+xEhAgwNxozTG28Z26XHB3HVOMJ1mAHkxWnDiZLGz6NW7+sjCdXAva8jkgw3lQIgaI
+         vALLud2M7dzQTvcp2ZeCjnIQZqeYsGRZ+iBIQwan4fv/awCo21DTphl8METczjZC3O/P
+         95hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GD6BIvUqA5Oi+YyOCn6l+FUN1jjJuNH169fVbfbKorw=;
+        b=O8wfOz8MukE4Dsq+wFBVEqtyQhsAo8paCmZFOuOrTPqXE4ECsKJfB48QganEDjpQ0w
+         oQZ++59G6fwmpNets9uYek9GKJ7YHZBFgcnKvI25eR7szTc+J13IfjOOxgRmOLBAeJtS
+         F1BvCoJKJapuQxlTa5Rr9KkImst/xO7t2juS5lrXzaZlIOfj03iAHzCXMMJ8AvurXuYb
+         D/N1Zb2Flgcdq711dUsHWxrDwvm1nDx2hZ5OMv3TNTprpBkOZcpfiRuf4m05CD0f0VkW
+         QTO97gw5Y2xQQ2Q4wpCEGgGmIjBUAvKJLYJx6kUmWkG3w2AIkzb+W2o1S0oix406B9sv
+         FjHA==
+X-Gm-Message-State: AOAM533/ClUldYzucHt4M6VvGCxVmDqC/Zu1tTCYews85gk2UGVeuudM
+        RL8wD4Itl480IVxcETV0BZXN1O0oG6RQODBaVEOJsQ==
+X-Google-Smtp-Source: ABdhPJxIy/+FbmPkRdLd+fE4QlG6dYCLWsG7ljD32Q9xSWvwS+DinNGEDchWYGgv2nA8UdXC+iuV+myzSOcs7T9TWeA=
+X-Received: by 2002:a05:6602:2103:: with SMTP id x3mr5304596iox.130.1594738120270;
+ Tue, 14 Jul 2020 07:48:40 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200713145934.18243-1-brgl@bgdev.pl> <20200713145934.18243-2-brgl@bgdev.pl>
+ <20200713192901.GD3703480@smile.fi.intel.com>
+In-Reply-To: <20200713192901.GD3703480@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 14 Jul 2020 16:48:29 +0200
+Message-ID: <CAMRc=Me66Yi-zXVEOgHW3m_TtaEAz4QMQUJRjeS0WKayJBHC9w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] devres: provide devm_krealloc()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+On Mon, Jul 13, 2020 at 9:29 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Jul 13, 2020 at 04:59:32PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Implement the managed variant of krealloc(). This function works with
+> > all memory allocated by devm_kmalloc() (or devres functions using it
+> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> >
+> > Managed realloc'ed chunks can be manually released with devm_kfree().
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../driver-api/driver-model/devres.rst        |  1 +
+> >  drivers/base/devres.c                         | 67 +++++++++++++++++++
+> >  include/linux/device.h                        |  2 +
+> >  3 files changed, 70 insertions(+)
+> >
+> > diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> > index eaaaafc21134f..f318a5c0033c1 100644
+> > --- a/Documentation/driver-api/driver-model/devres.rst
+> > +++ b/Documentation/driver-api/driver-model/devres.rst
+> > @@ -354,6 +354,7 @@ MEM
+> >    devm_kmalloc()
+> >    devm_kmalloc_array()
+> >    devm_kmemdup()
+> > +  devm_krealloc()
+> >    devm_kstrdup()
+> >    devm_kvasprintf()
+> >    devm_kzalloc()
+> > diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+> > index ed615d3b9cf15..1775d35462300 100644
+> > --- a/drivers/base/devres.c
+> > +++ b/drivers/base/devres.c
+> > @@ -837,6 +837,73 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+> >  }
+> >  EXPORT_SYMBOL_GPL(devm_kmalloc);
+> >
+> > +/**
+> > + * devm_krealloc - Resource-managed krealloc()
+> > + * @dev: Device to re-allocate memory for
+> > + * @ptr: Pointer to the memory chunk to re-allocate
+> > + * @new_size: New allocation size
+> > + * @gfp: Allocation gfp flags
+> > + *
+> > + * Managed krealloc(). Resizes the memory chunk allocated with devm_kmalloc().
+> > + * Behaves similarly to regular krealloc(): if @ptr is NULL or ZERO_SIZE_PTR,
+> > + * it's the equivalent of devm_kmalloc(). If new_size is zero, it returns
+>
+> 'it frees the previously allocated memory and returns'
+>
+> > + * ZERO_SIZE_PTR. This function doesn't change the order in which the release
+> > + * callback for the re-alloc'ed devres will be called (except when falling back
+> > + * to devm_kmalloc()
+>
+> 'or when freeing resources when new_size is zero'
+>
 
-[ Upstream commit c4c0bdc0d2d084ed847c7066bdf59fe2cd25aa17 ]
+This is nit-picking but ok. :)
 
-Currently, if a bpf program has more than one subprograms, each program will be
-jitted separately. For programs with bpf-to-bpf calls the
-prog->aux->num_exentries is not setup properly. For example, with
-bpf_iter_netlink.c modified to force one function to be not inlined and with
-CONFIG_BPF_JIT_ALWAYS_ON the following error is seen:
-   $ ./test_progs -n 3/3
-   ...
-   libbpf: failed to load program 'iter/netlink'
-   libbpf: failed to load object 'bpf_iter_netlink'
-   libbpf: failed to load BPF skeleton 'bpf_iter_netlink': -4007
-   test_netlink:FAIL:bpf_iter_netlink__open_and_load skeleton open_and_load failed
-   #3/3 netlink:FAIL
-The dmesg shows the following errors:
-   ex gen bug
-which is triggered by the following code in arch/x86/net/bpf_jit_comp.c:
-   if (excnt >= bpf_prog->aux->num_exentries) {
-     pr_err("ex gen bug\n");
-     return -EFAULT;
-   }
+[snip!]
 
-This patch fixes the issue by computing proper num_exentries for each
-subprogram before calling JIT.
+> > +++ b/include/linux/device.h
+> > @@ -206,6 +206,8 @@ int devres_release_group(struct device *dev, void *id);
+> >
+> >  /* managed devm_k.alloc/kfree for device drivers */
+> >  void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
+>
+> > +void *devm_krealloc(struct device *dev, void *ptr, size_t size,
+> > +                 gfp_t gfp) __must_check;
+>
+> Strange indentation, also you can move __must_check to the beginning of the
+> declaration.
+>
 
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/verifier.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+There's nothing wrong with this indentation, what do you mean?
+__must_check is usually put at the end of the line.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 739d9ba3ba6b7..eebdd5307713b 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9613,7 +9613,7 @@ static int jit_subprogs(struct bpf_verifier_env *env)
- 	int i, j, subprog_start, subprog_end = 0, len, subprog;
- 	struct bpf_insn *insn;
- 	void *old_bpf_func;
--	int err;
-+	int err, num_exentries;
- 
- 	if (env->subprog_cnt <= 1)
- 		return 0;
-@@ -9688,6 +9688,14 @@ static int jit_subprogs(struct bpf_verifier_env *env)
- 		func[i]->aux->nr_linfo = prog->aux->nr_linfo;
- 		func[i]->aux->jited_linfo = prog->aux->jited_linfo;
- 		func[i]->aux->linfo_idx = env->subprog_info[i].linfo_idx;
-+		num_exentries = 0;
-+		insn = func[i]->insnsi;
-+		for (j = 0; j < func[i]->len; j++, insn++) {
-+			if (BPF_CLASS(insn->code) == BPF_LDX &&
-+			    BPF_MODE(insn->code) == BPF_PROBE_MEM)
-+				num_exentries++;
-+		}
-+		func[i]->aux->num_exentries = num_exentries;
- 		func[i] = bpf_int_jit_compile(func[i]);
- 		if (!func[i]->jited) {
- 			err = -ENOTSUPP;
--- 
-2.25.1
+[snip!]
 
+Bart
