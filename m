@@ -2,196 +2,141 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F368C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A2BC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DBB22453
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="D1NGAPg9"
+	by mail.kernel.org (Postfix) with ESMTP id 1E8C52242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgGNMqK (ORCPT
+        id S1728447AbgGNMsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgGNMqJ (ORCPT
+        Tue, 14 Jul 2020 08:48:21 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33050 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgGNMsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:46:09 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A027C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:46:09 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k71so1532676pje.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=/SewYUnqs72nnjMOfIaT/P3hnIetrZLumBpPg+JegX0=;
-        b=D1NGAPg9DguAGriffg1ZKDQlJlC1+rzx1RCn9Z1SjvMh8mVyP85iJVTOk27SO4a08k
-         1V5qK1FMv2kRDf61ZAwWSToubCahJWjZawbE9dK/JQl/n6KGaGigwT8v4+/JvSOH3c9g
-         Mz5Lgz2PjW6tfU5YGXzfAQPF4Wg/hMeniIXfs+bXaz6nZPur23tEIN3EVe4/csCszP7T
-         aa4VAfNXB2ufQhsSmU5YlKzEACcAVaHvnN4wfizMbk4JbzAHCQuXlr1YyqS155MassiF
-         mgNzS52TqPR5Z4Go7wsaOTe0Q3qKQGveLcrduWSquAZ69BfUR0H0nvbYv0E4QcG7eqYv
-         Zv5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=/SewYUnqs72nnjMOfIaT/P3hnIetrZLumBpPg+JegX0=;
-        b=QkodQIhQmH0kT2Z6qFJ2pDsL33CxWeS0FdTuZ4nfYwlAPWR0fv/hZ/oQ52jeAyXKqU
-         W210nYoesa5yQLNCWKFWgwSL+lwi8T+w1CHV/Mb40haGDgr4A8Nimq+8QDo8iBzBDTvX
-         ZvlXivqhCsKo3spieqS2P7uDuZ5ahnLtIQCRNmPqY2pv5kJNjyL1at2la27Px4ablooD
-         7Fu54rINre9V76c/tj9gCLCAHMhxrijBEXmVxO02Wc62AzCjKEBKMXb8Y3A3IR1oTKN9
-         uneTBoHJQooMWuQHSnvgcCP4NWTmipbjc/qIYcQnqoU0UyHo8Zc9L/bYZ5kd2hbfDVM3
-         4WuA==
-X-Gm-Message-State: AOAM532Wpxv9VV5U0tomtJm2Hr7xxty4MVM+/Cd+mduaPsFKOBgFPtZQ
-        NsDPuETypowLA2XKIeVfaKyosQ==
-X-Google-Smtp-Source: ABdhPJxJbeD76js5UkUJHGRXxQF8mvRABkEpz0TioNSqyjRD+fSmGpaHXMGBmfPRvfGBot/P0MR7fg==
-X-Received: by 2002:a17:90a:3a81:: with SMTP id b1mr4539573pjc.217.1594730768819;
-        Tue, 14 Jul 2020 05:46:08 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:d111:b7a3:a3d3:c7aa? ([2601:646:c200:1ef2:d111:b7a3:a3d3:c7aa])
-        by smtp.gmail.com with ESMTPSA id g28sm17494542pfr.70.2020.07.14.05.46.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 05:46:07 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy tlb option
-Date:   Tue, 14 Jul 2020 05:46:05 -0700
-Message-Id: <6D3D1346-DB1E-43EB-812A-184918CCC16A@amacapital.net>
-References: <1594708054.04iuyxuyb5.astroid@bobo.none>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
-In-Reply-To: <1594708054.04iuyxuyb5.astroid@bobo.none>
-To:     Nicholas Piggin <npiggin@gmail.com>
-X-Mailer: iPhone Mail (17F80)
+        Tue, 14 Jul 2020 08:48:16 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 75C9480045E5;
+        Tue, 14 Jul 2020 12:48:13 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YWtsWr-lMKj8; Tue, 14 Jul 2020 15:48:11 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-mips@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 0/4] serial: 8250_dw: Fix ref clock usage
+Date:   Tue, 14 Jul 2020 15:48:03 +0300
+Message-ID: <20200714124808.21493-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Greg, Jiri. We've missed the last merge window. It would be pity to miss
+the next one. Please review/merge in the series.
 
+Regarding the patchset. It might be dangerous if an UART port reference
+clock rate is suddenly changed. In particular the 8250 port drivers
+(and AFAICS most of the tty drivers using common clock framework clocks)
+rely either on the exclusive reference clock utilization or on the ref
+clock rate being always constant. Needless to say that it turns out not
+true and if some other service suddenly changes the clock rate behind an
+UART port driver back no good can happen. So the port might not only end
+up with an invalid uartclk value saved, but may also experience a
+distorted output/input data since such action will effectively update the
+programmed baud-clock. We discovered such problem on Baikal-T1 SoC where
+two DW 8250 ports have got a shared reference clock. Allwinner SoC is
+equipped with an UART, which clock is derived from the CPU PLL clock
+source, so the CPU frequency change might be propagated down up to the
+serial port reference clock. This patchset provides a way to fix the
+problem to the 8250 serial port controllers and mostly fixes it for the
+DW 8250-compatible UART. I say mostly because due to not having a facility
+to pause/stop and resume/restart on-going transfers we implemented the
+UART clock rate update procedure executed post factum of the actual
+reference clock rate change.
 
-> On Jul 13, 2020, at 11:31 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
->=20
-> =EF=BB=BFExcerpts from Nicholas Piggin's message of July 14, 2020 3:04 pm:=
+In addition the patchset includes a small optimization patch. It
+simplifies the DW APB UART ref clock rate setting procedure a bit.
 
->> Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
->>>=20
->>>> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:=
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
->>>>=20
->>>> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 a=
-m:
->>>>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wr=
-ote:
->>>>>>=20
->>>>>> On big systems, the mm refcount can become highly contented when doin=
-g
->>>>>> a lot of context switching with threaded applications (particularly
->>>>>> switching between the idle thread and an application thread).
->>>>>>=20
->>>>>> Abandoning lazy tlb slows switching down quite a bit in the important=
+Changelog v3:
+- Refactor the original patch to adjust the UART port divisor instead of
+  requesting an exclusive ref clock utilization.
 
->>>>>> user->idle->user cases, so so instead implement a non-refcounted sche=
-me
->>>>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot do=
-wn
->>>>>> any remaining lazy ones.
->>>>>>=20
->>>>>> On a 16-socket 192-core POWER8 system, a context switching benchmark
->>>>>> with as many software threads as CPUs (so each switch will go in and
->>>>>> out of idle), upstream can achieve a rate of about 1 million context
->>>>>> switches per second. After this patch it goes up to 118 million.
->>>>>>=20
->>>>>=20
->>>>> I read the patch a couple of times, and I have a suggestion that could=
+Changelog v4:
+- Discard commit b426bf0fb085 ("serial: 8250: Fix max baud limit in generic
+  8250 port") since Greg has already merged it into the tty-next branch.
+- Use EXPORT_SYMBOL_GPL() for the serial8250_update_uartclk() method.
 
->>>>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
->>>>> refcount.  You're saying "hey, this mm has no more references, but it
->>>>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
->>>>> those references too."  I'm wondering whether you actually need the
->>>>> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
->>>>> for real?  Roughly, in __mmdrop(), you would only free the page tables=
+Changelog v5:
+- Refactor dw8250_clk_work_cb() function cheking the clk_get_rate()
+  return value for being erroneous and exit if it is.
+- Don't update p->uartclk in the port startup. It will be updated later in
+  the same procedure at the set_termios() function being invoked by the
+  serial_core anyway.
 
->>>>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
->>>>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check i=
-f
->>>>> you just removed the last bit from mm_cpumask and potentially free the=
+Changelog v6:
+- Resend
 
->>>>> mm.
->>>>>=20
->>>>> Getting the locking right here could be a bit tricky -- you need to
->>>>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
->>>>> should free the mm, and you also need to avoid an mm with mm_users
->>>>> hitting zero concurrently with the last remote CPU using it lazily
->>>>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
->>>>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns t=
-he
->>>>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some caref=
-ul
->>>>> cmpxchg or dec_return to make sure that only one CPU frees it.
->>>>>=20
->>>>> Or maybe you'd need a lock or RCU for this, but the idea would be to
->>>>> only ever take the lock after mm_users goes to zero.
->>>>=20
->>>> I don't think it's nonsense, it could be a good way to avoid IPIs.
->>>>=20
->>>> I haven't seen much problem here that made me too concerned about IPIs=20=
+Link: https://lore.kernel.org/linux-serial/20200617224813.23853-1-Sergey.Semin@baikalelectronics.ru
+Changelog v7:
+- Wake the device up on the serial port divider update.
 
->>>> yet, so I think the simple patch may be good enough to start with
->>>> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the=
+Link: https://lore.kernel.org/linux-serial/20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru
+Changelog v8:
+- Add a new patch:
+  "serial: 8250_dw: Pass the same rate to the clk round and set rate methods"
 
->>>> unlazying with the exit TLB flush without doing anything fancy with
->>>> ref counting, but we'll see.
->>>=20
->>> I would be cautious with benchmarking here. I would expect that the
->>> nasty cases may affect power consumption more than performance =E2=80=94=
- the=20
->>> specific issue is IPIs hitting idle cores, and the main effects are to=20=
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
->>> slow down exit() a bit but also to kick the idle core out of idle.=20
->>> Although, if the idle core is in a deep sleep, that IPI could be=20
->>> *very* slow.
->>=20
->> It will tend to be self-limiting to some degree (deeper idle cores
->> would tend to have less chance of IPI) but we have bigger issues on
->> powerpc with that, like broadcast IPIs to the mm cpumask for THP
->> management. Power hasn't really shown up as an issue but powerpc
->> CPUs may have their own requirements and issues there, shall we say.
->>=20
->>> So I think it=E2=80=99s worth at least giving this a try.
->>=20
->> To be clear it's not a complete solution itself. The problem is of=20
->> course that mm cpumask gives you false negatives, so the bits
->> won't always clean up after themselves as CPUs switch away from their
->> lazy tlb mms.
->=20
-> ^^
->=20
-> False positives: CPU is in the mm_cpumask, but is not using the mm
-> as a lazy tlb. So there can be bits left and never freed.
->=20
-> If you closed the false positives, you're back to a shared mm cache
-> line on lazy mm context switches.
+Serge Semin (4):
+  serial: 8250: Add 8250 port clock update method
+  serial: 8250_dw: Simplify the ref clock rate setting procedure
+  serial: 8250_dw: Pass the same rate to the clk round and set rate
+    methods
+  serial: 8250_dw: Fix common clocks usage race condition
 
-x86 has this exact problem. At least no more than 64*8 CPUs share the cache l=
-ine :)
+ drivers/tty/serial/8250/8250_dw.c   | 120 ++++++++++++++++++++++++----
+ drivers/tty/serial/8250/8250_port.c |  40 ++++++++++
+ include/linux/serial_8250.h         |   2 +
+ 3 files changed, 148 insertions(+), 14 deletions(-)
 
-Can your share your benchmark?
+-- 
+2.26.2
 
->=20
-> Thanks,
-> Nick
