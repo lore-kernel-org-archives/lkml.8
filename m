@@ -2,181 +2,123 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38543C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8356C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CE9207CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="snSRtwa7"
+	by mail.kernel.org (Postfix) with ESMTP id CB14E207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGNLC2 (ORCPT
+        id S1727857AbgGNLCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:02:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41989 "EHLO m43-7.mailgun.net"
+        Tue, 14 Jul 2020 07:02:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:53847 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNLC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:02:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594724547; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iZcdgtwphZVxchdYcmxjiWPJYNmsJYjk7e3jHbcFfaA=; b=snSRtwa7UccVaeLT8/FU9MmK/XlSzazzp0mXx1shygm4eiHV1HYNvQ+EH53M5h+UvKIKIhg3
- 05V+a8Bv/Z+nEZAdf40AfiMXHGnwKwotPc2Nypd+5Xc2fzEdkm5IM7Qr254Rrshzg4TMynXx
- 49kI+EHeyG15ZESE7Sqv8UP+x0I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f0d90ab8e36ecda30fda1c1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 11:02:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 25B8EC4339C; Tue, 14 Jul 2020 11:02:03 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.75.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 46868C433CA;
-        Tue, 14 Jul 2020 11:01:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46868C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 5/5] irqchip: qcom-pdc: Reset all pdc interrupts during
- init
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
- <1592818308-23001-6-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=X=0yqDMeWSUAM4D6o_6JsOU4hm8Q2XFbOSEVQcRzRN6A@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <6f2939a9-5704-6461-97bc-ee58a192c35f@codeaurora.org>
-Date:   Tue, 14 Jul 2020 16:31:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726610AbgGNLCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:02:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8228B68CFC; Tue, 14 Jul 2020 13:02:39 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 13:02:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     syzbot <syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com>
+Cc:     hch@lst.de, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, v9fs-developer@lists.sourceforge.net
+Subject: Re: WARNING in __kernel_read
+Message-ID: <20200714110239.GE16178@lst.de>
+References: <00000000000003d32b05aa4d493c@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=X=0yqDMeWSUAM4D6o_6JsOU4hm8Q2XFbOSEVQcRzRN6A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000003d32b05aa4d493c@google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jul 13, 2020 at 12:03:17AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
 
-On 7/14/2020 3:47 AM, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Jun 22, 2020 at 2:33 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Clear previous kernel's configuration during init by resetting
->> all interrupts in enable bank to zero.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   drivers/irqchip/qcom-pdc.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index 8beb6f7..11a9d3a 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/slab.h>
->>   #include <linux/types.h>
->>
->> +#define PDC_MAX_IRQS_PER_REG   32
->>   #define PDC_MAX_IRQS           168
->>   #define PDC_MAX_GPIO_IRQS      256
->>
->> @@ -339,6 +340,7 @@ static const struct irq_domain_ops qcom_pdc_gpio_ops = {
->>   static int pdc_setup_pin_mapping(struct device_node *np)
->>   {
->>          int ret, n;
->> +       u32 reg, max_regs, max_pins = 0;
->>
->>          n = of_property_count_elems_of_size(np, "qcom,pdc-ranges", sizeof(u32));
->>          if (n <= 0 || n % 3)
->> @@ -367,8 +369,19 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->>                                                   &pdc_region[n].cnt);
->>                  if (ret)
->>                          return ret;
->> +               max_pins += pdc_region[n].cnt;
->>          }
->>
->> +       if (max_pins > PDC_MAX_IRQS)
->> +               return -EINVAL;
->> +
->> +       max_regs = max_pins / PDC_MAX_IRQS_PER_REG;
->> +       if (max_pins % PDC_MAX_IRQS_PER_REG)
->> +               max_regs++;
-> nit: max_regs = DIV_ROUND_UP(max_pins, PDC_MAX_IRQS_PER_REG)
->
->
->> +       for (reg = 0; reg < max_regs; reg++)
->> +               pdc_reg_write(IRQ_ENABLE_BANK, reg, 0);
-> This doesn't feel correct to me, but maybe I'm misunderstanding the
-> hardware (I don't think I have access to a reference manual).  Looking
-> at the example in the bindings, I see:
->
-> qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
->
-> In that example we have mappings for PDC ports:
-> 0 - 93 (count = 94)
-> 94 - 108 (count = 15)
-> 115 - 121 (count = 7)
->
-> Notice the slight discontinuity there.  I presume that discontinuity
-> is normal / allowed?  If so, if there is enough of it then I think
-> your math could be wrong, though with the example you get lucky and it
-> works out OK.  It's easy to see the problem with a slightly different
-> example:  Imagine that you had this:
->
-> 0 - 33 (count = 34)
-> 94 - 108 (count = 15)
-> 115 - 121 (count = 7)
->
-> ...now max_pins = 56 and max_regs = 2.  So you'll init reg 0 and 1.
-> ...but (IIUC) you actually should be initting 0, 1, 2, and 3.
+This is not a crash, but a WARN_ON_ONCE, someone really needs to fix
+syzbot to report this correctly.
 
-Right, Thanks for cacthing this. I will fix in next revision.
+The fix should be queued up by the 9p maintainers.
 
-Thanks,
-Maulik
-
-> I have no idea what might be in those discontinuous ranges and if it's
-> always OK to clear, but (assuming it is) one fix is to put your
-> clearing loop _inside_ the other "for" loop in this function, AKA:
->
-> for (reg = pdc_region[n].pin_base / PDC_MAX_IRQS_PER_REG;
->       reg < DIV_ROUND_UP(pdc_region[n].pin_base + pdc_region[n].cnt),
->                          PDC_MAX_IRQS_PER_REG)
->       reg++)
->
-> ...or another option is to keep track of the max "pin_base + cnt" and
-> loop from 0 to there?  I just don't know your hardware well enough to
-> tell which would be right.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+> 
+> HEAD commit:    a581387e Merge tag 'io_uring-5.8-2020-07-10' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13e730eb100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d012ca3f813739c37c25
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e0222b100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162a004f100000
+> 
+> The bug was bisected to:
+> 
+> commit 6209dd9132e8ea5545cffc84483841e88ea8cc5b
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Fri May 8 07:00:28 2020 +0000
+> 
+>     fs: implement kernel_read using __kernel_read
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152d91fb100000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172d91fb100000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=132d91fb100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com
+> Fixes: 6209dd9132e8 ("fs: implement kernel_read using __kernel_read")
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 5 at fs/read_write.c:427 __kernel_read+0x41d/0x4d0 fs/read_write.c:427
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events p9_read_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x45 kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
+>  exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:542
+> RIP: 0010:__kernel_read+0x41d/0x4d0 fs/read_write.c:427
+> Code: fd ff ff e8 75 19 b6 ff 45 31 c9 45 31 c0 b9 01 00 00 00 4c 89 f2 89 ee 4c 89 ef e8 5d 22 12 00 e9 46 ff ff ff e8 53 19 b6 ff <0f> 0b 49 c7 c4 ea ff ff ff e9 11 fe ff ff 4c 89 f7 e8 2d 76 f5 ff
+> RSP: 0018:ffffc90000cbfbc8 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: ffff8880a9786ac0 RCX: ffffffff81bd9ac4
+> RDX: ffff8880a95a2140 RSI: ffffffff81bd9e3d RDI: 0000000000000005
+> RBP: ffff888096bc8060 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 1ffffffff1829bdd R12: 00000000081d801e
+> R13: ffffc90000cbfc98 R14: ffff8880a9786b44 R15: 0000000000000007
+>  kernel_read+0x52/0x70 fs/read_write.c:457
+>  p9_fd_read net/9p/trans_fd.c:263 [inline]
+>  p9_read_work+0x2ac/0xff0 net/9p/trans_fd.c:298
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:291
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+---end quoted text---
