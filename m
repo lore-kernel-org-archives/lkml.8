@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D200FC433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E2C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C8521D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD14621D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ib8dutrA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DqW4FLzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731280AbgGNTJE (ORCPT
+        id S1731323AbgGNTJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41846 "EHLO
+        Tue, 14 Jul 2020 15:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbgGNTIy (ORCPT
+        with ESMTP id S1729587AbgGNTIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:08:54 -0400
+        Tue, 14 Jul 2020 15:08:51 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9B1C08C5C1;
-        Tue, 14 Jul 2020 12:08:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B915AC061755;
+        Tue, 14 Jul 2020 12:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=WcArS13+FuVWgZpBq2jD9+35A9Hbd1u8/3A+t12Vw84=; b=ib8dutrASdxq5ixAa2izcpGDd8
-        E5vpjYNb9eM60YYK0LOg8AhUipNgP6uicqKfI0QWjHtLTK41cTGU94dQnEfFzRkgSizIPRX6jEP+s
-        Hw5ez6AwNdcM1gEvNntnm63w7oq3csfsoFpRkRWxL5yqwxWJ3iJRXYQbf5rR/RAWuJGGCFhfXoMwT
-        SPJKm4nFVE42oCfwCmXwODGnJLeeF4a9F6JJI/OHiVnKdYBdPNGhbQDaJ3xdji/uoYgzDRGo6BanF
-        gHJwGZsTKBDgMVTm1igR4FmT5CexBsZnr3Hr4CB6oKyQDmubOvvbg3XFbdOC1Bq7yaDJLZRdD5F4d
-        gkncjQ0Q==;
-Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
+        bh=SfNmnpeIaLgqLHElMoiTdMHjuz+bhccYioCzBmt8Vg0=; b=DqW4FLzTD57cZNh10SjFknXCtC
+        Mow05kCJ7Q/oZx3rGuN9I6SEx6li24QLIAE1xENr/zk9CRUI6iz4sASvq7zTG0ogSZNxgT/Espl9a
+        g9/6+KSWPSOZ+w543FqtOfDsK+dJvdFJXQKFNsQq5SQqWou1MA0MLXlAq0Lxie7T82TGd3C/nsPhk
+        zknezzp02cXSyZO0Sw1eSvA2GAvs7ULLHpfxBhTvgEYlh8AIMl4iYPiLbXouw7KkVO/KPU/JzE1hZ
+        bTzzNK8weW1KPOFzo9M5OQuGG/9I5Z90bvSUTYx3E4i4Y/73nZzw9MbrjcvRBtjDKVRTRE77NDRDw
+        4ck54ujg==;
+Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIO-0005pN-He; Tue, 14 Jul 2020 19:08:52 +0000
+        id 1jvQIM-0005pB-0o; Tue, 14 Jul 2020 19:08:50 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 03/23] init: remove the bstat helper
-Date:   Tue, 14 Jul 2020 21:04:07 +0200
-Message-Id: <20200714190427.4332-4-hch@lst.de>
+Subject: [PATCH 01/23] fs: add a vfs_fchown helper
+Date:   Tue, 14 Jul 2020 21:04:05 +0200
+Message-Id: <20200714190427.4332-2-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714190427.4332-1-hch@lst.de>
 References: <20200714190427.4332-1-hch@lst.de>
@@ -59,65 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only caller of the bstat function becomes cleaner and simpler when
-open coding the function.
+Add a helper for struct file based chown operations.  To be used by
+the initramfs code soon.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Song Liu <song@kernel.org>
 ---
- init/do_mounts.h    | 10 ----------
- init/do_mounts_md.c |  8 ++++----
- 2 files changed, 4 insertions(+), 14 deletions(-)
+ fs/open.c          | 29 +++++++++++++++++------------
+ include/linux/fs.h |  2 ++
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 0bb0806de4ce2c..7513d1c14d13fe 100644
---- a/init/do_mounts.h
-+++ b/init/do_mounts.h
-@@ -20,16 +20,6 @@ static inline int create_dev(char *name, dev_t dev)
- 	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+diff --git a/fs/open.c b/fs/open.c
+index 6cd48a61cda3b9..103c66309bee67 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -740,23 +740,28 @@ SYSCALL_DEFINE3(lchown, const char __user *, filename, uid_t, user, gid_t, group
+ 			   AT_SYMLINK_NOFOLLOW);
  }
  
--static inline u32 bstat(char *name)
--{
--	struct kstat stat;
--	if (vfs_stat(name, &stat) != 0)
--		return 0;
--	if (!S_ISBLK(stat.mode))
--		return 0;
--	return stat.rdev;
--}
++int vfs_fchown(struct file *file, uid_t user, gid_t group)
++{
++	int error;
++
++	error = mnt_want_write_file(file);
++	if (error)
++		return error;
++	audit_file(file);
++	error = chown_common(&file->f_path, user, group);
++	mnt_drop_write_file(file);
++	return error;
++}
++
+ int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
+ {
+ 	struct fd f = fdget(fd);
+ 	int error = -EBADF;
+ 
+-	if (!f.file)
+-		goto out;
 -
- #ifdef CONFIG_BLK_DEV_RAM
+-	error = mnt_want_write_file(f.file);
+-	if (error)
+-		goto out_fput;
+-	audit_file(f.file);
+-	error = chown_common(&f.file->f_path, user, group);
+-	mnt_drop_write_file(f.file);
+-out_fput:
+-	fdput(f);
+-out:
++	if (f.file) {
++		error = vfs_fchown(f.file, user, group);
++		fdput(f);
++	}
+ 	return error;
+ }
  
- int __init rd_load_disk(int n);
-diff --git a/init/do_mounts_md.c b/init/do_mounts_md.c
-index b84031528dd446..359363e85ccd0b 100644
---- a/init/do_mounts_md.c
-+++ b/init/do_mounts_md.c
-@@ -138,9 +138,9 @@ static void __init md_setup_drive(void)
- 			dev = MKDEV(MD_MAJOR, minor);
- 		create_dev(name, dev);
- 		for (i = 0; i < MD_SB_DISKS && devname != NULL; i++) {
-+			struct kstat stat;
- 			char *p;
- 			char comp_name[64];
--			u32 rdev;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f5abba86107d86..0ddd64ca0b45c0 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1744,6 +1744,8 @@ int vfs_mkobj(struct dentry *, umode_t,
+ 		int (*f)(struct dentry *, umode_t, void *),
+ 		void *);
  
- 			p = strchr(devname, ',');
- 			if (p)
-@@ -150,9 +150,9 @@ static void __init md_setup_drive(void)
- 			if (strncmp(devname, "/dev/", 5) == 0)
- 				devname += 5;
- 			snprintf(comp_name, 63, "/dev/%s", devname);
--			rdev = bstat(comp_name);
--			if (rdev)
--				dev = new_decode_dev(rdev);
-+			if (vfs_stat(comp_name, &stat) == 0 &&
-+			    S_ISBLK(stat.mode))
-+				dev = new_decode_dev(stat.rdev);
- 			if (!dev) {
- 				printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
- 				break;
++int vfs_fchown(struct file *file, uid_t user, gid_t group);
++
+ extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+ 
+ #ifdef CONFIG_COMPAT
 -- 
 2.27.0
 
