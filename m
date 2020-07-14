@@ -4,101 +4,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B048C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370B4C43457
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4401622224
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E7222210
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgGNHEn (ORCPT
+        id S1727786AbgGNHEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:04:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55386 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727091AbgGNHEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:04:37 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2858A5A23F2DA69548A0;
-        Tue, 14 Jul 2020 15:04:36 +0800 (CST)
-Received: from localhost (10.175.101.6) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Jul 2020
- 15:04:28 +0800
-From:   Weilong Chen <chenweilong@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
-        <edumazet@google.com>, <chenweilong@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 net] rtnetlink: Fix memory(net_device) leak when ->newlink fails
-Date:   Tue, 14 Jul 2020 15:48:14 +0800
-Message-ID: <20200714074814.108767-1-chenweilong@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Jul 2020 03:04:55 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7568 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgGNHEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:04:23 -0400
+IronPort-SDR: g8izOY92QYbvCb/YVWxnMmgkQ1KonhvoN4mEpeapEZGPRPlN8eTnCQEzzCiGodv4Z2S0UY59Mx
+ c+X4MlOOq2sQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="136970732"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="136970732"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:22 -0700
+IronPort-SDR: i0LqExrBzUtJkU9eqNM0y424kEtZ8Ql24Gg0EKNp03C+/z+emnIMY4v+O6oNf5WcrrVRGG2n8D
+ +66KNsFjR4FQ==
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="360295775"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:21 -0700
+From:   ira.weiny@intel.com
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH 12/15] kmap: Add stray write protection for device pages
+Date:   Tue, 14 Jul 2020 00:02:17 -0700
+Message-Id: <20200714070220.3500839-13-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714070220.3500839-1-ira.weiny@intel.com>
+References: <20200714070220.3500839-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When vlan_newlink call register_vlan_dev fails, it might return error
-with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
-free the memory. But currently rtnl_newlink only free the memory which
-state is NETREG_UNINITIALIZED.
+From: Ira Weiny <ira.weiny@intel.com>
 
-BUG: memory leak
-unreferenced object 0xffff8881051de000 (size 4096):
-  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
-  hex dump (first 32 bytes):
-    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
-    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
-  backtrace:
-    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
-    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
-    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
-    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
-    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
-    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
-    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
-    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
-    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
-    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
-    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
-    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
-    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
-    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
-    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
-    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Device managed pages may have additional protections.  These protections
+need to be removed prior to valid use by kernel users.
 
-Fixes: e51fb152318ee6 (rtnetlink: fix a memory leak when ->newlink fails)
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+Check for special treatment of device managed pages in kmap and take
+action if needed.  We use kmap as an interface for generic kernel code
+because under normal circumstances it would be a bug for general kernel
+code to not use kmap prior to accessing kernel memory.  Therefore, this
+should allow any valid kernel users to seamlessly use these pages
+without issues.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- net/core/rtnetlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/highmem.h | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 9aedc15736ad..85a4b0101f76 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3343,7 +3343,8 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		 */
- 		if (err < 0) {
- 			/* If device is not registered at all, free it now */
--			if (dev->reg_state == NETREG_UNINITIALIZED)
-+			if (dev->reg_state == NETREG_UNINITIALIZED ||
-+			    dev->reg_state == NETREG_UNREGISTERED)
- 				free_netdev(dev);
- 			goto out;
- 		}
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index d6e82e3de027..7f809d8d5a94 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -8,6 +8,7 @@
+ #include <linux/mm.h>
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
++#include <linux/memremap.h>
+ 
+ #include <asm/cacheflush.h>
+ 
+@@ -31,6 +32,20 @@ static inline void invalidate_kernel_vmap_range(void *vaddr, int size)
+ 
+ #include <asm/kmap_types.h>
+ 
++static inline void enable_access(struct page *page)
++{
++	if (!page_is_access_protected(page))
++		return;
++	dev_access_enable();
++}
++
++static inline void disable_access(struct page *page)
++{
++	if (!page_is_access_protected(page))
++		return;
++	dev_access_disable();
++}
++
+ #ifdef CONFIG_HIGHMEM
+ extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
+ extern void kunmap_atomic_high(void *kvaddr);
+@@ -55,6 +70,11 @@ static inline void *kmap(struct page *page)
+ 	else
+ 		addr = kmap_high(page);
+ 	kmap_flush_tlb((unsigned long)addr);
++	/*
++	 * Even non-highmem pages may have additional access protections which
++	 * need to be checked and potentially enabled.
++	 */
++	enable_access(page);
+ 	return addr;
+ }
+ 
+@@ -63,6 +83,11 @@ void kunmap_high(struct page *page);
+ static inline void kunmap(struct page *page)
+ {
+ 	might_sleep();
++	/*
++	 * Even non-highmem pages may have additional access protections which
++	 * need to be checked and potentially disabled.
++	 */
++	disable_access(page);
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+@@ -85,6 +110,7 @@ static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+ {
+ 	preempt_disable();
+ 	pagefault_disable();
++	enable_access(page);
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 	return kmap_atomic_high_prot(page, prot);
+@@ -137,6 +163,7 @@ static inline unsigned long totalhigh_pages(void) { return 0UL; }
+ static inline void *kmap(struct page *page)
+ {
+ 	might_sleep();
++	enable_access(page);
+ 	return page_address(page);
+ }
+ 
+@@ -146,6 +173,7 @@ static inline void kunmap_high(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
++	disable_access(page);
+ #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
+ 	kunmap_flush_on_unmap(page_address(page));
+ #endif
+@@ -155,6 +183,7 @@ static inline void *kmap_atomic(struct page *page)
+ {
+ 	preempt_disable();
+ 	pagefault_disable();
++	enable_access(page);
+ 	return page_address(page);
+ }
+ #define kmap_atomic_prot(page, prot)	kmap_atomic(page)
+@@ -216,7 +245,8 @@ static inline void kmap_atomic_idx_pop(void)
+ #define kunmap_atomic(addr)                                     \
+ do {                                                            \
+ 	BUILD_BUG_ON(__same_type((addr), struct page *));       \
+-	kunmap_atomic_high(addr);                                  \
++	disable_access(kmap_to_page(addr));                     \
++	kunmap_atomic_high(addr);                               \
+ 	pagefault_enable();                                     \
+ 	preempt_enable();                                       \
+ } while (0)
 -- 
-2.17.1
+2.25.1
 
