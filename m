@@ -2,30 +2,30 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF30C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DA9C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9F22082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE60422507
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgGNQP5 (ORCPT
+        id S1728909AbgGNQP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:15:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40926 "EHLO
+        Tue, 14 Jul 2020 12:15:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40928 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725931AbgGNQPz (ORCPT
+        with ESMTP id S1728817AbgGNQPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 12:15:55 -0400
 Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jvNan-0005y1-RV; Tue, 14 Jul 2020 16:15:41 +0000
+        id 1jvNau-0005y1-G8; Tue, 14 Jul 2020 16:15:48 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     David Howells <dhowells@redhat.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
@@ -33,10 +33,12 @@ To:     David Howells <dhowells@redhat.com>,
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 0/4] fs: add mount_setattr()
-Date:   Tue, 14 Jul 2020 18:14:11 +0200
-Message-Id: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
+Subject: [PATCH 2/4] namespace: only take read lock in do_reconfigure_mnt()
+Date:   Tue, 14 Jul 2020 18:14:14 +0200
+Message-Id: <20200714161415.3886463-4-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
+References: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,148 +46,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+do_reconfigure_mnt() used to take the down_write(&sb->s_umount) lock
+which seems unnecessary since we're not changing the superblock. We're
+only checking whether it is already read-only. Setting other mount
+attributes is protected by lock_mount_hash() afaict and not by s_umount.
 
-This series can be found at:
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=mount_setattr
-https://gitlab.com/brauner/linux/-/commits/mount_setattr
-https://github.com/brauner/linux/tree/mount_setattr
+So I think the history of down_write(&sb->s_umount) lock being taken
+when setting mount attributes dates back to the introduction of
+MNT_READONLY in [2]. Afaict, this introduced the concept of having
+read-only mounts in contrast to just having a read-only superblock. When
+it got introduced it was simply plumbed into do_remount() which already
+took down_write(&sb->s_umount) because it was only used to actually
+change the superblock before [2]. Afaict, it would've already been
+possible back then to only use down_read(&sb->s_umount) for
+MS_BIND | MS_REMOUNT since actual mount options were protected by
+the vfsmount lock already. But that would've meant special casing the
+locking for MS_BIND | MS_REMOUNT in do_remount() which people might not
+have considered worth it.
+Then in [1] MS_BIND | MS_REMOUNT mount option changes were split out of
+do_remount() into do_reconfigure_mnt() but the down_write(&sb->s_umount)
+lock was simply copied over.
+Now that we have this be a separate helper only take
+the down_read(&sb->s_umount) lock since we're only interested in
+checking whether the super block is currently read-only and blocking any
+writers from changing it. Essentially, checking that the super block is
+read-only has the advantage that we can avoid having to go into the
+slowpath and through MNT_WRITE_HOLD and can simply set the read-only
+flag on the mount in set_mount_attributes().
 
-This implements the mount_setattr() syscall which has come up a few
-times already back in 2018 and again now in recent discussions and as
-promised (see [1] and [2]) here is the first version. Sorry for the
-delay but there's never enough time to get things done on time.
+[1]: commit 43f5e655eff7 ("vfs: Separate changing mount flags full remount")
+[2]: commit 2e4b7fcd9260 ("[PATCH] r/o bind mounts: honor mount writer counts at remount")
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: David Howells <dhowells@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ fs/namespace.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-While the new mount api allows to change the properties of a superblock
-there is currently no way to change the mount properties of a mount or
-mount tree using mount file descriptors which the new mount api is based
-on. In addition the old mount api has the big restriction that mount
-options cannot be applied recursively. This hasn't changed since
-changing mount options on a per-mount basis was implemented and has been
-a frequent request and a source of bugs. The inability to change the
-read-only mount option recursively alone is invaluable to userspace. Not
-too long ago there was another significant security issue that was
-caused by mount properties not being applied recurisvely (cf. [3]).
-Additionally, various userspace projects have switched over to the new
-mount api (including the ones I maintain) but we still have terrible
-hacks and loops around changing mount properties for existing mount
-trees. With mount_setattr() all these codepaths will be demoted to
-fallback codepaths, hopefully. Michael Kerrisk recently pointed out the
-missing support for this syscall as well.
-
-The new mount_setattr() syscall allows to recursively clear and set
-mount options in one shot. Multiple calls to change mount options
-requesting the same changes are idempotent:
-
-int mount_setattr(int dfd, const char *path, unsigned flags,
-                  struct mount_attr *uattr, size_t usize);
-
-Flags to modify path resolution behavior are specified in the @flags
-argument. Currently, AT_EMPTY_PATH, AT_RECURSIVE, AT_SYMLINK_NOFOLLOW,
-and AT_NO_AUTOMOUNT are supported. If useful, additional lookup flags to
-restrict path resolution as introduced with openat2() might be supported
-in the future.
-
-mount_setattr() can be expected to grow over time and is designed with
-extensibility in mind. It follows the extensible syscall pattern we have
-used with other syscalls such as openat2(), clone3(),
-sched_{set,get}attr(), and others.
-The set of mount options is passed in the uapi struct mount_attr which
-currently has the following layout:
-
-struct mount_attr {
-	__u64 attr_set;
-	__u64 attr_clr;
-	__u32 propagation;
-	__u32 atime;
-};
-
-The @attr_set and @attr_clr members are used to clear and set mount
-options. This way a user can e.g. request that a set of flags is to be
-raised such as turning mounts readonly by raising MOUNT_ATTR_RDONLY in
-@attr_set while at the same time requesting that another set of flags is
-to be lowered such as removing noexec from a mount tree by specifying
-MOUNT_ATTR_NOEXEC in @attr_clr.
-
-The @propagation field lets callers specify the propagation type of a
-mount tree. Propagation is a single property that has four different
-settings and as such is not really a flag argument but an enum.
-Specifically, it would be unclear what setting and clearing propagation
-settings in combination would amount to. The legacy mount() syscall thus
-forbids the combination of multiple propagation settings too. The goal
-is to keep the semantics of mount propagation somewhat simple as they
-are overly complex as it is.
-
-Finally, struct mount_attr contains an @atime field which can be used to
-set the atime behavior of a mount tree. Currently, access times are
-already treated and defined like an enum in the new mount api so there's
-no reason to treat them equivalent to a flag argument. A new atime enum
-is introduced. The reason for not reusing the atime flags useable with
-fsmount() and defined in the new mount api is that the
-MOUNT_ATTR_RELATIME enum is defined as 0. This means, a user wanting to
-transition to relative atime cannot simply specify MOUNT_ATTR_RELATIME
-in @atime or @attr_set as this would mean not specifying any atime
-settings is equivalent to specifying relative atime. This would cause
-confusion for userspace as not specifying atime settings would switch
-them to relatime. The new set of enums rectifies this by starting the
-definition at 1 and letting 0 mean that atime settings are supposed to
-be left unchanged.
-
-Changing mount option has quite a few moving parts and the locking is
-quite intricate so it is not unlikely that I got subtleties (very) wrong.
-
-I've also merged the syscall addition into the individual arches into
-the main patch itself since Linus once expressed that he prefers this
-wher it makes sense. Manpage and selftests included.
-
-[1]: https://lore.kernel.org/lkml/20200518144212.xpfjlajgwzwhlq7r@wittgenstein/
-[2]: https://lore.kernel.org/lkml/CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com/
-[3]: https://github.com/moby/moby/issues/37838
-
-Thanks!
-Christian
-
-Christian Brauner (4):
-  namespace: take lock_mount_hash() directly when changing flags
-  namespace: only take read lock in do_reconfigure_mnt()
-  fs: add mount_setattr()
-  tests: add mount_setattr() selftests
-
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/arm64/include/asm/unistd32.h             |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- fs/internal.h                                 |   7 +
- fs/namespace.c                                | 300 ++++++-
- include/linux/syscalls.h                      |   3 +
- include/uapi/asm-generic/unistd.h             |   4 +-
- include/uapi/linux/mount.h                    |  31 +
- tools/testing/selftests/Makefile              |   1 +
- .../selftests/mount_setattr/.gitignore        |   1 +
- .../testing/selftests/mount_setattr/Makefile  |   7 +
- tools/testing/selftests/mount_setattr/config  |   1 +
- .../mount_setattr/mount_setattr_test.c        | 802 ++++++++++++++++++
- 27 files changed, 1145 insertions(+), 30 deletions(-)
- create mode 100644 tools/testing/selftests/mount_setattr/.gitignore
- create mode 100644 tools/testing/selftests/mount_setattr/Makefile
- create mode 100644 tools/testing/selftests/mount_setattr/config
- create mode 100644 tools/testing/selftests/mount_setattr/mount_setattr_test.c
-
-
-base-commit: dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 395b9c912edf..ab025dd3be04 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2507,10 +2507,6 @@ static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
+ 	return __mnt_unmake_readonly(mnt);
+ }
+ 
+-/*
+- * Update the user-settable attributes on a mount.  The caller must hold
+- * sb->s_umount for writing.
+- */
+ static void set_mount_attributes(struct mount *mnt, unsigned int mnt_flags)
+ {
+ 	mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
+@@ -2560,13 +2556,17 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ 	if (!can_change_locked_flags(mnt, mnt_flags))
+ 		return -EPERM;
+ 
+-	down_write(&sb->s_umount);
++	/*
++	 * We're only checking whether the superblock is read-only not changing
++	 * it, so only take down_read(&sb->s_umount).
++	 */
++	down_read(&sb->s_umount);
+ 	lock_mount_hash();
+ 	ret = change_mount_ro_state(mnt, mnt_flags);
+ 	if (ret == 0)
+ 		set_mount_attributes(mnt, mnt_flags);
+ 	unlock_mount_hash();
+-	up_write(&sb->s_umount);
++	up_read(&sb->s_umount);
+ 
+ 	mnt_warn_timestamp_expiry(path, &mnt->mnt);
+ 
 -- 
 2.27.0
 
