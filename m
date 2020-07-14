@@ -2,126 +2,180 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E167AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83882222E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F0A2222E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jwl7xjaj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qDRTTSHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgGNPws (ORCPT
+        id S1728113AbgGNPxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgGNPwr (ORCPT
+        Tue, 14 Jul 2020 11:53:07 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:5339 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNPxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:52:47 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDCAC061755;
-        Tue, 14 Jul 2020 08:52:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d18so17729002edv.6;
-        Tue, 14 Jul 2020 08:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HC01Z6OLDElwaYfUqlXgjB5pKfu/tIF7xhD0stkkoE4=;
-        b=Jwl7xjajpAamyRBfornhb/ooABbGMtjk3/sQx5mWMrJMj2Awgv+gDjRmAjSHkQ0Gv7
-         nlliQDgxqH4s7/dXsCh7i6CfYdJ3yAvUiXFVAFemTZ3LwvTfbvLTMjFnm6JSo0y45vCC
-         NKlz1D1AGvcc0NwxUSL4SXdyesqyufey3rJnG8PXlqgH2xFRTcL3hL0O+NPOzUTBreO0
-         ydjdztT3GK9UszUKAKMk2hP3Vx6rSvxs4vc7Z+6MLZh/MvTd7XDTyTBBdapBDC+2V0WM
-         3yWwcb2R0/egYXg3aqzRnLahJd2ZyGW+2Uf/fVZRJ47iJ/DGM7p7TU8ICfTz3IZOLgLZ
-         fKig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HC01Z6OLDElwaYfUqlXgjB5pKfu/tIF7xhD0stkkoE4=;
-        b=hnnNxSNxP8jS0zf+cr+Osm2zU7ENoKcmMZfH9h5gXQau5xGM/lHmg2nAToeqV0AEVo
-         iz8552SuRwiXrEW5Zu9gn4uK518ZNWNSVqELRPgCl9X2U+lRj+M2yJHqyH3ReO48hGpP
-         8wjwSHNLF7dNsDCAO5A4SFwXqBlCYZhMn4LanaaMqyH3gymgwQ6UWMfgjm8d5qz4ZWXV
-         tPIGNdZ0fw3Buhqd5+dhEIRUTaaGipI+1zMpbYyZObyaUcPKmhjBSUHG6JX/koSnqgug
-         pwqJGZn4prpWaf0MR+eWxtsdIL3peutbjrMRpcRB2PgoHT/YI9CbAbgRYQ4PAI3j85M8
-         WyYQ==
-X-Gm-Message-State: AOAM530rG31DP6NeCByLmAT5RJ237zi4Ncgurre2nJMI0cSxzVJxqQcz
-        EcUogcBvEk5qRud9Ea1Um3w=
-X-Google-Smtp-Source: ABdhPJwM+0LjznQqykK788nYYpN22ezdQK2v668RvcWSXO5fMQpdt3NfrSE/i4oQAr0H+Naf8jTS9w==
-X-Received: by 2002:a05:6402:2cb:: with SMTP id b11mr5506993edx.66.1594741966218;
-        Tue, 14 Jul 2020 08:52:46 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id h10sm14583606edz.31.2020.07.14.08.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 08:52:45 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 17:52:44 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] serial: tegra: drop bogus NULL tty-port checks
-Message-ID: <20200714155244.GC251696@ulmo>
-References: <20200710135947.2737-1-johan@kernel.org>
- <20200710135947.2737-3-johan@kernel.org>
+        Tue, 14 Jul 2020 11:53:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594741986; x=1626277986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aNKu4TlMhXFpa9EB4TrkuELaJm2syKB07ToTzzg1FLQ=;
+  b=qDRTTSHK5dnjj5lo6fsnNiiXeVTeNUyjQpJbRd4I7K2c0SKupCnMO5Gg
+   WAKZF1q8QLT/iHJtFCSnJlW0rSL3RpxHVOT+kN+gi1GAMPYyyiAB7ofCR
+   Xhk6JYXY5HsRdXnXJRXzfReyCVzyZCiO/6bbX/gSmDMMfe2wqBmBgCbpG
+   oCgPb4nA7iFRssvYUhyOyRuAwDHWpTpAKZvE2fHWRl6HBRt3AFjdzteIw
+   kPo1+KRfXLBScFqkwF4DsywCzVheV0ov4xsEabEzsxCpY9meMnf1gRa0a
+   8TyqIzcTXrkcM3+zNsE0ZeMpaI/v1eguaggY38ZuDomZPpWVVZjGsjI7X
+   Q==;
+IronPort-SDR: /kjKp62nmlg710TdH9zsvAp1ZfOmuARb+O9f72ul8ZZ56KtgXVpsTUJ63PtEhpJ2VaCXF5o0OU
+ xBgKuZRepTov7Jgkj9HsulI7F8gCyM7DpKKvk4o9PNjzkx+DQEfrgXEDnhe4W0OtjsM1p5TBEO
+ nCXLgRzvpwp1U7fBUJ/yu+UJGbvIH51NqsDbVDOiRP10KANtIVD7O7BYGn0ueS4N2NCiChqqo4
+ 6QobtjkVJE5sMcFUUagWYgTX+dHeL0qv5k+gafS/zHHgUTAvSUmNJDP+fjAn45U52itSAkoYqm
+ 3Kc=
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="83827043"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 08:53:06 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 14 Jul 2020 08:53:05 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 14 Jul 2020 08:52:32 -0700
+Date:   Tue, 14 Jul 2020 17:53:04 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <andrew@lunn.ch>, <UNGLinuxDriver@microchip.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next v4 12/12] net: bridge: Add port attribute
+ IFLA_BRPORT_MRP_IN_OPEN
+Message-ID: <20200714155304.6isfmpwhbqnh57kr@soft-dev3.localdomain>
+References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+ <20200714073458.1939574-13-horatiu.vultur@microchip.com>
+ <9eeb89c5-865f-2b21-c7c6-7f4479bf4175@cumulusnetworks.com>
+ <20200714150740.3ji3qhtvikhrizfn@soft-dev3.localdomain>
+ <a22642aa-63a2-e492-5f64-b344c62d0142@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200710135947.2737-3-johan@kernel.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <a22642aa-63a2-e492-5f64-b344c62d0142@cumulusnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The 07/14/2020 18:33, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 14/07/2020 18:07, Horatiu Vultur wrote:
+> > The 07/14/2020 16:29, Nikolay Aleksandrov wrote:
+> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >>
+> >> On 14/07/2020 10:34, Horatiu Vultur wrote:
+> >>> This patch adds a new port attribute, IFLA_BRPORT_MRP_IN_OPEN, which
+> >>> allows to notify the userspace when the node lost the contiuity of
+> >>> MRP_InTest frames.
+> >>>
+> >>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> >>> ---
+> >>>  include/uapi/linux/if_link.h       | 1 +
+> >>>  net/bridge/br_netlink.c            | 3 +++
+> >>>  tools/include/uapi/linux/if_link.h | 1 +
+> >>>  3 files changed, 5 insertions(+)
+> >>>
+> >
+> > Hi Nik,
+> >
+> >>
+> >> It's kind of late by now, but I'd wish these were contained in a nested MRP attribute. :)
+> >> Horatiu, do you expect to have many more MRP attributes outside of MRP netlink code?
+> >
+> > I don't expect to add any other MRP attributes outside of MRP netlink
+> > code.
+> >
+> >>
+> >> Perhaps we should at least dump them only for MRP-aware ports, that should be easy.
+> >> They make no sense outside of MRP anyway, but increase the size of the dump for all
+> >> right now.
+> >
+> > You are right. Then should I first send a fix on the net for this and
+> > after that I will fix these patches or just fix this in the next patch
+> > series?
+> >
+> 
+> IMO it's more of an improvement rather than a bug, but since you don't expect to have more
+> attributes outside of MRP's netlink I guess we can drop it for now. Up to you.
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, lets just drop it for now.
 
-On Fri, Jul 10, 2020 at 03:59:47PM +0200, Johan Hovold wrote:
-> The struct tty_port is part of the uart state and will never be NULL in
-> the receive helpers. Drop the bogus NULL checks and rename the
-> pointer-variables "port" to differentiate them from struct tty_struct
-> pointers (which can be NULL).
->=20
-> Fixes: 962963e4ee23 ("serial: tegra: Switch to using struct tty_port")
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/tty/serial/serial-tegra.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> It definitely shouldn't block this patch-set.
+> 
+> >>
+> >> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> >>
+> >>> diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+> >>> index cc185a007ade8..26842ffd0501d 100644
+> >>> --- a/include/uapi/linux/if_link.h
+> >>> +++ b/include/uapi/linux/if_link.h
+> >>> @@ -344,6 +344,7 @@ enum {
+> >>>       IFLA_BRPORT_ISOLATED,
+> >>>       IFLA_BRPORT_BACKUP_PORT,
+> >>>       IFLA_BRPORT_MRP_RING_OPEN,
+> >>> +     IFLA_BRPORT_MRP_IN_OPEN,
+> >>>       __IFLA_BRPORT_MAX
+> >>>  };
+> >>>  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+> >>> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+> >>> index c532fa65c9834..147d52596e174 100644
+> >>> --- a/net/bridge/br_netlink.c
+> >>> +++ b/net/bridge/br_netlink.c
+> >>> @@ -152,6 +152,7 @@ static inline size_t br_port_info_size(void)
+> >>>  #endif
+> >>>               + nla_total_size(sizeof(u16))   /* IFLA_BRPORT_GROUP_FWD_MASK */
+> >>>               + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_RING_OPEN */
+> >>> +             + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_IN_OPEN */
+> >>>               + 0;
+> >>>  }
+> >>>
+> >>> @@ -216,6 +217,8 @@ static int br_port_fill_attrs(struct sk_buff *skb,
+> >>>                      !!(p->flags & BR_NEIGH_SUPPRESS)) ||
+> >>>           nla_put_u8(skb, IFLA_BRPORT_MRP_RING_OPEN, !!(p->flags &
+> >>>                                                         BR_MRP_LOST_CONT)) ||
+> >>> +         nla_put_u8(skb, IFLA_BRPORT_MRP_IN_OPEN,
+> >>> +                    !!(p->flags & BR_MRP_LOST_IN_CONT)) ||
+> >>>           nla_put_u8(skb, IFLA_BRPORT_ISOLATED, !!(p->flags & BR_ISOLATED)))
+> >>>               return -EMSGSIZE;
+> >>>
+> >>> diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
+> >>> index cafedbbfefbe9..781e482dc499f 100644
+> >>> --- a/tools/include/uapi/linux/if_link.h
+> >>> +++ b/tools/include/uapi/linux/if_link.h
+> >>> @@ -344,6 +344,7 @@ enum {
+> >>>       IFLA_BRPORT_ISOLATED,
+> >>>       IFLA_BRPORT_BACKUP_PORT,
+> >>>       IFLA_BRPORT_MRP_RING_OPEN,
+> >>> +     IFLA_BRPORT_MRP_IN_OPEN,
+> >>>       __IFLA_BRPORT_MAX
+> >>>  };
+> >>>  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+> >>>
+> >>
+> >
+> 
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8N1MwACgkQ3SOs138+
-s6HN4Q/9GbF9ywuYWv23IziNN5Nomf0Lg5LzLc4u2KZiDaVFS94F7kqYc2ZVI189
-xKiFdeXeWfKadEcU3b9v8aSZeG+jQyjRq8SjlVa0jwN3pI1MQPEGUHeIKS53rWuy
-nmm3csdutYZEP9N4I7WPpgUJkhL8ReY5ycJmgAQT8Pw6lc/ikgg2RqZo8GK/L4vF
-DfcXXOGWf0C9rM8FS0Gsm3j0ZEiMNpo2mWqIb58nBZIW0DrYfg+E5CNB3KeVc6ry
-BXANwBwth2Np20gcTu29RYClJ+jPIaHLIyoyu/z1JFu4fKuQ8fE+5srm0UqrvKnB
-XXsr7Uck2Pp+cIICAwURnkeAdP/81ak27BvPJe+0039CRs0HxrQ8aLbEgfMU+0i+
-MoGuqpjYC+HmMEoMDUICoB0WHtHAoaeocUxN7wO45HMei4Vme4yDHrpsVQMeZ3Iw
-3SPuGaSPcjRqYnxvkDcMwLpbdj6llcpPO3vf5FGHD8LdgxGTcugz2/n43By1rDLS
-+1QitK/7JPf4hvaoBeYvd59GqRSc+oO0chrnHoWODjhC3kqS+VAjdU8bhcJLDEet
-GiWN2CqDsKujxrLj8gRqg72YE5CVXriVCiQdkULQz6g4qI9XA1/hP+wWKcJybB6l
-FQylj2A4/s1ZU5+APCsrmUlAOWkVYKradW0d0iG8Pozn120jpik=
-=O4HE
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+-- 
+/Horatiu
