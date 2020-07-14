@@ -2,115 +2,180 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E066AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96981217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD44B221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tejj1Erp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVpM8O7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgGNGar (ORCPT
+        id S1726630AbgGNGba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
+        Tue, 14 Jul 2020 02:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNGar (ORCPT
+        with ESMTP id S1725306AbgGNGba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:30:47 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5C9C061755;
-        Mon, 13 Jul 2020 23:30:46 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so20291316ejd.13;
-        Mon, 13 Jul 2020 23:30:46 -0700 (PDT)
+        Tue, 14 Jul 2020 02:31:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B846C061755;
+        Mon, 13 Jul 2020 23:31:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s10so19859834wrw.12;
+        Mon, 13 Jul 2020 23:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WDXrzFVh8dPZdUoaPn9Fet8aXFJz7P/2Be+BzrI1pyE=;
-        b=tejj1ErpQNUFtDQMvGW9bNJg1jL6/aKDikj/iPRu5NslOsOp8I0oMU00udNnzmvkSl
-         9qcb2UF9fOj7gxy9Bb9qGzhAI5oy8kaZxB7aml6Y9PXjgQ8npgdvlJ/2oUsj7f9yNvsh
-         +46uOq5N/gkxy9DMtPqpec4S9ttrBprc+xllZHy2kys81rZcPF38FSpo0hS2m9eLQVou
-         C3WsBKCit60KkpttjuFIW2wGybzq1TaOM/4nuuUfkAS8AqAkz35qGYAbv6OrzoP7xtUv
-         uNrIgOoSsKCl+AIVpgHf114ORPpn8++e2u1B+5frd43DvhfG2kLppJQFIKjARSaWNYjT
-         HSIA==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=IW5MsAw16WncT7hiN49Rl3HYAzAQeKbFqwcVhNGKS+0=;
+        b=nVpM8O7ybmoMTE2akKTxb4v6KVMISCvIgqJqJwoSHz7qagb7clcsDC+oQbghkHElPc
+         bjm8Hayl9wJtAbIZeB/zSnP71SuAi3ZZ9gwGNQUbLx+zLfKT/mL98S0vnSloOp8FEKm+
+         llTVPmLwkGgpk0HU9VepNa3BRC4XZTAOOYqEGL5xzDZ+7uEJW5gcwoQ4Fj4KvV5z51q1
+         JYdIEQF1uD+mz1mq86749Bjgs5ZqP5DaAH6LawN8dS6YhviPE0IiwuVRW2V3LxQ+wY2D
+         zsIYrVjcm7MPuqhZSyITlHvpp6ktGzPjvSTFNN57jN4HmJQQfkicQ+1HDNrT042NANOi
+         TA7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WDXrzFVh8dPZdUoaPn9Fet8aXFJz7P/2Be+BzrI1pyE=;
-        b=DPk7ab+CYe849ge4jQobl0UvayOx8armaOj2dgVVyV4HYd12jRzYtEz0pSPBLTH59y
-         H0d5yA1gzBrnk5M97ojKhEzbWJxp/oNKxbFL8o5huVn5MT8LTr+sxKFSIYEOGsr9X2sf
-         6+ke4HFPkoQ0dhlxuidNcfFtQCyDUB7HPJM3nrqr/o5Nuq9t8QMPXTrCfPYyQFUVRTqp
-         CdGYw3nngJtTZr/W2yp0aKuJqo5/ydUXl28k9KnolB7MpizeNmKHnjNKziyg23qPqb+H
-         eCAVAR5pBgKBeP2NND36E3a4Z8cdDSplJBbx5Jq4xg6eLWRCQoIsncq1byHUlPwN8PuG
-         MqDg==
-X-Gm-Message-State: AOAM533hLCfRv+PLzEJeyGuoLjaisjzXfg3HabPDBbygPsRZu3z+/MDb
-        o9NN1J+A0v/z7wlnZK+pJF4=
-X-Google-Smtp-Source: ABdhPJzAtUV4CLIhPpcRbq3dMdTeGC4Ii5aCix/QzePzBrI1bss70Hgw/d/GfQSJxOxUjCJSShMaNA==
-X-Received: by 2002:a17:906:3784:: with SMTP id n4mr196820ejc.277.1594708245450;
-        Mon, 13 Jul 2020 23:30:45 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d88:ea00:c4fb:750d:a5d0:9d75])
-        by smtp.gmail.com with ESMTPSA id t20sm11618717ejd.124.2020.07.13.23.30.44
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=IW5MsAw16WncT7hiN49Rl3HYAzAQeKbFqwcVhNGKS+0=;
+        b=W7XEq12VakA1RV6foXH+WX4tMj+59veg22EaQ1B6GvbNFWhtrWpJD814kCaANZPq65
+         6FoBb5MHHUy7WdxS2wtc6jDOpW7B4zz92RjHQLiRdxsFnNbGb8CVxMHxX4wGznsl2vfF
+         c9ivlZZR86+dc2DIXdQu8aaZbsZAaScrvsAOB9MCQcxzcSFm4M5aPv1pRmPzd+LscIcS
+         g/zmR+QX1aO7I61Np7MQw8L6gl9gzAEvHYwTCnk0vpCAtlCzc834ifreoOyj+f/l8Og/
+         Lq+5AXxK0biTVgBvRRYoH4BkzmRGLqCxEVzZYhLl0/YhjdCaanXYZgR0FlRrQ51efasy
+         m+yA==
+X-Gm-Message-State: AOAM533MXEj9x+eJMOHS0mW4uF4Hbv676CeKPl6YJkwAtjCTeXYZQXpQ
+        JNhz41c1Nl662vdx/bHh0to=
+X-Google-Smtp-Source: ABdhPJwfFy6dmo1Vm5gws7qxqL6AU1u3wZpvQnq5Cd3DfkTvP2ksYNqKbknLtrONUpUfmGGPoNjFgA==
+X-Received: by 2002:adf:e482:: with SMTP id i2mr3266445wrm.75.1594708288840;
+        Mon, 13 Jul 2020 23:31:28 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id z6sm2772208wmf.33.2020.07.13.23.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 23:30:44 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jeff Chase <jnchase@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Rob Herring <robh@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify CHRONTEL CH7322 CEC DRIVER section
-Date:   Tue, 14 Jul 2020 08:30:35 +0200
-Message-Id: <20200714063035.8635-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jul 2020 23:31:28 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 16:31:20 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
+ tlb option
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
+References: <1594658283.qabzoxga67.astroid@bobo.none>
+        <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
+        <1594701900.gcgdq8p13l.astroid@bobo.none>
+In-Reply-To: <1594701900.gcgdq8p13l.astroid@bobo.none>
+MIME-Version: 1.0
+Message-Id: <1594708054.04iuyxuyb5.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7f52faabd2e5 ("media: dt-bindings: Add ch7322 media i2c device")
-slipped in a typo in the CHRONTEL CH7322 CEC DRIVER section.
+Excerpts from Nicholas Piggin's message of July 14, 2020 3:04 pm:
+> Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
+>>=20
+>>> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
+>>>=20
+>>> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 =
+am:
+>>>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wr=
+ote:
+>>>>>=20
+>>>>> On big systems, the mm refcount can become highly contented when doin=
+g
+>>>>> a lot of context switching with threaded applications (particularly
+>>>>> switching between the idle thread and an application thread).
+>>>>>=20
+>>>>> Abandoning lazy tlb slows switching down quite a bit in the important
+>>>>> user->idle->user cases, so so instead implement a non-refcounted sche=
+me
+>>>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot do=
+wn
+>>>>> any remaining lazy ones.
+>>>>>=20
+>>>>> On a 16-socket 192-core POWER8 system, a context switching benchmark
+>>>>> with as many software threads as CPUs (so each switch will go in and
+>>>>> out of idle), upstream can achieve a rate of about 1 million context
+>>>>> switches per second. After this patch it goes up to 118 million.
+>>>>>=20
+>>>>=20
+>>>> I read the patch a couple of times, and I have a suggestion that could
+>>>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
+>>>> refcount.  You're saying "hey, this mm has no more references, but it
+>>>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
+>>>> those references too."  I'm wondering whether you actually need the
+>>>> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
+>>>> for real?  Roughly, in __mmdrop(), you would only free the page tables
+>>>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
+>>>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check i=
+f
+>>>> you just removed the last bit from mm_cpumask and potentially free the
+>>>> mm.
+>>>>=20
+>>>> Getting the locking right here could be a bit tricky -- you need to
+>>>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
+>>>> should free the mm, and you also need to avoid an mm with mm_users
+>>>> hitting zero concurrently with the last remote CPU using it lazily
+>>>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
+>>>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns =
+the
+>>>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some caref=
+ul
+>>>> cmpxchg or dec_return to make sure that only one CPU frees it.
+>>>>=20
+>>>> Or maybe you'd need a lock or RCU for this, but the idea would be to
+>>>> only ever take the lock after mm_users goes to zero.
+>>>=20
+>>> I don't think it's nonsense, it could be a good way to avoid IPIs.
+>>>=20
+>>> I haven't seen much problem here that made me too concerned about IPIs=20
+>>> yet, so I think the simple patch may be good enough to start with
+>>> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the
+>>> unlazying with the exit TLB flush without doing anything fancy with
+>>> ref counting, but we'll see.
+>>=20
+>> I would be cautious with benchmarking here. I would expect that the
+>> nasty cases may affect power consumption more than performance =E2=80=94=
+ the=20
+>> specific issue is IPIs hitting idle cores, and the main effects are to=20
+>> slow down exit() a bit but also to kick the idle core out of idle.=20
+>> Although, if the idle core is in a deep sleep, that IPI could be=20
+>> *very* slow.
+>=20
+> It will tend to be self-limiting to some degree (deeper idle cores
+> would tend to have less chance of IPI) but we have bigger issues on
+> powerpc with that, like broadcast IPIs to the mm cpumask for THP
+> management. Power hasn't really shown up as an issue but powerpc
+> CPUs may have their own requirements and issues there, shall we say.
+>=20
+>> So I think it=E2=80=99s worth at least giving this a try.
+>=20
+> To be clear it's not a complete solution itself. The problem is of=20
+> course that mm cpumask gives you false negatives, so the bits
+> won't always clean up after themselves as CPUs switch away from their
+> lazy tlb mms.
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+^^
 
-    warning: no file matches    F: \
-        Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
+False positives: CPU is in the mm_cpumask, but is not using the mm
+as a lazy tlb. So there can be bits left and never freed.
 
-Fix the typo to address this warning.
+If you closed the false positives, you're back to a shared mm cache
+line on lazy mm context switches.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies on next-20200713
-
-Jeff, please ack this patch.
-Hans, please pick this minor non-urgent patch for your -next tree.
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea296f213e45..43661d432b4b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4114,7 +4114,7 @@ M:	Jeff Chase <jnchase@google.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
--F:	Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
-+F:	Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
- F:	drivers/media/cec/i2c/ch7322.c
- 
- CIRRUS LOGIC AUDIO CODEC DRIVERS
--- 
-2.17.1
-
+Thanks,
+Nick
