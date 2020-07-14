@@ -2,951 +2,110 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BFFC433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CACC433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5AC2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD002082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sXVBKbo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgGNQQH (ORCPT
+        id S1728058AbgGNQQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:16:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40936 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgGNQQD (ORCPT
+        Tue, 14 Jul 2020 12:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgGNQQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:16:03 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jvNay-0005y1-7p; Tue, 14 Jul 2020 16:15:52 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 4/4] tests: add mount_setattr() selftests
-Date:   Tue, 14 Jul 2020 18:14:16 +0200
-Message-Id: <20200714161415.3886463-6-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
-References: <20200714161415.3886463-1-christian.brauner@ubuntu.com>
+        Tue, 14 Jul 2020 12:16:20 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33FAC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:16:20 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id a8so17862522edy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PJAAkiMZvLbA+AbaUpZoAxP/9zA26GPbCpUDtX3Iaw0=;
+        b=sXVBKbo9WzTyqzS+cenfmH7NMprrjkl7E2/IKGdTaxT3ttHcBJ/7EqcL7ThyfjJtBU
+         mP00heFRE2CJNB28rt18anviIh7a8oj+q+OSqmvPZM1i4OE2pnzADns2q79a9thKjHbx
+         FPkCMBIlNtHsVcU/tiGlqZ9O9rKPzMqBd70OJId2OBTjMDYDNR09B4q6TrrVY7HdULoY
+         RZk9xGm1+/iij/+lPY4GyGZWYPJBGgWCF7UrFA7JLjkTJu5s2KUhW/wrledoXy1l35X7
+         L7epTxjKULtM0CEQWT/XIyePNQ2gwDcrDv8qK1ssVnCMh2clXH5ucWEEPWqGnhhToiEz
+         upfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PJAAkiMZvLbA+AbaUpZoAxP/9zA26GPbCpUDtX3Iaw0=;
+        b=rr2mYo2vEEAMuI43YrheuPaPehsyEYhUuZftzo6uJCWTrOEuc0r8MTPOUJ/NQ/v6fv
+         2bBZWg4J4QanA/YKSBDfhA2WXDYe7EJnsDLYMzZN26BSCy0jeapWIHGpRWAxVFPJZWCG
+         bclEF2SSB4h7bw/4geM+jp1ND++DYFKlwtGHazD6Pg2pjIlv+8K9ByySm8/P92lDm6GV
+         +myeV/gscLT32/jEGv/HTxwk7SL+s+RvpvX1wagwsZ4ikf2fE5VfOAmUqaCDcOhhbvxw
+         h5dW2cNKQll9jXOAxT0awzyjCxPmo78yNCORDmMCBlEZk2zAw/w67zYRVvN5d3/896Cf
+         cNiw==
+X-Gm-Message-State: AOAM530lWW9RR5LtZDtWHh8AOVyaMjR3wsSOlM4ewENr/PjfUrEgjTXE
+        zUhIHt+yk4hPzpsbnZoSNfO1AJnW5AEiI3m4k9NB2w==
+X-Google-Smtp-Source: ABdhPJzNi/7UkybDtVoiFAjUob/tmDhhxvh3g33zBS0Y7CPcLTcNAugl50BLXnG61QRkbhBFaeRXbnt4b9uY4+sUsBM=
+X-Received: by 2002:a50:9e02:: with SMTP id z2mr5169887ede.87.1594743378417;
+ Tue, 14 Jul 2020 09:16:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200630180255.GD37466@atomide.com> <20200702051213.GB3450@jagdpanzerIV.localdomain>
+ <20200702160514.GK37466@atomide.com> <20200703103241.GB182102@jagdpanzerIV.localdomain>
+ <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com>
+ <877dvg6ft6.fsf@kurt> <20200706144314.GB1485@jagdpanzerIV.localdomain>
+ <87o8oqa1zy.fsf@kurt> <20200708080712.GC571@jagdpanzerIV.localdomain>
+ <20200708095215.GB4751@alley> <20200709132229.GD4380@jagdpanzerIV.localdomain>
+In-Reply-To: <20200709132229.GD4380@jagdpanzerIV.localdomain>
+From:   Raul Rangel <rrangel@google.com>
+Date:   Tue, 14 Jul 2020 10:16:07 -0600
+Message-ID: <CAHQZ30BEe4uPJ=7TZWAd5XtjKjFcjcfhr8GMaR6GKmEMrcTVqQ@mail.gmail.com>
+Subject: Re: UART/TTY console deadlock
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a range of selftests for the new mount_setattr() syscall to verify
-that it works as expected. This tests that:
-- no invalid flags can be specified
-- changing properties of a single mount works and leaves other mounts in
-  the mount tree unchanged
-- changing a mount tre to read-only when one of the mounts has writers
-  fails and leaves the whole mount tree unchanged
-- changing mount properties from multiple threads works
-- changing atime settings works
-- changing mount propagation works
-- changing the mount options of a mount tree where the individual mounts
-  in the tree have different mount options only changes the flags that
-  were requested to change
-- changing mount options from another mount namespace fails
-- changing mount options from another user namespace fails
+Hey everyone,
+So it looks like this was a red herring. We were getting spurious
+interrupts which I suspect caused the console code to get called in
+some critical section. Once we fixed the spurious interrupts we no
+longer see the issue. Sorry for the noise.
 
-[==========] Running 9 tests from 2 test cases.
-[ RUN      ] mount_setattr.invalid_attributes
-[       OK ] mount_setattr.invalid_attributes
-[ RUN      ] mount_setattr.basic
-[       OK ] mount_setattr.basic
-[ RUN      ] mount_setattr.basic_recursive
-[       OK ] mount_setattr.basic_recursive
-[ RUN      ] mount_setattr.mount_has_writers
-[       OK ] mount_setattr.mount_has_writers
-[ RUN      ] mount_setattr.mixed_mount_options
-[       OK ] mount_setattr.mixed_mount_options
-[ RUN      ] mount_setattr.time_changes
-[       OK ] mount_setattr.time_changes
-[ RUN      ] mount_setattr.multi_threaded
-[       OK ] mount_setattr.multi_threaded
-[ RUN      ] mount_setattr.wrong_user_namespace
-[       OK ] mount_setattr.wrong_user_namespace
-[ RUN      ] mount_setattr.wrong_mount_namespace
-[       OK ] mount_setattr.wrong_mount_namespace
-[==========] 9 / 9 tests passed.
-[  PASSED  ]
+Thanks,
+Raul
 
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: David Howells <dhowells@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- tools/testing/selftests/Makefile              |   1 +
- .../selftests/mount_setattr/.gitignore        |   1 +
- .../testing/selftests/mount_setattr/Makefile  |   7 +
- tools/testing/selftests/mount_setattr/config  |   1 +
- .../mount_setattr/mount_setattr_test.c        | 802 ++++++++++++++++++
- 5 files changed, 812 insertions(+)
- create mode 100644 tools/testing/selftests/mount_setattr/.gitignore
- create mode 100644 tools/testing/selftests/mount_setattr/Makefile
- create mode 100644 tools/testing/selftests/mount_setattr/config
- create mode 100644 tools/testing/selftests/mount_setattr/mount_setattr_test.c
-
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 1195bd85af38..6620c16799a3 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -31,6 +31,7 @@ TARGETS += membarrier
- TARGETS += memfd
- TARGETS += memory-hotplug
- TARGETS += mount
-+TARGETS += mount_setattr
- TARGETS += mqueue
- TARGETS += net
- TARGETS += net/forwarding
-diff --git a/tools/testing/selftests/mount_setattr/.gitignore b/tools/testing/selftests/mount_setattr/.gitignore
-new file mode 100644
-index 000000000000..5f74d8488472
---- /dev/null
-+++ b/tools/testing/selftests/mount_setattr/.gitignore
-@@ -0,0 +1 @@
-+mount_setattr_test
-diff --git a/tools/testing/selftests/mount_setattr/Makefile b/tools/testing/selftests/mount_setattr/Makefile
-new file mode 100644
-index 000000000000..2250f7dcb81e
---- /dev/null
-+++ b/tools/testing/selftests/mount_setattr/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Makefile for mount selftests.
-+CFLAGS = -g -I../../../../usr/include/ -Wall -O2 -pthread
-+
-+TEST_GEN_FILES += mount_setattr_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/mount_setattr/config b/tools/testing/selftests/mount_setattr/config
-new file mode 100644
-index 000000000000..416bd53ce982
---- /dev/null
-+++ b/tools/testing/selftests/mount_setattr/config
-@@ -0,0 +1 @@
-+CONFIG_USER_NS=y
-diff --git a/tools/testing/selftests/mount_setattr/mount_setattr_test.c b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
-new file mode 100644
-index 000000000000..d215470cc005
---- /dev/null
-+++ b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
-@@ -0,0 +1,802 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <sched.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <pthread.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <sys/wait.h>
-+#include <sys/vfs.h>
-+#include <sys/statvfs.h>
-+#include <sys/sysinfo.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <grp.h>
-+#include <stdbool.h>
-+#include <stdarg.h>
-+
-+#include "../kselftest_harness.h"
-+
-+#ifndef CLONE_NEWNS
-+#define CLONE_NEWNS 0x00020000
-+#endif
-+
-+#ifndef CLONE_NEWUSER
-+#define CLONE_NEWUSER 0x10000000
-+#endif
-+
-+#ifndef MS_REC
-+#define MS_REC 16384
-+#endif
-+
-+#ifndef MS_RELATIME
-+#define MS_RELATIME (1 << 21)
-+#endif
-+
-+#ifndef MS_STRICTATIME
-+#define MS_STRICTATIME (1 << 24)
-+#endif
-+
-+#ifndef MOUNT_ATTR_RDONLY
-+#define MOUNT_ATTR_RDONLY 0x00000001
-+#endif
-+
-+#ifndef MOUNT_ATTR_NOSUID
-+#define MOUNT_ATTR_NOSUID 0x00000002
-+#endif
-+
-+#ifndef MOUNT_ATTR_NOEXEC
-+#define MOUNT_ATTR_NOEXEC 0x00000008
-+#endif
-+
-+#ifndef MOUNT_ATTR_NODIRATIME
-+#define MOUNT_ATTR_NODIRATIME 0x00000080
-+#endif
-+
-+#ifndef MAKE_ATIME_UNCHANGED
-+#define MAKE_ATIME_UNCHANGED 0
-+#endif
-+
-+#ifndef MAKE_ATIME_RELATIVE
-+#define MAKE_ATIME_RELATIVE 1
-+#endif
-+
-+#ifndef MAKE_ATIME_NONE
-+#define MAKE_ATIME_NONE 2
-+#endif
-+
-+#ifndef MAKE_ATIME_STRICT
-+#define MAKE_ATIME_STRICT 3
-+#endif
-+
-+#ifndef AT_RECURSIVE
-+#define AT_RECURSIVE 0x8000
-+#endif
-+
-+#ifndef MAKE_PROPAGATION_SHARED
-+#define MAKE_PROPAGATION_SHARED 4
-+#endif
-+
-+#define DEFAULT_THREADS 4
-+#define ptr_to_int(p) ((int)((intptr_t)(p)))
-+#define int_to_ptr(u) ((void *)((intptr_t)(u)))
-+
-+#ifndef __NR_mount_setattr
-+	#if defined __alpha__
-+		#define __NR_mount_setattr 550
-+	#elif defined _MIPS_SIM
-+		#if _MIPS_SIM == _MIPS_SIM_ABI32	/* o32 */
-+			#define __NR_mount_setattr 4440
-+		#endif
-+		#if _MIPS_SIM == _MIPS_SIM_NABI32	/* n32 */
-+			#define __NR_mount_setattr 6440
-+		#endif
-+		#if _MIPS_SIM == _MIPS_SIM_ABI64	/* n64 */
-+			#define __NR_mount_setattr 5440
-+		#endif
-+	#elif defined __ia64__
-+		#define __NR_mount_setattr (440 + 1024)
-+	#else
-+		#define __NR_mount_setattr 440
-+#endif
-+
-+struct mount_attr {
-+	__u64 attr_set;
-+	__u64 attr_clr;
-+	__u32 propagation;
-+	__u32 atime;
-+};
-+#endif
-+
-+static inline int sys_mount_setattr(int dfd, const char *path, unsigned int flags,
-+				    struct mount_attr *attr, size_t size)
-+{
-+	return syscall(__NR_mount_setattr, dfd, path, flags, attr, size);
-+}
-+
-+static ssize_t write_nointr(int fd, const void *buf, size_t count)
-+{
-+	ssize_t ret;
-+
-+	do {
-+		ret = write(fd, buf, count);
-+	} while (ret < 0 && errno == EINTR);
-+
-+	return ret;
-+}
-+
-+static int write_file(const char *path, const void *buf, size_t count)
-+{
-+	int fd;
-+	ssize_t ret;
-+
-+	fd = open(path, O_WRONLY | O_CLOEXEC | O_NOCTTY | O_NOFOLLOW);
-+	if (fd < 0)
-+		return -1;
-+
-+	ret = write_nointr(fd, buf, count);
-+	close(fd);
-+	if (ret < 0 || (size_t)ret != count)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int create_and_enter_userns(void)
-+{
-+	uid_t uid;
-+	gid_t gid;
-+	char map[100];
-+
-+	uid = getuid();
-+	gid = getgid();
-+
-+	if (unshare(CLONE_NEWUSER))
-+		return -1;
-+
-+	if (write_file("/proc/self/setgroups", "deny", sizeof("deny") - 1) &&
-+	    errno != ENOENT)
-+		return -1;
-+
-+	snprintf(map, sizeof(map), "0 %d 1", uid);
-+	if (write_file("/proc/self/uid_map", map, strlen(map)))
-+		return -1;
-+
-+
-+	snprintf(map, sizeof(map), "0 %d 1", gid);
-+	if (write_file("/proc/self/gid_map", map, strlen(map)))
-+		return -1;
-+
-+	if (setgid(0))
-+		return -1;
-+
-+	if (setuid(0))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int prepare_unpriv_mountns(void)
-+{
-+	if (create_and_enter_userns())
-+		return -1;
-+
-+	if (unshare(CLONE_NEWNS))
-+		return -1;
-+
-+	if (mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int read_mnt_flags(const char *path)
-+{
-+	int ret;
-+	struct statvfs stat;
-+	unsigned int mnt_flags;
-+
-+	ret = statvfs(path, &stat);
-+	if (ret != 0)
-+		return -EINVAL;
-+
-+	if (stat.f_flag &
-+	    ~(ST_RDONLY | ST_NOSUID | ST_NODEV | ST_NOEXEC | ST_NOATIME |
-+	      ST_NODIRATIME | ST_RELATIME | ST_SYNCHRONOUS | ST_MANDLOCK))
-+		return -EINVAL;
-+
-+	mnt_flags = 0;
-+	if (stat.f_flag & ST_RDONLY)
-+		mnt_flags |= MS_RDONLY;
-+	if (stat.f_flag & ST_NOSUID)
-+		mnt_flags |= MS_NOSUID;
-+	if (stat.f_flag & ST_NODEV)
-+		mnt_flags |= MS_NODEV;
-+	if (stat.f_flag & ST_NOEXEC)
-+		mnt_flags |= MS_NOEXEC;
-+	if (stat.f_flag & ST_NOATIME)
-+		mnt_flags |= MS_NOATIME;
-+	if (stat.f_flag & ST_NODIRATIME)
-+		mnt_flags |= MS_NODIRATIME;
-+	if (stat.f_flag & ST_RELATIME)
-+		mnt_flags |= MS_RELATIME;
-+	if (stat.f_flag & ST_SYNCHRONOUS)
-+		mnt_flags |= MS_SYNCHRONOUS;
-+	if (stat.f_flag & ST_MANDLOCK)
-+		mnt_flags |= ST_MANDLOCK;
-+
-+	return mnt_flags;
-+}
-+
-+static char *get_field(char *src, int nfields)
-+{
-+	int i;
-+	char *p = src;
-+
-+	for (i = 0; i < nfields; i++) {
-+		while (*p && *p != ' ' && *p != '\t')
-+			p++;
-+
-+		if (!*p)
-+			break;
-+
-+		p++;
-+	}
-+
-+	return p;
-+}
-+
-+static void null_endofword(char *word)
-+{
-+	while (*word && *word != ' ' && *word != '\t')
-+		word++;
-+	*word = '\0';
-+}
-+
-+static bool is_shared_mount(const char *path)
-+{
-+	size_t len = 0;
-+	char *line = NULL;
-+	FILE *f = NULL;
-+
-+	f = fopen("/proc/self/mountinfo", "re");
-+	if (!f)
-+		return false;
-+
-+	while (getline(&line, &len, f) != -1) {
-+		char *opts, *target;
-+
-+		target = get_field(line, 4);
-+		if (!target)
-+			continue;
-+
-+		opts = get_field(target, 2);
-+		if (!opts)
-+			continue;
-+
-+		null_endofword(target);
-+
-+		if (strcmp(target, path) != 0)
-+			continue;
-+
-+		null_endofword(opts);
-+		if (strstr(opts, "shared:"))
-+			return true;
-+	}
-+
-+	free(line);
-+	fclose(f);
-+
-+	return false;
-+}
-+
-+static void *mount_setattr_thread(void *data)
-+{
-+	struct mount_attr attr = {
-+		.attr_set	= MOUNT_ATTR_RDONLY | MOUNT_ATTR_NOSUID,
-+		.attr_clr	= 0,
-+		.propagation	= MAKE_PROPAGATION_SHARED,
-+	};
-+
-+	if (sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)))
-+		pthread_exit(int_to_ptr(-1));
-+
-+	pthread_exit(int_to_ptr(0));
-+}
-+
-+FIXTURE(mount_setattr) {
-+};
-+
-+FIXTURE_SETUP(mount_setattr)
-+{
-+	EXPECT_EQ(prepare_unpriv_mountns(), 0);
-+
-+	(void)umount2("/mnt", MNT_DETACH);
-+	(void)umount2("/tmp", MNT_DETACH);
-+
-+	EXPECT_EQ(mount("testing", "/tmp", "tmpfs", MS_NOATIME | MS_NODEV,
-+			"size=100000,mode=700"), 0);
-+
-+	EXPECT_EQ(mkdir("/tmp/B", 0777), 0);
-+
-+	EXPECT_EQ(mount("testing", "/tmp/B", "tmpfs", MS_NOATIME | MS_NODEV,
-+			"size=100000,mode=700"), 0);
-+
-+	EXPECT_EQ(mkdir("/tmp/B/BB", 0777), 0);
-+
-+	EXPECT_EQ(mount("testing", "/tmp/B/BB", "tmpfs", MS_NOATIME | MS_NODEV,
-+			"size=100000,mode=700"), 0);
-+
-+	EXPECT_EQ(mount("testing", "/mnt", "tmpfs", MS_NOATIME | MS_NODEV,
-+			"size=100000,mode=700"), 0);
-+
-+	EXPECT_EQ(mkdir("/mnt/A", 0777), 0);
-+
-+	EXPECT_EQ(mount("testing", "/mnt/A", "tmpfs", MS_NOATIME | MS_NODEV,
-+			"size=100000,mode=700"), 0);
-+
-+	EXPECT_EQ(mkdir("/mnt/A/AA", 0777), 0);
-+
-+	EXPECT_EQ(mount("/tmp", "/mnt/A/AA", NULL, MS_BIND | MS_REC, NULL), 0);
-+
-+	EXPECT_EQ(mkdir("/mnt/B", 0777), 0);
-+
-+	EXPECT_EQ(mount("testing", "/mnt/B", "ramfs",
-+			MS_NOATIME | MS_NODEV | MS_NOSUID, 0), 0);
-+
-+	EXPECT_EQ(mkdir("/mnt/B/BB", 0777), 0);
-+
-+	EXPECT_EQ(mount("testing", "/tmp/B/BB", "devpts",
-+			MS_RELATIME | MS_NOEXEC | MS_RDONLY, 0), 0);
-+}
-+
-+FIXTURE_TEARDOWN(mount_setattr)
-+{
-+	(void)umount2("/mnt/A", MNT_DETACH);
-+	(void)umount2("/tmp", MNT_DETACH);
-+}
-+
-+TEST_F(mount_setattr, invalid_attributes)
-+{
-+	struct mount_attr invalid_attr = {
-+		.attr_set = (1U << 31),
-+	};
-+
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+
-+	invalid_attr.attr_set	= 0;
-+	invalid_attr.attr_clr	= (1U << 31);
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+
-+	invalid_attr.attr_clr		= 0;
-+	invalid_attr.propagation	= (1U << 31);
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+
-+	invalid_attr.attr_clr		= 0;
-+	invalid_attr.propagation	= 0;
-+	invalid_attr.atime		= (1U << 31);
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+
-+	invalid_attr.attr_set		= (1U << 31);
-+	invalid_attr.attr_clr		= (1U << 31);
-+	invalid_attr.propagation	= (1U << 31);
-+	invalid_attr.atime		= (1U << 31);
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+
-+	EXPECT_LT(sys_mount_setattr(-1, "mnt/A", AT_RECURSIVE, &invalid_attr,
-+				    sizeof(invalid_attr)), 0);
-+}
-+
-+TEST_F(mount_setattr, basic)
-+{
-+	unsigned int old_flags = 0, new_flags = 0, expected_flags = 0;
-+	struct mount_attr attr = {
-+		.attr_set	= MOUNT_ATTR_RDONLY | MOUNT_ATTR_NOEXEC,
-+		.atime		= MAKE_ATIME_RELATIVE,
-+	};
-+
-+	old_flags = read_mnt_flags("/mnt/A");
-+	EXPECT_GT(old_flags, 0);
-+
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", 0, &attr, sizeof(attr)), 0);
-+
-+	expected_flags = old_flags;
-+	expected_flags |= MS_RDONLY;
-+	expected_flags |= MS_NOEXEC;
-+	expected_flags &= ~MS_NOATIME;
-+	expected_flags |= MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, old_flags);
-+}
-+
-+TEST_F(mount_setattr, basic_recursive)
-+{
-+	int fd;
-+	unsigned int old_flags = 0, new_flags = 0, expected_flags = 0;
-+	struct mount_attr attr = {
-+		.attr_set	= MOUNT_ATTR_RDONLY | MOUNT_ATTR_NOEXEC,
-+		.atime		= MAKE_ATIME_RELATIVE,
-+	};
-+
-+	old_flags = read_mnt_flags("/mnt/A");
-+	EXPECT_GT(old_flags, 0);
-+
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags = old_flags;
-+	expected_flags |= MS_RDONLY;
-+	expected_flags |= MS_NOEXEC;
-+	expected_flags &= ~MS_NOATIME;
-+	expected_flags |= MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.attr_clr = MOUNT_ATTR_RDONLY;
-+	attr.propagation = MAKE_PROPAGATION_SHARED;
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags &= ~MS_RDONLY;
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	EXPECT_EQ(is_shared_mount("/mnt/A"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	EXPECT_EQ(is_shared_mount("/mnt/A/AA"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	EXPECT_EQ(is_shared_mount("/mnt/A/AA/B"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	EXPECT_EQ(is_shared_mount("/mnt/A/AA/B/BB"), true);
-+
-+	fd = open("/mnt/A/AA/B/b", O_RDWR | O_CLOEXEC | O_CREAT | O_EXCL, 0777);
-+	ASSERT_GE(fd, 0);
-+
-+	/*
-+	 * We're holding a fd open for writing so this needs to fail somewhere
-+	 * in the middle and the mount options need to be unchanged.
-+	 */
-+	attr.attr_set = MOUNT_ATTR_RDONLY;
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B/BB"), true);
-+
-+	EXPECT_EQ(close(fd), 0);
-+}
-+
-+TEST_F(mount_setattr, mount_has_writers)
-+{
-+	int fd;
-+	unsigned int old_flags = 0, new_flags = 0;
-+	struct mount_attr attr = {
-+		.attr_set	= MOUNT_ATTR_RDONLY | MOUNT_ATTR_NOEXEC,
-+		.atime		= MAKE_ATIME_RELATIVE,
-+		.propagation	= MAKE_PROPAGATION_SHARED,
-+	};
-+
-+	old_flags = read_mnt_flags("/mnt/A");
-+	EXPECT_GT(old_flags, 0);
-+
-+	fd = open("/mnt/A/AA/B/b", O_RDWR | O_CLOEXEC | O_CREAT | O_EXCL, 0777);
-+	ASSERT_GE(fd, 0);
-+
-+	/*
-+	 * We're holding a fd open to a mount somwhere in the middle so this
-+	 * needs to fail somewhere in the middle. After this the mount options
-+	 * need to be unchanged.
-+	 */
-+	EXPECT_LT(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A"), false);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA"), false);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B"), false);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, old_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B/BB"), false);
-+
-+	EXPECT_EQ(close(fd), 0);
-+
-+	/* All writers are gone so this should succeed. */
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+}
-+
-+TEST_F(mount_setattr, mixed_mount_options)
-+{
-+	unsigned int old_flags1 = 0, old_flags2 = 0, new_flags = 0, expected_flags = 0;
-+	struct mount_attr attr = {
-+		.attr_clr	= MOUNT_ATTR_RDONLY | MOUNT_ATTR_NOSUID | MOUNT_ATTR_NOEXEC,
-+		.atime		= MAKE_ATIME_RELATIVE,
-+	};
-+
-+	old_flags1 = read_mnt_flags("/mnt/B");
-+	EXPECT_GT(old_flags1, 0);
-+
-+	old_flags2 = read_mnt_flags("/mnt/B/BB");
-+	EXPECT_GT(old_flags2, 0);
-+
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/B", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags = old_flags2;
-+	expected_flags &= ~(MS_RDONLY | MS_NOEXEC | MS_NOATIME | MS_NOSUID);
-+	expected_flags |= MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	expected_flags = old_flags2;
-+	expected_flags &= ~(MS_RDONLY | MS_NOEXEC | MS_NOATIME | MS_NOSUID);
-+	expected_flags |= MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+}
-+
-+TEST_F(mount_setattr, time_changes)
-+{
-+	unsigned int old_flags = 0, new_flags = 0, expected_flags = 0;
-+	struct mount_attr attr = {
-+		.attr_set	= MOUNT_ATTR_NODIRATIME,
-+		.attr_clr	= 0,
-+		.atime		= MAKE_ATIME_NONE,
-+	};
-+
-+	old_flags = read_mnt_flags("/mnt/A");
-+	EXPECT_GT(old_flags, 0);
-+
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags = old_flags;
-+	expected_flags |= MS_NOATIME;
-+	expected_flags |= MS_NODIRATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.atime = MAKE_ATIME_RELATIVE;
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags &= ~MS_NOATIME;
-+	expected_flags |= MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.atime = MAKE_ATIME_STRICT;
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags &= ~MS_RELATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.atime = MAKE_ATIME_NONE;
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags |= MS_NOATIME;
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.attr_clr = MOUNT_ATTR_NODIRATIME;
-+	EXPECT_EQ(sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr)), 0);
-+
-+	expected_flags &= ~MS_NODIRATIME;
-+
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+}
-+
-+TEST_F(mount_setattr, multi_threaded)
-+{
-+	int i, j, nthreads;
-+	unsigned int old_flags = 0, new_flags = 0, expected_flags = 0;
-+	pthread_attr_t pattr;
-+	pthread_t threads[DEFAULT_THREADS];
-+
-+	old_flags = read_mnt_flags("/mnt/A");
-+	EXPECT_GT(old_flags, 0);
-+
-+	/* Try to change mount options from multiple threads. */
-+	nthreads = get_nprocs_conf();
-+	if (nthreads > DEFAULT_THREADS)
-+		nthreads = DEFAULT_THREADS;
-+
-+	pthread_attr_init(&pattr);
-+	for (i = 0; i < nthreads; i++)
-+		EXPECT_EQ(pthread_create(&threads[i], &pattr, mount_setattr_thread, NULL), 0);
-+
-+	for (j = 0; j < i; j++) {
-+		void *retptr = NULL;
-+
-+		EXPECT_EQ(pthread_join(threads[j], &retptr), 0);
-+
-+		ASSERT_EQ(ptr_to_int(retptr), 0);
-+	}
-+	pthread_attr_destroy(&pattr);
-+
-+	expected_flags = old_flags;
-+	expected_flags |= MS_RDONLY;
-+	expected_flags |= MS_NOSUID;
-+	new_flags = read_mnt_flags("/mnt/A");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B"), true);
-+
-+	new_flags = read_mnt_flags("/mnt/A/AA/B/BB");
-+	ASSERT_EQ(new_flags, expected_flags);
-+
-+	ASSERT_EQ(is_shared_mount("/mnt/A/AA/B/BB"), true);
-+}
-+
-+TEST_F(mount_setattr, wrong_user_namespace)
-+{
-+	int ret;
-+	struct mount_attr attr = {
-+		.attr_set = MOUNT_ATTR_RDONLY,
-+	};
-+
-+	EXPECT_EQ(create_and_enter_userns(), 0);
-+	ret = sys_mount_setattr(-1, "/mnt/A", AT_RECURSIVE, &attr, sizeof(attr));
-+	ASSERT_LT(ret, 0);
-+	ASSERT_EQ(errno, EPERM);
-+}
-+
-+TEST_F(mount_setattr, wrong_mount_namespace)
-+{
-+	int fd, ret;
-+	struct mount_attr attr = {
-+		.attr_set = MOUNT_ATTR_RDONLY,
-+	};
-+
-+	fd = open("/mnt/A", O_DIRECTORY | O_CLOEXEC);
-+	EXPECT_GE(fd, 0);
-+
-+	EXPECT_EQ(unshare(CLONE_NEWNS), 0);
-+
-+	ret = sys_mount_setattr(fd, "", AT_EMPTY_PATH | AT_RECURSIVE, &attr, sizeof(attr));
-+	ASSERT_LT(ret, 0);
-+	ASSERT_EQ(errno, EINVAL);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.27.0
-
+On Thu, Jul 9, 2020 at 7:22 AM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> On (20/07/08 11:52), Petr Mladek wrote:
+> >
+> > I still believe that this is a false positive.
+>
+> I've no problems with that. The thing that I'm trying to improve here is the
+> fact that from lockdep's point of view there are no false positives. lockdep
+> reports the problem and then waves good bye. It disables itself. There might
+> be some real suspend locking problems on some particular setups, but it's
+> hard to tell, because console startup blows up the lockdep first.
+>
+>         -ss
