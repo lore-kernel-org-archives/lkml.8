@@ -2,52 +2,56 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D90C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE7DC43465
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D34F206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677272064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737695;
-	bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gVp2dG3r3ltoJLmCUtjvvMDxKNcXkIW9iLx6WYKeVvdu+lVg6Rej3MJC0HKQ5L3rP
-	 zJXQygrIMP1FJNBnwqZmxpSzP7ILQ6k3fYsMYMMwccfVKVT8l5zQfjGcFK38y4jZBQ
-	 XX5fP+LJUcWRWx+1dM5IkdWGXeX6O0NOK9mjdXE8=
+	s=default; t=1594737700;
+	bh=+TpmgRyoAimEk+9EmfjO4fVbNk/czgms/EFFceKQDgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0HOV5kvlgLgpT/uSBQffJerPHksRkPcSpHFXQP9/u8TxCcYco/Zmvbc9uhguNkQqu
+	 KQfh6yGyjt1f0APFCwczjdq0561UxGwSyk1Q4UESfu71Q3liyu+uAFs5oWDOYW4m2m
+	 5/QWYEEwANldxLreFr66fYhQCKVPjMwSrv8sP9Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgGNOkV (ORCPT
+        id S1728855AbgGNOli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgGNOkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:12 -0400
+        id S1729324AbgGNOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F582256F;
-        Tue, 14 Jul 2020 14:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F2A206F5;
+        Tue, 14 Jul 2020 14:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737612;
-        bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xLnoz7OfbU8Nr2UQJ+VaXzv925p/sK/dvo7zFpIQ0VeZxHOa7/DKL8O7V1ki5rPLy
-         DNSAr3ewZbwKJ1noProMwM9UGn5Cdu39kdjfGuA8U/sBhZTKBlY5ErQTUfS/YSZWaG
-         Udg8/Lucy27yKLNVdb1BwVpHFDr5vfnGPZbEINHg=
+        s=default; t=1594737619;
+        bh=+TpmgRyoAimEk+9EmfjO4fVbNk/czgms/EFFceKQDgs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KIC8jTy8ry1ltCrulSBTEMEN59DUlyYLhGYT+Ra8gfaCvERy14cBEwGDLjpUgtvvO
+         mm5xuU1VJzVEA3Pxm/AN/QPjftBnB/MEbNBNq8fHj0lyOtEJ1KsZ1652d8XGH27SHC
+         8jF8FRyQZbMTiFMvmyunwxAAd8Ju5vtqghs6qvAc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacky Hu <hengqing.hu@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/10] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Tue, 14 Jul 2020 10:40:01 -0400
-Message-Id: <20200714144010.4035987-1-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 07/10] ALSA: hda/hdmi: fix failures at PCM open on Intel ICL and later
+Date:   Tue, 14 Jul 2020 10:40:07 -0400
+Message-Id: <20200714144010.4035987-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714144010.4035987-1-sashal@kernel.org>
+References: <20200714144010.4035987-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,43 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Hu <hengqing.hu@gmail.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
+[ Upstream commit 56275036d8185f92eceac7479d48b858ee3dab84 ]
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+When HDMI PCM devices are opened in a specific order, with at least one
+HDMI/DP receiver connected, ALSA PCM open fails to -EBUSY on the
+connected monitor, on recent Intel platforms (ICL/JSL and newer). While
+this is not a typical sequence, at least Pulseaudio does this every time
+when it is started, to discover the available PCMs.
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
+The rootcause is an invalid assumption in hdmi_add_pin(), where the
+total number of converters is assumed to be known at the time the
+function is called. On older Intel platforms this held true, but after
+ICL/JSL, the order how pins and converters are in the subnode list as
+returned by snd_hda_get_sub_nodes(), was changed. As a result,
+information for some converters was not stored to per_pin->mux_nids.
+And this means some pins cannot be connected to all converters, and
+application instead gets -EBUSY instead at open.
 
-npins should be 5 instead of 9 according to the definition.
+The assumption that converters are always before pins in the subnode
+list, is not really a valid one. Fix the problem in hdmi_parse_codec()
+by introducing separate loops for discovering converters and pins.
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+BugLink: https://github.com/thesofproject/linux/issues/1978
+BugLink: https://github.com/thesofproject/linux/issues/2216
+BugLink: https://github.com/thesofproject/linux/issues/2217
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200703153818.2808592-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c | 36 +++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index e8bbb20779d0d..83597e1d6dcd7 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -250,7 +250,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 2def4ad579ccf..f7bd91b713e83 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1655,33 +1655,43 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+ 
+ static int hdmi_parse_codec(struct hda_codec *codec)
+ {
+-	hda_nid_t nid;
++	hda_nid_t start_nid;
++	unsigned int caps;
+ 	int i, nodes;
+ 
+-	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &nid);
+-	if (!nid || nodes < 0) {
++	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
++	if (!start_nid || nodes < 0) {
+ 		codec_warn(codec, "HDMI: failed to get afg sub nodes\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	for (i = 0; i < nodes; i++, nid++) {
+-		unsigned int caps;
+-		unsigned int type;
++	/*
++	 * hdmi_add_pin() assumes total amount of converters to
++	 * be known, so first discover all converters
++	 */
++	for (i = 0; i < nodes; i++) {
++		hda_nid_t nid = start_nid + i;
+ 
+ 		caps = get_wcaps(codec, nid);
+-		type = get_wcaps_type(caps);
+ 
+ 		if (!(caps & AC_WCAP_DIGITAL))
+ 			continue;
+ 
+-		switch (type) {
+-		case AC_WID_AUD_OUT:
++		if (get_wcaps_type(caps) == AC_WID_AUD_OUT)
+ 			hdmi_add_cvt(codec, nid);
+-			break;
+-		case AC_WID_PIN:
++	}
++
++	/* discover audio pins */
++	for (i = 0; i < nodes; i++) {
++		hda_nid_t nid = start_nid + i;
++
++		caps = get_wcaps(codec, nid);
++
++		if (!(caps & AC_WCAP_DIGITAL))
++			continue;
++
++		if (get_wcaps_type(caps) == AC_WID_PIN)
+ 			hdmi_add_pin(codec, nid);
+-			break;
+-		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
