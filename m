@@ -2,187 +2,154 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67C4C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C554C433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF3121927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CAF221EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkIg4XsR"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nnkd2px9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGNIvi (ORCPT
+        id S1727044AbgGNIvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgGNIvh (ORCPT
+        Tue, 14 Jul 2020 04:51:11 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:31195 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726425AbgGNIvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:51:37 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CD5C061755;
-        Tue, 14 Jul 2020 01:51:37 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gc15so849267pjb.0;
-        Tue, 14 Jul 2020 01:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xjw4ARtfNtUX/6OkUQ1RIaj9M4+QsmA2dgmi/P58o5o=;
-        b=NkIg4XsR5nVcpy39XZ4T/BXz8U7st1zkK0LFOOgho1IiDJHZyrnBFMFdxH9MiqxnIM
-         esw76UvNr1LP6pQXcxbhTVNbQWP4KWIPbUoOPzMjYb+uJR24Uf42AsrGFy7l+Z1oYpgg
-         qBShjfjhWuf4TCKFgXBxZh7YMoR/UgVCYvdj/z5JF+9PcSX+a+MD3gs/7qoT6Ko5++2L
-         2pbI57+HOSZ4h73IAe3KXq1IDMSK5fRkado4j1/DmE1YDXvD6tHUSfCh6NPJkXb43eG8
-         VtSbMCaMjsg2sBOXGfmQossSbwiUpSCAkXpuX+5trLIsgiHhNxwle5MFn9R6hhqjpc68
-         2C+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xjw4ARtfNtUX/6OkUQ1RIaj9M4+QsmA2dgmi/P58o5o=;
-        b=DqIBPusRNyBixgiv8XAPvN5FDp1kLuUkCNPxPfATzOGZyn8TaGxZhOud0PYR4+KeNL
-         /WOnqp3ywvU7Gkj/T9zIinBb3NhcvtUXMbYcv7aoMnYrQI944YOd0Tb9VrpFpzj1isZU
-         QP62kyPeXwxQi77ZRrMTxbhcwr/wpd2xo7Kh1Jmj3n8ZRpFr9Z38Sg4UXeF7DVEeVTy4
-         i5RbqqxMXBmTyKXAkZZNlW7ev8uuaWMtM8RXb98dE2tK5zY7MnMCmWKWIzHpOxHieQXW
-         aIOaVj1/x6imLMyERpO19snxL5C5h3nZMOR4RZCXslWFdhT9OuwoOkufKS/5yZLgkry8
-         hCGw==
-X-Gm-Message-State: AOAM530ESkLLWLfGSViVyQrgnPVOziPPV83+nO7NnM1yedvBi6QffOa+
-        A03cxGqmPv3YJFwOFUnVP4LiKoiwdQynlm+ojgM=
-X-Google-Smtp-Source: ABdhPJz+U1xrPVMoU1USOz4l4EBn6EDe0LPwWgU9/7mbn/wsc8HtkjzMF0rTv8a85pPLg8q5H1dHIDQhDgyudGGaMa8=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr3631808pjp.228.1594716697098;
- Tue, 14 Jul 2020 01:51:37 -0700 (PDT)
+        Tue, 14 Jul 2020 04:51:08 -0400
+X-UUID: 1313aa58237640ce94ad384f8b920d72-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ixlbvrkq115Vky0/ESWunURbVwqDvUQV9NKQDPvH8bU=;
+        b=nnkd2px9FKbiCtsYsJQ1f+6+WBS6Njv8GMFco+EosvIlaWVe18wIk4yqclHIC1CIqeXj2sug+Itz4KeFihokSsjF7wilcxOuvXru7zE7HeEpEGYifShspd2++oR3QAw7sWauK7w9YS2rbPMVhGnmjaoxqy8j2CSSdU1kgXfNfJA=;
+X-UUID: 1313aa58237640ce94ad384f8b920d72-20200714
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1949484789; Tue, 14 Jul 2020 16:50:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 16:50:36 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 16:50:35 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 5/9] usb: gadget: bdc: add identifier name for function declaraion
+Date:   Tue, 14 Jul 2020 16:48:50 +0800
+Message-ID: <1594716535-24699-5-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1594716535-24699-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1594716535-24699-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-References: <20200508021844.6911-1-david.e.box@linux.intel.com> <20200714062323.19990-4-david.e.box@linux.intel.com>
-In-Reply-To: <20200714062323.19990-4-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Jul 2020 11:51:20 +0300
-Message-ID: <CAHp75VeueLvou3SEtR=EcTi0x+0qpLz7_cvE2KBXHXa_crS8cA@mail.gmail.com>
-Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability driver
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 83A1CE272C312E96A517B930759390ED524DEEE3F76AB404B9F71B81D4474F6E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 9:22 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
-> The Telemetry capability provides access to device telemetry metrics that
-> provide hardware performance data to users from continuous, memory mapped,
-> read-only register spaces.
->
-> Register mappings are not provided by the driver. Instead, a GUID is read
-> from a header for each endpoint. The GUID identifies the device and is to
-> be used with an XML, provided by the vendor, to discover the available set
-> of metrics and their register mapping.  This allows firmware updates to
-> modify the register space without needing to update the driver every time
-> with new mappings. Firmware writes a new GUID in this case to specify the
-> new mapping.  Software tools with access to the associated XML file can
-> then interpret the changes.
->
-> This module manages access to all PMT Telemetry endpoints on a system,
-> independent of the device exporting them. It creates a pmt_telemetry class
-> to manage the devices. For each telemetry endpoint, sysfs files provide
-> GUID and size information as well as a pointer to the parent device the
-> telemetry came from. Software may discover the association between
-> endpoints and devices by iterating through the list in sysfs, or by looking
-> for the existence of the class folder under the device of interest.  A
-> device node of the same name allows software to then map the telemetry
-> space for direct access.
->
-> This patch also creates an pci device id list for early telemetry hardware
-> that requires workarounds for known issues.
+VGhpcyBpcyB1c2VkIHRvIGF2b2lkIHRoZSB3YXJuaW5nIG9mIGZ1bmN0aW9uIGFyZ3VtZW50cywg
+ZS5nLg0KICBXQVJOSU5HOkZVTkNUSU9OX0FSR1VNRU5UUzogZnVuY3Rpb24gZGVmaW5pdGlvbiBh
+cmd1bWVudCAndTMyJw0KICBzaG91bGQgYWxzbyBoYXZlIGFuIGlkZW50aWZpZXIgbmFtZQ0KDQpT
+aWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQot
+LS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGMuaCAgICAgfCAyOCArKysrKysrKysr
+KysrKy0tLS0tLS0tLS0tLS0tDQogZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NtZC5o
+IHwgMTggKysrKysrKysrLS0tLS0tLS0tDQogZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRj
+X2RiZy5oIHwgIDggKysrKy0tLS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZXAu
+aCAgfCAgOCArKysrLS0tLQ0KIDQgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMzEg
+ZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9i
+ZGMuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oDQppbmRleCBlZTBlYWZjLi45
+NjE1NDM4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmgNCisr
+KyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oDQpAQCAtNDY2LDI0ICs0NjYsMjQg
+QEAgc3RhdGljIGlubGluZSB2b2lkIGJkY193cml0ZWwodm9pZCBfX2lvbWVtICpiYXNlLCB1MzIg
+b2Zmc2V0LCB1MzIgdmFsdWUpDQogfQ0KIA0KIC8qIEJ1ZmZlciBkZXNjcmlwdG9yIGxpc3Qgb3Bl
+cmF0aW9ucyAqLw0KLXZvaWQgYmRjX25vdGlmeV94ZnIoc3RydWN0IGJkYyAqLCB1MzIpOw0KLXZv
+aWQgYmRjX3NvZnRjb25uKHN0cnVjdCBiZGMgKik7DQotdm9pZCBiZGNfc29mdGRpc2Nvbm4oc3Ry
+dWN0IGJkYyAqKTsNCi1pbnQgYmRjX3J1bihzdHJ1Y3QgYmRjICopOw0KLWludCBiZGNfc3RvcChz
+dHJ1Y3QgYmRjICopOw0KLWludCBiZGNfcmVzZXQoc3RydWN0IGJkYyAqKTsNCi1pbnQgYmRjX3Vk
+Y19pbml0KHN0cnVjdCBiZGMgKik7DQotdm9pZCBiZGNfdWRjX2V4aXQoc3RydWN0IGJkYyAqKTsN
+Ci1pbnQgYmRjX3JlaW5pdChzdHJ1Y3QgYmRjICopOw0KK3ZvaWQgYmRjX25vdGlmeV94ZnIoc3Ry
+dWN0IGJkYyAqYmRjLCB1MzIgZXBudW0pOw0KK3ZvaWQgYmRjX3NvZnRjb25uKHN0cnVjdCBiZGMg
+KmJkYyk7DQordm9pZCBiZGNfc29mdGRpc2Nvbm4oc3RydWN0IGJkYyAqYmRjKTsNCitpbnQgYmRj
+X3J1bihzdHJ1Y3QgYmRjICpiZGMpOw0KK2ludCBiZGNfc3RvcChzdHJ1Y3QgYmRjICpiZGMpOw0K
+K2ludCBiZGNfcmVzZXQoc3RydWN0IGJkYyAqYmRjKTsNCitpbnQgYmRjX3VkY19pbml0KHN0cnVj
+dCBiZGMgKmJkYyk7DQordm9pZCBiZGNfdWRjX2V4aXQoc3RydWN0IGJkYyAqYmRjKTsNCitpbnQg
+YmRjX3JlaW5pdChzdHJ1Y3QgYmRjICpiZGMpOw0KIA0KIC8qIFN0YXR1cyByZXBvcnQgaGFuZGxl
+cnMgKi8NCiAvKiBVcHN0cmVhbSBwb3J0IHN0YXR1cyBjaGFuZ2Ugc3IgKi8NCi12b2lkIGJkY19z
+cl91c3BjKHN0cnVjdCBiZGMgKiwgc3RydWN0IGJkY19zciAqKTsNCit2b2lkIGJkY19zcl91c3Bj
+KHN0cnVjdCBiZGMgKmJkYywgc3RydWN0IGJkY19zciAqc3JlcG9ydCk7DQogLyogdHJhbnNmZXIg
+c3IgKi8NCi12b2lkIGJkY19zcl94c2Yoc3RydWN0IGJkYyAqLCBzdHJ1Y3QgYmRjX3NyICopOw0K
+K3ZvaWQgYmRjX3NyX3hzZihzdHJ1Y3QgYmRjICpiZGMsIHN0cnVjdCBiZGNfc3IgKnNyZXBvcnQp
+Ow0KIC8qIEVQMCBYU0YgaGFuZGxlcnMgKi8NCi12b2lkIGJkY194c2ZfZXAwX3NldHVwX3JlY3Yo
+c3RydWN0IGJkYyAqLCBzdHJ1Y3QgYmRjX3NyICopOw0KLXZvaWQgYmRjX3hzZl9lcDBfZGF0YV9z
+dGFydChzdHJ1Y3QgYmRjICosIHN0cnVjdCBiZGNfc3IgKik7DQotdm9pZCBiZGNfeHNmX2VwMF9z
+dGF0dXNfc3RhcnQoc3RydWN0IGJkYyAqLCBzdHJ1Y3QgYmRjX3NyICopOw0KK3ZvaWQgYmRjX3hz
+Zl9lcDBfc2V0dXBfcmVjdihzdHJ1Y3QgYmRjICpiZGMsIHN0cnVjdCBiZGNfc3IgKnNyZXBvcnQp
+Ow0KK3ZvaWQgYmRjX3hzZl9lcDBfZGF0YV9zdGFydChzdHJ1Y3QgYmRjICpiZGMsIHN0cnVjdCBi
+ZGNfc3IgKnNyZXBvcnQpOw0KK3ZvaWQgYmRjX3hzZl9lcDBfc3RhdHVzX3N0YXJ0KHN0cnVjdCBi
+ZGMgKmJkYywgc3RydWN0IGJkY19zciAqc3JlcG9ydCk7DQogDQogI2VuZGlmIC8qIF9fTElOVVhf
+QkRDX0hfXyAqLw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19j
+bWQuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19jbWQuaA0KaW5kZXggYTNhNmRi
+ZC4uNTMzYWQ1MiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19j
+bWQuaA0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NtZC5oDQpAQCAtMTAs
+MTQgKzEwLDE0IEBADQogI2RlZmluZSBfX0xJTlVYX0JEQ19DTURfSF9fDQogDQogLyogQ29tbWFu
+ZCBvcGVyYXRpb25zICovDQotaW50IGJkY19hZGRyZXNzX2RldmljZShzdHJ1Y3QgYmRjICosIHUz
+Mik7DQotaW50IGJkY19jb25maWdfZXAoc3RydWN0IGJkYyAqLCBzdHJ1Y3QgYmRjX2VwICopOw0K
+LWludCBiZGNfZGNvbmZpZ19lcChzdHJ1Y3QgYmRjICosIHN0cnVjdCBiZGNfZXAgKik7DQotaW50
+IGJkY19zdG9wX2VwKHN0cnVjdCBiZGMgKiwgaW50KTsNCi1pbnQgYmRjX2VwX3NldF9zdGFsbChz
+dHJ1Y3QgYmRjICosIGludCk7DQotaW50IGJkY19lcF9jbGVhcl9zdGFsbChzdHJ1Y3QgYmRjICos
+IGludCk7DQotaW50IGJkY19lcF9ibGEoc3RydWN0IGJkYyAqLCBzdHJ1Y3QgYmRjX2VwICosIGRt
+YV9hZGRyX3QpOw0KLWludCBiZGNfZnVuY3Rpb25fd2FrZShzdHJ1Y3QgYmRjKiwgdTgpOw0KLWlu
+dCBiZGNfZnVuY3Rpb25fd2FrZV9maChzdHJ1Y3QgYmRjKiwgdTgpOw0KK2ludCBiZGNfYWRkcmVz
+c19kZXZpY2Uoc3RydWN0IGJkYyAqYmRjLCB1MzIgYWRkKTsNCitpbnQgYmRjX2NvbmZpZ19lcChz
+dHJ1Y3QgYmRjICpiZGMsIHN0cnVjdCBiZGNfZXAgKmVwKTsNCitpbnQgYmRjX2Rjb25maWdfZXAo
+c3RydWN0IGJkYyAqYmRjLCBzdHJ1Y3QgYmRjX2VwICplcCk7DQoraW50IGJkY19zdG9wX2VwKHN0
+cnVjdCBiZGMgKmJkYywgaW50IGVwbnVtKTsNCitpbnQgYmRjX2VwX3NldF9zdGFsbChzdHJ1Y3Qg
+YmRjICpiZGMsIGludCBlcG51bSk7DQoraW50IGJkY19lcF9jbGVhcl9zdGFsbChzdHJ1Y3QgYmRj
+ICpiZGMsIGludCBlcG51bSk7DQoraW50IGJkY19lcF9ibGEoc3RydWN0IGJkYyAqYmRjLCBzdHJ1
+Y3QgYmRjX2VwICplcCwgZG1hX2FkZHJfdCBkbWFfYWRkcik7DQoraW50IGJkY19mdW5jdGlvbl93
+YWtlKHN0cnVjdCBiZGMgKmJkYywgdTggaW50Zik7DQoraW50IGJkY19mdW5jdGlvbl93YWtlX2Zo
+KHN0cnVjdCBiZGMgKmJkYywgdTggaW50Zik7DQogDQogI2VuZGlmIC8qIF9fTElOVVhfQkRDX0NN
+RF9IX18gKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZGJn
+LmggYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZGJnLmgNCmluZGV4IDg1OWQ1ODgu
+LmFjZDgzMzIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZGJn
+LmgNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19kYmcuaA0KQEAgLTEyLDEw
+ICsxMiwxMCBAQA0KICNpbmNsdWRlICJiZGMuaCINCiANCiAjaWZkZWYgQ09ORklHX1VTQl9HQURH
+RVRfVkVSQk9TRQ0KLXZvaWQgYmRjX2RiZ19iZF9saXN0KHN0cnVjdCBiZGMgKiwgc3RydWN0IGJk
+Y19lcCopOw0KLXZvaWQgYmRjX2RiZ19zcnIoc3RydWN0IGJkYyAqLCB1MzIpOw0KLXZvaWQgYmRj
+X2RiZ19yZWdzKHN0cnVjdCBiZGMgKik7DQotdm9pZCBiZGNfZHVtcF9lcHN0cyhzdHJ1Y3QgYmRj
+ICopOw0KK3ZvaWQgYmRjX2RiZ19iZF9saXN0KHN0cnVjdCBiZGMgKmJkYywgc3RydWN0IGJkY19l
+cCAqZXApOw0KK3ZvaWQgYmRjX2RiZ19zcnIoc3RydWN0IGJkYyAqYmRjLCB1MzIgc3JyX251bSk7
+DQordm9pZCBiZGNfZGJnX3JlZ3Moc3RydWN0IGJkYyAqYmRjKTsNCit2b2lkIGJkY19kdW1wX2Vw
+c3RzKHN0cnVjdCBiZGMgKmJkYyk7DQogI2Vsc2UNCiBzdGF0aWMgaW5saW5lIHZvaWQgYmRjX2Ri
+Z19yZWdzKHN0cnVjdCBiZGMgKmJkYykNCiB7IH0NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9n
+YWRnZXQvdWRjL2JkYy9iZGNfZXAuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19l
+cC5oDQppbmRleCA1YmJkNzNmLi40ZDNhZmZkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2Fk
+Z2V0L3VkYy9iZGMvYmRjX2VwLmgNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2Jk
+Y19lcC5oDQpAQCAtOSw5ICs5LDkgQEANCiAjaWZuZGVmIF9fTElOVVhfQkRDX0VQX0hfXw0KICNk
+ZWZpbmUgX19MSU5VWF9CRENfRVBfSF9fDQogDQotaW50IGJkY19pbml0X2VwKHN0cnVjdCBiZGMg
+Kik7DQotaW50IGJkY19lcF9kaXNhYmxlKHN0cnVjdCBiZGNfZXAgKik7DQotaW50IGJkY19lcF9l
+bmFibGUoc3RydWN0IGJkY19lcCAqKTsNCi12b2lkIGJkY19mcmVlX2VwKHN0cnVjdCBiZGMgKik7
+DQoraW50IGJkY19pbml0X2VwKHN0cnVjdCBiZGMgKmJkYyk7DQoraW50IGJkY19lcF9kaXNhYmxl
+KHN0cnVjdCBiZGNfZXAgKmVwKTsNCitpbnQgYmRjX2VwX2VuYWJsZShzdHJ1Y3QgYmRjX2VwICpl
+cCk7DQordm9pZCBiZGNfZnJlZV9lcChzdHJ1Y3QgYmRjICpiZGMpOw0KIA0KICNlbmRpZiAvKiBf
+X0xJTlVYX0JEQ19FUF9IX18gKi8NCi0tIA0KMS45LjENCg==
 
-Some more style issues, after addressing feel free to add
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-
-Since you are submitting this the order of the above SoB chain is a
-bit strange. I think something like
-
-SoB: Alexander
-Co-developed-by: Alexander
-SoB: David
-
-is expected (same for patch 2).
-
-...
-
-> +Contact:       David Box <david.e.box@linux.intel.com>
-> +Description:
-> +               The telem<x> directory contains files describing an instance of
-> +               a PMT telemetry device that exposes hardware telemetry. Each
-> +               telem<x> directory has an associated /dev/telem<x> node. This
-> +               node may be opened and mapped to access the telemetry space of
-> +               the device. The register layout of the telemetry space is
-> +               determined from an XML file that matches the pci device id and
-
-PCI
-
-> +               guid for the device.
-
-GUID
-
-Same for all code where it appears.
-
-...
-
-> +       psize = (PFN_UP(entry->base_addr + entry->header.size) - pfn) *
-> +               PAGE_SIZE;
-
-I wouldn't mind having this on one line.
-
-...
-
-> +static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
-> +                        char *buf)
-
-Ditto.
-
-...
-
-> +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> +                          char *buf)
-
-Ditto.
-
-...
-
-> +static bool pmt_telem_is_early_client_hw(struct device *dev)
-> +{
-
-> +       struct pci_dev *parent;
-> +
-> +       parent = to_pci_dev(dev->parent);
-
-Can be one line.
-
-> +       return !!pci_match_id(pmt_telem_early_client_pci_ids, parent);
-> +}
-
-...
-
-> +               entry->header_res = platform_get_resource(pdev, IORESOURCE_MEM,
-> +                                                         i);
-
-One line, please.
-
--- 
-With Best Regards,
-Andy Shevchenko
