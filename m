@@ -2,94 +2,177 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6DCC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A848C43464
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EDB2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066A722226
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGNHFS (ORCPT
+        id S1726917AbgGNHES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:05:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40994 "EHLO mx2.suse.de"
+        Tue, 14 Jul 2020 03:04:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9058 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgGNHFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:05:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id F0E7EB86E;
-        Tue, 14 Jul 2020 07:05:02 +0000 (UTC)
-Subject: Re: [PATCH v2 11/29] scsi: libfc: fc_rport: Fix a couple of
- misdocumented function parameters
-To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-12-lee.jones@linaro.org>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <3b98e5b9-412d-90c9-cd04-4844c645c774@suse.de>
-Date:   Tue, 14 Jul 2020 09:04:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726782AbgGNHEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:04:08 -0400
+IronPort-SDR: SzGkCToIK3nfVNmosCLbrrk7sKpWM7JgUNnxunx6ht3c1989Kmde/5luXomiQSSmUt6xwKW/UH
+ 55ztlkoPxDKw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148828649"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="148828649"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:06 -0700
+IronPort-SDR: zCgGXEqBmYqnjzD5g1tvTYbJG8Sugsaqt04O3q+7B6aA9Rho2GxTyEUJZYn+eiJhFS/hLT1lYm
+ 76SjNBY0o0KQ==
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="307752705"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:05 -0700
+From:   ira.weiny@intel.com
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH 03/15] x86/pks: Enable Protection Keys Supervisor (PKS)
+Date:   Tue, 14 Jul 2020 00:02:08 -0700
+Message-Id: <20200714070220.3500839-4-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714070220.3500839-1-ira.weiny@intel.com>
+References: <20200714070220.3500839-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713074645.126138-12-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 9:46 AM, Lee Jones wrote:
-> Fixes the following W=1 kernel build warning(s):
-> 
->   drivers/scsi/libfc/fc_rport.c:129: warning: Function parameter or member 'port_id' not described in 'fc_rport_create'
->   drivers/scsi/libfc/fc_rport.c:129: warning: Excess function parameter 'ids' description in 'fc_rport_create'
->   drivers/scsi/libfc/fc_rport.c:1452: warning: Function parameter or member 'rdata_arg' not described in 'fc_rport_logo_resp'
->   drivers/scsi/libfc/fc_rport.c:1452: warning: Excess function parameter 'lport_arg' description in 'fc_rport_logo_resp'
-> 
-> Cc: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   drivers/scsi/libfc/fc_rport.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
-> index 278d15ff1c5ae..18663a82865f9 100644
-> --- a/drivers/scsi/libfc/fc_rport.c
-> +++ b/drivers/scsi/libfc/fc_rport.c
-> @@ -121,7 +121,7 @@ EXPORT_SYMBOL(fc_rport_lookup);
->   /**
->    * fc_rport_create() - Create a new remote port
->    * @lport: The local port this remote port will be associated with
-> - * @ids:   The identifiers for the new remote port
-> + * @port_id:   The identifiers for the new remote port
->    *
->    * The remote port will start in the INIT state.
->    */
-> @@ -1445,7 +1445,7 @@ static void fc_rport_recv_rtv_req(struct fc_rport_priv *rdata,
->    * fc_rport_logo_resp() - Handler for logout (LOGO) responses
->    * @sp:	       The sequence the LOGO was on
->    * @fp:	       The LOGO response frame
-> - * @lport_arg: The local port
-> + * @rdata_arg: The remote port
->    */
->   static void fc_rport_logo_resp(struct fc_seq *sp, struct fc_frame *fp,
->   			       void *rdata_arg)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-Cheers,
+Protection Keys for Supervisor pages (PKS) enables fast, hardware thread
+specific, manipulation of permission restrictions on supervisor page
+mappings.  It uses the same mechanism of Protection Keys as those on
+User mappings but applies that mechanism to supervisor mappings using a
+supervisor specific MSR.
 
-Hannes
+Kernel users can thus defines 'domains' of page mappings which have an
+extra level of protection beyond those specified in the supervisor page
+table entries.
+
+Define ARCH_HAS_SUPERVISOR_PKEYS to distinguish this functionality from
+the existing ARCH_HAS_PKEYS and then enable PKS when configured and
+indicated by the CPU instance.  While not strictly necessary in this
+patch, ARCH_HAS_SUPERVISOR_PKEYS separates this functionality through
+the patch series so it is introduced here.
+
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ arch/x86/Kconfig                            |  1 +
+ arch/x86/include/asm/cpufeatures.h          |  1 +
+ arch/x86/include/uapi/asm/processor-flags.h |  2 ++
+ arch/x86/kernel/cpu/common.c                | 15 +++++++++++++++
+ mm/Kconfig                                  |  2 ++
+ 5 files changed, 21 insertions(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 883da0abf779..c3ecbed2cfa0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1872,6 +1872,7 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select ARCH_HAS_PKEYS
++	select ARCH_HAS_SUPERVISOR_PKEYS
+ 	help
+ 	  Memory Protection Keys provides a mechanism for enforcing
+ 	  page-based protections, but without requiring modification of the
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9e77b0..a832ed8820c0 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -351,6 +351,7 @@
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
+ #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
+ #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
++#define X86_FEATURE_PKS			(16*32+31) /* Protection Keys for Supervisor pages */
+ 
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+diff --git a/arch/x86/include/uapi/asm/processor-flags.h b/arch/x86/include/uapi/asm/processor-flags.h
+index bcba3c643e63..191c574b2390 100644
+--- a/arch/x86/include/uapi/asm/processor-flags.h
++++ b/arch/x86/include/uapi/asm/processor-flags.h
+@@ -130,6 +130,8 @@
+ #define X86_CR4_SMAP		_BITUL(X86_CR4_SMAP_BIT)
+ #define X86_CR4_PKE_BIT		22 /* enable Protection Keys support */
+ #define X86_CR4_PKE		_BITUL(X86_CR4_PKE_BIT)
++#define X86_CR4_PKS_BIT		24 /* enable Protection Keys for Supervisor */
++#define X86_CR4_PKS		_BITUL(X86_CR4_PKS_BIT)
+ 
+ /*
+  * x86-64 Task Priority Register, CR8
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 95c090a45b4b..f34bcefeda42 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1430,6 +1430,20 @@ static void validate_apic_and_package_id(struct cpuinfo_x86 *c)
+ #endif
+ }
+ 
++/*
++ * PKS is independent of PKU and either or both may be supported on a CPU.
++ * Configure PKS if the cpu supports the feature.
++ */
++static void setup_pks(void)
++{
++	if (!IS_ENABLED(CONFIG_ARCH_HAS_SUPERVISOR_PKEYS))
++		return;
++	if (!cpu_feature_enabled(X86_FEATURE_PKS))
++		return;
++
++	cr4_set_bits(X86_CR4_PKS);
++}
++
+ /*
+  * This does the hard work of actually picking apart the CPU stuff...
+  */
+@@ -1521,6 +1535,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 
+ 	x86_init_rdrand(c);
+ 	setup_pku(c);
++	setup_pks();
+ 
+ 	/*
+ 	 * Clear/Set all flags overridden by options, need do it
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f2104cc0d35c..e541d2c0dcac 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -826,6 +826,8 @@ config ARCH_USES_HIGH_VMA_FLAGS
+ 	bool
+ config ARCH_HAS_PKEYS
+ 	bool
++config ARCH_HAS_SUPERVISOR_PKEYS
++	bool
+ 
+ config PERCPU_STATS
+ 	bool "Collect percpu memory statistics"
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.25.1
+
