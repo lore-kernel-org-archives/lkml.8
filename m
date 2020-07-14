@@ -2,142 +2,121 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25624C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58E8C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40FA223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE630223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uq83Pv7t"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eU49U8Qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgGNQ36 (ORCPT
+        id S1728792AbgGNQaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgGNQ35 (ORCPT
+        Tue, 14 Jul 2020 12:30:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55296 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNQaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:29:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6135FC061755;
-        Tue, 14 Jul 2020 09:29:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id r19so23584426ljn.12;
-        Tue, 14 Jul 2020 09:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=E/fd4+ve+l+H502mXoaxeDxS6PWJ8G8plZiirt47oHI=;
-        b=uq83Pv7tgDH64WUNzFYrrR/E48jCN43Bab8+SBAdg7Zxs21SYFXCB6Hgt/BI+7G/yg
-         /Aw+42AAusY9mpF+olBfZW2YIYSKMQsI9W1Rqmi6DHDzPLitDgopQcp7TDJLyrZEsEJW
-         RSN2awUtFQXolcQXDu33ArWY0ZJqjYL3NXRA8D4mhsEa+i5LyCUxMq7d7nvPMOIpcL23
-         A7dgn9vaHkAUilwwpriMcL+f9scnNfW0Drqq9pneDe2qI3iJqOSeR4YbOsitpqnXs7Yg
-         LpxYGXTW/w2y1Vx3d38wZ5kErFALrrVBVrEUG43dCYZiIpfd8wat/ANV/ZkY8WHYyIY6
-         CcYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E/fd4+ve+l+H502mXoaxeDxS6PWJ8G8plZiirt47oHI=;
-        b=rrcf6JxjfEKUZdgCspJKJ78/rCFmLc/kWpJg3GjjXRqx5Dp1Fw3wLVJHiXVTMwiaPL
-         70M9xMdNndTab7sqj7KSA1p35SSo6ZUNrixseEF6nTjNsmuD8yqgafQL3dwp156MBgAd
-         i2tBlUtNjNjSk9nCHZSYA1ShUUzHG3ly7UKoSUxoX9uk8tLHEpQRJfCVU59HlFot7r/W
-         OU8oO21MVqUgT2QF18C99P344NqzUePeNU95yNOZYp10EUm268OTU1bI1ss07tHzmnAH
-         RVw9W5Rh6dQU/xPFVebPsiJar6xpVuAL6i+cdejmR2uJb/ih+l41Eg189O6c5RtV9zrk
-         bnRA==
-X-Gm-Message-State: AOAM532pHKJU/K0g2M5ovDTF+GTeO/lxzh98MKWh0rySPspmTBU6ZHHE
-        kaXZxsh0sjh3282inkbTV+zLatO3
-X-Google-Smtp-Source: ABdhPJy9XKMKAljS+dkH2V3EUqJ2kMbCeozYPbmE/34AgjNG/i4cmBWv9BCRezuYGsgLO2RdiWykwQ==
-X-Received: by 2002:a2e:3c0e:: with SMTP id j14mr2764753lja.25.1594744195878;
-        Tue, 14 Jul 2020 09:29:55 -0700 (PDT)
-Received: from mobilestation ([95.79.139.207])
-        by smtp.gmail.com with ESMTPSA id u7sm7283067lfi.45.2020.07.14.09.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 09:29:55 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 19:29:53 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200714162953.2333hke6pfvovjuk@mobilestation>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
- <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
- <20200714160830.GL34333@vkoul-mobl>
- <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
+        Tue, 14 Jul 2020 12:30:04 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGGwk0131212;
+        Tue, 14 Jul 2020 16:30:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=4zHQ+qbqhXQr0oeHM5WRqgkfmxqCrBYvMylcuFCv2s8=;
+ b=eU49U8Qv6hRHePqo9ugiHPg5XtBHsq1FFXXc/aWFAreRwSc7EHDfPKyqTpKNQG7Ns/Sg
+ 1SsvyqdxJNc9CAuoDUFRxqhzXRDqfX4AUhy4gOSdfBeW4wiGB++0aETihp2FIA2jr5v2
+ /WNS4wr8tol3aWEt2syUVMT4dBGAcbPBrhRShlygxJHkdxc06SxaQfh3IalT2TZpqkOU
+ gU6xUt1EVYdU6uj8Yv4p4aHCT2BHN/2OY3ewqFABDbLn1PCIwMRPDu0THAiZNXtuzoPW
+ XVX+W/nTABjAj+2BKIJulHfRn/nHH2TiPmHn5psWrZyCWRuS+z6t/H+jk06sHzcWXQbX 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 3275cm6ee6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 16:30:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGHbOY095955;
+        Tue, 14 Jul 2020 16:30:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 327q0pj5dt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 16:30:01 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EGU09I020069;
+        Tue, 14 Jul 2020 16:30:00 GMT
+Received: from dhcp-10-159-135-64.vpn.oracle.com (/10.159.135.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jul 2020 09:30:00 -0700
+Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200709233545.67954-1-junxiao.bi@oracle.com>
+ <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
+ <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
+ <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+Message-ID: <23a115e4-0d48-9186-c606-89d526649372@oracle.com>
+Date:   Tue, 14 Jul 2020 09:29:41 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
+In-Reply-To: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:18:16AM -0700, Dave Jiang wrote:
-> 
-> 
-> On 7/14/2020 9:08 AM, Vinod Koul wrote:
-> > On 13-07-20, 13:55, Dave Jiang wrote:
-> > > 
-> > > 
-> > > On 7/10/2020 2:38 AM, Serge Semin wrote:
-> > > > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
-> > > > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> > > > > > DMA capabilities non-uniformly redistributed between the device channels.
-> > > > > > In order to provide a way of exposing the channel-specific parameters to
-> > > > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
-> > > > > > if provided it gets called from the dma_get_slave_caps() method and is
-> > > > > > able to override the generic DMA-device capabilities.
-> > > > > 
-> > > > 
-> > > > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
-> > > > 
-> > > > As long as the 'slave' word is used in the name of the dma_slave_caps
-> > > > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-> > > > to use some else terminology. If renaming needs to be done, then it should be
-> > > > done synchronously for the whole subsystem.
-> > > 
-> > > What about just calling it dma_device_caps? Consider this is a useful
-> > > function not only slave DMA will utilize this. I can see this being useful
-> > > for some of my future code with idxd driver.
-> > 
-> > Some of the caps may make sense to generic dmaengine but few of them do
-> > not :) While at it, am planning to make it dmaengine_periph_caps to
-> > denote that these are dmaengine peripheral capabilities.
-> > 
-> 
+On 7/14/20 9:18 AM, Song Liu wrote:
 
-> If the function only passes in periph_caps, how do we allow the non periph
-> DMA utilize this function?
+> On Mon, Jul 13, 2020 at 11:41 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>> On 7/13/20 11:17 PM, Song Liu wrote:
+>>
+>>> On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>>>> The following deadlock was captured. The first process is holding 'kernfs_mutex'
+>>>> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
+>>>> this pending bio list would be flushed by second process 'md127_raid1', but
+>>>> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
+>>>> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
+>>>> path, removed all of them.
+>>>>
+>>> [...]
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+>>> Thanks for the patch. It looks good in general. One question though, do we
+>>> need the same change the following line in md.c:level_store()?
+>>>
+>>>       sysfs_notify(&mddev->kobj, NULL, "level");
+>> Thanks for the review. This one is not in io path, looks it's safe. I
+>> can change it if you want to align it with others.
+> This one is the only leftover. Let's also change it.
 
-Hello Dave. That seems reasonable. "dma_device_caps" or even "dma_chan_caps"
-might be more suitable seeing after this patchset merged in the "dma_slave_caps"
-may really provide the DMA channel-specific configs. Moreover that structure is
-accessible only by means of the dma_chan descriptor:
+Sure, i will send a v2.
 
-int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+Thanks,
 
-which makes those caps being the channel-specific even without this patchset.
+Junxiao.
 
-So as I see it "dma_chan_caps" might be the better choice.
-
--Sergey
+>
+> Thanks,
+> Song
