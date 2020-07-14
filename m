@@ -2,100 +2,102 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC2C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF5EC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515D1221FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594724985;
-	bh=z0OY3Bi/qrA2I/TTuCzgD3vQdt5c7DkNapFQwkQQDXs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ek2RWnFS5I9foazN249tVoDR8IJdxmGY8HD2oAd3JzuBgIeH+PcpScV2KRLhUgpT+
-	 cAB4iSMqApRBxIfUy3uQWzemohuVbmQrb1AWzpKBs9bkVee9jo+jHCIBvVHF1ecoEU
-	 dDBZOwBdimu0lTIV+JsG7cEdvbP12mPY4uiwdNtI=
+	by mail.kernel.org (Postfix) with ESMTP id CD5FF221FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvfy1hdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGNLJo (ORCPT
+        id S1727787AbgGNLJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:09:44 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:26298 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgGNLJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:09:43 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 06EB9N6M007255;
-        Tue, 14 Jul 2020 20:09:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 06EB9N6M007255
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1594724964;
-        bh=s+qGqbv3CTLs4XT47genE5qR5//Xe3CqrmsU7ugBumg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CzwbZZIfQDcMPUt8+yrFFQ1YJNYYX5aHiyggE32NZTFoY0mGNbZcUtbFoyrYyOLaC
-         NeM8nDqvL1gldnVGWbkj88awT+PpjhU0EInQVQoAYnRAiHsLnZL0F1YNYrdoCXXx2Y
-         7S1L0KogiGrmaDY3hNB6zV87DB5p9sAlVTzGMtMG82139iRgnWqzckxlHcB8G1snfE
-         RJBt/nhWklQH3KSi1rPclJUwixXjcSqpCPAu/Mekwfi4PXFvsAoD4kRjQx/Oeq1IO0
-         kb1J60B1klWKM8fYcqhK6/myexiflOFp6pEh08hqEdS8vLnkn1QChiAPv5K/XLDoro
-         6LU02AXqg5kpA==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id k7so5530481uan.13;
-        Tue, 14 Jul 2020 04:09:23 -0700 (PDT)
-X-Gm-Message-State: AOAM530/B8Z72J4C1Dji4v+k3oyGS3obQUg/QX3L0bYQUnZnCefmQ1sm
-        QawwvsPpZfFbni0c4W6tmI1KvopWX90aMkY1HrY=
-X-Google-Smtp-Source: ABdhPJzFoQKXXaO2byKTNGZBH3Q1438vhfsydjUWOj+DZJy+tjh7hGDv32uH8oQMzIflGPVWY3CW7MQ3X206v85g4Lw=
-X-Received: by 2002:ab0:71d3:: with SMTP id n19mr2734135uao.25.1594724962474;
- Tue, 14 Jul 2020 04:09:22 -0700 (PDT)
+        Tue, 14 Jul 2020 07:09:52 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33203 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727047AbgGNLJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:09:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594724990; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=063nsZA+TEvD+EIhBzADv1QQAX7cmYzUzYelnNmmLWM=;
+ b=lvfy1hddC1WW/SdttkR7iHVNGstAJo2VzSIxRdKZAv/Lg+v0IgwdUsQ0Y/dMvtTQSsmr1w08
+ 1VD8NLRC9TugsFdMXv7x/rRGpSf7HliD3NNl1jWXQY7BfbuGRIKrnavNvDi8qltPkDM5b9PN
+ +d2QqNH16x/qt684IJw7HtAGCHw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
+ 5f0d927e1e603dbb44cdf4ff (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 11:09:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B4CDEC433C8; Tue, 14 Jul 2020 11:09:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B25B1C433CA;
+        Tue, 14 Jul 2020 11:09:47 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200623114005.791643-1-yamada.masahiro@socionext.com>
- <20200714022252.GA1151466@bogus> <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
- <20200714095259.GB4900@sirena.org.uk>
-In-Reply-To: <20200714095259.GB4900@sirena.org.uk>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 14 Jul 2020 20:08:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARUwPRtG0uMZ4rwr7=+3wa9X1B70AXbnFL-CF1_wMvevw@mail.gmail.com>
-Message-ID: <CAK7LNARUwPRtG0uMZ4rwr7=+3wa9X1B70AXbnFL-CF1_wMvevw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        - <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 16:39:47 +0530
+From:   kalyan_t@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] drm/msm/dpu: add support for clk and bw scaling for display
+In-Reply-To: <20200714011219.GQ3191083@google.com>
+References: <1592489321-29213-1-git-send-email-kalyan_t@codeaurora.org>
+ <20200714011219.GQ3191083@google.com>
+Message-ID: <38dc4bbfd754175e476252c4bc259d55@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 6:53 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Jul 14, 2020 at 03:13:26PM +0900, Masahiro Yamada wrote:
->
-> > What do you mean by Reviewed-by ?
-> > Do you expect this to go to the asoc tree?
->
-> > I just thought the schema conversion
-> > would go through the dt tree.
->
-> No, bindings changes usually go through the subsystem - if there's any
-> other work on the binding then it'll usually also involve driver
-> changes.
+On 2020-07-14 06:42, Matthias Kaehlcke wrote:
+> On Thu, Jun 18, 2020 at 07:38:41PM +0530, Kalyan Thota wrote:
+>> This change adds support to scale src clk and bandwidth as
+>> per composition requirements.
+>> 
+>> Interconnect registration for bw has been moved to mdp
+>> device node from mdss to facilitate the scaling.
+>> 
+>> Changes in v1:
+>>  - Address armv7 compilation issues with the patch (Rob)
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> 
+> It seems this is an evolution of this series:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=265351
+> 
+> Are the DT bits of the series still valid? If so please include them in 
+> the
+> series, otherwise please add DT patches to allow folks to test and 
+> review,
+> and get them landed in Bjorn's tree after the driver changes have 
+> landed.
 
-OK, then please apply the following two if they look good.
+Hi,
 
-https://lore.kernel.org/patchwork/patch/1261568/
-https://lore.kernel.org/patchwork/patch/1261569/
+Yes the patch is dependent on the DT changes, should i add them with 
+depends tag in the commit text ?
+https://patchwork.kernel.org/patch/11470785/
+https://patchwork.kernel.org/patch/11470789/
 
-Both got Rob's Reviewed-by.
-
--- 
-Best Regards
-Masahiro Yamada
+- Kalyan
