@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5898C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD5B722B45
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAAB223B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752650;
-	bh=WJSu7jjjoQkirFpIXvqr4UHY09mUZiBEYqt0DClml1A=;
+	s=default; t=1594752652;
+	bh=u/65wFLFgeOfmx86HkO0SCLbQ0/z4jCPdJKcgVrD0IA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5aSkHRtN50PQBrYbDhLj967KDXSQrQ+OgdU3QViUIgCUDLy5IJxUj7ZgGNHWzIUc
-	 zmKoTsSwoTsoZmwaDr9yQQw96dyGETk/fKrYXC4sJCuaxKGvTl5XCDFbE+b6VABQCl
-	 3+TR0p5BUMdphwCT0m4DoAh/zDoaCH1/08o7AoXY=
+	b=s/RM4ztB0tbTcuZ7yzynd5Yqza8rG+SoeuiOA2rh/0r4chVgW0f4Nnth51vjZ2TrR
+	 MjSjcrtROoeoYki2tYO7qoDlYiIYY0bnZ0hULxsl967sxryuRE3mTWROXEdjTR6ZaD
+	 tSuhUO5SxokQggu41rq6MtoinH5zB/vSpVKOKL6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgGNSup (ORCPT
+        id S1730336AbgGNSuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:50:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46890 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbgGNSum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:50:42 -0400
+        id S1730325AbgGNSur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CF5C22B2A;
-        Tue, 14 Jul 2020 18:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AB022B3F;
+        Tue, 14 Jul 2020 18:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752641;
-        bh=WJSu7jjjoQkirFpIXvqr4UHY09mUZiBEYqt0DClml1A=;
+        s=default; t=1594752647;
+        bh=u/65wFLFgeOfmx86HkO0SCLbQ0/z4jCPdJKcgVrD0IA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyqkz618pKNoMivQ5Nw9wSiudcQ8VGpXqe18OWL1+GRXl+MzGYtfkBWe059GmBX7N
-         8Hx2GjeYVG9z9mZZUiFeC+Ctt6HTW7Xwk7IDP3VYC/Lu8B5BOwgm626QIQent1uxVS
-         HL4f1640dtmBWWKf5mljZk7NqvPolTMaYoittsxg=
+        b=Vc0sBL79BcpQF2WkMiwslLVHQT4m1bI8eTqIujeWkzdHMjHt37GfIPp1TugbD4TkA
+         QT/uMBNzb+NohUoeGVv5yXGo4fPOjw2G3CSED8DRIPNWUhaVDAKoTUDZmxlFf2Lh7w
+         okp3NE+F2+guwuU7RfZBjOW3W7nfAstG8RAdndZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kamalheib1@gmail.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/109] RDMA/siw: Fix reporting vendor_part_id
-Date:   Tue, 14 Jul 2020 20:43:59 +0200
-Message-Id: <20200714184108.200034373@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+934037347002901b8d2a@syzkaller.appspotmail.com,
+        Zheng Bin <zhengbin13@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/109] nbd: Fix memory leak in nbd_add_socket
+Date:   Tue, 14 Jul 2020 20:44:01 +0200
+Message-Id: <20200714184108.296148505@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,44 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit 04340645f69ab7abb6f9052688a60f0213b3f79c ]
+[ Upstream commit 579dd91ab3a5446b148e7f179b6596b270dace46 ]
 
-Move the initialization of the vendor_part_id to be before calling
-ib_register_device(), this is needed because the query_device() callback
-is called from the context of ib_register_device() before initializing the
-vendor_part_id, so the reported value is wrong.
+When adding first socket to nbd, if nsock's allocation failed, the data
+structure member "config->socks" was reallocated, but the data structure
+member "config->num_connections" was not updated. A memory leak will occur
+then because the function "nbd_config_put" will free "config->socks" only
+when "config->num_connections" is not zero.
 
-Fixes: bdcf26bf9b3a ("rdma/siw: network and RDMA core interface")
-Link: https://lore.kernel.org/r/20200707130931.444724-1-kamalheib1@gmail.com
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 03bf73c315ed ("nbd: prevent memory leak")
+Reported-by: syzbot+934037347002901b8d2a@syzkaller.appspotmail.com
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/nbd.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
-index 130b1e31b9780..fb66d67572787 100644
---- a/drivers/infiniband/sw/siw/siw_main.c
-+++ b/drivers/infiniband/sw/siw/siw_main.c
-@@ -66,12 +66,13 @@ static int siw_device_register(struct siw_device *sdev, const char *name)
- 	static int dev_id = 1;
- 	int rv;
- 
-+	sdev->vendor_part_id = dev_id++;
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 78181908f0df6..7b61d53ba050e 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1022,25 +1022,26 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	     test_bit(NBD_RT_BOUND, &config->runtime_flags))) {
+ 		dev_err(disk_to_dev(nbd->disk),
+ 			"Device being setup by another task");
+-		sockfd_put(sock);
+-		return -EBUSY;
++		err = -EBUSY;
++		goto put_socket;
++	}
 +
- 	rv = ib_register_device(base_dev, name);
- 	if (rv) {
- 		pr_warn("siw: device registration error %d\n", rv);
- 		return rv;
++	nsock = kzalloc(sizeof(*nsock), GFP_KERNEL);
++	if (!nsock) {
++		err = -ENOMEM;
++		goto put_socket;
  	}
--	sdev->vendor_part_id = dev_id++;
  
- 	siw_dbg(base_dev, "HWaddr=%pM\n", sdev->netdev->dev_addr);
+ 	socks = krealloc(config->socks, (config->num_connections + 1) *
+ 			 sizeof(struct nbd_sock *), GFP_KERNEL);
+ 	if (!socks) {
+-		sockfd_put(sock);
+-		return -ENOMEM;
++		kfree(nsock);
++		err = -ENOMEM;
++		goto put_socket;
+ 	}
  
+ 	config->socks = socks;
+ 
+-	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
+-	if (!nsock) {
+-		sockfd_put(sock);
+-		return -ENOMEM;
+-	}
+-
+ 	nsock->fallback_index = -1;
+ 	nsock->dead = false;
+ 	mutex_init(&nsock->tx_lock);
+@@ -1052,6 +1053,10 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	atomic_inc(&config->live_connections);
+ 
+ 	return 0;
++
++put_socket:
++	sockfd_put(sock);
++	return err;
+ }
+ 
+ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
 -- 
 2.25.1
 
