@@ -2,60 +2,56 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F34C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3902C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF92C21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43F421D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753576;
-	bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
+	s=default; t=1594753579;
+	bh=QMg3t7v4m+X0ZUi5wRxz4kW2zgxCcrXARq5pJ5mrBuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWibEv/iO+dIk75bERdwltMuoaWoilCXl1jR0Ug7RBSrd48rccNfitzAhS5wFtWI9
-	 gBKZLmRBiCI+GRkP0LJpXNJm/0mIiLxHBXx0acxFxwN1+umGNDQeRaVzoPyBNKl7G7
-	 0pEWa5z7SUcmHWFTeTKVUq2ly9MCoI/Tzh0baj1U=
+	b=kuzcfyWYjIN0NmblfI0n4EK7LWUbLqa28V3PCb18sH+gDnZSrNnq9maQFIb0gYV8f
+	 /FjqIgmeifm9yquue0G/z48aWkKxrYCVy5iazcWyaetJwu9uBaryZav7P07GwfiNhc
+	 e+Dz4QLrAG3iHaQhQguNl7BNe0PmL/uGElHRelO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbgGNTGO (ORCPT
+        id S1731216AbgGNTGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730247AbgGNSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:30 -0400
+        id S1730618AbgGNSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 929F1207F5;
-        Tue, 14 Jul 2020 18:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD89B22B3A;
+        Tue, 14 Jul 2020 18:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752809;
-        bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
+        s=default; t=1594752806;
+        bh=QMg3t7v4m+X0ZUi5wRxz4kW2zgxCcrXARq5pJ5mrBuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GZPTSk09r41HgEDQjv8zq0UYZhFjhhuqEOULNdo4014KjLI9IqUO34GuIr106Tmnf
-         ItmeIQv+QZPmH827kVZPR94RFH2BcCN82IN1OnjNiBHeO8HEczc0IfDaOE34QGX8eD
-         l4NSOWchriYsXRbzhsnRn1CvqjKp8BptXc37WYVc=
+        b=T1FsQWB5+uvgRaZ7Co39xZj81n9cMvQFMG9yPYjrb/0DUKZbYvEvObKnwiV86T8rJ
+         Vc6gEKTyucIzHmNXGtDdUze1fO+9VBuOFOoqADeeQVjxjPyUV96rHDk2oIzk2pkCJd
+         eOp38lJ0WwRcexEaJr7sHeR6CsQY2cEpkPWSMaJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 001/166] KVM: s390: reduce number of IO pins to 1
-Date:   Tue, 14 Jul 2020 20:42:46 +0200
-Message-Id: <20200714184115.917313137@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 108/109] perf scripts python: exported-sql-viewer.py: Fix unexpanded Find result
+Date:   Tue, 14 Jul 2020 20:44:51 +0200
+Message-Id: <20200714184110.734736570@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
-References: <20200714184115.844176932@linuxfoundation.org>
+In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
+References: <20200714184105.507384017@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,73 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
+commit 3a3cf7c570a486b07d9a6e68a77548aea6a8421f upstream.
 
-The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
-allocation (32kb) for each guest start/restart. This can result in OOM
-killer activity even with free swap when the memory is fragmented
-enough:
+Using Python version 3.8.2 and PySide2 version 5.14.0, ctrl-F ('Find')
+would not expand the tree to the result. Fix by using setExpanded().
 
-kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
-kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
-kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
-kernel: Call Trace:
-kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
-kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
-kernel:  [<00000001f8687032>] dump_header+0x62/0x258
-kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
-kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
-kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
-kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
-kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
-kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
-kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
-kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
-kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
-kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
-kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
-kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
-kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+Example:
 
-As far as I can tell s390x does not use the iopins as we bail our for
-anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
-only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
-reduce the memory footprint.
+  $ perf record -e intel_pt//u uname
+  Linux
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.034 MB perf.data ]
+  $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
+  2020-06-26 15:32:14.928997 Creating database ...
+  2020-06-26 15:32:14.933971 Writing records...
+  2020-06-26 15:32:15.535251 Adding indexes
+  2020-06-26 15:32:15.542993 Dropping unused tables
+  2020-06-26 15:32:15.549716 Done
+  $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  Select: Reports -> Context-Sensitive Call Graph    or     Reports -> Call Tree
+  Press: Ctrl-F
+  Enter: main
+  Press: Enter
+
+Before: line showing 'main' does not display
+
+After: tree is expanded to line showing 'main'
+
+Fixes: ebd70c7dc2f5f ("perf scripts python: exported-sql-viewer.py: Add ability to find symbols in the call-graph")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200629091955.17090-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/kvm_host.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index d6bcd34f3ec32..ec65bc2bd084e 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -31,12 +31,12 @@
- #define KVM_USER_MEM_SLOTS 32
- 
- /*
-- * These seem to be used for allocating ->chip in the routing table,
-- * which we don't use. 4096 is an out-of-thin-air value. If we need
-- * to look at ->chip later on, we'll need to revisit this.
-+ * These seem to be used for allocating ->chip in the routing table, which we
-+ * don't use. 1 is as small as we can get to reduce the needed memory. If we
-+ * need to look at ->chip later on, we'll need to revisit this.
-  */
- #define KVM_NR_IRQCHIPS 1
--#define KVM_IRQCHIP_NUM_PINS 4096
-+#define KVM_IRQCHIP_NUM_PINS 1
- #define KVM_HALT_POLL_NS_DEFAULT 50000
- 
- /* s390-specific vcpu->requests bit members */
--- 
-2.25.1
-
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -1018,6 +1018,7 @@ class TreeWindowBase(QMdiSubWindow):
+ 				child = self.model.index(row, 0, parent)
+ 				if child.internalPointer().dbid == dbid:
+ 					found = True
++					self.view.setExpanded(parent, True)
+ 					self.view.setCurrentIndex(child)
+ 					parent = child
+ 					break
 
 
