@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009D9C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ACFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8AF422AAB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDDE2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753605;
-	bh=jnIhzxpXO0JKlxaSrH9JI4FN6RQDYgOo1kucbxLZ2DA=;
+	s=default; t=1594753600;
+	bh=t38cKROaW5bZm5m83DpUpizQxSlDQDkFXo+98nVCCqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxfrxHkM+FFmSh2QywfL1IwoWaYUExfYrpyKiLUt5TfW9SWBsyi6wnx2y7YT/6To6
-	 8Wt2WxH7MtmqCC6BJuWJu0hhNas5w0R8Xq+e5MqlSaGXzVnwNtyQXHJkvKRI2kMco0
-	 nP+sL8sLeTxhux2rIxt3AX11nI9AiAvmsB2jOmEY=
+	b=mFjm9SHyAyqT57MzrVk43BPSn1kmip2fFxHaBwZwpufQUQWli45p0CI26+/BYFSxj
+	 RosjMPC8L07ep34yq24/elcTDPDuR0KzrxEVDJD3ENVRbmdgL+SdSJxvzQ2xxuyyQh
+	 yb6Aw/wUC203aWLZuTClpILGY2a4sMjjbMfp/Z0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbgGNTGo (ORCPT
+        id S1730596AbgGNSxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:06:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbgGNSxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:09 -0400
+        id S1730156AbgGNSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D73D22C7B;
-        Tue, 14 Jul 2020 18:53:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3155022BED;
+        Tue, 14 Jul 2020 18:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752788;
-        bh=jnIhzxpXO0JKlxaSrH9JI4FN6RQDYgOo1kucbxLZ2DA=;
+        s=default; t=1594752783;
+        bh=t38cKROaW5bZm5m83DpUpizQxSlDQDkFXo+98nVCCqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCIDXry/Cdu8FhhiEITw/AJKbF/aVJPKi60228YpT/W5G2582IAs0XT+BYqR2mKjR
-         8o/O5hnIdKVHvP0byop0jd44dfmDKebRmey7tRLiY7NxnW4DcJxEMLb8x5NIRxIcQl
-         Xk9avGXyxnMJuae1P2VMtfm0p3Rgyx9tuN2Y5/jA=
+        b=LtFTcZW8LiNux8IypoXf3IoZCG+LSRHkHccxhsF0C5m6gVn5QXzqMx4hKIhGJv02K
+         yecpSsxN2Jw+R9EPSE3J6vM6nLo6UxgHHVTm5Wwf3dTn7B1Lm0qw7lZdTsL7apExKO
+         n6u5tcimALMm8gR6vRlQtnl5WKRo9gzcyIB56vK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.4 080/109] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
-Date:   Tue, 14 Jul 2020 20:44:23 +0200
-Message-Id: <20200714184109.380816501@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 107/109] perf scripts python: exported-sql-viewer.py: Fix zero id in call tree Find result
+Date:   Tue, 14 Jul 2020 20:44:50 +0200
+Message-Id: <20200714184110.688231384@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,41 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
+commit 031c8d5edb1ddeb6d398f7942ce2a01a1a51ada9 upstream.
 
-PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
-pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
-encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
-RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
+Using ctrl-F ('Find') would not find 'unknown' because it matches id
+zero.  Fix by excluding id zero from selection.
 
-Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
-at EL2.
+Example:
 
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+   $ perf record -e intel_pt//u uname
+   Linux
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.034 MB perf.data ]
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
+   2020-06-26 15:32:14.928997 Creating database ...
+   2020-06-26 15:32:14.933971 Writing records...
+   2020-06-26 15:32:15.535251 Adding indexes
+   2020-06-26 15:32:15.542993 Dropping unused tables
+   2020-06-26 15:32:15.549716 Done
+   $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
+
+   Select: Reports -> Call Tree
+   Press: Ctrl-F
+   Enter: unknown
+   Press: Enter
+
+Before: displays 'unknown' not found
+After: tree is expanded to line showing 'unknown'
+
+Fixes: ae8b887c00d3f ("perf scripts python: exported-sql-viewer.py: Add call tree")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200629091955.17090-6-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/pgtable-prot.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/scripts/python/exported-sql-viewer.py |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -54,7 +54,7 @@
- #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
- #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
- #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
--#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
-+#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -951,7 +951,8 @@ class CallTreeModel(CallGraphModelBase):
+ 						" FROM calls"
+ 						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+ 						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-						" WHERE symbols.name" + match +
++						" WHERE calls.id <> 0"
++						" AND symbols.name" + match +
+ 						" ORDER BY comm_id, thread_id, call_time, calls.id")
  
- #define PAGE_S2_MEMATTR(attr)						\
- 	({								\
+ 	def FindPath(self, query):
 
 
