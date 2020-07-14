@@ -2,132 +2,129 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF00C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B7C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2016720BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DAA2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="ROgzE/YY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAYTZqW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGNIyV (ORCPT
+        id S1726766AbgGNIzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:54:21 -0400
-Received: from mail-eopbgr50102.outbound.protection.outlook.com ([40.107.5.102]:4735
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgGNIyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:54:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HLaT5oAB+ms7we7zRnqHKj7EiV1fZ9lLjwI0DpcEtW88hsnPLL/WrRJiqLHfGwn54vD10HpwSzN0jLyvuJpr7ucaP2LYb/p9j3I+mbIzEtS3TgZcVRAulTWuD6vDgSDj/cboLjV7VSczUGMr/pCOHZzTsH/kdWphEpRksxuLYTaFCaywM3Kg9gbmky0eKU0kLLi/mYjyyCRF+qabR5oX9erwn/XiueFvB3Hk4qS+c7dhmXtrZQtrBmsRbgZefi+HIaHsvyZa/UAbugb8iJj2Y6GIT4oXS9zL1XNN1AaP4ADhcxZLScmAsoKANC2eJQmRN6w17GFSZwtzMdgbyuLwHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmZ5uvhsE5MPtS8wLfI0Bjgd/yVrSq5Ty7YxNLyU2jA=;
- b=EBPfIQYgwVQgkTfDU00RzaQUBzgQ01xvoTR8ClouFxRgFWwQt6lGoN21gSyE+lXuxqXw+TKnCg8n9xYIJXsBUj7X36jnHfp786TvfMEME+gj554pU2J4GD3BHc5g+Nue2PeHl8Nf7PIPCLSaK43TOb84NzWWD+fBo21vdHZPCuPQc8uKZLY4+qjveJfAatTOnjpxOOjANMeNmst8WlPxemMce+mXvVk5NKCCgSnycJAICGniKPMCVhegww+p0tMcwvRAyCD/y+dMsoMeDHRqDoLurJr75h5NRjzPYF40j0sRyO0ghHs/LqgP0AfrqsXcnp5NUPHbp/6zXmUEgyzdQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmZ5uvhsE5MPtS8wLfI0Bjgd/yVrSq5Ty7YxNLyU2jA=;
- b=ROgzE/YYmI5iRNjGrRUKPqcc4nkt+yMuDXpn+cjGD0yIO45UMs31oGPGcvQW14qQJtMbhmwxaa7JyL+tOgPSQhINREe26uaObrf406I9pczAK85bKgslDhfaAXO+/cg8gd4CGCAZE/zB0rTpn9uHELn2P2D40vdpjfkvfMF33IM=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
- by DB8PR10MB3276.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 14 Jul
- 2020 08:54:17 +0000
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 08:54:17 +0000
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
- <20200702142511.GF4483@sirena.org.uk>
- <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
- <20200702150725.GI4483@sirena.org.uk>
- <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
- <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
- <20200713151108.GB4420@sirena.org.uk>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
-Date:   Tue, 14 Jul 2020 10:54:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200713151108.GB4420@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0079.eurprd02.prod.outlook.com
- (2603:10a6:208:154::20) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:50::12)
+        Tue, 14 Jul 2020 04:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgGNIzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:55:15 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463CCC061794;
+        Tue, 14 Jul 2020 01:55:15 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dp18so20680888ejc.8;
+        Tue, 14 Jul 2020 01:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BYpCX/p81FQOHpa4gqb+UE0SHcspB7H1zWvoCgfKkuU=;
+        b=cAYTZqW8l+uFf2mrwz8ziuGrMu/fOroZuQlZenYADb6Bjbyd7idbvTE3Iozi7BrznA
+         JIEZkDHiyh7tA3LztNUWuoONszuymZTJNtOXrh6er5WWJLUPBFniox7NBz4kPhAD1/tI
+         5rMYD/SP/IHfHFb5zjsPvk4yftUgFDiYGnyCMLeoG0o+BDDVB+wKO069x6/14j2dWSt8
+         sVkWzOi7nh4p3XwtNQhpqtWLi4JfDuf9v0wOU8AoYmkJM9kaH8B6ZMBGoQWJsXiBpfy9
+         6ASZ6gX9BgYdn5ojXMV5Z8QolKqrV7aoVAN4GCqnDAxCe9qNfeQg0euYp37EXLY0e+0Q
+         VJGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BYpCX/p81FQOHpa4gqb+UE0SHcspB7H1zWvoCgfKkuU=;
+        b=nPfFsqrRYocy0Qu/m03LNLUoxZRnvLc6sVjFjCNCbQhcBBfLqaOyYguwO1BJH5cZOx
+         PyJcG1Zmbb96NNTOtomPlDPcsliwDWRHylZi4gFXsKeqqEohSiz7MEe3XBxTvp+AjLc8
+         twb5COJFSNlRTV5V3R4EynUcmckWO7HfSXY7FO22+gIztvwK0pKxGj/zdmzuAsit44XI
+         bAuLMQZ1pCgcpW2cCEPzJM9M34mU3fyQHacWOTvQAO7i3bSrf8JW32yxV33GfzeKmljB
+         NmCobFuA1ZhId8C9h89hZGpruqrLLPjT30wIFnWpn03ZCuiaYhpdPu8sFbUGcV224IlU
+         PBRg==
+X-Gm-Message-State: AOAM533r6XyVH5rLX/Tq8OCG+D+JF0iuxrrrf3jS3fZY4KzUqqIN/PLH
+        Cq/FhcoKRdSgvAGxlmslnms=
+X-Google-Smtp-Source: ABdhPJycnijtvoHofHTPhh5AKxCI5zDgniYWn7cKHiQYJNanzDYohFgfiNCy1BVH50hsgdN4yVaCsw==
+X-Received: by 2002:a17:906:81d2:: with SMTP id e18mr3431938ejx.341.1594716913971;
+        Tue, 14 Jul 2020 01:55:13 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id jo25sm11922404ejb.116.2020.07.14.01.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 01:55:12 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 10:55:11 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     robh+dt@kernel.org, treding@nvidia.com, jonathanh@nvidia.com,
+        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] arm64: tegra: Re-order PCIe aperture mappings
+Message-ID: <20200714085511.GB141356@ulmo>
+References: <20200706171454.11316-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.99.63] (80.147.118.32) by AM0PR02CA0079.eurprd02.prod.outlook.com (2603:10a6:208:154::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Tue, 14 Jul 2020 08:54:17 +0000
-X-Originating-IP: [80.147.118.32]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7a3aa5c4-18ac-4b1c-63ed-08d827d37da3
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3276:
-X-Microsoft-Antispam-PRVS: <DB8PR10MB3276A0E7469D2B7B3EB3EE02E9610@DB8PR10MB3276.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QEHLnSkWVVqsd2xtM410UnhALVl9RPQA3dAVb0E5f++GZJY4aXBL3EIIyEnXtP+4uzjZV6hOXhe/d4fhF1vGPThz7swES1VeAkREzRLuDWKtzs+blk9I4h32YeNAPqAIPhUsI68k4G/NcfE9x9b1+OQ1R53oRFxAyFA3ioKGA/2x6oN3U/PaJAqebBNvXYjE8CGjPJ/8zAFMpmjuZVHnPnr74VKJPToLklBvz3n2ESBAw2PGeskCd5fuolCU2kdXg4tyweGsSOqGPIq/tqZgpS18B73AgZOH/wS1MUaUldkn5A7DQeQUvXUxbRay9gjQSB5WmziD2jB7i0JmVNjEKkuolzaL2rSoSQJHNPNLrskhAJ2Ck1/6N4rmwo4T4s4l
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(86362001)(5660300002)(53546011)(478600001)(31696002)(52116002)(6916009)(8936002)(36756003)(26005)(66946007)(31686004)(66476007)(66556008)(8676002)(956004)(2906002)(16576012)(2616005)(186003)(44832011)(316002)(4326008)(16526019)(6486002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 6YYE6bwsWAc1g48CZYSW39kOwi9MBrsvUU+Y/zG+XO0m9krhLYJpt9DZdeuI/JvPMQCGjnBRVgSClGIQecGeqow6sm9XYn7w0ksAEvvsmvvtfJN0rmbcZFsc/LO4m1aap0zx+VB2YEK8VoNEfCXICQQyXtgEvo/TMWB11r8iQImcL3hqglRt9G9B+jgI6AMqN54HgTnTEcgDbGPdreD/joumI5uGMZuenfmZK2qBIyRM3Uw99dvQw+ATeLZLGZ/3KZ/Mr5ihi68t4KDXKWQKTi+FalDQfVHCWO7w91SL2aK3G4WiXruwNP2fEEwUfWUsShCX1IPRHtZvqz9pMTrsUgN8+F7fYyxU01m9uB5GKDZsQnCTmTwO6pQ2+2r6LlARBBb4Od+Nmf2a45YxT9WWJQ8QIhYcBX4icyIlKzo//BhJWQrTbv0o4Q6zt1goiqGL0Mfk3RBKjRSN8WhfZdJ91g9Vnr+lfUiFz9/4hj9z/ns=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a3aa5c4-18ac-4b1c-63ed-08d827d37da3
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 08:54:17.4736
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g4JVprxkDccXSTUcrXodhzOw3XXA7s0QYgKUGzOUNelIyAim9Nc5YKVlwfOkvD35b1qhrT550/gJwFHOzE8puNojulOwOOEacJK7lpwgqgQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3276
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
+Content-Disposition: inline
+In-Reply-To: <20200706171454.11316-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.07.20 17:11, Mark Brown wrote:
-> On Mon, Jul 13, 2020 at 03:19:52PM +0200, Frieder Schrempf wrote:
-> 
->> I would have expected that there is some kind of existing userspace API to
->> load an overlay manually, but it seems like there isn't!?
-> 
->> So what's the reasoning behind this? How can I solve this in a
->> mainline-compliant way, meaning without either keeping downstream patches to
->> bind spidev to my device or writing and maintaining code that does the
->> overlay loading?
-> 
-> Basically the reasoning is that nobody's done it rather than any grand
-> design not to do it.  There's some issues for more complex connectors
-> present on multiple boards with mapping the same connector onto multiple
-> boards where a resource on the connector might be provided by different
-> things on the base board so it's not quite as trivial for them as it
-> should be.
 
-Ok, thanks. I'm afraid I'm currently not in the position to work on any 
-generic solution to leverage the loading of DT overlays from userspace.
+--5/uDoXvLw7AC5HRs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It would still be quite nice to benefit from the flexibility of DT 
-overlays not only for the SPI use case. But before I come up with any 
-custom solution, for now I will rather have the device in the DT statically.
+On Mon, Jul 06, 2020 at 10:44:54PM +0530, Vidya Sagar wrote:
+> Re-order Tegra194's PCIe aperture mappings to have IO window moved to
+> 64-bit aperture and have the entire 32-bit aperture used for accessing
+> the configuration space. This makes it to use the entire 32MB of the 32-b=
+it
+> aperture for ECAM purpose while booting through ACPI.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 36 ++++++++++++------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
 
-I just wonder if I need to keep the DT node for the device in a separate 
-patch in our own tree, or if a node with a custom compatible string like 
-for example "kontron,user-spi" would be accepted upstream, without a 
-matching driver?
+I've had to manually apply this because it conflicts with some of the
+cleanups I've been doing to the DTS files. I'll push it out later, so
+it'd be good if you could check that I've applied it correctly.
+
+Thanks,
+Thierry
+
+--5/uDoXvLw7AC5HRs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8Ncu0ACgkQ3SOs138+
+s6E9+w/+JjZPchwPj6idBmuMBbMOr4W0imsNtOOmtge31wagIjngpHj1pNYFjZ42
+qAgefyMb30w8IWMP8tkKHby4+UOXYE9mb6lqiertUynhPRCQDVu1+o3oWPRnmFd6
+ajnTN7/9ZhXJ83NmYm/h+0Zqk/2mvg6P2DjAdOkw2ioYGmfI9g6gBh6E5ypoC+sV
+Lr5VntibAYLU8+zGjkfg4yyMHHM/ljG4h6F/ybVdfkM0kqomUMkE7TcustiXXosy
+pdwUv53VDf2z1FRs7UbXzZSXY8G7Xo9ZarbUtjpf5+iOr1uys484/PU60qtAY0MC
+gaWp7qRtkYVDjJUNrWKGF8H0P5BNKRPQ8Nd9dyBP/QMhos8e78C6SaWHTbdCJhXr
+FHys9ND/Lvv9lBEq8zG+WvDuhZlbAzjYv0mQ0qn1lDQS45ObJsxnj2Ztg8q91K4W
+gWBmNyiltbRGlSYMFDeWSbvSK7PBNzrg0If3GOh2Ok5nQb3DlxQIBjmnTGeVPrv7
+lS5VjzyLQgxhsoTGURMBLqFICKV5gtNBhMc6FGMzK5QCcjgzdzlP6HeO/feXhYnn
+28gsh8VzOVdIkoyMLZljOp4XsNiQi2sEnG6jGJZjaIB/bt3di/hT0IZkSVt+EjK/
+ilRWmKI08vgWXbM+EnVILaUJDVHN50Zqi41IYhWhyEMaReFdf6s=
+=jJwZ
+-----END PGP SIGNATURE-----
+
+--5/uDoXvLw7AC5HRs--
