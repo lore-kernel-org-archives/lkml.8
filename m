@@ -2,189 +2,157 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578BCC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6BE221E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AD32193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slRrMlV0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEKPAwx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgGNFEZ (ORCPT
+        id S1726384AbgGNFEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
+        Tue, 14 Jul 2020 01:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgGNFEY (ORCPT
+        with ESMTP id S1725283AbgGNFEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:04:24 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C70C061755;
-        Mon, 13 Jul 2020 22:04:24 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 1so7050771pfn.9;
-        Mon, 13 Jul 2020 22:04:24 -0700 (PDT)
+        Tue, 14 Jul 2020 01:04:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEABEC061755;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 72so6531341ple.0;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=VIK/YY3yTw6u4hITwUK0EgJq6PIjyhDYiaWYv31wto8=;
-        b=slRrMlV0lZMUt2zoP1edcjG+ngUwdQ/+Uu9TSo4PH+TWndDmw8XMv8OCEFR+1mwGOG
-         g6SsD9uTmDCBMcinafpQpm7o/PCRr+s4nfTKf1yLJPxfbuqu3Wk8PfSf1rS8ys4GBklg
-         FvAWOtjECrcR8SFvbs6fNz/1jSS7zq7zlNigFNS0F5SoCFM01nSvkhXUSfSOnU2cvswC
-         RtmaDngwF3zbLU9+CSI/tNWL3Ke7dHaAz9hCqlTKEnYaD0XWvrifayJB9J8WEvKsbqgi
-         9GCxkywubm8UmQGKYuNAJ+xD/Zib45iY0ZtrgH2WAb8gF4zD54dpCQlg+5XJxbfVWhWy
-         i9eg==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
+        b=oEKPAwx4GyHC6xmDBAEPl6V7mNhsZsNcvI9zHN/ZTgEo/LqxmLpwrn73AKk2A1y76c
+         /dm58xfAMsBh4IBI0KKN0Hsbz3t3etJSzmk2nmG515ZKQmCoc+dUDK9CSooz6oyZzIKx
+         SXzbCSAagmBmPbfsCh1Kb7bMbpZ6/KcFKiupzPkacvdsS5DBMCg+ybo08ZLetp8vFidL
+         h7YBjdths6Os4zgbxQv18jWVNzOnbxr9Dq5QP5jFMS2HOO5DPdn7tu+AVQil6ySZFxHu
+         YoFLxFl2oO8iABtiukBcY8N7l4HKhBB3wILLJ74Si8sARPDPVs/XJuOKgqXzRbvQ4tws
+         Qemg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=VIK/YY3yTw6u4hITwUK0EgJq6PIjyhDYiaWYv31wto8=;
-        b=rguZSGs4s2xxMagPG9kIXm0LBk7vbOT+RNjvvBQFM0v02McaQHkIDoH1OnOSnD3YAL
-         8p5jN04OOliv/sj0cOVE09OUo/fgTV17gMdLCsBv2IvYEKBPnTbj//pHOk35WL1RTGER
-         cRlFEKAWoOKdCllenjtVs7TMs8DliuF7aSDBjHSStRmweSKZ7yCnF7HxSYkbXCPuUjXy
-         0/iD6xN0zfVngY+FEISyUTitgwE688pVGaL0wxFgZxRdh99Y/c+Il9AvZOgdS3sBoNVA
-         czik2BEKyFaNMMBb/byQYFbYJQseGA9rzYdGUKWlFUQjqIMna3PUDVRE995AfZWdsXLc
-         bjFw==
-X-Gm-Message-State: AOAM531MaFxtl5WYAhTeznWFMkbGQrDpALlN+nY43K1dOiHw+LqGgu+v
-        EKehQ4T8qxXYjqQ4I2dSVuA=
-X-Google-Smtp-Source: ABdhPJzjkdOVPLyQQhEB39lRCIFS24w3GNHvCYgABOFNsQYU+BBY6WgR9Vc6I81S8+XI+UZB46zUbw==
-X-Received: by 2002:aa7:9708:: with SMTP id a8mr2817058pfg.234.1594703063836;
-        Mon, 13 Jul 2020 22:04:23 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id y17sm15754645pfe.30.2020.07.13.22.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 22:04:23 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 15:04:17 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
- tlb option
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
-References: <1594658283.qabzoxga67.astroid@bobo.none>
-        <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
-In-Reply-To: <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
+        b=qoDK4XwTQKoQrYYo8Fs9bsmJC5KEfyxsVepvv+hRQ/zrTulB6tm/0k7UksQVYnrXbk
+         iNS/M9vV9wtCW59HIz+Z6WBrjWiYLkJcYKdiQjz1Eu4ZUf2ySqfOK+t5+5PW26Tlkstx
+         koWloNASXaMlSRHao+Vgw7DI7IFdahg2yURaQ8WMRryGsGrWK+soxh1M20iKvRPEC1j2
+         WGiV3j12Afby0FHzuFpop0LwZJyr5OnjgfqyczjXk3upKDKjwxjBJZHlgieCaxLtQ9w+
+         d/4fvmFYgPhcpAgXSk1YrQ7uyRXr6vmm+Mt2EtjAo9dwsQ41x2eK3rXaLuCH8XEXLAeu
+         fbyg==
+X-Gm-Message-State: AOAM532zCGzV7rL3T+tljlxSkPYb3fWhBITbSGHxtqWmbryfrKJRCPN7
+        7/IGnVq9nqzCTMPOSvtuCPvbQl81KEA=
+X-Google-Smtp-Source: ABdhPJzY/MjIIbiXdL5kEjKrtA00P/bfZOiwaxsQkBIHvxJ7WssS5XHHgxxZ9rY5a3OSey7GPywAHw==
+X-Received: by 2002:a17:90a:158f:: with SMTP id m15mr2719045pja.93.1594703044144;
+        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z11sm4887461pfr.71.2020.07.13.22.04.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 22:04:03 -0700 (PDT)
+Subject: Re: [RFC PATCH 17/35] hwmon: (sis5595) Tidy Success/Failure checks
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>
+Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-18-refactormyself@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <33cc25df-b34f-6bd1-5fc4-872b42369672@roeck-us.net>
+Date:   Mon, 13 Jul 2020 22:04:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-Id: <1594701900.gcgdq8p13l.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200713122247.10985-18-refactormyself@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
->=20
->> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
->>=20
->> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 a=
-m:
->>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wro=
-te:
->>>>=20
->>>> On big systems, the mm refcount can become highly contented when doing
->>>> a lot of context switching with threaded applications (particularly
->>>> switching between the idle thread and an application thread).
->>>>=20
->>>> Abandoning lazy tlb slows switching down quite a bit in the important
->>>> user->idle->user cases, so so instead implement a non-refcounted schem=
-e
->>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot dow=
-n
->>>> any remaining lazy ones.
->>>>=20
->>>> On a 16-socket 192-core POWER8 system, a context switching benchmark
->>>> with as many software threads as CPUs (so each switch will go in and
->>>> out of idle), upstream can achieve a rate of about 1 million context
->>>> switches per second. After this patch it goes up to 118 million.
->>>>=20
->>>=20
->>> I read the patch a couple of times, and I have a suggestion that could
->>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
->>> refcount.  You're saying "hey, this mm has no more references, but it
->>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
->>> those references too."  I'm wondering whether you actually need the
->>> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
->>> for real?  Roughly, in __mmdrop(), you would only free the page tables
->>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
->>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check if
->>> you just removed the last bit from mm_cpumask and potentially free the
->>> mm.
->>>=20
->>> Getting the locking right here could be a bit tricky -- you need to
->>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
->>> should free the mm, and you also need to avoid an mm with mm_users
->>> hitting zero concurrently with the last remote CPU using it lazily
->>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
->>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns t=
-he
->>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some carefu=
-l
->>> cmpxchg or dec_return to make sure that only one CPU frees it.
->>>=20
->>> Or maybe you'd need a lock or RCU for this, but the idea would be to
->>> only ever take the lock after mm_users goes to zero.
->>=20
->> I don't think it's nonsense, it could be a good way to avoid IPIs.
->>=20
->> I haven't seen much problem here that made me too concerned about IPIs=20
->> yet, so I think the simple patch may be good enough to start with
->> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the
->> unlazying with the exit TLB flush without doing anything fancy with
->> ref counting, but we'll see.
->=20
-> I would be cautious with benchmarking here. I would expect that the
-> nasty cases may affect power consumption more than performance =E2=80=94 =
-the=20
-> specific issue is IPIs hitting idle cores, and the main effects are to=20
-> slow down exit() a bit but also to kick the idle core out of idle.=20
-> Although, if the idle core is in a deep sleep, that IPI could be=20
-> *very* slow.
+On 7/13/20 5:22 AM, Saheed O. Bolarinwa wrote:
+> Remove unnecessary check for 0.
+> 
+> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+> ---
+> This patch depends on PATCH 16/35
+> 
+>  drivers/hwmon/sis5595.c | 13 ++++---------
+>  drivers/hwmon/via686a.c | 13 ++++---------
+>  drivers/hwmon/vt8231.c  | 13 ++++---------
+>  3 files changed, 12 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/hwmon/sis5595.c b/drivers/hwmon/sis5595.c
+> index 0ea174fb3048..91fdddaa4136 100644
+> --- a/drivers/hwmon/sis5595.c
+> +++ b/drivers/hwmon/sis5595.c
+> @@ -825,8 +825,7 @@ static int sis5595_pci_probe(struct pci_dev *dev,
+>  		pci_write_config_word(dev, SIS5595_BASE_REG, force_addr);
+>  	}
+>  
+> -	if (0 !=
+> -	    pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
+> +	if (pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
 
-It will tend to be self-limiting to some degree (deeper idle cores
-would tend to have less chance of IPI) but we have bigger issues on
-powerpc with that, like broadcast IPIs to the mm cpumask for THP
-management. Power hasn't really shown up as an issue but powerpc
-CPUs may have their own requirements and issues there, shall we say.
+Ah, there is is, and I see that others commented on it.
+Single patch, please.
 
-> So I think it=E2=80=99s worth at least giving this a try.
-
-To be clear it's not a complete solution itself. The problem is of=20
-course that mm cpumask gives you false negatives, so the bits
-won't always clean up after themselves as CPUs switch away from their
-lazy tlb mms.
-
-I would suspect it _may_ help with garbage collecting some remainders
-nicely after exit, but only with somewhat of a different accounting
-system than powerpc uses -- we tie mm_cpumask to TLB valids, so it can
-become spread over CPUs that don't (and even have never) used that mm
-as a lazy mm I don't know that the self-culling trick would help
-a great deal within that scheme.
-
-So powerpc needs a bit more work on that side of things too, hence
-looking at doing more of this in the final TLB shootdown.
-
-There's actually a lot of other things we can do as well to reduce
-IPIs, batching being a simple hammer, some kind of quiescing, testing
-the remote CPU to check what active mm it is using, doing the un-lazy
-at certain defined points etc, so I'm actually not worried about IPIs
-suddenly popping up and rendering the whole concept unworkable. At
-some point (unless we go something pretty complex like a SRCU type=20
-thing, or adding extra locking .e.g, to use_mm()), then at least=20
-sometimes an IPI will be required so I think it's reasonable to
-start here and introduce complexity more slowly if it's justified.
-
-Thanks,
-Nick
-
+Guenter
