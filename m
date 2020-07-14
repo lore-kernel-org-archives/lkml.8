@@ -2,103 +2,112 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C04C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD218C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C0F22AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820B722AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753409;
+	bh=OWIHnKV5MZ12VsrvwuY3Yra7e3O5eMMUe1kObuHO6Cc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n2X5gftM7TpIZnlWCJZvqstDjqtiy6oz2Xz7O4aJHgeBtUZZvQwqckOfUPU3S9Cg+
+	 eI5T1mqWBQR5mDNQZSxRfEIJTHSgBVQMm9Ur/C9cDhd3it8duCprlWC0zUCoestGYa
+	 /ZF0q0N7Iaxe5z/ToWbfbhFgLnD4SEedZrKAG+gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgGNTD0 (ORCPT
+        id S1731234AbgGNTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:03:26 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:51710 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729699AbgGNS52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:28 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 33E0E100E7B4A;
-        Tue, 14 Jul 2020 18:57:26 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wish68_300691626ef3
-X-Filterd-Recvd-Size: 3488
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Jul 2020 18:57:24 +0000 (UTC)
-Message-ID: <a323c1e47e8de871ff7bb72289740cb0bc2d27f8.camel@perches.com>
-Subject: Re: [PATCH 6/6] staging: qlge: qlge_ethtool: Remove one byte memset.
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Suraj Upadhyay <usuraj35@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 14 Jul 2020 11:57:23 -0700
-In-Reply-To: <20200713141749.GU2549@kadam>
-References: <cover.1594642213.git.usuraj35@gmail.com>
-         <b5eb87576cef4bf1b968481d6341013e6c7e9650.1594642213.git.usuraj35@gmail.com>
-         <20200713141749.GU2549@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 14 Jul 2020 15:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730687AbgGNS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A94F7207F5;
+        Tue, 14 Jul 2020 18:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594753050;
+        bh=OWIHnKV5MZ12VsrvwuY3Yra7e3O5eMMUe1kObuHO6Cc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a+1BSP6K1c5sn3THwe/w0RnNwYdHRwnmkZJ6qCldePhHFRU7Xldja7r8k+fvTEFZy
+         XADuLmqPGfyzziyZoum0U2SiDs2PZsBenIHs5Q/MKPQLuH5GApapFX6N1SuqxKMZdM
+         y6ritvof3o2BSFuZMZo3nNdrL7QgVBAZasPdkqvY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 101/166] net: macb: mark device wake capable when "magic-packet" property present
+Date:   Tue, 14 Jul 2020 20:44:26 +0200
+Message-Id: <20200714184120.679280878@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-13 at 17:17 +0300, Dan Carpenter wrote:
-> On Mon, Jul 13, 2020 at 05:52:22PM +0530, Suraj Upadhyay wrote:
-> > Use direct assignment instead of using memset with just one byte as an
-> > argument.
-> > Issue found by checkpatch.pl.
-> > 
-> > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> > ---
-> > Hii Maintainers,
-> > 	Please correct me if I am wrong here.
-> > ---
-> > 
-> >  drivers/staging/qlge/qlge_ethtool.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
-> > index 16fcdefa9687..d44b2dae9213 100644
-> > --- a/drivers/staging/qlge/qlge_ethtool.c
-> > +++ b/drivers/staging/qlge/qlge_ethtool.c
-> > @@ -516,8 +516,8 @@ static void ql_create_lb_frame(struct sk_buff *skb,
-> >  	memset(skb->data, 0xFF, frame_size);
-> >  	frame_size &= ~1;
-> >  	memset(&skb->data[frame_size / 2], 0xAA, frame_size / 2 - 1);
-> > -	memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
-> > -	memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
-> > +	skb->data[frame_size / 2 + 10] = (unsigned char)0xBE;
-> > +	skb->data[frame_size / 2 + 12] = (unsigned char)0xAF;
-> 
-> Remove the casting.
-> 
-> I guess this is better than the original because now it looks like
-> ql_check_lb_frame().  It's still really weird looking though.
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-There are several of these in the intel drivers too:
+[ Upstream commit ced4799d06375929e013eea04ba6908207afabbe ]
 
-drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
-drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
-drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
-drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
-drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[frame_size + 10], 0xBE, 1);
-drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[frame_size + 12], 0xAF, 1);
-drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->data[frame_size + 10], 0xBE, 1);
-drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->data[frame_size + 12], 0xAF, 1);
-drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
-drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
+Change the way the "magic-packet" DT property is handled in the
+macb_probe() function, matching DT binding documentation.
+Now we mark the device as "wakeup capable" instead of calling the
+device_init_wakeup() function that would enable the wakeup source.
+
+For Ethernet WoL, enabling the wakeup_source is done by
+using ethtool and associated macb_set_wol() function that
+already calls device_set_wakeup_enable() for this purpose.
+
+That would reduce power consumption by cutting more clocks if
+"magic-packet" property is set but WoL is not configured by ethtool.
+
+Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 55e680f350222..4cafe343c0a27 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4422,7 +4422,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	bp->wol = 0;
+ 	if (of_get_property(np, "magic-packet", NULL))
+ 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
+-	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
++	device_set_wakeup_capable(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
+ 
+ 	spin_lock_init(&bp->lock);
+ 
+-- 
+2.25.1
 
 
 
