@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E71AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FADA2255F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99E32255F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753271;
-	bh=imOiDUvX9IgMI4DgKmLXDbP4TlQTsiuChEG4SULf2I0=;
+	s=default; t=1594753279;
+	bh=c4nFP8A0K47Tn15OIczsmZVFSM5T1Rd/zIRoUYKhxn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILuQBrKzHyEUxDa4f/ad0okOdu+fAEfCXUY0lIV20QKWIEZnD73Ydg/F5catSOLsO
-	 c+iWwYp0jRSp1C4c0jnFDEY9aftH5cDoOePJd6TLlVxQMC68HY496zWdz91szRArJK
-	 q6FXTytVZJiRw7WRf6hCLOenskOMAOOgcGenEz8k=
+	b=AxmFzXSyxnF62qOMWOV8t83bGETtYeeMRXVMpKW29Rx1rWYLVsD3sIq+9/HLk2Ixb
+	 LfSTk6lGSFiDWQkZ9lkW26ZgtiwLe80iBOR3D8jaI9QfxBb5EDrdlsfTK/xOYy6ur0
+	 Vlks7/jOKu9jQKCEis9yvOy77QEXHP5K7SN1qods=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgGNTBI (ORCPT
+        id S1731260AbgGNTBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbgGNTAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:11 -0400
+        id S1730671AbgGNTAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2331222B9;
-        Tue, 14 Jul 2020 19:00:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF416229CA;
+        Tue, 14 Jul 2020 19:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753211;
-        bh=imOiDUvX9IgMI4DgKmLXDbP4TlQTsiuChEG4SULf2I0=;
+        s=default; t=1594753206;
+        bh=c4nFP8A0K47Tn15OIczsmZVFSM5T1Rd/zIRoUYKhxn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EYJrgTHhUhtPF+6F1VSPisLCcfctAA/8NHBzeFY32dURW75WhgxLxaYJpAmN1PBUr
-         dfLWvIpjk2YXVbjlVYQlQtOc71CeMrWC/UWcgZG1umMa4Fo2RESKNVvktwDDPaR/Fj
-         lmNhklmX3k+zGQrKb1Z+uNaTCZGAMLBANpb7KYeE=
+        b=ZKp6/DGBNivU1cDMgP0rndw36AJhD/clwZ5952k1dphIFBT8k5lavmKv3eGIleIgd
+         f/cMswKKbav9wjC7VkPx1A+/hJY87qEAQ/mIwzxdNmMRkS8/ORUqeI6Ulu235jFK2e
+         KyjTRUw7KVkqRWTlrnSb4JN4Vv0Q4Yzo4w63scLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 122/166] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
-Date:   Tue, 14 Jul 2020 20:44:47 +0200
-Message-Id: <20200714184121.677249888@linuxfoundation.org>
+        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.7 130/166] module: Do not expose section addresses to non-CAP_SYSLOG
+Date:   Tue, 14 Jul 2020 20:44:55 +0200
+Message-Id: <20200714184122.058394297@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,53 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
+commit b25a7c5af9051850d4f3d93ca500056ab6ec724b upstream.
 
-Mark CR4.TSD as being possibly owned by the guest as that is indeed the
-case on VMX.  Without TSD being tagged as possibly owned by the guest, a
-targeted read of CR4 to get TSD could observe a stale value.  This bug
-is benign in the current code base as the sole consumer of TSD is the
-emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
-when grabbing bits.
+The printing of section addresses in /sys/module/*/sections/* was not
+using the correct credentials to evaluate visibility.
 
-Add a build-time assertion in to ensure VMX doesn't hand over more CR4
-bits without also updating x86.
+Before:
 
-Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
+ # cat /sys/module/*/sections/.*text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0xffffffffc0458000
+ ...
+
+After:
+
+ # cat /sys/module/*/sections/*.text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0x0000000000000000
+ ...
+
+Additionally replaces the existing (safe) /proc/modules check with
+file->f_cred for consistency.
+
+Reported-by: Dominik Czarnota <dominik.czarnota@trailofbits.com>
+Fixes: be71eda5383f ("module: Fix display of wrong module .text address")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/kvm_cache_regs.h |    2 +-
- arch/x86/kvm/vmx/vmx.c        |    2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/module.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -7,7 +7,7 @@
- #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
- #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
- 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
--	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
-+	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1527,8 +1527,8 @@ static ssize_t module_sect_read(struct f
+ 	if (pos != 0)
+ 		return -EINVAL;
  
- #define BUILD_KVM_GPR_ACCESSORS(lname, uname)				      \
- static __always_inline unsigned long kvm_##lname##_read(struct kvm_vcpu *vcpu)\
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3932,6 +3932,8 @@ void vmx_set_constant_host_state(struct
+-	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+-		       (void *)sattr->address : NULL);
++	return sprintf(buf, "0x%px\n",
++		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
+ }
  
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
- {
-+	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
-+
- 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
- 	if (enable_ept)
- 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+@@ -4351,7 +4351,7 @@ static int modules_open(struct inode *in
+ 
+ 	if (!err) {
+ 		struct seq_file *m = file->private_data;
+-		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
++		m->private = kallsyms_show_value(file->f_cred) ? NULL : (void *)8ul;
+ 	}
+ 
+ 	return err;
 
 
