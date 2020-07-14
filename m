@@ -8,75 +8,79 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21763C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AC7C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F00912193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D616F2193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RcQ8N4yE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z4pAkkYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgGNE7T (ORCPT
+        id S1726752AbgGNE7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:59:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37726 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNE7R (ORCPT
+        Tue, 14 Jul 2020 00:59:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54180 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgGNE7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:59:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4utuQ172701;
-        Tue, 14 Jul 2020 04:59:01 GMT
+        Tue, 14 Jul 2020 00:59:21 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4wRIx100119;
+        Tue, 14 Jul 2020 04:59:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=8OamBc93tsElgQQ1UHHoc9Ay6yPCeE9e643okWZufPE=;
- b=RcQ8N4yE75AJIagGybBj1DOtp5WeLXeVMtnLPD7qSA1s9F8HbroJ3EngD0TfjMpAWiL5
- bEklOkbecflIy1SNslBC8cOi2ixycHJaUezl+e56jtcDbOPKFloEvpG61tHxbi7LFBkS
- nICuMdIbIJ53L52lKTOizUedA+Ky6g65LdPWbAUBqJllz8LIDmJUR5vHbS0nk3DFdyuT
- wAI0q9Cwp3w/kO5lZUKSzfhV/ApSg74ldxDoXt48oBkWaxQrKklt7/oen8IICsN3A+DX
- VMoXc3mJVH3gLonR22yKfXRFGULbH11pQti19gK2zWrTOjQyh0xljI0yk+O1f7JAWZsj mA== 
+ bh=i/edOp4Ak5/v8uEvTvaFWmM61UPCIIBiDRWqpfNG9p8=;
+ b=z4pAkkYBn0q/EA/pLW+9xuEBtS4DxKI7m5WCNvGQr3Mz/CZL/7mgW/5j2OaoP3nQK5ZC
+ JD+9IR8mrx0q/kLHeakpHW4OVRx7xcErXGxJnZRMHwm4AUbqiNghYaJH4bUqZ+1BUcp/
+ FKK41DGwUKgLwWMZ+cizN8e3PL/R4qTLhDKuK0uoPRBm6wiis+w/appuJ1+eIQxeBtaO
+ A4Up5oKu8wfZO92zKOtUS3dEEvEY1Iavf2I9xZWOftCqlujkhRYEGp7Lfu9XQeIayk6V
+ xdi5zpRzuOv3/iB9bqVnfwWAq2OFiAMrNyDwNDoh9lSxbQ7TUGjbLRFOwlJaNFFSqfIe xA== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3275cm2x3c-1
+        by userp2130.oracle.com with ESMTP id 3274ur2yqc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 04:59:01 +0000
+        Tue, 14 Jul 2020 04:59:00 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4vXKT174023;
-        Tue, 14 Jul 2020 04:59:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 327qb2nuud-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E4vXfW174045;
+        Tue, 14 Jul 2020 04:59:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 327qb2nusv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 04:59:01 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E4wxg2025076;
-        Tue, 14 Jul 2020 04:58:59 GMT
+        Tue, 14 Jul 2020 04:58:59 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06E4wvhU022060;
+        Tue, 14 Jul 2020 04:58:58 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 21:58:59 -0700
+        with ESMTP ; Mon, 13 Jul 2020 21:58:57 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     mst@redhat.com, pbonzini@redhat.com, jasowang@redhat.com,
-        Xianting Tian <xianting_tian@126.com>, jejb@linux.ibm.com,
-        stefanha@redhat.com
+To:     linux-scsi@vger.kernel.org, satyat@google.com, avri.altman@wdc.com,
+        jejb@linux.ibm.com, Stanley Chu <stanley.chu@mediatek.com>,
+        alim.akhtar@samsung.com, ebiggers@kernel.org
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH] scsi: virtio_scsi: remove unnecessary condition check
-Date:   Tue, 14 Jul 2020 00:58:47 -0400
-Message-Id: <159470266467.11195.10910825066875185491.b4-ty@oracle.com>
+        kuohong.wang@mediatek.com, cc.chou@mediatek.com,
+        linux-kernel@vger.kernel.org, matthias.bgg@gmail.com,
+        chaotian.jing@mediatek.com, peter.wang@mediatek.com,
+        andy.teng@mediatek.com, chun-hung.wu@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3] scsi: ufs-mediatek: Add inline encryption support
+Date:   Tue, 14 Jul 2020 00:58:45 -0400
+Message-Id: <159470266468.11195.3653329950550952550.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <1594307167-8807-1-git-send-email-xianting_tian@126.com>
-References: <1594307167-8807-1-git-send-email-xianting_tian@126.com>
+In-Reply-To: <20200712003226.7593-1-stanley.chu@mediatek.com>
+References: <20200712003226.7593-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=998 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
  mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007140037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007140037
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,17 +88,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 11:06:07 -0400, Xianting Tian wrote:
+On Sun, 12 Jul 2020 08:32:26 +0800, Stanley Chu wrote:
 
-> kmem_cache_destroy and mempool_destroy can correctly handle
-> null pointer parameter, so there is no need to check if the
-> parameter is null before calling kmem_cache_destroy and
-> mempool_destroy.
+> Add inline encryption support to ufs-mediatek.
+> 
+> The standards-compliant parts, such as querying the crypto capabilities
+> and enabling crypto for individual UFS requests, are already handled by
+> ufshcd-crypto.c, which itself is wired into the blk-crypto framework.
+> 
+> However MediaTek UFS host requires a vendor-specific hce_enable operation
+> to allow crypto-related registers being accessed normally in kernel.
+> After this step, MediaTek UFS host can work as standard-compliant host
+> for inline-encryption related functions.
 
 Applied to 5.9/scsi-queue, thanks!
 
-[1/1] scsi: virtio_scsi: Remove unnecessary condition check
-      https://git.kernel.org/mkp/scsi/c/92e8d0323a51
+[1/1] scsi: ufs-mediatek: Add inline encryption support
+      https://git.kernel.org/mkp/scsi/c/46426552e74f
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
