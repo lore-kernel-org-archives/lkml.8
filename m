@@ -2,303 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064D5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB52C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC4C22AB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oH9Nhsjs"
+	by mail.kernel.org (Postfix) with ESMTP id 21A8022AAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594755307;
+	bh=UWgfM4J1k3ptLf5eHBkwUzBGsbhcDzwpWX/DvrDrCGI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Dj6Qyd6dPk5T//xySbhr14nmgKebfub1A8MhqPoUmfmahVTSzKuI5tK+Tj+B7OiPA
+	 5IvAHFVLjK3B1OGN2pFyX5HiB8oA/ZXS8p+CT2f/3Z0NJGeEdwp/8QWC9dlqStq12U
+	 17ai+4V2uxAi9HmCGOVoF93bFkx+4xoaSOaFJMSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgGNTee (ORCPT
+        id S1729532AbgGNTfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
+        Tue, 14 Jul 2020 15:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729056AbgGNTed (ORCPT
+        with ESMTP id S1728768AbgGNTfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:34:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937D4C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:34:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j18so8484447wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:34:33 -0700 (PDT)
+        Tue, 14 Jul 2020 15:35:05 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC54BC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:04 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so24978102ljp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4mfUaMpopMuL0FhiKY0Px8Eg8zgBn//C6gh3EXugSpg=;
-        b=oH9Nhsjs2WxJGN3chyd5pHX0jZeOx3LdkgOAD0arGl+WLVkJhTV01CL2akT1QiKEeA
-         noGrmpvu5tCoQHdHR+mKZQiYwKbbdWYvD9b4TTlzRVgsSbkQ+X7/ZJfyJgwYQ1H8RJp/
-         /sgGMGL5QPedK8PiwGW454PNl8+FTX+VpcPdF4TG5c+simCS5BTwLrxHWlXsws77mbt7
-         wT85a2NPFmGi6i4QhMQqI72NGM6LPC7exouoLSUFTyJRGAJjR+jBxh9GU2kM91jku2yV
-         EAMAsbtZQI1cR89nJGUvmjEg8bnXmTCrtEHyZPJSqfBr7V0vEpaEglZQWqsq82ZZJA2u
-         LXiQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TmvrJI/J3yG66g6pPz5Il+RcCg67c3v/jT1iQASKlcc=;
+        b=KIYXfollvDwZIWSi8MBvzI16dhsw+y4zL9hnXlh1UD0SE8cjPtPzh3zCIWaf7usmKY
+         sJIPvwRi57eB+/xJI+6JaFihnvlQfFnptYDDF1G9FGiSyn3r0SxvQFRYD3v6hzm4/QTE
+         v64cADt8D/wtG1AQ2083itD+hTnNb9/mL5p7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4mfUaMpopMuL0FhiKY0Px8Eg8zgBn//C6gh3EXugSpg=;
-        b=CBxXEmj//9Ygeho4hvTBJp7YAAvXL88ADN6AaDC5J9DYCSUjf8kA6UG07Z0lmjw7co
-         WbCAq9ot/AgQte1pjbnSF4HxEJmOOIznlgLV1cyJPuTOOvxALbrD3dZ1yeY0C5xKy4o2
-         hakslixci15Hh2P2mwKxKFEn3JVKcKYAdAd63amWqMobRcSWHVfdXBbgPkgGcuGc4RM/
-         O2u7L4zu0nbwXtI1p4ag2lwlt3mszGXetrpuX68bxGKXZRTBHISLNpAX3pmJ0DzZdhoG
-         n0oUhHtGHEZH7+eQO3hfPzExzQuIeuJUFctcec959J+1GZwwADi/sT7+rSL6GXz87Gro
-         Luww==
-X-Gm-Message-State: AOAM533I7FSd01vvfxAJbVCxcm3Y6xmWQnH/Z25XwAWOymTH77N1zMBa
-        5QrEZxyiSeGP3Pf8UO/FxcmvcZti2So=
-X-Google-Smtp-Source: ABdhPJy56binQ+2vu0I6Ob0hwkSsr3NeALb6tJJ5EnVN+lNwl4FA4RfauRxInTUt0E4c4GYttHJEug==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr5440539wma.66.1594751720469;
-        Tue, 14 Jul 2020 11:35:20 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id v11sm7871983wmb.3.2020.07.14.11.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 11:35:19 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 15:35:13 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Sidong Yang <realwakka@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm/vkms: add wait_for_vblanks in atomic_commit_tail
-Message-ID: <20200714183513.6zah7wqlo2bpalum@smtp.gmail.com>
-References: <20200701153134.4187-1-realwakka@gmail.com>
- <20200702131355.GX3278063@phenom.ffwll.local>
- <20200710170533.xn2ar2cpekom6i2n@smtp.gmail.com>
- <20200713160621.GQ3278063@phenom.ffwll.local>
- <20200714102009.4qxgdq5bkpwhhhio@smtp.gmail.com>
- <CAJeY4oF9k--dGOYaC9qAXiVbx6aX2a6isXpfOg+JV2s+UskKGA@mail.gmail.com>
- <20200714140904.GF3278063@phenom.ffwll.local>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TmvrJI/J3yG66g6pPz5Il+RcCg67c3v/jT1iQASKlcc=;
+        b=Z58vQOg//nsmUU7zQOP1xwUPlZjB2h02Zko1bJWkVnDqPljy2UOsoRnQ8ZKqr/0TkV
+         NzBujEoygaJSmDVAFIYNGpcquJdag2gsLd2oV+FOBoKRqHB7+rlr3A1+rR8fe8zKSfLE
+         8hYSKK4el8Ts6PhssA9fsFM009ayjvEoWhGjAcUcB/qLjCa/1lJRGsLJoyVvJsCSR7V2
+         Qs8awhen0zZM4IrzVcVyulcHYKnRagQhuIRWoQjuFnVu6VW+ZYBMsjLd4sK/A9VTBoMQ
+         3MTbhnarKCrOTsuQrVS/cBf4/1NYGEzSvDk4ReiaeUyBsc1HlWoWLWbyabsm+V0kf6gZ
+         xp0w==
+X-Gm-Message-State: AOAM533fiyu1aJHUxXXqBzzeLrgQuyZmAd/kYVgzco/zy/UsXUIOTBtg
+        enYyVesTE9QeCIM2Kmacu1LQvmBJeOA=
+X-Google-Smtp-Source: ABdhPJxu+JkHL89co3sKA71u49FAq/0LNySvRORcRi8fR6PdZF6DHnytYXxeiS84ShQF/+mn3MQkbw==
+X-Received: by 2002:a2e:81a:: with SMTP id 26mr3142876lji.460.1594755302987;
+        Tue, 14 Jul 2020 12:35:02 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id i3sm2391ljj.64.2020.07.14.12.35.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 12:35:02 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id s16so13039928lfp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:01 -0700 (PDT)
+X-Received: by 2002:a19:8a07:: with SMTP id m7mr2908470lfd.31.1594755301618;
+ Tue, 14 Jul 2020 12:35:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714140904.GF3278063@phenom.ffwll.local>
+References: <20200714190427.4332-1-hch@lst.de>
+In-Reply-To: <20200714190427.4332-1-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 14 Jul 2020 12:34:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgxV9We+nVcJtQu2DHco+HSeja-WqVdA-KUcB=nyUYuoQ@mail.gmail.com>
+Message-ID: <CAHk-=wgxV9We+nVcJtQu2DHco+HSeja-WqVdA-KUcB=nyUYuoQ@mail.gmail.com>
+Subject: Re: decruft the early init / initrd / initramfs code v2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/14, Daniel Vetter wrote:
-> On Tue, Jul 14, 2020 at 07:39:42AM -0300, Melissa Wen wrote:
-> > On Tue, Jul 14, 2020 at 7:20 AM Melissa Wen <melissa.srw@gmail.com> wrote:
-> > >
-> > > On 07/13, Daniel Vetter wrote:
-> > > > On Fri, Jul 10, 2020 at 02:05:33PM -0300, Melissa Wen wrote:
-> > > > > On 07/02, Daniel Vetter wrote:
-> > > > > > On Wed, Jul 01, 2020 at 03:31:34PM +0000, Sidong Yang wrote:
-> > > > > > > there is an error when igt test is run continuously. vkms_atomic_commit_tail()
-> > > > > > > need to call drm_atomic_helper_wait_for_vblanks() for give up ownership of
-> > > > > > > vblank events. without this code, next atomic commit will not enable vblank
-> > > > > > > and raise timeout error.
-> > > > > > >
-> > > > > > > Signed-off-by: Sidong Yang <realwakka@gmail.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/vkms/vkms_drv.c | 2 ++
-> > > > > > >  1 file changed, 2 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> > > > > > > index 1e8b2169d834..10b9be67a068 100644
-> > > > > > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> > > > > > > @@ -93,6 +93,8 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
-> > > > > > >                 flush_work(&vkms_state->composer_work);
-> > > > > > >         }
-> > > > > > >
-> > > > > > > +       drm_atomic_helper_wait_for_vblanks(dev, old_state);
-> > > > > >
-> > > > > > Uh, we have a wait_for_flip_done right above, which should be doing
-> > > > > > exactly the same, but more precisely: Instead of just waiting for any
-> > > > > > vblank to happen, we wait for exactly the vblank corresponding to this
-> > > > > > atomic commit. So no races possible. If this is papering over some issue,
-> > > > > > then I think more debugging is needed.
-> > > > > >
-> > > > > > What exactly is going wrong here for you?
-> > > > >
-> > > > > Hi Daniel and Sidong,
-> > > > >
-> > > > > I noticed a similar issue when running the IGT test kms_cursor_crc. For
-> > > > > example, a subtest that passes on the first run (alpha-opaque) fails on
-> > > > > the second due to a kind of busy waiting in subtest preparation (the
-> > > > > subtest fails before actually running).
-> > > > >
-> > > > > In addition, in the same test, the dpms subtest started to fail since
-> > > > > the commit that change from wait_for_vblanks to wait_for_flip_done. By
-> > > > > reverting this commit, the dpms subtest passes again and the sequential
-> > > > > subtests return to normal.
-> > > > >
-> > > > > I am trying to figure out what's missing from using flip_done op on
-> > > > > vkms, since I am also interested in solving this problem and I
-> > > > > understand that the change for flip_done has been discussed in the past.
-> > > > >
-> > > > > Do you have any idea?
-> > > >
-> > > > Uh, not at all. This is indeed rather surprising ...
-> > > >
-> > > > What exactly is the failure mode when running a test the 2nd time? Full
-> > > > igt logs might give me an idea. But yeah this is kinda surprising.
-> > >
-> > > Hi Daniel,
-> > >
-> > > This is the IGT log of the 2nd run of kms_cursor_crc/alpha-opaque:
-> > >
-> > > IGT-Version: 1.25-NO-GIT (x86_64) (Linux: 5.8.0-rc2-DRM+ x86_64)
-> > > Force option used: Using driver vkms
-> > > Starting subtest: pipe-A-cursor-alpha-opaque
-> > > Timed out: Opening crc fd, and poll for first CRC.
-> > > Subtest pipe-A-cursor-alpha-opaque failed.
-> > > **** DEBUG ****
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: Virtual-1: set_pipe(A)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: Virtual-1: Selecting pipe A
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(width=1024, height=768, format=XR24(0x34325258), modifier=0x0, size=0)
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(handle=1, pitch=4096)
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: Test requirement passed: cairo_surface_status(fb->cairo_surface) == CAIRO_STATUS_SUCCESS
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(width=1024, height=768, format=XR24(0x34325258), modifier=0x0, size=0)
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(handle=2, pitch=4096)
-> > > (kms_cursor_crc:2317) igt_fb-DEBUG: Test requirement passed: cairo_surface_status(fb->cairo_surface) == CAIRO_STATUS_SUCCESS
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: Test requirement passed: plane_idx >= 0 && plane_idx < pipe->n_planes
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: Test requirement passed: plane_idx >= 0 && plane_idx < pipe->n_planes
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: plane_set_fb(37)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: plane_set_size (1024x768)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: fb_set_position(0,0)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: fb_set_size(1024x768)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: commit {
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     Virtual-1: SetCrtc pipe A, fb 37, src (0, 0), mode 1024x768
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     SetCursor pipe A, disabling
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     MoveCursor pipe A, (0, 0)
-> > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: }
-> > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
-> > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
-> > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
-> > > (kms_cursor_crc:2317) igt_core-INFO: Timed out: Opening crc fd, and poll for first CRC.
-> > > ****  END  ****
-> > > Subtest pipe-A-cursor-alpha-opaque: FAIL (10.017s)
-> > >
-> > > ---
-> > >
-> > > What I found was a timeout in the poll of
-> > > igt_debugfs/igt_pipe_crc_start() that in turn is called in the
-> > > prepare_crc() of kms_cursor_crc.
-> > >
-> > > Initially, I thought it was just a matter of timing for vblank and sent
-> > > a patch to IGT that solved the problem by calling igt_wait_for_vblank()
-> > > before the "start" op. But then I saw that the timeout also happens in a
-> > > similar way in the dpms subtest, which before the change to flip_done
-> > > was succeded.
-> > >
-> > > I still have doubts if it is or not a matter of timing...
-> > 
-> > Just to complement, this is what I sent to IGT due to my first suspicion
-> > (still not reviewed): https://patchwork.freedesktop.org/series/78813/
-> 
-> Hm, so the first patch makes some sense I think, that would indeed be a
-> test bug if we pile up the crc and leak the old one.
-> 
-> The 2nd patch looks a bit like similar duct-tape like the kernel patch
-> here, somehow forcing a full vblank wait instead of just waiting for the
-> previos flip to complete fixes something. I'm just really confused what it
-> could be.
-> 
-> We don't have multiple crtc in vkms, so it's likely not that, but it could
-> be that something goes wrong when we switch everything on. And after one
-> vblank, things are in sync and working ...
-> 
-> Maybe to test this theory, adding a drm_crtc_wait_one_vblank() to the
-> crtc->enable function? If that fixes all these bugs, then we at least have
-> a better idea where this vblank wait is needed, and can try to investigate
-> a bit more focused why.
+On Tue, Jul 14, 2020 at 12:06 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> this series starts to move the early init code away from requiring
+> KERNEL_DS to be implicitly set during early startup.  It does so by
+> first removing legacy unused cruft, and the switches away the code
+> from struct file based APIs to our more usual in-kernel APIs.
 
-Hey,
- 
-I just checked this way (let me know if I made a mistake):
+Looks good to me, with the added note on the utimes cruft too as a
+further cleanup (separate patch).
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index ac85e17428f8..893d451fa966 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -212,6 +212,7 @@ static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
-                                    struct drm_crtc_state *old_state)
- {
-        drm_crtc_vblank_on(crtc);
-+       drm_crtc_wait_one_vblank(crtc);
- }
+So you can add my acked-by.
 
-and yes, in the case of kms_cursor_crc, it solves the failure of the 2nd
-run (ie, sequential run) and the failure of the cursor-dpms subtest.
+I _would_ like the md parts to get a few more acks. I see the one from
+Song Liu, anybody else in md land willing to go through those patches?
+They were the bulk of it, and the least obvious to me because I don't
+know that code at all?
 
-:) 
-> 
-> I don't think it's relevant for crtc->disable, since once the crtc is off,
-> vblanks stop doing anything. And since steady-state seems to work (at
-> least your igt patch only adds a vblank wait on setup), so I don't think
-> we need it for all flips ...
-
-I'm not sure if it's also related: I noticed that the cursor-suspend
-subtest has another pipe_crc_start that is also "requiring" another
-igt_wait_for_vblank before it.
-
-Describing a little more, the cursor-dpms and cursor-suspend subtests
-have the same setup structure [do_single_test()] besides the
-prepare_crtc, but in the case of cursor-suspend, even applying any of
-these "proposals" to wait for vblank, it still breaks due to timeout
-issues in a last pipe_crc_start.  The cursor-suspend subtest only
-completes when we add another igt_wait_for_vblank also here.
-
-> 
-> Stil confused what's going on here.
-> -Daniel
-> 
-> > 
-> > >
-> > >
-> > > Thanks,
-> > >
-> > > Melissa
-> > > >
-> > > > Also happy to chat on irc for debugging ideas, that might be faster (I'm
-> > > > danvet on #dri-devel on freenode).
-> > > > -Daniel
-> > > >
-> > > > >
-> > > > > Melissa
-> > > > >
-> > > > > > -Daniel
-> > > > > >
-> > > > > > > +
-> > > > > > >         drm_atomic_helper_cleanup_planes(dev, old_state);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > --
-> > > > > > > 2.17.1
-> > > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Daniel Vetter
-> > > > > > Software Engineer, Intel Corporation
-> > > > > > http://blog.ffwll.ch
-> > > > > > _______________________________________________
-> > > > > > dri-devel mailing list
-> > > > > > dri-devel@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+              Linus
