@@ -2,31 +2,32 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B59C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DDCC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FED22201
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B8A22202
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="IOj2CJTF"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pnnLYhmz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgGNKXl (ORCPT
+        id S1727106AbgGNKXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:23:41 -0400
-Received: from vps.xff.cz ([195.181.215.36]:46160 "EHLO vps.xff.cz"
+        Tue, 14 Jul 2020 06:23:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:46190 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgGNKXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725955AbgGNKXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 06:23:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594722217; bh=b5ZA4YXSStj9NSEJKpR0EoBU9eCLYs5GBPxpk7Au4Jk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IOj2CJTFMM4foh6Z1bL6bN76aQ3IsZF6KzKGIuLDgwKASd6lE3sIDRQv/76ND9+BX
-         rqLW9wJBgyvd5VA3nFg4GXphHvFr/pdQEdcE8Dv3y+q2cSLVgjuvs5B1SxBQxXIoUe
-         tmTZaqUKBXg2vC69LsfMNpFnShBOCyhzHsK8LT9k=
+        t=1594722218; bh=OH0uafqw3wiAiFdr3Xq7r48sm5oT4+qFhajRJjz8lvE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=pnnLYhmzNGjWbXY+9HW3ylap0q/+IK6Yc4omVlj019IQFIPEQ4M7tgiMHRu/djUDf
+         NsZQ96KDg/M/7qLavIyoKhJBOLq9bu9NRNTO1LECaT0Yzevypdm3ACS5njsZY7G4Lu
+         5xCu7ld5J1Eu+ci3PMTvP2fNsqGSRrGw1ZyHrR3Y=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -38,9 +39,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 0/4] Add support for vibrator motor for TBS A711 Tablet
-Date:   Tue, 14 Jul 2020 12:22:59 +0200
-Message-Id: <20200714102303.3007896-1-megous@megous.com>
+Subject: [PATCH v4 2/4] input: gpio-vibra: Allow to use vcc-supply alone to control the vibrator
+Date:   Tue, 14 Jul 2020 12:23:01 +0200
+Message-Id: <20200714102303.3007896-3-megous@megous.com>
+In-Reply-To: <20200714102303.3007896-1-megous@megous.com>
+References: <20200714102303.3007896-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,47 +51,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tablet has a vibrator motor. This patch series exposes it via
-input subsystem (EV_FF).
+Make enable-gpio optional to allow using this driver with boards that
+have vibrator connected to a power supply without intermediate gpio
+based enable circuitry.
 
-I'd like to ask input maintainers to take the patches 1 and 2.
-Patches 3 and 4 should go via the sunxi tree.
+Also avoid a case where neither regulator nor enable gpio is specified,
+and bail out in probe in such a case.
 
-The change to the vibrator driver is meant to enable toggling the
-vibrator motor just via a power supply itself. There's not additional
-gpio driven switch on this tablet between the power supply for the
-motor and the motor.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-Please take a look.
-
-Changes in v4:
-- Added DT reviewed-by tag
-- Fixed motor typo
-
-Changes in v3:
-- Changed dt-binding to require at least one of enable/supply, dropped ack
-- Changed driver to bail out if neither supply nor gpio is given
-
-Changes in v2:
-- Added DT ack tag
-- Add more information to the commit log (re use of LDO for the power)
-
-
-thank you and regards,
-  Ondrej Jirman
-
-Ondrej Jirman (4):
-  dt-bindings: input: gpio-vibrator: Don't require enable-gpios
-  input: gpio-vibra: Allow to use vcc-supply alone to control the
-    vibrator
-  ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
-  ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
-
- .../devicetree/bindings/input/gpio-vibrator.yaml   |  7 ++++++-
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts          |  9 +++++++--
- drivers/input/misc/gpio-vibra.c                    | 14 ++++++++++----
- 3 files changed, 23 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..b3bb7e61ed1d 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+ 	struct device *pdev = vibrator->input->dev.parent;
+ 	int err;
+ 
+-	if (!vibrator->vcc_on) {
++	if (vibrator->vcc && !vibrator->vcc_on) {
+ 		err = regulator_enable(vibrator->vcc);
+ 		if (err) {
+ 			dev_err(pdev, "failed to enable regulator: %d\n", err);
+@@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+ {
+ 	gpiod_set_value_cansleep(vibrator->gpio, 0);
+ 
+-	if (vibrator->vcc_on) {
++	if (vibrator->vcc && vibrator->vcc_on) {
+ 		regulator_disable(vibrator->vcc);
+ 		vibrator->vcc_on = false;
+ 	}
+@@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 	if (!vibrator->input)
+ 		return -ENOMEM;
+ 
+-	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
+ 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
+@@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
++						 GPIOD_OUT_LOW);
+ 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
+@@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	if (!vibrator->vcc && !vibrator->gpio) {
++		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
++		return -EINVAL;
++	}
++
+ 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+ 
+ 	vibrator->input->name = "gpio-vibrator";
 -- 
 2.27.0
 
