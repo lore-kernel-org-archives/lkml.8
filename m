@@ -2,143 +2,151 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2036C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC44C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF3F42193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GcTUbvet"
+	by mail.kernel.org (Postfix) with ESMTP id B204F221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgGNFhA (ORCPT
+        id S1726456AbgGNFkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:37:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37919 "EHLO ozlabs.org"
+        Tue, 14 Jul 2020 01:40:15 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29411 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgGNFhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:37:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5Tm90d2cz9sQt;
-        Tue, 14 Jul 2020 15:36:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594705017;
-        bh=43nxw++z+R/eGBwxjSsH/v1ykHEiSFEa3zq/PArVSjc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GcTUbvetIM+JVD5zLxQVUtDNJJ5lAyUxnX/+nWmXWmgZxOnlqY0w5OVDeLTyTQLn/
-         as7EspbnqP2R3ks1Iwhm1b36R/4isGNY6bnszC3tOoVZvcf5c/GzqYhonFUYniDnG3
-         GUVEPHqz7rG7m43cP0W+rz4Q95bWcwDnOsHkQ/LNviehpyzhoaV2vgIY6dO4ifP7CD
-         MkI46vU8blnc+NbZ9N29XQQrZVqkFtp/VmSVVyq3wK1dk3ZtGomfVNdEAMbdfTG5WF
-         e9c5bebZl59VCTz0j9sMosGX5C73wjK19GrDirGFPCgLUd6fG2M/dcq2seIHEml8yn
-         YZZmdKE8rGJBg==
-Date:   Tue, 14 Jul 2020 15:36:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with
- am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
- probe failed on am437x platform.
-Message-ID: <20200714153656.4a044437@canb.auug.org.au>
-In-Reply-To: <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
-        <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
-        <20200714133835.3b03b8af@canb.auug.org.au>
-        <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
-        <20200714135407.35992389@canb.auug.org.au>
-        <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
+        id S1725306AbgGNFkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 01:40:14 -0400
+IronPort-SDR: 9P7nAcsnhmnqLDaTYOnxbFNxZ7+0vQJLs/Dn7P9ryN6qCT64IwTWR+MtV/XbHw2O0RSvGtULCA
+ BbJ3UbGSRuMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213622006"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="213622006"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:40:13 -0700
+IronPort-SDR: 8O3V/it4p0N6j+N7QEPzWNuCQ5U/VyDf2kVsZZjpwRZculpB/yqsVZ6ChpHCkWM+k6CU/n5I6/
+ JVf3sEmYaXEw==
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="269919030"
+Received: from otcsectest.jf.intel.com (HELO 760745902f30) ([10.54.30.81])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:40:12 -0700
+Date:   Tue, 14 Jul 2020 05:36:33 +0000
+From:   "Andersen, John" <john.s.andersen@intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
+        vineela.tummalapalli@intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
+        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
+        makarandsonare@google.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+Message-ID: <20200714053633.GB25@760745902f30>
+References: <20200618144314.GB23@258ff54ff3c0>
+ <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+ <20200707211244.GN20096@linux.intel.com>
+ <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
+ <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
+ <20200709154412.GA25@64c96d3be97b>
+ <af6ac772-318d-aab0-ce5f-55cf92f6e96d@intel.com>
+ <CALCETrWxt0CHUoonWX1fgbM46ydJPQZhj8Q=G+45EG4wW3wZqQ@mail.gmail.com>
+ <6040c3b3-cac9-cc0e-f0de-baaa274920a2@intel.com>
+ <CALCETrUHcpqjDfAM9SbrZUM7xcS2wkVm=r1Nb1JmxV7A-KAeUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7TYKA9b/DQM.BAfDBPF3OqB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUHcpqjDfAM9SbrZUM7xcS2wkVm=r1Nb1JmxV7A-KAeUQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7TYKA9b/DQM.BAfDBPF3OqB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 09, 2020 at 09:27:43AM -0700, Andy Lutomirski wrote:
+> On Thu, Jul 9, 2020 at 9:22 AM Dave Hansen <dave.hansen@intel.com> wrote:
+> >
+> > On 7/9/20 9:07 AM, Andy Lutomirski wrote:
+> > > On Thu, Jul 9, 2020 at 8:56 AM Dave Hansen <dave.hansen@intel.com> wrote:
+> > >> On 7/9/20 8:44 AM, Andersen, John wrote:
+> > >>>         Bits which are allowed to be pinned default to WP for CR0 and SMEP,
+> > >>>         SMAP, and UMIP for CR4.
+> > >> I think it also makes sense to have FSGSBASE in this set.
+> > >>
+> > >> I know it hasn't been tested, but I think we should do the legwork to
+> > >> test it.  If not in this set, can we agree that it's a logical next step?
+> > > I have no objection to pinning FSGSBASE, but is there a clear
+> > > description of the threat model that this whole series is meant to
+> > > address?  The idea is to provide a degree of protection against an
+> > > attacker who is able to convince a guest kernel to write something
+> > > inappropriate to CR4, right?  How realistic is this?
+> >
+> > If a quick search can find this:
+> >
+> > > https://googleprojectzero.blogspot.com/2017/05/exploiting-linux-kernel-via-packet.html
+> >
+> > I'd pretty confident that the guys doing actual bad things have it in
+> > their toolbox too.
+> >
+> 
+> True, but we have the existing software CR4 pinning.  I suppose the
+> virtualization version is stronger.
+> 
 
-Hi Dillon,
+Yes, as Kees said this will be stronger because it stops ROP and other gadget
+based techniques which avoid the use of native_write_cr0/4().
 
-On Tue, 14 Jul 2020 13:21:07 +0800 dillon min <dillon.minfei@gmail.com> wro=
-te:
->
-> Thanks, how about the below commit message.
->=20
-> Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
->=20
-> Got following d_can probe errors with kernel 5.8-rc1 on am437x
->=20
-> [   10.730822] CAN device driver interface
-> Starting Wait for Network to be Configured...
-> [  OK  ] Reached target Network.
-> [   10.787363] c_can_platform 481cc000.can: probe failed
-> [   10.792484] c_can_platform: probe of 481cc000.can failed with
-> error -2
-> [   10.799457] c_can_platform 481d0000.can: probe failed
-> [   10.804617] c_can_platform: probe of 481d0000.can failed with
-> error -2
->=20
-> actually, Tony has fixed this issue on am335x with the patch [3]
->=20
-> Since am437x has the same clock structure with am335x
-> [1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
->=20
->=20
-> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> Integration
-> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> Integration
-> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am3=
-35x")
->=20
-> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-> init to read revision")
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->=20
-> Hi Stephen,
->=20
-> This changes correct commit messages based on your reviewing.
-> make Fixes tags to oneline.
-> make all commit message tags at the end of commit message
-> make Fixes tags before Signed-off-by line.
-> add probe failed log to commit message.
+With regards to what should be done in this patchset and what in other
+patchsets. I have a fix for kexec thanks to Arvind's note about
+TRAMPOLINE_32BIT_CODE_SIZE. The physical host boots fine now and the virtual
+one can kexec fine.
 
-Apart from the line wrapping, that looks better.  I assume that your
-email client (looks like Gmail web gui) is wrapping the lines, please
-see if you can stop it doing that (see the section on Gmail in
-Documentation/process/email-clients.rst).
+What remains to be done on that front is to add some identifying information to
+the kernel image to declare that it supports paravirtualized control register
+pinning or not.
 
---=20
-Cheers,
-Stephen Rothwell
+Liran suggested adding a section to the built image acting as a flag to signify
+support for being kexec'd by a kernel with pinning enabled. If anyone has any
+opinions on how they'd like to see this implemented please let me know.
+Otherwise I'll just take a stab at it and you'll all see it hopefully in the
+next version.
 
---Sig_/7TYKA9b/DQM.BAfDBPF3OqB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NRHgACgkQAVBC80lX
-0GySgwf/Yr1H4JVT2M35sJmXj3dh+kgV5K11+Sq9znWqt2N8qaUtvyXY6xgMuAId
-Q9r+oLg32uebA5vAjTKL65r9pZ4Nvu0IytgnCu9CNHOqFkM5LNzORHo+ZjfceOah
-kpXY6O/RC12BUtLFVawkaztw5XiONcpqh1rsGVpFOWDNRuvipBJBm67S6vCO0hkv
-bap4g+BrWPyoZPSv0vZsuMMfrP6ZAusb0q+bX6F8yA0a/C2MZUIDIa2gvuIITreH
-eLGJ+ZM3ObPyI8dJJzc7FCbzCnKh3MDPpYL8IZDZjubhS+qY0qqoyYarl/Wz4Uxn
-ZUrGJqo1QK93pVkCQKMx8V0WBjiDZA==
-=5Bzu
------END PGP SIGNATURE-----
-
---Sig_/7TYKA9b/DQM.BAfDBPF3OqB--
+With regards to FSGSBASE, are we open to validating and adding that to the
+DEFAULT set as a part of a separate patchset? This patchset is focused on
+replicating the functionality we already have natively.
