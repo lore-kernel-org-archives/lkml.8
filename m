@@ -4,198 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B19FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA6DC433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AED5221F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D4221897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgGNJ5E (ORCPT
+        id S1726836AbgGNJ5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:57:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51072 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgGNJ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:57:03 -0400
-IronPort-SDR: EcITvOj5VfQuIvgfgHsGs3N/s4+JTsHODduuc54jVd5/z9QJOwvUdU+Mi6ouz8kzi/eFi2Iu8V
- vytuiffvqf8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128416715"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="128416715"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:57:02 -0700
-IronPort-SDR: vEq2xaUL4KkgSZXXpb1nDACInywqE9LidblzCiR7Zbn6dCU3EYyFwASBbhQvPhA6Kx1vTjAcUL
- nkzpRITO2OFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="459636235"
-Received: from rmarti11-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.57])
-  by orsmga005.jf.intel.com with ESMTP; 14 Jul 2020 02:56:50 -0700
-Date:   Tue, 14 Jul 2020 12:56:49 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v35 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200714095649.GC1442951@linux.intel.com>
-References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
- <20200707033747.142828-22-jarkko.sakkinen@linux.intel.com>
- <dcebec2e-ea46-48ec-e49b-292b10282373@fortanix.com>
+        Tue, 14 Jul 2020 05:57:34 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41433 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726431AbgGNJ5e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:57:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U2iCTqv_1594720633;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U2iCTqv_1594720633)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 Jul 2020 17:57:14 +0800
+Date:   Tue, 14 Jul 2020 17:57:13 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        mike.kravetz@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
+ for_each_node_mask_to_[alloc|free]
+Message-ID: <20200714095713.GA86690@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
+ <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
+ <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dcebec2e-ea46-48ec-e49b-292b10282373@fortanix.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:30:03AM +0200, Jethro Beekman wrote:
-> On 2020-07-07 05:37, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > An SGX runtime must be aware of the exceptions, which happen inside an
-> > enclave. Introduce a vDSO call that wraps EENTER/ERESUME cycle and returns
-> > the CPU exception back to the caller exactly when it happens.
-> > 
-> > Kernel fixups the exception information to RDI, RSI and RDX. The SGX call
-> > vDSO handler fills this information to the user provided buffer or
-> > alternatively trigger user provided callback at the time of the exception.
-> > 
-> > The calling convention is custom and does not follow System V x86-64 ABI.
-> > 
-> > Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> > Acked-by: Jethro Beekman <jethro@fortanix.com>
-> > Tested-by: Jethro Beekman <jethro@fortanix.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Cedric Xing <cedric.xing@intel.com>
-> > Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/entry/vdso/Makefile             |   2 +
-> >  arch/x86/entry/vdso/vdso.lds.S           |   1 +
-> >  arch/x86/entry/vdso/vsgx_enter_enclave.S | 131 +++++++++++++++++++++++
-> >  arch/x86/include/asm/enclu.h             |   8 ++
-> >  arch/x86/include/uapi/asm/sgx.h          |  98 +++++++++++++++++
-> >  5 files changed, 240 insertions(+)
-> >  create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
-> >  create mode 100644 arch/x86/include/asm/enclu.h
-> > 
-> > diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> > index ebe82b7aecda..f71ad5ebd0c4 100644
-> > --- a/arch/x86/entry/vdso/Makefile
-> > +++ b/arch/x86/entry/vdso/Makefile
-> > @@ -29,6 +29,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
-> >  vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-> >  vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
-> >  vobjs32-y += vdso32/vclock_gettime.o
-> > +vobjs-$(VDSO64-y)		+= vsgx_enter_enclave.o
-> >  
-> >  # files to link into kernel
-> >  obj-y				+= vma.o extable.o
-> > @@ -100,6 +101,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
-> >  CFLAGS_REMOVE_vclock_gettime.o = -pg
-> >  CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
-> >  CFLAGS_REMOVE_vgetcpu.o = -pg
-> > +CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
-> >  
-> >  #
-> >  # X32 processes use x32 vDSO to access 64bit kernel data.
-> > diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-> > index 36b644e16272..4bf48462fca7 100644
-> > --- a/arch/x86/entry/vdso/vdso.lds.S
-> > +++ b/arch/x86/entry/vdso/vdso.lds.S
-> > @@ -27,6 +27,7 @@ VERSION {
-> >  		__vdso_time;
-> >  		clock_getres;
-> >  		__vdso_clock_getres;
-> > +		__vdso_sgx_enter_enclave;
-> >  	local: *;
-> >  	};
-> >  }
-> > diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> > new file mode 100644
-> > index 000000000000..be7e467e1efb
-> > --- /dev/null
-> > +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> > @@ -0,0 +1,131 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#include <linux/linkage.h>
-> > +#include <asm/export.h>
-> > +#include <asm/errno.h>
-> > +#include <asm/enclu.h>
-> > +
-> > +#include "extable.h"
-> > +
-> > +#define EX_LEAF		0*8
-> > +#define EX_TRAPNR	0*8+4
-> > +#define EX_ERROR_CODE	0*8+6
-> > +#define EX_ADDRESS	1*8
-> > +
-> > +.code64
-> > +.section .text, "ax"
-> > +
-> > +SYM_FUNC_START(__vdso_sgx_enter_enclave)
-> > +	/* Prolog */
-> > +	.cfi_startproc
-> > +	push	%rbp
-> > +	.cfi_adjust_cfa_offset	8
-> > +	.cfi_rel_offset		%rbp, 0
-> > +	mov	%rsp, %rbp
-> > +	.cfi_def_cfa_register	%rbp
-> > +	push	%rbx
-> > +	.cfi_rel_offset		%rbx, -8
-> > +
-> > +	mov	%ecx, %eax
-> > +.Lenter_enclave:
-> > +	/* EENTER <= leaf <= ERESUME */
-> > +	cmp	$EENTER, %eax
-> > +	jb	.Linvalid_leaf
-> > +	cmp	$ERESUME, %eax
-> > +	ja	.Linvalid_leaf
-> > +
-> > +	/* Load TCS and AEP */
-> > +	mov	0x10(%rbp), %rbx
-> > +	lea	.Lasync_exit_pointer(%rip), %rcx
-> > +
-> > +	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
-> > +.Lasync_exit_pointer:
-> > +.Lenclu_eenter_eresume:
-> > +	enclu
-> 
-> After thinking about this some more, I'd like to come back to this
-> setup. Prior discussion at https://lkml.org/lkml/2018/11/2/597 . I
-> hope I'm not derailing the discussion so much as to delay the patch
-> set :(
-> 
-> I previously mentioned “Userspace may want fine-grained control over
-> enclave scheduling” as a reason userspace may want to specify a
-> different AEP, but gave a bad example. Here's a better example: If I'm
-> running my enclave in an M:N threading model (where M user threads run
-> N TCSs, with N > M), an AEX is a good oppurtunity to switch contexts.
-> Yes, I could implement this with alarm() or so, but that adds overhead
-> while missing out on a lot of opportunities for context switching.
+On Tue, Jul 14, 2020 at 11:22:03AM +0200, Vlastimil Babka wrote:
+>On 7/14/20 11:13 AM, Vlastimil Babka wrote:
+>> On 7/14/20 9:34 AM, Wei Yang wrote:
+>>> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
+>>> variant, which is not used outside of loop iteration.
+>>> 
+>>> Let's hide this.
+>>> 
+>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>> ---
+>>>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
+>>>  1 file changed, 20 insertions(+), 18 deletions(-)
+>>> 
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index 57ece74e3aae..9c3d15fb317e 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
+>>>  	return nid;
+>>>  }
+>>>  
+>>> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
+>>> -	for (nr_nodes = nodes_weight(*mask);				\
+>>> -		nr_nodes > 0 &&						\
+>>> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
+>>> +	int __nr_nodes;							\
+>>> +	for (__nr_nodes = nodes_weight(*mask);				\
+>> 
+>> The problem with this is that if I use the macro twice in the same block, this
+>> will redefine __nr_nodes and fail to compile, no?
+>> In that case it's better to avoid setting up this trap, IMHO.
+>
+>Ah, and it will also generate the following warning, if the use of for_each*
+>macro is not the first thing after variable declarations, but there's another
+>statement before:
+>
+>warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+>
+>Instead we should switch to C99 and declare it as "for (int __nr_nodes" :P
 
-The vDSO interface also provides optional callback. Wonder if that
-works for this or can it be refined to work for this?
+Hmm... I tried what you suggested, but compiler complains.
 
-/Jarkko
+'for' loop initial declarations are only allowed in C99 or C11 mode
+
+-- 
+Wei Yang
+Help you, Help me
