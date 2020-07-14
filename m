@@ -2,90 +2,70 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CBBC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F6322453
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146F822453
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgGNMjt (ORCPT
+        id S1728488AbgGNMkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:39:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52040 "EHLO inva021.nxp.com"
+        Tue, 14 Jul 2020 08:40:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54760 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNMjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:39:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 911A1201001;
-        Tue, 14 Jul 2020 14:39:36 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 84AE420018F;
-        Tue, 14 Jul 2020 14:39:36 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BF7F1205A4;
-        Tue, 14 Jul 2020 14:39:35 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] ARM: dts: imx6sll: add rng
-Date:   Tue, 14 Jul 2020 15:39:18 +0300
-Message-Id: <20200714123920.23711-4-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714123920.23711-1-horia.geanta@nxp.com>
-References: <20200714123920.23711-1-horia.geanta@nxp.com>
+        id S1728451AbgGNMkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:40:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C9615AC49;
+        Tue, 14 Jul 2020 12:40:01 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     hch@lst.de, linux-kernel@vger.kernel.org
+Cc:     linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH v2 0/4] dma-pool: Fix atomic pool selection
+Date:   Tue, 14 Jul 2020 14:39:24 +0200
+Message-Id: <20200714123928.8581-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add node for the RNGB block.
+This is my attempt at fixing one of the regressions we've seen[1] after
+the introduction of per-zone atomic pools.
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+This combined with "dma-pool: Do not allocate pool memory from CMA"[2]
+should fix the boot issues on Jeremy's RPi4 setup.
+
+[1] https://lkml.org/lkml/2020/7/2/974
+[2] https://lkml.org/lkml/2020/7/8/1108
+
 ---
- arch/arm/boot/dts/imx6sll.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index fb5d3bc50c6b..0b622201a1f3 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -786,6 +786,13 @@
- 				clocks = <&clks IMX6SLL_CLK_MMDC_P0_IPG>;
- 			};
- 
-+			rngb: rng@21b4000 {
-+				compatible = "fsl,imx6sll-rngb", "fsl,imx25-rngb";
-+				reg = <0x021b4000 0x4000>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6SLL_CLK_DUMMY>;
-+			};
-+
- 			ocotp: efuse@21bc000 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
+Changes since v1:
+ - Rebase into linus' master
+
+Nicolas Saenz Julienne (4):
+  dma-direct: Provide function to check physical memory area validity
+  dma-pool: Get rid of dma_in_atomic_pool()
+  dma-pool: Introduce dma_guess_pool()
+  dma-pool: Make sure atomic pool suits device
+
+ include/linux/dma-direct.h |  1 +
+ kernel/dma/direct.c        |  2 +-
+ kernel/dma/pool.c          | 80 +++++++++++++++++++++++++-------------
+ 3 files changed, 56 insertions(+), 27 deletions(-)
+
 -- 
-2.17.1
+2.27.0
 
