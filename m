@@ -2,139 +2,99 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B330C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F47C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E4420EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gF29rAnH"
+	by mail.kernel.org (Postfix) with ESMTP id D2F12221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594719863;
+	bh=WIzzL2vxmexuuKMhffrG8LZui4Dea/ANs5K0xx4zolE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dE8QBycD+4y5ii9aU5gI5LXEyTsmXGEvN9sQP/Pk9M8pNEFCbfmBHGbZf801lWHj7
+	 8gXP43mDEE1ttPz4mHChc/nbh5Z2omC+oTi3h9wla+9NOrvVURyLynoJu6f0E0HyS1
+	 FXToL1mR6SkMiBqPwuZqlbthBkZf8CqYT9JYZcPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGNJnW (ORCPT
+        id S1726828AbgGNJoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:43:22 -0400
-Received: from mout.web.de ([217.72.192.78]:49411 "EHLO mout.web.de"
+        Tue, 14 Jul 2020 05:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgGNJnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:43:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1594719758;
-        bh=b1zgLLM7aSsCcV07FLWap9Bv6VC1FSN60ZmqjMS2gHg=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=gF29rAnHUA+btvMscfcjzOQJRpJffjZiRpW8lLXQikReQft5qOWu8s/v3n7x0NXv6
-         bSXaKNAdSm3k3PZ9TMa//6D35fc7QIlT2nuPkmJnu3l82BfQaAiqpmOCQmjruBNcox
-         Sab55jDcJ7tSbNfLCquT/cEbEDLRBgnU3Aw6SFYo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.21.3]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBTEQ-1k3UOu1GvW-00AZMa; Tue, 14
- Jul 2020 11:42:38 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Esben Haabendal <esben@geanix.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Subject: Re: [PATCH] net: xilinx: fix potential NULL dereference in
- temac_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Xu Wang <vulab@iscas.ac.cn>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Message-ID: <d0873e01-4e07-ca59-ff6b-64ac6ee6aba4@web.de>
-Date:   Tue, 14 Jul 2020 11:42:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1725816AbgGNJoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:44:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376F421D7A;
+        Tue, 14 Jul 2020 09:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594719860;
+        bh=WIzzL2vxmexuuKMhffrG8LZui4Dea/ANs5K0xx4zolE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cg7mYIXAqtB0Frw9eTLIzy3AqMaN8uzdBgVihAY/uCka7Fn7d6nvxK4PoCWN3i8lf
+         R4jgxKw1+mE/hX2r0+VcjCG9NrEsln/oLoqK8QNSiDdAlRckCgOVMzb/YvTEAOoJo2
+         dtajleBa1Jm7t1eqcoWxZWHkmoDc8iwHhxXjQb5Y=
+Date:   Tue, 14 Jul 2020 10:44:06 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Qing Zhang <zhangqing@loongson.cn>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH] spi: Use clk_prepare_enable and clk_disable_unprepare
+Message-ID: <20200714094406.GA4900@sirena.org.uk>
+References: <1594717754-25428-1-git-send-email-zhangqing@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vLi6h1xpjWMUCKcSNNNgX+icND2lD7ixmP/+xib65ObXwxp/pN6
- Requoa3BsHECASb/PaU0viV5ZNyfdtqA7vVkT7filAT2oZ4d5mdvkjxMm9ma2pQRLCIXG3F
- z1dftJP+Y9PQp54GUwtsS1LPy+kT8IhprU810ByqExc2oOr/+bRcI1WmhG5chuBH2Kbvb1k
- oKp9G2RfG8ycPGEutGvPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SmFznmHh7L8=:RF9548JLrgaZgM/UjOeIvT
- SzqVtYGkgKAfr3jvou1iJnaEToaslpN2x+1bz+rEsUgnAig4gOzQ6OG5bhPaPaakAn7FJzm4m
- LrScKma38z+exxUH5z5YP/TNZPHs79YimS9aw4TOLKPAdn6EwpRE/DXXwAxX1tfb01cgQBjtB
- EEw3/OU0Y3vG/UcdazDX30c4fVpZaQ3cu0ErpeUSgiTrfdlJgwCHL5rh72F3B/MhCGWf7p1Yt
- h5+rTlFNfj887z3rAtDi3mqG9mcLTlpLn49DCC4SOP3go6KcBxBm40DO4SunP8lnG9ht5hMAB
- lbkwRyV8KoJWeNSMhzPJutWGFmMh1umzZhOtx8zCQI65PwJmLwmnxV8CYX3l7KQCu7A1gWfN5
- lqWdtJMMah6WbMR7vH+krtQ3nxPQmQd4vbmQNNeRb16d+lvpRupffqCY80/KSU9uiUGXxxzIT
- meWteWZUm2IRskruFqgmwuWR6QC5N3dhTRH0G0y8pKXDlsnG2PeLzC2FaBagzonadLSUoGu8j
- DZirrtB4Cz9r0GSbqLO4H6GPBCQuwkVQQxlJOW26FbKPfC5j5lkfHAWN4Hh1FUq5HDi+yvoB4
- JwLh5b9+x7HRw1ZADOJnMHX3pNmtf7O4qfCbGa/yuC/zJcKxdvIZypLWYuE/7fsKJgDQFUR09
- 4fa3KwinHJpplVv6IEPZiqSaCci5ree9BJMu09Tde/dNxB8jgiQpQF/LwcWPPoXKa4liO2sHO
- b8BIGwyba8uWUh4sYLuW8VZ5nTl79VGvu5jcxCaN1Dz6Ww7b4V1A6vREhOsReAOrFRNAq1aUn
- VXypJLMDLaI39cS3fcEDlX1LejeBawzGJHlie8KHXYlqyEFNvxYUP9Xjt65bNFiZjdufKFiAd
- PwIJbZoKhs3VDQcE5oFgu7YWYV4gioA5ShaTMptCJZ36WXcp3nwSG3BkuoN9vFSLvxzosaOn4
- qdmwxeY6pjf1owmiY+f7v7C9LjVqdfrggpc7EXVSRN4DCeKhUd2yIw4vdL57WtwcDmi6PZzNe
- UYf08WxUD2OYRiPw8T2XZu3s3OF9E/yO5Fkk2MYQi0h/eJvEbk/1vDfNa4oVUghrNL1fAcfkB
- +IIsKxPrCjOiCLinoCzTImhp5o4Ifzk05Ll5XGFqH9VOnxN2HwSytA3sz7RsnBWWrCPTq4Tp0
- bRreulSgz15l1aaLwGNw/DKQ+gkTj2KPm/GTunroSPzxde3ScVrqJzVUYp7EyAUet4D2o1+5D
- twfZKyOCk32jVMAr4RE7gn5IB5iTu9Ji4PwsYdQ==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Disposition: inline
+In-Reply-To: <1594717754-25428-1-git-send-email-zhangqing@loongson.cn>
+X-Cookie: Your password is pitifully obvious.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If you use devm_ioremap_resource() you can remove the !res check
-> entirely which would be equally acceptable as a fix.
 
-Would you like to use the wrapper function =E2=80=9Cdevm_platform_get_and_=
-ioremap_resource=E2=80=9D then?
-https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/base/platform.c#L=
-66
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/base/platform.c?id=3D0dc589da873b58b70f4caf4b070fb0cf70fdd1dc#n66
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Markus
+On Tue, Jul 14, 2020 at 05:09:14PM +0800, Qing Zhang wrote:
+> Convert clk_enable/clk_disable to clk_prepare_enable/clk_disable_unprepare
+> calls as required by common clock framework.
+>=20
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>  drivers/spi/spi-coldfire-qspi.c | 4 ++--
+
+Are you sure that ColdFire uses the common clock framework?
+
+>  drivers/spi/spi-omap-uwire.c    | 4 ++--
+
+It makes life easier if you send per-driver patches, that makes it
+easier for driver maintainers to review things and means that issues
+with a change in one driver won't hold up another.
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8NfmMACgkQJNaLcl1U
+h9BIbAf/R2GkeQj9D8dfvZvUp0id4vPtJwbTq/q26CQepJMwZC34jt2JA0XnTtnf
+58YhpL1GG9S1rcA8KGict63K+v9IsC+YoQwtfDWQpwRUCJ7dCSpZJCAxDSMbsUrl
+TAg1bFo37gqb4zzeNBOohrp40QhAL/XV+Y8N4Eih6Sf3lBmeEPKqdLuLMumBPriR
+ZCoOEiArZMhAbSvLsCzNVRI7j0Bc3jqqQxTHDu8VxQI/4OETK/cM63UQdfKeFETv
+013BOyx+E4Ig7es5SfB1KNKIAWM44q3M4/R/MAGQs8iZZBL15pvio9QcZNyaorU/
+3RnU7uo0TMOq5QORtscA1JRNVpIvOA==
+=TPc/
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
